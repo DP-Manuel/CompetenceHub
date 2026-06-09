@@ -1,0 +1,404 @@
+---
+import "../styles/global.css";
+
+const processSteps = [
+  "Seminar",
+  "Bedarf",
+  "Qualifizierung",
+  "Matching",
+  "Einstieg",
+];
+
+const strengths = [
+  "Sprachkurse",
+  "Bewerbungscoaching",
+  "Aktivierung",
+  "FBW-Maßnahmen",
+];
+
+const problems = [
+  "Offene Stellen bleiben länger unbesetzt.",
+  "Bewerberprofile passen nicht genau zu realen Anforderungen.",
+  "Einarbeitung kostet Zeit, wenn Grundkompetenzen fehlen.",
+  "Weiterbildung und Recruiting laufen getrennt voneinander.",
+];
+
+const modules = [
+  {
+    title: "Firmenseminare",
+    text: "Praktischer Einstieg in Unternehmen und vertrauensvoller Gesprächsanlass.",
+  },
+  {
+    title: "Bedarfsanalyse",
+    text: "Offene Rollen und fehlende Kompetenzen werden systematisch sichtbar.",
+  },
+  {
+    title: "Qualifizierung",
+    text: "Bestehende Maßnahmen werden mit realen Anforderungen verbunden.",
+  },
+  {
+    title: "Matching & Vermittlung",
+    text: "Profile werden gezielt mit Unternehmensbedarfen abgeglichen.",
+  },
+  {
+    title: "Begleitung beim Einstieg",
+    text: "Der Start wird begleitet und Erfahrungen fließen zurück ins System.",
+  },
+];
+
+const topics = [
+  "Vertrieb",
+  "Rhetorik",
+  "Kommunikation",
+  "Führung",
+  "Mitarbeitendenbindung",
+];
+
+const industries = [
+  {
+    title: "Pflege & Gesundheit",
+    text: "Sprachcoaching, Dokumentation und Kommunikation im Pflegealltag.",
+  },
+  {
+    title: "Logistik & Lager",
+    text: "Arbeitsstruktur, Scanner-Grundlagen und Prozessverständnis.",
+  },
+  {
+    title: "Bau, Elektro & Handwerk",
+    text: "Arbeitssicherheit, Materialkunde und Grundverständnis Baustelle.",
+  },
+  {
+    title: "IT, Büro & Support",
+    text: "IT-Grundlagen, Support-Strukturen und berufliche Kommunikation.",
+  },
+];
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Wireframe-Vorschau fuer eine B2B-Submarke von Donner + Partner."
+    />
+    <title>[Submarke] | Homepage Wireframe Preview</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="[Submarke] Startseite">
+        <span class="brand__name">[Submarke]</span>
+        <span class="brand__endorsement">Ein Angebot von Donner + Partner</span>
+      </a>
+      <nav class="nav" aria-label="Hauptnavigation">
+        <a href="#unternehmen">Für Unternehmen</a>
+        <a href="#seminare">Seminare</a>
+        <a href="#qualifizierung">Vermittlung & Qualifizierung</a>
+        <a href="#branchen">Branchen</a>
+      </nav>
+      <a class="button button--small" href="#kontakt">Kontakt aufnehmen</a>
+    </header>
+
+    <main id="top">
+      <section class="variant-switch" aria-labelledby="preview-title">
+        <div>
+          <p class="eyebrow">Wireframe Preview</p>
+          <h1 id="preview-title">Zwei Homepage-Varianten für die Teamvorstellung</h1>
+          <p>
+            Beide Varianten nutzen dieselben Inhalte. Der Umschalter zeigt, wie
+            sich Ton, Rhythmus und visuelle Gewichtung unterscheiden.
+          </p>
+        </div>
+        <div class="switcher" aria-label="Variantenumschalter">
+          <a href="#variant-a">Variante A</a>
+          <a href="#variant-b">Variante B</a>
+        </div>
+      </section>
+
+      <section id="variant-a" class="wireframe wireframe--corporate">
+        <div class="variant-label">
+          <p class="eyebrow">Variante A</p>
+          <h2>Seriös-Corporate</h2>
+          <p>
+            Stabil, ruhig, intern leicht anschlussfähig. Fokus auf Vertrauen,
+            klare Struktur und Nähe zu Donner + Partner.
+          </p>
+        </div>
+
+        <section class="hero hero--corporate" aria-labelledby="corporate-hero">
+          <div class="hero__copy">
+            <span class="bar"></span>
+            <p class="eyebrow">B2B-Submarke für Unternehmen</p>
+            <h2 id="corporate-hero">Weiterbildung, Recruiting und Vermittlung in einem System</h2>
+            <p>
+              Seminare schaffen Vertrauen, machen Personalbedarfe sichtbar und
+              verbinden Unternehmen mit gezielt qualifizierten Menschen.
+            </p>
+            <div class="actions">
+              <a class="button" href="#kontakt">Kontakt aufnehmen</a>
+              <a class="button button--secondary" href="#prozess-a">Ablauf ansehen</a>
+            </div>
+          </div>
+          <div class="hero__visual" aria-label="Platzhalter für professionelles Menschenbild">
+            <div class="photo-placeholder">
+              <span>Bild: Seminar / Beratung / Unternehmen</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="trust-strip" aria-label="Bestehende Staerken">
+          <h3>Bestehende Stärken, klar verbunden</h3>
+          <div class="chip-row">
+            {strengths.map((item) => <span>{item}</span>)}
+          </div>
+        </section>
+
+        <section class="grid-section" id="unternehmen">
+          <div>
+            <p class="eyebrow">Ausgangslage</p>
+            <h3>Wenn Qualifikation und Personalbedarf nicht zusammenfinden</h3>
+          </div>
+          <div class="card-grid card-grid--four">
+            {problems.map((problem) => <article class="card">{problem}</article>)}
+          </div>
+        </section>
+
+        <section id="prozess-a" class="process process--corporate">
+          <p class="eyebrow">Prozess</p>
+          <h3>Vom Seminar zur passenden Besetzung</h3>
+          <ol>
+            {processSteps.map((step, index) => (
+              <li>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                {step}
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section class="grid-section" id="qualifizierung">
+          <div>
+            <p class="eyebrow">Bausteine</p>
+            <h3>Ein System aus fünf Bausteinen</h3>
+          </div>
+          <div class="card-grid">
+            {modules.map((module) => (
+              <article class="card">
+                <h4>{module.title}</h4>
+                <p>{module.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="split-section" id="seminare">
+          <div>
+            <p class="eyebrow">Seminare</p>
+            <h3>Firmenseminare als Einstieg</h3>
+            <p>
+              Seminare bieten direkten Nutzen und schaffen den Raum, Personal-
+              und Qualifizierungsbedarfe besser zu verstehen.
+            </p>
+          </div>
+          <div class="topic-list">
+            {topics.map((topic) => <span>{topic}</span>)}
+          </div>
+        </section>
+
+        <section class="grid-section" id="branchen">
+          <div>
+            <p class="eyebrow">Branchen</p>
+            <h3>Fokus auf Engpassbereiche</h3>
+          </div>
+          <div class="card-grid card-grid--four">
+            {industries.map((industry) => (
+              <article class="card">
+                <h4>{industry.title}</h4>
+                <p>{industry.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="compliance">
+          <p class="eyebrow">Vertrauen</p>
+          <h3>Verlässlich, strukturiert und rechtssicher vorbereitet</h3>
+          <p>
+            Vermittlungs- und Kooperationsmodelle, Datenschutz und
+            Einwilligungen werden vor operativem Start geprüft und sauber
+            strukturiert.
+          </p>
+        </section>
+      </section>
+
+      <section id="variant-b" class="wireframe wireframe--dynamic">
+        <div class="variant-label">
+          <p class="eyebrow">Variante B</p>
+          <h2>Modern-Dynamic</h2>
+          <p>
+            Eigenständiger, bewegter, stärker als Submarke. Fokus auf
+            Prozessenergie und eine prägnantere erste Wirkung.
+          </p>
+        </div>
+
+        <section class="hero hero--dynamic" aria-labelledby="dynamic-hero">
+          <div class="process-ribbon" aria-label="Kurzprozess">
+            {processSteps.slice(0, 4).map((step) => <span>{step}</span>)}
+          </div>
+          <div class="hero__copy">
+            <p class="eyebrow">B2B-Submarke für Unternehmen</p>
+            <h2 id="dynamic-hero">Aus Seminaren wird Personalperspektive</h2>
+            <p>
+              Wir verbinden Weiterbildung, Unternehmensbedarf und
+              Qualifizierung zu einem nachvollziehbaren Vermittlungsprozess.
+            </p>
+            <div class="actions">
+              <a class="button" href="#kontakt">Kontakt aufnehmen</a>
+              <a class="button button--secondary" href="#prozess-b">Modell verstehen</a>
+            </div>
+          </div>
+          <div class="dynamic-visual" aria-label="Platzhalter für dynamisches Menschenbild">
+            <div class="dynamic-visual__photo">Bild</div>
+            <div class="dynamic-visual__block">Bedarf</div>
+          </div>
+        </section>
+
+        <section class="benefit-strip">
+          <article>
+            <span>01</span>
+            <h3>Klarere Bedarfe</h3>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Passendere Profile</h3>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Kürzere Einarbeitung</h3>
+          </article>
+        </section>
+
+        <section id="prozess-b" class="process process--dynamic">
+          <p class="eyebrow">Modell</p>
+          <h3>Das Modell in Bewegung</h3>
+          <ol>
+            {processSteps.map((step, index) => (
+              <li class={step === "Bedarf" ? "is-accent" : ""}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                {step}
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section class="module-mosaic">
+          <div>
+            <p class="eyebrow">Bausteine</p>
+            <h3>Fünf Bausteine, ein gemeinsames Ziel</h3>
+          </div>
+          {modules.map((module, index) => (
+            <article class="card">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <h4>{module.title}</h4>
+              <p>{module.text}</p>
+            </article>
+          ))}
+        </section>
+
+        <section class="topic-rail">
+          <p class="eyebrow">Seminare</p>
+          <h3>Einstieg über Seminare</h3>
+          <div>
+            {topics.map((topic) => <span>{topic}</span>)}
+          </div>
+        </section>
+
+        <section class="industry-band">
+          <div>
+            <p class="eyebrow">Branchen</p>
+            <h3>Branchen, in denen Bedarf konkret wird</h3>
+          </div>
+          <div class="card-grid card-grid--four">
+            {industries.map((industry) => (
+              <article class="card">
+                <h4>{industry.title}</h4>
+                <p>{industry.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="roadmap-strip">
+          <p class="eyebrow">Roadmap</p>
+          <h3>Digital anschlussfähig geplant</h3>
+          <p>
+            Plattform und App bleiben Zukunftsoptionen: Unternehmensprofile,
+            Kursverwaltung, Matching, Reporting und Lernstand-Tracking können
+            später auf dem gleichen Prozessmodell aufbauen.
+          </p>
+        </section>
+      </section>
+
+      <section id="kontakt" class="contact-section">
+        <div>
+          <p class="eyebrow">Kontakt</p>
+          <h2>Welcher Einstieg passt zu Ihrem Unternehmen?</h2>
+          <p>
+            Ob Seminar, Qualifizierungsbedarf oder offene Stellen: Über das
+            Formular wird ein erster Kontakt vorbereitet. Die finale
+            Verarbeitung braucht noch die Datenschutzfreigabe.
+          </p>
+        </div>
+        <form class="contact-form" aria-label="Kontaktformular Vorschau">
+          <label>
+            Name
+            <input name="name" type="text" placeholder="Vor- und Nachname" required />
+          </label>
+          <label>
+            Unternehmen
+            <input name="company" type="text" placeholder="Unternehmen" />
+          </label>
+          <label>
+            E-Mail
+            <input name="email" type="email" placeholder="name@unternehmen.de" required />
+          </label>
+          <label>
+            Telefon
+            <input name="phone" type="tel" placeholder="+49 ..." />
+          </label>
+          <label class="contact-form__wide">
+            Ich interessiere mich für
+            <select name="interest" required>
+              <option value="">Bitte auswählen</option>
+              <option>Firmenseminare</option>
+              <option>Personalbedarf</option>
+              <option>Qualifizierung & Vermittlung</option>
+              <option>Kooperation</option>
+              <option>Sonstiges</option>
+            </select>
+          </label>
+          <label class="contact-form__wide">
+            Nachricht
+            <textarea name="message" rows="5" placeholder="Worum geht es?"></textarea>
+          </label>
+          <label class="privacy contact-form__wide">
+            <input type="checkbox" required />
+            <span>
+              Ich habe die Datenschutzhinweise gelesen und stimme der
+              Verarbeitung meiner Angaben zur Kontaktaufnahme zu.
+            </span>
+          </label>
+          <button class="button contact-form__wide" type="submit">Anfrage senden</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>[Submarke]</span>
+      <span>Ein Angebot von Donner + Partner</span>
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+    </footer>
+  </body>
+</html>

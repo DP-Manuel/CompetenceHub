@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+
+# Local tooling
+tools/node-*/
+tools/*.zip
+
+# Internal source material
+Quellen/
+
+# Logs and local env
+*.log
+.env
+.env.*
+!.env.example
