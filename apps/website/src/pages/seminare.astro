@@ -9,20 +9,56 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
 const topics = [
   {
+    number: "01",
     title: "Führung & Mitarbeiterbindung",
-    text: "Für KMU im Wandel, die Fluktuation senken und Verantwortung im Team stärken wollen.",
+    text: "Für KMU im Wandel, die Verantwortung, Vertrauen und Bindung im Team stärken wollen.",
+    items: [
+      "Moderne Führung im Arbeitsalltag",
+      "Motivation, Vertrauen und Verbindlichkeit",
+      "Mitarbeitergespräche sicher führen",
+      "Wertschätzung als Führungsinstrument",
+      "Konflikte frühzeitig erkennen",
+      "Bindung stärken und Fluktuation vorbeugen",
+    ],
   },
   {
+    number: "02",
     title: "Vertrieb & Kundenkommunikation",
-    text: "Für Teams mit direktem Kundenkontakt, Beratungssituationen und erklärungsbedürftigen Leistungen.",
+    text: "Für Teams mit direktem Kundenkontakt, Beratungssituationen und anspruchsvollen Gesprächen.",
+    items: [
+      "Professionelle Gesprächsführung",
+      "Kundenbedürfnisse erkennen",
+      "Einwände souverän behandeln",
+      "Telefon- und E-Mail-Kommunikation",
+      "Beschwerdegespräche deeskalieren",
+      "Serviceorientierung im Unternehmensalltag",
+    ],
   },
   {
+    number: "03",
     title: "Rhetorik & Konfliktmanagement",
-    text: "Für klare Gespräche, sichere Kommunikation und lösungsorientierten Umgang mit Reibung.",
+    text: "Für einen sicheren Auftritt, klare Kommunikation und einen professionellen Umgang mit Reibung.",
+    items: [
+      "Sicher und überzeugend auftreten",
+      "Klar formulieren und aktiv zuhören",
+      "Körpersprache und Wirkung verstehen",
+      "Konflikte sachlich ansprechen",
+      "Kritik professionell äußern und annehmen",
+      "Gesprächstechniken für schwierige Situationen",
+    ],
   },
   {
+    number: "04",
     title: "Prävention & Resilienz",
-    text: "Für Belastungssituationen, Burnoutprävention und gesunde Arbeitsfähigkeit im Alltag.",
+    text: "Für einen gesunden Umgang mit Belastung, Veränderung und den eigenen Ressourcen.",
+    items: [
+      "Stress erkennen und regulieren",
+      "Resilienz im Arbeitsalltag stärken",
+      "Gesunde Grenzen setzen",
+      "Umgang mit Belastung und Veränderung",
+      "Selbstorganisation und Energiehaushalt",
+      "Prävention als Teil moderner Unternehmenskultur",
+    ],
   },
 ];
 ---
@@ -47,25 +83,48 @@ const topics = [
       />
     </figure>
 
-    <section class="topic-wall">
-      {topics.map((topic) => (
-        <article>
-          <h2>{topic.title}</h2>
-          <p>{topic.text}</p>
-        </article>
-      ))}
+    <section class="seminar-catalog" aria-labelledby="seminar-catalog-title">
+      <div class="section-heading seminar-catalog__heading">
+        <p class="eyebrow">Seminarbereiche</p>
+        <div>
+          <h2 id="seminar-catalog-title">Konkrete Themen für Ihren Unternehmensalltag</h2>
+          <p>
+            Jeder Schwerpunkt wird auf Ihre Ausgangslage, Ihre Mitarbeitenden
+            und die gewünschten Praxisziele abgestimmt.
+          </p>
+        </div>
+      </div>
+      <div class="seminar-topic-grid">
+        {topics.map((topic) => (
+          <article class="seminar-topic-card">
+            <header>
+              <span aria-hidden="true">{topic.number}</span>
+              <h3>{topic.title}</h3>
+            </header>
+            <div class="seminar-topic-card__body">
+              <p>{topic.text}</p>
+              <ul>
+                {topic.items.map((item) => <li>{item}</li>)}
+              </ul>
+            </div>
+          </article>
+        ))}
+      </div>
     </section>
 
-    <section class="split-panel">
-      <div>
-        <p class="eyebrow">Angebotsrahmen</p>
-        <h2>Auf einen Blick: Zielgruppe, Format, Dauer und Ort</h2>
+    <section class="seminar-offer" aria-labelledby="seminar-offer-title">
+      <div class="seminar-offer__copy">
+        <p class="eyebrow">Praxisnah in Würzburg und bei Ihnen vor Ort</p>
+        <h2 id="seminar-offer-title">Lassen Sie uns ins Gespräch kommen</h2>
+        <p>
+          Gemeinsam klären wir Zielgruppe, Format, Dauer und Ort und
+          entwickeln daraus ein passendes Seminarangebot für Ihr Unternehmen.
+        </p>
       </div>
-      <p>
-        Preise bleiben bewusst bei "individuelles Angebot". Sichtbar werden
-        dagegen Zielgruppe, Inhouse-/Präsenzformat, flexible Dauer und der
-        regionale Schwerpunkt im Raum Würzburg.
-      </p>
+      <div class="seminar-offer__action">
+        <span>Individuell statt von der Stange</span>
+        <a class="button" href={url("kontakt")}>Kostenfreies Erstgespräch anfragen</a>
+      </div>
     </section>
   </main>
 </BaseLayout>
