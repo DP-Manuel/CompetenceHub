@@ -6,43 +6,25 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
-
-const steps = [
-  "Schulung oder Erstgespräch als Anlass nutzen",
-  "Bedarfsanalyse mit dem Unternehmen durchführen",
-  "Arbeitsuchende über bestehende Kurse gezielt vorbereiten",
-  "Profile und Anforderungen regelbasiert vergleichen",
-  "Vermittlung begleiten und Firmenfeedback einholen",
-];
 ---
 
-<BaseLayout title="Qualifizierung | [Submarke]">
+<BaseLayout
+  title="Qualifizierung | Competence Hub"
+  description="Archivierte Prototypseite: Qualifizierung ist eine moegliche spaetere Ausbaustufe, nicht Fokus des aktuellen Competence-Hub-MVP."
+>
   <main class="subpage">
     <section class="page-hero">
-      <p class="eyebrow">Qualifizierung & Vermittlung</p>
-      <h1>Vom Unternehmensbedarf zur passgenauen Qualifizierung</h1>
+      <p class="eyebrow">Spätere Ausbaustufe</p>
+      <h1>Qualifizierung bleibt als Perspektive erhalten</h1>
       <p>
-        Das Modell verbindet Schulung, Bedarfsanalyse und Vermittlung:
-        Arbeitsuchende können in bestehenden Kursen gezielt auf konkrete
-        Anforderungen vorbereitet werden, ohne zunächst bereits Lehrpläne
-        oder produktive Datenflüsse festzulegen.
+        Qualifizierung kann später ein Entwicklungsbaustein im Competence Hub
+        werden. Für den Website-MVP stehen zunächst Livecoaching,
+        Businesscoaching und ein klarer Anfrageweg im Vordergrund.
       </p>
-    </section>
-
-    <figure class="subpage-image">
-      <img
-        src={url("images/qualifizierung.png")}
-        alt="Visualisierung gezielter Qualifizierung und Lernbegleitung"
-      />
-    </figure>
-
-    <section class="timeline-list">
-      {steps.map((step, index) => (
-        <article>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <p>{step}</p>
-        </article>
-      ))}
+      <div class="actions">
+        <a class="button" href={url("leistungen")}>Zum aktuellen Angebot</a>
+        <a class="button button--ghost" href={url("unternehmen")}>Für Unternehmen</a>
+      </div>
     </section>
   </main>
 </BaseLayout>

@@ -1,0 +1,128 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import "../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const services = [
+  {
+    eyebrow: "Livecoaching",
+    title: "Direkt an konkreten Situationen arbeiten",
+    text: "Livecoaching passt, wenn ein berufliches Anliegen nah an einer realen Situation begleitet werden soll: Gespräche, Führung, Konflikte, Rollen oder Veränderung.",
+    href: "livecoaching",
+  },
+  {
+    eyebrow: "Businesscoaching",
+    title: "Entwicklung strukturiert begleiten",
+    text: "Businesscoaching eignet sich für Unternehmen, Führungskräfte, Teams und Mitarbeitende, die Ziele, Zusammenarbeit und berufliche Entwicklung systematisch klären möchten.",
+    href: "businesscoaching",
+  },
+  {
+    eyebrow: "Unternehmen",
+    title: "Bedarf im Unternehmen einordnen",
+    text: "Für Firmen steht zuerst die Frage im Mittelpunkt, welches Anliegen, welche Zielgruppe und welches Format wirklich passen.",
+    href: "unternehmen",
+  },
+  {
+    eyebrow: "Anfrage",
+    title: "Nächsten Schritt klären",
+    text: "Die Kontaktseite sammelt die wichtigsten Angaben für eine spätere sichere Anfrageverarbeitung. Aktuell bleibt das Formular statisch.",
+    href: "kontakt",
+  },
+];
+
+const comparison = [
+  {
+    title: "Livecoaching",
+    text: "situationsnah, konkret, häufig direkt an einem aktuellen beruflichen Anlass ausgerichtet",
+  },
+  {
+    title: "Businesscoaching",
+    text: "strukturiert, entwicklungsorientiert, passend für Führung, Teams und Veränderungsprozesse",
+  },
+];
+
+const faqs = [
+  {
+    question: "Was ist der Unterschied zwischen Livecoaching und Businesscoaching?",
+    answer: "Livecoaching ist besonders nah an konkreten Situationen. Businesscoaching ist breiter angelegt und begleitet Führung, Zusammenarbeit, Rollenklärung oder berufliche Entwicklung strukturiert.",
+  },
+  {
+    question: "Können Teams und Einzelpersonen im beruflichen Kontext begleitet werden?",
+    answer: "Ja. Das Angebot richtet sich an Unternehmen, Teams, Führungskräfte und Mitarbeitende, wenn das Anliegen beruflich eingeordnet ist.",
+  },
+  {
+    question: "Wie startet eine Anfrage?",
+    answer: "Über die Kontaktseite werden Anlass, Zielgruppe und gewünschter Schwerpunkt beschrieben. Die technische Verarbeitung wird erst vor dem Livegang sicher konfiguriert.",
+  },
+];
+---
+
+<BaseLayout
+  title="Leistungen | Competence Hub"
+  description="Leistungen von Competence Hub: Livecoaching, Businesscoaching, Coaching fuer Unternehmen, Teams und berufliche Entwicklung."
+>
+  <main class="subpage">
+    <section class="page-hero page-hero--accent">
+      <p class="eyebrow">Leistungen</p>
+      <h1>Livecoaching und Businesscoaching klar unterscheiden</h1>
+      <p>
+        Competence Hub ordnet Coaching-Angebote so ein, dass Unternehmen,
+        Teams und Einzelpersonen im beruflichen Kontext schnell den passenden
+        Einstieg finden.
+      </p>
+      <div class="actions">
+        <a class="button" href={url("kontakt")}>Anfrage stellen</a>
+        <a class="button button--ghost" href={url("unternehmen")}>Für Unternehmen</a>
+      </div>
+    </section>
+
+    <section class="offer-grid" aria-label="Angebotsübersicht">
+      {services.map((service) => (
+        <article class="offer-card">
+          <p class="eyebrow">{service.eyebrow}</p>
+          <h2>{service.title}</h2>
+          <p>{service.text}</p>
+          <a class="text-link" href={url(service.href)}>Mehr erfahren</a>
+        </article>
+      ))}
+    </section>
+
+    <section class="split-panel">
+      <div>
+        <p class="eyebrow">Einordnung</p>
+        <h2>Welches Angebot passt?</h2>
+        <p>
+          Die genaue Form wird im Erstkontakt geklärt. Wichtig ist zunächst,
+          ob ein akuter beruflicher Anlass oder eine breitere
+          Entwicklungsfrage im Vordergrund steht.
+        </p>
+      </div>
+      <div class="benefit-grid">
+        {comparison.map((item) => (
+          <span>
+            {item.title}: {item.text}
+          </span>
+        ))}
+      </div>
+    </section>
+
+    <section class="faq-section" aria-labelledby="services-faq-title">
+      <div class="section-heading">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="services-faq-title">Häufige Fragen zu den Leistungen</h2>
+      </div>
+      <div class="faq-grid">
+        {faqs.map((faq) => (
+          <article>
+            <h3>{faq.question}</h3>
+            <p>{faq.answer}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>

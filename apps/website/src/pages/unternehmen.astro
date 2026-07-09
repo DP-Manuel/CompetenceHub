@@ -7,66 +7,116 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
-const cards = [
+const occasions = [
   {
-    title: "Schulung als Einstieg",
-    text: "Ein konkretes Thema schafft Gesprächsanlass und zeigt schnell, wo im Unternehmen Bedarf besteht.",
+    title: "Führung und Zusammenarbeit",
+    text: "Wenn Rollen, Verantwortung, Erwartungen oder Abstimmung im Team klarer werden sollen.",
   },
   {
-    title: "Personalbedarf klären",
-    text: "Offene Stellen, Einarbeitungshürden, Quereinsteigerbedarf und Mitarbeiterbindung werden strukturiert besprochen.",
+    title: "Kommunikation",
+    text: "Wenn Gespräche, Feedback, Kundenkontakt oder interne Abstimmung professioneller laufen sollen.",
   },
   {
-    title: "Bewerber vorbereiten",
-    text: "Arbeitsuchende aus bestehenden Maßnahmen können gezielt auf reale Anforderungen vorbereitet werden.",
+    title: "Veränderung und Entwicklung",
+    text: "Wenn neue Aufgaben, Wachstum, Umstrukturierung oder berufliche Entwicklung begleitet werden sollen.",
   },
   {
-    title: "Passgenau vermitteln",
-    text: "Der spätere Prozess führt Qualifikation, Bedarf und regionale Nähe nachvollziehbar zusammen.",
+    title: "Belastung und Orientierung",
+    text: "Wenn Teams Orientierung, Konfliktprävention und einen gesunden Umgang mit beruflicher Belastung brauchen.",
+  },
+  {
+    title: "Qualifizierung als Baustein",
+    text: "Wenn Coaching und Qualifizierung als Teil einer nachhaltigen Personal- und Kompetenzentwicklung gedacht werden.",
+  },
+];
+
+const benefits = [
+  "klare Einordnung des Anliegens",
+  "passendes Coaching-Format statt Standardpaket",
+  "professionelle Vorbereitung des nächsten Gesprächs",
+  "anschlussfähig für spätere Buchungs- und Netzwerkprozesse",
+];
+
+const faqs = [
+  {
+    question: "Für welche Unternehmen eignet sich Competence Hub?",
+    answer: "Für Unternehmen, die Führung, Zusammenarbeit, Kommunikation oder berufliche Entwicklung gezielt begleiten möchten. Der erste Schritt ist eine Klärung von Zielgruppe, Anlass und gewünschtem Format.",
+  },
+  {
+    question: "Ist das Angebot nur für Führungskräfte gedacht?",
+    answer: "Nein. Führungskräfte sind eine wichtige Zielgruppe, aber auch Teams und Mitarbeitende in Veränderungs- oder Entwicklungssituationen können einbezogen werden.",
+  },
+  {
+    question: "Gibt es garantierte Ergebnisse?",
+    answer: "Nein. Coaching kann Reflexion, Orientierung und professionelle Entwicklung unterstützen, ersetzt aber keine unternehmerische Entscheidung und keine medizinische oder therapeutische Beratung.",
   },
 ];
 ---
 
-<BaseLayout title="Für Unternehmen | [Submarke]">
+<BaseLayout
+  title="Coaching für Unternehmen | Competence Hub"
+  description="Competence Hub bietet Livecoaching und Businesscoaching fuer Unternehmen, Teams, Fuehrungskraefte und berufliche Entwicklung."
+>
   <main class="subpage">
     <section class="page-hero">
       <p class="eyebrow">Für Unternehmen</p>
-      <h1>Ein regionaler Partner für Schulung und Fachkräftebedarf</h1>
+      <h1>Coaching-Angebote für Führung, Teams und berufliche Entwicklung</h1>
       <p>
-        Für KMU in Tauberfranken/Würzburg verbinden wir praxisnahe
-        Firmenschulungen mit gezielter Personalqualifizierung und einem klaren
-        Blick auf offene Stellen.
+        Competence Hub hilft Unternehmen, Coaching-Bedarf klar zu formulieren,
+        passende Formate zu wählen und den nächsten Schritt professionell
+        vorzubereiten.
       </p>
-      <a class="button" href={url("kontakt")}>Kostenfreies Erstgespräch anfragen</a>
+      <div class="actions">
+        <a class="button" href={url("kontakt")}>Anfrage stellen</a>
+        <a class="button button--ghost" href={url("kontakt")}>Erstgespräch anfragen</a>
+      </div>
     </section>
 
-    <figure class="subpage-image">
-      <img
-        src={url("images/partnerschaft.png")}
-        alt="Symbolische Darstellung einer partnerschaftlichen Zusammenarbeit"
-      />
-    </figure>
-
-    <section class="feature-grid">
-      {cards.map((card) => (
+    <section class="feature-grid" aria-label="Typische Anlässe für Unternehmen">
+      {occasions.map((occasion) => (
         <article class="feature-card">
-          <h2>{card.title}</h2>
-          <p>{card.text}</p>
+          <h2>{occasion.title}</h2>
+          <p>{occasion.text}</p>
         </article>
       ))}
     </section>
 
-    <section class="showcase-strip">
+    <section class="split-panel">
       <div>
-        <p class="eyebrow">Wirkung für Unternehmen</p>
-        <h2>Ein geschlossener Kreislauf statt einzelner Insellösungen</h2>
+        <p class="eyebrow">Nutzen</p>
+        <h2>Vom ersten Anliegen zum passenden Coaching-Rahmen</h2>
+        <p>
+          Unternehmen müssen nicht sofort wissen, welches Format richtig ist.
+          Im ersten Schritt werden Anlass, Zielgruppe, Dringlichkeit und
+          mögliche Formate sortiert.
+        </p>
       </div>
-      <p>
-        Unternehmen schulen bestehende Teams und erhalten zugleich Zugang zu
-        Bewerbern, die über vorhandene Maßnahmen passend nachqualifiziert
-        werden können. Die Unternehmensseite kann später schlanker gefasst
-        oder mit echten Referenzen ergänzt werden.
-      </p>
+      <div class="benefit-grid">
+        {benefits.map((benefit) => <span>{benefit}</span>)}
+      </div>
+    </section>
+
+    <section class="faq-section" aria-labelledby="company-faq-title">
+      <div class="section-heading">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="company-faq-title">Fragen von Unternehmen</h2>
+      </div>
+      <div class="faq-grid">
+        {faqs.map((faq) => (
+          <article>
+            <h3>{faq.question}</h3>
+            <p>{faq.answer}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="cta-panel">
+      <div>
+        <p class="eyebrow">Nächster Schritt</p>
+        <h2>Coaching-Bedarf kurz beschreiben</h2>
+      </div>
+      <a class="button" href={url("kontakt")}>Anfrage stellen</a>
     </section>
   </main>
 </BaseLayout>

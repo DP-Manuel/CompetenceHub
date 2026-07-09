@@ -2,63 +2,43 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/global.css";
 
-const previewItems = [
-  "Firmen, Coaches und Stellen pflegen",
-  "Seminaranfragen prüfen",
-  "Angebote und Verträge vorbereiten",
-  "Feedback nach Seminaren auswerten",
+const futureItems = [
+  "geschützte Buchungs- und Verwaltungsbereiche",
+  "Coach-Kalender und Auftragsübersicht",
+  "Anfragen, Angebote und Vertragsprozesse",
+  "mobile Nutzung für spätere operative Abläufe",
 ];
 ---
 
-<BaseLayout title="Login-Demo | [Submarke]" bodyClass="login-page">
+<BaseLayout
+  title="Login | Competence Hub"
+  description="Der Login ist eine spaetere Ausbaustufe. Der aktuelle Competence-Hub-MVP enthaelt keine produktiven Accounts."
+  bodyClass="login-page"
+>
   <main class="login-shell">
     <section class="login-panel">
       <div class="login-copy">
-        <p class="eyebrow">App-Ausblick</p>
-        <h1>Eine Demo für das spätere Verwaltungssystem</h1>
+        <p class="eyebrow">Nicht produktiv</p>
+        <h1>Ein echter Login ist noch nicht Teil des Website-MVP</h1>
         <p>
-          Diese Seite ist eine reine Demo. Sie zeigt, wie der Einstieg in die
-          spätere App wirken könnte: zuerst für interne Abläufe rund um
-          Firmen, Coaches, Stellen, Seminaranfragen, Angebote, Verträge und
-          Feedback. Echte Redaktionsrechte und externe Zugänge bleiben fachlich
-          noch offen.
+          Competence Hub startet mit einer statischen Website für Angebote,
+          Unternehmen, Coach-Netzwerk und Kontakt. Geschützte Bereiche,
+          Accounts, Datenbank und Buchungsfunktionen werden erst später
+          fachlich und technisch geplant.
         </p>
         <div class="login-preview-list">
-          {previewItems.map((item) => <span>{item}</span>)}
+          {futureItems.map((item) => <span>{item}</span>)}
         </div>
       </div>
 
-      <form class="login-card" aria-label="Login-Demo">
-        <span class="demo-badge">Nicht produktiv</span>
-        <h2>Anmelden</h2>
-        <label>
-          E-Mail
-          <input type="email" value="demo@donner-partner.de" readonly />
-        </label>
-        <label>
-          Passwort
-          <input type="password" value="demodemo" readonly />
-        </label>
-        <button class="button" type="button">Dashboard-Demo öffnen</button>
+      <aside class="login-card" aria-label="Status des Login-Bereichs">
+        <span class="demo-badge">Ausbaustufe</span>
+        <h2>Kein Login aktiv</h2>
         <p>
-          Kein echter Login, keine Datenbank, keine personenbezogenen Daten.
+          Es gibt hier keine produktive Anmeldung, keine Testzugänge, keine
+          Datenbank und keine personenbezogene Datenerfassung.
         </p>
-      </form>
-    </section>
-
-    <section class="dashboard-teaser" aria-label="Dashboard-Demo">
-      <article>
-        <span>Heute</span>
-        <strong>4 Firmenanfragen</strong>
-      </article>
-      <article>
-        <span>Redaktion</span>
-        <strong>Coachprofile</strong>
-      </article>
-      <article>
-        <span>Stellen</span>
-        <strong>regelbasiert</strong>
-      </article>
+      </aside>
     </section>
   </main>
 </BaseLayout>

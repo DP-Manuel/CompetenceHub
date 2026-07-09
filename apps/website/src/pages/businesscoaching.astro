@@ -1,0 +1,124 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import "../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const audiences = [
+  "Unternehmen mit Entwicklungs- oder Veränderungsthemen",
+  "Führungskräfte mit Verantwortung für Teams und Entscheidungen",
+  "Teams, die Zusammenarbeit und Kommunikation verbessern möchten",
+  "Mitarbeitende in beruflichen Übergängen oder neuen Rollen",
+];
+
+const topics = [
+  {
+    title: "Kommunikation",
+    text: "Gespräche, Feedback, Abstimmung und Erwartungsklärung professionell gestalten.",
+  },
+  {
+    title: "Führung",
+    text: "Verantwortung, Wirkung, Entscheidungen und Mitarbeitergespräche reflektieren.",
+  },
+  {
+    title: "Zusammenarbeit",
+    text: "Rollen, Schnittstellen, Konflikte und gemeinsame Arbeitsweisen klären.",
+  },
+  {
+    title: "Berufliche Entwicklung",
+    text: "Ziele, Kompetenzen, Veränderung und nächste Schritte im beruflichen Kontext sortieren.",
+  },
+];
+
+const steps = [
+  "Anliegen und Zielgruppe einordnen",
+  "Rahmen, Format und gewünschte Wirkung klären",
+  "passenden Coach oder Schwerpunkt auswählen",
+  "Businesscoaching durchführen",
+  "Erkenntnisse und nächste Schritte festhalten",
+];
+
+const faqs = [
+  {
+    question: "Für wen ist Businesscoaching geeignet?",
+    answer: "Für Unternehmen, Führungskräfte, Teams und Mitarbeitende, wenn es um berufliche Entwicklung, Zusammenarbeit, Rollenklärung, Kommunikation oder Veränderung geht.",
+  },
+  {
+    question: "Wie unterscheidet sich Businesscoaching von Beratung?",
+    answer: "Businesscoaching unterstützt Reflexion, Klärung und Entwicklung. Es ersetzt keine fachliche Unternehmensberatung und trifft keine Entscheidungen für das Unternehmen.",
+  },
+  {
+    question: "Kann Businesscoaching mit Livecoaching kombiniert werden?",
+    answer: "Ja. Ein konkreter Livecoaching-Anlass kann in ein breiteres Businesscoaching übergehen, wenn daraus ein längerfristiges Entwicklungs- oder Teamthema entsteht.",
+  },
+];
+---
+
+<BaseLayout
+  title="Businesscoaching | Competence Hub"
+  description="Businesscoaching von Competence Hub fuer Unternehmen, Fuehrungskraefte, Teams, Kommunikation, Rollenklärung und berufliche Entwicklung."
+>
+  <main class="subpage">
+    <section class="page-hero page-hero--accent">
+      <p class="eyebrow">Businesscoaching</p>
+      <h1>Professioneller Rahmen für Führung, Teams und Veränderung</h1>
+      <p>
+        Businesscoaching unterstützt Unternehmen, Führungskräfte, Teams und
+        Mitarbeitende dabei, berufliche Anliegen strukturiert zu klären und
+        daraus tragfähige nächste Schritte abzuleiten.
+      </p>
+      <a class="button" href={url("kontakt")}>Businesscoaching anfragen</a>
+    </section>
+
+    <section class="audience-section" aria-labelledby="business-audience-title">
+      <div class="section-heading">
+        <p class="eyebrow">Zielgruppen</p>
+        <h2 id="business-audience-title">Für wen Businesscoaching gedacht ist</h2>
+      </div>
+      <div class="audience-list">
+        {audiences.map((audience, index) => (
+          <article>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <p>{audience}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="feature-grid" aria-label="Themen im Businesscoaching">
+      {topics.map((topic) => (
+        <article class="feature-card">
+          <h2>{topic.title}</h2>
+          <p>{topic.text}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="timeline-list" aria-label="Ablauf im Businesscoaching">
+      {steps.map((step, index) => (
+        <article>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <p>{step}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="faq-section" aria-labelledby="business-faq-title">
+      <div class="section-heading">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="business-faq-title">Häufige Fragen zum Businesscoaching</h2>
+      </div>
+      <div class="faq-grid">
+        {faqs.map((faq) => (
+          <article>
+            <h3>{faq.question}</h3>
+            <p>{faq.answer}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>

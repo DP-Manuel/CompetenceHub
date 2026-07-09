@@ -7,55 +7,32 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
-const modules = [
-  "Firmenprofile",
-  "Coachprofile",
-  "Stellenanzeigen",
-  "Seminaranfragen",
-  "Angebote",
-  "Vermittlungsvereinbarungen",
-  "Feedback nach Seminaren",
-  "Regelbasiertes Matching",
-  "Redaktionsworkflow",
+const later = [
+  "Buchungssystem für Unternehmen und Coaches",
+  "Coach-Kalender und mögliche Kalenderintegration",
+  "Vertrags- und Anfrageprozesse",
+  "App-Funktionen für spätere Aufträge, Termine und Rechnungen",
 ];
 ---
 
-<BaseLayout title="Systemausblick | [Submarke]">
+<BaseLayout
+  title="Systemausblick | Competence Hub"
+  description="Systemausblick fuer spaetere Competence-Hub-Ausbaustufen. Der aktuelle MVP enthaelt keine produktive App, keine Datenbank und keinen echten Login."
+>
   <main class="subpage">
     <section class="page-hero page-hero--system">
-      <p class="eyebrow">Systemausblick</p>
-      <h1>Ein späteres System für Firmen, Coaches und Stellen</h1>
+      <p class="eyebrow">Spätere Ausbaustufe</p>
+      <h1>Das spätere System ist nicht Teil des Website-MVP</h1>
       <p>
-        Der Ausblick zeigt die Richtung. Das spätere System soll unabhängig
-        arbeiten, eigene Daten nutzen und interne Abläufe rund um Seminare,
-        Firmen, Coachprofile, Stellen, Verträge, Feedback und Vermittlung
-        schrittweise vereinfachen.
+        Der aktuelle Competence-Hub-MVP ist eine statische Website. Buchung,
+        Kalender, Datenbank, Verträge und App-Funktionen werden erst nach
+        fachlicher und technischer Klärung umgesetzt.
       </p>
-      <a class="button" href={url("login")}>Login-Demo ansehen</a>
+      <a class="button" href={url("kontakt")}>Website-Anfrage stellen</a>
     </section>
 
-    <figure class="subpage-image">
-      <img
-        src={url("images/digitale-lernplattform.png")}
-        alt="Visualisierung eines digitalen Lern- und Verwaltungssystems"
-      />
-    </figure>
-
-    <section class="module-board">
-      {modules.map((module) => <article>{module}</article>)}
-    </section>
-
-    <section class="showcase-strip">
-      <div>
-        <p class="eyebrow">Bewusst noch nicht produktiv</p>
-        <h2>Keine echte Datenbank, keine echten Accounts</h2>
-      </div>
-      <p>
-        Der nächste Schritt ist das Bild: Wie könnte sich die Website in ein
-        professionelles System weiterentwickeln? Firmen-, Coach-, Stellen- und
-        interne Rollenfunktionen bleiben noch offen und werden nicht als final
-        gezeigt.
-      </p>
+    <section class="module-board" aria-label="Spätere Systemmodule">
+      {later.map((item) => <article>{item}</article>)}
     </section>
   </main>
 </BaseLayout>

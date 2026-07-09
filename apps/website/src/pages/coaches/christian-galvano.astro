@@ -7,7 +7,7 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
-const seminars = [
+const topics = [
   {
     title: "Neuroleadership",
     text: "Neurowissenschaftlich fundierte Impulse für Führung, Mitarbeitermotivation, Veränderung und mentale Stärke.",
@@ -24,7 +24,7 @@ const seminars = [
 ---
 
 <BaseLayout
-  title="Christian Galvano | Coaches | [Submarke]"
+  title="Christian Galvano | Coaches | Competence Hub"
   description="Christian Galvano begleitet Unternehmen als Dozent, Fachtrainer und Coach mit Schwerpunkten in Neuroleadership, Konfliktmanagement sowie Stress- und Burnoutprävention."
 >
   <main class="subpage">
@@ -38,12 +38,12 @@ const seminars = [
           Erwachsenenbildung.
         </p>
         <p>
-          Seine Seminare verbinden Erkenntnisse aus Neurowissenschaft und
+          Seine Angebote verbinden Erkenntnisse aus Neurowissenschaft und
           Psychologie mit konkreten Werkzeugen für Führung, Kommunikation,
           Veränderung und gesundes Arbeiten.
         </p>
         <div class="coach-profile-actions">
-          <a class="button" href={url("kontakt")}>Seminar anfragen</a>
+          <a class="button" href={url("kontakt")}>Coaching-Anfrage stellen</a>
           <a
             class="button button--ghost"
             href="https://changes-galvano.de/"
@@ -81,10 +81,10 @@ const seminars = [
       </div>
 
       <div class="coach-topic-grid">
-        {seminars.map((seminar) => (
+        {topics.map((topic) => (
           <article>
-            <h3>{seminar.title}</h3>
-            <p>{seminar.text}</p>
+            <h3>{topic.title}</h3>
+            <p>{topic.text}</p>
           </article>
         ))}
       </div>
@@ -113,7 +113,7 @@ const seminars = [
     <section class="showcase-strip coach-profile-cta">
       <div>
         <p class="eyebrow">Passendes Format besprechen</p>
-        <h2>Seminar für Ihr Unternehmen anfragen</h2>
+        <h2>Passendes Coaching-Format für Ihr Unternehmen anfragen</h2>
       </div>
       <div>
         <p>

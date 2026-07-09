@@ -7,86 +7,106 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
-const processSteps = [
-  { title: "Firmenschulung", text: "Ein konkretes Thema schafft den Einstieg in die Zusammenarbeit." },
-  { title: "Bedarfsanalyse", text: "Personalengpässe, Rollen und Kompetenzlücken werden greifbar." },
-  { title: "Qualifizierung", text: "Arbeitsuchende werden gezielt auf reale Firmenbedarfe vorbereitet." },
-  { title: "Vermittlung", text: "Profile und Anforderungen werden passgenau zusammengeführt." },
-  { title: "Feedback", text: "Erfahrungen aus Seminar und Einstieg fließen in die nächsten Schritte." },
+const offers = [
+  {
+    eyebrow: "Livecoaching",
+    title: "Begleitung in echten Arbeitssituationen",
+    text: "Livecoaching unterstützt Führungskräfte, Teams und Mitarbeitende dort, wo Kommunikation, Entscheidungen und Entwicklung konkret werden.",
+    href: "livecoaching",
+  },
+  {
+    eyebrow: "Businesscoaching",
+    title: "Klarheit für Führung, Zusammenarbeit und Veränderung",
+    text: "Businesscoaching schafft einen strukturierten Rahmen für berufliche Entwicklung, Konfliktklärung, Rollenverständnis und wirksame Führung.",
+    href: "businesscoaching",
+  },
+  {
+    eyebrow: "Für Unternehmen",
+    title: "Angebote für Teams und Organisationen",
+    text: "Unternehmen erhalten ein professionelles Angebot, das Ziele, Zielgruppen, Format und nächsten Schritt verständlich zusammenführt.",
+    href: "unternehmen",
+  },
+  {
+    eyebrow: "Coach-Netzwerk",
+    title: "Passende Expertinnen und Experten einbinden",
+    text: "Das Netzwerk kann später gezielt erweitert werden, damit Unternehmen passende Coaches für Thema, Zielgruppe und Format finden.",
+    href: "coaches",
+  },
 ];
 
 const benefits = [
-  "Praxisnaher Einstieg für KMU",
-  "Region Tauberfranken/Würzburg",
-  "Gezielte Personalqualifizierung",
-  "Passgenaue Vermittlung vorbereiten",
+  "Livecoaching für konkrete berufliche Situationen",
+  "Businesscoaching für Führung, Teams und Veränderung",
+  "Klare Angebotsstruktur für Firmenkunden",
+  "Wartbare Website-Basis für spätere Erweiterungen",
 ];
 
-const topics = [
-  "Führung & Mitarbeiterbindung",
-  "Vertrieb & Kundenkommunikation",
-  "Rhetorik & Konfliktmanagement",
-  "Prävention & Resilienz",
-];
-
-const roadmap = [
-  "Firmen, Coaches und Stellen",
-  "Seminaranfragen und Angebote",
-  "Angebote und Verträge",
-  "Feedback und Matching",
+const audiences = [
+  "Unternehmen, die Führung und Zusammenarbeit stärken wollen",
+  "Teams, die Kommunikation, Rollen und Konflikte professionell bearbeiten möchten",
+  "Führungskräfte und Mitarbeitende in beruflichen Entwicklungsphasen",
+  "Coaches, die später Teil eines strukturierten Netzwerks werden können",
 ];
 ---
 
-<BaseLayout title="[Submarke] | Firmenseminare und Personalperspektiven" bodyClass="home-page">
+<BaseLayout
+  title="Competence Hub | Livecoaching und Businesscoaching"
+  description="Competence Hub bietet Livecoaching und Businesscoaching fuer Unternehmen, Teams und berufliche Entwicklung."
+  bodyClass="home-page"
+>
   <main>
-    <section class="hero hero--showcase">
+    <section class="hero hero--competence">
       <div class="hero__copy">
-        <p class="eyebrow">Firmenschulungen für KMU in Tauberfranken/Würzburg</p>
-        <h1>Praxisnahe Schulungen, die Personalbedarf mitdenken</h1>
+        <p class="eyebrow">Competence Hub</p>
+        <h1>Livecoaching und Businesscoaching für Unternehmen, Teams und berufliche Entwicklung.</h1>
         <p>
-          Donner + Partner verbindet Weiterbildung für bestehende Teams mit
-          gezielter Qualifizierung von Arbeitsuchenden, die auf konkrete
-          Unternehmensbedarfe vorbereitet werden.
+          Competence Hub bündelt professionelle Coaching-Angebote für
+          Unternehmen, Führungskräfte und Teams. Der MVP fokussiert auf klare
+          Angebote, verständliche Anfragewege und eine wartbare Website, die
+          später um Buchung, Kalender und App-Funktionen erweitert werden kann.
         </p>
         <div class="actions">
-          <a class="button" href={url("kontakt")}>Kostenfreies Erstgespräch anfragen</a>
-          <a class="button button--ghost" href={url("seminare")}>Seminare ansehen</a>
+          <a class="button" href={url("kontakt")}>Anfrage stellen</a>
+          <a class="button button--ghost" href={url("leistungen")}>Angebote ansehen</a>
         </div>
       </div>
-      <div class="hero-visual" aria-label="Seminar- und Prozessvorschau">
-        <img
-          src={url("images/start.png")}
-          alt="Website-Vorschau mit Seminar, Recruiting und regionalen Branchen"
-        />
-        <div class="floating-card floating-card--need">
-          <span>Bedarfsanalyse</span>
-          <strong>offene Rollen klären</strong>
-        </div>
-        <div class="floating-card floating-card--score">
-          <span>Regionale Stärke</span>
-          <strong>KMU im Fokus</strong>
+      <div class="hero-panel" aria-label="Competence Hub Angebotsschwerpunkte">
+        <span>Website-MVP</span>
+        <strong>Coaching-Angebote klar darstellen</strong>
+        <div class="hero-panel__grid">
+          <em>Livecoaching</em>
+          <em>Businesscoaching</em>
+          <em>Unternehmen</em>
+          <em>Coach-Netzwerk</em>
         </div>
       </div>
     </section>
 
-    <section class="process-band" aria-label="Prozess">
-      {processSteps.map((step, index) => (
-        <article>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <h2>{step.title}</h2>
-          <p>{step.text}</p>
-        </article>
-      ))}
+    <section class="offer-section" id="leistungen" aria-labelledby="offers-title">
+      <div class="section-heading">
+        <p class="eyebrow">Leistungen</p>
+        <h2 id="offers-title">Vier Einstiegspunkte für den Website-MVP</h2>
+      </div>
+      <div class="offer-grid">
+        {offers.map((offer) => (
+          <article class="offer-card">
+            <p class="eyebrow">{offer.eyebrow}</p>
+            <h3>{offer.title}</h3>
+            <p>{offer.text}</p>
+            <a class="text-link" href={url(offer.href)}>Mehr erfahren</a>
+          </article>
+        ))}
+      </div>
     </section>
 
     <section class="split-panel">
       <div>
-        <p class="eyebrow">Warum der Einstieg funktioniert</p>
-        <h2>Firmenschulungen schaffen Vertrauen, bevor Vermittlung konkret wird</h2>
+        <p class="eyebrow">Was Competence Hub bietet</p>
+        <h2>Ein klarer Rahmen für Coaching-Angebote, Anfragen und spätere Erweiterung</h2>
         <p>
-          Unternehmen erhalten sofort nutzbare Weiterbildung. Gleichzeitig
-          entsteht ein Gespräch über Personalengpässe, Einarbeitung,
-          Mitarbeiterbindung und passende Qualifizierung.
+          Die Website erklärt kompakt, welche Coaching-Formate angeboten
+          werden, für welche Situationen sie passen und wie Unternehmen den
+          nächsten Schritt anfragen können.
         </p>
       </div>
       <div class="benefit-grid">
@@ -94,41 +114,32 @@ const roadmap = [
       </div>
     </section>
 
-    <section class="topic-section">
+    <section class="audience-section" aria-labelledby="audience-title">
       <div class="section-heading">
-        <p class="eyebrow">Seminarbeispiele</p>
-        <h2>Konkrete Themen für den ersten Kontakt</h2>
+        <p class="eyebrow">Zielgruppen</p>
+        <h2 id="audience-title">Für wen ist das Angebot gedacht?</h2>
       </div>
-      <div class="topic-rail">
-        {topics.map((topic) => <a href={url("seminare")}>{topic}</a>)}
+      <div class="audience-list">
+        {audiences.map((audience, index) => (
+          <article>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <p>{audience}</p>
+          </article>
+        ))}
       </div>
     </section>
 
-    <section class="app-preview">
+    <section class="future-note" aria-labelledby="future-title">
       <div>
-        <p class="eyebrow">Systemausblick</p>
-        <h2>Ein eigener Systemausblick, ohne produktive Daten</h2>
-        <p>
-          Die spätere App kann Seminaranfragen, Firmenprofile, Angebote,
-          Coach-Profile, Stellen, Verträge, Feedback und Matching
-          unterstützen. Dieser Bereich bleibt zunächst eine realistische
-          Vorschau ohne echten Login und ohne Datenbank.
-        </p>
-        <a class="button button--ghost" href={url("login")}>Login-Demo öffnen</a>
+        <p class="eyebrow">Ausbaustufen</p>
+        <h2 id="future-title">Buchungssystem, Coach-Kalender und App kommen später</h2>
       </div>
-      <div class="dashboard-card" aria-label="App-Vorschau">
-        <div class="dashboard-card__top">
-          <span>Demo-Dashboard</span>
-          <strong>Bedarfsanalyse</strong>
-        </div>
-        {roadmap.map((item, index) => (
-          <div class="pipeline-row">
-            <span>{String(index + 1).padStart(2, "0")}</span>
-            <strong>{item}</strong>
-            <em>{index === 0 ? "aktiv" : "geplant"}</em>
-          </div>
-        ))}
-      </div>
+      <p>
+        Der aktuelle MVP verspricht keine produktive Buchung, keinen echten
+        Login und keine Datenbank. Buchungssystem, Coach-Kalender,
+        Vertragsautomatisierung und App-Funktionen bleiben bewusst spätere
+        Ausbaustufen.
+      </p>
     </section>
   </main>
 </BaseLayout>

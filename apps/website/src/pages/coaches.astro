@@ -7,10 +7,24 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
+const principles = [
+  {
+    title: "Passung vor Masse",
+    text: "Coach, Thema, Zielgruppe und Format müssen zusammenpassen. Das Netzwerk soll Qualität sichtbar machen, nicht beliebig wachsen.",
+  },
+  {
+    title: "Erfahrung und Haltung",
+    text: "Für Unternehmen zählen fachliche Grundlage, Praxiserfahrung, Verlässlichkeit und ein professioneller Umgang mit sensiblen Anliegen.",
+  },
+  {
+    title: "Klare Angebotslogik",
+    text: "Coach-Profile sollen später verständlich zeigen, welche Themen, Formate und Zielgruppen sinnvoll zusammengehören.",
+  },
+];
+
 const coaches = [
   {
     name: "Christian Galvano",
-    initials: "CG",
     role: "Dozent, Fachtrainer und Coach",
     focus: [
       "Neuroleadership",
@@ -23,25 +37,41 @@ const coaches = [
 ];
 ---
 
-<BaseLayout title="Coaches | [Submarke]">
+<BaseLayout
+  title="Coach-Netzwerk | Competence Hub"
+  description="Das Coach-Netzwerk von Competence Hub verbindet Unternehmen mit passenden Coaches und Expertinnen fuer Livecoaching und Businesscoaching."
+>
   <main class="subpage">
     <section class="page-hero page-hero--accent coach-list-hero">
       <div>
-        <p class="eyebrow">Coaches & Dozenten</p>
-        <h1>Fachwissen mit Persönlichkeit und Praxiserfahrung</h1>
+        <p class="eyebrow">Coach-Netzwerk</p>
+        <h1>Passende Coaches und Expertinnen für Unternehmen finden</h1>
         <p>
-          Lernen Sie die Menschen kennen, die unsere Firmenschulungen fachlich
-          fundiert, verständlich und mit Blick auf den Arbeitsalltag gestalten.
+          Competence Hub arbeitet mit Coaches und Expertinnen zusammen, deren
+          Erfahrung, Schwerpunkt und Arbeitsweise zum Anliegen des Unternehmens
+          passen.
         </p>
-        <a class="button" href={url("kontakt")}>Coach-Einsatz anfragen</a>
+        <div class="actions">
+          <a class="button" href={url("kontakt")}>Als Coach Kontakt aufnehmen</a>
+          <a class="button button--ghost" href={url("kontakt")}>Unternehmensanfrage stellen</a>
+        </div>
       </div>
-      <aside class="coach-list-hero__note" aria-label="Unser Anspruch">
-        <span>Unser Anspruch</span>
-        <strong>Fachlich fundiert.<br />Praxisnah.<br />Persönlich.</strong>
+      <aside class="coach-list-hero__note" aria-label="Netzwerkanspruch">
+        <span>Netzwerkanspruch</span>
+        <strong>Passend.<br />Erfahren.<br />Verlässlich.</strong>
       </aside>
     </section>
 
-    <section class="coach-grid" aria-label="Coaches und Dozenten">
+    <section class="feature-grid" aria-label="Qualitätslogik im Coach-Netzwerk">
+      {principles.map((principle) => (
+        <article class="feature-card">
+          <h2>{principle.title}</h2>
+          <p>{principle.text}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="coach-grid" aria-label="Vorhandene Coach-Profile">
       {coaches.map((coach) => (
         <article class="coach-card coach-card--featured">
           <div class="coach-card__media">
@@ -54,7 +84,7 @@ const coaches = [
             />
           </div>
           <div>
-            <p class="eyebrow">Coach & Dozent</p>
+            <p class="eyebrow">Vorhandenes Profil</p>
             <h2>{coach.name}</h2>
             <strong>{coach.role}</strong>
             <ul class="tag-list" aria-label="Themenschwerpunkte">
@@ -69,20 +99,12 @@ const coaches = [
       ))}
     </section>
 
-    <section class="showcase-strip coach-list-cta">
+    <section class="cta-panel">
       <div>
-        <p class="eyebrow">Individuell zusammenstellen</p>
-        <h2>Passenden Coach finden</h2>
+        <p class="eyebrow">Kontakt</p>
+        <h2>Coach-Profil oder Unternehmensbedarf besprechen</h2>
       </div>
-      <div>
-        <p>
-          Wir stimmen Fachgebiet, Zielgruppe und Format auf die konkrete
-          Situation in Ihrem Unternehmen ab.
-        </p>
-        <a class="button" href={url("kontakt")}>
-          Kostenfreies Erstgespräch anfragen
-        </a>
-      </div>
+      <a class="button" href={url("kontakt")}>Kontakt aufnehmen</a>
     </section>
   </main>
 </BaseLayout>
