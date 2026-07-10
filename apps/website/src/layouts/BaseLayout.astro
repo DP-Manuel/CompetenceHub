@@ -57,8 +57,8 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
         <a href={url("unternehmen")}>Für Unternehmen</a>
         <a href={url("coaches")}>Coaches</a>
         <a href={url("kontakt")}>Kontakt</a>
-        <a href="#">Impressum</a>
-        <a href="#">Datenschutz</a>
+        <a href={url("impressum")}>Impressum</a>
+        <a href={url("datenschutz")}>Datenschutz</a>
       </nav>
     </footer>
   </body>

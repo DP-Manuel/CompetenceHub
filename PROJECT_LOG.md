@@ -2,6 +2,26 @@
 
 Newest entries first.
 
+## 2026-07-09 | deployment cleanup | Disable GitHub Pages autodeploy
+
+Checked and disabled the old GitHub Pages deployment path for the current Competence Hub MVP.
+
+- Deployment cleanup: removed `.github/workflows/deploy.yml`, which previously deployed to GitHub Pages automatically on pushes to `main`.
+- Config cleanup: removed the hard GitHub Pages `site` and `base` values from `apps/website/astro.config.mjs`; local/static builds now use Astro defaults until a later deployment decision is approved.
+- Documentation/tooling cleanup: updated `apps/website/README.md` to describe the current MVP routes, local preview URL, static contact form, and the fact that deployment is manual/freigabepflichtig; made `apps/website/scripts/serve-dist.mjs` default to root preview with optional `BASE_PATH`.
+- SEO/deployment note: removed the GitHub-Pages-specific static `robots.txt` and `sitemap.xml` for now, because no public GitHub Pages publication is planned yet.
+- Safety: no GitHub Actions secrets were read, no deployment command was run, no push was performed, and `.tmp/` was not opened.
+
+## 2026-07-09 | quality | Competence Hub MVP block 3
+
+Completed the third Competence Hub deadline-sprint block: quality pass, SEO/legal placeholders, and build verification.
+
+- User-facing change: added `/impressum` and `/datenschutz` as clearly marked legal placeholder pages with explicit pre-live legal/factual review notes and no invented company data.
+- Navigation/SEO: replaced footer placeholder links with real routes, aligned package naming, and checked the deployment-facing SEO files before deferring public robots/sitemap output to a later approved deployment decision.
+- Quality pass: checked MVP routes for H1/meta structure, internal links, CTA consistency, old prototype terms, demo credentials, legal placeholder clarity, and mobile-oriented CSS constraints; no new backend, provider, tracking, or form handling was added.
+- Verification: sandbox build again hit the known `spawn EPERM` after `astro check` passed with 0 errors, 0 warnings, and 0 hints; rerunning the same build outside the sandbox succeeded and generated 14 static pages.
+- Safety: did not open `Quellen/`, `.env*`, server/database access documents, `.tmp/`, or secrets; no deployment and no commit.
+
 ## 2026-07-09 | visual QA | Fix contact page contrast and heading wrap
 
 Fixed the visible `/kontakt` contrast issue before commit/push.

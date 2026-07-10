@@ -1,22 +1,27 @@
-# Website
+# Competence Hub Website
 
-Astro workspace for the public website.
+Astro workspace for the static public website MVP.
 
-## Current Preview
+## Current MVP Routes
 
-The first page is now a focused stakeholder prototype based on the preferred modern Variant B direction.
+- `/` - homepage
+- `/leistungen` - offer overview
+- `/livecoaching` - live coaching offer
+- `/businesscoaching` - business coaching offer
+- `/unternehmen` - company-facing page
+- `/coaches` - coach network page
+- `/kontakt` - static request/contact page
+- `/impressum` - legal placeholder, must be completed before live launch
+- `/datenschutz` - privacy placeholder, must be completed before live launch
 
-Included routes:
+Legacy/prototype routes remain build-safe but are not part of the main navigation:
 
-- `/` - homepage story
-- `/unternehmen` - company-facing offer
-- `/seminare` - seminar focus
-- `/qualifizierung` - qualification and placement story
-- `/system` - future-system outlook
-- `/login` - non-functional login demo
-- `/kontakt` - contact demo
+- `/seminare`
+- `/qualifizierung`
+- `/system`
+- `/login`
 
-The login and contact flows are visual only. They do not authenticate, submit data, or connect to a database.
+The contact form is static. It does not authenticate, submit data, store data, or connect to a database.
 
 ## Local Commands
 
@@ -42,5 +47,9 @@ node .\scripts\serve-dist.mjs
 Static preview URL:
 
 ```text
-http://127.0.0.1:4321/Firmenschulung/
+http://127.0.0.1:4321/
 ```
+
+## Deployment
+
+There is currently no automatic GitHub Pages deployment workflow. Deployment is intentionally manual/freigabepflichtig and must be planned separately before live publication.
