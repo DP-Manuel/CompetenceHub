@@ -78,6 +78,25 @@ const formats = [
   },
 ];
 
+const trustPoints = [
+  {
+    text: "Ein Angebot von Donner + Partner",
+    icon: "building" as const,
+  },
+  {
+    text: "Ausgewählte Coaches",
+    icon: "shield-check" as const,
+  },
+  {
+    text: "Persönliche Bedarfsklärung",
+    icon: "message-circle" as const,
+  },
+  {
+    text: "Vor Ort und digital",
+    icon: "compass" as const,
+  },
+];
+
 const process = [
   {
     title: "Bedarf verstehen",
@@ -132,12 +151,12 @@ const coachPreview = [
         </p>
         <div class="actions">
           <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
-          <a class="button button--ghost" href="#einsatzfelder">Einsatzfelder ansehen</a>
+          <a class="button button--ghost" href={url("leistungen")}>Leistungen ansehen</a>
         </div>
       </div>
       <aside class="hero-panel" aria-label="Wirkungsfelder von Competence Hub">
-        <p class="eyebrow">Direkt zum Thema</p>
-        <strong>Was möchten Sie bewegen?</strong>
+        <p class="eyebrow">Themen im Überblick</p>
+        <strong>Was interessiert Sie?</strong>
         <nav class="hero-shortcuts" aria-label="Schnelleinstieg nach Anliegen">
           <a href={url("businesscoaching")}><Icon name="leadership" size={24} /><span>Führung</span><Icon name="arrow-right" size={18} /></a>
           <a href={url("livecoaching")}><Icon name="users" size={24} /><span>Teams</span><Icon name="arrow-right" size={18} /></a>
@@ -148,16 +167,18 @@ const coachPreview = [
     </section>
 
     <section class="trust-strip" aria-label="Competence Hub auf einen Blick">
-      <strong>Ein Angebot von Donner + Partner</strong>
-      <span>Ausgewählte Coaches</span>
-      <span>Persönliche Bedarfsklärung</span>
-      <span>Vor Ort und digital</span>
+      {trustPoints.map((point) => (
+        <article>
+          <Icon name={point.icon} size={24} />
+          <strong>{point.text}</strong>
+        </article>
+      ))}
     </section>
 
     <section class="situation-section" id="einsatzfelder" aria-labelledby="situations-title">
       <div class="section-heading">
         <p class="eyebrow">Typische Anlässe</p>
-        <h2 id="situations-title">Wählen Sie Ihr Thema</h2>
+        <h2 id="situations-title">Welches Thema interessiert Sie?</h2>
       </div>
       <div class="situation-grid">
         {situations.map((situation) => (
@@ -185,8 +206,8 @@ const coachPreview = [
       <div class="format-grid">
         {formats.map((format) => (
           <article>
-            <Icon name={format.icon} size={30} />
             <p class="eyebrow">{format.eyebrow}</p>
+            <Icon name={format.icon} size={30} />
             <h3>{format.title}</h3>
             <details class="format-details">
               <summary>Mehr erfahren</summary>
@@ -253,7 +274,7 @@ const coachPreview = [
     <section class="cta-panel cta-panel--home" id="anfrage">
       <div>
         <p class="eyebrow">Nächster Schritt</p>
-        <h2>Welches Thema bewegt Ihr Unternehmen?</h2>
+        <h2>Wobei dürfen wir Sie unterstützen?</h2>
         <p>Eine kurze Beschreibung reicht für die erste Einordnung.</p>
       </div>
       <a class="button" href={url("kontakt")}>Bedarf besprechen</a>

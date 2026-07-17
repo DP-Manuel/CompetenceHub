@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -11,22 +12,27 @@ const occasions = [
   {
     title: "Führung und Zusammenarbeit",
     text: "Wenn Rollen, Verantwortung, Erwartungen oder Abstimmung im Team klarer werden sollen.",
+    icon: "leadership" as const,
   },
   {
     title: "Kommunikation",
     text: "Wenn Gespräche, Feedback, Kundenkontakt oder interne Abstimmung professioneller laufen sollen.",
+    icon: "message-circle" as const,
   },
   {
     title: "Veränderung und Entwicklung",
     text: "Wenn neue Aufgaben, Wachstum, Umstrukturierung oder berufliche Entwicklung begleitet werden sollen.",
+    icon: "compass" as const,
   },
   {
     title: "Belastung und Orientierung",
     text: "Wenn Teams Orientierung, Konfliktprävention und einen gesunden Umgang mit beruflicher Belastung brauchen.",
+    icon: "heart-pulse" as const,
   },
   {
     title: "Qualifizierung als Baustein",
     text: "Wenn Coaching und Qualifizierung als Teil einer nachhaltigen Personal- und Kompetenzentwicklung gedacht werden.",
+    icon: "users" as const,
   },
 ];
 
@@ -75,6 +81,7 @@ const faqs = [
     <section class="feature-grid" aria-label="Typische Anlässe für Unternehmen">
       {occasions.map((occasion) => (
         <article class="feature-card">
+          <span class="feature-card__icon"><Icon name={occasion.icon} size={28} /></span>
           <h2>{occasion.title}</h2>
           <p>{occasion.text}</p>
         </article>

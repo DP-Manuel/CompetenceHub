@@ -1,11 +1,21 @@
 # Brand And Design Notes
 
-Last updated: 2026-06-22
+Last updated: 2026-07-17
 
 ## Source
 
 - `Quellen/Corporate Design Manual Stand 12.03.25.pdf`
 - `Quellen/Firmendingsbums Onepager.pdf` (created by the media designer in Canva, 2026-06-22)
+- `Quellen/Inspiration/Bild (6).png` through `Bild (12).png`
+- `Quellen/Inspiration/Rückmeldung KI.docx` as a non-binding comparison
+
+## Canonical Digital Style
+
+Use `docs/assets/designstyle.md` as the implementation-ready design reference
+for the Competence Hub website and later web app. This file keeps the broader
+brand evidence and source history; `designstyle.md` owns current digital color
+roles, layout patterns, component families, responsive translation,
+accessibility constraints, and visual QA.
 
 ## Brand Foundation
 

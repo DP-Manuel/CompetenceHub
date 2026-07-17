@@ -22,21 +22,24 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
 const navigation = [
   { label: "Start", href: "" },
-  { label: "Leistungen", href: "leistungen" },
   { label: "Für Unternehmen", href: "unternehmen" },
   { label: "Coaches", href: "coaches" },
 ];
 
-const quickNavigation = [
-  { label: "Führung & Leadership", href: "businesscoaching#fuehrung", icon: "leadership" as const },
-  { label: "Teams & Konflikte", href: "livecoaching#teams", icon: "users" as const },
-  { label: "Gesundheit & Prävention", href: "leistungen#gesundheit", icon: "heart-pulse" as const },
-  { label: "Coach auswählen", href: "coaches", icon: "user-round" as const },
+const serviceNavigation = [
+  { label: "Alle Leistungen", href: "leistungen", icon: "compass" as const },
+  { label: "Livecoaching", href: "livecoaching", icon: "message-circle" as const },
+  { label: "Businesscoaching", href: "businesscoaching", icon: "briefcase" as const },
+  { label: "Psychologische Beratung & Prävention", href: "leistungen#gesundheit", icon: "heart-pulse" as const },
+  { label: "Supervision, Workshops & Vorträge", href: "leistungen#gruppenformate", icon: "users" as const },
 ];
 
 const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
 const isCurrent = (path = "") =>
   normalizePath(Astro.url.pathname) === normalizePath(url(path));
+const isServicePage = ["leistungen", "livecoaching", "businesscoaching"].some(
+  (path) => isCurrent(path),
+);
 ---
 
 <!doctype html>
@@ -64,7 +67,21 @@ const isCurrent = (path = "") =>
         <span class="brand__line">Ein Angebot von Donner + Partner</span>
       </a>
       <nav class="nav nav--desktop" aria-label="Hauptnavigation">
-        {navigation.map((item) => (
+        <a href={url()} aria-current={isCurrent() ? "page" : undefined}>Start</a>
+        <details class="services-menu">
+          <summary class:list={{ "is-current": isServicePage }}>Leistungen</summary>
+          <div class="services-menu__panel">
+            <strong>Leistungen im Überblick</strong>
+            {serviceNavigation.map((item) => (
+              <a href={url(item.href)}>
+                <Icon name={item.icon} size={20} />
+                <span>{item.label}</span>
+                <Icon name="arrow-right" size={17} />
+              </a>
+            ))}
+          </div>
+        </details>
+        {navigation.slice(1).map((item) => (
           <a
             href={url(item.href)}
             aria-current={isCurrent(item.href) ? "page" : undefined}
@@ -76,7 +93,16 @@ const isCurrent = (path = "") =>
       <details class="nav-menu">
         <summary>Menü</summary>
         <nav class="nav" aria-label="Mobile Hauptnavigation">
-          {navigation.map((item) => (
+          <a href={url()} aria-current={isCurrent() ? "page" : undefined}>Start</a>
+          {serviceNavigation.slice(0, 3).map((item) => (
+            <a
+              href={url(item.href)}
+              aria-current={isCurrent(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
+          {navigation.slice(1).map((item) => (
             <a
               href={url(item.href)}
               aria-current={isCurrent(item.href) ? "page" : undefined}
@@ -89,19 +115,6 @@ const isCurrent = (path = "") =>
         </nav>
       </details>
       <div class="header-actions">
-        <details class="quick-nav">
-          <summary><Icon name="compass" size={18} /> Direkt zu</summary>
-          <div class="quick-nav__panel">
-            <strong>Was möchten Sie bewegen?</strong>
-            {quickNavigation.map((item) => (
-              <a href={url(item.href)}>
-                <Icon name={item.icon} size={20} />
-                <span>{item.label}</span>
-                <Icon name="arrow-right" size={17} />
-              </a>
-            ))}
-          </div>
-        </details>
         <a class="header-login" href={url("login")}>
           <Icon name="log-in" size={18} />
           <span>Login</span>

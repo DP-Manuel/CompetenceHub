@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -11,18 +12,22 @@ const useCases = [
   {
     title: "Führungssituationen",
     text: "Gespräche vorbereiten, Entscheidungen reflektieren und die eigene Wirkung im beruflichen Alltag bewusster steuern.",
+    icon: "leadership" as const,
   },
   {
     title: "Kommunikation",
     text: "Anspruchsvolle Gespräche, Feedback, Abstimmung und Missverständnisse strukturiert bearbeiten.",
+    icon: "message-circle" as const,
   },
   {
     title: "Konfliktprävention",
     text: "Spannungen früh erkennen, einordnen und handlungsfähige nächste Schritte entwickeln.",
+    icon: "shield-check" as const,
   },
   {
     title: "Orientierung",
     text: "Rollen, Erwartungen und berufliche Entwicklung in konkreten Situationen klären.",
+    icon: "compass" as const,
   },
 ];
 
@@ -51,10 +56,8 @@ const benefits = [
       <p class="eyebrow">Livecoaching</p>
       <h1>Coaching nah an der konkreten Arbeitssituation</h1>
       <p>
-        Livecoaching bedeutet im Competence-Hub-Kontext: Ein berufliches
-        Anliegen wird nicht abstrakt behandelt, sondern nah an der konkreten
-        Situation, den beteiligten Rollen und dem nächsten machbaren Schritt.
-        Wir vermitteln dafür eine fachlich passende Person aus dem Netzwerk.
+        Konkrete berufliche Situationen klären und den nächsten machbaren
+        Schritt mit passender Expertise entwickeln.
       </p>
       <a class="button" href={url("kontakt")}>Livecoaching anfragen</a>
     </section>
@@ -62,6 +65,7 @@ const benefits = [
     <section class="feature-grid" id="teams" aria-label="Einsatzfelder im Livecoaching">
       {useCases.map((useCase) => (
         <article class="feature-card">
+          <span class="feature-card__icon"><Icon name={useCase.icon} size={28} /></span>
           <h2>{useCase.title}</h2>
           <p>{useCase.text}</p>
         </article>

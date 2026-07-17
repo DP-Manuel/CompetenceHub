@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -18,18 +19,22 @@ const topics = [
   {
     title: "Kommunikation",
     text: "Gespräche, Feedback, Abstimmung und Erwartungsklärung professionell gestalten.",
+    icon: "message-circle" as const,
   },
   {
     title: "Führung",
     text: "Verantwortung, Wirkung, Entscheidungen und Mitarbeitergespräche reflektieren.",
+    icon: "leadership" as const,
   },
   {
     title: "Zusammenarbeit",
     text: "Rollen, Schnittstellen, Konflikte und gemeinsame Arbeitsweisen klären.",
+    icon: "users" as const,
   },
   {
     title: "Berufliche Entwicklung",
     text: "Ziele, Kompetenzen, Veränderung und nächste Schritte im beruflichen Kontext sortieren.",
+    icon: "compass" as const,
   },
 ];
 
@@ -66,9 +71,8 @@ const faqs = [
       <p class="eyebrow">Businesscoaching</p>
       <h1>Professioneller Rahmen für Führung, Teams und Veränderung</h1>
       <p>
-        Competence Hub vermittelt passende Coaches, die Unternehmen,
-        Führungskräfte, Teams und Mitarbeitende dabei unterstützen, berufliche
-        Anliegen strukturiert zu klären und nächste Schritte abzuleiten.
+        Berufliche Anliegen strukturiert klären und Entwicklung mit einem
+        passenden Coach gezielt begleiten.
       </p>
       <a class="button" href={url("kontakt")}>Businesscoaching anfragen</a>
     </section>
@@ -91,6 +95,7 @@ const faqs = [
     <section class="feature-grid" id="fuehrung" aria-label="Themen im Businesscoaching">
       {topics.map((topic) => (
         <article class="feature-card">
+          <span class="feature-card__icon"><Icon name={topic.icon} size={28} /></span>
           <h2>{topic.title}</h2>
           <p>{topic.text}</p>
         </article>

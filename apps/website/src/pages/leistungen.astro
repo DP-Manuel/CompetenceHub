@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -10,50 +11,35 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 const services = [
   {
     eyebrow: "Livecoaching",
-    title: "Direkt an konkreten Situationen arbeiten",
-    text: "Livecoaching passt, wenn ein berufliches Anliegen nah an einer realen Situation begleitet werden soll: Gespräche, Führung, Konflikte, Rollen oder Veränderung.",
+    title: "Konkrete Situationen klären",
+    text: "Für Gespräche, Entscheidungen, Konflikte und Rollenfragen.",
     href: "livecoaching",
     id: undefined,
+    icon: "message-circle" as const,
   },
   {
     eyebrow: "Businesscoaching",
-    title: "Entwicklung strukturiert begleiten",
-    text: "Businesscoaching eignet sich für Unternehmen, Führungskräfte, Teams und Mitarbeitende, die Ziele, Zusammenarbeit und berufliche Entwicklung systematisch klären möchten.",
+    title: "Entwicklung gezielt begleiten",
+    text: "Für Führung, Zusammenarbeit und berufliche Entwicklung.",
     href: "businesscoaching",
     id: undefined,
+    icon: "briefcase" as const,
   },
   {
     eyebrow: "Psychologische Beratung",
-    title: "Berufliche Belastungen fundiert einordnen",
-    text: "Für Vorgesetzte, Selbstständige, Teams und Mitarbeitende bei psychischen Belastungen und psychologischen Fragestellungen im Arbeitskontext.",
+    title: "Belastungen fundiert einordnen",
+    text: "Für Prävention und psychologische Fragen im beruflichen Kontext.",
     href: "kontakt",
     id: "gesundheit",
+    icon: "heart-pulse" as const,
   },
   {
     eyebrow: "Supervision, Workshops & Vorträge",
-    title: "Gemeinsam reflektieren und Wissen anwenden",
-    text: "Für Teams und Gruppen, wenn fachliche Reflexion, Prävention oder ein praxisnaher Lernimpuls im Mittelpunkt steht.",
+    title: "Teams gemeinsam weiterbringen",
+    text: "Für Reflexion, Wissenstransfer und Lernimpulse in Gruppen.",
     href: "kontakt",
-    id: undefined,
-  },
-];
-
-const comparison = [
-  {
-    title: "Livecoaching",
-    text: "situationsnah, konkret, häufig direkt an einem aktuellen beruflichen Anlass ausgerichtet",
-  },
-  {
-    title: "Businesscoaching",
-    text: "strukturiert, entwicklungsorientiert, passend für Führung, Teams und Veränderungsprozesse",
-  },
-  {
-    title: "Psychologische Beratung",
-    text: "fachlich fundiert, berufsbezogen und klar von Psychotherapie oder medizinischer Behandlung abgegrenzt",
-  },
-  {
-    title: "Supervision, Workshop oder Vortrag",
-    text: "für gemeinsame Reflexion, Wissenstransfer und konkrete Impulse in Teams oder größeren Gruppen",
+    id: "gruppenformate",
+    icon: "users" as const,
   },
 ];
 
@@ -99,6 +85,7 @@ const faqs = [
     <section class="offer-grid" aria-label="Angebotsübersicht">
       {services.map((service) => (
         <article class="offer-card" id={service.id}>
+          <span class="offer-card__icon"><Icon name={service.icon} size={30} /></span>
           <p class="eyebrow">{service.eyebrow}</p>
           <h2>{service.title}</h2>
           <p>{service.text}</p>
@@ -107,23 +94,13 @@ const faqs = [
       ))}
     </section>
 
-    <section class="split-panel">
+    <section class="cta-panel">
       <div>
-        <p class="eyebrow">Einordnung</p>
-        <h2>Welches Format passt zum Anliegen?</h2>
-        <p>
-          Die genaue Form wird im Erstkontakt geklärt. Wichtig ist zunächst,
-          ob ein akuter beruflicher Anlass, eine breitere Entwicklungsfrage,
-          psychologische Beratung oder ein Gruppenformat im Vordergrund steht.
-        </p>
+        <p class="eyebrow">Noch unsicher?</p>
+        <h2>Wir ordnen Ihr Anliegen gemeinsam ein.</h2>
+        <p>Eine kurze Beschreibung reicht für eine erste Empfehlung.</p>
       </div>
-      <div class="benefit-grid">
-        {comparison.map((item) => (
-          <span>
-            {item.title}: {item.text}
-          </span>
-        ))}
-      </div>
+      <a class="button" href={url("kontakt")}>Bedarf klären</a>
     </section>
 
     <section class="faq-section" aria-labelledby="services-faq-title">

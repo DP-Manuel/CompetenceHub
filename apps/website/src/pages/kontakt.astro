@@ -1,29 +1,19 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
 const primaryEmail = "competencehub@donner-partner.de";
-const testEmail = "roedel.kg@donner-partner.eu";
-const showTestContact = import.meta.env.DEV;
+const fallbackSubject = encodeURIComponent("Anfrage über Competence Hub");
+const fallbackMailto = `mailto:${primaryEmail}?subject=${fallbackSubject}`;
 
-const subject = encodeURIComponent("Anfrage über Competence Hub");
-const body = encodeURIComponent(
-  "Unternehmen / Organisation:\nAnliegen:\nZielgruppe:\nGewünschter Zeitraum:\nRückrufnummer (optional):\n",
-);
-const mailto = (email: string) =>
-  `mailto:${email}?subject=${subject}&body=${body}`;
-
-const requestSteps = [
-  "Anliegen und Zielgruppe kurz beschreiben",
-  "gewünschten Zeitraum nennen",
-  "Kontaktdaten für die Rückmeldung ergänzen",
-];
-
-const helpfulDetails = [
-  "Unternehmen oder Organisation",
-  "beruflicher Anlass und gewünschte Wirkung",
-  "Zielgruppe oder ungefähre Teilnehmendenzahl",
-  "gewünschter Zeitraum oder Dringlichkeit",
+const topics = [
+  "Livecoaching",
+  "Businesscoaching",
+  "Psychologische Beratung & Prävention",
+  "Supervision, Workshop oder Vortrag",
+  "Coach-Auswahl",
+  "Noch nicht sicher",
 ];
 ---
 
@@ -33,48 +23,92 @@ const helpfulDetails = [
 >
   <main class="subpage">
     <section class="contact-page">
-      <div>
+      <div class="contact-page__intro">
         <p class="eyebrow">Kontakt</p>
-        <h1>Ihr Anliegen ist der beste Ausgangspunkt</h1>
+        <h1>Lassen Sie uns über Ihr Anliegen sprechen.</h1>
         <p>
-          Sie müssen noch nicht wissen, welches Coaching-Format passt.
-          Beschreiben Sie kurz die berufliche Situation, die Zielgruppe und
-          den gewünschten nächsten Schritt. Wir melden uns zur gemeinsamen
-          Einordnung zurück.
+          Ein paar Stichpunkte reichen. Wir melden uns zur gemeinsamen
+          Einordnung und empfehlen den passenden nächsten Schritt.
         </p>
-        <div class="login-preview-list" aria-label="Anfrage vorbereiten">
-          {requestSteps.map((step) => <span>{step}</span>)}
+        <div class="contact-points" aria-label="So geht es weiter">
+          <span><Icon name="message-circle" size={22} /> Anliegen schildern</span>
+          <span><Icon name="user-round" size={22} /> Expertise auswählen</span>
+          <span><Icon name="calendar" size={22} /> Rahmen abstimmen</span>
         </div>
-        <a class="button" href={mailto(primaryEmail)}>E-Mail-Anfrage öffnen</a>
+        <a class="contact-email" href={fallbackMailto}>{primaryEmail}</a>
       </div>
 
-      <aside class="contact-options" aria-labelledby="direct-contact-title">
-        <p class="eyebrow">Direkter Kontakt</p>
-        <h2 id="direct-contact-title">Per E-Mail an Competence Hub</h2>
-        <a class="contact-email" href={mailto(primaryEmail)}>{primaryEmail}</a>
-        <p>
-          Der Link öffnet Ihr E-Mail-Programm mit einer kurzen Vorlage. Auf
-          dieser Website werden dabei keine Formulardaten erfasst.
-        </p>
-
-        <div class="contact-checklist">
-          <strong>Hilfreich für eine schnelle Einordnung</strong>
-          <ul>
-            {helpfulDetails.map((detail) => <li>{detail}</li>)}
-          </ul>
+      <form
+        class="contact-form"
+        id="contact-request-form"
+        data-recipient={primaryEmail}
+      >
+        <div class="contact-form__heading contact-form__wide">
+          <p class="eyebrow">Anfrage vorbereiten</p>
+          <h2>Worum geht es?</h2>
         </div>
 
-        {showTestContact && (
-          <div class="contact-test-note">
-            <strong>Lokaler Testkontakt</strong>
-            <p>
-              Diese Adresse ist nur im Entwicklungsmodus sichtbar und wird
-              nicht in den Produktions-Build übernommen.
-            </p>
-            <a href={mailto(testEmail)}>{testEmail}</a>
-          </div>
-        )}
-      </aside>
+        <label>
+          Unternehmen
+          <input name="company" autocomplete="organization" required />
+        </label>
+
+        <label>
+          Ansprechpartner:in
+          <input name="contact" autocomplete="name" required />
+        </label>
+
+        <label class="contact-form__wide">
+          E-Mail-Adresse
+          <input name="email" type="email" autocomplete="email" required />
+        </label>
+
+        <label class="contact-form__wide">
+          Thema
+          <select name="topic" required>
+            <option value="">Bitte auswählen</option>
+            {topics.map((topic) => <option value={topic}>{topic}</option>)}
+          </select>
+        </label>
+
+        <label class="contact-form__wide">
+          Anliegen
+          <textarea
+            name="message"
+            rows="5"
+            placeholder="Situation, Zielgruppe und gewünschter Zeitraum"
+            required
+          ></textarea>
+        </label>
+
+        <button class="button contact-form__wide" type="submit">
+          E-Mail-Anfrage vorbereiten
+        </button>
+        <p class="form-note contact-form__wide">
+          Der Button öffnet Ihr E-Mail-Programm. Die Website speichert keine Formulardaten.
+        </p>
+      </form>
     </section>
   </main>
+
+  <script>
+    const form = document.querySelector<HTMLFormElement>("#contact-request-form");
+
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const recipient = form.dataset.recipient;
+      const topic = String(data.get("topic") || "Coaching-Anfrage");
+      const body = [
+        `Unternehmen: ${data.get("company") || ""}`,
+        `Ansprechpartner:in: ${data.get("contact") || ""}`,
+        `E-Mail: ${data.get("email") || ""}`,
+        `Thema: ${topic}`,
+        "",
+        String(data.get("message") || ""),
+      ].join("\n");
+
+      window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(`Anfrage: ${topic}`)}&body=${encodeURIComponent(body)}`;
+    });
+  </script>
 </BaseLayout>

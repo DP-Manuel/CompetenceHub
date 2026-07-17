@@ -2,6 +2,34 @@
 
 Newest entries first.
 
+## 2026-07-17 | design system / skill | Inspirationsserie in digitale Regeln übersetzt
+
+Die sieben freigegebenen Bilder aus `Quellen/Inspiration` wurden vollständig visuell analysiert und mit dem Corporate Design Manual, dem Designerinnen-Feedback und der ergänzenden Datei `Rückmeldung KI.docx` abgeglichen.
+
+- Designreferenz: `docs/assets/designstyle.md` dokumentiert Evidenzhierarchie, Markenwirkung, Farb- und Kontrastrollen, Typografie, Raster, Komponenten, Bildformate, Website-/App-Übertragung, Interaktion, Nicht-übernehmen-Regeln und Abnahmecheckliste.
+- Kernergebnis: viel Weiß, Pantone als Orientierung und Rahmen, Kaminrot als sparsamer Akzent, dunkelgrauer Inhalt, weiße modulare Karten, reduzierte Outline-Icons und authentische Menschenbilder. Flyer-Dichte, QR-Logik und Mikroschrift werden nicht direkt digitalisiert.
+- KI-Zweitmeinung: Bildformate, positives/negatives Markenprofil, App-Startscreen-Prioritäten und das Vermeiden generischer Handschlag-/KI-Roboter-Motive wurden übernommen. Größere Kartenradien und ein D+P-spezifischer Skillname wurden bewusst nicht als allgemeine Regel übernommen.
+- Wiederverwendung: Der neue generische Skill `derive-design-system` und `references/design-analysis-framework.md` wurden in der kanonischen CodexSkills-Sammlung und der aktiven Runtime installiert; keine Projektbilder, Kontaktdaten oder markenspezifischen Inhalte wurden in den Skill kopiert.
+- Website-Umsetzung: Die Startseite nutzt nun korallfarbene Primäraktionen mit dunkler Beschriftung, icongeführte Vertrauensmerkmale, stabile weiße Themenkarten, vollflächige korallfarbene Angebotsreiter, eine weiße Leitsatzfläche im Pantone-Rahmen, eine durchgehende responsive Prozesslinie und kontraststärkere Links sowie Fokuszustände.
+- Bildentscheidung: Die vorhandenen generierten PNG-Motive wurden geprüft, aber wegen eingebetteter Texte, Flyer-Layout und teils austauschbarer Handschlagmotive nicht in die neue Startseite übernommen. Der vorhandene freigegebene Coach-Bildpfad bleibt bestehen; weitere Bildflächen warten auf Originalassets und Nutzungsfreigaben.
+- Verifikation: Skill-Staging, kanonische und aktive Installation bestehen `quick_validate.py`. Die konkrete Designreferenz wurde gegen alle sieben Bilder geprüft. Die optimierte Startseite wurde bei 1440 und 500 Pixeln gerendert; eine entdeckte Timeline-Kaskade wurde korrigiert. Der finale Astro-Check meldet 0 Fehler, 0 Warnungen und 0 Hinweise, der Build erzeugt 19 Seiten.
+- Status: Designsystem und Startseitenoptimierung sind lokal umgesetzt; kein Commit, kein Push und kein Deployment in diesem Arbeitsschritt.
+
+## 2026-07-17 | stakeholder feedback | Designerinnen-Feedback umgesetzt
+
+Die ausdrücklich freigegebene Word-Datei `Quellen/Feedback 17.07.2026.docx` mit sechs markierten Screenshots und anschließend das gezielt freigegebene `Quellen/Corporate Design Manual Stand 12.03.25.pdf` wurden ausgewertet. Weitere Quelldokumente wurden nicht gelesen.
+
+- Farbwirkung: Primärbuttons und zentrale Markenflächen verwenden Pantone 320. Schwarze Rechteck- und Hintergrundflächen wurden entfernt. Nach der Designkorrektur sind die inneren Themen- und Leistungskarten weiß, Angebotsüberschriften verwenden Kaminrot und Inhaltstexte Dunkelgrau; Gelb wird nicht als Schrift auf Weiß eingesetzt.
+- Layoutkorrektur: Kartenkanten verschmelzen nicht mehr Pantone-auf-Pantone, sondern verwenden auf der türkisen Rahmenfläche durchgehend sichtbares Kaminrot. Der Leistungsbereich übernimmt aus der gelieferten Inspiration einen weiß gerahmten Leitsatz neben dem 2×2-Kartenfeld. Abschnittslabels wie „Der Weg zum Coaching“ stehen nun oberhalb statt seitlich neben der jeweiligen Überschrift.
+- Navigation: Das missverständliche separate Menü „Direkt zu“ wurde entfernt. „Leistungen“ enthält nun die Gesamtübersicht sowie Livecoaching, Businesscoaching, psychologische Beratung/Prävention und Gruppenformate.
+- Sprache: „Was möchten Sie bewegen?“ wurde durch das klarere „Was interessiert Sie?“ ersetzt; weitere Hero- und Leistungstexte wurden gekürzt.
+- Informationsdichte: Die Leistungsseite nutzt vier Icon-geführte Kurzangebote und eine einzige Bedarfsklärungs-CTA statt doppelter Vergleichstexte. Livecoaching, Businesscoaching und Unternehmensseite erhielten zusätzliche visuelle Themenanker.
+- Prozessdarstellung: Die fünf Coaching-Schritte erscheinen als zusammenhängende Prozesslinie statt als vermeintlich klickbare FAQ-Karten.
+- Kontakt: Ein ausfüllbares Anfrageformular bereitet lokal eine strukturierte E-Mail vor. Es speichert und versendet keine Formulardaten über die Website; eine echte serverseitige Übermittlung bleibt vom Hosting-/Backendentscheid abhängig.
+- Offene Designabhängigkeit: Erklärbilder und weitere Bildflächen werden erst mit freigegebenen Originalassets und Nutzungsrechten aus dem Mediendesign ergänzt.
+- Verifikation: regulärer und GitHub-Pages-Review-Build erfolgreich; 22 Astro-Dateien ohne Fehler, Warnungen oder Hinweise geprüft und 19 Seiten erzeugt. Start, Leistungen, Businesscoaching/Prozess und Kontakt wurden bei Desktopbreite geprüft; die Start- und Kontaktseite zusätzlich bei 500 Pixeln.
+- Status: Änderungen sind lokal und noch nicht erneut auf die öffentliche GitHub-Pages-Review ausgerollt.
+
 ## 2026-07-17 | review deployment | GitHub-Pages-Review veröffentlicht
 
 Für die Abstimmung mit Vertrieb und Mediendesign wurde das bestehende private Repository `DP-Manuel/CompetenceHub` als sinnvoller Review-Kanal bestätigt; das alte Firmenschulung-Repository wird nicht reaktiviert.

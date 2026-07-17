@@ -152,6 +152,19 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Implemented Feedback
 
+### 2026-07-17 | design-system-derivation | Translate visual evidence into reusable digital rules
+
+- Triggering project situation: Several rounds of website feedback required repeated comparison of a corporate design manual, seven design references, stakeholder screenshots, print-specific patterns, responsive UI behavior, and accessibility constraints. A second AI supplied an additional analysis and a D+P-specific skill proposal.
+- Current skill gap: `integrate-frontend` and `check-accessibility` cover implementation and verification, but no skill owned the earlier step of analyzing complete visual reference sets, ranking their evidence, separating print from digital patterns, and producing a durable implementation-ready design artifact.
+- Friction or missed opportunity: Individual screenshots could be over-weighted, print density could leak into the interface, brand colors could be assigned inaccessible text roles, and the same visual reasoning had to be reconstructed across feedback rounds.
+- Implemented improvement: Created the generic `derive-design-system` skill with an evidence hierarchy, full-reference analysis workflow, print-to-web and marketing-to-app translation, contrast review, source-rights boundaries, a `designstyle.md` structure, and visual QA gates. Added `references/design-analysis-framework.md` and installed the validated skill in canonical CodexSkills and the active runtime.
+- Project application: Created `docs/assets/designstyle.md` from the approved D+P manual, all seven inspiration images, designer feedback, and the additional KI comparison. Project-specific colors, names, sources, and decisions remain in this repository rather than the reusable skill.
+- Evidence decision: Adopted the additional KI suggestions for brand tone, image formats, authentic imagery, app start-screen priorities, and avoiding generic handshake/AI-robot motifs. Kept the skill generic instead of naming it D+P-specific; did not adopt 12-16 px card radii as a universal rule.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills `derive-design-system`, with implementation handoff to `integrate-frontend` and verification through `check-accessibility`
+- Status: implemented and validated on 2026-07-17; forward-test on a different project remains useful
+
 - 2026-06-22: Integrated safe skill sync planning, selective sync, and active-skill backups from CodexSkills commit `6acdc18`; added a local path-resolution fix so downstream validation works independently of the caller's working directory.
 - 2026-06-16: Integrated stakeholder-language, proactive requirements intake, GitHub Pages deployment checks, Windows/frontend toolchain notes, next-step handoff options, and multi-artifact web scaffold guidance into CodexSkills.
 

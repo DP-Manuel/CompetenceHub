@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-07-16
+Last updated: 2026-07-17
 
 ## Vision
 
@@ -53,6 +53,7 @@ Out of scope:
 
 - Now: complete the professional, mobile-first Competence Hub website MVP by 2026-07-23.
 - Now: validate the new topic-based navigation and role-oriented login preview with Manuel; no real authentication belongs in the public website slice.
+- Now: use `docs/assets/designstyle.md` as the shared visual acceptance basis for website corrections and later portal/app work.
 - Next: approve and publish the new coach content only after wording, current availability, image rights, and publication consent are confirmed.
 - In parallel: perform a read-only inventory of the blank server after its purpose and secure access method are confirmed; then select the backend runtime and migration tool.
 - Later: implement the independent web system with login, backend API, own database, roles, and first CRUD workflows.
@@ -103,7 +104,7 @@ Prepared on: 2026-07-16
 Resume here:
 
 1. Read `AGENTS.md`, `PROJECT_LOG.md`, and this `PROJECT_PLAN.md`.
-2. Review `PROJECT_STATUS.md`, `SKILL_FEEDBACK_LOG.md`, and `docs/requirements/requirements-engineering-update-2026-07-16.md`.
+2. Review `PROJECT_STATUS.md`, `SKILL_FEEDBACK_LOG.md`, `docs/assets/designstyle.md`, and `docs/requirements/requirements-engineering-update-2026-07-16.md`.
 3. Review `apps/website/src/pages/index.astro`, `apps/website/src/pages/login.astro`, `apps/website/src/pages/kontakt.astro`, and `apps/website/src/pages/coaches.astro` for the current B2B direction, role paths, contact flow, and coach-network state.
 4. Check `git status --short`; `.tmp/` must remain untracked and untouched.
 5. Start the local Astro website and review the current routes; no public deployment is active or approved.
