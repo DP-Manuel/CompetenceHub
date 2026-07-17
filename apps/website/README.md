@@ -52,4 +52,18 @@ http://127.0.0.1:4321/
 
 ## Deployment
 
-There is currently no automatic GitHub Pages deployment workflow. Deployment is intentionally manual/freigabepflichtig and must be planned separately before live publication.
+The repository contains a manual GitHub Pages review workflow at
+`.github/workflows/pages-review.yml`. It has no `push` trigger and cannot
+publish automatically. The review build uses `/CompetenceHub` as its base path,
+adds a visible draft banner, and sets `noindex, nofollow, noarchive`.
+
+Before a manual run:
+
+1. Confirm that every named coach has approved publication of the current draft.
+2. Commit and push the reviewed website state without `.env`, `.tmp`, or private source material.
+3. In GitHub repository settings, select GitHub Actions as the Pages source.
+4. Run `Publish GitHub Pages review` manually from the Actions tab.
+
+GitHub Pages is not an access-controlled review environment. `noindex` reduces
+search-engine discovery but does not make the URL private. Production deployment
+to the final domain remains a separate approval and release step.

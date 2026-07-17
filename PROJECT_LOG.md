@@ -2,6 +2,71 @@
 
 Newest entries first.
 
+## 2026-07-17 | deployment preparation | Manuelle GitHub-Pages-Review vorbereitet
+
+Für die Abstimmung mit Vertrieb und Mediendesign wurde das bestehende private Repository `DP-Manuel/CompetenceHub` als sinnvoller Review-Kanal bestätigt; das alte Firmenschulung-Repository wird nicht reaktiviert.
+
+- Workflow: `.github/workflows/pages-review.yml` nutzt die offiziellen Astro-/GitHub-Pages-Actions und kann ausschließlich manuell über `workflow_dispatch` gestartet werden; Pushes veröffentlichen nichts automatisch.
+- Review-Schutz: Der Pages-Build verwendet `/CompetenceHub`, zeigt einen sichtbaren Entwurfsstatus und setzt `noindex, nofollow, noarchive`. Dies ist keine Zugriffskontrolle; die veröffentlichte URL wäre weiterhin erreichbar.
+- Freigabeblocker: Die Entwürfe für Elisabeth Schwabauer und Carolin Hupp dürfen erst nach Publikationsfreigabe öffentlich bereitgestellt werden.
+- Verifikation: Review-Build mit GitHub-Pages-Basis erfolgreich; 22 Astro-Dateien ohne Fehler, Warnungen oder Hinweise geprüft und 19 statische Seiten erzeugt. Basis-Links, Review-Banner und Robots-Meta wurden im Build kontrolliert.
+- Status: GitHub Pages ist im Repository noch nicht aktiviert; kein Commit, Push, Workflow-Lauf oder Deployment wurde durchgeführt.
+- Infrastruktur: Die technischen Rückfragen zu SFTP, Hosting-Runtime, MySQL-Zugriff, TLS, Staging, Backups und Domain wurden an Herrn Roß gesendet; Antwort steht aus.
+
+## 2026-07-16 | design/implementation | Textverdichtung, Direkteinstieg und Login-Rollenwege
+
+Die B2B-Website wurde anhand aktueller Business-Website-Muster und der Navigationslogik der Haufe Akademie sichtbarer, kompakter und interaktiver gestaltet.
+
+- Inspiration: Notarize, Traackr, Nespresso, Byredo, Skullcandy und Haufe Akademie wurden auf Einstiegslogik, Menüs, Themenfinder, Rollenwege und Textdichte geprüft; übernommen wurden nur robuste Muster, keine fremden Designs.
+- Navigation: Der Desktop-Header bietet nun einen aufklappbaren Direkteinstieg nach Führung, Teams, Gesundheit und Coach-Suche sowie einen sichtbaren Login-Weg; mobil bleiben Kontakt und Login im nativen Menü erreichbar.
+- Startseite: Der Hero wurde verdichtet, ein symbolgestützter Themenfinder ergänzt und die sechs Anlässe als zugängliche Aufklapper umgesetzt. Leistungsdetails und FAQs sind progressiv aufklappbar, damit Fachinhalte und SEO-Struktur erhalten bleiben, ohne die Seite visuell zu überladen.
+- Login: `/login` zeigt die geplanten Rollenwege für internes Team, Coaches und Unternehmen. Die statischen Unterseiten `/login/intern`, `/login/coaches` und `/login/unternehmen` beschreiben nur den späteren Funktionsrahmen; es gibt keine Eingabemaske, Accounts, Sessions oder Datenbankzugriffe.
+- Technik: lokale Icon-Komponente ohne neue Abhängigkeit; native `details`/`summary`-Interaktionen, sichtbare Fokusführung und reduzierte Bewegung bleiben berücksichtigt.
+- Verifikation: finaler `npm run build` erfolgreich; Astro prüfte 22 Dateien mit 0 Fehlern, 0 Warnungen und 0 Hinweisen und erzeugte 19 statische Seiten. Start- und Loginseite wurden bei 1440 und 500 Pixeln ohne Überlappungen oder abgeschnittene Inhalte geprüft.
+- Sicherheit: kein Backend, keine Secrets, keine echte Authentifizierung, kein Deployment, kein Commit und kein Push.
+
+## 2026-07-16 | requirements/implementation/architecture | Vermittlungsprofil, Coaches und Datenbankvorbereitung
+
+Die neue Requirements-Engineering-Quelle und die gezielt freigegebenen Coach-Unterlagen wurden ausgewertet und in sichtbare Website- sowie technische Vorbereitung überführt.
+
+- Positionierung: Competence Hub wird nun korrekt als kuratierende Vermittlung zwischen Unternehmen und ausgewählten Coaches beschrieben; Qualität und Passung stehen vor Kataloggröße.
+- Angebot: psychologische Beratung im beruflichen Kontext, Supervision, Workshops, Vorträge, Gesundheitsförderung und Prävention wurden vorsichtig in die Leistungslogik aufgenommen; Therapie- und Medizingrenzen bleiben sichtbar.
+- Coach-Netzwerk: Elisabeth Schwabauer und Carolin Hupp wurden neben Christian Galvano als lokale Profilentwürfe ergänzt. Private Kontaktdaten wurden nicht übernommen; für beide neuen Profile fehlen noch Portrait und finale Publikationsfreigabe.
+- Preisangaben: 850/680 EUR für Workshops und 200 EUR für Vorträge wurden nur als offene Anforderung dokumentiert, weil Preisbasis, Inklusivleistungen, Umsatzsteuer und Rabattlogik noch widersprüchlich beziehungsweise unbestätigt sind.
+- Interaktive Inhalte: Leadership-, Stress- und KI-Selbstchecks sind als spätere Kandidaten dokumentiert, aber wegen Inhalts-, Datenschutz-, Ergebnis- und Accessibility-Fragen nicht in den Deadline-MVP gezogen.
+- Datenbank: `apps/webapp/.env.example` als commit-fähige Vorlage und eine leere, Git-ignorierte `apps/webapp/.env` für Manuel erstellt; keine Secrets eingetragen. SSH-Passwörter sind ausdrücklich ausgeschlossen.
+- Architektur: Server-Inventur, Datenbank-Bootstrap und ein initiales Modell für User, Firmen, Kontakte, Coaches, Leistungen, Anfragen, Einsätze, Feedback und Audit-Events dokumentiert.
+- Verifikation: finaler `npm run build` erfolgreich; Astro prüfte 20 Dateien mit 0 Fehlern, 0 Warnungen und 0 Hinweisen und erzeugte 16 statische Seiten. Startseite, Coach-Übersicht sowie beide neuen Profile wurden in Desktop- und Mobilbreite gerendert; ein dabei entdeckter Startseiten-CTA-Kontrastfehler wurde behoben.
+- Sicherheit: Das Zugangsdaten-Dokument wurde nicht geöffnet. Kein Serverzugriff, keine Installation, keine Migration, kein Deployment, kein Commit und kein Push.
+- Nächster Schritt: Manuel-Freigabe für Profile/Positionierung und Bestätigung, ob der neue Server Staging oder Produktion ist.
+
+## 2026-07-13 | implementation/verification | B2B conversion refresh and direct E-Mail contact
+
+Implemented the first B2B-focused visual and content refresh after the website review.
+
+- Homepage: replaced public MVP, roadmap, booking, login, database, and app language with the positioning "Coaching dort, wo Arbeit passiert", business use cases, format guidance, a three-step inquiry path, Donner + Partner trust signals, and the first real coach spotlight.
+- Navigation: reduced the main navigation to Start, Leistungen, Für Unternehmen, Coaches, and Kontakt; added active-page states and a native keyboard-accessible mobile details menu.
+- Contact: removed the non-functional demo form and added a usable `mailto:` inquiry path to `competencehub@donner-partner.de` with a prepared message structure.
+- Test contact: `roedel.kg@donner-partner.eu` is visible only under the Astro development server through `import.meta.env.DEV`; verification confirmed that it is absent from the production build.
+- Coach network: retained Christian Galvano as the only published real profile and added transparent network-growth wording. Manuel expects data for approximately five initial coaches during the week; no placeholder identities or unapproved details were invented.
+- Visual/accessibility: strengthened the editorial hero, reduced repeated card treatment, added responsive content bands, improved mobile header density, preserved visible focus, used native controls, and added reduced-motion handling.
+- SEO/content: added Open Graph title/description metadata and replaced ASCII `fuer/Fuehrungskraefte` wording in the main page descriptions with correct German text.
+- Verification: final `npm run build` passed outside the sandbox with 0 Astro errors, 0 warnings, and 0 hints; all 14 static pages built. Desktop and 500 px homepage/contact renders were inspected without clipping or overlap.
+- Local review: Astro development preview is available at `http://127.0.0.1:4321/` for Manuel's review.
+- Safety: no backend, deployment, provider, secret, restricted-source access, commit, or push. `.tmp/` remains untouched and untracked.
+- Next recommended task: review the local direction, then integrate approved coach data and complete legal/contact/SEO launch QA before 2026-07-23.
+
+## 2026-07-13 | review/implementation | B2B website review and central legal links
+
+Reviewed the rendered Competence Hub website at desktop and narrow viewports for visual distinctiveness, B2B trust, conversion, responsive behavior, and accessibility.
+
+- Legal navigation: linked footer entries for Impressum, Datenschutz, and AGB directly to the public Donner + Partner parent-site pages supplied by Manuel.
+- Legal placeholders: updated the local `/impressum` and `/datenschutz` pages with clear links to the central texts and retained the project-specific pre-live checks for the responsible group company, hosting, logs, contact processing, cookies, tracking, and external services.
+- Review finding: the current visual system is technically clean and recognizable, but the homepage still exposes internal MVP/roadmap language and lacks strong business proof, real people, concrete use cases, and a working inquiry route.
+- Verification: `npm run build` passed outside the sandbox with 0 Astro errors, 0 warnings, and 0 hints; all 14 static pages built successfully.
+- Residual legal risk: the parent privacy page describes services such as analytics, consent management, external fonts, maps, and an active contact form that are not automatically identical to the Competence Hub implementation. Applicability of Datenschutz and AGB must be confirmed before launch; this is not legal advice.
+- Next recommended task: refocus the homepage on business outcomes and trust, remove public MVP/system roadmap language, and provide a real approved contact path.
+
 ## 2026-07-09 | deployment cleanup | Disable GitHub Pages autodeploy
 
 Checked and disabled the old GitHub Pages deployment path for the current Competence Hub MVP.

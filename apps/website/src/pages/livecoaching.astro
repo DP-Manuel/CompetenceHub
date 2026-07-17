@@ -29,7 +29,7 @@ const useCases = [
 const steps = [
   "Anlass und Ziel kurz beschreiben",
   "Situation, Beteiligte und Rahmen klären",
-  "passende Coaching-Form und Umfang abstimmen",
+  "passenden Coach und Umfang abstimmen",
   "Coaching durchführen und nächste Schritte festhalten",
   "bei Bedarf Folgeformat oder Businesscoaching anschließen",
 ];
@@ -44,7 +44,7 @@ const benefits = [
 
 <BaseLayout
   title="Livecoaching | Competence Hub"
-  description="Livecoaching von Competence Hub begleitet Unternehmen, Fuehrungskraefte und Teams in konkreten beruflichen Situationen."
+  description="Competence Hub vermittelt Livecoaching für Unternehmen, Führungskräfte und Teams in konkreten beruflichen Situationen."
 >
   <main class="subpage">
     <section class="page-hero">
@@ -54,11 +54,12 @@ const benefits = [
         Livecoaching bedeutet im Competence-Hub-Kontext: Ein berufliches
         Anliegen wird nicht abstrakt behandelt, sondern nah an der konkreten
         Situation, den beteiligten Rollen und dem nächsten machbaren Schritt.
+        Wir vermitteln dafür eine fachlich passende Person aus dem Netzwerk.
       </p>
       <a class="button" href={url("kontakt")}>Livecoaching anfragen</a>
     </section>
 
-    <section class="feature-grid" aria-label="Einsatzfelder im Livecoaching">
+    <section class="feature-grid" id="teams" aria-label="Einsatzfelder im Livecoaching">
       {useCases.map((useCase) => (
         <article class="feature-card">
           <h2>{useCase.title}</h2>

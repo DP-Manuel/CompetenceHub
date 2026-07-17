@@ -1,0 +1,39 @@
+name: Publish GitHub Pages review
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-review
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Build and upload Astro website
+        uses: withastro/action@v6
+        with:
+          path: ./apps/website
+        env:
+          GITHUB_PAGES_REVIEW: "true"
+          PUBLIC_REVIEW_MODE: "true"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy review website
+        id: deployment
+        uses: actions/deploy-pages@v5

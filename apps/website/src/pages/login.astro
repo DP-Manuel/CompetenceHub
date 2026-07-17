@@ -1,44 +1,82 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
-const futureItems = [
-  "geschützte Buchungs- und Verwaltungsbereiche",
-  "Coach-Kalender und Auftragsübersicht",
-  "Anfragen, Angebote und Vertragsprozesse",
-  "mobile Nutzung für spätere operative Abläufe",
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const areas = [
+  {
+    title: "Interner Bereich",
+    audience: "Für das Competence-Hub-Team",
+    text: "Coaches, Anfragen und Angebote zentral verwalten.",
+    status: "Erste Backend-Priorität",
+    href: "login/intern",
+    icon: "shield-check" as const,
+  },
+  {
+    title: "Coach-Bereich",
+    audience: "Für Coaches im Netzwerk",
+    text: "Profil, Aufträge und Termine später an einem Ort.",
+    status: "Geplante Ausbaustufe",
+    href: "login/coaches",
+    icon: "user-round" as const,
+  },
+  {
+    title: "Unternehmensbereich",
+    audience: "Für Firmenkunden",
+    text: "Feedback, Aufträge und Verlauf strukturiert bündeln.",
+    status: "Geplante Ausbaustufe",
+    href: "login/unternehmen",
+    icon: "building" as const,
+  },
 ];
 ---
 
 <BaseLayout
-  title="Login | Competence Hub"
-  description="Der Login ist eine spaetere Ausbaustufe. Der aktuelle Competence-Hub-MVP enthaelt keine produktiven Accounts."
+  title="Login-Bereiche | Competence Hub"
+  description="Übersicht der geplanten geschützten Bereiche für das Competence-Hub-Team, Coaches und Unternehmen. Noch ohne produktive Anmeldung."
   bodyClass="login-page"
 >
   <main class="login-shell">
-    <section class="login-panel">
-      <div class="login-copy">
-        <p class="eyebrow">Nicht produktiv</p>
-        <h1>Ein echter Login ist noch nicht Teil des Website-MVP</h1>
-        <p>
-          Competence Hub startet mit einer statischen Website für Angebote,
-          Unternehmen, Coach-Netzwerk und Kontakt. Geschützte Bereiche,
-          Accounts, Datenbank und Buchungsfunktionen werden erst später
-          fachlich und technisch geplant.
-        </p>
-        <div class="login-preview-list">
-          {futureItems.map((item) => <span>{item}</span>)}
-        </div>
+    <section class="login-intro" aria-labelledby="login-title">
+      <div>
+        <p class="eyebrow">Zugänge im Aufbau</p>
+        <h1 id="login-title">Ein Zugang. Klare Bereiche.</h1>
       </div>
+      <p>
+        Der künftige Login führt Team, Coaches und Unternehmen direkt zu den
+        Funktionen, die sie brauchen. Aktuell sind noch keine Accounts aktiv.
+      </p>
+    </section>
 
-      <aside class="login-card" aria-label="Status des Login-Bereichs">
-        <span class="demo-badge">Ausbaustufe</span>
-        <h2>Kein Login aktiv</h2>
+    <section class="portal-grid" aria-label="Geplante Login-Bereiche">
+      {areas.map((area) => (
+        <a class="portal-card" href={url(area.href)}>
+          <span class="portal-card__icon"><Icon name={area.icon} size={32} /></span>
+          <span class="portal-card__status">{area.status}</span>
+          <span class="portal-card__body">
+            <small>{area.audience}</small>
+            <strong>{area.title}</strong>
+            <span>{area.text}</span>
+          </span>
+          <span class="portal-card__link">Bereich ansehen <Icon name="arrow-right" size={18} /></span>
+        </a>
+      ))}
+    </section>
+
+    <section class="login-safety-note">
+      <Icon name="shield-check" size={26} />
+      <div>
+        <h2>Noch keine Anmeldung</h2>
         <p>
-          Es gibt hier keine produktive Anmeldung, keine Testzugänge, keine
-          Datenbank und keine personenbezogene Datenerfassung.
+          Die Seiten zeigen nur die geplante Struktur. Sichere Authentifizierung,
+          Rollen und Datenbankzugriffe werden als eigener Backend-Schritt umgesetzt.
         </p>
-      </aside>
+      </div>
     </section>
   </main>
 </BaseLayout>

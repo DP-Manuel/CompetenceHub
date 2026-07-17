@@ -18,7 +18,7 @@ const principles = [
   },
   {
     title: "Klare Angebotslogik",
-    text: "Coach-Profile sollen später verständlich zeigen, welche Themen, Formate und Zielgruppen sinnvoll zusammengehören.",
+    text: "Jedes veröffentlichte Profil zeigt verständlich, welche Themen, Formate und Zielgruppen sinnvoll zusammengehören.",
   },
 ];
 
@@ -33,27 +33,53 @@ const coaches = [
     ],
     text: "Christian Galvano verbindet neurowissenschaftliche Grundlagen mit praxisnahen Methoden für Führung, Kommunikation und gesundes Arbeiten.",
     profilePath: "coaches/christian-galvano",
+    image: "images/coaches/christian-galvano.webp",
+    initials: "CG",
+  },
+  {
+    name: "Elisabeth Schwabauer",
+    role: "Psychologin (M.Sc.)",
+    focus: [
+      "Psychologische Beratung",
+      "Psychische Belastung",
+      "Team- und Konfliktklärung",
+    ],
+    text: "Elisabeth Schwabauer verbindet psychologische Fachkenntnis mit Erfahrung in beruflicher Beratung, Teamprozessen und der Einordnung psychischer Belastungen.",
+    profilePath: "coaches/elisabeth-schwabauer",
+    initials: "ES",
+  },
+  {
+    name: "Carolin Hupp",
+    role: "Diplom-Sportwissenschaftlerin",
+    focus: [
+      "Betriebliche Gesundheit",
+      "Bewegung und Prävention",
+      "Entspannung und Balance",
+    ],
+    text: "Carolin Hupp bringt Gesundheits- und Trainingsmanagement, Bewegungsförderung und alltagstaugliche Prävention in Unternehmen und Gruppen zusammen.",
+    profilePath: "coaches/carolin-hupp",
+    initials: "CH",
   },
 ];
 ---
 
 <BaseLayout
   title="Coach-Netzwerk | Competence Hub"
-  description="Das Coach-Netzwerk von Competence Hub verbindet Unternehmen mit passenden Coaches und Expertinnen fuer Livecoaching und Businesscoaching."
+  description="Competence Hub vermittelt ausgewählte Coaches für Führung, Psychologie, Teamarbeit, Gesundheit und berufliche Entwicklung."
 >
   <main class="subpage">
     <section class="page-hero page-hero--accent coach-list-hero">
       <div>
         <p class="eyebrow">Coach-Netzwerk</p>
-        <h1>Passende Coaches und Expertinnen für Unternehmen finden</h1>
+        <h1>Ausgewählte Coaches statt endlosem Katalog</h1>
         <p>
-          Competence Hub arbeitet mit Coaches und Expertinnen zusammen, deren
-          Erfahrung, Schwerpunkt und Arbeitsweise zum Anliegen des Unternehmens
-          passen.
+          Bei Competence Hub stehen die Coaches und ihre Leistungen im
+          Mittelpunkt. Wir verbinden Unternehmen mit Menschen, deren Erfahrung,
+          Schwerpunkt und Arbeitsweise zum konkreten Anliegen passen.
         </p>
         <div class="actions">
-          <a class="button" href={url("kontakt")}>Als Coach Kontakt aufnehmen</a>
-          <a class="button button--ghost" href={url("kontakt")}>Unternehmensanfrage stellen</a>
+          <a class="button" href={url("kontakt")}>Unternehmensbedarf besprechen</a>
+          <a class="button button--ghost" href={url("kontakt")}>Als Coach vorstellen</a>
         </div>
       </div>
       <aside class="coach-list-hero__note" aria-label="Netzwerkanspruch">
@@ -75,16 +101,20 @@ const coaches = [
       {coaches.map((coach) => (
         <article class="coach-card coach-card--featured">
           <div class="coach-card__media">
-            <img
-              src={url("images/coaches/christian-galvano.webp")}
-              alt="Porträt von Christian Galvano"
-              width="830"
-              height="830"
-              loading="lazy"
-            />
+            {coach.image ? (
+              <img
+                src={url(coach.image)}
+                alt={`Porträt von ${coach.name}`}
+                width="830"
+                height="830"
+                loading="lazy"
+              />
+            ) : (
+              <span class="coach-card__monogram" aria-hidden="true">{coach.initials}</span>
+            )}
           </div>
           <div>
-            <p class="eyebrow">Vorhandenes Profil</p>
+            <p class="eyebrow">Coach-Profil</p>
             <h2>{coach.name}</h2>
             <strong>{coach.role}</strong>
             <ul class="tag-list" aria-label="Themenschwerpunkte">
@@ -99,12 +129,22 @@ const coaches = [
       ))}
     </section>
 
+    <section class="network-growth-note" aria-labelledby="network-growth-title">
+      <p class="eyebrow">Netzwerk im Aufbau</p>
+      <h2 id="network-growth-title">Das Netzwerk wächst bewusst</h2>
+      <p>
+        Weitere Profile werden ergänzt, sobald Schwerpunkte, Qualifikationen,
+        Texte und Bildfreigaben abgestimmt sind. Qualität und Passung bleiben
+        wichtiger als die reine Anzahl.
+      </p>
+    </section>
+
     <section class="cta-panel">
       <div>
         <p class="eyebrow">Kontakt</p>
         <h2>Coach-Profil oder Unternehmensbedarf besprechen</h2>
       </div>
-      <a class="button" href={url("kontakt")}>Kontakt aufnehmen</a>
+      <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
     </section>
   </main>
 </BaseLayout>

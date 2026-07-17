@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-06-30
+Last updated: 2026-07-16
 
 ## Vision
 
@@ -9,16 +9,17 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 ## Current State
 
 - Workflow model: informal multi-day work
-- Current phase, sprint, milestone, board status, or release: kickoff-ready stakeholder prototype
-- Current status: green
-- Main blocker: public offer name, exact subdomain, legal wording, final visual review, and future app/backend/database architecture are not finalized
-- Next decision needed: how to frame the pre-built prototype as a positive surprise for the official 2026-07-01 project start
+- Current phase, sprint, milestone, board status, or release: Competence Hub website deadline sprint
+- Current status: yellow
+- Main blocker: final coach/publication approval, legal applicability, pricing semantics, and the approved live contact/response process are not finalized
+- Next decision needed: approve the compact visual direction, curated intermediary positioning, and the Elisabeth Schwabauer / Carolin Hupp profile drafts
 
 ## Scope
 
 In scope:
 
 - Public website as the first deliverable.
+- B2B-first Competence Hub presentation for Livecoaching and Businesscoaching.
 - B2B-first communication for company seminars, personnel needs discovery, qualification, and placement.
 - Surprise website prototype for 2026-07-01, because leadership does not yet know that the website is being prepared and the actual project start is 2026-07-01.
 - Handover-ready website operation so another Informatiker can understand, maintain, build, and deploy the website if Manuel is no longer the active technical owner.
@@ -50,16 +51,18 @@ Out of scope:
 
 ## Roadmap Or Work Plan
 
-- Now: present the polished Variant B prototype and first real coach profile at the official 2026-07-01 project kickoff.
-- Next: use stakeholder feedback to align positioning, sub-brand, website scope, and future app direction without implying prior leadership approval.
-- Later: design the independent web system with login, backend API, own database, roles, and first CRUD workflows.
+- Now: complete the professional, mobile-first Competence Hub website MVP by 2026-07-23.
+- Now: validate the new topic-based navigation and role-oriented login preview with Manuel; no real authentication belongs in the public website slice.
+- Next: approve and publish the new coach content only after wording, current availability, image rights, and publication consent are confirmed.
+- In parallel: perform a read-only inventory of the blank server after its purpose and secure access method are confirmed; then select the backend runtime and migration tool.
+- Later: implement the independent web system with login, backend API, own database, roles, and first CRUD workflows.
 - Before live handover: decide whether content maintenance stays developer-led in Astro, uses Astro plus CMS/API, moves to WordPress, or is fed by the later webapp.
 - Before real-site visual production: remind Manuel to request the original seminar illustrations and approved logo exports from the media designer; do not extract production assets from the PDF.
 - Future: evaluate document package automation, email sending, structured or AI-assisted matching, commute-time calculation, company feedback links, coach/lecturer workflows, company portal views, participant app, and Hermes Agent automation as separate implementation slices.
 
 ## Timeline And Budget Signals
 
-- Target date or milestone: stakeholder presentation on 2026-07-01
+- Target date or milestone: website MVP complete by 2026-07-23; first offers planned from August 2026
 - Budget or effort assumption: unknown
 - Confidence: medium for setup; low for delivery estimates until scope is known
 - Risks to time or budget: unclear content, unclear brand direction, late stack or deployment decisions, legal/privacy requirements discovered late
@@ -84,35 +87,31 @@ Out of scope:
 
 ## Immediate Next Steps
 
-1. Review the deployed prototype and Christian Galvano's polished live coach profile at the 2026-07-01 meeting display size.
-2. Decide whether the separate "Für Unternehmen" page remains or becomes part of homepage/qualification.
-3. Confirm Christian Galvano's profile wording and collect stakeholder feedback; the portrait supplied by Manuel is already integrated.
-4. Before live operation, make and document the future Redaktionsmodell decision: Astro developer-maintained, Astro plus CMS/API, WordPress/other CMS, or later webapp-fed content.
-5. Prepare a stakeholder reveal path for 2026-07-01: what to show first, how to frame the pre-work, what to say about scope, and what decisions to request.
-6. Keep future app/data model work separate from the website prototype unless a stakeholder decision requires a short visual preview.
-7. Collect missing decisions for login/system roles, soft skills, references, exact subdomain, legal/privacy wording, public offer name, Redaktionsworkflow, and long-term technical owner.
-8. When prototype work becomes real-site production, ask the media designer for the original seminar illustrations and approved logo files before replacing the temporary visual treatment.
+1. Review the refreshed homepage, topic-based quick navigation, expandable content, and login role paths locally.
+2. Review Elisabeth Schwabauer and Carolin Hupp profile wording; obtain portrait and publication approval or keep the profiles local.
+3. Confirm whether psychological consultation and supervision are approved public offers and clarify all price units/inclusions.
+4. Confirm which Donner + Partner group company legally operates Competence Hub and approve Impressum, Datenschutz, and AGB applicability for the final domain.
+5. Confirm the operational owner and expected response process for `competencehub@donner-partner.de`.
+6. Complete final browser, accessibility, SEO, and content QA before 2026-07-23.
+7. Confirm whether the blank server is staging or production before the first read-only SSH inventory.
+8. After server/runtime confirmation, scope secure authentication for the internal role first; coach and company access follow as separate backend slices.
 
 ## Restart Note
 
-Prepared on: 2026-06-30
+Prepared on: 2026-07-16
 
 Resume here:
 
 1. Read `AGENTS.md`, `PROJECT_LOG.md`, and this `PROJECT_PLAN.md`.
-2. Review `PROJECT_STATUS.md`, `SKILL_FEEDBACK_LOG.md`, and `docs/requirements/content-briefing-colleague-prototype.md`.
-3. Review `docs/requirements/website-maintenance-handover-and-editor-workflows.md` and `apps/website/src/pages/coaches/christian-galvano.astro` for handover, editor workflow, and the first real coach profile.
-4. Check `git status --short`; expect public website code to be clean/pushed and internal project memory/docs to remain local/untracked unless Manuel asks to commit them.
-5. Open the public prototype at `https://dp-manuel.github.io/Firmenschulung/` and verify the navigation path.
-6. Continue from: live visual review of the updated German prototype and Christian Galvano profile, photo/content approval, and stakeholder demo preparation for 2026-07-01.
+2. Review `PROJECT_STATUS.md`, `SKILL_FEEDBACK_LOG.md`, and `docs/requirements/requirements-engineering-update-2026-07-16.md`.
+3. Review `apps/website/src/pages/index.astro`, `apps/website/src/pages/login.astro`, `apps/website/src/pages/kontakt.astro`, and `apps/website/src/pages/coaches.astro` for the current B2B direction, role paths, contact flow, and coach-network state.
+4. Check `git status --short`; `.tmp/` must remain untracked and untouched.
+5. Start the local Astro website and review the current routes; no public deployment is active or approved.
+6. Continue from: Manuel's visual approval, coach/publication approval, legal/domain confirmation, and the read-only server inventory decision before 2026-07-23.
 
 ## Open Questions
 
-- What is the public offer or product name?
-- How should Manuel frame that the website prototype was prepared before leadership knew about the website work?
 - How should the sub-brand be named and endorsed under Donner + Partner?
-- What should the website make visitors do?
-- Which pages or sections are required for the first version?
 - Is there approved imagery, legal text, or final deployment configuration?
 - Which parts of the old Sophisto-like administration workflow should the new app mirror first?
 - Which roles are needed first: admin, internal staff, coach, company contact, participant, or others?
@@ -124,10 +123,12 @@ Resume here:
 - Which routing API would be acceptable for commute-time calculations?
 - Should the first app slice after the website focus on seminar offers/company contracts or on the high-pain participant booking/document package workflow?
 - Which documents belong in the participant/company document package and in what merge order?
-- Should the separate "Für Unternehmen" page remain in the prototype, or should its content be merged into homepage and qualification?
 - Which soft skills should be captured for later matching?
 - Which references, examples, numbers, or quotes may be named publicly?
 - Which content maintenance model should support the non-technical colleague: developer-led Astro edits, Astro plus CMS/API, WordPress, or later webapp-fed content?
+- Are the workshop prices 850/680 EUR per person or per event, and do they include VAT, room, and catering?
+- Is the 200 EUR talk price per participant, and is the minimum group size of 25 binding?
+- Is the blank server intended as development/staging or as the eventual production environment?
 - Who will be long-term technical owner for GitHub, hosting, deployment, domains/subdomains, and dependency updates?
 - Which access handover documentation is required before Manuel can safely transfer technical ownership?
 - May the media designer's original seminar illustrations and logo exports be reused on the public website, and in which file formats will they be supplied?
@@ -153,3 +154,11 @@ Resume here:
 - 2026-06-22: Use the media designer's onepager as the prototype reference for the seminar page; request original approved illustrations and logo exports when work moves to the real public website.
 - 2026-06-30: Use Christian Galvano as the first real coach profile, based on the supplied seminar flyers and his public CHANGES Galvano profile; publish no flyer-derived portrait until an approved standalone image is available.
 - 2026-06-30: Use the standalone Christian Galvano portrait supplied by Manuel on the coach listing and detail page; do not derive the portrait from the composed seminar flyers.
+- 2026-07-13: Use `competencehub@donner-partner.de` as the public Competence Hub contact address.
+- 2026-07-13: Expose `roedel.kg@donner-partner.eu` only as a local development test contact; do not include it in production builds.
+- 2026-07-13: Expect data for approximately five initial coaches from the colleague during the week; publish no placeholder identities or unapproved profile details.
+- 2026-07-13: Keep the separate "Für Unternehmen" route and use a reduced B2B navigation with Start, Leistungen, Für Unternehmen, Coaches, and Kontakt.
+- 2026-07-16: Position Competence Hub as a curated intermediary between companies and coaches; coach quality and fit are the central public differentiators.
+- 2026-07-16: Prepare Elisabeth Schwabauer and Carolin Hupp as local coach profiles without private contact data or invented portraits; require final publication approval.
+- 2026-07-16: Keep ambiguous price input and interactive quizzes out of the public deadline MVP until commercial, content, privacy, and accessibility questions are resolved.
+- 2026-07-16: Prepare MySQL/MariaDB-oriented placeholders and a data-model brief, but perform no server/database change before a read-only inventory and explicit approval.

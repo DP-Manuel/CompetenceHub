@@ -1,0 +1,121 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const topics = [
+  {
+    title: "Betriebliche Gesundheitsförderung",
+    text: "Bewegung, Körperwahrnehmung und gesundheitsorientiertes Verhalten als praktische Bausteine für den Arbeitsalltag.",
+  },
+  {
+    title: "Bewegung und Prävention",
+    text: "Rückengesundheit, funktionelles Training und alltagstaugliche Bewegung passend zu Zielgruppe und Leistungsstand.",
+  },
+  {
+    title: "Entspannung und Balance",
+    text: "Methoden wie progressive Muskelentspannung und autogenes Training zur Förderung von Regeneration und Selbstwahrnehmung.",
+  },
+];
+---
+
+<BaseLayout
+  title="Carolin Hupp | Coaches | Competence Hub"
+  description="Carolin Hupp ist Diplom-Sportwissenschaftlerin mit Schwerpunkten in Gesundheitsförderung, Bewegung, Prävention und Entspannung."
+>
+  <main class="subpage">
+    <section class="coach-profile-hero">
+      <div>
+        <p class="eyebrow">Gesundheit & Prävention</p>
+        <h1>Carolin Hupp</h1>
+        <p class="coach-profile-lead">
+          Diplom-Sportwissenschaftlerin im Gesundheits- und Trainingsmanagement
+          mit langjähriger Erfahrung in Bewegungsförderung, Prävention und
+          gesundheitsorientiertem Training.
+        </p>
+        <p>
+          Ihre Arbeit verbindet fachliche Grundlagen mit Formaten, die sich
+          verständlich und praxisnah in den Alltag von Gruppen und Unternehmen
+          übertragen lassen.
+        </p>
+        <div class="coach-profile-actions">
+          <a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a>
+          <a
+            class="button button--ghost"
+            href="https://fit4lifebalance.de/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Eigene Website besuchen
+          </a>
+        </div>
+      </div>
+      <aside class="coach-profile-placeholder" aria-label="Profil von Carolin Hupp">
+        <span aria-hidden="true">CH</span>
+        <div>
+          <strong>Carolin Hupp</strong>
+          <small>Gesundheit · Bewegung · Prävention</small>
+        </div>
+      </aside>
+    </section>
+
+    <section class="coach-profile-section">
+      <div class="section-heading coach-section-heading">
+        <div>
+          <p class="eyebrow">Themenschwerpunkte</p>
+          <h2>Gesundheit wird im Alltag wirksam</h2>
+        </div>
+        <p>
+          Die Inhalte eignen sich für Unternehmen und Gruppen, die Prävention,
+          Bewegung und Entspannung praktisch erlebbar machen möchten.
+        </p>
+      </div>
+
+      <div class="coach-topic-grid">
+        {topics.map((topic) => (
+          <article>
+            <h3>{topic.title}</h3>
+            <p>{topic.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="coach-credentials">
+      <div>
+        <p class="eyebrow">Profil</p>
+        <h2>Fachliche Grundlage</h2>
+        <p>
+          Sportwissenschaft, Gesundheitsmanagement und zertifizierte
+          Präventionskonzepte bilden die Basis für zielgruppengerechte Formate.
+        </p>
+      </div>
+      <ul>
+        <li>Diplom-Sportwissenschaftlerin</li>
+        <li>Gesundheits- und Trainingsmanagement</li>
+        <li>Personal Gesundheits- und Fitnesstraining</li>
+        <li>Rücken- und Bewegungskonzepte</li>
+        <li>Entspannungsverfahren</li>
+        <li>ZPP-geprüfte Präventionskurse nach § 20 SGB V</li>
+      </ul>
+    </section>
+
+    <section class="showcase-strip coach-profile-cta">
+      <div>
+        <p class="eyebrow">Gesundheitsformat planen</p>
+        <h2>Prävention und Bewegung für Ihr Unternehmen anfragen</h2>
+      </div>
+      <div>
+        <p>
+          Gemeinsam klären wir Zielgruppe, Schwerpunkt und einen passenden
+          Rahmen vor Ort oder digital.
+        </p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

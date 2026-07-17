@@ -1,0 +1,126 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const topics = [
+  {
+    title: "Psychologische Beratung im Beruf",
+    text: "Berufliche Fragestellungen fundiert einordnen, Perspektiven klären und konkrete nächste Schritte entwickeln.",
+  },
+  {
+    title: "Psychische Belastungen",
+    text: "Belastungsfaktoren im Arbeitskontext erkennen und gesundheitsorientierte Handlungsoptionen ableiten.",
+  },
+  {
+    title: "Teams und Konflikte",
+    text: "Mitarbeitergespräche, Konfliktklärung, Zusammenarbeit und Teamentwicklung professionell begleiten.",
+  },
+];
+---
+
+<BaseLayout
+  title="Elisabeth Schwabauer | Coaches | Competence Hub"
+  description="Elisabeth Schwabauer ist Psychologin mit Schwerpunkten in psychologischer Beratung, psychischer Belastung sowie Team- und Konfliktklärung."
+>
+  <main class="subpage">
+    <section class="coach-profile-hero">
+      <div>
+        <p class="eyebrow">Psychologin</p>
+        <h1>Elisabeth Schwabauer</h1>
+        <p class="coach-profile-lead">
+          Psychologin (M.Sc.) mit Erfahrung in neuropsychologischen und
+          berufsbezogenen Fragestellungen, Teamprozessen und psychologischer
+          Diagnostik.
+        </p>
+        <p>
+          Ihr Profil verbindet fachlich fundierte Einordnung mit einem klaren
+          Blick auf Zusammenarbeit, Belastung und konkrete Veränderungen im
+          beruflichen Alltag.
+        </p>
+        <div class="coach-profile-actions">
+          <a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a>
+        </div>
+      </div>
+      <aside class="coach-profile-placeholder" aria-label="Profil von Elisabeth Schwabauer">
+        <span aria-hidden="true">ES</span>
+        <div>
+          <strong>Elisabeth Schwabauer</strong>
+          <small>Psychologie · Belastung · Teams</small>
+        </div>
+      </aside>
+    </section>
+
+    <section class="coach-profile-section">
+      <div class="section-heading coach-section-heading">
+        <div>
+          <p class="eyebrow">Themenschwerpunkte</p>
+          <h2>Psychologische Expertise für den Arbeitskontext</h2>
+        </div>
+        <p>
+          Die Angebote richten sich an Unternehmen, Führungskräfte und Teams,
+          die Belastungen, Kommunikation und Entwicklung professionell
+          bearbeiten möchten.
+        </p>
+      </div>
+
+      <div class="coach-topic-grid">
+        {topics.map((topic) => (
+          <article>
+            <h3>{topic.title}</h3>
+            <p>{topic.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="coach-credentials">
+      <div>
+        <p class="eyebrow">Profil</p>
+        <h2>Fachliche Grundlage</h2>
+        <p>
+          Psychologische Ausbildung und praktische Erfahrung aus Beratung,
+          Diagnostik, Teamarbeit und Gesundheitsmanagement bilden die Grundlage.
+        </p>
+      </div>
+      <ul>
+        <li>Master of Science in Psychologie</li>
+        <li>Bachelor of Science in Angewandter Psychologie</li>
+        <li>Erfahrung in Neuropsychologie</li>
+        <li>Psychologische Beratung im beruflichen Kontext</li>
+        <li>Team- und Konfliktklärung</li>
+        <li>Psychische Gefährdungsbeurteilung nach § 5 ArbSchG</li>
+      </ul>
+    </section>
+
+    <section class="notice-panel">
+      <div>
+        <p class="eyebrow">Einordnung</p>
+        <h2>Beratung mit klaren Grenzen</h2>
+      </div>
+      <p>
+        Das Angebot im Competence Hub bezieht sich auf berufliche Beratung und
+        Entwicklung. Es ersetzt keine Psychotherapie, medizinische Beratung
+        oder akute Krisenversorgung.
+      </p>
+    </section>
+
+    <section class="showcase-strip coach-profile-cta">
+      <div>
+        <p class="eyebrow">Passung klären</p>
+        <h2>Psychologische Expertise für Ihr Anliegen anfragen</h2>
+      </div>
+      <div>
+        <p>
+          Beschreiben Sie kurz Ausgangslage, Zielgruppe und gewünschten Rahmen.
+          Competence Hub prüft die fachliche Passung.
+        </p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

@@ -13,24 +13,28 @@ const services = [
     title: "Direkt an konkreten Situationen arbeiten",
     text: "Livecoaching passt, wenn ein berufliches Anliegen nah an einer realen Situation begleitet werden soll: Gespräche, Führung, Konflikte, Rollen oder Veränderung.",
     href: "livecoaching",
+    id: undefined,
   },
   {
     eyebrow: "Businesscoaching",
     title: "Entwicklung strukturiert begleiten",
     text: "Businesscoaching eignet sich für Unternehmen, Führungskräfte, Teams und Mitarbeitende, die Ziele, Zusammenarbeit und berufliche Entwicklung systematisch klären möchten.",
     href: "businesscoaching",
+    id: undefined,
   },
   {
-    eyebrow: "Unternehmen",
-    title: "Bedarf im Unternehmen einordnen",
-    text: "Für Firmen steht zuerst die Frage im Mittelpunkt, welches Anliegen, welche Zielgruppe und welches Format wirklich passen.",
-    href: "unternehmen",
-  },
-  {
-    eyebrow: "Anfrage",
-    title: "Nächsten Schritt klären",
-    text: "Die Kontaktseite sammelt die wichtigsten Angaben für eine spätere sichere Anfrageverarbeitung. Aktuell bleibt das Formular statisch.",
+    eyebrow: "Psychologische Beratung",
+    title: "Berufliche Belastungen fundiert einordnen",
+    text: "Für Vorgesetzte, Selbstständige, Teams und Mitarbeitende bei psychischen Belastungen und psychologischen Fragestellungen im Arbeitskontext.",
     href: "kontakt",
+    id: "gesundheit",
+  },
+  {
+    eyebrow: "Supervision, Workshops & Vorträge",
+    title: "Gemeinsam reflektieren und Wissen anwenden",
+    text: "Für Teams und Gruppen, wenn fachliche Reflexion, Prävention oder ein praxisnaher Lernimpuls im Mittelpunkt steht.",
+    href: "kontakt",
+    id: undefined,
   },
 ];
 
@@ -42,6 +46,14 @@ const comparison = [
   {
     title: "Businesscoaching",
     text: "strukturiert, entwicklungsorientiert, passend für Führung, Teams und Veränderungsprozesse",
+  },
+  {
+    title: "Psychologische Beratung",
+    text: "fachlich fundiert, berufsbezogen und klar von Psychotherapie oder medizinischer Behandlung abgegrenzt",
+  },
+  {
+    title: "Supervision, Workshop oder Vortrag",
+    text: "für gemeinsame Reflexion, Wissenstransfer und konkrete Impulse in Teams oder größeren Gruppen",
   },
 ];
 
@@ -56,23 +68,27 @@ const faqs = [
   },
   {
     question: "Wie startet eine Anfrage?",
-    answer: "Über die Kontaktseite werden Anlass, Zielgruppe und gewünschter Schwerpunkt beschrieben. Die technische Verarbeitung wird erst vor dem Livegang sicher konfiguriert.",
+    answer: "Über die Kontaktseite werden Anlass, Zielgruppe, gewünschter Schwerpunkt und Zeitraum per E-Mail beschrieben. Danach wird der passende nächste Schritt gemeinsam geklärt.",
+  },
+  {
+    question: "Erbringt Competence Hub die Leistungen selbst?",
+    answer: "Competence Hub klärt den Bedarf und vermittelt passende Coaches oder Expertinnen und Experten aus dem Netzwerk. Durchführung, Umfang und Rahmen werden anschließend transparent abgestimmt.",
   },
 ];
 ---
 
 <BaseLayout
   title="Leistungen | Competence Hub"
-  description="Leistungen von Competence Hub: Livecoaching, Businesscoaching, Coaching fuer Unternehmen, Teams und berufliche Entwicklung."
+  description="Competence Hub vermittelt Livecoaching, Businesscoaching, psychologische Beratung, Supervision, Workshops und Vorträge für Unternehmen."
 >
   <main class="subpage">
     <section class="page-hero page-hero--accent">
       <p class="eyebrow">Leistungen</p>
-      <h1>Livecoaching und Businesscoaching klar unterscheiden</h1>
+      <h1>Das Thema zuerst. Dann die passende Expertise.</h1>
       <p>
-        Competence Hub ordnet Coaching-Angebote so ein, dass Unternehmen,
-        Teams und Einzelpersonen im beruflichen Kontext schnell den passenden
-        Einstieg finden.
+        Competence Hub klärt den Bedarf und vermittelt ausgewählte Coaches
+        oder Expertinnen und Experten. So finden Unternehmen einen passenden
+        Einstieg, ohne sich zuerst durch einen großen Katalog arbeiten zu müssen.
       </p>
       <div class="actions">
         <a class="button" href={url("kontakt")}>Anfrage stellen</a>
@@ -82,7 +98,7 @@ const faqs = [
 
     <section class="offer-grid" aria-label="Angebotsübersicht">
       {services.map((service) => (
-        <article class="offer-card">
+        <article class="offer-card" id={service.id}>
           <p class="eyebrow">{service.eyebrow}</p>
           <h2>{service.title}</h2>
           <p>{service.text}</p>
@@ -94,11 +110,11 @@ const faqs = [
     <section class="split-panel">
       <div>
         <p class="eyebrow">Einordnung</p>
-        <h2>Welches Angebot passt?</h2>
+        <h2>Welches Format passt zum Anliegen?</h2>
         <p>
           Die genaue Form wird im Erstkontakt geklärt. Wichtig ist zunächst,
-          ob ein akuter beruflicher Anlass oder eine breitere
-          Entwicklungsfrage im Vordergrund steht.
+          ob ein akuter beruflicher Anlass, eine breitere Entwicklungsfrage,
+          psychologische Beratung oder ein Gruppenformat im Vordergrund steht.
         </p>
       </div>
       <div class="benefit-grid">
@@ -117,10 +133,10 @@ const faqs = [
       </div>
       <div class="faq-grid">
         {faqs.map((faq) => (
-          <article>
-            <h3>{faq.question}</h3>
+          <details>
+            <summary>{faq.question}</summary>
             <p>{faq.answer}</p>
-          </article>
+          </details>
         ))}
       </div>
     </section>

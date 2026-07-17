@@ -2,67 +2,79 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/global.css";
 
+const primaryEmail = "competencehub@donner-partner.de";
+const testEmail = "roedel.kg@donner-partner.eu";
+const showTestContact = import.meta.env.DEV;
+
+const subject = encodeURIComponent("Anfrage über Competence Hub");
+const body = encodeURIComponent(
+  "Unternehmen / Organisation:\nAnliegen:\nZielgruppe:\nGewünschter Zeitraum:\nRückrufnummer (optional):\n",
+);
+const mailto = (email: string) =>
+  `mailto:${email}?subject=${subject}&body=${body}`;
+
 const requestSteps = [
-  "Anliegen kurz beschreiben",
-  "Interesse und Zielgruppe einordnen",
-  "passenden nächsten Kontakt vorbereiten",
+  "Anliegen und Zielgruppe kurz beschreiben",
+  "gewünschten Zeitraum nennen",
+  "Kontaktdaten für die Rückmeldung ergänzen",
+];
+
+const helpfulDetails = [
+  "Unternehmen oder Organisation",
+  "beruflicher Anlass und gewünschte Wirkung",
+  "Zielgruppe oder ungefähre Teilnehmendenzahl",
+  "gewünschter Zeitraum oder Dringlichkeit",
 ];
 ---
 
 <BaseLayout
   title="Kontakt und Anfrage | Competence Hub"
-  description="Kontakt zu Competence Hub fuer Anfragen zu Livecoaching, Businesscoaching, Coaching fuer Unternehmen und Coach-Netzwerk."
+  description="Kontakt zu Competence Hub für Livecoaching, Businesscoaching und Coaching-Anfragen von Unternehmen, Führungskräften und Teams."
 >
   <main class="subpage">
     <section class="contact-page">
       <div>
         <p class="eyebrow">Kontakt</p>
-        <h1>Anfrage zu Coaching und Coach-Netzwerk</h1>
+        <h1>Ihr Anliegen ist der beste Ausgangspunkt</h1>
         <p>
-          Beschreiben Sie kurz, worum es geht. Das Formular ist im MVP noch
-          statisch und sendet keine Daten. Die technische Anbindung wird vor
-          Livegang sicher konfiguriert.
+          Sie müssen noch nicht wissen, welches Coaching-Format passt.
+          Beschreiben Sie kurz die berufliche Situation, die Zielgruppe und
+          den gewünschten nächsten Schritt. Wir melden uns zur gemeinsamen
+          Einordnung zurück.
         </p>
-        <div class="login-preview-list" aria-label="Anfrageablauf">
+        <div class="login-preview-list" aria-label="Anfrage vorbereiten">
           {requestSteps.map((step) => <span>{step}</span>)}
         </div>
+        <a class="button" href={mailto(primaryEmail)}>E-Mail-Anfrage öffnen</a>
       </div>
-      <form class="contact-form" aria-label="Kontaktformular Demo">
-        <label>
-          Name
-          <input name="name" type="text" placeholder="Vor- und Nachname" />
-        </label>
-        <label>
-          Unternehmen
-          <input name="company" type="text" placeholder="Unternehmen oder Organisation" />
-        </label>
-        <label>
-          E-Mail
-          <input name="email" type="email" placeholder="name@unternehmen.de" />
-        </label>
-        <label>
-          Anliegen
-          <select name="interest">
-            <option>Livecoaching</option>
-            <option>Businesscoaching</option>
-            <option>Coaching für Unternehmen</option>
-            <option>Coach-Netzwerk</option>
-          </select>
-        </label>
-        <label class="contact-form__wide">
-          Nachricht
-          <textarea
-            name="message"
-            rows="5"
-            placeholder="Was ist der Anlass, wer ist beteiligt, welcher nächste Schritt wäre hilfreich?"
-          ></textarea>
-        </label>
-        <p class="form-note contact-form__wide">
-          Demo-Status: Dieses Formular ist noch nicht angebunden und speichert
-          oder versendet keine Daten.
+
+      <aside class="contact-options" aria-labelledby="direct-contact-title">
+        <p class="eyebrow">Direkter Kontakt</p>
+        <h2 id="direct-contact-title">Per E-Mail an Competence Hub</h2>
+        <a class="contact-email" href={mailto(primaryEmail)}>{primaryEmail}</a>
+        <p>
+          Der Link öffnet Ihr E-Mail-Programm mit einer kurzen Vorlage. Auf
+          dieser Website werden dabei keine Formulardaten erfasst.
         </p>
-        <button class="button contact-form__wide" type="button">Anfrage vorbereiten</button>
-      </form>
+
+        <div class="contact-checklist">
+          <strong>Hilfreich für eine schnelle Einordnung</strong>
+          <ul>
+            {helpfulDetails.map((detail) => <li>{detail}</li>)}
+          </ul>
+        </div>
+
+        {showTestContact && (
+          <div class="contact-test-note">
+            <strong>Lokaler Testkontakt</strong>
+            <p>
+              Diese Adresse ist nur im Entwicklungsmodus sichtbar und wird
+              nicht in den Produktions-Build übernommen.
+            </p>
+            <a href={mailto(testEmail)}>{testEmail}</a>
+          </div>
+        )}
+      </aside>
     </section>
   </main>
 </BaseLayout>

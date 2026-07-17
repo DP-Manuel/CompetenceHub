@@ -33,14 +33,14 @@ const occasions = [
 const benefits = [
   "klare Einordnung des Anliegens",
   "passendes Coaching-Format statt Standardpaket",
-  "professionelle Vorbereitung des nächsten Gesprächs",
-  "anschlussfähig für spätere Buchungs- und Netzwerkprozesse",
+  "kuratierte Auswahl statt unübersichtlichem Katalog",
+  "passende Expertise für Thema und Unternehmenskontext",
 ];
 
 const faqs = [
   {
     question: "Für welche Unternehmen eignet sich Competence Hub?",
-    answer: "Für Unternehmen, die Führung, Zusammenarbeit, Kommunikation oder berufliche Entwicklung gezielt begleiten möchten. Der erste Schritt ist eine Klärung von Zielgruppe, Anlass und gewünschtem Format.",
+    answer: "Für Unternehmen, die Führung, Zusammenarbeit, Kommunikation, Gesundheit oder berufliche Entwicklung gezielt begleiten möchten. Der erste Schritt ist eine Klärung von Zielgruppe, Anlass und gewünschtem Format.",
   },
   {
     question: "Ist das Angebot nur für Führungskräfte gedacht?",
@@ -55,20 +55,20 @@ const faqs = [
 
 <BaseLayout
   title="Coaching für Unternehmen | Competence Hub"
-  description="Competence Hub bietet Livecoaching und Businesscoaching fuer Unternehmen, Teams, Fuehrungskraefte und berufliche Entwicklung."
+  description="Competence Hub vermittelt ausgewählte Coaches für Unternehmen in Führung, Zusammenarbeit, psychologischer Beratung, Gesundheit und Veränderung."
 >
   <main class="subpage">
     <section class="page-hero">
       <p class="eyebrow">Für Unternehmen</p>
-      <h1>Coaching-Angebote für Führung, Teams und berufliche Entwicklung</h1>
+      <h1>Passende Coaches für echte Themen im Unternehmen</h1>
       <p>
-        Competence Hub hilft Unternehmen, Coaching-Bedarf klar zu formulieren,
-        passende Formate zu wählen und den nächsten Schritt professionell
-        vorzubereiten.
+        Competence Hub hilft Unternehmen, ihren Bedarf klar zu formulieren und
+        vermittelt ausgewählte Coaches für das konkrete Thema, die Zielgruppe
+        und den gewünschten Rahmen.
       </p>
       <div class="actions">
-        <a class="button" href={url("kontakt")}>Anfrage stellen</a>
-        <a class="button button--ghost" href={url("kontakt")}>Erstgespräch anfragen</a>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+        <a class="button button--ghost" href={url("leistungen")}>Formate vergleichen</a>
       </div>
     </section>
 
@@ -84,11 +84,11 @@ const faqs = [
     <section class="split-panel">
       <div>
         <p class="eyebrow">Nutzen</p>
-        <h2>Vom ersten Anliegen zum passenden Coaching-Rahmen</h2>
+        <h2>Vom ersten Anliegen zur passenden Person</h2>
         <p>
           Unternehmen müssen nicht sofort wissen, welches Format richtig ist.
           Im ersten Schritt werden Anlass, Zielgruppe, Dringlichkeit und
-          mögliche Formate sortiert.
+          mögliche Formate sortiert und passende Expertise ausgewählt.
         </p>
       </div>
       <div class="benefit-grid">
@@ -103,10 +103,10 @@ const faqs = [
       </div>
       <div class="faq-grid">
         {faqs.map((faq) => (
-          <article>
-            <h3>{faq.question}</h3>
+          <details>
+            <summary>{faq.question}</summary>
             <p>{faq.answer}</p>
-          </article>
+          </details>
         ))}
       </div>
     </section>
@@ -116,7 +116,7 @@ const faqs = [
         <p class="eyebrow">Nächster Schritt</p>
         <h2>Coaching-Bedarf kurz beschreiben</h2>
       </div>
-      <a class="button" href={url("kontakt")}>Anfrage stellen</a>
+      <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
     </section>
   </main>
 </BaseLayout>

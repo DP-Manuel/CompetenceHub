@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -7,139 +8,255 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
-const offers = [
+const situations = [
   {
-    eyebrow: "Livecoaching",
-    title: "Begleitung in echten Arbeitssituationen",
-    text: "Livecoaching unterstützt Führungskräfte, Teams und Mitarbeitende dort, wo Kommunikation, Entscheidungen und Entwicklung konkret werden.",
-    href: "livecoaching",
-  },
-  {
-    eyebrow: "Businesscoaching",
-    title: "Klarheit für Führung, Zusammenarbeit und Veränderung",
-    text: "Businesscoaching schafft einen strukturierten Rahmen für berufliche Entwicklung, Konfliktklärung, Rollenverständnis und wirksame Führung.",
+    title: "Führung wirksam gestalten",
+    text: "Neue Verantwortung, schwierige Entscheidungen und anspruchsvolle Gespräche klar und reflektiert angehen.",
+    icon: "leadership" as const,
     href: "businesscoaching",
   },
   {
-    eyebrow: "Für Unternehmen",
-    title: "Angebote für Teams und Organisationen",
-    text: "Unternehmen erhalten ein professionelles Angebot, das Ziele, Zielgruppen, Format und nächsten Schritt verständlich zusammenführt.",
-    href: "unternehmen",
+    title: "Zusammenarbeit verbessern",
+    text: "Rollen, Erwartungen und Kommunikation im Team sortieren, bevor Reibung dauerhaft Energie bindet.",
+    icon: "users" as const,
+    href: "livecoaching",
   },
   {
-    eyebrow: "Coach-Netzwerk",
-    title: "Passende Expertinnen und Experten einbinden",
-    text: "Das Netzwerk kann später gezielt erweitert werden, damit Unternehmen passende Coaches für Thema, Zielgruppe und Format finden.",
-    href: "coaches",
+    title: "Konflikte früh klären",
+    text: "Spannungen einordnen, Perspektiven zusammenbringen und tragfähige nächste Schritte entwickeln.",
+    icon: "message-circle" as const,
+    href: "livecoaching",
+  },
+  {
+    title: "Belastung gesund begegnen",
+    text: "Psychische Belastungen einordnen, Ressourcen stärken und Prävention im Arbeitsalltag verankern.",
+    icon: "heart-pulse" as const,
+    href: "leistungen",
+  },
+  {
+    title: "Veränderung begleiten",
+    text: "Orientierung geben, neue Rollen festigen und Mitarbeitende in beruflichen Übergängen stärken.",
+    icon: "compass" as const,
+    href: "businesscoaching",
+  },
+  {
+    title: "Gesundheit in Bewegung bringen",
+    text: "Gesundheitsförderung, Bewegung und Entspannung passend zum betrieblichen Kontext gestalten.",
+    icon: "heart-pulse" as const,
+    href: "leistungen",
   },
 ];
 
-const benefits = [
-  "Livecoaching für konkrete berufliche Situationen",
-  "Businesscoaching für Führung, Teams und Veränderung",
-  "Klare Angebotsstruktur für Firmenkunden",
-  "Wartbare Website-Basis für spätere Erweiterungen",
+const formats = [
+  {
+    eyebrow: "Livecoaching",
+    title: "Nah an der konkreten Situation",
+    text: "Für aktuelle Gespräche, Entscheidungen, Konflikte oder Rollenfragen, bei denen zeitnah Klarheit entstehen soll.",
+    href: "livecoaching",
+    icon: "message-circle" as const,
+  },
+  {
+    eyebrow: "Businesscoaching",
+    title: "Entwicklung strukturiert begleiten",
+    text: "Für Führungskräfte, Teams und Mitarbeitende, wenn Entwicklung, Zusammenarbeit oder Veränderung einen verlässlichen Rahmen braucht.",
+    href: "businesscoaching",
+    icon: "briefcase" as const,
+  },
+  {
+    eyebrow: "Psychologische Beratung",
+    title: "Belastungen professionell einordnen",
+    text: "Für berufliche Fragestellungen, psychische Belastungen, Konflikte und gesundheitsbezogene Entwicklung im Unternehmen.",
+    href: "leistungen",
+    icon: "heart-pulse" as const,
+  },
+  {
+    eyebrow: "Supervision & Workshops",
+    title: "Teams und Wissen weiterbringen",
+    text: "Für gemeinsame Reflexion, Prävention und konkrete Lernimpulse in Gruppen, Teams oder Fachveranstaltungen.",
+    href: "leistungen",
+    icon: "users" as const,
+  },
 ];
 
-const audiences = [
-  "Unternehmen, die Führung und Zusammenarbeit stärken wollen",
-  "Teams, die Kommunikation, Rollen und Konflikte professionell bearbeiten möchten",
-  "Führungskräfte und Mitarbeitende in beruflichen Entwicklungsphasen",
-  "Coaches, die später Teil eines strukturierten Netzwerks werden können",
+const process = [
+  {
+    title: "Bedarf verstehen",
+    text: "Anlass, Zielgruppe und gewünschte Wirkung werden im Erstkontakt gemeinsam eingeordnet.",
+  },
+  {
+    title: "Passende Expertise auswählen",
+    text: "Aus Thema, Situation und Rahmen entsteht eine begründete Empfehlung aus dem Coach-Netzwerk.",
+  },
+  {
+    title: "Nächsten Schritt vereinbaren",
+    text: "Umfang, Termin und Vorgehen werden transparent abgestimmt, bevor das Coaching startet.",
+  },
+];
+
+const coachPreview = [
+  {
+    name: "Christian Galvano",
+    role: "Führung, Konflikte & Prävention",
+    href: "coaches/christian-galvano",
+    image: "images/coaches/christian-galvano.webp",
+    initials: "CG",
+  },
+  {
+    name: "Elisabeth Schwabauer",
+    role: "Psychologie, Belastung & Teams",
+    href: "coaches/elisabeth-schwabauer",
+    initials: "ES",
+  },
+  {
+    name: "Carolin Hupp",
+    role: "Gesundheit, Bewegung & Prävention",
+    href: "coaches/carolin-hupp",
+    initials: "CH",
+  },
 ];
 ---
 
 <BaseLayout
-  title="Competence Hub | Livecoaching und Businesscoaching"
-  description="Competence Hub bietet Livecoaching und Businesscoaching fuer Unternehmen, Teams und berufliche Entwicklung."
+  title="Competence Hub | Passende Coaches für Unternehmen"
+  description="Competence Hub vermittelt ausgewählte Coaches für Unternehmen, Führungskräfte und Teams in Führung, Zusammenarbeit, psychologischer Beratung und Gesundheit."
   bodyClass="home-page"
 >
   <main>
     <section class="hero hero--competence">
       <div class="hero__copy">
-        <p class="eyebrow">Competence Hub</p>
-        <h1>Livecoaching und Businesscoaching für Unternehmen, Teams und berufliche Entwicklung.</h1>
-        <p>
-          Competence Hub bündelt professionelle Coaching-Angebote für
-          Unternehmen, Führungskräfte und Teams. Der MVP fokussiert auf klare
-          Angebote, verständliche Anfragewege und eine wartbare Website, die
-          später um Buchung, Kalender und App-Funktionen erweitert werden kann.
+        <p class="eyebrow">Kuratierte Coach-Vermittlung</p>
+        <h1>Der passende Coach für das, was Ihr Unternehmen bewegt.</h1>
+        <p class="hero__lead">
+          Ausgewählte Expertise für Führung, Zusammenarbeit, Gesundheit und
+          berufliche Entwicklung. Persönlich kuratiert für Ihren Bedarf.
         </p>
         <div class="actions">
-          <a class="button" href={url("kontakt")}>Anfrage stellen</a>
-          <a class="button button--ghost" href={url("leistungen")}>Angebote ansehen</a>
+          <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+          <a class="button button--ghost" href="#einsatzfelder">Einsatzfelder ansehen</a>
         </div>
       </div>
-      <div class="hero-panel" aria-label="Competence Hub Angebotsschwerpunkte">
-        <span>Website-MVP</span>
-        <strong>Coaching-Angebote klar darstellen</strong>
-        <div class="hero-panel__grid">
-          <em>Livecoaching</em>
-          <em>Businesscoaching</em>
-          <em>Unternehmen</em>
-          <em>Coach-Netzwerk</em>
-        </div>
+      <aside class="hero-panel" aria-label="Wirkungsfelder von Competence Hub">
+        <p class="eyebrow">Direkt zum Thema</p>
+        <strong>Was möchten Sie bewegen?</strong>
+        <nav class="hero-shortcuts" aria-label="Schnelleinstieg nach Anliegen">
+          <a href={url("businesscoaching")}><Icon name="leadership" size={24} /><span>Führung</span><Icon name="arrow-right" size={18} /></a>
+          <a href={url("livecoaching")}><Icon name="users" size={24} /><span>Teams</span><Icon name="arrow-right" size={18} /></a>
+          <a href={url("leistungen#gesundheit")}><Icon name="heart-pulse" size={24} /><span>Gesundheit</span><Icon name="arrow-right" size={18} /></a>
+          <a href={url("coaches")}><Icon name="user-round" size={24} /><span>Coach finden</span><Icon name="arrow-right" size={18} /></a>
+        </nav>
+      </aside>
+    </section>
+
+    <section class="trust-strip" aria-label="Competence Hub auf einen Blick">
+      <strong>Ein Angebot von Donner + Partner</strong>
+      <span>Ausgewählte Coaches</span>
+      <span>Persönliche Bedarfsklärung</span>
+      <span>Vor Ort und digital</span>
+    </section>
+
+    <section class="situation-section" id="einsatzfelder" aria-labelledby="situations-title">
+      <div class="section-heading">
+        <p class="eyebrow">Typische Anlässe</p>
+        <h2 id="situations-title">Wählen Sie Ihr Thema</h2>
+      </div>
+      <div class="situation-grid">
+        {situations.map((situation) => (
+          <details class="situation-card">
+            <summary>
+              <Icon name={situation.icon} size={28} />
+              <span>{situation.title}</span>
+              <span class="situation-card__toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="situation-card__details">
+              <p>{situation.text}</p>
+              <a class="text-link" href={url(situation.href)}>Passende Angebote</a>
+            </div>
+          </details>
+        ))}
       </div>
     </section>
 
-    <section class="offer-section" id="leistungen" aria-labelledby="offers-title">
-      <div class="section-heading">
-        <p class="eyebrow">Leistungen</p>
-        <h2 id="offers-title">Vier Einstiegspunkte für den Website-MVP</h2>
+    <section class="format-band" aria-labelledby="formats-title">
+      <div>
+        <p class="eyebrow">Leistungsspektrum</p>
+        <h2 id="formats-title">Das Thema zuerst. Dann die passende Expertise.</h2>
+        <p>Sie bringen das Anliegen. Wir empfehlen Expertise und Format.</p>
       </div>
-      <div class="offer-grid">
-        {offers.map((offer) => (
-          <article class="offer-card">
-            <p class="eyebrow">{offer.eyebrow}</p>
-            <h3>{offer.title}</h3>
-            <p>{offer.text}</p>
-            <a class="text-link" href={url(offer.href)}>Mehr erfahren</a>
+      <div class="format-grid">
+        {formats.map((format) => (
+          <article>
+            <Icon name={format.icon} size={30} />
+            <p class="eyebrow">{format.eyebrow}</p>
+            <h3>{format.title}</h3>
+            <details class="format-details">
+              <summary>Mehr erfahren</summary>
+              <p>{format.text}</p>
+            </details>
+            <a class="text-link" href={url(format.href)}>Zum Angebot</a>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="split-panel">
-      <div>
-        <p class="eyebrow">Was Competence Hub bietet</p>
-        <h2>Ein klarer Rahmen für Coaching-Angebote, Anfragen und spätere Erweiterung</h2>
-        <p>
-          Die Website erklärt kompakt, welche Coaching-Formate angeboten
-          werden, für welche Situationen sie passen und wie Unternehmen den
-          nächsten Schritt anfragen können.
-        </p>
-      </div>
-      <div class="benefit-grid">
-        {benefits.map((benefit) => <span>{benefit}</span>)}
-      </div>
-    </section>
-
-    <section class="audience-section" aria-labelledby="audience-title">
+    <section class="process-section" aria-labelledby="process-title">
       <div class="section-heading">
-        <p class="eyebrow">Zielgruppen</p>
-        <h2 id="audience-title">Für wen ist das Angebot gedacht?</h2>
+        <p class="eyebrow">Der Weg zum Coaching</p>
+        <h2 id="process-title">Vom ersten Anliegen zum passenden Rahmen</h2>
       </div>
-      <div class="audience-list">
-        {audiences.map((audience, index) => (
+      <div class="timeline-list timeline-list--compact">
+        {process.map((step, index) => (
           <article>
             <span>{String(index + 1).padStart(2, "0")}</span>
-            <p>{audience}</p>
+            <div>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
           </article>
         ))}
       </div>
     </section>
 
-    <section class="future-note" aria-labelledby="future-title">
-      <div>
-        <p class="eyebrow">Ausbaustufen</p>
-        <h2 id="future-title">Buchungssystem, Coach-Kalender und App kommen später</h2>
+    <section class="coach-preview" aria-labelledby="coach-spotlight-title">
+      <div class="coach-preview__heading">
+        <div>
+          <p class="eyebrow">Kuratiertes Coach-Netzwerk</p>
+          <h2 id="coach-spotlight-title">Expertise hat ein Gesicht</h2>
+        </div>
+        <p>Qualifikation, Schwerpunkte und Einsatzbereich auf einen Blick.</p>
       </div>
-      <p>
-        Der aktuelle MVP verspricht keine produktive Buchung, keinen echten
-        Login und keine Datenbank. Buchungssystem, Coach-Kalender,
-        Vertragsautomatisierung und App-Funktionen bleiben bewusst spätere
-        Ausbaustufen.
-      </p>
+      <div class="coach-preview__grid">
+        {coachPreview.map((coach) => (
+          <a class="coach-preview__card" href={url(coach.href)}>
+            <span class:list={["coach-preview__visual", { "coach-preview__visual--image": coach.image }]}>
+              {coach.image ? (
+                <img
+                  src={url(coach.image)}
+                  alt={`Porträt von ${coach.name}`}
+                  width="830"
+                  height="830"
+                  loading="lazy"
+                />
+              ) : (
+                <strong aria-hidden="true">{coach.initials}</strong>
+              )}
+            </span>
+            <span class="coach-preview__copy">
+              <strong>{coach.name}</strong>
+              <small>{coach.role}</small>
+            </span>
+          </a>
+        ))}
+      </div>
+      <a class="text-link" href={url("coaches")}>Alle Coach-Profile ansehen</a>
+    </section>
+
+    <section class="cta-panel cta-panel--home" id="anfrage">
+      <div>
+        <p class="eyebrow">Nächster Schritt</p>
+        <h2>Welches Thema bewegt Ihr Unternehmen?</h2>
+        <p>Eine kurze Beschreibung reicht für die erste Einordnung.</p>
+      </div>
+      <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
     </section>
   </main>
 </BaseLayout>

@@ -1,4 +1,6 @@
 ---
+import Icon from "../components/Icon.astro";
+
 interface Props {
   title: string;
   description?: string;
@@ -7,14 +9,34 @@ interface Props {
 
 const {
   title,
-  description = "Competence Hub bietet Livecoaching und Businesscoaching fuer Unternehmen, Teams und berufliche Entwicklung.",
+  description = "Competence Hub vermittelt ausgewählte Coaches für Führung, Zusammenarbeit, psychologische Beratung und gesunde berufliche Entwicklung.",
   bodyClass = "",
 } = Astro.props;
+
+const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const navigation = [
+  { label: "Start", href: "" },
+  { label: "Leistungen", href: "leistungen" },
+  { label: "Für Unternehmen", href: "unternehmen" },
+  { label: "Coaches", href: "coaches" },
+];
+
+const quickNavigation = [
+  { label: "Führung & Leadership", href: "businesscoaching#fuehrung", icon: "leadership" as const },
+  { label: "Teams & Konflikte", href: "livecoaching#teams", icon: "users" as const },
+  { label: "Gesundheit & Prävention", href: "leistungen#gesundheit", icon: "heart-pulse" as const },
+  { label: "Coach auswählen", href: "coaches", icon: "user-round" as const },
+];
+
+const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
+const isCurrent = (path = "") =>
+  normalizePath(Astro.url.pathname) === normalizePath(url(path));
 ---
 
 <!doctype html>
@@ -23,25 +45,68 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {reviewMode && <meta name="robots" content="noindex, nofollow, noarchive" />}
     <title>{title}</title>
   </head>
   <body class={bodyClass}>
+    {reviewMode && (
+      <div class="review-banner" role="status">
+        Interne Review-Version · Inhalte und Gestaltung noch nicht final freigegeben
+      </div>
+    )}
     <header class="site-header">
       <a class="brand" href={url()} aria-label="Competence Hub Startseite">
         <span class="brand__mark">Competence Hub</span>
         <span class="brand__line">Ein Angebot von Donner + Partner</span>
       </a>
-      <nav class="nav" aria-label="Hauptnavigation">
-        <a href={url()}>Start</a>
-        <a href={url("leistungen")}>Leistungen</a>
-        <a href={url("livecoaching")}>Livecoaching</a>
-        <a href={url("businesscoaching")}>Businesscoaching</a>
-        <a href={url("unternehmen")}>Unternehmen</a>
-        <a href={url("coaches")}>Coaches</a>
-        <a href={url("kontakt")}>Kontakt</a>
+      <nav class="nav nav--desktop" aria-label="Hauptnavigation">
+        {navigation.map((item) => (
+          <a
+            href={url(item.href)}
+            aria-current={isCurrent(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
       </nav>
+      <details class="nav-menu">
+        <summary>Menü</summary>
+        <nav class="nav" aria-label="Mobile Hauptnavigation">
+          {navigation.map((item) => (
+            <a
+              href={url(item.href)}
+              aria-current={isCurrent(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
+          <a href={url("kontakt")}>Kontakt</a>
+          <a href={url("login")}><Icon name="log-in" size={18} /> Login</a>
+        </nav>
+      </details>
       <div class="header-actions">
-        <a class="button" href={url("kontakt")}>Anfrage stellen</a>
+        <details class="quick-nav">
+          <summary><Icon name="compass" size={18} /> Direkt zu</summary>
+          <div class="quick-nav__panel">
+            <strong>Was möchten Sie bewegen?</strong>
+            {quickNavigation.map((item) => (
+              <a href={url(item.href)}>
+                <Icon name={item.icon} size={20} />
+                <span>{item.label}</span>
+                <Icon name="arrow-right" size={17} />
+              </a>
+            ))}
+          </div>
+        </details>
+        <a class="header-login" href={url("login")}>
+          <Icon name="log-in" size={18} />
+          <span>Login</span>
+        </a>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
       </div>
     </header>
     <slot />
@@ -49,6 +114,9 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
       <div>
         <strong>Competence Hub</strong>
         <span>Ein Angebot von Donner + Partner</span>
+        <a class="site-footer__contact" href="mailto:competencehub@donner-partner.de">
+          competencehub@donner-partner.de
+        </a>
       </div>
       <nav aria-label="Footer">
         <a href={url("leistungen")}>Leistungen</a>
@@ -57,8 +125,9 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
         <a href={url("unternehmen")}>Für Unternehmen</a>
         <a href={url("coaches")}>Coaches</a>
         <a href={url("kontakt")}>Kontakt</a>
-        <a href={url("impressum")}>Impressum</a>
-        <a href={url("datenschutz")}>Datenschutz</a>
+        <a href="https://donner-partner.de/dp/impressum/">Impressum</a>
+        <a href="https://donner-partner.de/dp/datenschutz/">Datenschutz</a>
+        <a href="https://donner-partner.de/dp/agb/">AGB</a>
       </nav>
     </footer>
   </body>

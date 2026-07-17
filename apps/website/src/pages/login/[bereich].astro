@@ -1,0 +1,110 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+import "../../styles/global.css";
+
+type IconName = "building" | "calendar" | "message-circle" | "shield-check" | "user-round";
+
+interface Area {
+  slug: string;
+  title: string;
+  eyebrow: string;
+  description: string;
+  icon: IconName;
+  priority: string;
+  items: Array<{ title: string; text: string; icon: IconName }>;
+}
+
+export function getStaticPaths() {
+  const areas: Area[] = [
+    {
+    slug: "intern",
+    title: "Interner Bereich",
+    eyebrow: "Für Manuel und das Competence-Hub-Team",
+    description: "Der erste geschützte Arbeitsbereich soll die tägliche Koordination von Anfragen, Coaches und Angeboten vereinfachen.",
+    icon: "shield-check",
+    priority: "Erste Backend-Priorität",
+    items: [
+      { title: "Anfragen", text: "Neue Anliegen einordnen und den Bearbeitungsstand verfolgen.", icon: "message-circle" },
+      { title: "Coach-Netzwerk", text: "Profile, Schwerpunkte und Verfügbarkeit pflegen.", icon: "user-round" },
+      { title: "Termine", text: "Absprachen und spätere Kalenderanbindungen bündeln.", icon: "calendar" },
+    ],
+  },
+  {
+    slug: "coaches",
+    title: "Coach-Bereich",
+    eyebrow: "Für Coaches im Netzwerk",
+    description: "Coaches sollen später ihre relevanten Informationen und laufenden Aufträge selbstständig überblicken können.",
+    icon: "user-round",
+    priority: "Nach dem internen Bereich",
+    items: [
+      { title: "Profil", text: "Qualifikationen, Schwerpunkte und Angaben aktuell halten.", icon: "user-round" },
+      { title: "Aufträge", text: "Anfragen und vereinbarte Einsätze strukturiert sehen.", icon: "message-circle" },
+      { title: "Kalender", text: "Verfügbarkeiten und Termine später synchronisieren.", icon: "calendar" },
+    ],
+  },
+  {
+    slug: "unternehmen",
+    title: "Unternehmensbereich",
+    eyebrow: "Für Firmenkunden",
+    description: "Unternehmen sollen später Feedback, laufende Coaching-Aufträge und relevante Unterlagen übersichtlich bündeln können.",
+    icon: "building",
+    priority: "Geplante Ausbaustufe",
+    items: [
+      { title: "Feedback", text: "Rückmeldungen strukturiert und rollenbasiert erfassen.", icon: "message-circle" },
+      { title: "Aufträge", text: "Vereinbarte Leistungen und Status nachvollziehen.", icon: "building" },
+      { title: "Termine", text: "Coaching-Termine und Absprachen im Blick behalten.", icon: "calendar" },
+    ],
+    },
+  ];
+
+  return areas.map((area) => ({ params: { bereich: area.slug }, props: { area } }));
+}
+
+const { area } = Astro.props as { area: Area };
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+---
+
+<BaseLayout
+  title={`${area.title} | Competence Hub`}
+  description={`${area.title}: vorbereitete Struktur für den künftigen geschützten Competence-Hub-Bereich. Noch ohne produktive Anmeldung.`}
+  bodyClass="login-page"
+>
+  <main class="portal-page">
+    <a class="portal-back" href={url("login")}>&larr; Alle Login-Bereiche</a>
+
+    <section class="portal-hero">
+      <span class="portal-hero__icon"><Icon name={area.icon} size={42} /></span>
+      <div>
+        <p class="eyebrow">{area.eyebrow}</p>
+        <h1>{area.title}</h1>
+        <p>{area.description}</p>
+      </div>
+      <span class="portal-hero__status">{area.priority}</span>
+    </section>
+
+    <section class="portal-feature-grid" aria-label={`Geplante Funktionen für ${area.title}`}>
+      {area.items.map((item) => (
+        <article>
+          <Icon name={item.icon} size={28} />
+          <h2>{item.title}</h2>
+          <p>{item.text}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="login-safety-note">
+      <Icon name="shield-check" size={26} />
+      <div>
+        <h2>Vorschau, kein produktiver Zugang</h2>
+        <p>
+          Es werden keine Zugangsdaten abgefragt und keine Daten gespeichert.
+          Der geschützte Bereich folgt erst mit geprüfter Backend- und Rollenarchitektur.
+        </p>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

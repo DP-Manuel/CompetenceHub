@@ -59,16 +59,16 @@ const faqs = [
 
 <BaseLayout
   title="Businesscoaching | Competence Hub"
-  description="Businesscoaching von Competence Hub fuer Unternehmen, Fuehrungskraefte, Teams, Kommunikation, Rollenklärung und berufliche Entwicklung."
+  description="Competence Hub vermittelt Businesscoaching für Unternehmen, Führungskräfte und Teams in Kommunikation, Rollenklärung und beruflicher Entwicklung."
 >
   <main class="subpage">
     <section class="page-hero page-hero--accent">
       <p class="eyebrow">Businesscoaching</p>
       <h1>Professioneller Rahmen für Führung, Teams und Veränderung</h1>
       <p>
-        Businesscoaching unterstützt Unternehmen, Führungskräfte, Teams und
-        Mitarbeitende dabei, berufliche Anliegen strukturiert zu klären und
-        daraus tragfähige nächste Schritte abzuleiten.
+        Competence Hub vermittelt passende Coaches, die Unternehmen,
+        Führungskräfte, Teams und Mitarbeitende dabei unterstützen, berufliche
+        Anliegen strukturiert zu klären und nächste Schritte abzuleiten.
       </p>
       <a class="button" href={url("kontakt")}>Businesscoaching anfragen</a>
     </section>
@@ -88,7 +88,7 @@ const faqs = [
       </div>
     </section>
 
-    <section class="feature-grid" aria-label="Themen im Businesscoaching">
+    <section class="feature-grid" id="fuehrung" aria-label="Themen im Businesscoaching">
       {topics.map((topic) => (
         <article class="feature-card">
           <h2>{topic.title}</h2>
@@ -113,10 +113,10 @@ const faqs = [
       </div>
       <div class="faq-grid">
         {faqs.map((faq) => (
-          <article>
-            <h3>{faq.question}</h3>
+          <details>
+            <summary>{faq.question}</summary>
             <p>{faq.answer}</p>
-          </article>
+          </details>
         ))}
       </div>
     </section>
