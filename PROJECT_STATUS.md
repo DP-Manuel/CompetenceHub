@@ -14,7 +14,7 @@ Last updated: 2026-07-17
 - Blocked for live launch: responsible legal entity/domain confirmation, final Datenschutz/AGB applicability, mailbox ownership and response process, final domain/deployment approval
 - Public contact decision: `competencehub@donner-partner.de`
 - Local development test contact: `roedel.kg@donner-partner.eu`; excluded from production builds
-- Deployment status: manual-only GitHub Pages review workflow prepared and locally verified; Pages remains disabled and no deployment is active
+- Deployment status: manual-only GitHub Pages review is active at `https://dp-manuel.github.io/CompetenceHub/`; Pages build/deploy and HTTP smoke tests passed
 - Database status: no database change performed; a safe example, a local Git-ignored blank ENV, and an initial data model are prepared
 - Server status: no login performed; technical hosting/database questions were sent to Herrn Roß and the response is pending
 
@@ -45,6 +45,6 @@ Last updated: 2026-07-17
 
 - Read first: `AGENTS.md`, `PROJECT_LOG.md`, `PROJECT_PLAN.md`, this file, and `SKILL_FEEDBACK_LOG.md`.
 - Website entry points: `apps/website/src/layouts/BaseLayout.astro`, `apps/website/src/pages/index.astro`, `apps/website/src/pages/kontakt.astro`, `apps/website/src/pages/coaches.astro`, and `apps/website/src/styles/global.css`.
-- Git state: latest pushed commit is `4e36313`; the current B2B refresh and legal-link changes are local and uncommitted. `.tmp/` remains intentionally untracked.
+- Git state: website and review deployment were pushed in commit `f8104b9`; `.tmp/` remains intentionally untracked and the real `.env` remains ignored.
 - Safety: source files may only be opened when Manuel names and approves them. Do not open credential documents or real `.env*`, disclose secrets, or deploy without explicit approval.
 - Next concrete action: Manuel reviews the new local topic navigation, expandable sections, login role paths, positioning, and coach drafts before publication.

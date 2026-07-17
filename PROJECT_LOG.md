@@ -2,7 +2,7 @@
 
 Newest entries first.
 
-## 2026-07-17 | deployment preparation | Manuelle GitHub-Pages-Review vorbereitet
+## 2026-07-17 | review deployment | GitHub-Pages-Review veröffentlicht
 
 Für die Abstimmung mit Vertrieb und Mediendesign wurde das bestehende private Repository `DP-Manuel/CompetenceHub` als sinnvoller Review-Kanal bestätigt; das alte Firmenschulung-Repository wird nicht reaktiviert.
 
@@ -10,7 +10,9 @@ Für die Abstimmung mit Vertrieb und Mediendesign wurde das bestehende private R
 - Review-Schutz: Der Pages-Build verwendet `/CompetenceHub`, zeigt einen sichtbaren Entwurfsstatus und setzt `noindex, nofollow, noarchive`. Dies ist keine Zugriffskontrolle; die veröffentlichte URL wäre weiterhin erreichbar.
 - Freigabeblocker: Die Entwürfe für Elisabeth Schwabauer und Carolin Hupp dürfen erst nach Publikationsfreigabe öffentlich bereitgestellt werden.
 - Verifikation: Review-Build mit GitHub-Pages-Basis erfolgreich; 22 Astro-Dateien ohne Fehler, Warnungen oder Hinweise geprüft und 19 statische Seiten erzeugt. Basis-Links, Review-Banner und Robots-Meta wurden im Build kontrolliert.
-- Status: GitHub Pages ist im Repository noch nicht aktiviert; kein Commit, Push, Workflow-Lauf oder Deployment wurde durchgeführt.
+- Veröffentlichung: Nach ausdrücklicher Freigabe wurde das inzwischen öffentliche Repository mit Commit `f8104b9` aktualisiert, GitHub Pages im Workflow-Modus aktiviert und der manuelle Lauf `29576161306` erfolgreich abgeschlossen.
+- Smoke-Test: `https://dp-manuel.github.io/CompetenceHub/` sowie `/coaches/`, `/kontakt/` und `/login/` antworten mit HTTP 200; Review-Banner, `noindex` und die `/CompetenceHub`-Basislinks sind vorhanden.
+- Sicherheit: `.tmp/`, die echte `.env`, private Schlüssel und Passwörter wurden nicht committed. Der Workflow bleibt manuell und reagiert nicht automatisch auf Pushes.
 - Infrastruktur: Die technischen Rückfragen zu SFTP, Hosting-Runtime, MySQL-Zugriff, TLS, Staging, Backups und Domain wurden an Herrn Roß gesendet; Antwort steht aus.
 
 ## 2026-07-16 | design/implementation | Textverdichtung, Direkteinstieg und Login-Rollenwege
