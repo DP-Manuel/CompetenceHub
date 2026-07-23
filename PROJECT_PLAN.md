@@ -11,7 +11,8 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 - Workflow model: informal multi-day work
 - Current phase, sprint, milestone, board status, or release: Competence Hub website deadline sprint
 - Current status: yellow; the central interactive Connected-Core graph is
-  implemented locally and awaits content/design review
+  pushed to `main`, while the manually triggered Pages review and stakeholder
+  review are still pending
 - Main blocker: final coach/publication approval, legal applicability, pricing semantics, and the approved live contact/response process are not finalized
 - Next decision needed: approve the central relationship-graph direction,
   curated intermediary positioning, and the Elisabeth Schwabauer / Carolin

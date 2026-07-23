@@ -17,8 +17,10 @@ Last updated: 2026-07-23
 - Blocked for live launch: responsible legal entity/domain confirmation, final Datenschutz/AGB applicability, mailbox ownership and response process, final domain/deployment approval
 - Public contact decision: `competencehub@donner-partner.de`
 - Local development test contact: `roedel.kg@donner-partner.eu`; excluded from production builds
-- Deployment status: manual-only GitHub Pages review remains on the previous
-  approved revision; the 2026-07-23 Connected-Core work is local only
+- Deployment status: the 2026-07-23 Connected-Core work was pushed in
+  implementation commit `693901b`; the manual-only GitHub Pages review still
+  shows the previous revision because CLI authentication must be renewed before
+  dispatching the workflow
 - Database status: no database change performed; a safe example, a local Git-ignored blank ENV, and an initial data model are prepared
 - Server status: no login performed; technical hosting/database questions were sent to Herrn Roß and the response is pending
 
@@ -53,7 +55,10 @@ Last updated: 2026-07-23
 
 - Read first: `AGENTS.md`, `PROJECT_LOG.md`, `PROJECT_PLAN.md`, this file, `SKILL_FEEDBACK_LOG.md`, and `docs/assets/designstyle.md` for visual work.
 - Website entry points: `apps/website/src/layouts/BaseLayout.astro`, `apps/website/src/pages/index.astro`, `apps/website/src/pages/kontakt.astro`, `apps/website/src/pages/coaches.astro`, and `apps/website/src/styles/global.css`.
-- Git state: website and review deployment were pushed in commit `f8104b9`; `.tmp/` remains intentionally untracked and the real `.env` remains ignored.
+- Git state: the central Connected-Core implementation was pushed in commit
+  `693901b`; `.tmp/` remains intentionally untracked and the real `.env`
+  remains ignored. The public Pages review has not yet been rebuilt from this
+  commit.
 - Safety: source files may only be opened when Manuel names and approves them. Do not open credential documents or real `.env*`, disclose secrets, or deploy without explicit approval.
 - Next concrete action: Manuel and the design department review the central
   relationship graph and its wording locally against `docs/assets/designstyle.md`;

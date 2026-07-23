@@ -33,7 +33,10 @@ ausgewertet und in eine lokale Website-Version übertragen.
   500 Pixeln geprüft; Coach-Übersicht, Wegner-Ney, Kontakt und Businesscoaching
   zusätzlich im Desktop-Render. Gefundene Fehler bei Hero-Umbruch, mobilem
   Hub-Raster und Porträtformat wurden korrigiert.
-- Veröffentlichung: nur lokale Umsetzung; kein Commit, Push oder Deployment.
+- Veröffentlichung: Die Umsetzung wurde als Commit `693901b` nach `main`
+  gepusht. Der weiterhin manuelle Pages-Workflow wurde noch nicht gestartet,
+  weil die lokale GitHub-CLI-Anmeldung abgelaufen ist; die öffentliche
+  Prüffassung zeigt daher noch den vorherigen Stand.
 
 ## 2026-07-17 | design system / skill | Inspirationsserie in digitale Regeln übersetzt
 
