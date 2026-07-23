@@ -18,9 +18,9 @@ Last updated: 2026-07-23
 - Public contact decision: `competencehub@donner-partner.de`
 - Local development test contact: `roedel.kg@donner-partner.eu`; excluded from production builds
 - Deployment status: the 2026-07-23 Connected-Core work was pushed in
-  implementation commit `693901b`; the manual-only GitHub Pages review still
-  shows the previous revision because CLI authentication must be renewed before
-  dispatching the workflow
+  implementation commit `693901b` and successfully published through manual
+  GitHub Pages review workflow `30016684516`; automatic deployment remains
+  disabled
 - Database status: no database change performed; a safe example, a local Git-ignored blank ENV, and an initial data model are prepared
 - Server status: no login performed; technical hosting/database questions were sent to Herrn Roß and the response is pending
 
@@ -57,8 +57,8 @@ Last updated: 2026-07-23
 - Website entry points: `apps/website/src/layouts/BaseLayout.astro`, `apps/website/src/pages/index.astro`, `apps/website/src/pages/kontakt.astro`, `apps/website/src/pages/coaches.astro`, and `apps/website/src/styles/global.css`.
 - Git state: the central Connected-Core implementation was pushed in commit
   `693901b`; `.tmp/` remains intentionally untracked and the real `.env`
-  remains ignored. The public Pages review has not yet been rebuilt from this
-  commit.
+  remains ignored. The public Pages review was successfully rebuilt and
+  verified after publication.
 - Safety: source files may only be opened when Manuel names and approves them. Do not open credential documents or real `.env*`, disclose secrets, or deploy without explicit approval.
 - Next concrete action: Manuel and the design department review the central
   relationship graph and its wording locally against `docs/assets/designstyle.md`;
