@@ -1,0 +1,289 @@
+---
+import Icon from "./Icon.astro";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const nodes = [
+  {
+    id: "unternehmen",
+    title: "Für Unternehmen",
+    detail: "Anliegen und Ziele",
+    href: "unternehmen",
+    icon: "building" as const,
+    kind: "primary",
+    x: 14.2,
+    y: 29,
+    size: 138,
+  },
+  {
+    id: "coaches",
+    title: "Coaches",
+    detail: "Ausgewählte Expertise",
+    href: "coaches",
+    icon: "users" as const,
+    kind: "primary",
+    x: 85.8,
+    y: 29,
+    size: 132,
+  },
+  {
+    id: "leistungen",
+    title: "Leistungen",
+    detail: "Passende Formate",
+    href: "leistungen",
+    icon: "briefcase" as const,
+    kind: "primary",
+    x: 81,
+    y: 73,
+    size: 136,
+  },
+  {
+    id: "recruiting",
+    title: "Recruiting",
+    detail: "Potenziale verbinden",
+    href: "leistungen#recruiting",
+    icon: "user-round" as const,
+    kind: "primary",
+    x: 20,
+    y: 75,
+    size: 128,
+  },
+  {
+    id: "kontakt",
+    title: "Kontakt",
+    detail: "Persönlich begleitet",
+    href: "kontakt",
+    icon: "message-circle" as const,
+    kind: "primary",
+    x: 50,
+    y: 86,
+    size: 116,
+  },
+  {
+    id: "livecoaching",
+    title: "Livecoaching",
+    detail: "Situationsnah",
+    href: "livecoaching",
+    icon: "message-circle" as const,
+    kind: "secondary",
+    x: 60,
+    y: 11.5,
+    size: 94,
+  },
+  {
+    id: "businesscoaching",
+    title: "Businesscoaching",
+    detail: "Entwicklung",
+    href: "businesscoaching",
+    icon: "leadership" as const,
+    kind: "secondary",
+    x: 70.5,
+    y: 47,
+    size: 104,
+  },
+  {
+    id: "gesundheit",
+    title: "Gesundheit",
+    detail: "Prävention",
+    href: "leistungen#gesundheit",
+    icon: "heart-pulse" as const,
+    kind: "secondary",
+    x: 63.5,
+    y: 81,
+    size: 92,
+  },
+  {
+    id: "gruppenformate",
+    title: "Workshops & Vorträge",
+    detail: "Gemeinsam lernen",
+    href: "leistungen#gruppenformate",
+    icon: "compass" as const,
+    kind: "secondary",
+    x: 35,
+    y: 13.5,
+    size: 104,
+  },
+];
+
+const edges = [
+  { from: "core", to: "unternehmen", d: "M600 380 Q400 300 170 220" },
+  { from: "core", to: "coaches", d: "M600 380 Q800 290 1030 220" },
+  { from: "core", to: "leistungen", d: "M600 380 Q820 430 972 555" },
+  { from: "core", to: "recruiting", d: "M600 380 Q410 470 240 570" },
+  { from: "core", to: "kontakt", d: "M600 380 Q600 520 600 654" },
+  { from: "coaches", to: "livecoaching", d: "M1030 220 Q880 90 720 88" },
+  { from: "coaches", to: "businesscoaching", d: "M1030 220 Q945 300 846 357" },
+  { from: "coaches", to: "gesundheit", d: "M1030 220 Q920 500 762 616" },
+  { from: "coaches", to: "gruppenformate", d: "M1030 220 Q720 80 420 103" },
+  { from: "leistungen", to: "livecoaching", d: "M972 555 Q930 255 720 88" },
+  { from: "leistungen", to: "businesscoaching", d: "M972 555 Q915 445 846 357" },
+  { from: "leistungen", to: "gesundheit", d: "M972 555 Q860 610 762 616" },
+  { from: "leistungen", to: "gruppenformate", d: "M972 555 Q660 350 420 103" },
+  { from: "unternehmen", to: "recruiting", d: "M170 220 Q155 405 240 570" },
+  { from: "unternehmen", to: "businesscoaching", d: "M170 220 Q505 250 846 357" },
+  { from: "unternehmen", to: "gruppenformate", d: "M170 220 Q290 120 420 103" },
+  { from: "recruiting", to: "kontakt", d: "M240 570 Q410 650 600 654" },
+];
+---
+
+<div class="hub-graph" data-hub-graph>
+  <p class="visually-hidden" id="hub-graph-help">
+    Der Competence Hub ist der zentrale Startknoten. Fokussieren oder berühren
+    Sie den Kern, um seine Hauptverbindungen anzuzeigen. Die Außenknoten führen
+    direkt zu den jeweiligen Bereichen.
+  </p>
+
+  <svg
+    class="hub-graph__connections"
+    viewBox="0 0 1200 760"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <circle class="hub-graph__orbit" cx="600" cy="380" r="188" />
+    <circle class="hub-graph__orbit hub-graph__orbit--outer" cx="600" cy="380" r="310" />
+    <circle class="hub-graph__marker" cx="600" cy="192" r="7" />
+    {edges.map((edge) => (
+      <path
+        d={edge.d}
+        data-edge
+        data-from={edge.from}
+        data-to={edge.to}
+        pathLength="1"
+      />
+    ))}
+  </svg>
+
+  <div
+    class="hub-graph__core"
+    data-node="core"
+    role="button"
+    tabindex="0"
+    aria-expanded="false"
+    aria-describedby="hub-graph-help"
+  >
+    <span class="hub-graph__eyebrow">Zentraler Startknoten</span>
+    <h1>Competence <em>Hub</em></h1>
+    <p>Passende Expertise.<br />Persönlich verbunden.</p>
+    <small>Verbindungen entdecken</small>
+  </div>
+
+  <nav class="hub-graph__nodes" aria-label="Bereiche des Competence Hub">
+    {nodes.map((node) => (
+      <span
+        class={`hub-graph__position hub-graph__position--${node.kind}`}
+        style={`--node-x: ${node.x}%; --node-y: ${node.y}%; --node-size: ${node.size}px;`}
+      >
+        <a
+          class="hub-graph__node"
+          data-node={node.id}
+          data-kind={node.kind}
+          href={url(node.href)}
+          aria-label={`${node.title}: ${node.detail}`}
+        >
+          <Icon name={node.icon} size={node.kind === "primary" ? 25 : 20} />
+          <strong>{node.title}</strong>
+          <small>{node.detail}</small>
+        </a>
+      </span>
+    ))}
+  </nav>
+
+  <div class="hub-graph__guide" aria-hidden="true">
+    <span></span>
+    <strong>Hub oder Knoten berühren</strong>
+    <span></span>
+  </div>
+</div>
+
+<script>
+  const graphs = document.querySelectorAll<HTMLElement>("[data-hub-graph]");
+
+  graphs.forEach((graph) => {
+    const core = graph.querySelector<HTMLElement>('[data-node="core"]');
+    const nodes = Array.from(
+      graph.querySelectorAll<HTMLElement>(".hub-graph__node[data-node]"),
+    );
+    const edges = Array.from(
+      graph.querySelectorAll<SVGPathElement>("[data-edge]"),
+    );
+    let locked = false;
+
+    const clear = () => {
+      graph.removeAttribute("data-active");
+      core?.setAttribute("aria-expanded", "false");
+      edges.forEach((edge) => edge.classList.remove("is-active"));
+      nodes.forEach((node) => {
+        node.classList.remove("is-active", "is-related", "is-muted");
+      });
+    };
+
+    const activate = (id: string) => {
+      clear();
+      graph.dataset.active = id;
+      core?.setAttribute("aria-expanded", id === "core" ? "true" : "false");
+
+      const related = new Set<string>();
+      edges.forEach((edge) => {
+        const from = edge.dataset.from || "";
+        const to = edge.dataset.to || "";
+        const active =
+          id === "core" ? from === "core" : from === id || to === id;
+
+        edge.classList.toggle("is-active", active);
+        if (active) {
+          related.add(from);
+          related.add(to);
+        }
+      });
+
+      nodes.forEach((node) => {
+        const nodeId = node.dataset.node || "";
+        node.classList.toggle("is-active", nodeId === id);
+        node.classList.toggle("is-related", related.has(nodeId));
+        node.classList.toggle(
+          "is-muted",
+          id !== "core" && nodeId !== id && !related.has(nodeId),
+        );
+      });
+    };
+
+    const release = () => {
+      if (locked) {
+        activate("core");
+      } else {
+        clear();
+      }
+    };
+
+    core?.addEventListener("mouseenter", () => activate("core"));
+    core?.addEventListener("mouseleave", release);
+    core?.addEventListener("focus", () => activate("core"));
+    core?.addEventListener("blur", release);
+    core?.addEventListener("click", () => {
+      locked = !locked;
+      locked ? activate("core") : clear();
+    });
+    core?.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        locked = !locked;
+        locked ? activate("core") : clear();
+      }
+      if (event.key === "Escape") {
+        locked = false;
+        clear();
+      }
+    });
+
+    nodes.forEach((node) => {
+      const id = node.dataset.node || "";
+      node.addEventListener("mouseenter", () => activate(id));
+      node.addEventListener("mouseleave", release);
+      node.addEventListener("focus", () => activate(id));
+      node.addEventListener("blur", release);
+    });
+  });
+</script>

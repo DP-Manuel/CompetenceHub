@@ -12,6 +12,7 @@ const topics = [
   "Businesscoaching",
   "Psychologische Beratung & Prävention",
   "Supervision, Workshop oder Vortrag",
+  "Recruiting & Personalentwicklung",
   "Coach-Auswahl",
   "Noch nicht sicher",
 ];
@@ -35,6 +36,17 @@ const topics = [
           <span><Icon name="user-round" size={22} /> Expertise auswählen</span>
           <span><Icon name="calendar" size={22} /> Rahmen abstimmen</span>
         </div>
+        <aside class="contact-person" aria-label="Persönliche Ansprechpartnerin">
+          <span aria-hidden="true"><Icon name="user-round" size={30} /></span>
+          <div>
+            <small>Ihre Ansprechpartnerin</small>
+            <strong>Janay Rappelt</strong>
+            <p>
+              Sie verbindet Ihr Unternehmensanliegen mit der passenden
+              Coach-Expertise und begleitet die Abstimmung.
+            </p>
+          </div>
+        </aside>
         <a class="contact-email" href={fallbackMailto}>{primaryEmail}</a>
       </div>
 

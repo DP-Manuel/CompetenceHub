@@ -9,7 +9,7 @@ interface Props {
 
 const {
   title,
-  description = "Competence Hub vermittelt ausgewählte Coaches für Führung, Zusammenarbeit, psychologische Beratung und gesunde berufliche Entwicklung.",
+  description = "Competence Hub verbindet Unternehmensanliegen mit ausgewählten Coaches, passenden Formaten und persönlicher Begleitung.",
   bodyClass = "",
 } = Astro.props;
 
@@ -30,6 +30,7 @@ const serviceNavigation = [
   { label: "Alle Leistungen", href: "leistungen", icon: "compass" as const },
   { label: "Livecoaching", href: "livecoaching", icon: "message-circle" as const },
   { label: "Businesscoaching", href: "businesscoaching", icon: "briefcase" as const },
+  { label: "Recruiting & Personalentwicklung", href: "leistungen#recruiting", icon: "users" as const },
   { label: "Psychologische Beratung & Prävention", href: "leistungen#gesundheit", icon: "heart-pulse" as const },
   { label: "Supervision, Workshops & Vorträge", href: "leistungen#gruppenformate", icon: "users" as const },
 ];
@@ -63,8 +64,8 @@ const isServicePage = ["leistungen", "livecoaching", "businesscoaching"].some(
     )}
     <header class="site-header">
       <a class="brand" href={url()} aria-label="Competence Hub Startseite">
-        <span class="brand__mark">Competence Hub</span>
-        <span class="brand__line">Ein Angebot von Donner + Partner</span>
+        <span class="brand__mark">Competence <em>Hub</em></span>
+        <span class="brand__line">Passende Expertise. Persönlich verbunden.</span>
       </a>
       <nav class="nav nav--desktop" aria-label="Hauptnavigation">
         <a href={url()} aria-current={isCurrent() ? "page" : undefined}>Start</a>
@@ -94,7 +95,7 @@ const isServicePage = ["leistungen", "livecoaching", "businesscoaching"].some(
         <summary>Menü</summary>
         <nav class="nav" aria-label="Mobile Hauptnavigation">
           <a href={url()} aria-current={isCurrent() ? "page" : undefined}>Start</a>
-          {serviceNavigation.slice(0, 3).map((item) => (
+          {serviceNavigation.map((item) => (
             <a
               href={url(item.href)}
               aria-current={isCurrent(item.href) ? "page" : undefined}

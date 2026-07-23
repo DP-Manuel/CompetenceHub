@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-07-17
+Last updated: 2026-07-23
 
 ## Vision
 
@@ -10,9 +10,12 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 
 - Workflow model: informal multi-day work
 - Current phase, sprint, milestone, board status, or release: Competence Hub website deadline sprint
-- Current status: yellow
+- Current status: yellow; the central interactive Connected-Core graph is
+  implemented locally and awaits content/design review
 - Main blocker: final coach/publication approval, legal applicability, pricing semantics, and the approved live contact/response process are not finalized
-- Next decision needed: approve the compact visual direction, curated intermediary positioning, and the Elisabeth Schwabauer / Carolin Hupp profile drafts
+- Next decision needed: approve the central relationship-graph direction,
+  curated intermediary positioning, and the Elisabeth Schwabauer / Carolin
+  Hupp profile drafts
 
 ## Scope
 
@@ -54,6 +57,8 @@ Out of scope:
 - Now: complete the professional, mobile-first Competence Hub website MVP by 2026-07-23.
 - Now: validate the new topic-based navigation and role-oriented login preview with Manuel; no real authentication belongs in the public website slice.
 - Now: use `docs/assets/designstyle.md` as the shared visual acceptance basis for website corrections and later portal/app work.
+- Now: review the local Connected-Core direction, Recruiting field, Wegner-Ney
+  profile draft and Janay-Rappelt contact role before any public update.
 - Next: approve and publish the new coach content only after wording, current availability, image rights, and publication consent are confirmed.
 - In parallel: perform a read-only inventory of the blank server after its purpose and secure access method are confirmed; then select the backend runtime and migration tool.
 - Later: implement the independent web system with login, backend API, own database, roles, and first CRUD workflows.
@@ -96,6 +101,8 @@ Out of scope:
 6. Complete final browser, accessibility, SEO, and content QA before 2026-07-23.
 7. Confirm whether the blank server is staging or production before the first read-only SSH inventory.
 8. After server/runtime confirmation, scope secure authentication for the internal role first; coach and company access follow as separate backend slices.
+9. Decide whether Recruiting becomes a confirmed public Competence-Hub offer
+   and define its exact scope before production wording is finalized.
 
 ## Restart Note
 

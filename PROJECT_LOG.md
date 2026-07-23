@@ -2,6 +2,39 @@
 
 Newest entries first.
 
+## 2026-07-23 | concept/implementation | Connected Core lokal umgesetzt
+
+Das freigegebene Gesamtkonzept in `Quellen/Neues Konzept`, der heutige
+Requirements-Engineering-Eintrag und die Unterlagen zu Wegner-Ney wurden
+ausgewertet und in eine lokale Website-Version übertragen.
+
+- Markenlogik: Die Startseite erklärt Competence Hub nun als sichtbaren Kern,
+  der Unternehmensanliegen, ausgewählte Coaches, passende Formate und
+  persönliche Begleitung verbindet.
+- Gestaltung: Der Hub steht nun allein im Zentrum der ersten Ansicht.
+  Kreisförmige Haupt- und Themenknoten bilden einen interaktiven
+  Beziehungsgraphen; Hover, Fokus oder Aktivierung zeigen nur passende
+  Verbindungen. Ein kleiner Orientierungspunkt läuft dann um den Kern.
+  Mobile Geräte erhalten ein stabiles Kreisraster ohne unlesbare Linien.
+- Angebot: Recruiting und Personalentwicklung sind lokal als ergänzendes
+  Leistungsfeld sichtbar. Der öffentliche Leistungsumfang bleibt
+  freigabepflichtig.
+- Businesscoaching: Emotionale Ebene und Sachebene werden getrennt erklärt und
+  als zusammengehörige Coachingperspektiven dargestellt.
+- Personen: Wegner-Ney wurde mit freigegebenem Porträt und ausschließlich
+  nicht-KI-bezogenen Themen als lokaler Profilentwurf ergänzt. Janay Rappelt
+  wird ohne erfundenes Bild oder Profil als persönliche Ansprechpartnerin
+  zwischen Unternehmen und Coaches gezeigt.
+- Dokumentation: `docs/assets/designstyle.md` wurde um Connected Core ergänzt;
+  die neuen Anforderungen stehen in
+  `docs/requirements/requirements-engineering-update-2026-07-23.md`.
+- Verifikation: Astro prüft 24 Dateien ohne Fehler, Warnungen oder Hinweise und
+  erzeugt 20 statische Seiten. Die zentrale Hub-Ansicht wurde bei 1440 und
+  500 Pixeln geprüft; Coach-Übersicht, Wegner-Ney, Kontakt und Businesscoaching
+  zusätzlich im Desktop-Render. Gefundene Fehler bei Hero-Umbruch, mobilem
+  Hub-Raster und Porträtformat wurden korrigiert.
+- Veröffentlichung: nur lokale Umsetzung; kein Commit, Push oder Deployment.
+
 ## 2026-07-17 | design system / skill | Inspirationsserie in digitale Regeln übersetzt
 
 Die sieben freigegebenen Bilder aus `Quellen/Inspiration` wurden vollständig visuell analysiert und mit dem Corporate Design Manual, dem Designerinnen-Feedback und der ergänzenden Datei `Rückmeldung KI.docx` abgeglichen.

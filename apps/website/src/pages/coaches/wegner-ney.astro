@@ -1,0 +1,113 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const topics = [
+  {
+    title: "Starke Führung und starke Teams",
+    text: "Führung so gestalten, dass Verantwortung, Vertrauen und Zusammenarbeit im Arbeitsalltag wirksam zusammenkommen.",
+  },
+  {
+    title: "Potenziale im Recruiting erkennen",
+    text: "Praktische Fähigkeiten, berufliche Erfahrung und Entwicklungsmöglichkeiten stärker in den Blick nehmen, statt Auswahl nur an formalen Kriterien auszurichten.",
+  },
+  {
+    title: "Mittelstand im Wandel",
+    text: "Familiengeführte und mittelständische Unternehmen dabei unterstützen, Zusammenarbeit und Personalentwicklung auch in Veränderung handlungsfähig zu gestalten.",
+  },
+];
+---
+
+<BaseLayout
+  title="Wegner-Ney | Coaches | Competence Hub"
+  description="Wegner-Ney bietet Workshops und Vorträge zu Führung, Teamstärkung, Recruiting und Personalentwicklung für mittelständische Unternehmen."
+>
+  <main class="subpage">
+    <section class="coach-profile-hero">
+      <div>
+        <p class="eyebrow">Workshop- und Vortragsexpertise</p>
+        <h1>Wegner-Ney</h1>
+        <p class="coach-profile-lead">
+          Impulse für mittelständische und familiengeführte Unternehmen, die
+          Führung, Zusammenarbeit und Mitarbeitergewinnung weiterentwickeln
+          möchten.
+        </p>
+        <p>
+          Im Mittelpunkt stehen die Menschen im Unternehmen: ihre praktischen
+          Fähigkeiten, ihre Verantwortung und die Frage, wie starke Teams auch
+          in Veränderung gemeinsam wirksam bleiben.
+        </p>
+        <div class="coach-profile-actions">
+          <a class="button" href={url("kontakt")}>Format anfragen</a>
+          <a class="button button--ghost" href={url("coaches")}>Alle Coaches</a>
+        </div>
+      </div>
+      <figure class="coach-profile-portrait">
+        <img
+          src={url("images/coaches/wegner-ney.jpg")}
+          alt="Porträt von Wegner-Ney"
+          width="1030"
+          height="1545"
+        />
+        <figcaption>
+          <strong>Wegner-Ney</strong>
+          <span>Führung · Teams · Recruiting</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="coach-profile-section">
+      <div class="section-heading coach-section-heading">
+        <div>
+          <p class="eyebrow">Themenschwerpunkte</p>
+          <h2>Menschen und Unternehmen gemeinsam entwickeln</h2>
+        </div>
+        <p>
+          Die Angebote richten sich an Unternehmen, die Führung und
+          Personalgewinnung praxisnah mit ihrer tatsächlichen Arbeitssituation
+          verbinden möchten.
+        </p>
+      </div>
+
+      <div class="coach-topic-grid">
+        {topics.map((topic) => (
+          <article>
+            <h3>{topic.title}</h3>
+            <p>{topic.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="coach-format-band" aria-labelledby="wegner-formats-title">
+      <div>
+        <p class="eyebrow">Mögliche Formate</p>
+        <h2 id="wegner-formats-title">Vortrag oder Workshop passend zum Bedarf</h2>
+      </div>
+      <p>
+        Thema, Zielgruppe und gewünschte Wirkung werden vorab gemeinsam
+        eingeordnet. Der konkrete Zuschnitt entsteht aus dem Bedarf des
+        Unternehmens.
+      </p>
+    </section>
+
+    <section class="showcase-strip coach-profile-cta">
+      <div>
+        <p class="eyebrow">Persönlich verbunden</p>
+        <h2>Passt diese Expertise zu Ihrem Anliegen?</h2>
+      </div>
+      <div>
+        <p>
+          Janay Rappelt unterstützt bei der Einordnung und stellt den Kontakt
+          zwischen Unternehmen und Coach her.
+        </p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

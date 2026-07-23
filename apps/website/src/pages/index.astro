@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import CompetenceHubMap from "../components/CompetenceHubMap.astro";
 import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
@@ -45,6 +46,12 @@ const situations = [
     icon: "heart-pulse" as const,
     href: "leistungen",
   },
+  {
+    title: "Mitarbeitende gewinnen und entwickeln",
+    text: "Potenziale erkennen, passende Menschen ansprechen und Personalentwicklung mit dem Unternehmensbedarf verbinden.",
+    icon: "users" as const,
+    href: "leistungen#recruiting",
+  },
 ];
 
 const formats = [
@@ -76,6 +83,13 @@ const formats = [
     href: "leistungen",
     icon: "users" as const,
   },
+  {
+    eyebrow: "Recruiting & Personalentwicklung",
+    title: "Menschen und Aufgaben passend verbinden",
+    text: "Für Unternehmen, die Potenziale gezielter erkennen, Mitarbeitende gewinnen und Entwicklung mit dem tatsächlichen Bedarf verbinden möchten.",
+    href: "leistungen#recruiting",
+    icon: "building" as const,
+  },
 ];
 
 const trustPoints = [
@@ -92,8 +106,8 @@ const trustPoints = [
     icon: "message-circle" as const,
   },
   {
-    text: "Vor Ort und digital",
-    icon: "compass" as const,
+    text: "Janay Rappelt als Ansprechpartnerin",
+    icon: "user-round" as const,
   },
 ];
 
@@ -109,6 +123,10 @@ const process = [
   {
     title: "Nächsten Schritt vereinbaren",
     text: "Umfang, Termin und Vorgehen werden transparent abgestimmt, bevor das Coaching startet.",
+  },
+  {
+    title: "Umsetzung begleiten",
+    text: "Janay Rappelt bleibt als persönliche Verbindung zwischen Unternehmen und Coach ansprechbar.",
   },
 ];
 
@@ -132,38 +150,24 @@ const coachPreview = [
     href: "coaches/carolin-hupp",
     initials: "CH",
   },
+  {
+    name: "Wegner-Ney",
+    role: "Führung, Teams & Recruiting",
+    href: "coaches/wegner-ney",
+    image: "images/coaches/wegner-ney.jpg",
+    initials: "WN",
+  },
 ];
 ---
 
 <BaseLayout
   title="Competence Hub | Passende Coaches für Unternehmen"
-  description="Competence Hub vermittelt ausgewählte Coaches für Unternehmen, Führungskräfte und Teams in Führung, Zusammenarbeit, psychologischer Beratung und Gesundheit."
+  description="Competence Hub verbindet Unternehmensanliegen mit ausgewählten Coaches und passenden Formaten für Führung, Teams, Recruiting, Gesundheit und Entwicklung."
   bodyClass="home-page"
 >
   <main>
-    <section class="hero hero--competence">
-      <div class="hero__copy">
-        <p class="eyebrow">Kuratierte Coach-Vermittlung</p>
-        <h1>Der passende Coach für das, was Ihr Unternehmen bewegt.</h1>
-        <p class="hero__lead">
-          Ausgewählte Expertise für Führung, Zusammenarbeit, Gesundheit und
-          berufliche Entwicklung. Persönlich kuratiert für Ihren Bedarf.
-        </p>
-        <div class="actions">
-          <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
-          <a class="button button--ghost" href={url("leistungen")}>Leistungen ansehen</a>
-        </div>
-      </div>
-      <aside class="hero-panel" aria-label="Wirkungsfelder von Competence Hub">
-        <p class="eyebrow">Themen im Überblick</p>
-        <strong>Was interessiert Sie?</strong>
-        <nav class="hero-shortcuts" aria-label="Schnelleinstieg nach Anliegen">
-          <a href={url("businesscoaching")}><Icon name="leadership" size={24} /><span>Führung</span><Icon name="arrow-right" size={18} /></a>
-          <a href={url("livecoaching")}><Icon name="users" size={24} /><span>Teams</span><Icon name="arrow-right" size={18} /></a>
-          <a href={url("leistungen#gesundheit")}><Icon name="heart-pulse" size={24} /><span>Gesundheit</span><Icon name="arrow-right" size={18} /></a>
-          <a href={url("coaches")}><Icon name="user-round" size={24} /><span>Coach finden</span><Icon name="arrow-right" size={18} /></a>
-        </nav>
-      </aside>
+    <section class="hub-hero" aria-label="Competence Hub entdecken">
+      <CompetenceHubMap />
     </section>
 
     <section class="trust-strip" aria-label="Competence Hub auf einen Blick">
@@ -219,10 +223,10 @@ const coachPreview = [
       </div>
     </section>
 
-    <section class="process-section" aria-labelledby="process-title">
+    <section class="process-section" id="so-funktioniert-der-hub" aria-labelledby="process-title">
       <div class="section-heading">
-        <p class="eyebrow">Der Weg zum Coaching</p>
-        <h2 id="process-title">Vom ersten Anliegen zum passenden Rahmen</h2>
+        <p class="eyebrow">So verbindet der Hub</p>
+        <h2 id="process-title">Ein Anliegen. Die passende Verbindung.</h2>
       </div>
       <div class="timeline-list timeline-list--compact">
         {process.map((step, index) => (
@@ -271,13 +275,21 @@ const coachPreview = [
       <a class="text-link" href={url("coaches")}>Alle Coach-Profile ansehen</a>
     </section>
 
-    <section class="cta-panel cta-panel--home" id="anfrage">
-      <div>
-        <p class="eyebrow">Nächster Schritt</p>
-        <h2>Wobei dürfen wir Sie unterstützen?</h2>
-        <p>Eine kurze Beschreibung reicht für die erste Einordnung.</p>
+    <section class="contact-lead" id="anfrage" aria-labelledby="contact-lead-title">
+      <div class="contact-lead__person">
+        <span aria-hidden="true"><Icon name="user-round" size={34} /></span>
+        <div>
+          <small>Ihre Ansprechpartnerin</small>
+          <strong>Janay Rappelt</strong>
+          <p>Persönliche Verbindung zwischen Unternehmen und Coaches</p>
+        </div>
       </div>
-      <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      <div class="contact-lead__copy">
+        <p class="eyebrow">Nächster Schritt</p>
+        <h2 id="contact-lead-title">Wobei dürfen wir Sie unterstützen?</h2>
+        <p>Eine kurze Beschreibung reicht für die erste Einordnung.</p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      </div>
     </section>
   </main>
 </BaseLayout>

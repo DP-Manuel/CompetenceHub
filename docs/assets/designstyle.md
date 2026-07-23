@@ -1,6 +1,6 @@
 # Competence Hub Design Style
 
-Stand: 2026-07-17
+Stand: 2026-07-23
 
 ## Zweck
 
@@ -23,7 +23,10 @@ Illustrationen dürfen nur mit bestätigten Nutzungsrechten übernommen werden.
    Primärquellen geprüft und nur bei zusätzlicher Evidenz übernommen.
 4. Ergänzend: `docs/assets/brand-design-notes.md` und bestätigtes Feedback der
    Designabteilung.
-5. Technische Pflicht: responsive Nutzbarkeit, ausreichender Kontrast,
+5. Aktuelles Produkt- und Designkonzept:
+   `Quellen/Neues Konzept/Competence_Hub_Gesamtkonzept.md` und die zugehörige
+   Konzepttafel vom 23.07.2026. Die Tafel ist Referenz, kein Web-Asset.
+6. Technische Pflicht: responsive Nutzbarkeit, ausreichender Kontrast,
    semantisches HTML und klare Interaktionszustände.
 
 Bei Konflikten gelten Markenfreigabe, Lesbarkeit und Barrierefreiheit vor einer
@@ -35,6 +38,48 @@ Ein heller, menschlicher und klar gegliederter B2B-Auftritt mit viel Weiß,
 Pantone-Türkis als Rahmen und Orientierung, Kaminrot als aktiver Akzent,
 dunkelgrauer Typografie sowie modularen Informationsflächen mit reduzierten
 Linien-Icons und freundlichen Menschenbildern.
+
+## Connected Core
+
+Der Name Competence Hub wird als funktionales Orientierungsprinzip sichtbar.
+Die erste Ansicht stellt den Hub als zentralen Startknoten dar, nicht als
+Illustration neben einem klassischen Text-Hero. Um ihn liegen kleinere,
+kreisförmige Knoten für Unternehmen, Coaches, Leistungen, Recruiting, Kontakt
+und konkrete Formate.
+
+Der Kern verbindet fünf unmittelbare Einstiege:
+
+1. Unternehmensanliegen,
+2. ausgewählte Coaches,
+3. passende Leistungen und Formate,
+4. Recruiting und Personalentwicklung,
+5. persönliche Begleitung.
+
+Die Kernbewegung lautet:
+
+`Anliegen -> Klärung -> Expertise -> Format -> nächster Schritt`
+
+Kreise stehen in der ersten Ansicht für Menschen, Themen und Kontaktpunkte;
+Linien machen nur den aktuell betrachteten Zusammenhang sichtbar. Bei
+Hover, Tastaturfokus oder Aktivierung reagiert der gewählte Knoten leicht,
+relevante Verbindungen werden eingezeichnet und ein kleiner Punkt bewegt sich
+entlang der Kernbahn. Die Darstellung bleibt im Ruhezustand ruhig und startet
+keine dauerhafte Animation.
+
+Sekundärbeziehungen dürfen fachliche Wege sichtbar machen, zum Beispiel
+`Coaches -> Livecoaching -> Workshops und Vorträge`. Sie müssen inhaltlich
+begründet sein und dürfen kein automatisches Matching vortäuschen. Mobil wird
+dieselbe Information als stabiles Kreisraster in sinnvoller DOM-Reihenfolge
+dargestellt; die Verbindungslinien entfallen dort zugunsten von Lesbarkeit und
+direkter Bedienung.
+
+Recruiting und Personalentwicklung werden in der lokalen Konzeptversion als
+zusätzliches Anwendungs- und Leistungsfeld gezeigt. Sie verändern nicht die
+grundlegende Hub-Funktion und werden erst nach fachlicher Freigabe als
+verbindliches öffentliches Angebot behandelt.
+
+Keine Gestaltung darf den Eindruck eines automatischen Matchings, offenen
+Coach-Marktplatzes, Buchungssystems oder bereits fertigen Portals erzeugen.
 
 ## Markenwirkung
 

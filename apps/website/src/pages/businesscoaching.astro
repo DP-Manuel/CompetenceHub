@@ -38,6 +38,21 @@ const topics = [
   },
 ];
 
+const dimensions = [
+  {
+    label: "Emotionale Ebene",
+    title: "Menschen, Beziehungen und Wirkung verstehen",
+    text: "Gefühle, Vertrauen, Konflikte, Motivation und die eigene Wirkung werden reflektiert, damit Zusammenarbeit wieder tragfähig werden kann.",
+    icon: "heart-pulse" as const,
+  },
+  {
+    label: "Sachebene",
+    title: "Rollen, Ziele und Entscheidungen klären",
+    text: "Aufgaben, Erwartungen, Verantwortlichkeiten und konkrete nächste Schritte werden so sortiert, dass Entwicklung im Arbeitsalltag umsetzbar wird.",
+    icon: "compass" as const,
+  },
+];
+
 const steps = [
   "Anliegen und Zielgruppe einordnen",
   "Rahmen, Format und gewünschte Wirkung klären",
@@ -100,6 +115,23 @@ const faqs = [
           <p>{topic.text}</p>
         </article>
       ))}
+    </section>
+
+    <section class="coaching-dimensions" aria-labelledby="dimensions-title">
+      <div class="section-heading">
+        <p class="eyebrow">Zwei Ebenen</p>
+        <h2 id="dimensions-title">Businesscoaching verbindet Mensch und Aufgabe</h2>
+      </div>
+      <div class="coaching-dimensions__grid">
+        {dimensions.map((dimension) => (
+          <article>
+            <span><Icon name={dimension.icon} size={28} /></span>
+            <p class="eyebrow">{dimension.label}</p>
+            <h3>{dimension.title}</h3>
+            <p>{dimension.text}</p>
+          </article>
+        ))}
+      </div>
     </section>
 
     <section class="timeline-list" aria-label="Ablauf im Businesscoaching">
