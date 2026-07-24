@@ -10,17 +10,17 @@ Last updated: 2026-07-24
 - Current phase: Competence Hub public website MVP
 - Current goal: professional, mobile-first B2B website ready by 2026-07-23; first offers are planned from August 2026
 - Done: Competence Hub page structure, central interactive Connected-Core graph, local Connected-Story start page, topic-based B2B paths, direct E-Mail inquiry path, central legal links, curated intermediary positioning, four local coach profiles, visible personal contact role, role-oriented login preview, initial server/database planning, and the implementation-ready `docs/assets/designstyle.md`
-- In progress: stakeholder review of the locally enlarged Hub, progressive
+- In progress: stakeholder review of the published enlarged Hub, progressive
   scroll story, Recruiting, Wegner-Ney and the Janay-Rappelt contact role;
   public wording and publication approvals remain open
 - Waiting: final wording, availability, portrait rights, and publication approval for Elisabeth Schwabauer and Carolin Hupp; further coach data may follow
 - Blocked for live launch: responsible legal entity/domain confirmation, final Datenschutz/AGB applicability, mailbox ownership and response process, final domain/deployment approval
 - Public contact decision: `competencehub@donner-partner.de`
 - Local development test contact: `roedel.kg@donner-partner.eu`; excluded from production builds
-- Deployment status: the 2026-07-23 Connected-Core work was pushed in
-  implementation commit `693901b` and successfully published through manual
-  GitHub Pages review workflow `30016684516`; automatic deployment remains
-  disabled. The 2026-07-24 Connected-Story revision is local only.
+- Deployment status: the 2026-07-24 Connected-Story revision was pushed in
+  implementation commit `fcc0129` and successfully published through manual
+  GitHub Pages review workflow `30094540079`; automatic deployment remains
+  disabled.
 - Database status: no database change performed; a safe example, a local Git-ignored blank ENV, and an initial data model are prepared
 - Server status: no login performed; technical hosting/database questions were sent to Herrn Roß and the response is pending
 
@@ -54,11 +54,11 @@ Last updated: 2026-07-24
 
 - Read first: `AGENTS.md`, `PROJECT_LOG.md`, `PROJECT_PLAN.md`, this file, `SKILL_FEEDBACK_LOG.md`, and `docs/assets/designstyle.md` for visual work.
 - Website entry points: `apps/website/src/layouts/BaseLayout.astro`, `apps/website/src/pages/index.astro`, `apps/website/src/pages/kontakt.astro`, `apps/website/src/pages/coaches.astro`, and `apps/website/src/styles/global.css`.
-- Git state: the published Connected-Core implementation is based on commit
-  `693901b`; the 2026-07-24 Connected-Story revision is not committed.
+- Git state: the published Connected-Story implementation is based on commit
+  `fcc0129`.
   `.tmp/` remains intentionally untracked and the real `.env` remains ignored.
 - Safety: source files may only be opened when Manuel names and approves them. Do not open credential documents or real `.env*`, disclose secrets, or deploy without explicit approval.
 - Next concrete action: Manuel and the design department review the enlarged
-  Hub and progressive Connected Story locally against
-  `docs/assets/designstyle.md`; approved corrections can then be committed and
-  manually published as a new review.
+  Hub and progressive Connected Story at the public Pages review URL against
+  `docs/assets/designstyle.md`; approved corrections can then be implemented
+  and manually published as a new review.

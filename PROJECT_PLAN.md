@@ -11,8 +11,8 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 - Workflow model: informal multi-day work
 - Current phase, sprint, milestone, board status, or release: Competence Hub website deadline sprint
 - Current status: yellow; the enlarged Hub and progressive Connected Story are
-  implemented locally, while the public Pages review still shows the previous
-  revision and stakeholder/content approval remains pending
+  published as a public Pages review, while stakeholder/content approval
+  remains pending
 - Main blocker: final coach/publication approval, legal applicability, pricing semantics, and the approved live contact/response process are not finalized
 - Next decision needed: approve the Connected-Story start-page direction,
   curated intermediary positioning, and the Elisabeth Schwabauer / Carolin
@@ -59,9 +59,9 @@ Out of scope:
   created directly after the 2026-07-23 MVP deadline.
 - Now: validate the new topic-based navigation and role-oriented login preview with Manuel; no real authentication belongs in the public website slice.
 - Now: use `docs/assets/designstyle.md` as the shared visual acceptance basis for website corrections and later portal/app work.
-- Now: review the local Connected-Story direction, Recruiting field,
-  Wegner-Ney profile draft and Janay-Rappelt contact role before any public
-  update.
+- Now: review the published Connected-Story direction, Recruiting field,
+  Wegner-Ney profile draft and Janay-Rappelt contact role before the next
+  public update.
 - Next: approve and publish the new coach content only after wording, current availability, image rights, and publication consent are confirmed.
 - In parallel: perform a read-only inventory of the blank server after its purpose and secure access method are confirmed; then select the backend runtime and migration tool.
 - Later: implement the independent web system with login, backend API, own database, roles, and first CRUD workflows.

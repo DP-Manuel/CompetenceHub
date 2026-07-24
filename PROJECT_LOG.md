@@ -30,7 +30,11 @@ B2B-Erzählung reduziert.
   erzeugt 20 statische Seiten. Hub und Übergang wurden bei 1440, 1366 und
   500 Pixeln gerendert; ein Kontaktknoten-Überlauf in niedriger Laptopansicht
   wurde korrigiert.
-- Veröffentlichung: nur lokale Umsetzung; kein Commit, Push oder Deployment.
+- Veröffentlichung: Die Connected Story wurde mit Commit `fcc0129` nach
+  `main` gepusht und durch den manuellen Pages-Workflow `30094540079`
+  erfolgreich als öffentliche Prüffassung veröffentlicht. Der HTTP-Smoke-Test
+  bestätigt Status 200, die neue Überschrift, die Scroll-Komponente und die
+  korrigierte Web-Orange-Farbe im ausgelieferten CSS.
 
 ## 2026-07-23 | concept/implementation | Connected Core lokal umgesetzt
 
