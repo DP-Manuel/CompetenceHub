@@ -2,6 +2,7 @@
   --color-white: #ffffff;
   --color-pantone: #009ca6;
   --color-red: #ff7f57;
+  --color-red-text: #c14d2c;
   --color-dark: #333132;
   --color-yellow: #ffb758;
   --color-soft: #f3f8f8;
@@ -2449,16 +2450,16 @@ p {
 
 .hub-hero {
   display: grid;
-  min-height: calc(100vh - 84px);
   align-items: center;
-  padding: 28px 0 46px;
+  min-height: 0;
+  padding: 24px 0 46px;
 }
 
 .hub-graph {
   position: relative;
   width: 100%;
-  min-height: 700px;
-  aspect-ratio: 1200 / 760;
+  height: clamp(620px, calc(100svh - 150px), 820px);
+  min-height: 620px;
   overflow: hidden;
   border-top: 1px solid var(--color-line);
   border-bottom: 1px solid var(--color-line);
@@ -2498,6 +2499,11 @@ p {
     opacity 180ms ease,
     stroke-dashoffset 420ms ease;
   vector-effect: non-scaling-stroke;
+}
+
+.hub-graph__connections path[data-from="core"] {
+  stroke-dashoffset: 0;
+  opacity: 0.18;
 }
 
 .hub-graph__connections path.is-active {
@@ -2541,11 +2547,11 @@ p {
   left: 50%;
   z-index: 4;
   display: grid;
-  width: 272px;
-  height: 272px;
+  width: 360px;
+  height: 360px;
   place-content: center;
-  padding: 34px;
-  border: 12px solid var(--color-white);
+  padding: 48px;
+  border: 14px solid var(--color-white);
   border-radius: 50%;
   background: var(--color-pantone-deep);
   box-shadow:
@@ -2574,19 +2580,11 @@ p {
   outline-offset: 7px;
 }
 
-.hub-graph__eyebrow {
-  margin-bottom: 8px;
-  color: var(--color-yellow);
-  font-size: 0.68rem;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
 .hub-graph__core h1 {
-  margin-bottom: 12px;
+  margin-bottom: 22px;
   color: var(--color-white);
-  font-size: 2.25rem;
-  line-height: 0.95;
+  font-size: 2.85rem;
+  line-height: 0.94;
 }
 
 .hub-graph__core h1 em {
@@ -2596,16 +2594,12 @@ p {
 }
 
 .hub-graph__core p {
-  margin-bottom: 14px;
+  max-width: 240px;
+  margin: 0 auto;
   color: var(--color-white);
-  font-size: 0.9rem;
+  font-size: 1.04rem;
   font-weight: 800;
-}
-
-.hub-graph__core small {
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 0.7rem;
-  font-weight: 800;
+  line-height: 1.35;
 }
 
 .hub-graph__nodes {
@@ -2741,6 +2735,265 @@ p {
 .hub-graph__guide span {
   height: 1px;
   background: var(--color-line);
+}
+
+.hub-journey {
+  margin-bottom: 96px;
+  padding-top: 18px;
+}
+
+.hub-journey__heading {
+  display: grid;
+  max-width: 850px;
+  margin-bottom: 30px;
+}
+
+.hub-journey__heading h2 {
+  margin-bottom: 18px;
+}
+
+.hub-journey__heading > p:last-child {
+  max-width: 690px;
+  margin-bottom: 0;
+  font-size: 1.08rem;
+}
+
+.hub-journey__layout {
+  display: grid;
+  grid-template-columns: minmax(430px, 0.95fr) minmax(360px, 0.72fr);
+  gap: clamp(42px, 7vw, 92px);
+  align-items: start;
+}
+
+.hub-journey__visual {
+  position: sticky;
+  top: 132px;
+  display: grid;
+  height: calc(100svh - 164px);
+  min-height: 560px;
+  max-height: 760px;
+  place-items: center;
+  align-self: start;
+  overflow: hidden;
+  border-top: 8px solid var(--color-pantone);
+  background: var(--color-soft);
+}
+
+.hub-journey__stage {
+  position: relative;
+  width: min(92%, 570px);
+  aspect-ratio: 1;
+}
+
+.hub-journey__stage > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hub-journey__orbit {
+  fill: none;
+  stroke: var(--color-line);
+  stroke-dasharray: 3 13;
+  stroke-width: 1.5;
+}
+
+.hub-journey__connection {
+  fill: none;
+  stroke: var(--color-pantone);
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  stroke-linecap: round;
+  stroke-width: 4;
+  opacity: 0.12;
+  transition:
+    stroke-dashoffset 500ms ease,
+    opacity 220ms ease;
+}
+
+.hub-journey__connection.is-active,
+.hub-journey__connection.is-complete {
+  stroke-dashoffset: 0;
+}
+
+.hub-journey__connection.is-active {
+  opacity: 0.95;
+}
+
+.hub-journey__connection.is-complete {
+  opacity: 0.34;
+}
+
+.hub-journey__core,
+.hub-journey__node {
+  position: absolute;
+  display: grid;
+  place-content: center;
+  border-radius: 50%;
+  text-align: center;
+}
+
+.hub-journey__core {
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 190px;
+  height: 190px;
+  border: 10px solid var(--color-white);
+  background: var(--color-pantone-deep);
+  box-shadow:
+    0 0 0 2px var(--color-pantone),
+    0 18px 38px rgba(51, 49, 50, 0.14);
+  color: var(--color-white);
+  transform: translate(-50%, -50%);
+}
+
+.hub-journey__core span,
+.hub-journey__core strong {
+  line-height: 1;
+}
+
+.hub-journey__core span {
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.hub-journey__core strong {
+  color: var(--color-yellow);
+  font-size: 2.35rem;
+}
+
+.hub-journey__node {
+  top: var(--journey-y);
+  left: var(--journey-x);
+  z-index: 3;
+  width: 116px;
+  height: 116px;
+  gap: 5px;
+  padding: 14px;
+  border: 2px solid var(--color-line);
+  background: var(--color-white);
+  color: var(--color-red-text);
+  transform: translate(-50%, -50%) scale(0.92);
+  transition:
+    color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.hub-journey__node .icon {
+  margin-inline: auto;
+  color: var(--color-red-text);
+}
+
+.hub-journey__node strong {
+  font-size: 0.84rem;
+  line-height: 1.1;
+}
+
+.hub-journey__node.is-complete {
+  border-color: rgba(0, 156, 166, 0.45);
+  color: var(--color-red-text);
+  transform: translate(-50%, -50%) scale(0.97);
+}
+
+.hub-journey__node.is-active {
+  border-color: var(--color-red);
+  box-shadow:
+    0 0 0 7px rgba(255, 127, 87, 0.18),
+    0 16px 30px rgba(51, 49, 50, 0.13);
+  color: var(--color-red-text);
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.hub-journey__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hub-journey__steps li {
+  position: relative;
+  display: grid;
+  min-height: 66svh;
+  align-content: center;
+  padding: 52px 0 52px 34px;
+  border-left: 2px solid var(--color-line);
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.hub-journey.is-enhanced .hub-journey__steps li {
+  opacity: 0.72;
+  transform: translateY(16px);
+}
+
+.hub-journey__steps li::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -7px;
+  width: 12px;
+  height: 12px;
+  border: 3px solid var(--color-white);
+  border-radius: 50%;
+  background: var(--color-line);
+  box-shadow: 0 0 0 1px var(--color-line);
+  transform: translateY(-50%);
+}
+
+.hub-journey__steps li[aria-current="step"],
+.hub-journey__steps li:focus-within {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hub-journey__steps li[aria-current="step"]::before {
+  background: var(--color-red);
+  box-shadow: 0 0 0 2px var(--color-red);
+}
+
+.hub-journey__steps li > .icon {
+  margin-bottom: 14px;
+  color: var(--color-pantone);
+}
+
+.hub-journey__steps .eyebrow {
+  margin-bottom: 10px;
+}
+
+.hub-journey__steps h3 {
+  max-width: 540px;
+  margin-bottom: 16px;
+  font-size: 2rem;
+  line-height: 1.12;
+}
+
+.hub-journey__steps li > p:not(.eyebrow) {
+  max-width: 520px;
+  margin-bottom: 22px;
+}
+
+.hub-journey__number {
+  position: absolute;
+  top: 50%;
+  left: -62px;
+  color: rgba(51, 49, 50, 0.16);
+  font-size: 2.6rem;
+  font-weight: 900;
+  transform: translateY(-50%);
+}
+
+.hub-journey__steps .text-link {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  width: fit-content;
 }
 
 .format-grid article:last-child:nth-child(odd) {
@@ -3045,22 +3298,46 @@ p {
   }
 
   .hub-graph {
-    min-height: 610px;
+    height: 620px;
+    min-height: 620px;
   }
 
   .hub-graph__core {
-    width: 230px;
-    height: 230px;
-    padding: 28px;
+    width: 310px;
+    height: 310px;
+    padding: 40px;
   }
 
   .hub-graph__core h1 {
-    font-size: 1.95rem;
+    font-size: 2.45rem;
   }
 
   .hub-graph__position {
     width: calc(var(--node-size) * 0.84);
     height: calc(var(--node-size) * 0.84);
+  }
+
+  .hub-journey__layout {
+    grid-template-columns: minmax(340px, 0.9fr) minmax(300px, 0.72fr);
+    gap: 34px;
+  }
+
+  .hub-journey__visual {
+    top: 112px;
+  }
+
+  .hub-journey__core {
+    width: 160px;
+    height: 160px;
+  }
+
+  .hub-journey__node {
+    width: 98px;
+    height: 98px;
+  }
+
+  .hub-journey__number {
+    display: none;
   }
 
   h1 {
@@ -3222,12 +3499,14 @@ p {
 
   .hub-graph {
     display: grid;
+    height: auto;
     min-height: 0;
     aspect-ratio: auto;
     padding: 54px 18px 24px;
   }
 
   .hub-graph::before {
+    content: "Ihre Verbindung beginnt hier";
     top: 20px;
     right: 18px;
     left: 18px;
@@ -3244,8 +3523,8 @@ p {
     top: auto;
     left: auto;
     width: 100%;
-    max-width: 250px;
-    height: 250px;
+    max-width: 290px;
+    height: 290px;
     margin: 8px auto 28px;
     padding: 30px;
     transform: none;
@@ -3258,7 +3537,12 @@ p {
   }
 
   .hub-graph__core h1 {
-    font-size: 2rem;
+    font-size: 2.3rem;
+  }
+
+  .hub-graph__core p {
+    max-width: 210px;
+    font-size: 0.98rem;
   }
 
   .hub-graph__nodes {
@@ -3297,6 +3581,58 @@ p {
 
   .hub-graph__node.is-muted {
     opacity: 0.46;
+  }
+
+  .hub-journey {
+    margin-bottom: 70px;
+  }
+
+  .hub-journey__heading {
+    margin-bottom: 32px;
+  }
+
+  .hub-journey__layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .hub-journey__visual {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 0;
+    padding: 18px;
+  }
+
+  .hub-journey__stage {
+    width: min(100%, 430px);
+  }
+
+  .hub-journey__steps {
+    display: grid;
+    gap: 16px;
+  }
+
+  .hub-journey__steps li {
+    min-height: 0;
+    padding: 28px 24px 28px 30px;
+    border: 1px solid var(--color-line);
+    border-left: 7px solid var(--color-pantone);
+    background: var(--color-white);
+    opacity: 1;
+    transform: none;
+  }
+
+  .hub-journey__steps li::before {
+    display: none;
+  }
+
+  .hub-journey__steps li[aria-current="step"] {
+    border-left-color: var(--color-red);
+  }
+
+  .hub-journey__steps h3 {
+    font-size: 1.55rem;
   }
 
   .portal-card {
@@ -3473,12 +3809,20 @@ p {
   .hub-graph__core,
   .hub-graph__node,
   .hub-graph__marker,
+  .hub-journey__connection,
+  .hub-journey__node,
+  .hub-journey__steps li,
   .hub-graph__connections path {
     transition: none;
   }
 
   .hub-graph__marker {
     animation: none;
+  }
+
+  .hub-journey.is-enhanced .hub-journey__steps li {
+    opacity: 1;
+    transform: none;
   }
 }
 

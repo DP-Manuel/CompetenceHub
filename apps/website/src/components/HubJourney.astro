@@ -1,0 +1,195 @@
+---
+import Icon from "./Icon.astro";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const steps = [
+  {
+    number: "01",
+    node: "Anliegen",
+    eyebrow: "Ihr Ausgangspunkt",
+    title: "Wir beginnen mit dem, was Sie wirklich beschäftigt.",
+    text: "Führung, Zusammenarbeit, Gesundheit oder Personalentwicklung: Zuerst klären wir Anlass, Zielgruppe und gewünschte Wirkung.",
+    href: "unternehmen",
+    link: "Anliegen einordnen",
+    icon: "building" as const,
+    x: 50,
+    y: 10,
+  },
+  {
+    number: "02",
+    node: "Expertise",
+    eyebrow: "Ausgewähltes Netzwerk",
+    title: "Das Anliegen führt zur passenden Expertise.",
+    text: "Nicht jedes Thema braucht dieselbe Perspektive. Der Hub verbindet Ihren Bedarf mit qualifizierten Coaches und nachvollziehbaren Schwerpunkten.",
+    href: "coaches",
+    link: "Coaches kennenlernen",
+    icon: "users" as const,
+    x: 88,
+    y: 50,
+  },
+  {
+    number: "03",
+    node: "Format",
+    eyebrow: "Passender Rahmen",
+    title: "Expertise wird zum passenden Format.",
+    text: "Livecoaching, Businesscoaching, Beratung oder Gruppenformat werden so gewählt, dass sie zur Situation und zum Unternehmen passen.",
+    href: "leistungen",
+    link: "Formate ansehen",
+    icon: "briefcase" as const,
+    x: 50,
+    y: 90,
+  },
+  {
+    number: "04",
+    node: "Begleitung",
+    eyebrow: "Persönliche Verbindung",
+    title: "Eine Ansprechpartnerin hält den Weg zusammen.",
+    text: "Janay Rappelt begleitet die Abstimmung zwischen Unternehmen und Coaches und bleibt für den nächsten Schritt persönlich ansprechbar.",
+    href: "kontakt",
+    link: "Bedarf besprechen",
+    icon: "message-circle" as const,
+    x: 12,
+    y: 50,
+  },
+];
+
+const connections = [
+  "M300 300 Q300 190 300 76",
+  "M300 300 Q410 300 524 300",
+  "M300 300 Q300 410 300 524",
+  "M300 300 Q190 300 76 300",
+];
+---
+
+<section
+  class="hub-journey"
+  id="so-funktioniert-der-hub"
+  data-hub-journey
+  aria-labelledby="hub-journey-title"
+>
+  <header class="hub-journey__heading">
+    <p class="eyebrow">So wächst die Verbindung</p>
+    <h2 id="hub-journey-title">Vom ersten Anliegen zur passenden Begleitung.</h2>
+    <p>
+      Der Competence Hub macht aus vielen Möglichkeiten einen nachvollziehbaren
+      Weg mit persönlicher Verantwortung.
+    </p>
+  </header>
+
+  <div class="hub-journey__layout">
+    <div class="hub-journey__visual" aria-hidden="true">
+      <div class="hub-journey__stage">
+        <svg viewBox="0 0 600 600" focusable="false">
+          <circle class="hub-journey__orbit" cx="300" cy="300" r="214" />
+          {connections.map((connection, index) => (
+            <path
+              class="hub-journey__connection"
+              d={connection}
+              pathLength="1"
+              data-journey-connection={index + 1}
+            />
+          ))}
+        </svg>
+
+        <div class="hub-journey__core">
+          <span>Competence</span>
+          <strong>Hub</strong>
+        </div>
+
+        {steps.map((step, index) => (
+          <div
+            class="hub-journey__node"
+            style={`--journey-x: ${step.x}%; --journey-y: ${step.y}%;`}
+            data-journey-node={index + 1}
+          >
+            <Icon name={step.icon} size={25} />
+            <strong>{step.node}</strong>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <ol class="hub-journey__steps">
+      {steps.map((step, index) => (
+        <li data-journey-step={index + 1} aria-current={index === 0 ? "step" : undefined}>
+          <span class="hub-journey__number">{step.number}</span>
+          <Icon name={step.icon} size={30} />
+          <p class="eyebrow">{step.eyebrow}</p>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+          <a class="text-link" href={url(step.href)}>
+            {step.link}
+            <Icon name="arrow-right" size={18} />
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-hub-journey]").forEach((journey) => {
+    const steps = Array.from(
+      journey.querySelectorAll<HTMLElement>("[data-journey-step]"),
+    );
+    const nodes = Array.from(
+      journey.querySelectorAll<HTMLElement>("[data-journey-node]"),
+    );
+    const connections = Array.from(
+      journey.querySelectorAll<SVGPathElement>("[data-journey-connection]"),
+    );
+
+    journey.classList.add("is-enhanced");
+
+    const activate = (stepNumber: number) => {
+      journey.dataset.activeStep = String(stepNumber);
+
+      steps.forEach((step) => {
+        const number = Number(step.dataset.journeyStep);
+        if (number === stepNumber) {
+          step.setAttribute("aria-current", "step");
+        } else {
+          step.removeAttribute("aria-current");
+        }
+      });
+
+      nodes.forEach((node) => {
+        const number = Number(node.dataset.journeyNode);
+        node.classList.toggle("is-active", number === stepNumber);
+        node.classList.toggle("is-complete", number < stepNumber);
+      });
+
+      connections.forEach((connection) => {
+        const number = Number(connection.dataset.journeyConnection);
+        connection.classList.toggle("is-active", number === stepNumber);
+        connection.classList.toggle("is-complete", number < stepNumber);
+      });
+    };
+
+    activate(1);
+
+    if (!("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (!visible) return;
+        const target = visible.target as HTMLElement;
+        activate(Number(target.dataset.journeyStep) || 1);
+      },
+      {
+        rootMargin: "-28% 0px -42% 0px",
+        threshold: [0.2, 0.45, 0.7],
+      },
+    );
+
+    steps.forEach((step) => observer.observe(step));
+  });
+</script>

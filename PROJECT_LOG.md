@@ -2,6 +2,36 @@
 
 Newest entries first.
 
+## 2026-07-24 | design/implementation | Startseite als Connected Story verdichtet
+
+Das freigegebene Variantenkonzept B wurde lokal umgesetzt und auf eine klarere
+B2B-Erzählung reduziert.
+
+- Hub-Bühne: Der zentrale Competence Hub ist deutlich größer, enthält nur noch
+  Markenname und Nutzensatz und beginnt ohne übergroße vertikale Leerfläche
+  direkt unter der Navigation.
+- Beziehungen: Dezente Hauptverbindungen bleiben bereits im Ruhezustand
+  sichtbar; Hover, Fokus und Aktivierung zeigen weiterhin die relevanten
+  Zusammenhänge und den umlaufenden Orientierungspunkt.
+- Scroll-Erzählung: Die neue Komponente `HubJourney.astro` führt schrittweise
+  durch Anliegen, Expertise, Format und persönliche Begleitung. Desktop nutzt
+  eine haftende Netzgrafik, mobil eine stabile lineare Übersetzung.
+- Farbkorrektur: Die vier visuellen Stationen nutzen für Icon und Kurzlabel die
+  kontraststärkere Web-Orange-Variante `#C14D2C` auf Weiß. Eine zu breit
+  greifende SVG-Regel wurde auf die Orbitgrafik begrenzt, damit die
+  Stationsicons ihre vorgesehenen Abmessungen behalten.
+- Verdichtung: Sieben Anlasskarten, fünf Formatkarten und vier separate
+  Prozesskarten wurden von der Startseite entfernt. Die Inhalte bleiben über
+  Unternehmen, Leistungen, Coaches und Kontakt erreichbar.
+- Zugänglichkeit: Native Links, sichtbare Fokuszustände, semantische
+  Überschriften, vollständig sichtbarer Inhalt ohne JavaScript und
+  `prefers-reduced-motion` bleiben erhalten.
+- Verifikation: Astro prüft 25 Dateien ohne Fehler, Warnungen oder Hinweise und
+  erzeugt 20 statische Seiten. Hub und Übergang wurden bei 1440, 1366 und
+  500 Pixeln gerendert; ein Kontaktknoten-Überlauf in niedriger Laptopansicht
+  wurde korrigiert.
+- Veröffentlichung: nur lokale Umsetzung; kein Commit, Push oder Deployment.
+
 ## 2026-07-23 | concept/implementation | Connected Core lokal umgesetzt
 
 Das freigegebene Gesamtkonzept in `Quellen/Neues Konzept`, der heutige

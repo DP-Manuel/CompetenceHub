@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-07-23
+Last updated: 2026-07-24
 
 ## Snapshot
 
@@ -9,10 +9,10 @@ Last updated: 2026-07-23
 - Workflow model: informal multi-day deadline sprint
 - Current phase: Competence Hub public website MVP
 - Current goal: professional, mobile-first B2B website ready by 2026-07-23; first offers are planned from August 2026
-- Done: Competence Hub page structure, central interactive Connected-Core graph, topic-based B2B paths, direct E-Mail inquiry path, central legal links, curated intermediary positioning, four local coach profiles, visible personal contact role, role-oriented login preview, initial server/database planning, and the implementation-ready `docs/assets/designstyle.md`
-- In progress: stakeholder review of the local Connected Core, Recruiting,
-  Wegner-Ney and the Janay-Rappelt contact role; public wording and publication
-  approvals remain open
+- Done: Competence Hub page structure, central interactive Connected-Core graph, local Connected-Story start page, topic-based B2B paths, direct E-Mail inquiry path, central legal links, curated intermediary positioning, four local coach profiles, visible personal contact role, role-oriented login preview, initial server/database planning, and the implementation-ready `docs/assets/designstyle.md`
+- In progress: stakeholder review of the locally enlarged Hub, progressive
+  scroll story, Recruiting, Wegner-Ney and the Janay-Rappelt contact role;
+  public wording and publication approvals remain open
 - Waiting: final wording, availability, portrait rights, and publication approval for Elisabeth Schwabauer and Carolin Hupp; further coach data may follow
 - Blocked for live launch: responsible legal entity/domain confirmation, final Datenschutz/AGB applicability, mailbox ownership and response process, final domain/deployment approval
 - Public contact decision: `competencehub@donner-partner.de`
@@ -20,7 +20,7 @@ Last updated: 2026-07-23
 - Deployment status: the 2026-07-23 Connected-Core work was pushed in
   implementation commit `693901b` and successfully published through manual
   GitHub Pages review workflow `30016684516`; automatic deployment remains
-  disabled
+  disabled. The 2026-07-24 Connected-Story revision is local only.
 - Database status: no database change performed; a safe example, a local Git-ignored blank ENV, and an initial data model are prepared
 - Server status: no login performed; technical hosting/database questions were sent to Herrn Roß and the response is pending
 
@@ -28,12 +28,11 @@ Last updated: 2026-07-23
 
 - Website MVP deadline: 2026-07-23
 - First company offers planned: August 2026
-- Build evidence: final `npm run build` passed with 0 Astro errors, warnings, or
-  hints and generated 20 static pages
-- Visual evidence: the central Connected-Core graph was checked on the
-  homepage at 1440 and 500 px; Coach-Übersicht, Wegner-Ney, Kontakt and
-  Businesscoaching were checked at desktop width. Hero wrapping, the mobile hub
-  grid and portrait sizing were corrected during QA.
+- Build evidence: `npm run build` passes with 0 Astro errors, warnings, or
+  hints across 25 files and generates 20 static pages
+- Visual evidence: the enlarged Connected-Core graph and its transition into
+  the Connected Story were checked at 1440, 1366 and 500 px. A low-viewport
+  contact-node overlap was corrected during QA.
 - Accessibility direction: semantic headings, native links/details navigation, visible focus, readable contrast, responsive text fit, and reduced-motion handling
 - Remaining QA: real-browser keyboard/menu check, final content proofread, legal review, production-domain SEO/canonical/structured-data work, and incoming coach-profile QA
 
@@ -55,11 +54,11 @@ Last updated: 2026-07-23
 
 - Read first: `AGENTS.md`, `PROJECT_LOG.md`, `PROJECT_PLAN.md`, this file, `SKILL_FEEDBACK_LOG.md`, and `docs/assets/designstyle.md` for visual work.
 - Website entry points: `apps/website/src/layouts/BaseLayout.astro`, `apps/website/src/pages/index.astro`, `apps/website/src/pages/kontakt.astro`, `apps/website/src/pages/coaches.astro`, and `apps/website/src/styles/global.css`.
-- Git state: the central Connected-Core implementation was pushed in commit
-  `693901b`; `.tmp/` remains intentionally untracked and the real `.env`
-  remains ignored. The public Pages review was successfully rebuilt and
-  verified after publication.
+- Git state: the published Connected-Core implementation is based on commit
+  `693901b`; the 2026-07-24 Connected-Story revision is not committed.
+  `.tmp/` remains intentionally untracked and the real `.env` remains ignored.
 - Safety: source files may only be opened when Manuel names and approves them. Do not open credential documents or real `.env*`, disclose secrets, or deploy without explicit approval.
-- Next concrete action: Manuel and the design department review the central
-  relationship graph and its wording locally against `docs/assets/designstyle.md`;
-  approved corrections can then be prepared for a later review publication.
+- Next concrete action: Manuel and the design department review the enlarged
+  Hub and progressive Connected Story locally against
+  `docs/assets/designstyle.md`; approved corrections can then be committed and
+  manually published as a new review.

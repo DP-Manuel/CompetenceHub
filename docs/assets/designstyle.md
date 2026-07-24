@@ -47,6 +47,12 @@ Illustration neben einem klassischen Text-Hero. Um ihn liegen kleinere,
 kreisförmige Knoten für Unternehmen, Coaches, Leistungen, Recruiting, Kontakt
 und konkrete Formate.
 
+Der Kern erhält deutlich mehr visuelles Gewicht als die Außenknoten. Im Kern
+stehen nur Markenname und ein kurzer Nutzensatz; Bedienhinweise, Kategorien und
+weitere Erklärungen werden außerhalb platziert. Auf großen Bildschirmen wird
+die Höhe der Hub-Bühne begrenzt, damit keine übergroße leere Fläche oberhalb
+des Kerns entsteht.
+
 Der Kern verbindet fünf unmittelbare Einstiege:
 
 1. Unternehmensanliegen,
@@ -72,6 +78,13 @@ begründet sein und dürfen kein automatisches Matching vortäuschen. Mobil wird
 dieselbe Information als stabiles Kreisraster in sinnvoller DOM-Reihenfolge
 dargestellt; die Verbindungslinien entfallen dort zugunsten von Lesbarkeit und
 direkter Bedienung.
+
+Nach der ersten Hub-Bühne darf eine scrollgesteuerte „Connected Story“ den Weg
+`Anliegen -> Expertise -> Format -> Begleitung` schrittweise aufbauen. Desktop
+zeigt dabei eine ruhige, kurzzeitig haftende Netzgrafik neben den nacheinander
+aktiven Kapiteln. Mobil werden Visualisierung und Kapitel in normaler
+Lesereihenfolge untereinander angeordnet. Ohne JavaScript bleiben alle Inhalte
+vollständig sichtbar und erreichbar.
 
 Recruiting und Personalentwicklung werden in der lokalen Konzeptversion als
 zusätzliches Anwendungs- und Leistungsfeld gezeigt. Sie verändern nicht die
@@ -125,6 +138,7 @@ generisches Start-up.
 | --- | --- | --- |
 | Markenfarbe | `#009CA6` | Rahmen, Balken, Icons, Linien, große Markenfläche, nicht für langen Kleintext |
 | Komplementärfarbe | `#FF7F57` | Kartenreiter, Kategorieakzent, Prozessmoment, sparsame Hervorhebung |
+| Web-Orange für Kleintext | `#C14D2C` | kleine orange Labels und Icons auf Weiß, wenn das helle Markenorange nicht genügend Kontrast bietet |
 | Textfarbe | `#333132` | Fließtext, Formulare, längere Überschriften, Navigation |
 | Akzentfarbe | `#FFB758` | kleine Linien, Marker und sekundäre Details; niemals als Text auf Weiß |
 | Grundfläche | `#FFFFFF` | dominante Seiten- und Kartenfläche |
@@ -140,6 +154,8 @@ Die Originalfarben erfüllen nicht in jeder Kombination WCAG AA:
 - Weiß auf Pantone: `3.33:1`; kleine Button- oder Fließtexte vermeiden.
 - Kaminrot auf Weiß: `2.49:1`; nur dekorativ oder nach fachlich freigegebener,
   kontraststärkerer Webvariante als Text einsetzen.
+- Web-Orange auf Weiß: `4.81:1`; geeignete AA-konforme Variante für kleine
+  orange Labels und Icons.
 - Gelb auf Weiß: `1.73:1`; nicht als Text einsetzen.
 - Dunkelgrau auf Weiß: `12.91:1`; Standard für alle normalen Texte.
 - Dunkelgrau auf Kaminrot: `5.18:1`; geeignete Kombination für kompakte Labels.
@@ -242,8 +258,8 @@ Mischung aus 3D-, Emoji-, gefüllten und Outline-Stilen.
 
 ## Website-Anwendung
 
-- Erste Ansicht: eine direkte Nutzenheadline, ein kurzer Belegsatz, eine
-  primäre Anfrageaktion und ein sichtbarer Themen- oder Leistungsfinder.
+- Erste Ansicht: der große zentrale Hub, ein kurzer Nutzensatz und direkt
+  erreichbare Themen-, Unternehmens-, Coach- und Kontaktknoten.
 - Große Weißanteile zwischen Markenflächen einplanen.
 - Angebotsbereiche als weiße Karten in einem ruhigen Raster darstellen.
 - Pro Abschnitt nur eine Kernbotschaft und einen klaren nächsten Schritt.
@@ -284,6 +300,9 @@ Mischung aus 3D-, Emoji-, gefüllten und Outline-Stilen.
 
 - Bewegung unterstützt Orientierung: kurze Hover-, Fokus- und
   Aufklapptransitionen zwischen etwa 120 und 220 Millisekunden.
+- Scrollzustände dürfen eine Verbindungslinie zeichnen und genau ein
+  zugehöriges Kapitel sowie einen Knoten hervorheben. Der Inhalt muss auch ohne
+  diese Zustandsänderung verständlich bleiben.
 - Keine dekorativen Dauerschleifen, Parallax-Effekte oder springenden Karten.
 - `prefers-reduced-motion` respektieren.
 - Hover darf nie die einzige Rückmeldung sein; Fokuszustände müssen sichtbar

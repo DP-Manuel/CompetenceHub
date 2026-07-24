@@ -58,9 +58,9 @@ const nodes = [
     href: "kontakt",
     icon: "message-circle" as const,
     kind: "primary",
-    x: 50,
+    x: 42,
     y: 86,
-    size: 116,
+    size: 110,
   },
   {
     id: "livecoaching",
@@ -113,7 +113,7 @@ const edges = [
   { from: "core", to: "coaches", d: "M600 380 Q800 290 1030 220" },
   { from: "core", to: "leistungen", d: "M600 380 Q820 430 972 555" },
   { from: "core", to: "recruiting", d: "M600 380 Q410 470 240 570" },
-  { from: "core", to: "kontakt", d: "M600 380 Q600 520 600 654" },
+  { from: "core", to: "kontakt", d: "M600 380 Q545 515 504 654" },
   { from: "coaches", to: "livecoaching", d: "M1030 220 Q880 90 720 88" },
   { from: "coaches", to: "businesscoaching", d: "M1030 220 Q945 300 846 357" },
   { from: "coaches", to: "gesundheit", d: "M1030 220 Q920 500 762 616" },
@@ -125,7 +125,7 @@ const edges = [
   { from: "unternehmen", to: "recruiting", d: "M170 220 Q155 405 240 570" },
   { from: "unternehmen", to: "businesscoaching", d: "M170 220 Q505 250 846 357" },
   { from: "unternehmen", to: "gruppenformate", d: "M170 220 Q290 120 420 103" },
-  { from: "recruiting", to: "kontakt", d: "M240 570 Q410 650 600 654" },
+  { from: "recruiting", to: "kontakt", d: "M240 570 Q365 635 504 654" },
 ];
 ---
 
@@ -164,10 +164,8 @@ const edges = [
     aria-expanded="false"
     aria-describedby="hub-graph-help"
   >
-    <span class="hub-graph__eyebrow">Zentraler Startknoten</span>
     <h1>Competence <em>Hub</em></h1>
-    <p>Passende Expertise.<br />Persönlich verbunden.</p>
-    <small>Verbindungen entdecken</small>
+    <p>Expertise, die zu Ihrem Anliegen passt.</p>
   </div>
 
   <nav class="hub-graph__nodes" aria-label="Bereiche des Competence Hub">
