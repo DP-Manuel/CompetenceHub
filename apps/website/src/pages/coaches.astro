@@ -14,7 +14,7 @@ const principles = [
   },
   {
     title: "Erfahrung und Haltung",
-    text: "Für Unternehmen zählen fachliche Grundlage, Praxiserfahrung, Verlässlichkeit und ein professioneller Umgang mit sensiblen Anliegen.",
+    text: "Für Unternehmen und Privatpersonen zählen fachliche Grundlage, Praxiserfahrung, Verlässlichkeit und ein professioneller Umgang mit sensiblen Anliegen.",
   },
   {
     title: "Klare Angebotslogik",
@@ -22,7 +22,19 @@ const principles = [
   },
 ];
 
-const coaches = [
+interface Coach {
+  name: string;
+  role: string;
+  focus: string[];
+  text: string;
+  profilePath: string;
+  image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  initials: string;
+}
+
+const coaches: Coach[] = [
   {
     name: "Christian Galvano",
     role: "Dozent, Fachtrainer und Coach",
@@ -34,6 +46,8 @@ const coaches = [
     text: "Christian Galvano verbindet neurowissenschaftliche Grundlagen mit praxisnahen Methoden für Führung, Kommunikation und gesundes Arbeiten.",
     profilePath: "coaches/christian-galvano",
     image: "images/coaches/christian-galvano.webp",
+    imageWidth: 830,
+    imageHeight: 830,
     initials: "CG",
   },
   {
@@ -46,6 +60,9 @@ const coaches = [
     ],
     text: "Elisabeth Schwabauer verbindet psychologische Fachkenntnis mit Erfahrung in beruflicher Beratung, Teamprozessen und der Einordnung psychischer Belastungen.",
     profilePath: "coaches/elisabeth-schwabauer",
+    image: "images/coaches/elisabeth-schwabauer.webp",
+    imageWidth: 1200,
+    imageHeight: 1800,
     initials: "ES",
   },
   {
@@ -71,6 +88,8 @@ const coaches = [
     text: "Wegner-Ney richtet den Blick auf starke Führung, funktionierende Teams und eine Personalgewinnung, die praktische Fähigkeiten und Entwicklungspotenziale ernst nimmt.",
     profilePath: "coaches/wegner-ney",
     image: "images/coaches/wegner-ney.jpg",
+    imageWidth: 830,
+    imageHeight: 830,
     initials: "WN",
   },
 ];
@@ -78,7 +97,7 @@ const coaches = [
 
 <BaseLayout
   title="Coach-Netzwerk | Competence Hub"
-  description="Competence Hub vermittelt ausgewählte Coaches für Führung, Teamarbeit, Recruiting, Psychologie, Gesundheit und berufliche Entwicklung."
+  description="Competence Hub vermittelt ausgewählte Coaches für Unternehmen und Privatpersonen in den Bereichen Führung, Life Coaching, Recruiting, Psychologie, Gesundheit und Entwicklung."
 >
   <main class="subpage">
     <section class="page-hero page-hero--accent coach-list-hero">
@@ -87,11 +106,12 @@ const coaches = [
         <h1>Ausgewählte Coaches statt endlosem Katalog</h1>
         <p>
           Bei Competence Hub stehen die Coaches und ihre Leistungen im
-          Mittelpunkt. Wir verbinden Unternehmen mit Menschen, deren Erfahrung,
-          Schwerpunkt und Arbeitsweise zum konkreten Anliegen passen.
+          Mittelpunkt. Wir verbinden Unternehmen und Privatpersonen mit
+          Menschen, deren Erfahrung, Schwerpunkt und Arbeitsweise zum konkreten
+          Anliegen passen.
         </p>
         <div class="actions">
-          <a class="button" href={url("kontakt")}>Unternehmensbedarf besprechen</a>
+          <a class="button" href={url("kontakt")}>Coaching-Bedarf besprechen</a>
           <a class="button button--ghost" href={url("kontakt")}>Als Coach vorstellen</a>
         </div>
       </div>
@@ -118,8 +138,8 @@ const coaches = [
               <img
                 src={url(coach.image)}
                 alt={`Porträt von ${coach.name}`}
-                width="830"
-                height="830"
+                width={coach.imageWidth ?? 830}
+                height={coach.imageHeight ?? 830}
                 loading="lazy"
               />
             ) : (

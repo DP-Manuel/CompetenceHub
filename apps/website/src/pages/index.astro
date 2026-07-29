@@ -12,7 +12,7 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
 const trustPoints = [
   {
-    text: "Ein Angebot von Donner + Partner",
+    text: "Für Unternehmen & Privatpersonen",
     icon: "building" as const,
   },
   {
@@ -29,18 +29,33 @@ const trustPoints = [
   },
 ];
 
-const coachPreview = [
+interface CoachPreview {
+  name: string;
+  role: string;
+  href: string;
+  image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  initials: string;
+}
+
+const coachPreview: CoachPreview[] = [
   {
     name: "Christian Galvano",
     role: "Führung, Konflikte & Prävention",
     href: "coaches/christian-galvano",
     image: "images/coaches/christian-galvano.webp",
+    imageWidth: 830,
+    imageHeight: 830,
     initials: "CG",
   },
   {
     name: "Elisabeth Schwabauer",
     role: "Psychologie, Belastung & Teams",
     href: "coaches/elisabeth-schwabauer",
+    image: "images/coaches/elisabeth-schwabauer.webp",
+    imageWidth: 1200,
+    imageHeight: 1800,
     initials: "ES",
   },
   {
@@ -54,14 +69,16 @@ const coachPreview = [
     role: "Führung, Teams & Recruiting",
     href: "coaches/wegner-ney",
     image: "images/coaches/wegner-ney.jpg",
+    imageWidth: 830,
+    imageHeight: 830,
     initials: "WN",
   },
 ];
 ---
 
 <BaseLayout
-  title="Competence Hub | Passende Coaches für Unternehmen"
-  description="Competence Hub verbindet Unternehmensanliegen mit ausgewählten Coaches und passenden Formaten für Führung, Teams, Recruiting, Gesundheit und Entwicklung."
+  title="Competence Hub | Coaching für Unternehmen und Privatpersonen"
+  description="Competence Hub verbindet Unternehmen und Privatpersonen mit Mindforge Life Coaching, Businesscoaching, Recruiting und ausgewählten Coaches."
   bodyClass="home-page"
 >
   <main>
@@ -96,8 +113,8 @@ const coachPreview = [
                 <img
                   src={url(coach.image)}
                   alt={`Porträt von ${coach.name}`}
-                  width="830"
-                  height="830"
+                  width={coach.imageWidth ?? 830}
+                  height={coach.imageHeight ?? 830}
                   loading="lazy"
                 />
               ) : (
@@ -120,7 +137,7 @@ const coachPreview = [
         <div>
           <small>Ihre Ansprechpartnerin</small>
           <strong>Janay Rappelt</strong>
-          <p>Persönliche Verbindung zwischen Unternehmen und Coaches</p>
+          <p>Persönliche Verbindung zwischen Anliegen und passender Expertise</p>
         </div>
       </div>
       <div class="contact-lead__copy">

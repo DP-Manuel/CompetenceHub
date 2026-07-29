@@ -1,0 +1,115 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import "../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const useCases = [
+  {
+    title: "Führungssituationen",
+    text: "Gespräche vorbereiten, Entscheidungen reflektieren und die eigene Wirkung im beruflichen Alltag bewusster steuern.",
+    icon: "leadership" as const,
+  },
+  {
+    title: "Kommunikation",
+    text: "Anspruchsvolle Gespräche, Feedback, Abstimmung und Missverständnisse strukturiert bearbeiten.",
+    icon: "message-circle" as const,
+  },
+  {
+    title: "Konfliktprävention",
+    text: "Spannungen früh erkennen, einordnen und handlungsfähige nächste Schritte entwickeln.",
+    icon: "shield-check" as const,
+  },
+  {
+    title: "Orientierung",
+    text: "Rollen, Erwartungen und berufliche Entwicklung in konkreten Situationen klären.",
+    icon: "compass" as const,
+  },
+];
+
+const steps = [
+  "Anlass und Ziel kurz beschreiben",
+  "Situation, Beteiligte und Rahmen klären",
+  "passenden Coach und Umfang abstimmen",
+  "Coaching durchführen und nächste Schritte festhalten",
+  "bei Bedarf ein Mindforge-Paket oder Businesscoaching anschließen",
+];
+
+const benefits = [
+  "konkrete berufliche Situation im Fokus",
+  "schneller Einstieg ohne komplexen Prozess",
+  "reflektierte nächste Schritte",
+  "anschlussfähig für Teams und Unternehmen",
+];
+---
+
+<BaseLayout
+  title="Life Coaching | Mindforge | Competence Hub"
+  description="Mindforge Life Coaching im Competence Hub begleitet Privatpersonen, Mitarbeitende und Führungskräfte bei Resilienz, Mindset und persönlicher Entwicklung."
+>
+  <main class="subpage">
+    <section class="page-hero">
+      <p class="eyebrow">Mindforge Life Coaching</p>
+      <h1>Coaching nah an Ihrer konkreten Lebens- und Arbeitssituation</h1>
+      <p>
+        Persönliche oder berufliche Situationen klären, Ressourcen stärken und
+        den nächsten machbaren Schritt mit passender Expertise entwickeln.
+      </p>
+      <div class="actions">
+        <a class="button" href={url("mindforge")}>Mindforge-Angebote ansehen</a>
+        <a class="button button--ghost" href={url("kontakt")}>Life Coaching anfragen</a>
+      </div>
+    </section>
+
+    <section class="feature-grid" id="teams" aria-label="Einsatzfelder im Life Coaching">
+      {useCases.map((useCase) => (
+        <article class="feature-card">
+          <span class="feature-card__icon"><Icon name={useCase.icon} size={28} /></span>
+          <h2>{useCase.title}</h2>
+          <p>{useCase.text}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="timeline-list" aria-label="Ablauf im Life Coaching">
+      {steps.map((step, index) => (
+        <article>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <p>{step}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="split-panel">
+      <div>
+        <p class="eyebrow">Nutzen</p>
+        <h2>Aus einem konkreten Anlass wird ein klarer nächster Schritt</h2>
+        <p>
+          Life Coaching eignet sich, wenn ein Thema bereits spürbar ist und
+          zeitnah sortiert werden soll, ohne daraus sofort ein großes Programm
+          zu machen.
+        </p>
+      </div>
+      <div class="benefit-grid">
+        {benefits.map((benefit) => <span>{benefit}</span>)}
+      </div>
+    </section>
+
+    <section class="notice-panel">
+      <div>
+        <p class="eyebrow">Grenzen</p>
+        <h2>Kein Ersatz für Therapie oder medizinische Beratung</h2>
+      </div>
+      <p>
+        Mindforge Life Coaching begleitet persönliche und berufliche
+        Entwicklung, Kommunikation und Handlungsklarheit. Es ist keine
+        Therapie, keine medizinische Beratung und kein Ersatz für
+        professionelle gesundheitliche Behandlung.
+      </p>
+    </section>
+  </main>
+</BaseLayout>

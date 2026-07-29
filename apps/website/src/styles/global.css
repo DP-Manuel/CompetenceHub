@@ -1054,7 +1054,9 @@ p {
   margin-top: -26px;
   background: var(--color-red);
   color: var(--color-dark);
-  box-shadow: 0 0 0 8px var(--color-white);
+  box-shadow:
+    0 0 0 8px var(--color-white),
+    0 0 0 10px var(--color-pantone);
 }
 
 .timeline-list--compact h3 {
@@ -2875,6 +2877,8 @@ p {
   border: 2px solid var(--color-line);
   background: var(--color-white);
   color: var(--color-red-text);
+  cursor: pointer;
+  text-decoration: none;
   transform: translate(-50%, -50%) scale(0.92);
   transition:
     color 220ms ease,
@@ -2906,6 +2910,21 @@ p {
     0 16px 30px rgba(51, 49, 50, 0.13);
   color: var(--color-red-text);
   transform: translate(-50%, -50%) scale(1.08);
+}
+
+.hub-journey__node:hover,
+.hub-journey__node:focus-visible {
+  border-color: var(--color-red);
+  box-shadow:
+    0 0 0 7px rgba(255, 127, 87, 0.18),
+    0 16px 30px rgba(51, 49, 50, 0.13);
+  color: var(--color-red-text);
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.hub-journey__node:hover .icon,
+.hub-journey__node:focus-visible .icon {
+  color: var(--color-red-text);
 }
 
 .hub-journey__steps {
@@ -3131,6 +3150,335 @@ p {
   margin-bottom: 0;
 }
 
+.mindforge-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(380px, 0.88fr);
+  gap: clamp(36px, 6vw, 82px);
+  align-items: center;
+  min-height: 620px;
+  margin: clamp(32px, 6vw, 72px) 0 70px;
+  padding: clamp(36px, 6vw, 70px);
+  border: 1px solid var(--color-line);
+  border-top: 10px solid var(--color-red);
+  background: var(--color-white);
+}
+
+.mindforge-hero h1 {
+  max-width: 820px;
+  margin-bottom: 24px;
+  font-size: 4.8rem;
+  line-height: 0.98;
+}
+
+.mindforge-hero__lead {
+  max-width: 720px;
+  font-size: 1.24rem;
+  font-weight: 700;
+}
+
+.mindforge-audience-button {
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.mindforge-audience-button--business:hover,
+.mindforge-audience-button--business:focus-visible {
+  border-color: var(--color-red);
+  background: var(--color-red);
+  color: var(--color-dark);
+}
+
+.mindforge-audience-actions:has(
+    .mindforge-audience-button--business:hover,
+    .mindforge-audience-button--business:focus-visible
+  )
+  .mindforge-audience-button--private {
+  border-color: var(--color-pantone);
+  background: var(--color-white);
+  color: var(--color-dark);
+  box-shadow: none;
+}
+
+.mindforge-hero__signal {
+  position: relative;
+  width: min(100%, 460px);
+  aspect-ratio: 1;
+  justify-self: center;
+  border: 2px dashed var(--color-line);
+  border-radius: 50%;
+}
+
+.mindforge-hero__signal strong,
+.mindforge-hero__signal span {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  text-align: center;
+}
+
+.mindforge-hero__signal strong {
+  top: 50%;
+  left: 50%;
+  width: 48%;
+  aspect-ratio: 1;
+  padding: 14px;
+  border: 10px solid var(--color-white);
+  background: var(--color-pantone-deep);
+  box-shadow:
+    0 0 0 2px var(--color-pantone),
+    0 20px 42px rgba(51, 49, 50, 0.16);
+  color: var(--color-white);
+  font-size: 2rem;
+  transform: translate(-50%, -50%);
+}
+
+.mindforge-hero__signal span {
+  top: 50%;
+  left: 50%;
+  width: 25.22%;
+  aspect-ratio: 1;
+  padding: 12px;
+  border: 2px solid var(--color-line);
+  background: var(--color-white);
+  color: var(--color-red-text);
+  font-size: 0.88rem;
+  font-weight: 900;
+  box-shadow: 0 12px 26px rgba(51, 49, 50, 0.08);
+}
+
+.mindforge-hero__signal span:nth-of-type(1) {
+  top: 13.39%;
+  transform: translate(-50%, -50%);
+}
+
+.mindforge-hero__signal span:nth-of-type(2) {
+  left: 86.61%;
+  transform: translate(-50%, -50%);
+}
+
+.mindforge-hero__signal span:nth-of-type(3) {
+  top: 75.887%;
+  left: 24.113%;
+  transform: translate(-50%, -50%);
+}
+
+.mindforge-intro {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1.3fr);
+  gap: clamp(28px, 6vw, 76px);
+  align-items: start;
+  margin-bottom: 70px;
+  padding: clamp(30px, 5vw, 54px) 0;
+  border-top: 2px solid var(--color-pantone);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.mindforge-intro h2 {
+  grid-column: 2;
+  max-width: 900px;
+  margin: 0;
+}
+
+.mindforge-intro > p:last-child {
+  grid-column: 2;
+  max-width: 780px;
+  margin: 0;
+}
+
+.mindforge-formats,
+.mindforge-process {
+  margin-bottom: 70px;
+}
+
+.feature-grid--company {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mindforge-process {
+  padding: clamp(30px, 5vw, 56px);
+  border-top: 8px solid var(--color-pantone);
+  background: var(--color-soft);
+}
+
+.pricing-group {
+  margin-bottom: 76px;
+  scroll-margin-top: 130px;
+}
+
+.pricing-group__heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.6fr);
+  gap: 32px;
+  align-items: end;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--color-pantone);
+}
+
+.pricing-group__heading h2,
+.pricing-group__heading p {
+  margin-bottom: 0;
+}
+
+.pricing-group__heading > p {
+  color: rgba(51, 49, 50, 0.74);
+  font-weight: 700;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.pricing-card {
+  display: grid;
+  min-height: 250px;
+  align-content: space-between;
+  gap: 26px;
+  padding: 26px;
+  border: 1px solid var(--color-line);
+  border-top: 7px solid var(--color-pantone);
+  background: var(--color-white);
+}
+
+.pricing-card:nth-child(even) {
+  border-top-color: var(--color-red);
+}
+
+.pricing-card h3 {
+  font-size: 1.35rem;
+}
+
+.pricing-card p {
+  margin: 0;
+  color: rgba(51, 49, 50, 0.76);
+}
+
+.pricing-card > strong {
+  color: var(--color-red-text);
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.assessment-bridge {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 6vw, 70px);
+  align-items: center;
+  margin-bottom: 70px;
+  padding: clamp(30px, 5vw, 54px);
+  border-left: 12px solid var(--color-red);
+  background: var(--color-soft);
+}
+
+.assessment-bridge h2,
+.assessment-bridge p {
+  margin-bottom: 14px;
+}
+
+.assessment-bridge .text-link,
+.assessment-section .text-link {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  width: fit-content;
+}
+
+.assessment-section {
+  margin-bottom: 70px;
+  padding: clamp(32px, 5vw, 58px);
+  border-top: 9px solid var(--color-red);
+  background: var(--color-soft);
+  scroll-margin-top: 130px;
+}
+
+.assessment-section__heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.7fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: end;
+  margin-bottom: 34px;
+}
+
+.assessment-section__heading h2,
+.assessment-section__heading p {
+  margin-bottom: 0;
+}
+
+.assessment-applications,
+.assessment-levels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.assessment-applications {
+  margin-bottom: 14px;
+}
+
+.assessment-applications article {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 26px;
+  border-left: 7px solid var(--color-pantone);
+  background: var(--color-white);
+}
+
+.assessment-applications .icon {
+  color: var(--color-pantone-deep);
+}
+
+.assessment-applications h3,
+.assessment-applications p,
+.assessment-levels h3,
+.assessment-levels p {
+  margin-bottom: 8px;
+}
+
+.assessment-levels article {
+  display: grid;
+  gap: 10px;
+  min-height: 240px;
+  align-content: space-between;
+  padding: 28px;
+  border: 1px solid var(--color-line);
+  border-top: 6px solid var(--color-red);
+  background: var(--color-white);
+}
+
+.assessment-levels strong {
+  color: var(--color-red-text);
+  font-size: 1.55rem;
+}
+
+.assessment-levels small {
+  color: rgba(51, 49, 50, 0.7);
+  font-weight: 800;
+}
+
+.assessment-section__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.coach-profile-portrait--elisabeth img {
+  object-position: center 24%;
+}
+
+.coach-profile-section--pending {
+  border-top-color: var(--color-red);
+}
+
 .offer-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -3208,13 +3556,27 @@ p {
   .coach-profile-hero,
   .coach-credentials,
   .format-band,
-  .coach-spotlight {
+  .coach-spotlight,
+  .mindforge-hero,
+  .mindforge-intro,
+  .pricing-group__heading,
+  .assessment-bridge,
+  .assessment-section__heading {
     grid-template-columns: 1fr;
   }
 
   .contact-lead,
   .coach-format-band {
     grid-template-columns: 1fr;
+  }
+
+  .mindforge-intro h2,
+  .mindforge-intro > p:last-child {
+    grid-column: 1;
+  }
+
+  .pricing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .login-intro,
@@ -3451,11 +3813,14 @@ p {
   .situation-grid,
   .format-grid,
   .timeline-list--compact,
-    .coach-spotlight,
-    .coach-preview__grid,
-    .network-growth-note,
-    .portal-grid,
-    .portal-feature-grid {
+  .coach-spotlight,
+  .coach-preview__grid,
+  .network-growth-note,
+  .portal-grid,
+  .portal-feature-grid,
+  .pricing-grid,
+  .assessment-applications,
+  .assessment-levels {
     grid-template-columns: 1fr;
   }
 
@@ -3463,6 +3828,39 @@ p {
   .coaching-dimensions__grid,
   .coach-format-band {
     grid-template-columns: 1fr;
+  }
+
+  .mindforge-hero {
+    min-height: 0;
+    padding: 28px 22px 36px;
+  }
+
+  .mindforge-hero h1 {
+    font-size: 2.65rem;
+    line-height: 1.04;
+  }
+
+  .mindforge-hero__signal {
+    width: min(100%, 330px);
+  }
+
+  .mindforge-hero__signal strong {
+    padding: 8px;
+    font-size: 1.25rem;
+  }
+
+  .mindforge-hero__signal span {
+    padding: 8px;
+    font-size: 0.72rem;
+  }
+
+  .pricing-card,
+  .assessment-levels article {
+    min-height: 0;
+  }
+
+  .assessment-section {
+    padding: 28px 20px;
   }
 
   .trust-strip article {

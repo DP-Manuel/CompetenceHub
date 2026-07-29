@@ -10,12 +10,12 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
 const services = [
   {
-    eyebrow: "Livecoaching",
-    title: "Konkrete Situationen klären",
-    text: "Für Gespräche, Entscheidungen, Konflikte und Rollenfragen.",
-    href: "livecoaching",
+    eyebrow: "Mindforge",
+    title: "Life Coaching, Resilienz und Mindset",
+    text: "Für persönliche Entwicklung bei Privatpersonen, Mitarbeitenden und Führungskräften.",
+    href: "mindforge",
     id: undefined,
-    icon: "message-circle" as const,
+    icon: "sparkles" as const,
   },
   {
     eyebrow: "Businesscoaching",
@@ -29,7 +29,7 @@ const services = [
     eyebrow: "Recruiting & Personalentwicklung",
     title: "Potenziale passend verbinden",
     text: "Für Mitarbeitergewinnung, Führung und Entwicklung mit Blick auf praktische Fähigkeiten und Unternehmensbedarf.",
-    href: "kontakt",
+    href: "unternehmen#assessment-center",
     id: "recruiting",
     icon: "building" as const,
   },
@@ -53,12 +53,12 @@ const services = [
 
 const faqs = [
   {
-    question: "Was ist der Unterschied zwischen Livecoaching und Businesscoaching?",
-    answer: "Livecoaching ist besonders nah an konkreten Situationen. Businesscoaching ist breiter angelegt und begleitet Führung, Zusammenarbeit, Rollenklärung oder berufliche Entwicklung strukturiert.",
+    question: "Was ist der Unterschied zwischen Mindforge Life Coaching und Businesscoaching?",
+    answer: "Mindforge Life Coaching richtet den Blick auf persönliche Resilienz, Mindset und Entwicklung. Businesscoaching begleitet stärker rollen-, führungs- oder organisationsbezogene Fragestellungen. Beide Formate können aufeinander aufbauen.",
   },
   {
-    question: "Können Teams und Einzelpersonen im beruflichen Kontext begleitet werden?",
-    answer: "Ja. Das Angebot richtet sich an Unternehmen, Teams, Führungskräfte und Mitarbeitende, wenn das Anliegen beruflich eingeordnet ist.",
+    question: "Können auch Privatpersonen Mindforge nutzen?",
+    answer: "Ja. Mindforge bietet freigegebene Life-Coaching-Pakete für Selbstzahlende sowie Angebote für Mitarbeitende und Führungskräfte in Unternehmen.",
   },
   {
     question: "Wie startet eine Anfrage?",
@@ -70,14 +70,14 @@ const faqs = [
   },
   {
     question: "Gehört Recruiting bereits zum Angebot?",
-    answer: "Recruiting und Personalentwicklung werden in der lokalen Konzeptversion als ergänzendes Feld berücksichtigt. Der konkrete Leistungsumfang wird im Erstkontakt geklärt und vor einer öffentlichen Vermarktung fachlich finalisiert.",
+    answer: "Ja. Assessment Center können bei Personalauswahl und interner Personalentwicklung eingesetzt werden. Planung, Konzeption und Full-Service-Durchführung werden passend zum Unternehmensbedarf abgestimmt.",
   },
 ];
 ---
 
 <BaseLayout
   title="Leistungen | Competence Hub"
-  description="Competence Hub verbindet Unternehmen mit Expertise für Livecoaching, Businesscoaching, Recruiting, psychologische Beratung, Supervision, Workshops und Vorträge."
+  description="Competence Hub verbindet Privatpersonen und Unternehmen mit Mindforge Life Coaching, Businesscoaching, Recruiting, Assessment Center, psychologischer Beratung und Gruppenformaten."
 >
   <main class="subpage">
     <section class="page-hero page-hero--accent">
@@ -85,11 +85,13 @@ const faqs = [
       <h1>Das Thema zuerst. Dann die passende Expertise.</h1>
       <p>
         Competence Hub klärt den Bedarf und vermittelt ausgewählte Coaches
-        oder Expertinnen und Experten. So finden Unternehmen einen passenden
-        Einstieg, ohne sich zuerst durch einen großen Katalog arbeiten zu müssen.
+        oder Expertinnen und Experten. So finden Privatpersonen und Unternehmen
+        einen passenden Einstieg, ohne sich zuerst durch einen großen Katalog
+        arbeiten zu müssen.
       </p>
       <div class="actions">
         <a class="button" href={url("kontakt")}>Anfrage stellen</a>
+        <a class="button button--ghost" href={url("mindforge")}>Mindforge entdecken</a>
         <a class="button button--ghost" href={url("unternehmen")}>Für Unternehmen</a>
       </div>
     </section>

@@ -1,0 +1,255 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import "../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const formats = [
+  {
+    title: "Präsenz",
+    text: "In geschütztem Rahmen im Raum Würzburg, beim Firmenkunden oder nach individueller Abstimmung.",
+    icon: "building" as const,
+  },
+  {
+    title: "Online",
+    text: "Persönliche Begleitung per Video-Call mit möglichst wenig Reise- und Zeitaufwand.",
+    icon: "message-circle" as const,
+  },
+  {
+    title: "Hybrid",
+    text: "Zum Beispiel mit einem Kick-off in Präsenz und anschließenden Online-Sessions.",
+    icon: "sparkles" as const,
+  },
+];
+
+const process = [
+  {
+    title: "Kostenfreies Erstgespräch",
+    text: "15 bis 20 Minuten für Chemie-Check, Anliegen und eine erste Einordnung.",
+  },
+  {
+    title: "Standort und Ziel klären",
+    text: "Ausgangslage, gewünschte Wirkung und das passende Format gemeinsam festlegen.",
+  },
+  {
+    title: "Intensiv arbeiten",
+    text: "Konkrete Themen in 90-minütigen, praxisorientierten Sessions bearbeiten.",
+  },
+  {
+    title: "Transfer sichern",
+    text: "Übungen, Reflexionsimpulse und vereinbarte nächste Schritte in den Alltag übertragen.",
+  },
+];
+
+const privateOffers = [
+  {
+    title: "Kostenfreies Erstgespräch",
+    detail: "15 bis 20 Minuten Kennenlernen und Standortbestimmung",
+    price: "kostenfrei",
+  },
+  {
+    title: "Impuls-Session",
+    detail: "1 × 90 Minuten für ein punktuelles Thema oder einen Engpass",
+    price: "195 €",
+  },
+  {
+    title: "Fokus & Balance",
+    detail: "3 × 90 Minuten inklusive Übungen und Arbeitsmaterialien",
+    price: "540 €",
+  },
+  {
+    title: "Nachhaltige Entwicklung",
+    detail: "6 × 90 Minuten inklusive Begleit-Support zwischen den Sessions",
+    price: "990 €",
+  },
+];
+
+const businessOffers = [
+  {
+    title: "Einzel-Session",
+    detail: "1 × 90 Minuten bei akutem Bedarf oder als Einzelbuchung",
+    price: "270–350 €",
+  },
+  {
+    title: "Mitarbeiter-Resilienz",
+    detail: "4 × 90 Minuten pro Person inklusive Zielvereinbarung und Feedback",
+    price: "1.150 €",
+  },
+  {
+    title: "Flexibles Firmen-Kontingent",
+    detail: "10 × 90 Minuten, frei abrufbar für Mitarbeitende oder Teams",
+    price: "2.800 €",
+  },
+  {
+    title: "Individuelles Unternehmenspaket",
+    detail: "Abgestimmte Kombination aus Workshops und Einzelcoachings",
+    price: "auf Anfrage",
+  },
+];
+---
+
+<BaseLayout
+  title="Mindforge Life Coaching | Competence Hub"
+  description="Mindforge im Competence Hub bietet Life Coaching, Resilienz- und Mindset-Entwicklung für Privatpersonen, Mitarbeitende und Führungskräfte in Präsenz, online oder hybrid."
+>
+  <main class="subpage mindforge-page">
+    <section class="mindforge-hero">
+      <div class="mindforge-hero__copy">
+        <p class="eyebrow">Mindforge im Competence Hub</p>
+        <h1>Mental stark. Resilient. Bereit für Entwicklung.</h1>
+        <p class="mindforge-hero__lead">
+          Life Coaching für Menschen, die Belastungen besser einordnen,
+          Handlungsspielräume erweitern und persönliche Entwicklung wirksam in
+          ihren Alltag übertragen möchten.
+        </p>
+        <div class="actions mindforge-audience-actions">
+          <a
+            class="button mindforge-audience-button mindforge-audience-button--private"
+            href="#privatpersonen"
+          >
+            Für Privatpersonen
+          </a>
+          <a
+            class="button button--ghost mindforge-audience-button mindforge-audience-button--business"
+            href="#unternehmen"
+          >
+            Für Unternehmen
+          </a>
+          <a class="text-link" href={url("kontakt")}>Erstgespräch anfragen</a>
+        </div>
+      </div>
+      <div class="mindforge-hero__signal" aria-label="Resilienz, Mindset und persönliche Entwicklung">
+        <strong>Mindforge</strong>
+        <span>Resilienz</span>
+        <span>Mindset</span>
+        <span>Entwicklung</span>
+      </div>
+    </section>
+
+    <section class="mindforge-intro" aria-labelledby="mindforge-philosophy-title">
+      <p class="eyebrow">Die Idee</p>
+      <h2 id="mindforge-philosophy-title">Entwicklung beginnt mit einem klaren Blick auf die eigene Situation.</h2>
+      <p>
+        Mindforge verbindet fundierte Reflexion mit alltagstauglichen
+        Methoden. Im Mittelpunkt stehen nicht fertige Standards, sondern die
+        Person, ihr Anliegen und der Rahmen, in dem Veränderung gelingen soll.
+      </p>
+    </section>
+
+    <section class="feature-grid mindforge-formats" aria-label="Durchführungsformate">
+      {formats.map((format) => (
+        <article class="feature-card">
+          <span class="feature-card__icon"><Icon name={format.icon} size={28} /></span>
+          <h2>{format.title}</h2>
+          <p>{format.text}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="mindforge-process" aria-labelledby="mindforge-process-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Der Mindforge-Prozess</p>
+          <h2 id="mindforge-process-title">Vom Kennenlernen zum nachhaltigen Transfer</h2>
+        </div>
+        <p>Transparent, persönlich und auf das tatsächliche Anliegen abgestimmt.</p>
+      </div>
+      <div class="timeline-list timeline-list--compact">
+        {process.map((step, index) => (
+          <article>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <div>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="pricing-group" id="privatpersonen" aria-labelledby="private-pricing-title">
+      <div class="pricing-group__heading">
+        <div>
+          <p class="eyebrow">Mindforge für Privatpersonen</p>
+          <h2 id="private-pricing-title">Klarer Rahmen für persönliche Entwicklung</h2>
+        </div>
+        <p>Alle Preise für Privatpersonen verstehen sich inklusive Mehrwertsteuer.</p>
+      </div>
+      <div class="pricing-grid">
+        {privateOffers.map((offer) => (
+          <article class="pricing-card">
+            <div>
+              <h3>{offer.title}</h3>
+              <p>{offer.detail}</p>
+            </div>
+            <strong>{offer.price}</strong>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="pricing-group pricing-group--business" id="unternehmen" aria-labelledby="business-pricing-title">
+      <div class="pricing-group__heading">
+        <div>
+          <p class="eyebrow">Mindforge für Unternehmen</p>
+          <h2 id="business-pricing-title">Resilienz und Entwicklung verlässlich begleiten</h2>
+        </div>
+        <p>Alle Preise für Unternehmen verstehen sich zuzüglich Mehrwertsteuer.</p>
+      </div>
+      <div class="pricing-grid">
+        {businessOffers.map((offer) => (
+          <article class="pricing-card">
+            <div>
+              <h3>{offer.title}</h3>
+              <p>{offer.detail}</p>
+            </div>
+            <strong>{offer.price}</strong>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="assessment-bridge" aria-labelledby="mindforge-assessment-title">
+      <div>
+        <p class="eyebrow">Personalentwicklung</p>
+        <h2 id="mindforge-assessment-title">Assessment Center als fundierter Entwicklungsauftakt</h2>
+      </div>
+      <div>
+        <p>
+          Ein Development Assessment Center kann Stärken und Entwicklungsfelder
+          sichtbar machen. Die Ergebnisse lassen sich anschließend gezielt in
+          Mindforge-Einzelcoachings weiterbearbeiten.
+        </p>
+        <a class="text-link" href={url("unternehmen#assessment-center")}>
+          Assessment Center für Unternehmen
+          <Icon name="arrow-right" size={18} />
+        </a>
+      </div>
+    </section>
+
+    <section class="notice-panel">
+      <div>
+        <p class="eyebrow">Klare Grenze</p>
+        <h2>Life Coaching ist kein Therapieangebot</h2>
+      </div>
+      <p>
+        Mindforge unterstützt persönliche und berufliche Entwicklung. Das
+        Angebot ersetzt keine Psychotherapie, medizinische Beratung oder akute
+        Krisenversorgung.
+      </p>
+    </section>
+
+    <section class="cta-panel">
+      <div>
+        <p class="eyebrow">Unverbindlich starten</p>
+        <h2>Welcher Rahmen passt zu Ihrem Anliegen?</h2>
+        <p>Im kostenfreien Erstgespräch klären wir Chemie, Ziel und nächsten Schritt.</p>
+      </div>
+      <a class="button" href={url("kontakt")}>Erstgespräch anfragen</a>
+    </section>
+  </main>
+</BaseLayout>

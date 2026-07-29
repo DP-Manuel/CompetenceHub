@@ -1,111 +1,30 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
-
-const useCases = [
-  {
-    title: "Führungssituationen",
-    text: "Gespräche vorbereiten, Entscheidungen reflektieren und die eigene Wirkung im beruflichen Alltag bewusster steuern.",
-    icon: "leadership" as const,
-  },
-  {
-    title: "Kommunikation",
-    text: "Anspruchsvolle Gespräche, Feedback, Abstimmung und Missverständnisse strukturiert bearbeiten.",
-    icon: "message-circle" as const,
-  },
-  {
-    title: "Konfliktprävention",
-    text: "Spannungen früh erkennen, einordnen und handlungsfähige nächste Schritte entwickeln.",
-    icon: "shield-check" as const,
-  },
-  {
-    title: "Orientierung",
-    text: "Rollen, Erwartungen und berufliche Entwicklung in konkreten Situationen klären.",
-    icon: "compass" as const,
-  },
-];
-
-const steps = [
-  "Anlass und Ziel kurz beschreiben",
-  "Situation, Beteiligte und Rahmen klären",
-  "passenden Coach und Umfang abstimmen",
-  "Coaching durchführen und nächste Schritte festhalten",
-  "bei Bedarf Folgeformat oder Businesscoaching anschließen",
-];
-
-const benefits = [
-  "konkrete berufliche Situation im Fokus",
-  "schneller Einstieg ohne komplexen Prozess",
-  "reflektierte nächste Schritte",
-  "anschlussfähig für Teams und Unternehmen",
-];
 ---
 
 <BaseLayout
-  title="Livecoaching | Competence Hub"
-  description="Competence Hub vermittelt Livecoaching für Unternehmen, Führungskräfte und Teams in konkreten beruflichen Situationen."
+  title="Life Coaching heißt jetzt Mindforge | Competence Hub"
+  description="Der bisherige Coaching-Bereich wird im Competence Hub unter dem Namen Mindforge Life Coaching weitergeführt."
 >
   <main class="subpage">
-    <section class="page-hero">
-      <p class="eyebrow">Livecoaching</p>
-      <h1>Coaching nah an der konkreten Arbeitssituation</h1>
+    <section class="page-hero page-hero--accent">
+      <p class="eyebrow">Hinweis zur Bezeichnung</p>
+      <h1>Life Coaching ist Teil von Mindforge.</h1>
       <p>
-        Konkrete berufliche Situationen klären und den nächsten machbaren
-        Schritt mit passender Expertise entwickeln.
+        Der bisher als Livecoaching bezeichnete Bereich wird fachlich korrekt
+        als Life Coaching weitergeführt. Mindforge bündelt persönliche
+        Entwicklung, Resilienz und Mindset für Privatpersonen und Unternehmen.
       </p>
-      <a class="button" href={url("kontakt")}>Livecoaching anfragen</a>
-    </section>
-
-    <section class="feature-grid" id="teams" aria-label="Einsatzfelder im Livecoaching">
-      {useCases.map((useCase) => (
-        <article class="feature-card">
-          <span class="feature-card__icon"><Icon name={useCase.icon} size={28} /></span>
-          <h2>{useCase.title}</h2>
-          <p>{useCase.text}</p>
-        </article>
-      ))}
-    </section>
-
-    <section class="timeline-list" aria-label="Ablauf im Livecoaching">
-      {steps.map((step, index) => (
-        <article>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <p>{step}</p>
-        </article>
-      ))}
-    </section>
-
-    <section class="split-panel">
-      <div>
-        <p class="eyebrow">Nutzen</p>
-        <h2>Aus einem konkreten Anlass wird ein klarer nächster Schritt</h2>
-        <p>
-          Livecoaching eignet sich, wenn ein Thema bereits spürbar ist und
-          zeitnah sortiert werden soll, ohne daraus sofort ein großes Programm
-          zu machen.
-        </p>
+      <div class="actions">
+        <a class="button" href={url("mindforge")}>Mindforge entdecken</a>
+        <a class="button button--ghost" href={url("lifecoaching")}>Life Coaching im Detail</a>
       </div>
-      <div class="benefit-grid">
-        {benefits.map((benefit) => <span>{benefit}</span>)}
-      </div>
-    </section>
-
-    <section class="notice-panel">
-      <div>
-        <p class="eyebrow">Grenzen</p>
-        <h2>Kein Ersatz für Therapie oder medizinische Beratung</h2>
-      </div>
-      <p>
-        Livecoaching begleitet berufliche Entwicklung, Kommunikation und
-        Handlungsklarheit. Es ist keine Therapie, keine medizinische Beratung
-        und kein Ersatz für professionelle gesundheitliche Behandlung.
-      </p>
     </section>
   </main>
 </BaseLayout>

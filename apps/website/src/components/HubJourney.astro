@@ -36,7 +36,7 @@ const steps = [
     node: "Format",
     eyebrow: "Passender Rahmen",
     title: "Expertise wird zum passenden Format.",
-    text: "Livecoaching, Businesscoaching, Beratung oder Gruppenformat werden so gewählt, dass sie zur Situation und zum Unternehmen passen.",
+    text: "Life Coaching, Businesscoaching, Beratung oder Gruppenformat werden so gewählt, dass sie zur Person, Situation und Zielsetzung passen.",
     href: "leistungen",
     link: "Formate ansehen",
     icon: "briefcase" as const,
@@ -81,9 +81,9 @@ const connections = [
   </header>
 
   <div class="hub-journey__layout">
-    <div class="hub-journey__visual" aria-hidden="true">
+    <div class="hub-journey__visual">
       <div class="hub-journey__stage">
-        <svg viewBox="0 0 600 600" focusable="false">
+        <svg viewBox="0 0 600 600" focusable="false" aria-hidden="true">
           <circle class="hub-journey__orbit" cx="300" cy="300" r="214" />
           {connections.map((connection, index) => (
             <path
@@ -95,20 +95,22 @@ const connections = [
           ))}
         </svg>
 
-        <div class="hub-journey__core">
+        <div class="hub-journey__core" aria-hidden="true">
           <span>Competence</span>
           <strong>Hub</strong>
         </div>
 
         {steps.map((step, index) => (
-          <div
+          <a
             class="hub-journey__node"
+            href={url(step.href)}
+            aria-label={`${step.node}: ${step.link}`}
             style={`--journey-x: ${step.x}%; --journey-y: ${step.y}%;`}
             data-journey-node={index + 1}
           >
             <Icon name={step.icon} size={25} />
             <strong>{step.node}</strong>
-          </div>
+          </a>
         ))}
       </div>
     </div>

@@ -73,7 +73,7 @@ entlang der Kernbahn. Die Darstellung bleibt im Ruhezustand ruhig und startet
 keine dauerhafte Animation.
 
 Sekundärbeziehungen dürfen fachliche Wege sichtbar machen, zum Beispiel
-`Coaches -> Livecoaching -> Workshops und Vorträge`. Sie müssen inhaltlich
+`Coaches -> Mindforge Life Coaching -> Workshops und Vorträge`. Sie müssen inhaltlich
 begründet sein und dürfen kein automatisches Matching vortäuschen. Mobil wird
 dieselbe Information als stabiles Kreisraster in sinnvoller DOM-Reihenfolge
 dargestellt; die Verbindungslinien entfallen dort zugunsten von Lesbarkeit und

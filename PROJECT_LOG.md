@@ -2,6 +2,45 @@
 
 Newest entries first.
 
+## 2026-07-29 | requirements/implementation | Mindforge und Elisabeth erweitert
+
+Der freigegebene Requirements-Engineering-Eintrag vom 29.07.2026 und die neuen
+Unterlagen zu Elisabeth Schwabauer wurden lokal in die Website übertragen.
+
+- Markenarchitektur: Competence Hub bleibt die Dachmarke. Mindforge ist als
+  eigener Bereich für Life Coaching, Resilienz, Mindset und persönliche
+  Entwicklung eingebunden.
+- Zielgruppen: Die Website spricht nun neben Unternehmen auch Privatpersonen
+  an. Kontaktweg, Leistungsübersicht, Startseite und Coach-Netzwerk wurden
+  entsprechend geöffnet.
+- Angebote und Preise: Die freigegebenen Privat- und Firmenpakete werden mit
+  Umfang, 90-Minuten-Einheiten und korrektem Mehrwertsteuerhinweis dargestellt.
+  `Sustainable Growth` wird als `Nachhaltige Entwicklung` geführt.
+- Assessment Center: Der kleinere Spezialbereich verbindet Recruiting und
+  Personalauswahl mit Development Assessment Center und anschließender
+  Mindforge-Personalentwicklung. Beide freigegebenen Leistungsstufen und Preise
+  sind auf der Unternehmensseite sichtbar.
+- Elisabeth Schwabauer: Das freigegebene Foto wurde lokal als 1200 x 1800
+  Pixel großes WebP ohne Quelldokumente übernommen. Die Heilpraktikererlaubnis
+  wird nur als Zusatzqualifikation genannt; ein Therapieangebot wird
+  ausdrücklich ausgeschlossen. Fehlendes Zitat, Formate und Verfügbarkeit sind
+  klar als offene Profilangaben markiert.
+- Dokumentation: Die Entscheidungen sind datensparsam in
+  `docs/requirements/requirements-engineering-update-2026-07-29.md`
+  festgehalten; private Kontaktdaten, Geburtsdaten und Zeugnisse wurden nicht
+  in Website oder Projektdokumentation übernommen.
+- Interaktionskorrektur: Die vier Kreise der Hub-Journey führen nun direkt zu
+  Unternehmen, Coaches, Leistungen und Kontakt. Auf der Mindforge-Seite
+  wechseln die Zielgruppen-Buttons gemeinsam ihren Zustand, alle drei
+  Satelliten berühren den Mindforge-Kern ohne Linienüberlagerung und die
+  Prozessnummern besitzen außen eine feine grüne Kontur.
+- Verifikation: Astro prüft 27 Dateien ohne Fehler, Warnungen oder Hinweise und
+  erzeugt 22 statische Seiten. Mindforge, Startseiten-Hub, Unternehmensseite
+  und Elisabeth-Profil wurden bei 1440 und 500 Pixeln gerendert. Der gekoppelte
+  Mindforge-Buttonzustand wurde zusätzlich im lokalen Browser geprüft.
+- Veröffentlichung: Commit und Push auf `main` sind für die kollegiale Prüfung
+  freigegeben. Der manuelle GitHub-Pages-Workflow wurde nicht gestartet.
+
 ## 2026-07-24 | design/implementation | Startseite als Connected Story verdichtet
 
 Das freigegebene Variantenkonzept B wurde lokal umgesetzt und auf eine klarere

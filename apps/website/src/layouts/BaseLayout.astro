@@ -9,7 +9,7 @@ interface Props {
 
 const {
   title,
-  description = "Competence Hub verbindet Unternehmensanliegen mit ausgewählten Coaches, passenden Formaten und persönlicher Begleitung.",
+  description = "Competence Hub verbindet Unternehmen und Privatpersonen mit ausgewählten Coaches, passenden Formaten und persönlicher Begleitung.",
   bodyClass = "",
 } = Astro.props;
 
@@ -28,7 +28,7 @@ const navigation = [
 
 const serviceNavigation = [
   { label: "Alle Leistungen", href: "leistungen", icon: "compass" as const },
-  { label: "Livecoaching", href: "livecoaching", icon: "message-circle" as const },
+  { label: "Mindforge · Life Coaching", href: "mindforge", icon: "sparkles" as const },
   { label: "Businesscoaching", href: "businesscoaching", icon: "briefcase" as const },
   { label: "Recruiting & Personalentwicklung", href: "leistungen#recruiting", icon: "users" as const },
   { label: "Psychologische Beratung & Prävention", href: "leistungen#gesundheit", icon: "heart-pulse" as const },
@@ -38,7 +38,7 @@ const serviceNavigation = [
 const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
 const isCurrent = (path = "") =>
   normalizePath(Astro.url.pathname) === normalizePath(url(path));
-const isServicePage = ["leistungen", "livecoaching", "businesscoaching"].some(
+const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching", "businesscoaching"].some(
   (path) => isCurrent(path),
 );
 ---
@@ -134,7 +134,7 @@ const isServicePage = ["leistungen", "livecoaching", "businesscoaching"].some(
       </div>
       <nav aria-label="Footer">
         <a href={url("leistungen")}>Leistungen</a>
-        <a href={url("livecoaching")}>Livecoaching</a>
+        <a href={url("mindforge")}>Mindforge</a>
         <a href={url("businesscoaching")}>Businesscoaching</a>
         <a href={url("unternehmen")}>Für Unternehmen</a>
         <a href={url("coaches")}>Coaches</a>

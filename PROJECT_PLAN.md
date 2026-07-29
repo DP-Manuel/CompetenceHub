@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-07-24
+Last updated: 2026-07-29
 
 ## Vision
 
@@ -10,20 +10,20 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 
 - Workflow model: informal multi-day work
 - Current phase, sprint, milestone, board status, or release: Competence Hub website deadline sprint
-- Current status: yellow; the enlarged Hub and progressive Connected Story are
-  published as a public Pages review, while stakeholder/content approval
-  remains pending
-- Main blocker: final coach/publication approval, legal applicability, pricing semantics, and the approved live contact/response process are not finalized
-- Next decision needed: approve the Connected-Story start-page direction,
-  curated intermediary positioning, and the Elisabeth Schwabauer / Carolin
-  Hupp profile drafts
+- Current status: yellow; the published Connected Story has been extended and
+  versioned with Mindforge, approved B2C/B2B prices, Assessment Center and
+  Elisabeth Schwabauer's approved portrait
+- Main blocker: final legal applicability, remaining coach approvals and the approved live contact/response process are not finalized
+- Next decision needed: approve the Mindforge, Assessment Center and Elisabeth
+  profile presentation for the next manual Pages review publication
 
 ## Scope
 
 In scope:
 
 - Public website as the first deliverable.
-- B2B-first Competence Hub presentation for Livecoaching and Businesscoaching.
+- Competence Hub presentation for companies and private customers, including
+  Mindforge Life Coaching and Businesscoaching.
 - B2B-first communication for company seminars, personnel needs discovery, qualification, and placement.
 - Surprise website prototype for 2026-07-01, because leadership does not yet know that the website is being prepared and the actual project start is 2026-07-01.
 - Handover-ready website operation so another Informatiker can understand, maintain, build, and deploy the website if Manuel is no longer the active technical owner.
@@ -50,7 +50,7 @@ Out of scope:
 
 - Product owner / decision owner: Manuel
 - Technical owner: Manuel with Codex support
-- Users or affected groups: companies first; later internal staff, coaches, participants, and company contacts
+- Users or affected groups: companies, private coaching customers, internal staff, coaches, participants, and company contacts
 - External stakeholders: executive stakeholders for 2026-07-01 presentation; EDV for hosting/subdomain/database coordination
 
 ## Roadmap Or Work Plan
@@ -59,13 +59,15 @@ Out of scope:
   created directly after the 2026-07-23 MVP deadline.
 - Now: validate the new topic-based navigation and role-oriented login preview with Manuel; no real authentication belongs in the public website slice.
 - Now: use `docs/assets/designstyle.md` as the shared visual acceptance basis for website corrections and later portal/app work.
-- Now: review the published Connected-Story direction, Recruiting field,
-  Wegner-Ney profile draft and Janay-Rappelt contact role before the next
-  public update.
+- Now: review the versioned Mindforge extension, official prices, Assessment
+  Center cross-links and Elisabeth Schwabauer profile before the next public
+  update.
 - Next: approve and publish the new coach content only after wording, current availability, image rights, and publication consent are confirmed.
 - In parallel: perform a read-only inventory of the blank server after its purpose and secure access method are confirmed; then select the backend runtime and migration tool.
 - Later: implement the independent web system with login, backend API, own database, roles, and first CRUD workflows.
-- Before live handover: decide whether content maintenance stays developer-led in Astro, uses Astro plus CMS/API, moves to WordPress, or is fed by the later webapp.
+- Before live handover: decide whether content maintenance stays developer-led
+  in Astro, uses Astro plus CMS/API, or is fed by the later webapp. WordPress
+  remains excluded.
 - Before real-site visual production: remind Manuel to request the original seminar illustrations and approved logo exports from the media designer; do not extract production assets from the PDF.
 - Future: evaluate document package automation, email sending, structured or AI-assisted matching, commute-time calculation, company feedback links, coach/lecturer workflows, company portal views, participant app, and Hermes Agent automation as separate implementation slices.
 

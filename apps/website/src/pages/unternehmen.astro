@@ -48,6 +48,34 @@ const benefits = [
   "passende Expertise für Thema und Unternehmenskontext",
 ];
 
+const assessmentApplications = [
+  {
+    title: "Recruiting & Personalauswahl",
+    text: "Externe Bewerbende oder interne Kandidatinnen und Kandidaten anhand eines abgestimmten Anforderungsprofils strukturiert und vergleichbar beurteilen.",
+    icon: "user-round" as const,
+  },
+  {
+    title: "Personalentwicklung",
+    text: "Stärken und Entwicklungsfelder sichtbar machen und die Ergebnisse als fundierten Ausgangspunkt für Mindforge-Coachings nutzen.",
+    icon: "sparkles" as const,
+  },
+];
+
+const assessmentLevels = [
+  {
+    title: "Planung & Konzeption",
+    text: "Anforderungsprofil, Übungsdesign, Beobachtungs- und Bewertungsbögen, internes Briefing sowie Regie- und Ablaufplan.",
+    price: "2.500–3.800 €",
+    unit: "zzgl. MwSt. · pauschal",
+  },
+  {
+    title: "Full-Service",
+    text: "Zusätzlich Moderation, neutrale Beobachtung, Auswertung, Gutachten und strukturierte Feedbackgespräche.",
+    price: "4.500–7.500 €",
+    unit: "zzgl. MwSt. · pro Assessment-Center-Tag",
+  },
+];
+
 const faqs = [
   {
     question: "Für welche Unternehmen eignet sich Competence Hub?",
@@ -60,6 +88,10 @@ const faqs = [
   {
     question: "Gibt es garantierte Ergebnisse?",
     answer: "Nein. Coaching kann Reflexion, Orientierung und professionelle Entwicklung unterstützen, ersetzt aber keine unternehmerische Entscheidung und keine medizinische oder therapeutische Beratung.",
+  },
+  {
+    question: "Können Assessment Center auch der Personalentwicklung dienen?",
+    answer: "Ja. Neben der Personalauswahl können Development Assessment Center Potenziale und Entwicklungsfelder sichtbar machen. Die Ergebnisse lassen sich anschließend in Mindforge-Coachings gezielt weiterbearbeiten.",
   },
 ];
 ---
@@ -83,7 +115,7 @@ const faqs = [
       </div>
     </section>
 
-    <section class="feature-grid" aria-label="Typische Anlässe für Unternehmen">
+    <section class="feature-grid feature-grid--company" aria-label="Typische Anlässe für Unternehmen">
       {occasions.map((occasion) => (
         <article class="feature-card">
           <span class="feature-card__icon"><Icon name={occasion.icon} size={28} /></span>
@@ -91,6 +123,52 @@ const faqs = [
           <p>{occasion.text}</p>
         </article>
       ))}
+    </section>
+
+    <section class="assessment-section" id="assessment-center" aria-labelledby="assessment-title">
+      <div class="assessment-section__heading">
+        <div>
+          <p class="eyebrow">Kompakter Spezialbereich</p>
+          <h2 id="assessment-title">Assessment Center für Auswahl und Entwicklung</h2>
+        </div>
+        <p>
+          Präsenz, digital oder hybrid. Umfang und Beobachtungsaufwand werden
+          passend zur Zielgruppe und zur konkreten Entscheidung geplant.
+        </p>
+      </div>
+
+      <div class="assessment-applications">
+        {assessmentApplications.map((application) => (
+          <article>
+            <Icon name={application.icon} size={28} />
+            <div>
+              <h3>{application.title}</h3>
+              <p>{application.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="assessment-levels" aria-label="Leistungsstufen und Preise">
+        {assessmentLevels.map((level) => (
+          <article>
+            <div>
+              <h3>{level.title}</h3>
+              <p>{level.text}</p>
+            </div>
+            <strong>{level.price}</strong>
+            <small>{level.unit}</small>
+          </article>
+        ))}
+      </div>
+
+      <div class="assessment-section__links">
+        <a class="button" href={url("kontakt")}>Assessment Center anfragen</a>
+        <a class="text-link" href={url("mindforge#unternehmen")}>
+          Mindforge für Unternehmen
+          <Icon name="arrow-right" size={18} />
+        </a>
+      </div>
     </section>
 
     <section class="split-panel">
