@@ -1,6 +1,13 @@
 ---
 import Icon from "./Icon.astro";
 
+interface Props {
+  presentation?: "default" | "living";
+  layout?: "default" | "asymmetric";
+}
+
+const { presentation = "default", layout = "default" } = Astro.props;
+
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
@@ -127,9 +134,65 @@ const edges = [
   { from: "unternehmen", to: "gruppenformate", d: "M170 220 Q290 120 420 103" },
   { from: "recruiting", to: "kontakt", d: "M240 570 Q365 635 504 654" },
 ];
+
+const asymmetricPositions: Record<
+  string,
+  { x: number; y: number; size?: number }
+> = {
+  unternehmen: { x: 18, y: 31 },
+  coaches: { x: 89, y: 29 },
+  leistungen: { x: 87, y: 76 },
+  recruiting: { x: 15.5, y: 77 },
+  kontakt: { x: 43, y: 93 },
+  mindforge: { x: 66, y: 10.5, size: 90 },
+  businesscoaching: { x: 90, y: 52, size: 86 },
+  gesundheit: { x: 70, y: 91, size: 86 },
+  gruppenformate: { x: 34, y: 10.5, size: 96 },
+};
+
+const renderedNodes =
+  layout === "asymmetric"
+    ? nodes.map((node) => ({ ...node, ...asymmetricPositions[node.id] }))
+    : nodes;
+
+const pointFor = (id: string) => {
+  if (id === "core") return { x: 600, y: 380 };
+  const node = renderedNodes.find((item) => item.id === id);
+  return node
+    ? { x: node.x * 12, y: node.y * 7.6 }
+    : { x: 600, y: 380 };
+};
+
+const renderedEdges =
+  layout === "asymmetric"
+    ? edges.map((edge, index) => {
+        const from = pointFor(edge.from);
+        const to = pointFor(edge.to);
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+        const length = Math.max(Math.hypot(dx, dy), 1);
+        const bend = (index % 2 === 0 ? 1 : -1) * Math.min(28, length * 0.05);
+        const controlX = (from.x + to.x) / 2 - (dy / length) * bend;
+        const controlY = (from.y + to.y) / 2 + (dx / length) * bend;
+
+        return {
+          ...edge,
+          d: `M${from.x} ${from.y} Q${controlX} ${controlY} ${to.x} ${to.y}`,
+        };
+      })
+    : edges;
 ---
 
-<div class="hub-graph" data-hub-graph>
+<div
+  class:list={[
+    "hub-graph",
+    {
+      "hub-graph--living": presentation === "living",
+      "hub-graph--asymmetric": layout === "asymmetric",
+    },
+  ]}
+  data-hub-graph
+>
   <p class="visually-hidden" id="hub-graph-help">
     Der Competence Hub ist der zentrale Startknoten. Fokussieren oder berühren
     Sie den Kern, um seine Hauptverbindungen anzuzeigen. Die Außenknoten führen
@@ -145,7 +208,7 @@ const edges = [
     <circle class="hub-graph__orbit" cx="600" cy="380" r="188" />
     <circle class="hub-graph__orbit hub-graph__orbit--outer" cx="600" cy="380" r="310" />
     <circle class="hub-graph__marker" cx="600" cy="192" r="7" />
-    {edges.map((edge) => (
+    {renderedEdges.map((edge) => (
       <path
         d={edge.d}
         data-edge
@@ -169,7 +232,7 @@ const edges = [
   </div>
 
   <nav class="hub-graph__nodes" aria-label="Bereiche des Competence Hub">
-    {nodes.map((node) => (
+    {renderedNodes.map((node) => (
       <span
         class={`hub-graph__position hub-graph__position--${node.kind}`}
         style={`--node-x: ${node.x}%; --node-y: ${node.y}%; --node-size: ${node.size}px;`}

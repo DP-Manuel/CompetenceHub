@@ -1,8 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import CompetenceHubMap from "../components/CompetenceHubMap.astro";
-import HubJourney from "../components/HubJourney.astro";
 import Icon from "../components/Icon.astro";
+import LivingHubPrototype from "../components/LivingHubPrototype.astro";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -81,21 +80,17 @@ const coachPreview: CoachPreview[] = [
   description="Competence Hub verbindet Unternehmen und Privatpersonen mit Mindforge Life Coaching, Businesscoaching, Recruiting und ausgewählten Coaches."
   bodyClass="home-page"
 >
-  <main>
-    <section class="hub-hero" aria-label="Competence Hub entdecken">
-      <CompetenceHubMap />
-    </section>
-
-    <section class="trust-strip" aria-label="Competence Hub auf einen Blick">
-      {trustPoints.map((point) => (
-        <article>
-          <Icon name={point.icon} size={24} />
-          <strong>{point.text}</strong>
-        </article>
-      ))}
-    </section>
-
-    <HubJourney />
+  <LivingHubPrototype variant="c" prototypeMode={false}>
+    <Fragment slot="before-journey">
+      <section class="trust-strip" aria-label="Competence Hub auf einen Blick">
+        {trustPoints.map((point) => (
+          <article>
+            <Icon name={point.icon} size={24} />
+            <strong>{point.text}</strong>
+          </article>
+        ))}
+      </section>
+    </Fragment>
 
     <section class="coach-preview" aria-labelledby="coach-spotlight-title">
       <div class="coach-preview__heading">
@@ -147,5 +142,5 @@ const coachPreview: CoachPreview[] = [
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
       </div>
     </section>
-  </main>
+  </LivingHubPrototype>
 </BaseLayout>

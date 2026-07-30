@@ -5,12 +5,14 @@ interface Props {
   title: string;
   description?: string;
   bodyClass?: string;
+  noindex?: boolean;
 }
 
 const {
   title,
   description = "Competence Hub verbindet Unternehmen und Privatpersonen mit ausgewählten Coaches, passenden Formaten und persönlicher Begleitung.",
   bodyClass = "",
+  noindex = false,
 } = Astro.props;
 
 const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
@@ -53,7 +55,9 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    {reviewMode && <meta name="robots" content="noindex, nofollow, noarchive" />}
+    {(reviewMode || noindex) && (
+      <meta name="robots" content="noindex, nofollow, noarchive" />
+    )}
     <title>{title}</title>
   </head>
   <body class={bodyClass}>

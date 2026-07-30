@@ -2,6 +2,60 @@
 
 Newest entries first.
 
+## 2026-07-30 | design/implementation | Living Hub C2 auf Startseite übernommen
+
+Die freigegebene asymmetrische Living-Hub-Variante C2 ersetzt den bisherigen
+oberen Connected-Core-Einstieg der Startseite.
+
+- Startseite: Der produktive Hero verbindet die zentrale Hub-Map mit der
+  Aussage `Wo Anliegen und passende Expertise zusammenfinden.` sowie direkten
+  Einstiegen für Unternehmen, Mindforge und Kontakt. Variantenumschalter und
+  Prototyp-Beschriftungen erscheinen nur auf den lokalen Vergleichsrouten.
+- Bestehende Inhalte: Trust-Strip, Hub-Journey, Coach-Vorschau und persönlicher
+  Kontaktabschluss bleiben vollständig erhalten.
+- Feinkorrekturen: Der Unternehmensknoten wurde auf breiten Viewports aus der
+  Überschrift herausgerückt. Zwischen `Competence` und `Hub` liegt ein kleiner
+  zusätzlicher Abstand. `zusammenfinden` bleibt auch mobil vollständig und
+  ungetrennt sichtbar.
+- Responsive: Ab 1100 Pixeln wird die asymmetrische Komposition gestapelt;
+  mobile Hub-Knoten bleiben zweispaltig und alle Ziele anklickbar.
+- Verifikation: Startseite und Prototyp wurden bei 1920, 1000 und 500 Pixeln
+  lokal gerendert. Der abschließende Astro-Build ist fehlerfrei.
+- Veröffentlichung: Commit, Push und das manuelle GitHub-Pages-Review wurden
+  nach lokaler Abnahme ausdrücklich freigegeben.
+
+## 2026-07-30 | design/prototype | Drei lokale Living-Hub-Heros umgesetzt
+
+Das neue Living-Hub-Konzept wurde als begrenzter, lokal vergleichbarer
+Frontend-Prototyp umgesetzt. Die bestehende Startseite unter `/` bleibt
+unverändert.
+
+- Vergleich: Drei interaktive, untereinander verlinkte Varianten stehen unter
+  `/prototyp/living-hub-a`, `/prototyp/living-hub-b` und
+  `/prototyp/living-hub-c` bereit. A inszeniert eine vollständig zentrale
+  Hub-Halle, B ergänzt Orientierungsdocks für Unternehmen und Mindforge, C
+  vergleicht einen asymmetrischen Text-Core-Einstieg.
+- Wiederverwendung: Alle Varianten verwenden dieselbe bestehende
+  `CompetenceHubMap` mit echten Links sowie dieselbe `HubJourney`. Die stabile
+  Map erhielt nur einen optionalen Präsentationsmodus.
+- Interaktion: Feine Pointer-Parallaxe, eine ruhige Core-Signalisierung und ein
+  direkter Sprung führen vom Hero in die vorhandene Hub-Journey. Touch,
+  Tastaturbedienung und `prefers-reduced-motion` werden berücksichtigt.
+- C2-Entscheidung: Der asymmetrische Einstieg ist die bevorzugte Richtung. Der
+  erklärende Zwischenabschnitt wurde mangels Kundennutzen entfernt. Variante C
+  besitzt eine eigene Knoten- und Liniengeometrie, damit kein Satellit vom
+  großen Core verdeckt wird. Das Schlüsselwort `zusammenfinden` bleibt in
+  jeder Überschriftenbreite ungetrennt. Unter 1100 Pixeln wird die Komposition
+  kontrolliert gestapelt.
+- Sicherheit/SEO: Die Prototypseiten sind ausdrücklich `noindex`; es wurden
+  keine neuen Abhängigkeiten, Provider, Backend-Funktionen oder Deployments
+  ergänzt.
+- Verifikation: Die drei Hero-Varianten wurden lokal bei 1440 Pixeln und in
+  schmaler Darstellung gerendert. Mobile Hub-Knoten nutzen für bessere
+  Lesbarkeit zwei Spalten. Astro prüft 31 Dateien ohne Fehler, Warnungen oder
+  Hinweise und erzeugt 25 statische Seiten.
+- Veröffentlichung: Nur lokal. Kein Commit, Push oder Deployment.
+
 ## 2026-07-30 | handoff/release | Frontendstand für Konzeptreview übergeben
 
 Der aktuelle Website-, Design- und Projektstand wurde für die Übergabe an eine
