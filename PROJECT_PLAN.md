@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-07-29
+Last updated: 2026-07-30
 
 ## Vision
 
@@ -10,12 +10,11 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 
 - Workflow model: informal multi-day work
 - Current phase, sprint, milestone, board status, or release: Competence Hub website deadline sprint
-- Current status: yellow; the published Connected Story has been extended and
-  versioned with Mindforge, approved B2C/B2B prices, Assessment Center and
-  Elisabeth Schwabauer's approved portrait
+- Current status: yellow; the current Connected Story and Mindforge frontend
+  is documented and ready for comparison with a possible new frontend concept
 - Main blocker: final legal applicability, remaining coach approvals and the approved live contact/response process are not finalized
-- Next decision needed: approve the Mindforge, Assessment Center and Elisabeth
-  profile presentation for the next manual Pages review publication
+- Next decision needed: approve, reject or phase the expected new frontend
+  direction after comparing it against current behavior, content and design
 
 ## Scope
 
@@ -59,9 +58,8 @@ Out of scope:
   created directly after the 2026-07-23 MVP deadline.
 - Now: validate the new topic-based navigation and role-oriented login preview with Manuel; no real authentication belongs in the public website slice.
 - Now: use `docs/assets/designstyle.md` as the shared visual acceptance basis for website corrections and later portal/app work.
-- Now: review the versioned Mindforge extension, official prices, Assessment
-  Center cross-links and Elisabeth Schwabauer profile before the next public
-  update.
+- Now: use `CHATGPT_PROJECT_BRIEF.md` and `docs/assets/designstyle.md` to review
+  the current frontend with stakeholders and the other KI.
 - Next: approve and publish the new coach content only after wording, current availability, image rights, and publication consent are confirmed.
 - In parallel: perform a read-only inventory of the blank server after its purpose and secure access method are confirmed; then select the backend runtime and migration tool.
 - Later: implement the independent web system with login, backend API, own database, roles, and first CRUD workflows.

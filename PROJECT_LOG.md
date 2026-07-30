@@ -2,6 +2,28 @@
 
 Newest entries first.
 
+## 2026-07-30 | handoff/release | Frontendstand für Konzeptreview übergeben
+
+Der aktuelle Website-, Design- und Projektstand wurde für die Übergabe an eine
+weitere KI konsolidiert.
+
+- Interaktion: Die Mindforge-Prozessnummern besitzen mehr Abstand zum Text.
+  Sekundärbuttons werden projektweit bei Hover oder Tastaturfokus orange; in
+  Button-Gruppen wechselt der zugehörige Primärbutton auf Weiß. Einzelne
+  Buttons erhalten eine sichtbare türkise Interaktionsbetonung.
+- Übergabe: `CHATGPT_PROJECT_BRIEF.md` wurde vollständig auf den Stand vom
+  30.07.2026 gebracht. Enthalten sind Produktpositionierung, Funktionen,
+  Seiten, Komponenten, Designregeln, Ordnerstruktur, Stack, Deployment,
+  Webapp-/Datenbankgrenzen, offene Punkte und Sicherheitsregeln.
+- Sicherheit: `Quellen/`, `.env*`, Zugangsdaten, `.tmp/` und private
+  Quelldokumente wurden weder gelesen noch in die Übergabe übernommen.
+- Verifikation: Astro prüft 27 Dateien ohne Fehler, Warnungen oder Hinweise und
+  erzeugt 22 statische Seiten. Prozessabstand und verallgemeinerte
+  Buttonzustände wurden zusätzlich lokal im Browser geprüft.
+- Veröffentlichung: Commit und Push auf `main` sind freigegeben. Der
+  GitHub-Pages-Review-Workflow bleibt ein separater manueller Schritt und wird
+  ohne erneute ausdrückliche Freigabe nicht gestartet.
+
 ## 2026-07-29 | requirements/implementation | Mindforge und Elisabeth erweitert
 
 Der freigegebene Requirements-Engineering-Eintrag vom 29.07.2026 und die neuen
@@ -38,8 +60,16 @@ Unterlagen zu Elisabeth Schwabauer wurden lokal in die Website übertragen.
   erzeugt 22 statische Seiten. Mindforge, Startseiten-Hub, Unternehmensseite
   und Elisabeth-Profil wurden bei 1440 und 500 Pixeln gerendert. Der gekoppelte
   Mindforge-Buttonzustand wurde zusätzlich im lokalen Browser geprüft.
-- Veröffentlichung: Commit und Push auf `main` sind für die kollegiale Prüfung
-  freigegeben. Der manuelle GitHub-Pages-Workflow wurde nicht gestartet.
+- Lokale Nachkorrektur: Zwischen den nummerierten Prozesskästen und ihren
+  Texten liegt nun mehr Abstand. Der gekoppelte Orange-Weiß-Wechsel gilt für
+  alle vorhandenen Primär-/Sekundär-Button-Gruppen; einzelne Buttons und der
+  Formularbutton besitzen ebenfalls einen deutlichen Hover- und
+  Tastaturfokuszustand. Build und Browserprüfung sind erfolgreich.
+- Veröffentlichung: Commit `a33ff12` wurde auf `main` gepusht und mit dem
+  manuellen GitHub-Pages-Workflow `30483085264` erfolgreich als Review unter
+  `https://dp-manuel.github.io/CompetenceHub/` veröffentlicht. Startseite,
+  Mindforge, Unternehmen und Elisabeths Coach-Profil antworteten anschließend
+  öffentlich mit HTTP 200 und enthielten die erwarteten neuen Inhalte.
 
 ## 2026-07-24 | design/implementation | Startseite als Connected Story verdichtet
 

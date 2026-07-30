@@ -1,193 +1,369 @@
-# Competence Hub Website - Projektbrief fuer externe KI
+# Competence Hub - Projektübergabe für eine andere KI
 
-Stand: 2026-07-09
+Stand: 2026-07-30
 
-Zweck dieser Datei: schnelle, sichere Projektuebersicht fuer eine zweite KI, die Prompts oder Umsetzungsvorschlaege schreiben soll. Diese Datei enthaelt bewusst keine Zugangsdaten, keine Secrets und keine Inhalte aus dem gesperrten Quellen-Ordner.
+Zweck: Diese Datei ist der kompakte, aber vollständige Einstieg für eine
+weitere KI, die das Frontend analysieren, ein neues Gestaltungskonzept
+ausarbeiten oder präzise Umsetzungsaufträge formulieren soll.
 
-## Kurzfassung
+Die Datei enthält keine Zugangsdaten, Secrets, privaten Quelldokumente oder
+vertraulichen Coach-Unterlagen.
 
-- Projekt: Competence Hub Website
-- Lokaler Projektpfad: `C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website`
-- Neues Ziel-Repo laut Manuel: `https://github.com/DP-Manuel/CompetenceHub`
-- Aktuelles lokales Git-Remote zeigt noch auf: `https://github.com/DP-Manuel/Firmenschulung.git`
-- Deadline Website-MVP: 2026-07-23
-- Ziel: schnell sichtbarer, professioneller, wartbarer Website-MVP.
-- Fokus: Livecoaching- und Businesscoaching-Angebote, Firmenkunden, Coach-Netzwerk, Kontakt/Anfrage.
-- Nicht-Fokus jetzt: Project Cockpit, echtes Backend, Login, Buchungssystem, Datenbank, Deployment-Automatisierung.
+## 1. Kurzfassung
 
-## Sicherheitsgrenzen
+- Projekt: `Competence Hub`
+- Lokaler Pfad:
+  `C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website`
+- Repository: `https://github.com/DP-Manuel/CompetenceHub`
+- Branch: `main`
+- Website: statische Astro-Website in `apps/website`
+- Öffentliche Review-URL:
+  `https://dp-manuel.github.io/CompetenceHub/`
+- Review-Deployment: nur manuell über GitHub Actions
+- Aktuelle Produktphase: Frontend- und Inhaltsreview nach dem Website-MVP
+- Hauptzielgruppen: Unternehmen und Privatpersonen
+- Dachmarke: `Competence Hub`
+- Angebotsbereich: `Mindforge` für Life Coaching
+- Kein WordPress, kein Backend, keine Datenbankanbindung, keine echte
+  Authentifizierung und keine echte Online-Buchung
 
-Nicht oeffnen, nicht lesen, nicht indexieren:
+Der bisher öffentlich veröffentlichte Review-Build basiert auf Commit
+`a33ff12`. Ein Push auf `main` veröffentlicht nicht automatisch. Für eine
+aktualisierte öffentliche Vorschau muss der manuelle Workflow
+`Publish GitHub Pages review` ausdrücklich gestartet werden.
 
-- `C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website\Quellen`
-- Word-Dokument mit dem Namen `Zugangsdaten Server und Datenbank`
-- `.env`, `.env.*`, Zugangsdaten, Passwoerter, Tokens, Secrets
+## 2. Produktidee und Positionierung
 
-Keine Secrets in Code, Docs, Prompts oder Commits schreiben.
+Der Competence Hub ist keine offene Coaching-Plattform und kein automatischer
+Marktplatz. Er soll Unternehmen und Privatpersonen mit passender Expertise,
+geeigneten Formaten und einer persönlichen Ansprechpartnerin verbinden.
 
-Keine sensiblen Daten an externe Dienste senden.
+Kernlogik:
 
-Kein Deployment ohne ausdrueckliche Freigabe.
+```text
+Anliegen -> Klärung -> passende Expertise -> passendes Format -> nächster Schritt
+```
 
-Keine externen Provider fuer das Projekt einfuehren.
+Zentrale Nutzenidee:
 
-Kein OpenRouter.
+- Das Anliegen steht vor dem Produkt.
+- Coaches werden kuratiert, nicht als endloser Katalog dargestellt.
+- Die Verbindung zwischen Bedarf, Coach und Format wird persönlich begleitet.
+- Janay Rappelt ist als vermittelnde Kontaktperson zwischen Unternehmen und
+  Coaches vorgesehen. Ein vollständiges Profil und Foto liegen noch nicht vor.
 
-Kein Hermes.
+## 3. Aktuell dargestellte Leistungsbereiche
 
-Kontaktformular zunaechst nur sicher planen: ENV-/Konfigurationsplatzhalter, keine echten Zugangsdaten.
+### Competence Hub
 
-## Was bisher geschehen ist
+- Coaching und Beratung für Unternehmen
+- Businesscoaching
+- Recruiting und Personalentwicklung
+- Assessment Center für Personalauswahl und Entwicklung
+- psychologische Beratung und Prävention
+- Supervision, Workshops und Vorträge
+- kuratiertes Coach-Netzwerk
 
-1. Projektstruktur wurde als Website-first Workspace angelegt.
-2. Astro wurde als statischer Website-Stack eingerichtet.
-3. Eine erste moderne Stakeholder-Prototyp-Website wurde gebaut.
-4. Vorhandene Routen:
-   - `/`
-   - `/unternehmen`
-   - `/seminare`
-   - `/qualifizierung`
-   - `/system`
-   - `/login`
-   - `/kontakt`
-   - `/coaches`
-   - `/coaches/christian-galvano`
-5. Die Seite ist aktuell noch auf eine fruehere Positionierung ausgerichtet:
-   - Firmenschulungen
-   - KMU in Tauberfranken/Wuerzburg
-   - Personalqualifizierung
-   - Vermittlungsperspektive
-   - spaeterer Systemausblick
-6. Ein erstes echtes Coach-Profil fuer Christian Galvano wurde integriert.
-7. Login und Kontakt sind visuelle Demos ohne Authentifizierung, Datenbank oder echte Formularverarbeitung.
-8. Astro Build wurde geprueft:
-   - `astro check`: 0 Fehler, 0 Warnungen, 0 Hinweise
-   - Build in Sandbox kann mit `spawn EPERM` scheitern
-   - derselbe Build ausserhalb der Sandbox lief erfolgreich und erzeugte 9 statische Seiten
-9. Am 2026-07-09 wurde entschieden, daraus einen Deadline-Sprint fuer den Website-MVP "Competence Hub" zu machen.
+### Mindforge
 
-## Aktuelle technische Basis
+Mindforge ist ein eigener Angebotsbereich innerhalb des Competence Hub:
 
-Stack:
+- Life Coaching, nicht „Livecoaching“
+- Resilienz
+- Mindset
+- persönliche und berufliche Entwicklung
+- Angebote für Privatpersonen und Unternehmen
+- Präsenz, online oder hybrid
+- kostenfreies Erstgespräch von 15 bis 20 Minuten
+- 90-minütige Intensiv-Sessions
+- Übungen, Arbeitsmaterialien und Transferimpulse
 
-- Astro `^5.18.2`
-- TypeScript `^6.0.3`
-- `@astrojs/check`
-- Statische Website
-- Kein WordPress
-- Kein Backend
-- Keine Datenbank
-- Keine echte Authentifizierung
+Die veröffentlichten Mindforge- und Assessment-Center-Preise sind fachlich
+freigegeben und in
+`docs/requirements/requirements-engineering-update-2026-07-29.md`
+dokumentiert.
 
-Wichtige Datei:
+Wichtige Grenze:
 
-- `apps/website/package.json`
+- Mindforge ist Life Coaching.
+- Über den Competence Hub wird aktuell keine Psychotherapie angeboten.
+- Die Website darf kein Therapieversprechen formulieren.
 
-Scripts:
+## 4. Was die Website aktuell kann
 
-```json
-{
-  "dev": "astro dev --host 127.0.0.1",
-  "build": "astro check && astro build",
-  "preview": "astro preview --host 127.0.0.1"
-}
+### Technisch
+
+- statische Seiten mit Astro erzeugen
+- responsive Desktop-, Tablet- und Mobilansichten
+- eigene Meta-Titel und Meta-Descriptions pro Seite
+- zentrale Navigation mit Leistungs-Dropdown
+- mobile Navigation über native `details`/`summary`
+- interne, GitHub-Pages-kompatible Links mit dynamischem Base-Pfad
+- interaktive Hub-Grafik mit Hover, Tastaturfokus und Klickzielen
+- scrollabhängige Hub-Journey mit sichtbarer Fallback-Darstellung
+- reduzierte Bewegungen bei `prefers-reduced-motion`
+- manuell auslösbaren GitHub-Pages-Review-Build erzeugen
+
+### Nicht vorhanden
+
+- kein Backend
+- keine API
+- keine Datenbankverbindung
+- keine Benutzerkonten
+- keine echte Anmeldung
+- keine Formularübertragung oder Speicherung
+- keine Terminbuchung
+- keine Coach-Kalender
+- kein CMS
+- kein automatisches Matching
+- keine Vertrags- oder Rechnungsautomatisierung
+
+Loginseiten und Kontaktformular sind sichtbare Strukturvorschauen. Sie dürfen
+nicht als produktive Funktion beschrieben werden.
+
+## 5. Aktuelle Seiten
+
+| Route | Zweck und aktueller Inhalt |
+| --- | --- |
+| `/` | Startseite mit zentralem Connected-Core-Hub, anklickbaren Themenknoten, scrollender Journey, Coach-Spotlight und Kontakt-CTA |
+| `/leistungen` | Gesamtübersicht für Mindforge, Businesscoaching, Recruiting, Assessment Center, Gesundheit und Gruppenformate |
+| `/mindforge` | Hauptseite für Life Coaching, Formate, Prozess, offizielle B2C-/B2B-Preise, Assessment-Verbindung und Therapieabgrenzung |
+| `/lifecoaching` | erklärende Life-Coaching-Seite mit Einsatzfeldern, Vorgehen und fachlicher Grenze |
+| `/livecoaching` | Kompatibilitätsseite; erklärt, dass Life Coaching jetzt unter Mindforge geführt wird |
+| `/businesscoaching` | Führung, Teams, Kommunikation, Rollenklärung und Veränderung |
+| `/unternehmen` | B2B-Einstieg, Anlässe, Assessment Center, Auswahl/Entwicklung, Prozess und FAQ |
+| `/coaches` | kuratiertes Coach-Netzwerk mit vier vorhandenen Profilen |
+| `/coaches/christian-galvano` | Coach-Profil für Leadership, Konflikt, Stress- und Burnoutprävention |
+| `/coaches/carolin-hupp` | Coach-Profil für Gesundheitsförderung, Bewegung, Prävention und Entspannung |
+| `/coaches/elisabeth-schwabauer` | Psychologin; Beratung, psychische Belastung, Team- und Konfliktklärung; kein Therapieangebot |
+| `/coaches/wegner-ney` | Workshops und Vorträge zu Führung, Teamstärkung, Recruiting und Personalentwicklung; KI-Angebote wurden bewusst nicht übernommen |
+| `/kontakt` | statische Anfragevorschau für Unternehmen und Privatpersonen; keine Übertragung |
+| `/login` | Vorschau geplanter Bereiche für internes Team, Coaches und Unternehmen |
+| `/login/intern` | statische Vorschau für den späteren internen Bereich |
+| `/login/coaches` | statische Vorschau für einen späteren Coach-Bereich |
+| `/login/unternehmen` | statische Vorschau für einen späteren Unternehmensbereich |
+| `/impressum` | lokale Hinweis-/Platzhalterseite mit Link zum zentralen Donner-Partner-Impressum |
+| `/datenschutz` | lokale Hinweis-/Platzhalterseite mit Link zum zentralen Datenschutz |
+| `/seminare` | entschärfte Archiv-/Perspektivseite, nicht Hauptnavigation |
+| `/qualifizierung` | entschärfte Archiv-/Perspektivseite, nicht Hauptnavigation |
+| `/system` | klar gekennzeichneter späterer Systemausblick |
+
+Footer-Rechtslinks:
+
+- `https://donner-partner.de/dp/impressum/`
+- `https://donner-partner.de/dp/datenschutz/`
+- `https://donner-partner.de/dp/agb/`
+
+Öffentliche Kontaktadresse:
+
+- `competencehub@donner-partner.de`
+
+## 6. Zentrale Frontend-Elemente
+
+### Connected Core
+
+Datei: `apps/website/src/components/CompetenceHubMap.astro`
+
+- großer zentraler Competence-Hub-Kreis als Startknoten
+- kleinere Knoten für Unternehmen, Coaches, Leistungen, Recruiting, Kontakt,
+  Mindforge, Businesscoaching, Gesundheit sowie Workshops/Vorträge
+- Verbindungen werden bei Hover, Fokus oder Aktivierung sichtbar
+- Außenknoten sind echte Links
+- Mobil wird die Grafik stabiler und einfacher dargestellt
+- keine Behauptung von automatischem Matching
+
+### Hub Journey
+
+Datei: `apps/website/src/components/HubJourney.astro`
+
+- vier Schritte: Anliegen, Expertise, Format, Begleitung
+- alle vier Kreise sind klickbar
+- Ziele: Unternehmen, Coaches, Leistungen und Kontakt
+- Desktop: haftende Grafik mit scrollabhängig aktivem Schritt
+- Mobil: normale Lesereihenfolge ohne unzugängliche Animation
+
+### Mindforge-Signal
+
+Datei: `apps/website/src/pages/mindforge.astro`
+
+- zentraler Mindforge-Kreis
+- Satelliten: Resilienz, Mindset und Entwicklung
+- Satelliten berühren den Kern nur an der Kontur und überlagern ihn nicht
+- die Darstellung skaliert proportional
+
+### Buttons
+
+Datei: `apps/website/src/styles/global.css`
+
+- Primärbutton: Kaminrot/Orange mit dunkler Schrift
+- Sekundärbutton: Weiß mit türkiser Kontur
+- Sekundärbutton wird bei Hover oder Tastaturfokus orange
+- in Primär-/Sekundärgruppen wird der Primärbutton gleichzeitig weiß
+- einzelne Buttons behalten Orange und erhalten eine sichtbare türkise
+  Hover-/Fokusbetonung
+- das Verhalten gilt projektweit für vorhandene Button-Gruppen, Coach-CTAs,
+  Header-CTA und Formularbutton
+
+### Mindforge-Prozess
+
+- vier nummerierte Schritte auf einer horizontalen Linie
+- Nummer: orange Innenfläche, weißer Rahmen, dünne türkise Außenlinie
+- zusätzlicher Abstand zwischen Nummernkasten und Text
+- mobil wird daraus eine vertikale Timeline
+
+## 7. Designsystem
+
+Verbindliche digitale Arbeitsgrundlage:
+
+`docs/assets/designstyle.md`
+
+Kurzfassung:
+
+- viel Weiß und helle Ruheflächen
+- Pantone-Türkis als Rahmen, Linie, Icon und Orientierung
+- Kaminrot/Orange als aktiver Akzent
+- Dunkelgrau für normalen Text
+- Gelb nur sehr sparsam
+- klare Raster und begrenzte Inhaltsbreite
+- kleine Kartenradien, meist 0 bis 8 Pixel
+- zurückhaltende Schatten
+- keine dekorativen Farbblasen oder generische Startup-Optik
+- keine vollflächige Türkis-auf-Türkis- oder Orange-auf-Orange-Komposition
+- Inhalte bevorzugt über Symbole, kurze Aussagen, Prozesse und scanbare
+  Module vermitteln
+- Kreise sind für Hub, Beziehungen und Menschen vorgesehen
+- Rechtecke/Karten strukturieren Leistungen, Preise und Prozesse
+
+Farbrollen:
+
+| Rolle | Wert |
+| --- | --- |
+| Pantone-Türkis | `#009CA6` |
+| Kaminrot/Orange | `#FF7F57` |
+| kontraststärkeres Orange für kleinen Text | `#C14D2C` |
+| Dunkelgrau | `#333132` |
+| Gelb | `#FFB758` |
+| Weiß | `#FFFFFF` |
+| helle Ruhefläche | `#F3F8F8` |
+| Trennlinie | `#D8E4E5` |
+
+Wichtige Kontrastregel:
+
+Die Markenfarben sind nicht in jeder Kombination für kleinen Text geeignet.
+Normaler Text bleibt dunkelgrau. Lesbarkeit und Barrierefreiheit haben Vorrang
+vor einer rein dekorativen Farbanwendung.
+
+Responsive Breakpoints im aktuellen CSS:
+
+- `980px`
+- `640px`
+- `420px`
+
+## 8. Technischer Stack
+
+```text
+Astro                5.18.2
+TypeScript           6.0.3
+@astrojs/check       0.9.9
+Rendering            statisch
+Frontend-JavaScript  klein, nativ und komponentennah
+Styling              ein zentrales global.css
+WordPress            nein
+Frontend-Framework   keines zusätzlich
+Backend              keines
+```
+
+Scripts in `apps/website/package.json`:
+
+```text
+npm run dev      Astro-Dev-Server auf 127.0.0.1
+npm run build    astro check && astro build
+npm run preview  statische Astro-Vorschau
 ```
 
 Lokale Entwicklung:
 
 ```powershell
+cd C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website\apps\website
 $env:PATH = "..\..\tools\node-v22.16.0-win-x64;$env:PATH"
-cd apps\website
+$env:ASTRO_TELEMETRY_DISABLED = "1"
 npm run dev
 ```
 
 Build:
 
 ```powershell
+cd C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website\apps\website
 $env:PATH = "..\..\tools\node-v22.16.0-win-x64;$env:PATH"
 $env:ASTRO_TELEMETRY_DISABLED = "1"
-cd apps\website
 npm run build
 ```
 
-Falls Astro/Vite wegen Windows-Sandbox mit `spawn EPERM` oder AppData-Telemetrieproblemen scheitert: erst als Umgebungsproblem behandeln, nicht sofort als Codefehler.
+Letzter geprüfter Build vor dieser Übergabe:
 
-## Lokale Version der Website
+- 27 Astro-Dateien geprüft
+- 0 Fehler
+- 0 Warnungen
+- 0 Hinweise
+- 22 statische Seiten erzeugt
 
-Eine lokale Version ist sehr sinnvoll und sollte beibehalten werden.
+Windows-Hinweis:
 
-Grund:
+Astro/Vite kann in einer Sandbox mit `EPERM`, AppData- oder `spawn`-Fehlern
+scheitern. Dann denselben Build mit deaktivierter Telemetrie beziehungsweise
+nach Freigabe außerhalb der Sandbox prüfen, bevor der Code als fehlerhaft
+bewertet wird.
 
-- schnelle Aenderungen ohne Deployment
-- weniger Tokenverbrauch, weil Code lokal geprueft werden kann
-- bessere visuelle Kontrolle vor Push/Deploy
-- sicherer Umgang mit Secrets, weil keine Zugangsdaten an Chat-KIs geschickt werden muessen
+## 9. Projektstruktur
 
-Empfohlener Arbeitsmodus:
-
-1. Lokal in `apps/website` arbeiten.
-2. `npm run dev` fuer schnelle Vorschau nutzen.
-3. Vor groesseren Uebergaben `npm run build` ausfuehren.
-4. Erst nach Freigabe ins Repo pushen.
-5. Serverdaten niemals in Prompts kopieren.
-
-## Repo-Empfehlung
-
-Das neue Repo `DP-Manuel/CompetenceHub` macht Sinn.
-
-Empfohlen:
-
-- Competence Hub als neues kanonisches Repo verwenden.
-- Aktuellen Website-Code und sichere Dokumentation dorthin ueberfuehren.
-- Nicht uebernehmen:
-  - `Quellen/`
-  - `.env`, `.env.*`
-  - Zugangsdaten-Dokumente
-  - `node_modules/`
-  - `dist/`
-  - `.astro/`
-  - lokale Logs
-  - private Rohmaterialien ohne Freigabe
-
-Wichtig: lokal zeigt `origin` derzeit noch auf `DP-Manuel/Firmenschulung.git`. Vor einem Push ins neue Repo muss das Remote bewusst angepasst oder ein neues Remote gesetzt werden. Nicht blind pushen.
-
-Moegliche Strategie:
-
-- `origin` auf `https://github.com/DP-Manuel/CompetenceHub.git` umstellen, wenn das alte Repo nicht mehr Ziel sein soll.
-- Alternativ ein zweites Remote wie `competencehub` anlegen, wenn das alte Repo vorerst erhalten bleiben soll.
-
-Keine Git-Aenderung wurde in diesem Schritt automatisch vorgenommen.
-
-## Server-Stand
-
-Manuel hat neue Daten fuer einen neuen Server, der noch blank ist.
-
-Empfehlung:
-
-- Zugangsdaten nicht an ChatGPT oder andere KI schicken.
-- Erst Repo und lokalen Build sauber machen.
-- Dann Deployment-Plan schreiben.
-- Erst danach Server initialisieren.
-- Serverzugangsdaten lokal halten, idealerweise in Passwortmanager oder sicherer lokaler Dokumentation, nicht im Repo.
-
-Bis zur Freigabe kein Deployment.
-
-## Aktuelle Ordnerstruktur
-
-Root:
+Sensible und generierte Bereiche sind bewusst nicht vollständig aufgelistet.
 
 ```text
-C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website
-├─ .agents/
+Website/
 ├─ .github/
-├─ .git/
-├─ .tmp/
+│  └─ workflows/
+│     └─ pages-review.yml
 ├─ apps/
+│  ├─ website/
+│  │  ├─ public/
+│  │  │  └─ images/
+│  │  │     └─ coaches/
+│  │  ├─ scripts/
+│  │  │  └─ serve-dist.mjs
+│  │  ├─ src/
+│  │  │  ├─ components/
+│  │  │  │  ├─ CompetenceHubMap.astro
+│  │  │  │  ├─ HubJourney.astro
+│  │  │  │  └─ Icon.astro
+│  │  │  ├─ layouts/
+│  │  │  │  └─ BaseLayout.astro
+│  │  │  ├─ pages/
+│  │  │  │  ├─ coaches/
+│  │  │  │  ├─ login/
+│  │  │  │  └─ *.astro
+│  │  │  └─ styles/
+│  │  │     └─ global.css
+│  │  ├─ astro.config.mjs
+│  │  ├─ package.json
+│  │  ├─ package-lock.json
+│  │  ├─ README.md
+│  │  └─ tsconfig.json
+│  └─ webapp/
+│     └─ README.md
 ├─ docs/
+│  ├─ architecture/
+│  │  ├─ initial-data-model.md
+│  │  └─ server-database-bootstrap.md
+│  ├─ assets/
+│  │  ├─ brand-design-notes.md
+│  │  └─ designstyle.md
+│  ├─ decisions/
+│  ├─ design/
+│  ├─ requirements/
+│  └─ research/
 ├─ new-project-starter/
 ├─ scripts/
-├─ tools/
-├─ .gitignore
+│  └─ codexskills-update-check.ps1
 ├─ AGENTS.md
 ├─ CHATGPT_PROJECT_BRIEF.md
 ├─ MEETINGS.md
@@ -199,319 +375,287 @@ C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website
 └─ SKILL_FEEDBACK_LOG.md
 ```
 
-Website:
+Absichtlich nicht darstellen oder verarbeiten:
+
+- `Quellen/`
+- `.tmp/`
+- `.git/`
+- `.env` und `.env.*`
+- `node_modules/`
+- `dist/`
+- `.astro/`
+- lokale portable Node-Binärdateien
+
+## 10. Öffentliche Bildressourcen
+
+Aktuell im Website-Projekt:
 
 ```text
-apps/website
-├─ public/images/
-├─ public/images/coaches/
-├─ scripts/serve-dist.mjs
-├─ src/layouts/BaseLayout.astro
-├─ src/pages/
-├─ src/pages/coaches/
-├─ src/styles/global.css
-├─ astro.config.mjs
-├─ package.json
-├─ package-lock.json
-├─ README.md
-└─ tsconfig.json
+apps/website/public/images/
+├─ start.png
+├─ firmenseminare.png
+├─ qualifizierung.png
+├─ vermittlung.png
+├─ recruiting.png
+├─ partnerschaft.png
+├─ digitale-lernplattform.png
+└─ coaches/
+   ├─ christian-galvano.webp
+   ├─ elisabeth-schwabauer.webp
+   └─ wegner-ney.jpg
 ```
 
-Website-Seiten:
+Nicht jedes ältere Bild wird im aktuellen Frontend prominent verwendet.
+Bildrechte, Freigabe und inhaltliche Passung müssen vor Produktionsnutzung
+weiterhin geprüft werden. Keine Bilder aus Quelldokumenten extrahieren oder
+ohne Freigabe neu veröffentlichen.
 
-```text
-apps/website/src/pages/index.astro
-apps/website/src/pages/unternehmen.astro
-apps/website/src/pages/seminare.astro
-apps/website/src/pages/qualifizierung.astro
-apps/website/src/pages/system.astro
-apps/website/src/pages/login.astro
-apps/website/src/pages/kontakt.astro
-apps/website/src/pages/coaches.astro
-apps/website/src/pages/coaches/christian-galvano.astro
-```
+## 11. Navigation
 
-Webapp:
+Desktop:
 
-```text
-apps/webapp/README.md
-```
+- Start
+- Leistungen als Dropdown
+- Für Unternehmen
+- Coaches
+- Login
+- CTA `Bedarf besprechen`
 
-Status: reserviert fuer spaetere Webanwendung, aktuell nicht gescoped.
+Leistungs-Dropdown:
 
-Docs:
+- Alle Leistungen
+- Mindforge · Life Coaching
+- Businesscoaching
+- Recruiting & Personalentwicklung
+- Psychologische Beratung & Prävention
+- Supervision, Workshops & Vorträge
 
-```text
-docs/assets/brand-design-notes.md
-docs/decisions/0001-subdomain-independent-system-database.md
-docs/design/homepage-wireframe-concept.md
-docs/requirements/content-briefing-colleague-prototype.md
-docs/requirements/future-system-ideas-backlog.md
-docs/requirements/product-discovery-brief.md
-docs/requirements/stakeholder-prototype-2026-07-01.md
-docs/requirements/website-maintenance-handover-and-editor-workflows.md
-docs/requirements/website-outline.md
-docs/research/b2b-design-benchmark.md
-```
+Mobil:
 
-## Wichtige Projektdateien
+- native aufklappbare Navigation
+- dieselben inhaltlichen Ziele
+- Kontakt und Login zusätzlich im Menü
 
-`AGENTS.md`
+## 12. Kontakt und Recht
 
-- verbindliche Arbeitsregeln fuer Codex/KI
-- enthaelt Sicherheitsgrenzen
-- enthaelt Skill-Routing und Projektstruktur
+- Öffentliche E-Mail: `competencehub@donner-partner.de`
+- Das Formular ist rein statisch.
+- Es werden aktuell keine Formulardaten übertragen, gespeichert oder
+  verarbeitet.
+- Kein Secret oder Mailprovider ist eingebunden.
+- Impressum, Datenschutz und AGB verlinken auf die Mutterseite.
+- Die konkrete verantwortliche Rechtseinheit und die Anwendbarkeit der
+  zentralen Rechtstexte müssen vor dem finalen Livegang bestätigt werden.
+- Die GitHub-Pages-Seite ist eine öffentliche Review-Version, kein privater
+  Testraum.
 
-`PROJECT_PLAN.md`
+## 13. GitHub Pages und Deployment
 
-- Projektvision, Scope, Roadmap, Risiken, Entscheidungen
-- aktuell noch stark auf Stand 2026-06-30 / Stakeholder-Prototyp bezogen
-- muss fuer Competence-Hub-Deadline-Sprint aktualisiert werden
+Workflow:
 
-`PROJECT_STATUS.md`
+`.github/workflows/pages-review.yml`
 
-- kompakter Status und Restart-Handoff
-- aktuell Stand 2026-06-30
-- muss ebenfalls auf 2026-07-09 / Deadline 2026-07-23 aktualisiert werden
+Eigenschaften:
 
-`PROJECT_LOG.md`
+- nur `workflow_dispatch`
+- kein automatischer Deploy bei Push
+- Buildpfad `apps/website`
+- Review-Umgebungsvariablen:
+  - `GITHUB_PAGES_REVIEW=true`
+  - `PUBLIC_REVIEW_MODE=true`
+- sichtbarer Review-Banner
+- `noindex, nofollow, noarchive`
+- Base-Pfad `/CompetenceHub`
 
-- chronologisches Projektlog, neueste Eintraege zuerst
-- dokumentiert Setup, Prototyp, Deployments, Entscheidungen und Skill-Themen
+Review-URL:
 
-`PROJECT_AI_POLICY.md`
+`https://dp-manuel.github.io/CompetenceHub/`
 
-- KI-Sicherheitsregeln
-- Hard Deny Paths
-- Datenklassen
-- Logging- und Stop-Regeln
+Wichtig:
 
-`SKILL_FEEDBACK_LOG.md`
+- Ein Push aktualisiert die öffentliche Seite nicht.
+- Ein manueller Workflow-Lauf ist ein echtes öffentliches Deployment und
+  benötigt eine ausdrückliche Freigabe.
+- Die finale Domain und der spätere Produktivserver sind noch nicht bestätigt.
 
-- Sammlung von Verbesserungen fuer CodexSkills
-- wichtige Punkte:
-  - visuelle UI-Handoffs brauchen lokale Vorschau/Screenshots
-  - Sandbox/Astro EPERM-Fehler dokumentiert
-  - Anforderungen sollen automatisch persistiert werden
-  - Windows-/Umlaut-/Toolchain-Probleme wurden als Skill-Learning erfasst
-  - GitHub Pages Aktivierung und Deployment-Checklisten wurden als Learning erfasst
+## 14. Webapp-, Login- und Datenbankstatus
 
-## Vorhandene Ressourcen
+`apps/webapp` ist nur ein reservierter Arbeitsbereich.
 
-Bildassets:
+Vorbereitet:
 
-```text
-apps/website/public/images/start.png
-apps/website/public/images/firmenseminare.png
-apps/website/public/images/qualifizierung.png
-apps/website/public/images/vermittlung.png
-apps/website/public/images/recruiting.png
-apps/website/public/images/partnerschaft.png
-apps/website/public/images/digitale-lernplattform.png
-apps/website/public/images/coaches/christian-galvano.webp
-```
+- erste Architekturhinweise
+- ein initiales Datenmodell
+- Server-/Datenbank-Bootstrap-Dokumentation
+- Rollenidee für internes Team, Coaches und Unternehmen
+- Platzhalterkonfiguration für eine spätere lokale Umgebung
 
-Code-Ressourcen:
+Nicht entschieden oder umgesetzt:
 
-- gemeinsames Layout: `apps/website/src/layouts/BaseLayout.astro`
-- globales Styling: `apps/website/src/styles/global.css`
-- keine separaten Komponenten bisher
-- Inhalte aktuell direkt in Astro-Seiten als Arrays/Markup gepflegt
+- Backend-Sprache und Framework
+- API
+- ORM/Migrationswerkzeug
+- Authentifizierung
+- Autorisierung
+- Datenbankinstallation
+- Serverkonfiguration
+- Backup und Restore
+- TLS/Reverse Proxy
+- produktive Benutzerrollen
 
-Deployment-Ressource:
+Architekturgrenze:
 
-- `.github/workflows/deploy.yml`
-- GitHub Pages Workflow fuer Astro
-- aktuell fuer altes Setup gedacht
+Die öffentliche Astro-Website darf niemals direkt auf MySQL/MariaDB zugreifen.
+Ein späteres Backend muss Datenbankzugriff, Rollen, Validierung, Audit und
+Datenschutz kapseln.
 
-Astro-Konfiguration:
+Serverstatus:
 
-```js
-site: "https://dp-manuel.github.io"
-base: "/Firmenschulung"
-```
+- kein Serverlogin in diesem Arbeitsstand
+- keine Serveränderung
+- IT-Rückmeldung zu Hosting, Laufzeit und Datenbankdetails steht noch aus
+- keine Zugangsdaten in Git, Dokumentation oder KI-Chat übernehmen
 
-Bei neuem Repo `CompetenceHub` muss `base` wahrscheinlich auf `/CompetenceHub` angepasst werden, falls GitHub Pages unter `https://dp-manuel.github.io/CompetenceHub/` genutzt wird. Bei eigener Domain/Subdomain waere die Konfiguration anders.
+## 15. Geplante spätere Ausbaustufen
 
-## Aktueller Git-Status
-
-`git status --short` zeigt viele unversionierte Dateien, unter anderem:
-
-```text
-?? .tmp/
-?? AGENTS.md
-?? MEETINGS.md
-?? PROJECT_AI_POLICY.md
-?? PROJECT_LOG.md
-?? PROJECT_PLAN.md
-?? PROJECT_STATUS.md
-?? SKILL_FEEDBACK_LOG.md
-?? apps/webapp/
-?? docs/
-?? new-project-starter/
-?? scripts/
-```
-
-Interpretation:
-
-- Das Projekt wirkt lokal noch nicht sauber als neues Repo konsolidiert.
-- Vor einem Push nach `DP-Manuel/CompetenceHub` sollte bewusst entschieden werden, welche Dateien versioniert werden.
-- `.gitignore` schliesst wichtige Dinge bereits aus:
-  - `node_modules/`
-  - `dist/`
-  - `.astro/`
-  - `tools/node-*`
-  - `tools/*.zip`
-  - `Quellen/`
-  - `*.log`
-  - `.env`, `.env.*`
-
-## Ziel bis 2026-07-23
-
-Professioneller Website-MVP fuer "Competence Hub".
-
-Muss:
-
-- Marke: `Competence Hub`
-- moderne Startseite
-- klare Angebote:
-  - Livecoaching
-  - Businesscoaching
-- Zielgruppe Unternehmen klar ansprechen
-- Coach-/Netzwerkseite sinnvoll einordnen
-- Kontakt-/Anfrageseite professionell
-- SEO/KI-Suchmaschinenoptimierung beruecksichtigen
-- Mobile-first
-- wartbar
-- statisch buildbar
-- keine Secrets
-- kein echtes Backend
-
-Sollte:
-
-- Angebotsuebersicht `/leistungen` oder `/angebote`
-- Einzelseiten `/livecoaching` und `/businesscoaching`
-- Seite `/unternehmen`
-- Seite `/coaches` oder `/netzwerk`
-- optionale Seite `/ueber-uns`
-- Impressum und Datenschutz klaeren
-- interne Verlinkung und Meta-Descriptions
-- strukturierte FAQ-Bloecke fuer Suchmaschinen/KI-Antwortsysteme
-
-Spaeter:
-
-- Buchungssystem im Backend fuer Firmen und Coaches
-- zunaechst ca. 5 Coaches
-- spaeter einzelne Teilnehmer
+- interner Login für Manuel und Kollegin
+- später Coach- und Unternehmenszugänge
+- Firmenfeedback
 - Coach-Kalender
-- evtl. Outlook Booking Integration
+- mögliche Outlook-Booking-Integration
+- Buchungssystem
 - Vertragsautomatisierung
-- Handy-taugliche Vertragserstellung fuer Kollegin Rappelt
-- E-Mail an Buchhaltung/Kollegin
-- MySQL-Datenbank
-- Mobile-App nach August 2026 fuer Auftraege, Termine und Rechnungen
+- Benachrichtigungen an Kollegin/Buchhaltung
+- Aufträge, Termine und Rechnungen
+- spätere Mobile-App
+- editorfreundliche Inhaltspflege ohne Git für nichttechnische Kolleginnen
 
-Nicht jetzt:
+Diese Punkte gehören nicht in den aktuellen statischen Frontend-Slice.
 
-- Project Cockpit weiter ausbauen
-- echter Login
-- echte Datenbank
-- echte Buchung
-- Vertragsautomatisierung
-- Deployment ohne Freigabe
-- neue Frameworks einfuehren
-- grosse Refactorings ohne Deadline-Nutzen
+## 16. Aktuelle offene Punkte
 
-## Empfohlene Seitenstruktur fuer MVP
+### Inhalt und Freigabe
+
+- weiteres Coach-Profil beziehungsweise Daten für insgesamt etwa fünf Coaches
+- Zitat, Formate, Einsatzregion und Verfügbarkeit für Elisabeth Schwabauer
+- finale Freigaben und Bildrechte für alle Profile
+- vollständiges Profil und Foto für Janay Rappelt
+- freigegebene Referenzen, Kennzahlen oder Kundenbeispiele
+- abschließende Formulierungen zu psychologischer Beratung und Supervision
+
+### Betrieb und Recht
+
+- verantwortliche Donner-Partner-Rechtseinheit
+- finale Domain
+- Freigabe von Impressum, Datenschutz und AGB
+- Verantwortlichkeit und Reaktionsprozess für die öffentliche Mailbox
+- Serverzweck: Entwicklung, Staging oder Produktion
+- Hosting-Laufzeit, Datenbanktyp und Version
+- Backup-, Restore- und Wartungsverantwortung
+
+### Frontend
+
+- neues mögliches Gesamtkonzept wird von einer weiteren KI vorbereitet
+- aktuelles Frontend zuerst als Referenz und Vergleichsbasis bewerten
+- keine funktionierende Interaktion oder fachlich freigegebene Information
+  versehentlich zurückbauen
+- finaler Content-Proofread
+- abschließende echte Browser-/Geräteprüfung
+- Canonical URL und strukturierte Daten erst mit finaler Domain abschließen
+
+## 17. Sicherheitsgrenzen für jede weitere KI
+
+Nicht öffnen, lesen, listen, indexieren oder übertragen:
+
+- `C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website\Quellen`
+- Zugangsdaten-Dokumente
+- `.env` oder `.env.*`
+- Passwörter, Tokens, SSH-Schlüssel, API-Schlüssel oder Sessiondaten
+- private Coach-, Kunden-, Vertrags- oder Personaldaten
+- `.tmp/`
+
+Weitere Regeln:
+
+- keine Secrets in Code oder Dokumentation schreiben
+- keine sensiblen Daten an externe Dienste senden
+- keine externen Provider ohne Freigabe
+- kein OpenRouter
+- kein Hermes
+- keine GitHub-Actions-Secrets lesen
+- kein Deployment ohne ausdrückliche Freigabe
+- `.tmp/` niemals committen
+- keine echte Backendfunktion vortäuschen
+- keine Demo-Zugangsdaten veröffentlichen
+- keine privaten Quelldokumente in Git übernehmen
+
+Die sicheren, bereits abstrahierten Requirements in `docs/requirements` sollen
+anstelle der privaten Quelldokumente verwendet werden.
+
+## 18. Arbeitsregeln für Frontend-Anpassungen
+
+1. Zuerst `AGENTS.md`, diese Datei und `docs/assets/designstyle.md` lesen.
+2. Danach `PROJECT_STATUS.md` und den neuesten Eintrag in `PROJECT_LOG.md`
+   prüfen.
+3. Nur sichere Dateien außerhalb der gesperrten Bereiche verwenden.
+4. Bestehenden Astro-Stack und aktuelle Komponentenlogik respektieren.
+5. Kein Framework und keine Abhängigkeit ohne klaren Nutzen hinzufügen.
+6. Neues Konzept zuerst lokal umsetzen.
+7. Desktop und Mobil visuell prüfen.
+8. Hover, Tastaturfokus, Kontrast, Textumbruch und reduzierte Bewegung prüfen.
+9. Keine funktionslosen Features als produktiv darstellen.
+10. Vor Commit `npm run build` ausführen.
+11. Vor Push `git status` prüfen und `.tmp/`, Secrets sowie Rohquellen
+    ausschließen.
+12. Push und öffentliches Pages-Deployment als zwei getrennte Schritte
+    behandeln.
+
+## 19. Wichtigste Dateien für einen Frontend-Neustart
+
+In dieser Reihenfolge:
+
+1. `AGENTS.md`
+2. `CHATGPT_PROJECT_BRIEF.md`
+3. `docs/assets/designstyle.md`
+4. `PROJECT_STATUS.md`
+5. `PROJECT_LOG.md`
+6. `apps/website/src/pages/index.astro`
+7. `apps/website/src/components/CompetenceHubMap.astro`
+8. `apps/website/src/components/HubJourney.astro`
+9. `apps/website/src/layouts/BaseLayout.astro`
+10. `apps/website/src/styles/global.css`
+11. `apps/website/src/pages/leistungen.astro`
+12. `apps/website/src/pages/mindforge.astro`
+13. `apps/website/src/pages/unternehmen.astro`
+14. `apps/website/src/pages/coaches.astro`
+15. `apps/website/src/pages/kontakt.astro`
+
+## 20. Empfohlener Auftrag an die nächste KI
 
 ```text
-/                       Startseite
-/leistungen             Angebote im Ueberblick
-/livecoaching           Livecoaching-Angebot
-/businesscoaching       Businesscoaching-Angebot
-/unternehmen            Fuer Unternehmen
-/coaches                Fuer Coaches / Netzwerk
-/kontakt                Kontakt / Anfrage
-/ueber-uns              optional
-/impressum              Pflichtseite, Inhalt klaeren
-/datenschutz            Pflichtseite, Inhalt klaeren
+Analysiere den aktuellen Competence-Hub-Frontendstand anhand von
+CHATGPT_PROJECT_BRIEF.md, docs/assets/designstyle.md und den sicheren
+Astro-Dateien. Öffne keine Quellen-, .env-, Zugangsdaten- oder tmp-Dateien.
+
+Bewerte zuerst:
+- Informationshierarchie
+- Besonderheit und B2B-/B2C-Wirkung
+- Connected-Core-Hub und Scroll-Journey
+- Navigation und schnelle Einstiege
+- Textmenge und Scanbarkeit
+- Konsistenz von Mindforge und Competence Hub
+- mobile Nutzbarkeit
+- Kontrast, Fokus und Bewegung
+- Conversion für Unternehmen und Privatpersonen
+
+Erstelle danach ein klares Frontend-Konzept mit:
+- beizubehaltenden Elementen
+- zu vereinfachenden Elementen
+- neuer Seiten- und Abschnittsdramaturgie
+- konkreten Komponenten
+- Desktop-/Mobilverhalten
+- visuellen Zuständen und Animationen
+- schrittweiser Umsetzung ohne Backendvortäuschung
+
+Noch keine Implementierung starten, bis Konzept, Auswirkungen auf bestehende
+Seiten und Migrationsreihenfolge abgestimmt sind.
 ```
-
-Bestehende Seiten koennen umgebaut werden:
-
-- `/seminare` kann zu `/leistungen` oder einem Angebotsbereich werden.
-- `/qualifizierung` kann fuer spaeter geparkt oder reduziert werden.
-- `/system` und `/login` sollten fuer den MVP in der Navigation zuruecktreten oder entfernt werden, damit die Website nicht wie eine unfertige App wirkt.
-- `/kontakt` sollte von Demo-Formular zu serioeser Anfrage-Seite weiterentwickelt werden, aber ohne echte Verarbeitung, solange keine sichere Konfiguration vorhanden ist.
-
-## Naechste konkrete Umsetzungsschritte
-
-Arbeitsblock 1: sichtbare MVP-Umstellung
-
-- `[Submarke]` durch `Competence Hub` ersetzen.
-- Navigation auf MVP-Seitenstruktur umstellen.
-- Startseite auf Livecoaching + Businesscoaching ausrichten.
-- Hero, CTAs und Angebotskacheln ueberarbeiten.
-- System/Login-Ausblick aus der Hauptnavigation entfernen oder stark nachrangig machen.
-
-Arbeitsblock 2: Angebotsseiten
-
-- `/livecoaching` erstellen.
-- `/businesscoaching` erstellen.
-- `/unternehmen` auf Firmenkunden-Nutzen ausrichten.
-- `/coaches` als Netzwerk-/Vertrauensseite ueberarbeiten.
-- Kontaktseite als Anfrageprozess formulieren.
-
-Arbeitsblock 3: Qualitaet und Repo
-
-- SEO-Titel und Meta-Descriptions pro Seite.
-- strukturierte H1/H2 und FAQ-Bloecke.
-- Mobile Layout pruefen.
-- `npm run build` pruefen.
-- neues Repo `DP-Manuel/CompetenceHub` bewusst als Ziel einrichten.
-- nur sichere Dateien committen.
-
-## Hinweise fuer die Prompt-KI
-
-Bitte keine Prompts schreiben, die verlangen:
-
-- `Quellen/` zu lesen
-- Zugangsdaten zu kopieren
-- `.env` zu oeffnen
-- Serverdaten in den Chat zu schicken
-- Deployment ohne Freigabe zu starten
-- externe Provider einzubauen
-- WordPress einzufuehren
-- OpenRouter oder Hermes zu nutzen
-
-Gute Prompt-Richtung:
-
-- "Arbeite nur mit sicheren Dateien ausserhalb von `Quellen/`."
-- "Baue zuerst lokal einen sichtbaren MVP."
-- "Halte den bestehenden Astro-Stack."
-- "Keine neuen Frameworks ohne technische Notwendigkeit."
-- "Keine Backend- oder Login-Funktionalitaet vortaeuschen."
-- "Kontaktformular nur als sichere, noch nicht angebundene Anfrage vorbereiten."
-- "Nach jeder sichtbaren UI-Aenderung Build und lokale Vorschau/Screenshot einplanen."
-
-## Kompakter Arbeitsauftrag fuer die naechste KI
-
-Du arbeitest im Projekt:
-
-`C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website`
-
-Ziel:
-
-Bis 2026-07-23 einen modernen, mobilen, wartbaren Website-MVP fuer `Competence Hub` liefern.
-
-Stack:
-
-Astro static site in `apps/website`.
-
-Nicht lesen:
-
-`Quellen/`, `.env*`, Zugangsdaten, Serverdaten, Secrets.
-
-Erster sinnvoller Umsetzungsschritt:
-
-`apps/website/src/layouts/BaseLayout.astro` und `apps/website/src/pages/index.astro` auf `Competence Hub` umstellen: Marke, Navigation, Hero, CTAs und Angebotskacheln fuer Livecoaching und Businesscoaching. Danach Build pruefen.
