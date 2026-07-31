@@ -1,0 +1,196 @@
+---
+import Icon from "./Icon.astro";
+
+type IconName =
+  | "briefcase"
+  | "building"
+  | "compass"
+  | "heart-pulse"
+  | "leadership"
+  | "message-circle"
+  | "sparkles"
+  | "user-round"
+  | "users";
+
+interface RelatedNode {
+  label: string;
+  detail: string;
+  href: string;
+  icon: IconName;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  centerLabel: string;
+  centerDetail: string;
+  centerIcon: IconName;
+  related: [RelatedNode, RelatedNode, RelatedNode];
+  titleId: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lead,
+  centerLabel,
+  centerDetail,
+  centerIcon,
+  related,
+  titleId,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") =>
+  path.startsWith("#") ? path : `${base}${path.replace(/^\//, "")}`;
+
+const paths = [
+  "M260 260 L260 72",
+  "M260 260 L442 270",
+  "M260 260 L145 420",
+];
+---
+
+<section
+  class="connected-page-hero"
+  data-connected-page-hero
+  aria-labelledby={titleId}
+>
+  <div class="connected-page-hero__copy">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 id={titleId}>{title}</h1>
+    <p class="connected-page-hero__lead">{lead}</p>
+    <slot name="actions" />
+  </div>
+
+  <div class="connected-page-hero__visual">
+    <p class="visually-hidden" id={`${titleId}-connections`}>
+      Der aktuelle Bereich ist mit drei passenden nächsten Wegen verbunden.
+      Die Außenknoten führen direkt zum jeweiligen Angebot oder Abschnitt.
+    </p>
+
+    <svg viewBox="0 0 520 520" focusable="false" aria-hidden="true">
+      <circle class="connected-page-hero__orbit" cx="260" cy="260" r="190" />
+      {paths.map((path, index) => (
+        <path
+          class="connected-page-hero__connection"
+          d={path}
+          pathLength="1"
+          data-connected-page-edge={index + 1}
+        />
+      ))}
+    </svg>
+
+    <div
+      class="connected-page-hero__core"
+      role="button"
+      tabindex="0"
+      aria-pressed="false"
+      aria-label={`Verbindungen von ${centerLabel} hervorheben`}
+      aria-describedby={`${titleId}-connections`}
+      data-connected-page-core
+    >
+      <Icon name={centerIcon} size={30} />
+      <strong>{centerLabel}</strong>
+      <small>{centerDetail}</small>
+    </div>
+
+    <nav
+      class="connected-page-hero__nodes"
+      aria-label={`Verbindungen von ${centerLabel}`}
+    >
+      {related.map((node, index) => (
+        <a
+          class={`connected-page-hero__node connected-page-hero__node--${index + 1}`}
+          href={url(node.href)}
+          data-connected-page-node={index + 1}
+          aria-label={`${node.label}: ${node.detail}`}
+        >
+          <Icon name={node.icon} size={23} />
+          <strong>{node.label}</strong>
+          <small>{node.detail}</small>
+        </a>
+      ))}
+    </nav>
+  </div>
+</section>
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>("[data-connected-page-hero]")
+    .forEach((hero) => {
+      const core = hero.querySelector<HTMLElement>("[data-connected-page-core]");
+      const nodes = Array.from(
+        hero.querySelectorAll<HTMLElement>("[data-connected-page-node]"),
+      );
+      const edges = Array.from(
+        hero.querySelectorAll<SVGPathElement>("[data-connected-page-edge]"),
+      );
+      let locked = false;
+
+      const clear = () => {
+        hero.removeAttribute("data-active-node");
+        nodes.forEach((node) => node.classList.remove("is-active", "is-muted"));
+        edges.forEach((edge) => edge.classList.remove("is-active"));
+      };
+
+      const activateAll = () => {
+        hero.dataset.activeNode = "all";
+        nodes.forEach((node) => node.classList.remove("is-muted"));
+        edges.forEach((edge) => edge.classList.add("is-active"));
+      };
+
+      const activate = (number: string) => {
+        hero.dataset.activeNode = number;
+        nodes.forEach((node) => {
+          const active = node.dataset.connectedPageNode === number;
+          node.classList.toggle("is-active", active);
+          node.classList.toggle("is-muted", !active);
+        });
+        edges.forEach((edge) => {
+          edge.classList.toggle(
+            "is-active",
+            edge.dataset.connectedPageEdge === number,
+          );
+        });
+      };
+
+      const release = () => {
+        locked ? activateAll() : clear();
+      };
+
+      core?.addEventListener("mouseenter", activateAll);
+      core?.addEventListener("mouseleave", release);
+      core?.addEventListener("focus", activateAll);
+      core?.addEventListener("blur", release);
+      core?.addEventListener("click", () => {
+        locked = !locked;
+        core.setAttribute("aria-pressed", String(locked));
+        locked ? activateAll() : clear();
+      });
+      core?.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          locked = !locked;
+          core.setAttribute("aria-pressed", String(locked));
+          locked ? activateAll() : clear();
+        }
+        if (event.key === "Escape") {
+          locked = false;
+          core.setAttribute("aria-pressed", "false");
+          clear();
+        }
+      });
+
+      nodes.forEach((node) => {
+        const number = node.dataset.connectedPageNode || "";
+        node.addEventListener("mouseenter", () => activate(number));
+        node.addEventListener("mouseleave", release);
+        node.addEventListener("focus", () => activate(number));
+        node.addEventListener("blur", release);
+      });
+    });
+</script>

@@ -2,6 +2,104 @@
 
 Newest entries first.
 
+## 2026-07-31 | architecture/implementation | Coach-Themen skalierbar verknüpft
+
+Die Coach-Übersicht kann Profile nun nach kanonischen Themenschwerpunkten
+filtern, ohne Coaches bei Überschneidungen zu duplizieren.
+
+- Datenbasis: Startseite und Coach-Übersicht verwenden
+  `apps/website/src/data/coaches.ts` als gemeinsame öffentliche Quelle für
+  Profile, Vorschautexte und Themenzuordnungen.
+- Modell: Coaches und Themen sind viele-zu-viele verknüpft. Führung,
+  Team-/Konfliktthemen oder Gesundheit können dadurch mehrere fachliche
+  Perspektiven anzeigen.
+- Darstellung: Ein kompaktes Themenraster filtert die vorhandenen Profile.
+  Die Auswahl bleibt über `#thema-<id>` verlinkbar und wird barrierearm über
+  `aria-pressed` und einen Live-Status vermittelt.
+- Skalierungsgrenze: Kein dauerhaftes All-to-all-Diagramm. Eigene Themenseiten
+  sind erst sinnvoll, wenn freigegebene fachliche Substanz über eine gefilterte
+  Coach-Liste hinaus vorliegt.
+- Dokumentation: `docs/architecture/coach-topic-network.md` beschreibt
+  Datenmodell, visuelle Regeln, URL-Pfad und spätere Datenbankmigration.
+- Visual QA: Das Themenraster nutzt Desktop vier, Tablet zwei und Mobil eine
+  Spalte. Überschneidungen und Direktaufrufe per Hash wurden lokal geprüft.
+- Bugfix: Primärbuttons bleiben beim Hover orange; der gewünschte Farbwechsel
+  zwischen Primär- und Ghost-Button bleibt erhalten.
+- Veröffentlichung: Nur lokal. Kein Commit, Push oder Deployment.
+
+## 2026-07-31 | frontend/implementation | Living Hub auf Kernseiten erweitert
+
+Die Living-Hub-Sprache der Startseite wurde als kleinerer, kontextbezogener
+Seiteneinstieg auf vier priorisierte Unterseiten übertragen.
+
+- Gemeinsame Komponente: `ConnectedPageHero.astro` verbindet H1, Einordnung,
+  CTAs und drei passende, klickbare Nachbarknoten ohne die große Startseiten-Map
+  zu duplizieren.
+- Seiten: `/leistungen`, `/unternehmen`, `/businesscoaching` und `/mindforge`
+  verwenden jeweils fachlich passende Verbindungen zu Angeboten, Zielgruppen
+  oder vorhandenen Seitenankern.
+- Interaktion: Außenknoten heben ihre Verbindung bei Hover und Tastaturfokus
+  hervor. Der zentrale Kreis kann per Klick, Touch, Enter oder Leertaste
+  eingerastet und mit Escape wieder gelöst werden.
+- Konsistenz: Primäre Buttons, Ghost-Buttons, Textlinks und verlinkte
+  Angebotskarten besitzen nun deutlichere, gemeinsame Hover-/Fokuszustände.
+- Barrierefreiheit: Schaltersemantik, Fokusdarstellung, Reduced Motion und
+  Farbkontraste wurden geprüft.
+- Verifikation: Astro prüft 33 Dateien ohne Fehler, Warnungen oder Hinweise und
+  erzeugt 26 statische Seiten. Alle vier Einstiege wurden bei 1440 und 390
+  Pixeln ohne horizontalen Überlauf, Textkollision oder abgeschnittene Knoten
+  geprüft.
+- Veröffentlichung: Nur lokal. Kein Commit, Push oder Deployment.
+
+## 2026-07-31 | planning | SEO, GEO & First-Party Authority eingeplant
+
+`PROJECT_PLAN.md` enthält nun einen eigenen, mit dem Living-Hub-Frontend
+verbundenen, aber getrennten SEO-/GEO-Workstream.
+
+- Reihenfolge: zuerst Content Inventory für die fünf priorisierten Kernseiten,
+  danach eine freigabebasierte Content-Evidence-Matrix.
+- Grenzen: keine neuen Ratgeberseiten, erfundenen Autoritätssignale, privaten
+  Rohquellen oder sensiblen Daten; GEO ergänzt klassische SEO.
+- Status: reine Planung. Keine Content-Implementierung, Veröffentlichung oder
+  Deployment-Aktion ausgelöst.
+
+## 2026-07-31 | content/implementation | Goran Celic als fünfter Coach ergänzt
+
+Der bestätigte Vertriebscoach Goran Celic wurde auf Basis des ausdrücklich
+freigegebenen Quellenhinweises und seiner öffentlichen Website in das
+Competence-Hub-Frontend aufgenommen.
+
+- Coach-Netzwerk: Goran Celic erscheint mit offiziellem Porträt, Rolle und
+  den bestätigten Hauptschwerpunkten Rhetorik und Vertrieb auf der Startseite
+  sowie in der vollständigen Coach-Übersicht. Storytelling bleibt als
+  ergänzende Methode sichtbar.
+- Profilseite: `/coaches/goran-celic` bündelt Zielgruppen, Themen, Formate und
+  Erfahrung in der sachlichen Competence-Hub-Tonalität. Kontaktanfragen laufen
+  weiter über Janay Rappelt; die eigene Website ist als externe Quelle
+  verlinkt.
+- Inhaltsgrenze: Fremde Kundenlogos, externe Buchungssysteme und starke
+  Umsatzversprechen der Ursprungsseite wurden nicht übernommen. Backend,
+  Verfügbarkeiten und ausstehende interne Genehmigungen bleiben unberührt.
+- Frontend: Das Coach-Raster passt sich nun flexibel an fünf Profile an und
+  läuft als ruhiges, erweiterbares Laufband mit vier sichtbaren Profilbreiten.
+  Auf Tablet und Mobil werden zwei beziehungsweise ein Profil dargestellt.
+  Hover, Tastaturfokus und eine eigene Schaltfläche pausieren die Bewegung;
+  bei `prefers-reduced-motion` bleibt die Liste statisch scrollbar.
+- Lesbarkeit: Öffentliche Texte nennen keine feste Coach-Anzahl mehr. Der
+  Profiltext auf dunklem Türkis ist hell gesetzt. Automatische Trennungen in
+  Überschriften wurden global deaktiviert und die mobile Typografie so
+  angepasst, dass lange Begriffe wie `Vertriebsbegleitung` vollständig
+  umbrechen.
+- Stakeholderfeedback: Die bisherige Website-Richtung wurde aus mehreren
+  Abteilungen ausschließlich positiv bewertet.
+- Verifikation: Astro prüft 32 Dateien ohne Fehler, Warnungen oder Hinweise und
+  erzeugt 26 statische Seiten. Coach-Laufband, Pausezustand, Kontrast und
+  Profilseite wurden lokal im Browser geprüft. Die Laufband-Spalte ist gegen
+  Überbreite begrenzt; Einleitung und Pauseknopf bleiben bei 1200, 1440 und
+  2048 Pixeln vollständig sichtbar. Die wichtigsten Seiten zeigen bei 390
+  Pixeln weder horizontalen Überlauf noch überbreite Überschriften.
+- Veröffentlichung: Nur lokal. Kein Commit, Push oder Deployment.
+
 ## 2026-07-30 | design/implementation | Living Hub C2 auf Startseite übernommen
 
 Die freigegebene asymmetrische Living-Hub-Variante C2 ersetzt den bisherigen

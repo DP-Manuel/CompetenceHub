@@ -1,5 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { coaches, coachTopics } from "../data/coaches";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -22,82 +24,11 @@ const principles = [
   },
 ];
 
-interface Coach {
-  name: string;
-  role: string;
-  focus: string[];
-  text: string;
-  profilePath: string;
-  image?: string;
-  imageWidth?: number;
-  imageHeight?: number;
-  initials: string;
-}
-
-const coaches: Coach[] = [
-  {
-    name: "Christian Galvano",
-    role: "Dozent, Fachtrainer und Coach",
-    focus: [
-      "Neuroleadership",
-      "Konfliktmanagement",
-      "Stress- und Burnoutprävention",
-    ],
-    text: "Christian Galvano verbindet neurowissenschaftliche Grundlagen mit praxisnahen Methoden für Führung, Kommunikation und gesundes Arbeiten.",
-    profilePath: "coaches/christian-galvano",
-    image: "images/coaches/christian-galvano.webp",
-    imageWidth: 830,
-    imageHeight: 830,
-    initials: "CG",
-  },
-  {
-    name: "Elisabeth Schwabauer",
-    role: "Psychologin (M.Sc.)",
-    focus: [
-      "Psychologische Beratung",
-      "Psychische Belastung",
-      "Team- und Konfliktklärung",
-    ],
-    text: "Elisabeth Schwabauer verbindet psychologische Fachkenntnis mit Erfahrung in beruflicher Beratung, Teamprozessen und der Einordnung psychischer Belastungen.",
-    profilePath: "coaches/elisabeth-schwabauer",
-    image: "images/coaches/elisabeth-schwabauer.webp",
-    imageWidth: 1200,
-    imageHeight: 1800,
-    initials: "ES",
-  },
-  {
-    name: "Carolin Hupp",
-    role: "Diplom-Sportwissenschaftlerin",
-    focus: [
-      "Betriebliche Gesundheit",
-      "Bewegung und Prävention",
-      "Entspannung und Balance",
-    ],
-    text: "Carolin Hupp bringt Gesundheits- und Trainingsmanagement, Bewegungsförderung und alltagstaugliche Prävention in Unternehmen und Gruppen zusammen.",
-    profilePath: "coaches/carolin-hupp",
-    initials: "CH",
-  },
-  {
-    name: "Wegner-Ney",
-    role: "Workshop- und Vortragsexpertise",
-    focus: [
-      "Führung und Teamstärkung",
-      "Recruiting und Potenziale",
-      "Zusammenarbeit im Mittelstand",
-    ],
-    text: "Wegner-Ney richtet den Blick auf starke Führung, funktionierende Teams und eine Personalgewinnung, die praktische Fähigkeiten und Entwicklungspotenziale ernst nimmt.",
-    profilePath: "coaches/wegner-ney",
-    image: "images/coaches/wegner-ney.jpg",
-    imageWidth: 830,
-    imageHeight: 830,
-    initials: "WN",
-  },
-];
 ---
 
 <BaseLayout
   title="Coach-Netzwerk | Competence Hub"
-  description="Competence Hub vermittelt ausgewählte Coaches für Unternehmen und Privatpersonen in den Bereichen Führung, Life Coaching, Recruiting, Psychologie, Gesundheit und Entwicklung."
+  description="Competence Hub vermittelt ausgewählte Coaches für Unternehmen und Privatpersonen in den Bereichen Führung, Vertrieb, Life Coaching, Recruiting, Psychologie, Gesundheit und Entwicklung."
 >
   <main class="subpage">
     <section class="page-hero page-hero--accent coach-list-hero">
@@ -130,9 +61,71 @@ const coaches: Coach[] = [
       ))}
     </section>
 
-    <section class="coach-grid" aria-label="Vorhandene Coach-Profile">
+    <section
+      class="coach-topic-explorer"
+      aria-labelledby="coach-topic-title"
+      data-coach-topic-explorer
+    >
+      <div class="coach-topic-explorer__heading">
+        <div>
+          <p class="eyebrow">Nach Thema orientieren</p>
+          <h2 id="coach-topic-title">Ein Thema kann mehrere Perspektiven brauchen.</h2>
+        </div>
+        <p>
+          Wählen Sie einen Schwerpunkt. Passende Profile werden gemeinsam
+          sichtbar, auch wenn sich fachliche Zugänge überschneiden.
+        </p>
+      </div>
+      <div
+        class="coach-topic-filter"
+        role="group"
+        aria-label="Coach-Profile nach Themenschwerpunkt filtern"
+      >
+        <button
+          type="button"
+          class="coach-topic-filter__option is-active"
+          data-coach-topic="all"
+          aria-pressed="true"
+          aria-controls="coach-profile-grid"
+        >
+          <Icon name="compass" size={22} />
+          <span>Alle Themen</span>
+        </button>
+        {coachTopics.map((topic) => (
+          <button
+            type="button"
+            class="coach-topic-filter__option"
+            data-coach-topic={topic.id}
+            aria-pressed="false"
+            aria-controls="coach-profile-grid"
+            title={topic.detail}
+          >
+            <Icon name={topic.icon} size={22} />
+            <span>{topic.label}</span>
+          </button>
+        ))}
+      </div>
+      <p
+        class="visually-hidden"
+        aria-live="polite"
+        data-coach-topic-status
+      >
+        Alle Coach-Profile werden angezeigt.
+      </p>
+    </section>
+
+    <section
+      class="coach-grid"
+      id="coach-profile-grid"
+      aria-label="Vorhandene Coach-Profile"
+      data-coach-profile-grid
+    >
       {coaches.map((coach) => (
-        <article class="coach-card coach-card--featured">
+        <article
+          class="coach-card coach-card--featured"
+          data-coach-card
+          data-coach-topics={coach.topics.join(" ")}
+        >
           <div class="coach-card__media">
             {coach.image ? (
               <img
@@ -166,9 +159,9 @@ const coaches: Coach[] = [
       <p class="eyebrow">Netzwerk im Aufbau</p>
       <h2 id="network-growth-title">Das Netzwerk wächst bewusst</h2>
       <p>
-        Weitere Profile werden ergänzt, sobald Schwerpunkte, Qualifikationen,
-        Texte und Bildfreigaben abgestimmt sind. Qualität und Passung bleiben
-        wichtiger als die reine Anzahl.
+        Die veröffentlichten Profile zeigen unterschiedliche fachliche
+        Zugänge. Weitere Coaches ergänzen wir erst, wenn Schwerpunkte,
+        Qualifikationen, Texte und Bildfreigaben abgestimmt sind.
       </p>
     </section>
 
@@ -181,3 +174,74 @@ const coaches: Coach[] = [
     </section>
   </main>
 </BaseLayout>
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>("[data-coach-topic-explorer]")
+    .forEach((explorer) => {
+      const buttons = Array.from(
+        explorer.querySelectorAll<HTMLButtonElement>("[data-coach-topic]"),
+      );
+      const grid = document.querySelector<HTMLElement>(
+        "[data-coach-profile-grid]",
+      );
+      const cards = Array.from(
+        grid?.querySelectorAll<HTMLElement>("[data-coach-card]") || [],
+      );
+      const status = explorer.querySelector<HTMLElement>(
+        "[data-coach-topic-status]",
+      );
+      const labels = new Map(
+        buttons.map((button) => [
+          button.dataset.coachTopic || "all",
+          button.textContent?.trim() || "Alle Themen",
+        ]),
+      );
+
+      explorer.classList.add("is-enhanced");
+
+      const applyTopic = (topic: string, updateUrl = true) => {
+        const selected = labels.has(topic) ? topic : "all";
+
+        buttons.forEach((button) => {
+          const active = button.dataset.coachTopic === selected;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+
+        cards.forEach((card) => {
+          const topics = (card.dataset.coachTopics || "").split(" ");
+          card.hidden = selected !== "all" && !topics.includes(selected);
+        });
+
+        if (status) {
+          status.textContent =
+            selected === "all"
+              ? "Alle Coach-Profile werden angezeigt."
+              : `Passende Coach-Profile für ${labels.get(selected)} werden angezeigt.`;
+        }
+
+        if (updateUrl) {
+          const nextUrl = new URL(window.location.href);
+          nextUrl.hash = selected === "all" ? "" : `thema-${selected}`;
+          history.replaceState(null, "", nextUrl);
+        }
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          applyTopic(button.dataset.coachTopic || "all");
+        });
+      });
+
+      const topicFromHash = () =>
+        window.location.hash.startsWith("#thema-")
+          ? window.location.hash.replace("#thema-", "")
+          : "all";
+
+      applyTopic(topicFromHash(), false);
+      window.addEventListener("hashchange", () => {
+        applyTopic(topicFromHash(), false);
+      });
+    });
+</script>

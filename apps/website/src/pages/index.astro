@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import LivingHubPrototype from "../components/LivingHubPrototype.astro";
+import { coaches } from "../data/coaches";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -28,51 +29,22 @@ const trustPoints = [
   },
 ];
 
-interface CoachPreview {
-  name: string;
-  role: string;
-  href: string;
-  image?: string;
-  imageWidth?: number;
-  imageHeight?: number;
-  initials: string;
-}
+const coachPreview = coaches.map((coach) => ({
+  name: coach.name,
+  role: coach.previewRole,
+  href: coach.profilePath,
+  image: coach.image,
+  imageWidth: coach.imageWidth,
+  imageHeight: coach.imageHeight,
+  initials: coach.initials,
+}));
 
-const coachPreview: CoachPreview[] = [
-  {
-    name: "Christian Galvano",
-    role: "Führung, Konflikte & Prävention",
-    href: "coaches/christian-galvano",
-    image: "images/coaches/christian-galvano.webp",
-    imageWidth: 830,
-    imageHeight: 830,
-    initials: "CG",
-  },
-  {
-    name: "Elisabeth Schwabauer",
-    role: "Psychologie, Belastung & Teams",
-    href: "coaches/elisabeth-schwabauer",
-    image: "images/coaches/elisabeth-schwabauer.webp",
-    imageWidth: 1200,
-    imageHeight: 1800,
-    initials: "ES",
-  },
-  {
-    name: "Carolin Hupp",
-    role: "Gesundheit, Bewegung & Prävention",
-    href: "coaches/carolin-hupp",
-    initials: "CH",
-  },
-  {
-    name: "Wegner-Ney",
-    role: "Führung, Teams & Recruiting",
-    href: "coaches/wegner-ney",
-    image: "images/coaches/wegner-ney.jpg",
-    imageWidth: 830,
-    imageHeight: 830,
-    initials: "WN",
-  },
-];
+const coachPreviewRail = [...coachPreview, ...coachPreview].map(
+  (coach, index) => ({
+    ...coach,
+    duplicate: index >= coachPreview.length,
+  }),
+);
 ---
 
 <BaseLayout
@@ -98,16 +70,44 @@ const coachPreview: CoachPreview[] = [
           <p class="eyebrow">Kuratiertes Coach-Netzwerk</p>
           <h2 id="coach-spotlight-title">Expertise hat ein Gesicht</h2>
         </div>
-        <p>Qualifikation, Schwerpunkte und Einsatzbereich auf einen Blick.</p>
+        <div class="coach-preview__summary">
+          <p>
+            Profile mit klaren Schwerpunkten und unterschiedlichen fachlichen
+            Zugängen.
+          </p>
+          <button
+            class="coach-preview__toggle"
+            type="button"
+            aria-pressed="false"
+            aria-label="Coach-Laufband pausieren"
+            title="Coach-Laufband pausieren"
+            data-coach-toggle
+          >
+            <span data-coach-pause-icon><Icon name="pause" size={20} /></span>
+            <span data-coach-play-icon hidden><Icon name="play" size={20} /></span>
+          </button>
+        </div>
       </div>
-      <div class="coach-preview__grid">
-        {coachPreview.map((coach) => (
-          <a class="coach-preview__card" href={url(coach.href)}>
+      <div
+        class="coach-preview__carousel"
+        data-coach-carousel
+        style={`--coach-duration: ${coachPreview.length * 9}s`}
+      >
+        <div class="coach-preview__viewport">
+          <div class="coach-preview__track" data-coach-track>
+        {coachPreviewRail.map((coach) => (
+          <a
+            class="coach-preview__card"
+            href={url(coach.href)}
+            aria-hidden={coach.duplicate ? "true" : undefined}
+            tabindex={coach.duplicate ? -1 : undefined}
+            data-coach-duplicate={coach.duplicate ? "true" : undefined}
+          >
             <span class:list={["coach-preview__visual", { "coach-preview__visual--image": coach.image }]}>
               {coach.image ? (
                 <img
                   src={url(coach.image)}
-                  alt={`Porträt von ${coach.name}`}
+                  alt={coach.duplicate ? "" : `Porträt von ${coach.name}`}
                   width={coach.imageWidth ?? 830}
                   height={coach.imageHeight ?? 830}
                   loading="lazy"
@@ -122,6 +122,8 @@ const coachPreview: CoachPreview[] = [
             </span>
           </a>
         ))}
+          </div>
+        </div>
       </div>
       <a class="text-link" href={url("coaches")}>Alle Coach-Profile ansehen</a>
     </section>
@@ -144,3 +146,49 @@ const coachPreview: CoachPreview[] = [
     </section>
   </LivingHubPrototype>
 </BaseLayout>
+
+<script>
+  const carousels = document.querySelectorAll<HTMLElement>("[data-coach-carousel]");
+
+  carousels.forEach((carousel) => {
+    const track = carousel.querySelector<HTMLElement>("[data-coach-track]");
+    const firstCard = track?.querySelector<HTMLElement>(".coach-preview__card");
+    const firstDuplicate = track?.querySelector<HTMLElement>(
+      '[data-coach-duplicate="true"]',
+    );
+    const toggle = carousel
+      .closest(".coach-preview")
+      ?.querySelector<HTMLButtonElement>("[data-coach-toggle]");
+    const pauseIcon = toggle?.querySelector<HTMLElement>("[data-coach-pause-icon]");
+    const playIcon = toggle?.querySelector<HTMLElement>("[data-coach-play-icon]");
+
+    if (!track || !firstCard || !firstDuplicate || !toggle) return;
+
+    const updateShift = () => {
+      const shift = firstDuplicate.offsetLeft - firstCard.offsetLeft;
+      track.style.setProperty("--coach-shift", `${shift}px`);
+    };
+
+    const setPaused = (paused: boolean) => {
+      carousel.dataset.paused = paused ? "true" : "false";
+      toggle.setAttribute("aria-pressed", paused ? "true" : "false");
+      toggle.setAttribute(
+        "aria-label",
+        paused ? "Coach-Laufband fortsetzen" : "Coach-Laufband pausieren",
+      );
+      toggle.title = paused
+        ? "Coach-Laufband fortsetzen"
+        : "Coach-Laufband pausieren";
+      if (pauseIcon) pauseIcon.hidden = paused;
+      if (playIcon) playIcon.hidden = !paused;
+    };
+
+    carousel.classList.add("is-ready");
+    requestAnimationFrame(updateShift);
+    new ResizeObserver(updateShift).observe(carousel);
+
+    toggle.addEventListener("click", () => {
+      setPaused(carousel.dataset.paused !== "true");
+    });
+  });
+</script>

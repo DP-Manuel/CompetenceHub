@@ -1,0 +1,140 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const topics = [
+  {
+    title: "Rhetorik und überzeugender Auftritt",
+    text: "Botschaften klar strukturieren, sicher präsentieren und Sprache, Stimme sowie Körpersprache gezielt für einen glaubwürdigen Auftritt einsetzen.",
+  },
+  {
+    title: "Vertriebscoaching",
+    text: "Argumentation und Gesprächsführung so weiterentwickeln, dass Verkaufsgespräche verständlich, adressatengerecht und verbindlich geführt werden.",
+  },
+  {
+    title: "Storytelling im Vertrieb",
+    text: "Komplexe Produkte, Leistungen und Botschaften in verständliche Geschichten übersetzen, die Orientierung geben und im Gedächtnis bleiben.",
+  },
+];
+---
+
+<BaseLayout
+  title="Goran Celic | Rhetorik & Vertrieb | Competence Hub"
+  description="Goran Celic begleitet Vertriebsteams und Experten mit Rhetorik, Vertriebscoaching, Gesprächsführung, Storytelling und praxisnahen Workshops."
+>
+  <main class="subpage">
+    <section class="coach-profile-hero">
+      <div>
+        <p class="eyebrow">Rhetorik & Vertriebscoaching</p>
+        <h1>Goran Celic</h1>
+        <p class="coach-profile-lead">
+          Coach für Rhetorik und Vertrieb für Experten und Teams, die komplexe
+          Angebote klar vermitteln, sicher auftreten und ihre Gesprächsführung
+          gezielt weiterentwickeln möchten.
+        </p>
+        <p>
+          Seine Arbeit verbindet langjährige Vertriebspraxis mit Rhetorik und
+          professionellem Storytelling. Im Mittelpunkt stehen verständliche
+          Botschaften, überzeugende Präsentationen und die konkrete Umsetzung
+          im Vertriebsalltag.
+        </p>
+        <div class="coach-profile-actions">
+          <a class="button" href={url("kontakt")}>Coaching anfragen</a>
+          <a
+            class="button button--ghost"
+            href="https://gorancelic.de/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Eigene Website besuchen
+          </a>
+        </div>
+      </div>
+      <figure class="coach-profile-portrait coach-profile-portrait--goran">
+        <img
+          src={url("images/coaches/goran-celic.png")}
+          alt="Porträt von Goran Celic"
+          width="768"
+          height="929"
+        />
+        <figcaption>
+          <strong>Goran Celic</strong>
+          <span>Rhetorik · Vertrieb · Storytelling</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="coach-profile-section">
+      <div class="section-heading coach-section-heading">
+        <div>
+          <p class="eyebrow">Themenschwerpunkte</p>
+          <h2>Rhetorik, die im Vertrieb Wirkung entfaltet</h2>
+        </div>
+        <p>
+          Die Angebote richten sich an Unternehmen, Vertriebsteams und
+          Fachleute, die ihre Botschaften schärfen, sicher auftreten und ihre
+          Gesprächsführung wirkungsvoll in die Praxis übertragen möchten.
+        </p>
+      </div>
+
+      <div class="coach-topic-grid">
+        {topics.map((topic) => (
+          <article>
+            <h3>{topic.title}</h3>
+            <p>{topic.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="coach-credentials">
+      <div>
+        <p class="eyebrow">Profil</p>
+        <h2>Rhetorik trifft Vertriebserfahrung</h2>
+        <p>
+          Goran Celic bringt Erfahrung aus Vertriebsaufbau, Coaching und der
+          Entwicklung praxisnaher Rhetorik- und Vertriebsformate zusammen.
+        </p>
+      </div>
+      <ul>
+        <li>Mehr als 20 Jahre Vertriebserfahrung</li>
+        <li>Über 6.000 Teilnehmende im Einzel- und Gruppencoaching</li>
+        <li>Rhetorik und überzeugender Auftritt</li>
+        <li>Präsentations- und Gesprächstraining</li>
+        <li>Storytelling für erklärungsbedürftige Angebote</li>
+        <li>Impulsvorträge und Workshops</li>
+      </ul>
+    </section>
+
+    <section class="coach-format-band" aria-labelledby="goran-formats-title">
+      <div>
+        <p class="eyebrow">Mögliche Formate</p>
+        <h2 id="goran-formats-title">Vom Impuls bis zur Vertriebsbegleitung</h2>
+      </div>
+      <p>
+        Impulsvortrag, Workshop, Coaching oder firmenspezifisches Konzept:
+        Zielgruppe, Ausgangslage und gewünschte Wirkung bestimmen den passenden
+        Rahmen.
+      </p>
+    </section>
+
+    <section class="showcase-strip coach-profile-cta">
+      <div>
+        <p class="eyebrow">Persönlich verbunden</p>
+        <h2>Passt diese Expertise zu Ihrem Rhetorik- oder Vertriebsanliegen?</h2>
+      </div>
+      <div>
+        <p>
+          Janay Rappelt unterstützt bei der Einordnung und stellt den Kontakt
+          zwischen Unternehmen und Coach her.
+        </p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

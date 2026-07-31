@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
@@ -97,16 +98,36 @@ const businessOffers = [
   description="Mindforge im Competence Hub bietet Life Coaching, Resilienz- und Mindset-Entwicklung für Privatpersonen, Mitarbeitende und Führungskräfte in Präsenz, online oder hybrid."
 >
   <main class="subpage mindforge-page">
-    <section class="mindforge-hero">
-      <div class="mindforge-hero__copy">
-        <p class="eyebrow">Mindforge im Competence Hub</p>
-        <h1>Mental stark. Resilient. Bereit für Entwicklung.</h1>
-        <p class="mindforge-hero__lead">
-          Life Coaching für Menschen, die Belastungen besser einordnen,
-          Handlungsspielräume erweitern und persönliche Entwicklung wirksam in
-          ihren Alltag übertragen möchten.
-        </p>
-        <div class="actions mindforge-audience-actions">
+    <ConnectedPageHero
+      eyebrow="Mindforge im Competence Hub"
+      title="Mental stark. Resilient. Bereit für Entwicklung."
+      lead="Life Coaching für Menschen, die Belastungen besser einordnen, Handlungsspielräume erweitern und persönliche Entwicklung wirksam in ihren Alltag übertragen möchten."
+      centerLabel="Mindforge"
+      centerDetail="Life Coaching"
+      centerIcon="sparkles"
+      titleId="mindforge-title"
+      related={[
+        {
+          label: "Privatpersonen",
+          detail: "Persönliche Entwicklung",
+          href: "#privatpersonen",
+          icon: "user-round",
+        },
+        {
+          label: "Unternehmen",
+          detail: "Resilienz & Entwicklung",
+          href: "#unternehmen",
+          icon: "building",
+        },
+        {
+          label: "Ablauf",
+          detail: "Vier klare Schritte",
+          href: "#ablauf",
+          icon: "compass",
+        },
+      ]}
+    >
+      <div slot="actions" class="actions mindforge-audience-actions">
           <a
             class="button mindforge-audience-button mindforge-audience-button--private"
             href="#privatpersonen"
@@ -120,15 +141,8 @@ const businessOffers = [
             Für Unternehmen
           </a>
           <a class="text-link" href={url("kontakt")}>Erstgespräch anfragen</a>
-        </div>
       </div>
-      <div class="mindforge-hero__signal" aria-label="Resilienz, Mindset und persönliche Entwicklung">
-        <strong>Mindforge</strong>
-        <span>Resilienz</span>
-        <span>Mindset</span>
-        <span>Entwicklung</span>
-      </div>
-    </section>
+    </ConnectedPageHero>
 
     <section class="mindforge-intro" aria-labelledby="mindforge-philosophy-title">
       <p class="eyebrow">Die Idee</p>
@@ -150,7 +164,11 @@ const businessOffers = [
       ))}
     </section>
 
-    <section class="mindforge-process" aria-labelledby="mindforge-process-title">
+    <section
+      class="mindforge-process"
+      id="ablauf"
+      aria-labelledby="mindforge-process-title"
+    >
       <div class="section-heading">
         <div>
           <p class="eyebrow">Der Mindforge-Prozess</p>

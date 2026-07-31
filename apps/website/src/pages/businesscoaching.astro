@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
@@ -82,15 +83,40 @@ const faqs = [
   description="Competence Hub vermittelt Businesscoaching für Unternehmen, Führungskräfte und Teams in Kommunikation, Rollenklärung und beruflicher Entwicklung."
 >
   <main class="subpage">
-    <section class="page-hero page-hero--accent">
-      <p class="eyebrow">Businesscoaching</p>
-      <h1>Professioneller Rahmen für Führung, Teams und Veränderung</h1>
-      <p>
-        Berufliche Anliegen strukturiert klären und Entwicklung mit einem
-        passenden Coach gezielt begleiten.
-      </p>
-      <a class="button" href={url("kontakt")}>Businesscoaching anfragen</a>
-    </section>
+    <ConnectedPageHero
+      eyebrow="Businesscoaching"
+      title="Professioneller Rahmen für Führung, Teams und Veränderung"
+      lead="Berufliche Anliegen strukturiert klären und Entwicklung mit einem passenden Coach gezielt begleiten."
+      centerLabel="Businesscoaching"
+      centerDetail="Entwicklung begleiten"
+      centerIcon="leadership"
+      titleId="businesscoaching-title"
+      related={[
+        {
+          label: "Unternehmen",
+          detail: "Bedarf einordnen",
+          href: "unternehmen",
+          icon: "building",
+        },
+        {
+          label: "Coaches",
+          detail: "Expertise finden",
+          href: "coaches",
+          icon: "users",
+        },
+        {
+          label: "Leistungen",
+          detail: "Formate vergleichen",
+          href: "leistungen",
+          icon: "briefcase",
+        },
+      ]}
+    >
+      <div slot="actions" class="actions">
+        <a class="button" href={url("kontakt")}>Businesscoaching anfragen</a>
+        <a class="button button--ghost" href="#fuehrung">Themen ansehen</a>
+      </div>
+    </ConnectedPageHero>
 
     <section class="audience-section" aria-labelledby="business-audience-title">
       <div class="section-heading">
@@ -117,7 +143,11 @@ const faqs = [
       ))}
     </section>
 
-    <section class="coaching-dimensions" aria-labelledby="dimensions-title">
+    <section
+      class="coaching-dimensions"
+      id="entwicklung"
+      aria-labelledby="dimensions-title"
+    >
       <div class="section-heading">
         <p class="eyebrow">Zwei Ebenen</p>
         <h2 id="dimensions-title">Businesscoaching verbindet Mensch und Aufgabe</h2>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
@@ -101,21 +102,46 @@ const faqs = [
   description="Competence Hub verbindet Unternehmen mit ausgewählten Coaches und Expertise für Führung, Zusammenarbeit, Recruiting, Gesundheit und Veränderung."
 >
   <main class="subpage">
-    <section class="page-hero">
-      <p class="eyebrow">Für Unternehmen</p>
-      <h1>Passende Coaches für echte Themen im Unternehmen</h1>
-      <p>
-        Competence Hub hilft Unternehmen, ihren Bedarf klar zu formulieren und
-        vermittelt ausgewählte Coaches für das konkrete Thema, die Zielgruppe
-        und den gewünschten Rahmen.
-      </p>
-      <div class="actions">
+    <ConnectedPageHero
+      eyebrow="Für Unternehmen"
+      title="Passende Coaches für echte Themen im Unternehmen"
+      lead="Competence Hub hilft Unternehmen, ihren Bedarf klar zu formulieren und vermittelt ausgewählte Coaches für das konkrete Thema, die Zielgruppe und den gewünschten Rahmen."
+      centerLabel="Unternehmen"
+      centerDetail="Anliegen und Ziele"
+      centerIcon="building"
+      titleId="company-title"
+      related={[
+        {
+          label: "Businesscoaching",
+          detail: "Führung & Teams",
+          href: "businesscoaching",
+          icon: "leadership",
+        },
+        {
+          label: "Assessment Center",
+          detail: "Auswahl & Entwicklung",
+          href: "#assessment-center",
+          icon: "user-round",
+        },
+        {
+          label: "Coaches",
+          detail: "Expertise wählen",
+          href: "coaches",
+          icon: "users",
+        },
+      ]}
+    >
+      <div slot="actions" class="actions">
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
         <a class="button button--ghost" href={url("leistungen")}>Formate vergleichen</a>
       </div>
-    </section>
+    </ConnectedPageHero>
 
-    <section class="feature-grid feature-grid--company" aria-label="Typische Anlässe für Unternehmen">
+    <section
+      class="feature-grid feature-grid--company"
+      id="anlaesse"
+      aria-label="Typische Anlässe für Unternehmen"
+    >
       {occasions.map((occasion) => (
         <article class="feature-card">
           <span class="feature-card__icon"><Icon name={occasion.icon} size={28} /></span>

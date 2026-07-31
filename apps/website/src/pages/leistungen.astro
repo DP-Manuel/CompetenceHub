@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
@@ -80,23 +81,43 @@ const faqs = [
   description="Competence Hub verbindet Privatpersonen und Unternehmen mit Mindforge Life Coaching, Businesscoaching, Recruiting, Assessment Center, psychologischer Beratung und Gruppenformaten."
 >
   <main class="subpage">
-    <section class="page-hero page-hero--accent">
-      <p class="eyebrow">Leistungen</p>
-      <h1>Das Thema zuerst. Dann die passende Expertise.</h1>
-      <p>
-        Competence Hub klärt den Bedarf und vermittelt ausgewählte Coaches
-        oder Expertinnen und Experten. So finden Privatpersonen und Unternehmen
-        einen passenden Einstieg, ohne sich zuerst durch einen großen Katalog
-        arbeiten zu müssen.
-      </p>
-      <div class="actions">
+    <ConnectedPageHero
+      eyebrow="Leistungen"
+      title="Das Thema zuerst. Dann die passende Expertise."
+      lead="Competence Hub klärt den Bedarf und vermittelt ausgewählte Coaches oder Expertinnen und Experten. So finden Privatpersonen und Unternehmen einen passenden Einstieg, ohne sich zuerst durch einen großen Katalog arbeiten zu müssen."
+      centerLabel="Leistungen"
+      centerDetail="Passende Formate"
+      centerIcon="briefcase"
+      titleId="services-title"
+      related={[
+        {
+          label: "Mindforge",
+          detail: "Life Coaching",
+          href: "mindforge",
+          icon: "sparkles",
+        },
+        {
+          label: "Businesscoaching",
+          detail: "Führung & Teams",
+          href: "businesscoaching",
+          icon: "leadership",
+        },
+        {
+          label: "Unternehmen",
+          detail: "Bedarf klären",
+          href: "unternehmen",
+          icon: "building",
+        },
+      ]}
+    >
+      <div slot="actions" class="actions">
         <a class="button" href={url("kontakt")}>Anfrage stellen</a>
         <a class="button button--ghost" href={url("mindforge")}>Mindforge entdecken</a>
         <a class="button button--ghost" href={url("unternehmen")}>Für Unternehmen</a>
       </div>
-    </section>
+    </ConnectedPageHero>
 
-    <section class="offer-grid" aria-label="Angebotsübersicht">
+    <section class="offer-grid" id="angebote" aria-label="Angebotsübersicht">
       {services.map((service) => (
         <article class="offer-card" id={service.id}>
           <span class="offer-card__icon"><Icon name={service.icon} size={30} /></span>

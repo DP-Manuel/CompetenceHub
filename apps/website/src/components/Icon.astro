@@ -10,6 +10,8 @@ interface Props {
     | "leadership"
     | "log-in"
     | "message-circle"
+    | "pause"
+    | "play"
     | "shield-check"
     | "sparkles"
     | "user-round"
@@ -43,6 +45,8 @@ const { name, size = 20, strokeWidth = 2 } = Astro.props;
   {name === "leadership" && <><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /><path d="m18 5 2-2M6 5 4 3" /></>}
   {name === "log-in" && <><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><path d="m10 17 5-5-5-5M15 12H3" /></>}
   {name === "message-circle" && <><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /><path d="M8 9h8M8 13h5" /></>}
+  {name === "pause" && <><rect width="4" height="16" x="6" y="4" rx="1" /><rect width="4" height="16" x="14" y="4" rx="1" /></>}
+  {name === "play" && <path d="m6 3 14 9-14 9z" />}
   {name === "shield-check" && <><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3z" /><path d="m9 12 2 2 4-4" /></>}
   {name === "sparkles" && <><path d="m12 3-1.9 5.1L5 10l5.1 1.9L12 17l1.9-5.1L19 10l-5.1-1.9z" /><path d="M5 3v4M3 5h4M19 17v4M17 19h4" /></>}
   {name === "user-round" && <><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></>}

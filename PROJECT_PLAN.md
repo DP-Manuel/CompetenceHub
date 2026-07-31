@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-07-30
+Last updated: 2026-07-31
 
 ## Vision
 
@@ -60,6 +60,10 @@ Out of scope:
 - Now: use `docs/assets/designstyle.md` as the shared visual acceptance basis for website corrections and later portal/app work.
 - Now: use `CHATGPT_PROJECT_BRIEF.md` and `docs/assets/designstyle.md` to review
   the current frontend with stakeholders and the other KI.
+- Now: review the reusable Connected Page Hero on `/leistungen`,
+  `/unternehmen`, `/businesscoaching`, and `/mindforge`; decide whether the
+  smaller Living-Hub pattern should later extend to coaches and contact after
+  the Priority A content inventory.
 - Next: approve and publish the new coach content only after wording, current availability, image rights, and publication consent are confirmed.
 - In parallel: perform a read-only inventory of the blank server after its purpose and secure access method are confirmed; then select the backend runtime and migration tool.
 - Later: implement the independent web system with login, backend API, own database, roles, and first CRUD workflows.
@@ -68,6 +72,111 @@ Out of scope:
   remains excluded.
 - Before real-site visual production: remind Manuel to request the original seminar illustrations and approved logo exports from the media designer; do not extract production assets from the PDF.
 - Future: evaluate document package automation, email sending, structured or AI-assisted matching, commute-time calculation, company feedback links, coach/lecturer workflows, company portal views, participant app, and Hermes Agent automation as separate implementation slices.
+
+## Workstream: SEO, GEO & First-Party Authority
+
+Status: planned; inventory and evidence planning only. No new guide pages,
+content implementation, publication, or deployment is authorized by this
+workstream yet.
+
+### Objective And Relationship To The Frontend
+
+- Strengthen classical SEO and add GEO so Competence Hub becomes easier for
+  search engines and AI-supported answer systems to understand, retrieve, and
+  cite.
+- Build authority from approved first-party expertise, concrete use cases, and
+  traceable evidence instead of generic or mass-produced content.
+- Keep the Living Hub/frontend workstream and this content/GEO workstream
+  separate but connected. The frontend defines presentation and interaction;
+  this workstream defines audience fit, content substance, evidence, and
+  findability.
+- Preserve the Competence Hub journey:
+  `Anliegen -> Klärung -> passende Expertise -> passendes Format -> nächster Schritt`.
+- GEO complements classical SEO; it does not replace technical SEO, semantic
+  HTML, clear titles and descriptions, internal links, understandable URLs,
+  performance, or mobile usability.
+
+### Guardrails
+
+- Do not create new guide or advice pages before the inventory and evidence
+  phases are complete and sufficient original substance is approved.
+- Do not invent expert quotations, cases, customer references, statistics,
+  outcomes, or other authority signals.
+- Do not open or use private raw sources. `Quellen/`, `.env`, `.tmp/`, secrets,
+  private coach/customer data, and other sensitive data remain excluded.
+- Store no private raw data in the Content-Evidence Matrix.
+- Treat the GEO-video figures of roughly 30-40% visibility improvement and
+  roughly 500-2,000 words only as research orientation. They are not promises,
+  targets, acceptance criteria, or fixed content-length rules.
+- Publication requires factual, editorial, privacy, rights, and stakeholder
+  approval where applicable.
+
+### Planned Sequence And Deliverables
+
+1. **Phase 1 - Content Inventory**
+   - Inventory the existing core pages without rewriting them.
+   - For every page record route, primary audience, concrete use case/pain
+     point, central user question, relevant expertise, available first-party
+     information, current CTA, content owner if known, and review status.
+   - Mark mixed audiences, redundancies, unsupported claims, unclear CTAs, and
+     missing evidence.
+   - Start with `/`, `/unternehmen`, `/leistungen`, `/businesscoaching`, and
+     `/mindforge`.
+2. **Phase 2 - Content-Evidence Matrix**
+   - Add relevant service, "Why Competence Hub?", approved primary
+     information, expert quote, case/practical experience, verified statistic,
+     external primary source, approval status, CTA, and last subject-matter
+     review.
+   - Distinguish `available`, `needs verification`, `needs approval`, and
+     `missing`; absence must not be filled with assumptions.
+   - Prepare standardized expert/content interviews, but publish no interview
+     result before explicit approval.
+3. **Phase 3 - Core Page Content Plan**
+   - Use the completed inventories to plan focused improvements for the five
+     priority routes.
+   - Define a direct answer/value proposition, audience and situation, typical
+     triggers, solution path, relevant expertise, evidence, limitations, and
+     next step for each route.
+   - Keep the content scannable and compatible with the Living Hub rather than
+     increasing text volume for its own sake.
+4. **Phase 4 - Approved Expertise Components**
+   - Plan reusable `Expert Insight`, `Aus der Praxis`, `Zahlen & Fakten`,
+     `Für wen passt das?`, and `Wann ist ein anderer Weg sinnvoll?`
+     components.
+   - Implement them only after evidence, permissions, design fit, and
+     accessibility are approved.
+5. **Phase 5 - Knowledge Content Gate**
+   - Consider new knowledge content only when it contains approved original
+     expertise, a real expert perspective, a concrete case analysis, own data,
+     or a valuable synthesis from reliable primary sources.
+   - Do not create pages merely to increase page count or target keywords.
+6. **Phase 6 - Measurement And Iteration**
+   - After a separately approved publication, evaluate classical search data,
+     a stable set of realistic AI-search questions, source mentions, content
+     gaps, contact paths, and subject-matter feedback.
+   - Treat observations as learning signals, not as guarantees of visibility.
+
+### Priority A Inventory Baseline
+
+The following entries are planning hypotheses from the approved project
+positioning. Phase 1 must verify them against the current public page content
+before any copy change.
+
+| Route | Primary audience | Concrete use case to verify | Relevant expertise to verify | Existing first-party basis to inventory | CTA to verify |
+| --- | --- | --- | --- | --- | --- |
+| `/` | Companies first; private customers as a distinct path | Understand the Hub and find the right route from an initial concern | Curated matching of concern, expertise, and format | Existing Competence Hub positioning and journey; no quote, case, or number assumed | Discuss the need / choose the relevant path |
+| `/unternehmen` | Company decision-makers, HR, and leaders | Find support for a concrete organizational, leadership, team, recruiting, or development need | Coaching for companies, leadership/team development, recruiting and personnel development where approved | Existing company-facing process and offer information; evidence and approvals still to inventory | Discuss the company need |
+| `/leistungen` | Prospective customers comparing suitable support formats | Determine which service or format fits the situation | Approved coaching, workshop, talk, assessment, and related formats | Existing service and format descriptions; factual support and overlap still to inventory | View a relevant offer or request orientation |
+| `/businesscoaching` | Companies, leaders, and teams | Address a concrete leadership, collaboration, or professional-development situation | Approved Businesscoaching and relevant coach expertise | Existing Businesscoaching content and approved profile information; quotes/cases/statistics not assumed | Request an initial discussion |
+| `/mindforge` | Private customers; company personnel-development use cases only where clearly separated | Seek Life Coaching for resilience, mindset, orientation, or personal development | Mindforge Life Coaching and approved additional qualifications | Existing Mindforge positioning and process; evidence, boundaries, and approvals still to inventory | Choose the private/company path and request an initial discussion |
+
+### Priority After The Baseline
+
+- Priority B: `/coaches`, approved coach profiles, recruiting and personnel
+  development, assessment center, psychological consultation/prevention,
+  supervision, workshops/talks, and `/lifecoaching`.
+- Priority C: guide content, case studies, and own research only after the
+  Knowledge Content Gate is met.
 
 ## Timeline And Budget Signals
 
@@ -173,3 +282,11 @@ Resume here:
 - 2026-07-16: Prepare Elisabeth Schwabauer and Carolin Hupp as local coach profiles without private contact data or invented portraits; require final publication approval.
 - 2026-07-16: Keep ambiguous price input and interactive quizzes out of the public deadline MVP until commercial, content, privacy, and accessibility questions are resolved.
 - 2026-07-16: Prepare MySQL/MariaDB-oriented placeholders and a data-model brief, but perform no server/database change before a read-only inventory and explicit approval.
+- 2026-07-31: Add SEO, GEO & First-Party Authority as a separate but connected
+  workstream. Begin with Content Inventory and a Content-Evidence Matrix; GEO
+  complements SEO, and no new guide content or unsupported authority signal is
+  permitted.
+- 2026-07-31: Model Coach topics as a many-to-many relation. Use a compact
+  topic filter for the current public network, avoid a permanent all-to-all
+  graph, and add dedicated topic routes only when approved first-party content
+  provides value beyond a filtered Coach list.
