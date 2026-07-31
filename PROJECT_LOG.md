@@ -2,6 +2,25 @@
 
 Newest entries first.
 
+## 2026-07-31 | release | Living-Hub-Review über GitHub Pages veröffentlicht
+
+Der freigegebene Mittagsstand ist als GitHub-Pages-Review öffentlich
+erreichbar.
+
+- Website-Commit: `7f13cec` (`Extend Living Hub and coach discovery`) wurde
+  nach `origin/main` gepusht.
+- Workflow: `Publish GitHub Pages review`, Run `30620235023`; Build und Deploy
+  wurden erfolgreich abgeschlossen.
+- Review-URL: `https://dp-manuel.github.io/CompetenceHub/`
+- Smoke-Test: Startseite, Leistungen, Coach-Übersicht und Goran-Celic-Profil
+  antworten mit HTTP 200.
+- Browserprüfung: Themenfilter, Hash-Direktlink `#thema-fuehrung`, Goran-Profil,
+  Bilder und interne `/CompetenceHub`-Basispfade funktionieren öffentlich.
+- Deploymentgrenze: Veröffentlichung bleibt ein manueller,
+  freigabepflichtiger `workflow_dispatch`; Pushes deployen nicht automatisch.
+- Lokale Grenze: `.tmp/` blieb ungetrackt und wurde weder geöffnet noch
+  committed.
+
 ## 2026-07-31 | architecture/implementation | Coach-Themen skalierbar verknüpft
 
 Die Coach-Übersicht kann Profile nun nach kanonischen Themenschwerpunkten
