@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-07-31
+Last updated: 2026-08-04
 
 ## Vision
 
@@ -10,11 +10,13 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 
 - Workflow model: informal multi-day work
 - Current phase, sprint, milestone, board status, or release: Competence Hub website deadline sprint
-- Current status: yellow; the current Connected Story and Mindforge frontend
-  is documented and ready for comparison with a possible new frontend concept
+- Current status: yellow; stakeholder feedback, the Mindforge umbrella update,
+  the sixth Coach profile and the expanded Herr T. Wegner-Ney profile are
+  implemented and verified locally in commit `6bf28ec`
 - Main blocker: final legal applicability, remaining coach approvals and the approved live contact/response process are not finalized
-- Next decision needed: approve, reject or phase the expected new frontend
-  direction after comparing it against current behavior, content and design
+- Next decision needed: complete the manual desktop/mobile interaction review
+  and decide whether commit `6bf28ec` should receive a separate public
+  GitHub-Pages review deployment
 
 ## Scope
 
@@ -205,30 +207,38 @@ before any copy change.
 
 ## Immediate Next Steps
 
-1. Review the refreshed homepage, topic-based quick navigation, expandable content, and login role paths locally.
-2. Review Elisabeth Schwabauer and Carolin Hupp profile wording; obtain portrait and publication approval or keep the profiles local.
-3. Confirm whether psychological consultation and supervision are approved public offers and clarify all price units/inclusions.
-4. Confirm which Donner + Partner group company legally operates Competence Hub and approve Impressum, Datenschutz, and AGB applicability for the final domain.
-5. Confirm the operational owner and expected response process for `competencehub@donner-partner.de`.
-6. Complete final browser, accessibility, SEO, and content QA before 2026-07-23.
-7. Confirm whether the blank server is staging or production before the first read-only SSH inventory.
-8. After server/runtime confirmation, scope secure authentication for the internal role first; coach and company access follow as separate backend slices.
-9. Decide whether Recruiting becomes a confirmed public Competence-Hub offer
-   and define its exact scope before production wording is finalized.
-
+1. Review the eight-node homepage Hub, Mindforge umbrella wording and removed
+   standalone Businesscoaching node at desktop and mobile widths.
+2. Review the Coach topic filter, automatic result scroll, visible selection
+   status and the honest empty state for Mediation by mouse and keyboard.
+3. Review Frau Dr. Stefanie Becker and Herr T. Wegner-Ney profiles; keep Frau
+   Dr. Stefanie Becker's customer references excluded and use no PDF-derived
+   portrait.
+4. Assign Mediation only after a Coach's qualification and publication approval
+   explicitly support that offer.
+5. Decide whether commit `6bf28ec` should be pushed to a manual public
+   GitHub-Pages review workflow; a normal push must not deploy automatically.
+6. Confirm which Donner + Partner group company legally operates Competence Hub
+   and approve Impressum, Datenschutz and AGB applicability for the final domain.
+7. Confirm the operational owner and expected response process for
+   `competencehub@donner-partner.de`.
+8. Confirm whether the blank server is staging or production before the first
+   read-only SSH inventory.
 ## Restart Note
 
-Prepared on: 2026-07-16
+Prepared on: 2026-08-04
 
 Resume here:
 
-1. Read `AGENTS.md`, `PROJECT_LOG.md`, and this `PROJECT_PLAN.md`.
-2. Review `PROJECT_STATUS.md`, `SKILL_FEEDBACK_LOG.md`, `docs/assets/designstyle.md`, and `docs/requirements/requirements-engineering-update-2026-07-16.md`.
-3. Review `apps/website/src/pages/index.astro`, `apps/website/src/pages/login.astro`, `apps/website/src/pages/kontakt.astro`, and `apps/website/src/pages/coaches.astro` for the current B2B direction, role paths, contact flow, and coach-network state.
-4. Check `git status --short`; `.tmp/` must remain untracked and untouched.
-5. Start the local Astro website and review the current routes; no public deployment is active or approved.
-6. Continue from: Manuel's visual approval, coach/publication approval, legal/domain confirmation, and the read-only server inventory decision before 2026-07-23.
-
+1. Read `AGENTS.md`, `PROJECT_LOG.md`, this `PROJECT_PLAN.md` and
+   `PROJECT_STATUS.md`.
+2. Review `docs/requirements/requirements-engineering-update-2026-08-04.md`
+   and `docs/assets/designstyle.md`.
+3. Check `git status --short`; `.tmp/` must remain untracked and untouched.
+4. Review commit `6bf28ec` and the current Coach/Hub routes locally.
+5. Complete the outstanding real-browser desktop/mobile interaction check.
+6. Continue from: decide on a separate manual GitHub-Pages review deployment;
+   no deployment is implied by a push.
 ## Open Questions
 
 - How should the sub-brand be named and endorsed under Donner + Partner?
@@ -290,3 +300,7 @@ Resume here:
   topic filter for the current public network, avoid a permanent all-to-all
   graph, and add dedicated topic routes only when approved first-party content
   provides value beyond a filtered Coach list.
+- 2026-08-04: Treat Mindforge as the central Hub umbrella for Life Coaching and Businesscoaching; remove the separate Businesscoaching Hub node while preserving the dedicated Businesscoaching page.
+- 2026-08-04: Treat Mediation as a qualification-gated network topic; assign no Coach without explicit evidence and approval.
+- 2026-08-04: Publish Frau Dr. Stefanie Becker's approved profile without customer references or a PDF-derived portrait; expand Herr T. Wegner-Ney toward technology, processes and change with KI only as a secondary topic.
+- 2026-08-04: Use Herr/Frau honorifics consistently for visible Coach names and refer to the contact person as Frau Janay Rappelt.

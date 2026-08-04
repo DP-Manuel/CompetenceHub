@@ -2,6 +2,47 @@
 
 Newest entries first.
 
+## 2026-08-04 | frontend/content/workflow | Coach-Feedback und zweiter Rechner integriert
+
+Das freigegebene Stakeholderfeedback und die neuen Coach-Unterlagen wurden als
+abgegrenzter Frontend-Slice umgesetzt und auf dem zweiten Rechner verifiziert.
+
+- Hub: Businesscoaching ist unter dem Mindforge-Oberbegriff gebündelt. Der
+  separate Knoten entfällt; die Startseiten-Map besitzt acht Außenknoten.
+  Mindforge verlinkt die eigenständige Businesscoaching-Seite weiterhin direkt.
+- Coach-Netzwerk: Frau Dr. Stefanie Becker ist als sechstes freigegebenes Profil
+  ohne Kundenreferenzen und ohne PDF-extrahiertes Porträt ergänzt. Herr T.
+  Wegner-Neys Profil umfasst nun Technologie- und Prozessveränderung,
+  Qualitätsmanagement, Mitarbeiterbeteiligung, Führung und Fachkräftesicherung;
+  KI bleibt ein Nebenthema.
+- Themenlogik: Mediation ist als allgemeiner, qualifikationsgebundener Bereich
+  vorbereitet. Solange kein Coach ausdrücklich qualifiziert und freigegeben
+  zugeordnet ist, zeigt der Filter einen transparenten Leerzustand.
+- Interaktion: Themenauswahl aktualisiert einen sichtbaren Live-Status, filtert
+  die Profile und scrollt reduziert-bewegungsbewusst zu den Ergebnissen. Die
+  drei bisherigen Qualitätskarten wurden entfernt; FAQ-Köpfe erhielten mehr
+  Raum.
+- Anreden: sichtbare Coach-Namen verwenden Herr/Frau; die Kontaktperson wird als
+  Frau Janay Rappelt bezeichnet.
+- Requirements: hinzugefügt
+  `docs/requirements/requirements-engineering-update-2026-08-04.md`.
+- Verification: secret-freie lokale Build-Kopie mit Node 22; Astro prüft 35
+  Dateien ohne Fehler, Warnungen oder Hinweise und erzeugt 27 statische Seiten.
+  HTTP-Smoke-Checks bestätigen die betroffenen Routen, acht Hub-Knoten,
+  Mindforge-Businesscoaching-Link, Mediation und Leerzustand.
+- Einschränkung: direkte Builds auf `Z:` hingen nach der Typgenerierung; die
+  in-app Browser-Verbindung lief zweimal ins Zeitlimit. Echte Desktop-/Mobil-
+  und Tastaturprüfung bleibt vor einem öffentlichen Review manuell offen.
+- Commit: `6bf28ec` (`Integrate coach feedback and profiles`). Kein öffentliches
+  Deployment ausgelöst.
+- Zweitrechner: GitHub-HTTPS-Zugriff und repository-lokale Autoridentität sind
+  eingerichtet. `DP-Manuel/CodexSkills` wurde separat nach
+  `Z:\IT Development Manuel\CodexSkills` geklont.
+- Sicherheit: `.tmp/`, `.env*`, Zugangsdaten, private Nachweise und
+  Kundenreferenzen blieben ausgeschlossen.
+- Nächster Schritt: lokaler visueller/keyboard Review; danach separat über einen
+  manuellen GitHub-Pages-Reviewlauf entscheiden.
+
 ## 2026-07-31 | release | Living-Hub-Review über GitHub Pages veröffentlicht
 
 Der freigegebene Mittagsstand ist als GitHub-Pages-Review öffentlich
