@@ -9,38 +9,40 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
 const topics = [
   {
-    title: "Starke Führung und starke Teams",
-    text: "Führung so gestalten, dass Verantwortung, Vertrauen und Zusammenarbeit im Arbeitsalltag wirksam zusammenkommen.",
+    title: "Technologien und Prozesse sinnvoll einführen",
+    text: "Investitionen, Abläufe und wirtschaftlichen Nutzen vor dem Start einordnen und neue Werkzeuge schrittweise in den betrieblichen Alltag integrieren.",
   },
   {
-    title: "Potenziale im Recruiting erkennen",
-    text: "Praktische Fähigkeiten, berufliche Erfahrung und Entwicklungsmöglichkeiten stärker in den Blick nehmen, statt Auswahl nur an formalen Kriterien auszurichten.",
+    title: "Menschen in Veränderung beteiligen",
+    text: "Unsicherheiten ernst nehmen, Prozesswissen nutzen und Mitarbeitende so einbinden, dass Modernisierung, Digitalisierung und neue Arbeitsweisen gemeinsam getragen werden.",
   },
   {
-    title: "Mittelstand im Wandel",
-    text: "Familiengeführte und mittelständische Unternehmen dabei unterstützen, Zusammenarbeit und Personalentwicklung auch in Veränderung handlungsfähig zu gestalten.",
+    title: "Führung und Potenziale stärken",
+    text: "Verantwortung, Teamarbeit und praktische Fähigkeiten sichtbar machen und bei Führung, Fachkräftesicherung sowie Integration konsequent mitdenken.",
   },
 ];
 ---
 
 <BaseLayout
-  title="Wegner-Ney | Coaches | Competence Hub"
-  description="Wegner-Ney bietet Workshops und Vorträge zu Führung, Teamstärkung, Recruiting und Personalentwicklung für mittelständische Unternehmen."
+  title="Herr T. Wegner-Ney | Coaches | Competence Hub"
+  description="Herr T. Wegner-Ney begleitet mittelständische Unternehmen bei Technologie- und Prozessveränderung, Qualitätsmanagement, Führung und Fachkräftesicherung."
 >
   <main class="subpage">
     <section class="coach-profile-hero">
       <div>
-        <p class="eyebrow">Workshop- und Vortragsexpertise</p>
-        <h1>Wegner-Ney</h1>
+        <p class="eyebrow">Unternehmensberatung, Workshops & Vorträge</p>
+        <h1>Herr T. Wegner-Ney</h1>
         <p class="coach-profile-lead">
-          Impulse für mittelständische und familiengeführte Unternehmen, die
-          Führung, Zusammenarbeit und Mitarbeitergewinnung weiterentwickeln
-          möchten.
+          Unternehmensberater, Speaker, Workshop-Leiter und Coach für
+          mittelständische Unternehmen, die neue Technologien, Prozesse und
+          Zusammenarbeit praxisnah weiterentwickeln möchten.
         </p>
         <p>
-          Im Mittelpunkt stehen die Menschen im Unternehmen: ihre praktischen
-          Fähigkeiten, ihre Verantwortung und die Frage, wie starke Teams auch
-          in Veränderung gemeinsam wirksam bleiben.
+          Herr T. Wegner-Ney betrachtet Unternehmen als Ganzes. Er verbindet
+          Industrie- und Führungserfahrung mit Qualitätsmanagement,
+          Prozessoptimierung und einer verständlichen Begleitung von
+          Veränderungen. KI kann dabei als konkrete Technologie vorkommen,
+          steht aber nicht im Zentrum seines Angebots.
         </p>
         <div class="coach-profile-actions">
           <a class="button" href={url("kontakt")}>Format anfragen</a>
@@ -50,13 +52,13 @@ const topics = [
       <figure class="coach-profile-portrait">
         <img
           src={url("images/coaches/wegner-ney.jpg")}
-          alt="Porträt von Wegner-Ney"
+          alt="Porträt von Herrn T. Wegner-Ney"
           width="1030"
           height="1545"
         />
         <figcaption>
-          <strong>Wegner-Ney</strong>
-          <span>Führung · Teams · Recruiting</span>
+          <strong>Herr T. Wegner-Ney</strong>
+          <span>Veränderung · Prozesse · Führung</span>
         </figcaption>
       </figure>
     </section>
@@ -65,12 +67,12 @@ const topics = [
       <div class="section-heading coach-section-heading">
         <div>
           <p class="eyebrow">Themenschwerpunkte</p>
-          <h2>Menschen und Unternehmen gemeinsam entwickeln</h2>
+          <h2>Erst verstehen. Dann verändern.</h2>
         </div>
         <p>
-          Die Angebote richten sich an Unternehmen, die Führung und
-          Personalgewinnung praxisnah mit ihrer tatsächlichen Arbeitssituation
-          verbinden möchten.
+          Die Angebote richten sich an Unternehmerinnen und Unternehmer,
+          Führungskräfte sowie Mitarbeitende, die Veränderung wirtschaftlich,
+          verständlich und gemeinsam gestalten möchten.
         </p>
       </div>
 
@@ -84,27 +86,48 @@ const topics = [
       </div>
     </section>
 
+    <section class="coach-credentials">
+      <div>
+        <p class="eyebrow">Profil</p>
+        <h2>Praxis vom Produktionsalltag bis zur Geschäftsleitung</h2>
+        <p>
+          Herr T. Wegner-Ney spricht unterschiedliche Unternehmenssprachen und
+          verbindet technisches Verständnis, Qualitätsarbeit, Projekt- und
+          Führungserfahrung mit anschaulicher Vermittlung.
+        </p>
+      </div>
+      <ul>
+        <li>Staatlich geprüfter Techniker Druck- und Medientechnik</li>
+        <li>Zertifizierter Qualitätsbeauftragter</li>
+        <li>Ausbilder nach AEVO</li>
+        <li>Qualitätsmanagement und Prozessoptimierung</li>
+        <li>Projektleitung und Führungskräfteentwicklung</li>
+        <li>Konzeption von Workshops und Fachvorträgen</li>
+      </ul>
+    </section>
+
     <section class="coach-format-band" aria-labelledby="wegner-formats-title">
       <div>
         <p class="eyebrow">Mögliche Formate</p>
         <h2 id="wegner-formats-title">Vortrag oder Workshop passend zum Bedarf</h2>
       </div>
       <p>
-        Thema, Zielgruppe und gewünschte Wirkung werden vorab gemeinsam
-        eingeordnet. Der konkrete Zuschnitt entsteht aus dem Bedarf des
-        Unternehmens.
+        Themen können von Technologie- und Prozessveränderung über
+        Qualitätsmanagement und Mitarbeiterbeteiligung bis zu Führung,
+        Fachkräftesicherung und Integration reichen. Zielgruppe, Ausgangslage
+        und gewünschter Nutzen bestimmen den konkreten Zuschnitt.
       </p>
     </section>
 
     <section class="showcase-strip coach-profile-cta">
       <div>
         <p class="eyebrow">Persönlich verbunden</p>
-        <h2>Passt diese Expertise zu Ihrem Anliegen?</h2>
+        <h2>Passt diese Expertise zu Ihrem Vorhaben?</h2>
       </div>
       <div>
         <p>
-          Janay Rappelt unterstützt bei der Einordnung und stellt den Kontakt
-          zwischen Unternehmen und Coach her.
+          Frau Janay Rappelt unterstützt bei der Einordnung und stellt den
+          Kontakt zwischen Unternehmen und Coach her.
         </p>
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
       </div>

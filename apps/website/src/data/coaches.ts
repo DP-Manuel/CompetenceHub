@@ -2,6 +2,7 @@ export type CoachTopicId =
   | "fuehrung"
   | "teams-konflikte"
   | "gesundheit-praevention"
+  | "mediation"
   | "recruiting-potenziale"
   | "rhetorik-vertrieb"
   | "psychologische-beratung";
@@ -55,6 +56,12 @@ export const coachTopics: CoachTopic[] = [
     icon: "heart-pulse",
   },
   {
+    id: "mediation",
+    label: "Mediation",
+    detail: "Strukturierte Konfliktklärung",
+    icon: "message-circle",
+  },
+  {
     id: "recruiting-potenziale",
     label: "Recruiting & Potenziale",
     detail: "Auswahl und Entwicklung",
@@ -76,7 +83,7 @@ export const coachTopics: CoachTopic[] = [
 
 export const coaches: Coach[] = [
   {
-    name: "Christian Galvano",
+    name: "Herr Christian Galvano",
     role: "Dozent, Fachtrainer und Coach",
     previewRole: "Führung, Konflikte & Prävention",
     focus: [
@@ -85,7 +92,7 @@ export const coaches: Coach[] = [
       "Stress- und Burnoutprävention",
     ],
     topics: ["fuehrung", "teams-konflikte", "gesundheit-praevention"],
-    text: "Christian Galvano verbindet neurowissenschaftliche Grundlagen mit praxisnahen Methoden für Führung, Kommunikation und gesundes Arbeiten.",
+    text: "Herr Christian Galvano verbindet neurowissenschaftliche Grundlagen mit praxisnahen Methoden für Führung, Kommunikation und gesundes Arbeiten.",
     profilePath: "coaches/christian-galvano",
     image: "images/coaches/christian-galvano.webp",
     imageWidth: 830,
@@ -93,7 +100,7 @@ export const coaches: Coach[] = [
     initials: "CG",
   },
   {
-    name: "Elisabeth Schwabauer",
+    name: "Frau Elisabeth Schwabauer",
     role: "Psychologin (M.Sc.)",
     previewRole: "Psychologie, Belastung & Teams",
     focus: [
@@ -106,7 +113,7 @@ export const coaches: Coach[] = [
       "gesundheit-praevention",
       "teams-konflikte",
     ],
-    text: "Elisabeth Schwabauer verbindet psychologische Fachkenntnis mit Erfahrung in beruflicher Beratung, Teamprozessen und der Einordnung psychischer Belastungen.",
+    text: "Frau Elisabeth Schwabauer verbindet psychologische Fachkenntnis mit Erfahrung in beruflicher Beratung, Teamprozessen und der Einordnung psychischer Belastungen.",
     profilePath: "coaches/elisabeth-schwabauer",
     image: "images/coaches/elisabeth-schwabauer.webp",
     imageWidth: 1200,
@@ -114,7 +121,7 @@ export const coaches: Coach[] = [
     initials: "ES",
   },
   {
-    name: "Carolin Hupp",
+    name: "Frau Carolin Hupp",
     role: "Diplom-Sportwissenschaftlerin",
     previewRole: "Gesundheit, Bewegung & Prävention",
     focus: [
@@ -123,21 +130,21 @@ export const coaches: Coach[] = [
       "Entspannung und Balance",
     ],
     topics: ["gesundheit-praevention"],
-    text: "Carolin Hupp bringt Gesundheits- und Trainingsmanagement, Bewegungsförderung und alltagstaugliche Prävention in Unternehmen und Gruppen zusammen.",
+    text: "Frau Carolin Hupp bringt Gesundheits- und Trainingsmanagement, Bewegungsförderung und alltagstaugliche Prävention in Unternehmen und Gruppen zusammen.",
     profilePath: "coaches/carolin-hupp",
     initials: "CH",
   },
   {
-    name: "Wegner-Ney",
-    role: "Workshop- und Vortragsexpertise",
-    previewRole: "Führung, Teams & Recruiting",
+    name: "Herr T. Wegner-Ney",
+    role: "Unternehmensberater, Speaker, Workshop-Leiter und Coach",
+    previewRole: "Veränderung, Prozesse & Führung",
     focus: [
-      "Führung und Teamstärkung",
-      "Recruiting und Potenziale",
-      "Zusammenarbeit im Mittelstand",
+      "Technologie- und Prozessveränderung",
+      "Führung und Mitarbeiterbeteiligung",
+      "Qualitätsmanagement im Mittelstand",
     ],
     topics: ["fuehrung", "teams-konflikte", "recruiting-potenziale"],
-    text: "Wegner-Ney richtet den Blick auf starke Führung, funktionierende Teams und eine Personalgewinnung, die praktische Fähigkeiten und Entwicklungspotenziale ernst nimmt.",
+    text: "Herr T. Wegner-Ney begleitet mittelständische Unternehmen dabei, neue Technologien, Prozesse und Qualitätsanforderungen wirtschaftlich einzuordnen und gemeinsam mit ihren Mitarbeitenden wirksam umzusetzen.",
     profilePath: "coaches/wegner-ney",
     image: "images/coaches/wegner-ney.jpg",
     imageWidth: 830,
@@ -145,7 +152,7 @@ export const coaches: Coach[] = [
     initials: "WN",
   },
   {
-    name: "Goran Celic",
+    name: "Herr Goran Celic",
     role: "Coach für Rhetorik und Vertrieb",
     previewRole: "Rhetorik, Vertrieb & Storytelling",
     focus: [
@@ -154,11 +161,25 @@ export const coaches: Coach[] = [
       "Storytelling und Gesprächsführung",
     ],
     topics: ["rhetorik-vertrieb"],
-    text: "Goran Celic verbindet langjährige Vertriebserfahrung mit Rhetorik, Gesprächsführung und praxisnaher Begleitung für Vertriebsteams und Experten.",
+    text: "Herr Goran Celic verbindet langjährige Vertriebserfahrung mit Rhetorik, Gesprächsführung und praxisnaher Begleitung für Vertriebsteams und Experten.",
     profilePath: "coaches/goran-celic",
     image: "images/coaches/goran-celic.png",
     imageWidth: 768,
     imageHeight: 929,
     initials: "GC",
+  },
+  {
+    name: "Frau Dr. Stefanie Becker",
+    role: "Executive Coach und Team- und Organisationsentwicklerin",
+    previewRole: "Change, Führung & Organisation",
+    focus: [
+      "Change und Organisationsentwicklung",
+      "Vision, Strategie und Kultur",
+      "Female Leadership und Neurodiversität",
+    ],
+    topics: ["fuehrung", "teams-konflikte"],
+    text: "Frau Dr. Stefanie Becker begleitet Leitungsteams, Führungskräfte und Mitarbeitende in organisationalen und persönlichen Transformationsprozessen mit einem hypnosystemischen und beteiligungsorientierten Ansatz.",
+    profilePath: "coaches/stefanie-becker",
+    initials: "SB",
   },
 ];

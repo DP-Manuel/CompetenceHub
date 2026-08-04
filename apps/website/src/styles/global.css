@@ -1373,8 +1373,8 @@ p {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
-  min-height: 80px;
-  padding: 18px 20px;
+  min-height: 96px;
+  padding: 22px 24px;
   font-size: 1.18rem;
   font-weight: 850;
   line-height: 1.22;
@@ -1887,6 +1887,24 @@ p {
 .coach-topic-filter__option:focus-visible {
   outline: 3px solid var(--color-dark);
   outline-offset: 3px;
+}
+
+.coach-topic-status {
+  margin: 22px 0 0;
+  padding: 14px 18px;
+  scroll-margin-top: 130px;
+  border-left: 6px solid var(--color-red);
+  background: var(--color-white);
+  font-weight: 850;
+}
+
+.coach-topic-empty {
+  margin: -12px 0 34px;
+  padding: 24px;
+  border: 1px solid var(--color-line);
+  border-left: 8px solid var(--color-yellow);
+  background: var(--color-soft);
+  font-weight: 750;
 }
 
 .coach-grid {

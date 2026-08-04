@@ -9,21 +9,6 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
-const principles = [
-  {
-    title: "Passung vor Masse",
-    text: "Coach, Thema, Zielgruppe und Format müssen zusammenpassen. Das Netzwerk soll Qualität sichtbar machen, nicht beliebig wachsen.",
-  },
-  {
-    title: "Erfahrung und Haltung",
-    text: "Für Unternehmen und Privatpersonen zählen fachliche Grundlage, Praxiserfahrung, Verlässlichkeit und ein professioneller Umgang mit sensiblen Anliegen.",
-  },
-  {
-    title: "Klare Angebotslogik",
-    text: "Jedes veröffentlichte Profil zeigt verständlich, welche Themen, Formate und Zielgruppen sinnvoll zusammengehören.",
-  },
-];
-
 ---
 
 <BaseLayout
@@ -50,15 +35,6 @@ const principles = [
         <span>Netzwerkanspruch</span>
         <strong>Passend.<br />Erfahren.<br />Verlässlich.</strong>
       </aside>
-    </section>
-
-    <section class="feature-grid" aria-label="Qualitätslogik im Coach-Netzwerk">
-      {principles.map((principle) => (
-        <article class="feature-card">
-          <h2>{principle.title}</h2>
-          <p>{principle.text}</p>
-        </article>
-      ))}
     </section>
 
     <section
@@ -106,7 +82,7 @@ const principles = [
         ))}
       </div>
       <p
-        class="visually-hidden"
+        class="coach-topic-status"
         aria-live="polite"
         data-coach-topic-status
       >
@@ -130,7 +106,7 @@ const principles = [
             {coach.image ? (
               <img
                 src={url(coach.image)}
-                alt={`Porträt von ${coach.name}`}
+                alt={`Porträt: ${coach.name}`}
                 width={coach.imageWidth ?? 830}
                 height={coach.imageHeight ?? 830}
                 loading="lazy"
@@ -154,6 +130,11 @@ const principles = [
         </article>
       ))}
     </section>
+
+    <p class="coach-topic-empty" data-coach-topic-empty hidden>
+      Für diesen Themenbereich ist aktuell noch kein ausdrücklich
+      qualifiziertes und freigegebenes Coach-Profil veröffentlicht.
+    </p>
 
     <section class="network-growth-note" aria-labelledby="network-growth-title">
       <p class="eyebrow">Netzwerk im Aufbau</p>
@@ -191,6 +172,9 @@ const principles = [
       const status = explorer.querySelector<HTMLElement>(
         "[data-coach-topic-status]",
       );
+      const emptyState = document.querySelector<HTMLElement>(
+        "[data-coach-topic-empty]",
+      );
       const labels = new Map(
         buttons.map((button) => [
           button.dataset.coachTopic || "all",
@@ -209,17 +193,24 @@ const principles = [
           button.setAttribute("aria-pressed", String(active));
         });
 
+        let visibleCount = 0;
         cards.forEach((card) => {
           const topics = (card.dataset.coachTopics || "").split(" ");
-          card.hidden = selected !== "all" && !topics.includes(selected);
+          const visible = selected === "all" || topics.includes(selected);
+          card.hidden = !visible;
+          if (visible) visibleCount += 1;
         });
 
         if (status) {
           status.textContent =
             selected === "all"
-              ? "Alle Coach-Profile werden angezeigt."
-              : `Passende Coach-Profile für ${labels.get(selected)} werden angezeigt.`;
+              ? `Alle ${visibleCount} Coach-Profile werden angezeigt.`
+              : visibleCount > 0
+                ? `${labels.get(selected)}: ${visibleCount} passende Coach-Profile.`
+                : `${labels.get(selected)}: Noch kein freigegebenes Coach-Profil.`;
         }
+
+        if (emptyState) emptyState.hidden = visibleCount > 0;
 
         if (updateUrl) {
           const nextUrl = new URL(window.location.href);
@@ -231,6 +222,13 @@ const principles = [
       buttons.forEach((button) => {
         button.addEventListener("click", () => {
           applyTopic(button.dataset.coachTopic || "all");
+          const reduceMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
+          status?.scrollIntoView({
+            behavior: reduceMotion ? "auto" : "smooth",
+            block: "start",
+          });
         });
       });
 

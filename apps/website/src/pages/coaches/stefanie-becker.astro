@@ -1,0 +1,133 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const topics = [
+  {
+    title: "Change und Organisationsentwicklung",
+    text: "Veränderungsprozesse mit klarer Architektur, Beteiligung und einem gemeinsamen Verständnis von Ziel, Rollen und nächsten Schritten gestalten.",
+  },
+  {
+    title: "Vision, Strategie und Kultur",
+    text: "Leitungsteams dabei begleiten, Zukunftsbilder zu entwickeln, strategische Orientierung zu schärfen und Werte im Arbeitsalltag wirksam werden zu lassen.",
+  },
+  {
+    title: "Führung und Vielfalt",
+    text: "Führungspersönlichkeit, Female Leadership und Neurodiversität als praktische Perspektiven für wirksame und zukunftsfähige Zusammenarbeit verbinden.",
+  },
+];
+---
+
+<BaseLayout
+  title="Frau Dr. Stefanie Becker | Coaches | Competence Hub"
+  description="Frau Dr. Stefanie Becker begleitet Leitungsteams und Führungskräfte bei Change, Organisationsentwicklung, Strategie, Kultur, Female Leadership und Neurodiversität."
+>
+  <main class="subpage">
+    <section class="coach-profile-hero">
+      <div>
+        <p class="eyebrow">Change & Organisationsentwicklung</p>
+        <h1>Frau Dr. Stefanie Becker</h1>
+        <p class="coach-profile-lead">
+          Executive Coach und hypnosystemische Team- und
+          Organisationsentwicklerin für Leitungsteams, Führungskräfte und
+          Mitarbeitende in Veränderungsprozessen.
+        </p>
+        <p>
+          Frau Dr. Stefanie Becker verbindet Organisationsentwicklung,
+          Coaching und Facilitation. Ihr Ansatz richtet den Blick auf klare
+          Veränderungsarchitekturen, Beteiligung und die bewussten wie
+          unwillkürlichen Dynamiken, die Zusammenarbeit und Wandel prägen.
+        </p>
+        <div class="coach-profile-actions">
+          <a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a>
+          <a class="button button--ghost" href={url("coaches")}>Alle Coaches</a>
+        </div>
+      </div>
+      <aside
+        class="coach-profile-placeholder"
+        aria-label="Profil von Frau Dr. Stefanie Becker"
+      >
+        <span aria-hidden="true">SB</span>
+        <div>
+          <strong>Frau Dr. Stefanie Becker</strong>
+          <small>Change · Führung · Organisation</small>
+        </div>
+      </aside>
+    </section>
+
+    <section class="coach-profile-section">
+      <div class="section-heading coach-section-heading">
+        <div>
+          <p class="eyebrow">Themenschwerpunkte</p>
+          <h2>Veränderung gemeinsam wirksam gestalten</h2>
+        </div>
+        <p>
+          Die Angebote richten sich an Organisationen und Führungsteams, die
+          Wandel nicht nur planen, sondern mit tragfähiger Orientierung,
+          Beteiligung und konkreter Umsetzung verbinden möchten.
+        </p>
+      </div>
+
+      <div class="coach-topic-grid">
+        {topics.map((topic) => (
+          <article>
+            <h3>{topic.title}</h3>
+            <p>{topic.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="coach-credentials">
+      <div>
+        <p class="eyebrow">Profil</p>
+        <h2>Recht, Organisation und Coaching verbunden</h2>
+        <p>
+          Frau Dr. Stefanie Becker bringt mehr als zehn Jahre Erfahrung in
+          Coaching und Persönlichkeitsentwicklung sowie berufliche Praxis aus
+          Recht, internationalen Projekten und Organisationsentwicklung ein.
+        </p>
+      </div>
+      <ul>
+        <li>Promotion in Rechtswissenschaften</li>
+        <li>Hypnosystemisches Coaching</li>
+        <li>Systemisch-evolutionäre Organisationsentwicklung</li>
+        <li>Lösungsfokussiertes Konfliktmanagement</li>
+        <li>Generative Facilitation</li>
+        <li>Konzeption und Begleitung von Großgruppenprozessen</li>
+      </ul>
+    </section>
+
+    <section class="coach-format-band" aria-labelledby="becker-formats-title">
+      <div>
+        <p class="eyebrow">Mögliche Formate</p>
+        <h2 id="becker-formats-title">Vom Führungsworkshop bis zur Keynote</h2>
+      </div>
+      <p>
+        Mögliche Schwerpunkte sind Vision und Strategie, die Arbeit an
+        konkreten Change-Projekten, Grundlagen zu Veränderung, Female
+        Leadership sowie Neurodiversität in Organisationen. Der passende
+        Rahmen wird vorab gemeinsam geklärt.
+      </p>
+    </section>
+
+    <section class="showcase-strip coach-profile-cta">
+      <div>
+        <p class="eyebrow">Persönlich verbunden</p>
+        <h2>Passt diese Expertise zu Ihrem Veränderungsvorhaben?</h2>
+      </div>
+      <div>
+        <p>
+          Frau Janay Rappelt unterstützt bei der Einordnung und stellt den
+          Kontakt zwischen Unternehmen und Coach her.
+        </p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
