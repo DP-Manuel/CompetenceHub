@@ -2,6 +2,31 @@
 
 Newest entries first.
 
+## 2026-08-05 | verification/workflow | Lokale Vorschau und Zweitrechner-Handoff gesichert
+
+Der aktuelle Stand wurde auf dem zweiten Rechner als sichtbare lokale Vorschau
+bereitgestellt und die dafür relevanten Besonderheiten wurden restart-sicher
+dokumentiert.
+
+- Synchronisation: `main` und `origin/main` waren vor den Arbeiten identisch;
+  `.tmp/` blieb ungetrackt und unberührt.
+- Vorschau: Astro-Start direkt auf `Z:` hing. Eine geheimnisfreie lokale Kopie
+  unter `C:\tmp` wurde stattdessen mit der vorhandenen Astro-Installation
+  gestartet. `http://127.0.0.1:4321/` antwortete mit HTTP 200 und enthielt den
+  aktuellen Mindforge-Inhalt.
+- Anzeige: die eingebettete Browser-Verbindung lief erneut ins Zeitlimit; die
+  verifizierte URL wurde deshalb sichtbar im Standardbrowser geöffnet.
+- Rechnergedächtnis: `docs/architecture/second-workstation-setup.md` hält Pfade,
+  Git/GitHub-Status, Node/npm-Regeln, Netzlaufwerk-Fallback, Browsergrenze und
+  Sicherheitsregeln ohne Zugangsdaten fest. `AGENTS.md` verweist darauf.
+- Skill-Feedback: ein wiederverwendbarer Multi-Workstation-/Windows-Preview-
+  Bootstrap wurde in `SKILL_FEEDBACK_LOG.md` vorgeschlagen; noch keine Änderung
+  am kanonischen CodexSkills-Repository.
+- Verifikation: HTTP 200 und aktueller Seiteninhalt bestätigt; automatisierte
+  visuelle und Tastaturprüfung bleibt wegen der Browser-Verbindung offen.
+- Nächster Schritt: Manuel prüft die geöffnete Seite; nach Rückmeldung kann der
+  betreffende UI-Slice gezielt angepasst und erneut lokal gezeigt werden.
+
 ## 2026-08-04 | frontend/content/workflow | Coach-Feedback und zweiter Rechner integriert
 
 Das freigegebene Stakeholderfeedback und die neuen Coach-Unterlagen wurden als

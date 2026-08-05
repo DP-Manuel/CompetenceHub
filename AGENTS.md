@@ -6,10 +6,16 @@ Read this file before editing.
 
 - Project name: Firmendingsbums Website
 - Local project path: `C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website`
-- Canonical remote: unknown
+- Canonical remote: `https://github.com/DP-Manuel/CompetenceHub.git`
 - Primary runtime or artifact type: website first; webapp and additional digital artifacts later
 - Main entry points: project memory files in the repository root; website workspace in `apps/website`
 - Sensitive areas: credentials, customer or company data, private brand material, analytics data, production deployment settings
+
+## Second Workstation
+
+- On the network-separated second workstation, this repository is mounted at `Z:\IT Development Manuel\Firmendingsbums\Website` and canonical CodexSkills are at `Z:\IT Development Manuel\CodexSkills`.
+- Read `docs/architecture/second-workstation-setup.md` before Git, Node/Astro, local-preview, browser, or filesystem-tooling work on that workstation.
+- Keep `.tmp/`, `.env*`, credentials and unrelated private material excluded from reads, copies and commits.
 
 ## CodexSkills Access
 

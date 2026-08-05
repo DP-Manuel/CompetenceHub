@@ -6,6 +6,18 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-08-05 | multi-workstation-preview-bootstrap | Make Windows network-drive preview setup portable and restart-safe
+
+- Triggering project situation: The same repository is used in parallel from a second, network-separated Windows workstation with a different folder structure. Hard-coded first-workstation paths were stale; Git required safe-directory handling for network-share ownership; PowerShell blocked `npm.ps1`; Astro dev/build processes hung on `Z:`; the embedded browser connection repeatedly timed out; and a reliable preview required a secret-free `C:\tmp` mirror plus a visible default-browser fallback.
+- Current skill behavior: Windows/frontend guidance covers portable Node and some sandbox failures, while browser and project-state skills cover preview verification and durable handoff. No single restart-safe bootstrap route currently discovers sibling CodexSkills paths, verifies Git/GitHub prerequisites, distinguishes network-drive failures from code failures, and selects a safe local-preview fallback.
+- Friction or missed opportunity: agents can repeat slow setup attempts, treat valid code as broken, copy dependencies incompletely, or lose time rediscovering workstation-specific constraints. Broad Robocopy exclusions are especially fragile because excluding `.astro` can also omit `node_modules\astro`.
+- Evidence: system Node v20.17.0 and project Node v22.16.0 were both present; `npm.cmd` avoided the execution-policy problem; Git/GitHub access worked after safe-directory and CLI setup; the current page returned HTTP 200 only after being served from a secret-free local mirror; the in-app browser setup timed out again; and the normal patch-edit path has repeatedly hung on both the network drive and `C:\tmp`.
+- Suggested improvement: add a small Windows multi-workstation bootstrap/reference or deterministic checker that resolves project and CodexSkills paths instead of assuming one user profile, checks Git safe-directory and CLI authentication without exposing secrets, prefers `npm.cmd`, detects network-drive workspaces, creates a reviewed secret-free local verification mirror, copies `node_modules` without name-collision exclusions, verifies HTTP readiness separately from browser QA, and offers a documented visible-browser fallback after browser-connection troubleshooting. Include a narrow precondition-and-diff fallback when the standard patch tool is unavailable.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills Windows/frontend setup reference, `integrate-frontend` local-preview handoff, browser troubleshooting guidance, and new-project starter bootstrap checks
+- Status: proposed; project-specific facts captured in `docs/architecture/second-workstation-setup.md`
+
 ### 2026-06-30 | visual-ui-handoff | Require a rendered, viewable UI handoff
 
 - Triggering project situation: The first real coach profile passed Astro check and build, but Manuel could not inspect it until it was pushed. A later screenshot then exposed a visibly unbalanced heading layout: the long title was squeezed into a narrow column while the adjacent column contained only one sentence.

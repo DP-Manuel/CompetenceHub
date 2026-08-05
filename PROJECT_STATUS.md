@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-08-04
+Last updated: 2026-08-05
 
 ## Snapshot
 
@@ -18,8 +18,10 @@ Last updated: 2026-08-04
   preview and initial server/database planning.
 - Latest implementation: commit `6bf28ec` (`Integrate coach feedback and
   profiles`).
-- In progress: final real-browser desktop/mobile review of Hub geometry, topic
-  selection, automatic result scroll, focus behavior and long text wrapping.
+- In progress: the current source is available locally at
+  `http://127.0.0.1:4321/` in the visible default browser; final real-browser
+  desktop/mobile review of Hub geometry, topic selection, automatic result
+  scroll, focus behavior and long text wrapping remains open.
 - Waiting: remaining profile details and rights where still open; explicit
   qualification and approval before any Coach is assigned to Mediation.
 - Blocked for live launch: responsible legal entity/domain confirmation, final
@@ -46,7 +48,7 @@ Last updated: 2026-08-04
 - Accessibility direction: native filter buttons, `aria-pressed`, controlled
   profile grid, visible live status, honest empty state, visible focus and
   reduced-motion-aware automatic scrolling.
-- Verification limitation: the in-app browser connection timed out twice on
+- Verification limitation: the in-app browser connection timed out again on
   this workstation. Final visual and keyboard checks at representative desktop
   and mobile widths remain manual before any public review deployment.
 - Network-drive note: direct Astro builds can hang on `Z:` after type
@@ -85,7 +87,9 @@ Last updated: 2026-08-04
   `apps/website/src/styles/global.css`.
 - Workstation setup: Git/GitHub HTTPS authentication works; repository-local
   author identity matches the existing history. Canonical CodexSkills are
-  cloned separately at `Z:\IT Development Manuel\CodexSkills`.
+  cloned separately at `Z:\IT Development Manuel\CodexSkills`. Read
+  `docs/architecture/second-workstation-setup.md` for the verified paths,
+  Node/npm rules, network-drive build fallback and browser limitation.
 - Safety: do not open credentials or `.env*`; keep `.tmp/` untracked; publish no
   customer references from Frau Dr. Stefanie Beckers source material; do not
   infer a Mediationsqualification.
