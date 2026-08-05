@@ -16,12 +16,13 @@ Last updated: 2026-08-05
   Dr. Stefanie Becker profile without customer references, qualification-gated
   Mediation topic, direct E-Mail inquiry path, legal links, role-oriented login
   preview and initial server/database planning.
-- Latest implementation: commit `6bf28ec` (`Integrate coach feedback and
-  profiles`).
+- Latest coach/content integration: commit `6bf28ec` (`Integrate coach feedback
+  and profiles`).
 - In progress: the current source is available locally at
-  `http://127.0.0.1:4321/` in the visible default browser; final real-browser
-  desktop/mobile review of Hub geometry, topic selection, automatic result
-  scroll, focus behavior and long text wrapping remains open.
+  `http://127.0.0.1:4321/` in the visible default browser. The topic-filter
+  jump now keeps the complete filter grid below the sticky header; Manuel's
+  visual confirmation and the remaining desktop/mobile review of Hub geometry,
+  focus behavior and long text wrapping remain open.
 - Waiting: remaining profile details and rights where still open; explicit
   qualification and approval before any Coach is assigned to Mediation.
 - Blocked for live launch: responsible legal entity/domain confirmation, final

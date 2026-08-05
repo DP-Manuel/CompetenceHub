@@ -54,6 +54,7 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
       </div>
       <div
         class="coach-topic-filter"
+        data-coach-topic-filter
         role="group"
         aria-label="Coach-Profile nach Themenschwerpunkt filtern"
       >
@@ -172,6 +173,9 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
       const status = explorer.querySelector<HTMLElement>(
         "[data-coach-topic-status]",
       );
+      const filter = explorer.querySelector<HTMLElement>(
+        "[data-coach-topic-filter]",
+      );
       const emptyState = document.querySelector<HTMLElement>(
         "[data-coach-topic-empty]",
       );
@@ -225,7 +229,7 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
           const reduceMotion = window.matchMedia(
             "(prefers-reduced-motion: reduce)",
           ).matches;
-          status?.scrollIntoView({
+          filter?.scrollIntoView({
             behavior: reduceMotion ? "auto" : "smooth",
             block: "start",
           });

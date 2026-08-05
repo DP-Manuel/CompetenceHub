@@ -2,6 +2,27 @@
 
 Newest entries first.
 
+## 2026-08-05 | frontend/verification | Themensprung zeigt vollständiges Filterraster
+
+Das von Manuel gemeldete Scrollproblem auf der Coach-Übersicht wurde im
+laufenden lokalen Review korrigiert.
+
+- Ursache: Nach der Themenwahl wurde die Ergebnis-Statuszeile am Viewport
+  ausgerichtet. Dadurch lag die erste Reihe der Themenfelder oberhalb des
+  sichtbaren Bereichs.
+- Änderung: Der Scrollanker ist nun das gesamte Themenraster. Ein
+  `scroll-margin-top` von 130 px berücksichtigt den sticky Seitenkopf; der
+  Fokus bleibt auf dem ausgelösten nativen Button und reduzierte Bewegung wird
+  weiterhin respektiert.
+- Verifikation: aktualisierte lokale Vorschau liefert `/coaches` mit HTTP 200;
+  Astro prüft 35 Dateien mit 0 Fehlern, 0 Warnungen und 0 Hinweisen und erzeugt
+  27 statische Seiten.
+- Einschränkung: Die eingebettete Browser-Verbindung lief erneut ins Zeitlimit.
+  Die aktualisierte Seite wurde sichtbar im Standardbrowser geöffnet; Manuels
+  visuelle Bestätigung bleibt der abschließende UI-Check.
+- Nächster Schritt: Sichtprüfung des Sprungs in Desktop- und Mobilbreite; bei
+  Freigabe keine weitere Änderung an der Filterlogik nötig.
+
 ## 2026-08-05 | verification/workflow | Lokale Vorschau und Zweitrechner-Handoff gesichert
 
 Der aktuelle Stand wurde auf dem zweiten Rechner als sichtbare lokale Vorschau

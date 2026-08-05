@@ -1836,6 +1836,7 @@ p {
 
 .coach-topic-filter {
   display: none;
+  scroll-margin-top: 130px;
 }
 
 .coach-topic-explorer.is-enhanced .coach-topic-filter {
@@ -1892,7 +1893,6 @@ p {
 .coach-topic-status {
   margin: 22px 0 0;
   padding: 14px 18px;
-  scroll-margin-top: 130px;
   border-left: 6px solid var(--color-red);
   background: var(--color-white);
   font-weight: 850;
