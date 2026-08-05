@@ -48,16 +48,18 @@ const topics = [
           <a class="button button--ghost" href={url("coaches")}>Alle Coaches</a>
         </div>
       </div>
-      <aside
-        class="coach-profile-placeholder"
-        aria-label="Profil von Frau Dr. Stefanie Becker"
-      >
-        <span aria-hidden="true">SB</span>
-        <div>
+      <figure class="coach-profile-portrait">
+        <img
+          src={url("images/coaches/stefanie-becker.webp")}
+          alt="Porträt von Frau Dr. Stefanie Becker"
+          width="642"
+          height="594"
+        />
+        <figcaption>
           <strong>Frau Dr. Stefanie Becker</strong>
-          <small>Change · Führung · Organisation</small>
-        </div>
-      </aside>
+          <span>Change · Führung · Organisation</span>
+        </figcaption>
+      </figure>
     </section>
 
     <section class="coach-profile-section">

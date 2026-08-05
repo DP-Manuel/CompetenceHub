@@ -2,6 +2,28 @@
 
 Newest entries first.
 
+## 2026-08-05 | frontend/assets | Porträt von Frau Dr. Stefanie Becker integriert
+
+Das ausdrücklich freigegebene Bild aus `Quellen/Coach/06. Dr. Stefanie Becker/Bild.docx`
+wurde in Übersicht und Profil eingebunden.
+
+- Quelle und Datenschutz: ausschließlich die einzelne Mediendatei aus
+  `Bild.docx` wurde extrahiert. E-Mail, Profil-PDF und Zertifikate wurden für
+  diese Änderung nicht geöffnet; Kundenreferenzen bleiben weiterhin außen vor.
+- Asset: das eingebettete 642 × 594 px PNG wurde ohne übernommene Metadaten als
+  `stefanie-becker.webp` mit 26 KB gespeichert.
+- Frontend: die gemeinsame Coach-Datenquelle enthält Bildpfad und feste
+  Abmessungen; der bisherige Monogramm-Platzhalter im Stefanie-Becker-Profil
+  wurde durch das Porträt mit Alternativtext und Bildunterschrift ersetzt.
+- Verifikation: Übersicht, Profil und Bild antworten lokal mit HTTP 200. Astro
+  prüft 35 Dateien mit 0 Fehlern, 0 Warnungen und 0 Hinweisen und erzeugt 27
+  statische Seiten.
+- Einschränkung: die eingebettete Browser-Verbindung lief erneut ins Zeitlimit.
+  Übersicht und Profil wurden zur visuellen Zuschnittskontrolle im sichtbaren
+  Standardbrowser geöffnet.
+- Nächster Schritt: sichtbaren Bildausschnitt in Übersicht und Profil bestätigen;
+  Kundenreferenzen bleiben bis zu einer gesonderten Freigabe ausgeschlossen.
+
 ## 2026-08-05 | frontend/verification | Themensprung zeigt vollständiges Filterraster
 
 Das von Manuel gemeldete Scrollproblem auf der Coach-Übersicht wurde im

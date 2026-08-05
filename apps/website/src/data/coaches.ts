@@ -180,6 +180,9 @@ export const coaches: Coach[] = [
     topics: ["fuehrung", "teams-konflikte"],
     text: "Frau Dr. Stefanie Becker begleitet Leitungsteams, Führungskräfte und Mitarbeitende in organisationalen und persönlichen Transformationsprozessen mit einem hypnosystemischen und beteiligungsorientierten Ansatz.",
     profilePath: "coaches/stefanie-becker",
+    image: "images/coaches/stefanie-becker.webp",
+    imageWidth: 642,
+    imageHeight: 594,
     initials: "SB",
   },
 ];

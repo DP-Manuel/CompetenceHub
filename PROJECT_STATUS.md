@@ -13,7 +13,8 @@ Last updated: 2026-08-05
 - Done: Living-Hub website, Mindforge umbrella for Life Coaching and
   Businesscoaching, eight-node homepage Hub, topic-based Coach discovery,
   six Coach profiles, updated Herr T. Wegner-Ney profile, approved Frau
-  Dr. Stefanie Becker profile without customer references, qualification-gated
+  Dr. Stefanie Becker profile with portrait and without customer references,
+  qualification-gated
   Mediation topic, direct E-Mail inquiry path, legal links, role-oriented login
   preview and initial server/database planning.
 - Latest coach/content integration: commit `6bf28ec` (`Integrate coach feedback
