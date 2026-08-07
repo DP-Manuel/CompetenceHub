@@ -1,6 +1,6 @@
 # Initial Competence Hub Data Model
 
-Last updated: 2026-07-16
+Last updated: 2026-08-06
 
 ## Goal And Scope
 
@@ -9,7 +9,7 @@ offers, assignments, and feedback. This is a design input, not an applied schema
 
 Assumptions:
 
-- MySQL/MariaDB is the current database direction but still needs server verification.
+- PostgreSQL on the VPS is accepted by ADR 0002; no database is installed yet.
 - Internal Donner + Partner staff create and manage operational records first.
 - The public Astro website has no direct database access.
 - External company and coach accounts are later slices.

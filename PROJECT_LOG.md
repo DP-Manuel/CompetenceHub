@@ -2,6 +2,219 @@
 
 Newest entries first.
 
+## 2026-08-07 | requirements/operations | Portalumfang und Würzburg-Backupkandidat bestätigt
+
+- Backupkandidat: Manuels D+P-Arbeitsrechner am Standort Würzburg soll als
+  erstes Off-Server-Ziel geprüft werden. Vorgesehen ist ein Pull des bereits
+  verschlüsselten Dumps vom VPS ohne eingehende Standortfreigabe. Vor realen
+  Daten müssen Datenträgerverschlüsselung, Zugriffsschutz, Aufbewahrung und ein
+  Restore aus genau der heruntergeladenen Kopie nachgewiesen werden.
+- Dateninput: Manuel erstellt eine Excel-Arbeitsmappe als Ideengeber für Felder
+  und Zusammenhänge. Sie wird vor einem Import fachlich und technisch gemappt;
+  synthetische Beispiele ersetzen vorerst reale Daten.
+- Rolleninput: Manuel liefert die vorgesehenen Nutzer und Rechte. Bis dahin
+  wird keine Rollenmatrix oder Berechtigung stillschweigend erfunden.
+- Portalrichtung: Hinter dem Login entsteht eine getrennte Webapp für interne
+  Nutzer-/Rollenverwaltung, Firmen, Coaches, Feedback und Statistiken. Der
+  erste Slice umfasst Authentifizierung, serverseitige Autorisierung,
+  Mehrfachrollen und Auditnachweise; die Fachmodule folgen schrittweise.
+- Anforderungen: Der aktuelle Rahmen steht in
+  `requirements-engineering-update-2026-08-07.md`; keine Implementierung,
+  Veröffentlichung oder Verarbeitung realer Daten wurde ausgelöst.
+
+## 2026-08-07 | operations/database | VPS gewartet und PostgreSQL-Staging abgenommen
+
+- Zeitfenster: Das ursprünglich für Samstag geplante Wartungsfenster wurde in
+  Manuels reservierten Freitag-Arbeitstag vorgezogen. Der Chatbot war vor und
+  nach allen Änderungen öffentlich gesund; der geplante Crawl blieb aktiv.
+- System: Ubuntu-Pakete wurden aktualisiert und der VPS kontrolliert neu
+  gestartet. Aktiv ist Kernel `6.8.0-137-generic`; Chatbot, Nginx und Fail2ban
+  liefen danach ohne Neustartzähler oder Health-Fehler weiter.
+- Netzwerk: UFW ist aktiv mit `deny incoming`; öffentlich erlaubt sind nur
+  22/80/443. PostgreSQL lauscht ausschließlich auf `127.0.0.1:5432`.
+- Datenbank: PostgreSQL 16.14 und `postgresql-contrib` sind installiert. Die
+  leere Datenbank `competence_hub_staging` besitzt getrennte Rollen für Owner,
+  Migrationen und die eingeschränkte Anwendung. Passwörter wurden nur
+  interaktiv in `psql` gesetzt und weder geteilt noch gespeichert.
+- Authentifizierung: lokale Socket-Anmeldung nutzt `peer`; Loopback-TCP nutzt
+  SCRAM-SHA-256. Das App-Konto darf DML nach Migrationen ausführen, aber keine
+  Tabellen anlegen. Der Migrator kann kontrolliert die NOLOGIN-Ownerrolle
+  übernehmen. Standardrechte für zukünftige Funktionen wurden `PUBLIC`
+  entzogen und ausschließlich der App-Rolle erteilt.
+- Restore-Nachweis: Ein synthetischer Datensatz wurde als geschützter lokaler
+  Custom-Dump gesichert, in eine separate Testdatenbank wiederhergestellt und
+  mit Eigentümer- und App-Rechten geprüft. Testdatenbank und Prüftabelle wurden
+  anschließend entfernt; das Anwendungsschema ist wieder leer.
+- Backupgrenze: Der lokale Dump liegt mit Modus `600` unter einem nur für
+  PostgreSQL zugänglichen Serververzeichnis. Das ist noch kein vollständiges
+  Produktivbackup. Reale Firmen-/Personendaten bleiben gesperrt, bis eine
+  verschlüsselte externe D+P-Kopie aus genau dieser Kopie erfolgreich
+  wiederhergestellt wurde.
+- Projektartefakt: `apps/webapp/database/bootstrap-staging.sql` dokumentiert
+  den geheimnisfreien, least-privilege Bootstrap. Kein Deployment, Commit oder
+  Push wurde ausgeführt.
+
+## 2026-08-07 | operations/decision | Wartungsfenster und Nicht-Cloud-Backupweg bestätigt
+
+- Wartungsfenster: Samstag, 08.08.2026, 09:00 Uhr Europe/Berlin ist bestätigt.
+- Sudo: Manuel gibt das Passwort ausschließlich interaktiv in seiner eigenen
+  SSH-Sitzung ein; es wird nicht geteilt oder gespeichert.
+- Backupgrenze: Für IONOS Object Storage und Cloud Backup fehlt aktuell die
+  interne Berechtigung. Die PostgreSQL-Installation bleibt deshalb zunächst
+  staging-only mit synthetischen Daten.
+- Zwischenlösung: Dump/Restore wird lokal getestet. Vor Produktivdaten wird ein
+  verschlüsselter Dump per SCP auf einen D+P-kontrollierten, verschlüsselten
+  Rechner, eine interne Freigabe oder ein verschlüsseltes Wechselmedium kopiert
+  und von dieser Kopie wiederhergestellt.
+- Die lokale BitLocker-Abfrage konnte ohne Windows-Administratorrechte nicht
+  ausgeführt werden; Verschlüsselung des Zielgeräts bleibt vor Nutzung zu
+  bestätigen.
+- Keine Serveränderung oder Installation ausgeführt.
+
+## 2026-08-07 | operations/planning | Crawl-Zeit und Backupoptionen verifiziert
+
+- Timer: Der aktive Chatbot-Crawl ist freitags für circa 15:22 UTC angesetzt,
+  im August also circa 17:22 Uhr deutscher Zeit. Der letzte Lauf endete mit
+  `success` und Status 0.
+- Wartung: Samstagvormittag ist das bevorzugte Fenster. Freitagabend kommt erst
+  ab 19:30 Uhr und nur nach erfolgreichem Crawl-/API-Healthcheck infrage.
+- Backup: IONOS Object Storage wird als primäres Ziel für verschlüsselte,
+  portable PostgreSQL-Dumps empfohlen; IONOS Cloud Backup kann ergänzend den
+  ganzen VPS sichern. Eine weitere periodische D+P-interne Kopie reduziert das
+  verbleibende Anbieter-/Kontorisiko.
+- Der vorhandene Website-Webspace ist kein geeignetes Backupziel, solange kein
+  ausdrücklich nicht öffentlich erreichbarer Speicherbereich bestätigt ist.
+- Keine Wartung, Installation, Konfigurationsänderung oder Datenverarbeitung
+  ausgeführt.
+
+## 2026-08-06 | decision/runbook | PostgreSQL 16 freigegeben
+
+Manuel hat ADR 0002 und PostgreSQL 16 als Datenbank für das eigenständige
+Competence-Hub-Backend auf dem VPS freigegeben.
+
+- ADR 0002 steht auf `Accepted`; PostgreSQL bleibt ausschließlich lokal und
+  wird nicht über einen öffentlichen Datenbankport angeboten.
+- `postgresql-16-installation-runbook.md` beschreibt Preflight,
+  Systemwartung/Neustart, Firewallprüfung, Installation, getrennte Rollen,
+  Secretgrenzen, Backup, Restore-Test, Abnahme und Rollback.
+- Noch offen: Wartungsfenster, interaktive sudo-Ausführung und verschlüsseltes
+  Off-Server-Backupziel.
+- Keine Installation, Aktualisierung, Neustart, Passwortverarbeitung oder
+  Serveränderung ausgeführt.
+
+## 2026-08-06 | decisions/database | Ansprechpartner, Mailbox und PostgreSQL-Richtung geklärt
+
+Manuel hat weitere Verantwortlichkeiten bestätigt und die vorhandene, bislang
+ungenutzte IONOS-MySQL-Datenbank eingeordnet.
+
+- Recht: Lars Donner ist der rechtliche Ansprechpartner. Die konkrete
+  Gesellschaft, Vertrags-/Rechnungsangaben und das finale Impressum folgen.
+- Kontakt: Janay Rappelt übernimmt
+  `competencehub@donner-partner.de`; Reaktionszeit und Abwesenheitsvertretung
+  werden noch als kurzer Betriebsprozess festgelegt.
+- IONOS-Datenbank: Eine MySQL-Datenbank und Zugangsdaten existieren, werden aber
+  nicht in Projektdateien übernommen. Wegen der bestätigten Beschränkung auf den
+  IONOS-Webspace ist sie für das VPS-Backend nicht verwendbar.
+- VPS-Pakete: Rein lesend bestätigt wurden PostgreSQL 16 und MariaDB 10.11 als
+  verfügbare Ubuntu-Pakete; keines ist installiert.
+- Entscheidungsvorlage: ADR 0002 schlägt eine lokale, nicht öffentlich
+  erreichbare PostgreSQL-Datenbank auf dem VPS vor. Installation bleibt bis zu
+  expliziter ADR-, Wartungs-, Firewall- und Backupfreigabe aus.
+- Konfiguration: `.env.example` enthält nur PostgreSQL-Platzhalter. Die
+  missverständlichen SSH-Felder wurden entfernt; SSH-Zugang gehört nicht in die
+  Anwendungs-ENV.
+- Keine echten Zugangsdaten gelesen oder gespeichert; keine Installation,
+  Aktualisierung, Datenbankänderung oder Veröffentlichung ausgeführt.
+
+## 2026-08-06 | infrastructure/security/planning | VPS-Inventur abgeschlossen und Betrieb geklärt
+
+Manuel hat die read-only Prüfung des bestehenden Chatbot-VPS sowie dessen
+grundsätzliche Nutzung für einen strikt getrennten Competence-Hub-Dienst
+freigegeben. Es wurden ausschließlich System-, Ressourcen-, Dienst-, Port- und
+Versionsmetadaten gelesen.
+
+- Kapazität: Ubuntu 24.04 LTS, 6 vCPUs, 7,7 GiB RAM mit rund 6,8 GiB verfügbar,
+  rund 228 GiB freier Speicher und sehr geringe Last. Ein kleiner Pilot ist
+  kapazitiv realistisch.
+- Betriebsbild: Nginx veröffentlicht 80/443, SSH nutzt 22 und der Chatbot bindet
+  Uvicorn ausschließlich an `127.0.0.1:8000`. Fail2ban, unattended-upgrades,
+  Certbot und der wöchentliche Chatbot-Crawler sind aktiv.
+- Gates: System-/Kernelupdates und ein Neustart stehen aus. Firewall-/Fail2ban-
+  Details konnten ohne interaktive sudo-Freigabe nicht verifiziert werden. Es
+  gibt keinen nachgewiesenen App-/Datenbank-Off-Server-Backup- und Restoreweg;
+  kein Swap und keine aktive Datenbank sind vorhanden.
+- Bewertung: Conditional Go für eine isolierte Staging-/Pilotinstanz mit
+  Testdaten. Noch kein Go für produktive personenbezogene Daten.
+- Verantwortung: Manuel übernimmt Serverbetrieb, Patchen, Monitoring, Backup
+  und Notfälle; Thomas Roß ist als EDV-Leiter Produktionsfreigabeowner.
+  `competencehub.donner-partner.de` ist die kanonische Domain.
+- Versionsverwaltung: GitHub bleibt Quellcode- und Releasequelle. Datenbanken,
+  private Dateien und Off-Server-Backups werden separat gesichert.
+- Dokumentation: `vps-read-only-inventory-2026-08-06.md` und
+  `versioning-and-operations-plan.md` ergänzen Hostingentscheidung, Projektplan
+  und Restart-Handoff.
+- Sicherheit: keine Secrets, Konfigurationen, Logs, Datenbanken oder Nutzdaten
+  geöffnet; keine Installation, Aktualisierung, Neustart oder Veröffentlichung.
+
+## 2026-08-06 | architecture/planning/frontend | EDV-Rückmeldung in Betriebsplan überführt
+
+Die ausdrücklich freigegebene EDV-Rückmeldung und der Status des vorhandenen
+Donner-+Partner-Chatbot-Projekts wurden ohne Zugriff auf Zugangsdaten oder
+Anwendungsdaten ausgewertet.
+
+- IONOS: Der vorhandene Webspace eignet sich für die statische Astro-Website,
+  aber nicht für dauerhaft laufende Node-/Python-Dienste. Die IONOS-MySQL-
+  Datenbank ist ausschließlich vom eigenen Webspace erreichbar und daher nicht
+  für ein Backend auf dem separaten VPS nutzbar.
+- Domains: `competencehub.donner-partner.de` und die Bindestrich-Variante zeigen
+  bereits auf den Webspace und sind durch Wildcard-TLS abgedeckt. Eine
+  kanonische Domain und Weiterleitung müssen noch festgelegt werden.
+- VPS: Der vorhandene Server ist nicht leer, sondern betreibt bereits den
+  Chatbot mit FastAPI und systemd. Er bleibt nur eine Kandidatenplattform. Vor
+  Co-Hosting sind organisatorische Freigabe, read-only Ressourcen-/Betriebs-
+  inventur, Datenschutzentscheidung und vollständige technische Trennung nötig.
+- Planung: `docs/architecture/hosting-runtime-decision-2026-08-06.md` vergleicht
+  die Optionen und definiert Entscheidungsowner, Arbeitsblöcke und
+  Deployment-Gates. `server-database-bootstrap.md`, `PROJECT_PLAN.md` und
+  `PROJECT_STATUS.md` wurden an die bestätigte Infrastruktur angepasst.
+- Frontend: Das freigegebene Porträt von Frau Janay Rappelt ersetzt nun auch in
+  der Kontaktbox der Startseite den bisherigen Personen-Platzhalter.
+- Verifikation: Astro prüft 36 Dateien ohne Fehler, Warnungen oder Hinweise und
+  erzeugt 28 statische Seiten. Kein Serverlogin, Datenbankzugriff, Deployment,
+  Commit oder Push wurde ausgeführt; `.tmp/` blieb unberührt.
+
+## 2026-08-06 | frontend/planning | Startseiten-Hub zentriert und Über-uns-Weg ergänzt
+
+Stakeholderfeedback zur Orientierung im Living Hub wurde als lokaler,
+abgegrenzter Frontend-Slice umgesetzt.
+
+- Startseite: Einordnung und Nutzenversprechen stehen nun über dem zentrierten
+  Hub-Netzwerk; Bedarfsklärung, Hub-Erkundung und direkte Zielgruppenwege folgen
+  darunter. Die lokalen A/B/C-Prototypseiten bleiben unverändert nutzbar.
+- Hub-Kern: Der zentrale Kreis ist ein semantischer Link zu der neuen Route
+  `/ueber-uns` und behält seine Hover- und Fokusreaktion auf die Verbindungen.
+- Über uns: Die neue Seite erklärt den Competence Hub als Angebot von Donner +
+  Partner, die Anliegen-zu-Expertise-Logik und den persönlichen Einstieg, ohne
+  Unternehmensgeschichte, Referenzen oder Wirkungsversprechen zu erfinden.
+- Ansprechpartnerin: Das ausdrücklich freigegebene Porträt von Frau Janay
+  Rappelt aus `Quellen/Über uns` ist unverändert als öffentliches Team-Asset
+  eingebunden. Ein eigener responsiver Abschnitt erklärt ihre Rolle zwischen
+  Interessierten, Unternehmen und Coaches und führt zum Kontaktweg.
+- Hub Journey: Die vier visuellen Kreise springen zu den jeweiligen
+  Scrolltext-Schritten auf der Startseite. Erst die ausführlichen Text-CTAs
+  führen weiterhin gezielt zu Unternehmen, Coaches, Leistungen oder Kontakt.
+- Zukunftsplanung: Bedarfserhebung/Fragebogen, Coach-Auswahl, Anfrage,
+  Angebot/Vertrag, Durchführung, Unternehmensfeedback und freigegebene
+  Kundenstimmen sind als eigener späterer Workstream in `PROJECT_PLAN.md`
+  dokumentiert. Das statische Frontend täuscht keine dieser Funktionen vor.
+- Verifikation: Astro prüft 36 Dateien ohne Fehler, Warnungen oder Hinweise und
+  erzeugt 28 statische Seiten. Startseite und `/ueber-uns/` liefern HTTP 200;
+  Desktop und echte 390-Pixel-Mobil-Emulation zeigen keinen horizontalen
+  Überlauf. Alle Journey-Hashes bleiben auf `/` und aktivieren den richtigen
+  Schritt.
+- Veröffentlichung: nur lokal unter `http://127.0.0.1:4321/`; kein Commit,
+  Push oder Deployment ausgelöst. `.tmp/` blieb unberührt.
+
 ## 2026-08-05 | frontend/assets | Porträt von Frau Dr. Stefanie Becker integriert
 
 Das ausdrücklich freigegebene Bild aus `Quellen/Coach/06. Dr. Stefanie Becker/Bild.docx`

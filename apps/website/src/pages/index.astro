@@ -130,7 +130,15 @@ const coachPreviewRail = [...coachPreview, ...coachPreview].map(
 
     <section class="contact-lead" id="anfrage" aria-labelledby="contact-lead-title">
       <div class="contact-lead__person">
-        <span aria-hidden="true"><Icon name="user-round" size={34} /></span>
+        <span class="contact-lead__portrait">
+          <img
+            src={url("images/team/janay-rappelt.jpg")}
+            alt="Frau Janay Rappelt"
+            width="1066"
+            height="1600"
+            loading="lazy"
+          />
+        </span>
         <div>
           <small>Ihre Ansprechpartnerin</small>
           <strong>Frau Janay Rappelt</strong>

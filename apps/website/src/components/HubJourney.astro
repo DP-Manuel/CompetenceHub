@@ -103,8 +103,8 @@ const connections = [
         {steps.map((step, index) => (
           <a
             class="hub-journey__node"
-            href={url(step.href)}
-            aria-label={`${step.node}: ${step.link}`}
+            href={`#hub-journey-step-${index + 1}`}
+            aria-label={`Zum Schritt ${step.number} ${step.node} springen`}
             style={`--journey-x: ${step.x}%; --journey-y: ${step.y}%;`}
             data-journey-node={index + 1}
           >
@@ -117,7 +117,11 @@ const connections = [
 
     <ol class="hub-journey__steps">
       {steps.map((step, index) => (
-        <li data-journey-step={index + 1} aria-current={index === 0 ? "step" : undefined}>
+        <li
+          id={`hub-journey-step-${index + 1}`}
+          data-journey-step={index + 1}
+          aria-current={index === 0 ? "step" : undefined}
+        >
           <span class="hub-journey__number">{step.number}</span>
           <Icon name={step.icon} size={30} />
           <p class="eyebrow">{step.eyebrow}</p>

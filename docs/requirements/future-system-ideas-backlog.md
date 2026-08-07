@@ -1,6 +1,6 @@
 # Future System Ideas Backlog
 
-Last updated: 2026-06-16
+Last updated: 2026-08-07
 
 ## Purpose
 
@@ -11,6 +11,9 @@ The backlog preserves brainstorming input so it can later be turned into user st
 ## Source Inputs
 
 - Brainstorming from Manuel and colleague on 2026-06-16.
+- Confirmed portal direction from Manuel on 2026-08-07: authenticated user and
+  role administration, company and Coach records, feedback and role-scoped
+  statistics. Detailed rights and an Excel data-input workbook will follow.
 - Direction: build a simple but expandable web-based system, similar in business coverage to the old Sophisto-like administration system, but independent.
 - Reference system: `http://sophisto.de/` should be reviewed later; initial fetch attempt on 2026-06-16 timed out.
 
@@ -19,6 +22,11 @@ The backlog preserves brainstorming input so it can later be turned into user st
 The system should begin simply, but grow into an operational platform for managing companies, seminars, coaches, participants or skilled workers, job postings, matching, offers, contracts, and communication.
 
 The public website and the later app may both initiate data flows, but operational creation, review, approval, and management should happen through the authenticated app and backend API. The public website should only collect or submit limited lead/contact data once legal and privacy processing are approved.
+
+The first implementation slice is the internal identity and authorization
+foundation, not a broad dashboard. See
+`requirements-engineering-update-2026-08-07.md` for the current requirements,
+scope boundary and required inputs.
 
 Initial business priority: start with seminars because the project first needs external attention and company-facing offers. The first document priority is offers, then company contracts, because the early business model is expected to focus on company trainings.
 

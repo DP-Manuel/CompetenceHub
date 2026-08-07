@@ -138,28 +138,68 @@ const variants = [
     )}
 
     {variant === "c" && (
-      <div class="living-hero__asymmetric-stage">
-        <div class="living-hero__copy">
-          <p class="eyebrow">
-            {prototypeMode
-              ? "Variante C · Asymmetrischer Einstieg"
-              : "Coaching, Entwicklung und Beratung im Netzwerk"}
-          </p>
-          <p class="living-hero__display">
-            Wo Anliegen und passende Expertise
-            <span class="living-hero__keep-together">zusammenfinden.</span>
-          </p>
-          <p class="living-hero__lead">
-            Der Competence Hub verbindet Unternehmen und Privatpersonen mit
-            ausgewählten Coaches, passenden Formaten und persönlicher Begleitung.
-          </p>
-          <div class="living-hero__actions">
+      prototypeMode ? (
+        <div class="living-hero__asymmetric-stage">
+          <div class="living-hero__copy">
+            <p class="eyebrow">Variante C · Asymmetrischer Einstieg</p>
+            <p class="living-hero__display">
+              Wo Anliegen und passende Expertise
+              <span class="living-hero__keep-together">zusammenfinden.</span>
+            </p>
+            <p class="living-hero__lead">
+              Der Competence Hub verbindet Unternehmen und Privatpersonen mit
+              ausgewählten Coaches, passenden Formaten und persönlicher Begleitung.
+            </p>
+            <div class="living-hero__actions">
+              <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+              <a class="button button--ghost" href="#so-funktioniert-der-hub">
+                Hub erkunden
+              </a>
+            </div>
+            <div class="living-hero__routes" aria-label="Direkte Einstiege">
+              <a href={url("unternehmen")}>
+                <Icon name="building" size={20} />
+                Für Unternehmen
+              </a>
+              <a href={url("mindforge")}>
+                <Icon name="sparkles" size={20} />
+                Mindforge · Life Coaching
+              </a>
+            </div>
+          </div>
+
+          <div class="living-hero__space living-hero__space--asymmetric">
+            <CompetenceHubMap presentation="living" layout="asymmetric" />
+          </div>
+        </div>
+      ) : (
+        <div class="living-hero__centered-stage">
+          <div class="living-hero__copy living-hero__copy--centered">
+            <p class="eyebrow">Coaching, Entwicklung und Beratung im Netzwerk</p>
+            <p class="living-hero__display">
+              Wo Anliegen und passende Expertise
+              <span class="living-hero__keep-together">zusammenfinden.</span>
+            </p>
+            <p class="living-hero__lead">
+              Der Competence Hub verbindet Unternehmen und Privatpersonen mit
+              ausgewählten Coaches, passenden Formaten und persönlicher Begleitung.
+            </p>
+          </div>
+
+          <div class="living-hero__space living-hero__space--centered">
+            <CompetenceHubMap presentation="living" />
+          </div>
+
+          <div class="living-hero__actions living-hero__actions--centered">
             <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
             <a class="button button--ghost" href="#so-funktioniert-der-hub">
               Hub erkunden
             </a>
           </div>
-          <div class="living-hero__routes" aria-label="Direkte Einstiege">
+          <div
+            class="living-hero__routes living-hero__routes--centered"
+            aria-label="Direkte Einstiege"
+          >
             <a href={url("unternehmen")}>
               <Icon name="building" size={20} />
               Für Unternehmen
@@ -170,11 +210,7 @@ const variants = [
             </a>
           </div>
         </div>
-
-        <div class="living-hero__space living-hero__space--asymmetric">
-          <CompetenceHubMap presentation="living" layout="asymmetric" />
-        </div>
-      </div>
+      )
     )}
   </section>
 
@@ -236,6 +272,11 @@ const variants = [
 
   .living-prototype--production {
     padding-top: 24px;
+  }
+
+  .living-prototype--production .living-hero {
+    min-height: 0;
+    padding-bottom: 44px;
   }
 
   .prototype-switcher {
@@ -545,10 +586,39 @@ const variants = [
     min-height: 740px;
   }
 
+  .living-hero__centered-stage {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    justify-items: center;
+    overflow: hidden;
+  }
+
   .living-hero__copy {
     position: relative;
     z-index: 8;
     padding: 42px 0 42px 34px;
+  }
+
+  .living-hero__copy--centered {
+    width: min(100%, 1080px);
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 52px 28px 6px;
+    text-align: center;
+  }
+
+  .living-hero__copy--centered .living-hero__display,
+  .living-hero__copy--centered .living-hero__lead {
+    margin-inline: auto;
+  }
+
+  .living-hero__copy--centered .living-hero__display {
+    max-width: 1040px;
+  }
+
+  .living-hero__copy--centered .living-hero__lead {
+    max-width: 760px;
   }
 
   .living-hero__display {
@@ -613,6 +683,33 @@ const variants = [
     margin-left: -70px;
   }
 
+  .living-hero__space--centered {
+    width: min(100%, 1240px);
+    min-width: 0;
+    max-width: 100%;
+    margin: -28px auto -18px;
+    overflow: hidden;
+  }
+
+  .living-hero__space--centered :global(.hub-graph--living) {
+    width: 100%;
+    max-width: 100%;
+    height: clamp(610px, 53vw, 690px);
+    min-height: 610px;
+  }
+
+  .living-hero__actions--centered {
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  .living-hero__routes--centered {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 22px;
+  }
+
   .living-hero + :global(.hub-journey) {
     margin-top: clamp(76px, 9vw, 122px);
   }
@@ -654,6 +751,15 @@ const variants = [
 
     .living-hero__space--asymmetric {
       margin: -40px 0 -20px;
+    }
+
+    .living-prototype--production .living-hero__copy--centered {
+      max-width: 900px;
+      padding: 46px 28px 0;
+    }
+
+    .living-hero__space--centered {
+      margin: -18px 0 -12px;
     }
 
   }
@@ -706,6 +812,10 @@ const variants = [
 
     .living-hero__space--asymmetric {
       margin: -40px 0 -20px;
+    }
+
+    .living-hero__space--centered {
+      margin: -18px 0 -12px;
     }
 
   }
@@ -824,6 +934,15 @@ const variants = [
       padding: 34px 20px 0;
     }
 
+    .living-prototype--production .living-hero__copy--centered {
+      padding: 34px 20px 0;
+      text-align: left;
+    }
+
+    .living-prototype--production .living-hero__copy--centered .eyebrow {
+      white-space: normal;
+    }
+
     .living-prototype--c .living-hero__display {
       margin-top: 12px;
       font-size: 2.1rem;
@@ -845,6 +964,27 @@ const variants = [
 
     .living-hero__space--asymmetric {
       margin: 0;
+    }
+
+    .living-hero__space--centered {
+      width: 100%;
+      margin: 0;
+    }
+
+    .living-hero__space--centered :global(.hub-graph--living) {
+      height: auto;
+      min-height: 0;
+    }
+
+    .living-hero__actions--centered,
+    .living-hero__routes--centered {
+      width: 100%;
+      padding-inline: 20px;
+    }
+
+    .living-hero__routes--centered {
+      align-items: flex-start;
+      flex-direction: column;
     }
 
   }

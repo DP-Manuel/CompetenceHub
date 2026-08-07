@@ -1,0 +1,153 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ConnectedPageHero from "../components/ConnectedPageHero.astro";
+import Icon from "../components/Icon.astro";
+import "../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const principles = [
+  {
+    title: "Vom Anliegen ausgehen",
+    text: "Am Anfang steht nicht ein fertiges Standardpaket, sondern die Frage, was eine Person, ein Team oder ein Unternehmen konkret erreichen möchte.",
+    icon: "message-circle" as const,
+  },
+  {
+    title: "Expertise passend verbinden",
+    text: "Thema, Zielgruppe und gewünschte Wirkung geben den Rahmen vor. Dazu werden passende fachliche Schwerpunkte und Coaches sichtbar gemacht.",
+    icon: "users" as const,
+  },
+  {
+    title: "Den nächsten Schritt klären",
+    text: "Eine persönliche Ansprechpartnerin begleitet die erste Einordnung und sorgt dafür, dass aus Orientierung ein nachvollziehbarer nächster Schritt wird.",
+    icon: "compass" as const,
+  },
+];
+---
+
+<BaseLayout
+  title="Über uns | Competence Hub von Donner + Partner"
+  description="Competence Hub ist ein Angebot von Donner + Partner und verbindet Unternehmen und Privatpersonen mit ausgewählten Coaches, Expertise und passenden Formaten."
+>
+  <main class="subpage">
+    <ConnectedPageHero
+      eyebrow="Über uns"
+      title="Verbindung schafft Orientierung."
+      lead="Competence Hub ist ein Angebot von Donner + Partner. Der Hub verbindet Unternehmen und Privatpersonen mit ausgewählten Coaches, passenden fachlichen Zugängen und persönlicher Begleitung."
+      centerLabel="Competence Hub"
+      centerDetail="Anliegen und Expertise verbinden"
+      centerIcon="compass"
+      titleId="about-title"
+      related={[
+        {
+          label: "Unternehmen",
+          detail: "Bedarf einordnen",
+          href: "unternehmen",
+          icon: "building",
+        },
+        {
+          label: "Coaches",
+          detail: "Expertise entdecken",
+          href: "coaches",
+          icon: "users",
+        },
+        {
+          label: "Kontakt",
+          detail: "Persönlich starten",
+          href: "kontakt",
+          icon: "message-circle",
+        },
+      ]}
+    >
+      <div slot="actions" class="actions">
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+        <a class="button button--ghost" href={url("leistungen")}>Leistungen ansehen</a>
+      </div>
+    </ConnectedPageHero>
+
+    <section class="section-heading" aria-labelledby="about-principles-title">
+      <p class="eyebrow">Die Idee hinter dem Hub</p>
+      <h2 id="about-principles-title">Ein zentraler Zugang zu passender Expertise</h2>
+      <p>
+        Coaching und Entwicklung beginnen häufig mit einer Situation, nicht mit
+        einem fertigen Produktnamen. Der Competence Hub macht deshalb Anliegen,
+        fachliche Perspektiven und mögliche Formate als zusammenhängendes
+        Netzwerk verständlich.
+      </p>
+    </section>
+
+    <section class="feature-grid" aria-label="Arbeitsprinzipien des Competence Hub">
+      {principles.map((principle) => (
+        <article class="feature-card">
+          <span class="feature-card__icon">
+            <Icon name={principle.icon} size={28} />
+          </span>
+          <h2>{principle.title}</h2>
+          <p>{principle.text}</p>
+        </article>
+      ))}
+    </section>
+
+    <section
+      class="about-contact-person"
+      id="ansprechpartnerin"
+      aria-labelledby="about-contact-person-title"
+    >
+      <figure class="about-contact-person__portrait">
+        <img
+          src={url("images/team/janay-rappelt.jpg")}
+          alt="Porträt von Frau Janay Rappelt"
+          width="1066"
+          height="1600"
+          loading="lazy"
+        />
+      </figure>
+      <div class="about-contact-person__copy">
+        <p class="eyebrow">Persönliche Ansprechpartnerin</p>
+        <h2 id="about-contact-person-title">
+          Frau Janay Rappelt verbindet Anliegen und Netzwerk
+        </h2>
+        <p>
+          Frau Janay Rappelt begleitet die erste Abstimmung zwischen
+          Interessierten, Unternehmen und Coaches. Sie hilft dabei, das Anliegen
+          einzuordnen und den Kontakt zu passender Expertise herzustellen.
+        </p>
+        <p>
+          Für den Einstieg genügt eine kurze Beschreibung der Situation, der
+          Zielgruppe und des gewünschten nächsten Schritts.
+        </p>
+        <a class="button" href={url("kontakt")}>Bedarf mit Frau Rappelt besprechen</a>
+      </div>
+    </section>
+
+    <section class="split-panel about-parent">
+      <div>
+        <p class="eyebrow">Donner + Partner</p>
+        <h2>Ein Angebot mit Verbindung zum Mutterunternehmen</h2>
+      </div>
+      <div>
+        <p>
+          Der Competence Hub ist ein Angebot von Donner + Partner. Auf der
+          Unternehmensseite finden Sie weitere Informationen zu Donner + Partner
+          und den dort gebündelten Arbeitsfeldern.
+        </p>
+        <a class="text-link" href="https://donner-partner.de/">
+          Zur Donner + Partner Website
+          <Icon name="arrow-right" size={18} />
+        </a>
+      </div>
+    </section>
+
+    <section class="cta-panel">
+      <div>
+        <p class="eyebrow">Persönlicher Einstieg</p>
+        <h2>Beginnen wir mit Ihrem Anliegen</h2>
+        <p>Eine kurze Beschreibung reicht für die erste gemeinsame Einordnung.</p>
+      </div>
+      <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+    </section>
+  </main>
+</BaseLayout>

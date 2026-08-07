@@ -1,19 +1,37 @@
 # Server And Database Bootstrap
 
-Last updated: 2026-07-16
+Last updated: 2026-08-07
 
 ## Goal
 
-Prepare the blank server for a later authenticated Competence Hub backend and an
-independent MySQL/MariaDB database without affecting the public Astro website.
+Assess the existing VPS as a possible home for a later authenticated Competence
+Hub backend and an independent database without affecting the public Astro
+website or the already running Donner + Partner chatbot.
 
 ## Current Boundary
 
-- No server login or server change has been performed in this work block.
+- The approved read-only inventory was followed by a controlled maintenance
+  and database-staging change on 2026-08-07.
 - No credential document was opened.
 - No deployment is approved.
 - `apps/webapp/.env.example` contains placeholders only.
-- The backend runtime and framework are still undecided.
+- The backend runtime and framework are not finally decided; a separate
+  FastAPI/systemd service is the current operational recommendation.
+- The IONOS shared webspace is confirmed as production hosting for static/PHP
+  files. It cannot run a permanent Node.js or Python backend.
+- The IONOS MySQL database is reachable only from its own webspace and therefore
+  cannot serve a backend running on the separate VPS.
+- The VPS already runs the Donner + Partner chatbot using FastAPI and systemd.
+  It remained healthy through patching and reboot. PostgreSQL 16.14 now runs as
+  a separate localhost-only staging database. Manuel owns operations; encrypted
+  off-server backup and backend-runtime gates remain.
+
+See `hosting-runtime-decision-2026-08-06.md` for options, recommendation and
+decision gates.
+
+The original read-only inventory is documented in
+`vps-read-only-inventory-2026-08-06.md`. The executed change and remaining
+production gates are documented in `postgresql-16-installation-runbook.md`.
 
 ## Access Rules
 
@@ -27,37 +45,44 @@ independent MySQL/MariaDB database without affecting the public Astro website.
 
 ## First Server Session: Read-Only Inventory
 
-After Manuel confirms the target environment and access method:
+After Manuel confirms the target environment, EDV/governance approval and
+access method:
 
 1. Confirm host identity, operating system, version, time, and hostname.
 2. Inspect CPU, memory, disk capacity, and mounted filesystems.
 3. Inspect active services and listening ports without changing them.
 4. Check firewall status and pending operating-system updates.
-5. Check whether MySQL or MariaDB is installed and record its version.
-6. Check available backup locations and current backup policy.
-7. Stop and prepare a change plan before installing or reconfiguring anything.
+5. Record existing chatbot services, reverse proxy, timers and resource usage.
+6. Check whether a database engine is installed and record its version without
+   opening application credentials or existing data.
+7. Check available backup locations and current backup policy.
+8. Stop and prepare a change plan before installing or reconfiguring anything.
 
 ## Database Bootstrap Sequence
 
-1. Confirm MySQL versus MariaDB and supported version.
-2. Define development/staging/production boundaries and backup target.
-3. Install and harden the selected database only after approval.
-4. Bind the database to localhost/private interfaces.
-5. Create a dedicated database and migration owner.
-6. Create a separate least-privilege application user.
-7. Apply versioned migrations from the future backend repository code.
-8. Create an encrypted backup and prove a restore before real data is stored.
-9. Add health checks and failure logging without logging credentials or personal data.
+1. Completed: follow ADR 0002 and install PostgreSQL 16 on the VPS.
+2. Completed: define the current database as staging-only.
+3. Completed: bind PostgreSQL to localhost and verify UFW/Fail2ban.
+4. Completed: create a dedicated database, NOLOGIN owner, migrator and
+   least-privilege application role with
+   `apps/webapp/database/bootstrap-staging.sql`.
+5. Completed: create a protected local dump and prove a restore with synthetic
+   data in a separate database.
+6. Next: apply versioned migrations from the future backend code.
+7. Next: create and restore an encrypted off-server backup before real data.
+8. Next: add health checks and failure logging without credentials or personal
+   data.
 
-## Required Decisions Before Changes
+## Remaining Decisions Before Productive Use
 
 - Server purpose: development/staging or production.
+- EDV/governance approval for co-hosting beside the production chatbot.
 - Operating-system maintenance owner.
-- Database engine and version.
 - Backup destination, encryption, retention, and restore owner.
 - Final backend runtime and migration tool.
 - Domain/TLS/reverse-proxy ownership.
 - Authentication and first internal role model.
+- Resource isolation and failure boundaries between chatbot and Competence Hub.
 
 ## Verification Gates
 

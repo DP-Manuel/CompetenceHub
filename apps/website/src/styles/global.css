@@ -673,6 +673,10 @@ p {
   background: rgba(255, 255, 255, 0.86);
 }
 
+.split-panel > * {
+  min-width: 0;
+}
+
 .benefit-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -1518,7 +1522,51 @@ p {
 }
 
 .subpage {
+  overflow-x: clip;
   padding: 54px 0 80px;
+}
+
+.about-contact-person {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(34px, 6vw, 78px);
+  align-items: center;
+  margin-bottom: 70px;
+  padding: clamp(24px, 4vw, 46px);
+  border-top: 8px solid var(--color-pantone);
+  background: var(--color-soft);
+  scroll-margin-top: 128px;
+}
+
+.about-contact-person__portrait {
+  width: min(100%, 460px);
+  margin: 0;
+  justify-self: center;
+  background: var(--color-dark);
+}
+
+.about-contact-person__portrait img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1066 / 1600;
+  object-fit: contain;
+}
+
+.about-contact-person__copy {
+  min-width: 0;
+}
+
+.about-contact-person__copy h2 {
+  max-width: 680px;
+  margin-bottom: 22px;
+}
+
+.about-contact-person__copy > p:not(.eyebrow) {
+  max-width: 650px;
+}
+
+.about-contact-person__copy .button {
+  margin-top: 12px;
 }
 
 .page-hero {
@@ -3056,6 +3104,7 @@ p {
     0 22px 50px rgba(51, 49, 50, 0.16);
   color: var(--color-white);
   cursor: pointer;
+  text-decoration: none;
   text-align: center;
   transform: translate(-50%, -50%);
   transition:
@@ -3436,6 +3485,7 @@ p {
   padding: 52px 0 52px 34px;
   border-left: 2px solid var(--color-line);
   opacity: 1;
+  scroll-margin-top: 132px;
   transform: none;
   transition:
     opacity 220ms ease,
@@ -3552,6 +3602,21 @@ p {
   border-radius: 50%;
   background: var(--color-white);
   color: var(--color-pantone);
+}
+
+.contact-lead__person > .contact-lead__portrait {
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border-color: var(--color-pantone);
+  background: var(--color-dark);
+}
+
+.contact-lead__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 18%;
 }
 
 .contact-lead__person div,
@@ -4029,6 +4094,7 @@ p {
 
   .hero,
   .split-panel,
+  .about-contact-person,
   .app-preview,
   .showcase-strip,
   .future-note,

@@ -6,6 +6,38 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-08-06 | project-state-cadence | Require a steering checkpoint after material changes
+
+- Triggering project situation: Several rapid frontend, stakeholder and
+  infrastructure-feedback rounds produced visible progress, but Manuel noticed
+  that the explicit project plan, decision list, needed inputs and next-step
+  guidance had become less consistent even though a project-state skill exists.
+- Current skill behavior: `manage-project-state` already asks agents to keep
+  plan, status and log current after meaningful work. In practice it can be
+  skipped when a sequence of small implementation turns grows into a material
+  scope, architecture or deployment change.
+- Friction or missed opportunity: the repository can remain technically
+  current while decision ownership, blockers and the next safe action become
+  scattered across chat history. This is especially risky before server,
+  database or deployment work.
+- Evidence: the IONOS/EDV response changed the viable backend topology, and the
+  existing VPS turned out to be an occupied production-like Chatbot host rather
+  than a blank server. These facts required coordinated updates to architecture,
+  plan, status and restart handoff, not only a technical note.
+- Suggested improvement: add a project-harness checkpoint after any meaningful
+  stakeholder, scope, architecture, infrastructure, security or deployment
+  change and after a series of related frontend slices. Before ending, record
+  current state, decisions made, decisions needed with owner, blockers, required
+  inputs, next recommended action, verification and whether commit/push/deploy
+  remain separate approvals. Treat repeated missed routing as a coordination
+  compliance issue, not merely a documentation preference.
+- Reuse potential: high
+- Risk if ignored: high
+- Proposed destination: CodexSkills `manage-project-state`,
+  `coordinate-software-project` and the downstream project starter/AGENTS
+  guidance
+- Status: proposed; applied locally to this project on 2026-08-06
+
 ### 2026-08-05 | multi-workstation-preview-bootstrap | Make Windows network-drive preview setup portable and restart-safe
 
 - Triggering project situation: The same repository is used in parallel from a second, network-separated Windows workstation with a different folder structure. Hard-coded first-workstation paths were stale; Git required safe-directory handling for network-share ownership; PowerShell blocked `npm.ps1`; Astro dev/build processes hung on `Z:`; the embedded browser connection repeatedly timed out; and a reliable preview required a secret-free `C:\tmp` mirror plus a visible default-browser fallback.

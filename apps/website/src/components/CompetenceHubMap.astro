@@ -180,8 +180,8 @@ const renderedEdges =
 >
   <p class="visually-hidden" id="hub-graph-help">
     Der Competence Hub ist der zentrale Startknoten. Fokussieren oder berühren
-    Sie den Kern, um seine Hauptverbindungen anzuzeigen. Die Außenknoten führen
-    direkt zu den jeweiligen Bereichen.
+    Sie den Kern, um seine Hauptverbindungen anzuzeigen. Der Kern führt zur
+    Seite Über uns, die Außenknoten direkt zu den jeweiligen Bereichen.
   </p>
 
   <svg
@@ -204,17 +204,16 @@ const renderedEdges =
     ))}
   </svg>
 
-  <div
+  <a
     class="hub-graph__core"
     data-node="core"
-    role="button"
-    tabindex="0"
-    aria-expanded="false"
+    href={url("ueber-uns")}
+    aria-label="Mehr über den Competence Hub erfahren"
     aria-describedby="hub-graph-help"
   >
     <h1>Competence <em>Hub</em></h1>
     <p>Expertise, die zu Ihrem Anliegen passt.</p>
-  </div>
+  </a>
 
   <nav class="hub-graph__nodes" aria-label="Bereiche des Competence Hub">
     {renderedNodes.map((node) => (
@@ -255,11 +254,8 @@ const renderedEdges =
     const edges = Array.from(
       graph.querySelectorAll<SVGPathElement>("[data-edge]"),
     );
-    let locked = false;
-
     const clear = () => {
       graph.removeAttribute("data-active");
-      core?.setAttribute("aria-expanded", "false");
       edges.forEach((edge) => edge.classList.remove("is-active"));
       nodes.forEach((node) => {
         node.classList.remove("is-active", "is-related", "is-muted");
@@ -269,7 +265,6 @@ const renderedEdges =
     const activate = (id: string) => {
       clear();
       graph.dataset.active = id;
-      core?.setAttribute("aria-expanded", id === "core" ? "true" : "false");
 
       const related = new Set<string>();
       edges.forEach((edge) => {
@@ -297,32 +292,13 @@ const renderedEdges =
     };
 
     const release = () => {
-      if (locked) {
-        activate("core");
-      } else {
-        clear();
-      }
+      clear();
     };
 
     core?.addEventListener("mouseenter", () => activate("core"));
     core?.addEventListener("mouseleave", release);
     core?.addEventListener("focus", () => activate("core"));
     core?.addEventListener("blur", release);
-    core?.addEventListener("click", () => {
-      locked = !locked;
-      locked ? activate("core") : clear();
-    });
-    core?.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        locked = !locked;
-        locked ? activate("core") : clear();
-      }
-      if (event.key === "Escape") {
-        locked = false;
-        clear();
-      }
-    });
 
     nodes.forEach((node) => {
       const id = node.dataset.node || "";
