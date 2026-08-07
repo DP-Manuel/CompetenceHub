@@ -2,6 +2,19 @@
 
 Newest entries first.
 
+## 2026-08-07 | deployment/review | Verbesserter Frontendstand auf GitHub Pages veröffentlicht
+
+- Commit `19a6f49` wurde nach `origin/main` gepusht und anschließend bewusst
+  über den manuellen Workflow `Publish GitHub Pages review` veröffentlicht.
+- GitHub-Actions-Run `31172489046`: Build und Deploy erfolgreich.
+- Review-URL: `https://dp-manuel.github.io/CompetenceHub/`.
+- Verifikation: Startseite und `/ueber-uns/` liefern HTTP 200; Assetpfade nutzen
+  `/CompetenceHub`. Interner Review-Banner sowie
+  `noindex, nofollow, noarchive` sind aktiv.
+- Die Vorschau dient ausschließlich der Kolleginnen-/Stakeholderprüfung. Sie
+  ersetzt nicht die spätere freigegebene Veröffentlichung unter der
+  kanonischen Donner-+Partner-Domain.
+
 ## 2026-08-07 | requirements/operations | Portalumfang und Würzburg-Backupkandidat bestätigt
 
 - Backupkandidat: Manuels D+P-Arbeitsrechner am Standort Würzburg soll als

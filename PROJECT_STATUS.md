@@ -22,12 +22,11 @@ Last updated: 2026-08-07
   Mediation topic, direct E-Mail inquiry path, legal links, role-oriented login
   preview, PostgreSQL 16 staging installation, separated database roles and a
   successful synthetic local dump/restore rehearsal.
-- Latest remote state: commit `8165ebc` (`Add Stefanie Becker portrait`) is
-  synchronized locally. The homepage/About/Journey revision is local and
-  uncommitted.
-- In progress: the current source is available locally at
-  `http://127.0.0.1:4321/`. Manuel's visual and content feedback on the centered
-  Hub and new About page is the next review gate.
+- Latest remote state: commit `19a6f49` (`Prepare Competence Hub frontend and
+  staging foundation`) is synchronized locally and contains the centered
+  homepage/About/Journey revision plus the documented backend foundation.
+- In progress: stakeholder review of the centered Hub and `/ueber-uns` through
+  the manually published GitHub-Pages review environment.
 - Waiting: remaining profile details and rights where still open; explicit
   qualification and approval before any Coach is assigned to Mediation;
   legal-provider decision, portal role matrix, Excel data input and validation
@@ -39,10 +38,11 @@ Last updated: 2026-08-07
 - Public mailbox owner: Janay Rappelt.
 - Legal contact: Lars Donner; the concrete operating company, contract/invoice
   details and final Impressum are still pending.
-- Deployment status: the last documented public GitHub-Pages review contains
-  website commit `7f13cec`; the latest remote and local revisions are not part
-  of that documented review. Pushes do not deploy automatically; the review
-  workflow remains a separate manual action.
+- Deployment status: GitHub-Pages review commit `19a6f49` was manually
+  published successfully through Actions run `31172489046` and is available at
+  `https://dp-manuel.github.io/CompetenceHub/`. Homepage and `/ueber-uns/`
+  return HTTP 200. The review banner and `noindex, nofollow, noarchive` remain
+  active. Pushes still do not deploy automatically.
 - Hosting status: EDV confirmed the IONOS webspace as production hosting for
   static/PHP files. Both Competence-Hub subdomains point there and are covered
   by wildcard TLS. Permanent Node/Python services are not possible.
