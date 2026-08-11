@@ -1,6 +1,7 @@
 # Competence Hub - Projektübergabe für eine andere KI
 
-Stand: 2026-07-30
+Grundstand: 2026-07-30
+Planungsnachtrag: 2026-08-11 (PWA-first; keine Implementierung)
 
 Zweck: Diese Datei ist der kompakte, aber vollständige Einstieg für eine
 weitere KI, die das Frontend analysieren, ein neues Gestaltungskonzept
@@ -527,7 +528,8 @@ Serverstatus:
 - Vertragsautomatisierung
 - Benachrichtigungen an Kollegin/Buchhaltung
 - Aufträge, Termine und Rechnungen
-- spätere Mobile-App
+- spätere installierbare Webapp als PWA-first; native Android-/iOS-Clients
+  bleiben optional und bedarfsabhängig
 - editorfreundliche Inhaltspflege ohne Git für nichttechnische Kolleginnen
 
 Diese Punkte gehören nicht in den aktuellen statischen Frontend-Slice.

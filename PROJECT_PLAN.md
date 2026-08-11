@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-08-07
+Last updated: 2026-08-11
 
 ## Vision
 
@@ -327,6 +327,61 @@ publication is authorized in the current static frontend slice.
 - A customer-feedback and testimonial approval workflow connected to
   `PROJECT_PLAN_GEO_FIRST_PARTY_CONTENT.md`.
 
+## Workstream: PWA & Mobile Distribution
+
+Status: proposed and deferred. This workstream records the preferred future
+distribution direction only. No PWA, native app, store integration, dependency,
+server change or deployment is authorized by it.
+
+### Architecture Boundaries
+
+- The public Astro website remains a separate static frontend.
+- The later authenticated client lives in `apps/webapp` and is planned
+  mobile-first and PWA-ready.
+- Webapp/PWA clients use the protected backend API; neither the website nor a
+  PWA may connect directly to PostgreSQL.
+- PWA-first is the preferred first installable mobile direction. App stores are
+  not an initial gate; native Android/iOS clients remain optional and require a
+  demonstrated need plus a new distribution review.
+- An installable PWA is not synonymous with offline storage. Authenticated data
+  defaults to `NO_CACHE` until an explicit privacy and security decision
+  permits a narrower classification.
+- Push is a later optional workstream and must not expose sensitive content by
+  default.
+
+### Planned Sequence
+
+1. **Webapp core:** authentication, server-side authorization, multiple roles,
+   auditability and the first approved portal workflow with synthetic data.
+2. **PWA readiness:** mobile-first UI, touch operation, stable routes/deep
+   links and a frontend architecture that does not require later rework.
+3. **Installable PWA:** only after a stable webapp core; add manifest, icons,
+   display settings, HTTPS verification and platform-specific install guidance
+   as a separately approved slice.
+4. **Cache/offline decision:** classify `PUBLIC_STATIC`,
+   `AUTHENTICATED_NON_SENSITIVE`, `PERSONAL_DATA`,
+   `CONFIDENTIAL_DOCUMENT` and `NO_CACHE` before any Service Worker caches
+   authenticated content.
+5. **Push only with a use case:** define purpose, consent, content boundary,
+   revocation and platform support before implementation.
+6. **Native-app evaluation:** only when real requirements cannot be met
+   reasonably by Web/PWA; recheck current Android and Apple distribution rules
+   before selecting technology or a release path.
+
+### Open Decisions
+
+- Webapp frontend stack and the exact PWA-readiness acceptance criteria.
+- Session/token model, secure client storage, logout/session expiry, device
+  loss, multi-device behavior, CSRF/XSS protection and possible MFA.
+- Supported platform/browser baseline and owner of installation guidance.
+- Whether any authenticated data may ever be cached, for which purpose and
+  under which retention/deletion controls.
+- Whether a concrete push or native-device capability creates proven value.
+
+See `docs/architecture/pwa-app-distribution-strategy-2026-08-11.md` for the
+full planning rationale, distribution constraints, security boundaries and
+phase model.
+
 ## Timeline And Budget Signals
 
 - Target date or milestone: website MVP complete by 2026-07-23; first offers planned from August 2026
@@ -383,6 +438,7 @@ Resume here:
 2. Review `docs/architecture/hosting-runtime-decision-2026-08-06.md`,
    `docs/architecture/vps-read-only-inventory-2026-08-06.md`,
    `docs/architecture/versioning-and-operations-plan.md`,
+   `docs/architecture/pwa-app-distribution-strategy-2026-08-11.md`,
    `docs/requirements/requirements-engineering-update-2026-08-04.md` and
    `docs/assets/designstyle.md`.
 3. Check `git status --short`; `.tmp/` must remain untracked and untouched.
@@ -422,6 +478,10 @@ Resume here:
 
 ## Decisions
 
+- 2026-08-11: Plan the future authenticated client PWA-first after the Webapp
+  core. App stores are not an initial gate; native clients remain optional.
+  Offline/cache and push remain separate security decisions. No implementation
+  or release is authorized by this planning decision.
 - 2026-08-06: Lars Donner is the legal Competence-Hub contact; the concrete
   operating company, contract/invoice details and final Impressum will follow.
 - 2026-08-06: Janay Rappelt owns the public

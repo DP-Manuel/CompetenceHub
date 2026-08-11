@@ -2,6 +2,29 @@
 
 Newest entries first.
 
+## 2026-08-11 | architecture/planning | PWA-first als zukünftige App-Distributionsrichtung aufgenommen
+
+Die bereits vorbereitete PWA-Strategie wurde gegen den aktuellen Portal-,
+Backend- und Datenbankrahmen geprüft und restart-sicher im Projektgedächtnis
+verankert.
+
+- Bevorzugte Richtung: Nach einem stabilen Webapp-Kern soll eine gemeinsame,
+  mobile-first geplante und installierbare PWA der erste Mobile-Client sein.
+- Distribution: App Stores sind kein initiales Gate. Native Android-/iOS-Clients
+  bleiben optional und werden nur bei nachgewiesenem Bedarf samt dann aktuellen
+  Distributionsbedingungen neu bewertet.
+- Sicherheitsgrenze: Website und PWA greifen ausschließlich über die geschützte
+  Backend-API zu; PostgreSQL bleibt serverseitig gekapselt. Authentifizierte
+  Daten bleiben standardmäßig `NO_CACHE`.
+- Separate Entscheidungen: Manifest/Installierbarkeit, Service Worker,
+  Cache/Offline, Push und native Releases sind spätere eigene Slices. Push darf
+  standardmäßig keine sensiblen Inhalte enthalten.
+- Konfliktprüfung: Keine sichere Architekturdatei legt bereits eine native
+  Android- oder iOS-App verbindlich fest. Der ältere Brief nannte nur allgemein
+  eine spätere Mobile-App und wurde auf PWA-first/native optional präzisiert.
+- Ausführung: keine PWA/Webapp implementiert, keine Dependency installiert,
+  keine Serveränderung, kein Commit, Push oder Deployment ausgelöst.
+
 ## 2026-08-07 | deployment/review | Verbesserter Frontendstand auf GitHub Pages veröffentlicht
 
 - Commit `19a6f49` wurde nach `origin/main` gepusht und anschließend bewusst

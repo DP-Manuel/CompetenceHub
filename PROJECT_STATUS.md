@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-08-07
+Last updated: 2026-08-11
 
 ## Snapshot
 
@@ -70,6 +70,10 @@ Last updated: 2026-08-07
   and role-aware statistics. The first implementation slice is authentication,
   authorization and auditability; Manuel will provide users/rights and an Excel
   workbook before schema implementation.
+- App-distribution direction: PWA-first is the proposed future path for the
+  installable authenticated client after the Webapp core. Nothing has been
+  implemented; no store or native release is decided. Website/PWA, backend API
+  and PostgreSQL remain separated, with no direct client database access.
 - Confirmed ownership: Manuel owns VPS operations, patching, monitoring,
   backups and incident response. Thomas Roß, EDV-Leiter, owns production
   approval. Separate app/API subdomains are approved in principle.
@@ -117,6 +121,10 @@ Last updated: 2026-08-07
   import candidates, and which contain personal data?
 - Which feedback types and statistical formulas are required first, and which
   roles may see them?
+- Which Webapp frontend stack and supported browser/platform baseline make the
+  later client PWA-ready without implementing PWA features in the first slice?
+- May any authenticated data ever leave the default `NO_CACHE` boundary, and
+  who owns the later cache, push and native-distribution security decisions?
 - Is an isolated staging instance on the same VPS sufficient?
 - Which remaining Coach texts, qualifications, portraits and publication
   consents are approved?
@@ -137,6 +145,7 @@ Last updated: 2026-08-07
   `docs/architecture/hosting-runtime-decision-2026-08-06.md`,
   `docs/architecture/vps-read-only-inventory-2026-08-06.md`,
   `docs/architecture/versioning-and-operations-plan.md`,
+  `docs/architecture/pwa-app-distribution-strategy-2026-08-11.md`,
   `docs/requirements/requirements-engineering-update-2026-08-04.md` and
   `docs/assets/designstyle.md`.
 - Key implementation files: `apps/website/src/data/coaches.ts`,
