@@ -204,9 +204,9 @@ verified on the VPS staging database; no backend/login code or real data exists.
 3. Completed 2026-08-13: local security primitives, API contract, FastAPI health
    scaffold and synthetic tests are prepared; migration `0002` is applied and
    verified on isolated staging with no remaining test data.
-4. Approved 2026-08-13: version the complete portal/auth/migration state in Git.
-   After that, implement the session repository and the smallest protected
-   session/logout API slice.
+4. Completed 2026-08-13: version the complete portal/auth/migration state in
+   feature commit `8feb2c8`. Next implement the session repository and the
+   smallest protected session/logout API slice.
 5. Implement companies/contacts, then Coaches/topics/services.
 6. Implement request CRUD without final transition automation.
 7. Run Janay's real-workflow walkthrough before hardening the request state

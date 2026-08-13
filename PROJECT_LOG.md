@@ -2,6 +2,17 @@
 
 Newest entries first.
 
+## 2026-08-13 | versioning | Portal- und Auth-Grundlage gepusht
+
+- Feature-Commit `8feb2c8` (`Add portal schema and internal auth foundation`)
+  wurde erfolgreich nach `origin/main` gepusht.
+- Umfang: 37 freigegebene Dateien mit Portal-/RBAC-Dokumentation, Migrationen
+  `0001`/`0002`, Smoke-Tests, ADR 0003, Auth-API-Vertrag, FastAPI-Grundrahmen,
+  16 synthetischen Tests und aktualisiertem Projektgedaechtnis.
+- Schutz: typische Secret-Signaturen wurden im Index nicht gefunden;
+  `.tmp/`, `.venv/`, `*.egg-info`, echte `.env` und Quellen blieben ausserhalb.
+- Der Push hat kein GitHub-Pages- oder Backend-Deployment ausgeloest.
+
 ## 2026-08-13 | versioning | Portal- und Auth-Grundlage zur Versionierung freigegeben
 
 - Manuel hat Commit und Push des vollstaendigen Portal-, Datenbank-, Auth-,

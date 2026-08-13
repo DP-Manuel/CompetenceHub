@@ -22,14 +22,14 @@ Last updated: 2026-08-13
   Mediation topic, direct E-Mail inquiry path, legal links, role-oriented login
   preview, PostgreSQL 16 staging installation, separated database roles and a
   successful synthetic local dump/restore rehearsal.
-- Latest remote state: commit `e434f01` is synchronized locally and includes
-  the PWA-first planning update. The 2026-08-13 portal-domain and migration work
-  is local and uncommitted.
+- Canonical `main` includes feature commit `8feb2c8` with the portal domain,
+  PostgreSQL migrations `0001`/`0002`, approved Auth ADR/API contract, FastAPI
+  scaffold, synthetic tests and current project memory.
 - In progress: stakeholder review of the centered Hub and `/ueber-uns` through
   the manually published GitHub-Pages review environment.
 - Waiting: remaining profile details and rights where still open; explicit
   qualification and approval before any Coach is assigned to Mediation;
-  legal-provider decision, Auth-ADR, Janay request-workflow walkthrough and
+  legal-provider decision, Janay request-workflow walkthrough and
   validation of the encrypted Wuerzburg off-server backup target.
 - Blocked for live launch: responsible legal entity, final Datenschutz/AGB
   applicability, mailbox response/absence process, content approval and an
@@ -175,11 +175,10 @@ Last updated: 2026-08-13
   rights, protected readable pre/post dumps and unchanged service health. Login
   routes, persistence repository, real accounts and deployable service
   configuration do not exist yet.
-- Versioning status: commit and push of the complete portal/Auth/migration
-  change set were explicitly approved on 2026-08-13. The change set excludes
-  `.tmp/`, `.venv/`, generated package metadata, real `.env` files and secrets;
-  no deployment is part of the push.
-- Recommended next work block after versioning: implement the database/session
+- Versioning status: feature commit `8feb2c8` was pushed successfully to
+  `origin/main` on 2026-08-13. `.tmp/`, `.venv/`, generated package metadata,
+  real `.env` files and secrets were excluded; no deployment was triggered.
+- Recommended next work block: implement the database/session
   repository plus protected current-session and logout endpoints. Definition of
   Done: token hashes only, idle/absolute expiry and revocation enforced,
   deny-by-default authentication dependency, synthetic repository/API tests and
