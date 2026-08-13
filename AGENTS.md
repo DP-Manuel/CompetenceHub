@@ -44,6 +44,21 @@ Read this file before editing.
 - Use `MEETINGS.md` for stakeholder, steering, planning, review, retrospective, or decision meetings.
 - Use `SKILL_FEEDBACK_LOG.md` for proposed CodexSkills improvements discovered during this project.
 
+## Completion And Steering Checkpoint
+
+- After any meaningful implementation, migration, deployment, infrastructure,
+  security or stakeholder-decision block, do not stop at the result summary.
+- Update stale `next`, `waiting`, `blocked`, `not applied` and similar claims in
+  `PROJECT_PLAN.md`, `PROJECT_STATUS.md` and `PROJECT_LOG.md` during the same
+  session.
+- End with exactly one recommended next work block including purpose, required
+  inputs, deliverables and Definition of Done. Keep parallel organizational
+  gates and alternative workstreams separate from that recommendation.
+- State explicitly whether commit, push, deployment and real-data use occurred
+  or still need separate approval.
+- Any command Manuel must execute must be repeated in the final response that
+  requests the action; intermediary commentary is not a durable handoff.
+
 ## Structure
 
 - `apps/website` - first deliverable: public website.

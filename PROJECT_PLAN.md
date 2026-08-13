@@ -148,19 +148,75 @@ for Git, release, backup and restore responsibilities.
 1. **Remaining ownership gate:** confirm the exact legal operating company when
    the Impressum/contract details arrive and define response time plus absence
    cover for the Janay Rappelt-owned public mailbox.
-2. **Operational gate:** schedule system updates/reboot, verify firewall and
-   Fail2ban administratively, choose an encrypted off-server backup target and
-   complete a restore test plan.
-3. **Architecture decision:** use the positive capacity inventory to decide the
-   isolated pilot shape, backend stack, database engine, staging boundary,
-   DNS/TLS ownership, backup and rollback; document the result as an ADR.
+2. **Operational gate:** validate the encrypted Wuerzburg off-server backup
+   target and restore from that exact external copy before real data.
+3. **Architecture decision:** PostgreSQL staging and the B2B-first core schema
+   direction are selected. Decide the Auth/session stack and isolated FastAPI
+   runtime before login code or API deployment.
 4. **Static production readiness:** set the canonical Astro `site`, prepare the
    domain redirect, security/cache headers, error pages and an SFTP deployment
    plus rollback runbook. Deployment still requires separate approval.
-5. **First backend slice:** only after the infrastructure gates, build an
-   internal `admin`/`staff` workflow for Company, Coach, Service and
-   CoachingRequest using test data. External logins, contracts and feedback
-   remain later slices.
+5. **First backend slice:** migration `0001` is applied and verified on staging.
+   Decide the Auth-ADR next, then implement internal auth/RBAC without exposing
+   external logins. Contracts and feedback remain later slices.
+
+## Workstream: Authenticated Portal Core
+
+Status: Product-Owner workbook v0.2 evaluated on 2026-08-13. Domain model,
+schema specification, portal information architecture, RBAC matrix and the
+first PostgreSQL migration are prepared. Migration `0001` is applied and
+verified on the VPS staging database; no backend/login code or real data exists.
+
+### Confirmed Phase-1 Core
+
+- portal users with multiple roles
+- companies and multiple company contacts
+- Coaches with canonical topics and optional service relations
+- services
+- B2B coaching requests with topics, services and one internal responsibility
+- append-oriented audit events
+- active working roles: Admin, Intern, Coach and Firmenkontakt; participant is
+  deferred
+- server-side deny-by-default authorization and restricted own/assigned scopes
+
+### Provisional
+
+- request status values may be stored as draft data, but transitions and
+  automation are not final
+- Coach/service relation is optional until its maintenance rule is confirmed
+- company-contact/portal-user and Coach/portal-user links are optional bridges
+  until the Auth-ADR defines account invitation and identity
+- role codes are working identifiers pending formal naming confirmation
+
+### Deferred
+
+- orders, appointments, documents, feedback tables and reporting formulas
+- B2C/Mindforge accounts and participants
+- contracts, invoices, file storage, calendar, push, offline data and AI
+  matching
+
+### Portal-Core Next Slices
+
+1. Completed 2026-08-13: apply and transaction-test `0001_portal_core.sql` on
+   isolated staging with synthetic data and the rollback-only smoke test.
+2. Completed 2026-08-13: ADR 0003 and the internal-auth acceptance criteria
+   were explicitly approved by Manuel.
+3. Completed 2026-08-13: local security primitives, API contract, FastAPI health
+   scaffold and synthetic tests are prepared; migration `0002` is applied and
+   verified on isolated staging with no remaining test data.
+4. Approved 2026-08-13: version the complete portal/auth/migration state in Git.
+   After that, implement the session repository and the smallest protected
+   session/logout API slice.
+5. Implement companies/contacts, then Coaches/topics/services.
+6. Implement request CRUD without final transition automation.
+7. Run Janay's real-workflow walkthrough before hardening the request state
+   machine.
+
+See `docs/architecture/portal-domain-model-v0.1.md`,
+`docs/architecture/portal-schema-spec-v0.1.md`,
+`docs/requirements/portal-rbac-matrix-v0.1.md`,
+`docs/requirements/portal-information-architecture-v0.1.md` and
+`docs/requirements/portal-open-gates-v0.1.md`.
 
 ## Workstream: SEO, GEO & First-Party Authority
 
@@ -409,23 +465,24 @@ phase model.
 
 ## Immediate Next Steps
 
-1. Verify the scheduled Friday Chatbot crawl after it completes; the API and
-   services were healthy throughout the maintenance and database installation.
-2. Validate Manuels D+P-controlled Würzburg workstation as the first encrypted
+1. Implement the database/session repository plus protected
+   current-session and logout endpoints with synthetic tests only.
+2. Schedule and run Janay's real coaching-request walkthrough before finalizing
+   request transitions or automation.
+3. Validate Manuels D+P-controlled Würzburg workstation as the first encrypted
    off-server backup target. It must pull the encrypted dump from the VPS; test
    a restore from that exact downloaded copy before real data.
-3. Run the portal role/data intake using Manuels forthcoming user-rights list
-   and Excel workbook. Use synthetic examples and document field visibility,
-   editing rights and retention before creating the first migration.
 4. Confirm which Donner + Partner company legally operates Competence Hub when
    contract/invoice data and the final Impressum arrive. Lars Donner is already
    confirmed as legal contact.
 5. Define response time and absence cover for Janay Rappelt as mailbox owner.
-6. Prepare the static IONOS production-readiness and rollback plan independently
+6. Verify the scheduled Chatbot crawl remains healthy; this is an operations
+   check, not a blocker for the Auth ADR.
+7. Prepare the static IONOS production-readiness and rollback plan independently
    of backend timing; do not deploy before the previous launch gates are met.
-7. Review the centered homepage Hub, `/ueber-uns`, Frau Janay Rappelt's portrait
+8. Review the centered homepage Hub, `/ueber-uns`, Frau Janay Rappelt's portrait
    and Journey scrolling, then decide separately on commit/push/review deploy.
-8. Continue Coach/topic approval work in parallel; assign Mediation only after
+9. Continue Coach/topic approval work in parallel; assign Mediation only after
    explicit qualification and publication approval.
 ## Restart Note
 
@@ -442,18 +499,20 @@ Resume here:
    `docs/requirements/requirements-engineering-update-2026-08-04.md` and
    `docs/assets/designstyle.md`.
 3. Check `git status --short`; `.tmp/` must remain untracked and untouched.
-4. Review the current uncommitted homepage/About slice locally.
-5. Continue from the off-server backup and first migration gates in the
+4. Review the current uncommitted portal documents and migration locally.
+5. Continue from the off-server backup and Auth-ADR gates in the
    Hosting, Deployment & Backend Foundation workstream.
-6. PostgreSQL staging is installed and empty. Do not add real data or deploy a
-   backend without the separately documented production gates. A push does not
-   imply either GitHub-Pages or production deployment.
+6. PostgreSQL staging contains the verified portal-core schema but no business
+   or personal data. Do not add real data or deploy a backend without the
+   separately documented production gates. A push does not imply either
+   GitHub-Pages or production deployment.
 ## Open Questions
 
 - How should the sub-brand be named and endorsed under Donner + Partner?
 - Is there approved imagery, legal text, or final deployment configuration?
 - Which parts of the old Sophisto-like administration workflow should the new app mirror first?
-- Which roles are needed first: admin, internal staff, coach, company contact, participant, or others?
+- Are the four active working role names Admin, Intern, Coach and
+  Firmenkontakt formally final, or should display labels change before auth?
 - Should the later webapp share the same backend/API, auth, design system, and deployment setup?
 - Who receives successor/emergency access if Manuel is unavailable?
 - Which concrete app/API subdomains should be created for staging and
@@ -478,10 +537,32 @@ Resume here:
 
 ## Decisions
 
+- 2026-08-13: After explicit approval, migration `0001` was applied to the
+  empty VPS staging database. The rollback-only synthetic smoke test passed;
+  all synthetic rows were removed. All 15 tables belong to
+  `competence_hub_owner`, PostgreSQL remains localhost-only and the Chatbot,
+  Nginx, Fail2ban and PostgreSQL services remained active. This does not
+  authorize auth/backend deployment or real data.
+- 2026-08-13: Manuel approved ADR 0003. The first internal Auth slice uses
+  server-side opaque sessions, Argon2id, mandatory TOTP-MFA, CSRF/Origin checks,
+  strict Admin privilege boundaries and external secret storage. Local
+  migration/API/scaffold work with synthetic data is authorized; server change,
+  deployment, mail integration and real data remain separate approvals.
+- 2026-08-13: After separate approval, migration `0002` was applied to isolated
+  VPS staging. The rollback-only smoke test passed; all seven Auth tables are
+  empty, owned by `competence_hub_owner`, and runtime privileges match the
+  contract. Pre/post dumps are protected and the Chatbot remained healthy.
 - 2026-08-11: Plan the future authenticated client PWA-first after the Webapp
   core. App stores are not an initial gate; native clients remain optional.
   Offline/cache and push remain separate security decisions. No implementation
   or release is authorized by this planning decision.
+- 2026-08-13: Product-Owner workbook v0.2 is the authoritative input for the
+  B2B-first portal core. The RBAC matrix is largely confirmed; the request
+  workflow remains a Janay practice gate. A local PostgreSQL migration and
+  rollback-only synthetic smoke test were initially authorized for preparation;
+  this preparation decision alone did not authorize a server change, backend
+  deployment, auth implementation or real data. The later explicit staging-
+  migration approval is recorded separately above.
 - 2026-08-06: Lars Donner is the legal Competence-Hub contact; the concrete
   operating company, contract/invoice details and final Impressum will follow.
 - 2026-08-06: Janay Rappelt owns the public

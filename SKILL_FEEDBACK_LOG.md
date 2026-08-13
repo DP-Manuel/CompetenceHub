@@ -24,19 +24,51 @@ Do not implement every idea immediately. First collect evidence, then decide whe
   existing VPS turned out to be an occupied production-like Chatbot host rather
   than a blank server. These facts required coordinated updates to architecture,
   plan, status and restart handoff, not only a technical note.
+- Recurrence evidence 2026-08-13: After the first portal migration, smoke test,
+  permission verification and backup hardening all passed, the handoff still
+  ended without the required prioritized continuation. `PROJECT_STATUS.md`
+  additionally still named the already completed staging migration as the next
+  concrete action. Manuel had to ask explicitly what comes next although the
+  skill already requires this guidance.
 - Suggested improvement: add a project-harness checkpoint after any meaningful
   stakeholder, scope, architecture, infrastructure, security or deployment
   change and after a series of related frontend slices. Before ending, record
   current state, decisions made, decisions needed with owner, blockers, required
   inputs, next recommended action, verification and whether commit/push/deploy
   remain separate approvals. Treat repeated missed routing as a coordination
-  compliance issue, not merely a documentation preference.
+  compliance issue, not merely a documentation preference. Add a deterministic
+  stale-state check: completed work must not still appear as `next`, `waiting`
+  or `not applied`. Require exactly one recommended next block with purpose,
+  inputs, deliverables and Definition of Done; list parallel gates separately.
 - Reuse potential: high
 - Risk if ignored: high
 - Proposed destination: CodexSkills `manage-project-state`,
   `coordinate-software-project` and the downstream project starter/AGENTS
   guidance
-- Status: proposed; applied locally to this project on 2026-08-06
+- Status: repeated/high-priority evidence; local project safeguard strengthened
+  on 2026-08-13; canonical CodexSkills change recommended
+
+### 2026-08-13 | required-command-handoff | Repeat required user commands in the durable final response
+
+- Triggering project situation: During the interactive VPS migration, command
+  blocks shown in intermediary updates disappeared from Manuel's visible chat
+  view. Only the final one-line instruction remained, so the required commands
+  had to be requested and sent again.
+- Current skill behavior: operations and deployment guidance can split a
+  command block into a progress update and finish with a short final handoff.
+- Friction or missed opportunity: a correct operational sequence becomes
+  unusable when the UI retains only the final response. This is especially
+  risky for backup, migration, restore and verification commands.
+- Suggested improvement: any command the user must execute must appear in the
+  final response that asks for its execution. Commentary may preview it, but
+  must never be the only copy. For multi-step interactive operations, include
+  the current command block, expected result and secret-handling warning in the
+  same durable response.
+- Reuse potential: high
+- Risk if ignored: high for operations work
+- Proposed destination: CodexSkills `coordinate-software-project`,
+  `create-deployment-plan`, `integrate-backend` and operations handoff guidance
+- Status: proposed; applied as a project-local handoff rule on 2026-08-13
 
 ### 2026-08-05 | multi-workstation-preview-bootstrap | Make Windows network-drive preview setup portable and restart-safe
 

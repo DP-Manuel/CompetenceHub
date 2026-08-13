@@ -7,6 +7,12 @@ Dieses Dokument konkretisiert den späteren geschützten Portalbereich. Es löst
 noch keine Implementierung aus. Rollenmatrix, Excel-Dateninput und
 Authentifizierungsdetails folgen.
 
+Fortschreibung 13.08.2026: Rollenmatrix und Excel-Dateninput liegen vor und
+sind in `portal-domain-model-v0.1.md`, `portal-schema-spec-v0.1.md`,
+`portal-rbac-matrix-v0.1.md`, `portal-information-architecture-v0.1.md` und
+`portal-open-gates-v0.1.md` ueberfuehrt. Authentifizierung und finale
+Anfrage-Transitionen bleiben offen.
+
 ## Bestätigte Richtung
 
 - Die öffentliche Astro-Website bleibt von operativen Daten und

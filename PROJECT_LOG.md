@@ -2,6 +2,128 @@
 
 Newest entries first.
 
+## 2026-08-13 | versioning | Portal- und Auth-Grundlage zur Versionierung freigegeben
+
+- Manuel hat Commit und Push des vollstaendigen Portal-, Datenbank-, Auth-,
+  Scaffold-, Test- und Projektstatusstands ausdruecklich freigegeben.
+- Vorabnachweis: `main` entspricht `origin/main`, 16 Tests bestehen,
+  `git diff --check` ist sauber und die versionierte `.env.example` enthaelt nur
+  leere Secret-Platzhalter.
+- Ausschluss: `.tmp/`, `.venv/`, generierte `*.egg-info`, echte `.env`, Quellen
+  und Secrets bleiben ausserhalb des Commits. Der Push loest kein Deployment
+  aus.
+
+## 2026-08-13 | database/security | Auth-Migration 0002 auf Staging verifiziert
+
+- Freigabe: Manuel hat die Staging-Anwendung von Migration `0002` separat
+  freigegeben. SQL und Rollback-Smoke-Test wurden nach `/tmp` uebertragen,
+  gehasht geprueft und auf `0600` gesetzt.
+- Sicherung: geschuetzter Pre-Migration-Dump angelegt; Ausgangszustand waren 15
+  Tabellen, null Auth-Tabellen und nur Migration `0001`.
+- Ausfuehrung: `0002_internal_auth.sql` als `competence_hub_migrator`
+  erfolgreich committed. Der synthetische Smoke-Test bestand und endete mit
+  `ROLLBACK`.
+- Nachweis: 22 Tabellen gehoeren `competence_hub_owner`, davon sieben leere
+  Auth-Tabellen. Benutzer, Credentials, Challenges, Sessions, Einmal-Token,
+  TOTP, Recovery-Codes und Rate-Limit-Buckets enthalten jeweils null Zeilen.
+- Rechte: `competence_hub_app` kann das Schema nicht erweitern und
+  Migrationsmetadaten nicht lesen; erwartete Select-/Insert-/Update-Rechte fuer
+  Sessions sind vorhanden.
+- Betrieb: Chatbot, Nginx, Fail2ban und PostgreSQL blieben aktiv. PostgreSQL
+  lauscht nur auf `127.0.0.1:5432`. Der lesbare Post-Dump hat Modus `0600`.
+- Grenzen: kein Backenddienst, Login, echtes Konto, Commit, Push oder Deployment.
+
+## 2026-08-13 | implementation/security | Auth-Grundrahmen lokal umgesetzt
+
+- Freigabe: Manuel hat ADR 0003 ausdruecklich freigegeben. Der ADR ist auf
+  `Accepted` gesetzt; Serveraenderung, Deployment, Mail und Echtdaten bleiben
+  getrennte Freigaben.
+- Daten: Migration `0002_internal_auth.sql` modelliert Passwort-Credentials,
+  kurzlebige Login-Challenges, serverseitige MFA-Sitzungen, Einladungs-/Reset-
+  Token, verschluesselte TOTP-Credentials, Recovery-Code-HMACs und
+  HMAC-pseudonymisierte Rate-Limit-Buckets. Sie ist noch nicht auf dem VPS.
+- Vertrag: `internal-auth-api-contract-v0.1.md` beschreibt Cookie-, CSRF-,
+  Fehler-, Login-, MFA-, Reset-, Einladungs- und Sessionvertraege. Die Routen
+  sind bewusst noch nicht vorgetaeuscht.
+- Code: minimaler FastAPI-Grundrahmen mit ehrlichen Liveness-/Readinessrouten,
+  Security-Headern, sicheren Cookie-Helfern, Argon2id-Passwortpolicy,
+  256-Bit-Token und HMAC-Primitive.
+- Verifikation: isolierte `.venv`, 16 synthetische Tests bestanden, Python-
+  Compileall bestanden und `pip check` ohne defekte Anforderungen. Die erste
+  Starlette-TestClient-Warnung wurde durch direkten ASGI-Transport beseitigt.
+- Grenzen: keine `.env`, Secrets, echten Konten oder Fachdaten gelesen/erzeugt;
+  kein VPS-Change, Commit, Push oder Deployment.
+
+## 2026-08-13 | architecture/security | Interne Auth-Entscheidung vorbereitet
+
+- ADR 0003 legt fuer den ersten internen Admin-/Intern-Slice opaque
+  serverseitige Sessions in sicheren Host-only-Cookies, Argon2id, CSRF- und
+  Origin-Pruefung, TOTP-MFA, Einladungs-/Resetflows, Rate Limits, Audit und
+  getrennten Secretbetrieb fest.
+- Sicherheitskorrektur: Nur Admin darf die Adminrolle oder Adminkonten
+  veraendern; `internal` kann keine Privilegien zu Admin eskalieren. Diese
+  Einschraenkung praezisiert die bisher zu breite Rollenvergabe der RBAC-Matrix.
+- Anforderungen: `internal-authentication-v0.1.md` enthaelt 19 funktionale,
+  neun nichtfunktionale Anforderungen und 18 pruefbare Akzeptanzkriterien.
+- Scope: keine Selbstregistrierung, externen Nutzer, SSO, produktive
+  Mailintegration, Login-Implementierung, neuen Dependencies oder Echtdaten.
+- Status: Entscheidungsvorlage fertig, explizite Freigabe vor Login-Code offen;
+  kein Commit, Push oder Deployment.
+
+## 2026-08-13 | process/project-state | Naechsten Arbeitsblock verbindlich priorisiert
+
+- Prozessfeedback: Der Abschluss der erfolgreichen Datenbankrunde enthielt
+  keinen ausreichend klaren Folgeblock; zudem nannte `PROJECT_STATUS.md` die
+  bereits erledigte Migration noch als naechste Aktion.
+- Korrektur: Auth-ADR fuer den ersten internen Admin-/Intern-Login ist jetzt der
+  eine empfohlene Folgeblock, inklusive Zweck, Eingaben, Ergebnissen und
+  Definition of Done. Janay-Workflow und verschluesseltes Off-Server-Backup
+  sind als parallele organisatorische Gates getrennt ausgewiesen.
+- Skill-Learning: Wiederholte Evidenz zum fehlenden Steuerungs-Checkpoint und
+  ein neues Learning zu verschwindenden Pflichtbefehlen wurden in
+  `SKILL_FEEDBACK_LOG.md` dokumentiert. `AGENTS.md` enthaelt nun einen lokalen
+  verbindlichen Abschluss- und Steering-Checkpoint.
+- Freigabegrenze: kein Commit, Push, Deployment, Login-Code oder Echtdatenbetrieb
+  durch diese Planungs- und Prozesskorrektur.
+
+## 2026-08-13 | requirements/architecture/implementation | Portal-Fachmodell v0.1 uebernommen
+
+- Synchronisation: `main` wurde per Fast-Forward von `e8e0704` auf `e434f01`
+  aktualisiert. Die neue PWA-first-Planung vom Zweitrechner wurde uebernommen;
+  `.tmp/` blieb unberuehrt.
+- Quelle: Der ausdruecklich freigegebene Ordner `Quellen/13.08.2026` und die
+  Product-Owner-Arbeitsmappe v0.2 wurden vollstaendig ausgewertet. Die Excel hat
+  Vorrang vor den daraus abgeleiteten Begleitdokumenten.
+- Bestaetigt: B2B-first Kern mit Benutzern/Mehrfachrollen, Unternehmen und
+  Ansprechpartnern, Coaches/Themen/Leistungen, Coaching-Anfragen und Audit.
+  Die Rechtematrix fuer Admin, Intern, Coach und Firmenkontakt ist weitgehend
+  bestaetigt und deny-by-default zu implementieren.
+- Provisorisch: Anfrage-Statuswerte, Coach/Leistung und Portalaccount-Bruecken
+  sind vorbereitbar. Finale Transitionen, Automation und die Reihenfolge von
+  Coach-Anfrage, Angebot und Auftrag bleiben Janay-/Praxis-Gate.
+- Deferred: Auftraege, Termine, Dokumente, Feedbacktabellen, Reportingformeln,
+  B2C, Teilnehmer, Vertraege/Rechnungen, Kalender, Push, Offline-Fachdaten und
+  KI-Matching.
+- Dokumente: Domainmodell, Schema-Spezifikation, Portal-IA, RBAC-Matrix und
+  Open-Gates-Liste wurden in sichere Projektpfade ueberfuehrt. Der alte
+  `initial-data-model.md` ist als historischer Vorentwurf markiert.
+- Implementierung: `0001_portal_core.sql` und ein ausschliesslich synthetischer,
+  mit `ROLLBACK` endender Smoke-Test wurden lokal erstellt. Migration `0001`
+  wurde nach einem geschuetzten Pre-Migration-Dump auf die leere VPS-Staging-
+  Datenbank angewendet und der Smoke-Test erfolgreich ausgefuehrt. Alle
+  synthetischen Testdaten wurden zurueckgerollt.
+- Verifikation: 15 Tabellen gehoeren `competence_hub_owner`, vier Arbeitsrollen
+  sind vorhanden und Benutzer, Unternehmen, Anfragen sowie Audit-Ereignisse
+  enthalten jeweils null Datensaetze. Die Runtime-Rolle darf weder das Schema
+  erweitern noch Migrationsdaten lesen oder Anfragen physisch loeschen.
+- Betrieb: Chatbot, Nginx, Fail2ban und PostgreSQL blieben aktiv. PostgreSQL
+  lauscht weiterhin nur auf `127.0.0.1:5432`. Ein lesbarer Post-Migration-Dump
+  wurde angelegt. Pre- und Post-Migration-Dump sind `postgres`-eigen und auf
+  Modus `0600` gesetzt; das Backupverzeichnis steht auf `0700`. Das
+  verschluesselte Off-Server-Backup bleibt Pflicht vor Echtdaten.
+- Sicherheit: keine Echtdaten, Secrets oder `.env` gelesen oder geschrieben;
+  keine produktive Migration, kein Backend-Deployment, Commit oder Push.
+
 ## 2026-08-11 | architecture/planning | PWA-first als zukünftige App-Distributionsrichtung aufgenommen
 
 Die bereits vorbereitete PWA-Strategie wurde gegen den aktuellen Portal-,

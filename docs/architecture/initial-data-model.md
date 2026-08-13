@@ -1,15 +1,21 @@
 # Initial Competence Hub Data Model
 
-Last updated: 2026-08-06
+Last updated: 2026-08-13
+
+Status: durch die Product-Owner-Arbeitsmappe v0.2 fachlich fortgeschrieben.
+Dieses Dokument bleibt als historischer Vorentwurf erhalten. Fuer neue Arbeit
+sind `portal-domain-model-v0.1.md` und `portal-schema-spec-v0.1.md`
+massgeblich.
 
 ## Goal And Scope
 
 Define a small first model for internal login, companies, coaches, coaching
 offers, assignments, and feedback. This is a design input, not an applied schema.
 
-Assumptions:
+Historische Annahmen:
 
-- PostgreSQL on the VPS is accepted by ADR 0002; no database is installed yet.
+- PostgreSQL 16 staging is installed and localhost-only; the portal schema is
+  not yet applied.
 - Internal Donner + Partner staff create and manage operational records first.
 - The public Astro website has no direct database access.
 - External company and coach accounts are later slices.

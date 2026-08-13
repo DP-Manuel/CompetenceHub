@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-08-11
+Last updated: 2026-08-13
 
 ## Snapshot
 
@@ -22,15 +22,15 @@ Last updated: 2026-08-11
   Mediation topic, direct E-Mail inquiry path, legal links, role-oriented login
   preview, PostgreSQL 16 staging installation, separated database roles and a
   successful synthetic local dump/restore rehearsal.
-- Latest remote state: commit `19a6f49` (`Prepare Competence Hub frontend and
-  staging foundation`) is synchronized locally and contains the centered
-  homepage/About/Journey revision plus the documented backend foundation.
+- Latest remote state: commit `e434f01` is synchronized locally and includes
+  the PWA-first planning update. The 2026-08-13 portal-domain and migration work
+  is local and uncommitted.
 - In progress: stakeholder review of the centered Hub and `/ueber-uns` through
   the manually published GitHub-Pages review environment.
 - Waiting: remaining profile details and rights where still open; explicit
   qualification and approval before any Coach is assigned to Mediation;
-  legal-provider decision, portal role matrix, Excel data input and validation
-  of the encrypted Würzburg off-server backup target.
+  legal-provider decision, Auth-ADR, Janay request-workflow walkthrough and
+  validation of the encrypted Wuerzburg off-server backup target.
 - Blocked for live launch: responsible legal entity, final Datenschutz/AGB
   applicability, mailbox response/absence process, content approval and an
   explicitly scheduled production deployment.
@@ -65,11 +65,12 @@ Last updated: 2026-08-11
   an encrypted external copy to D+P-controlled storage and a restore test. The
   D+P workstation at the Würzburg site is the preferred candidate, pending
   disk-encryption/access checks and restore from the downloaded copy.
-- Portal direction: the authenticated webapp will add internal user creation,
-  multiple roles per person, company and Coach administration, scoped feedback
-  and role-aware statistics. The first implementation slice is authentication,
-  authorization and auditability; Manuel will provide users/rights and an Excel
-  workbook before schema implementation.
+- Portal direction: Product-Owner workbook v0.2 has been evaluated. The
+  B2B-first core covers users/multiple roles, companies/contacts,
+  Coaches/topics/services, coaching requests and audit. The RBAC matrix for
+  Admin, Intern, Coach and Firmenkontakt is largely confirmed. Domain/schema,
+  portal IA and RBAC tests are prepared. Migration `0001` is applied to the VPS
+  staging database and verified; no login or backend code has been executed.
 - App-distribution direction: PWA-first is the proposed future path for the
   installable authenticated client after the Webapp core. Nothing has been
   implemented; no store or native release is decided. Website/PWA, backend API
@@ -81,7 +82,8 @@ Last updated: 2026-08-11
   should redirect permanently.
 - Database direction: ADR 0002 is accepted and implemented for staging with
   PostgreSQL 16. The existing IONOS MySQL database and its credentials are not
-  used by the VPS backend. No application schema migration or real data exists.
+  used by the VPS backend. Portal-core migration `0001` exists on the VPS
+  staging database, but no business or personal data exists there.
 
 ## Timeline And Quality
 
@@ -115,10 +117,10 @@ Last updated: 2026-08-11
   unavailable?
 - Which encrypted off-server backup target, retention and restore-test rhythm
   are approved?
-- Which initial users receive accounts, which roles do they hold, and what may
-  each role read, create, edit, approve, deactivate, export or evaluate?
-- Which Excel fields are authoritative ideas, required fields, relationships or
-  import candidates, and which contain personal data?
+- Which concrete people receive the first synthetic/staging accounts and which
+  combinations of the four working roles do they need?
+- Which Auth/session/invitation/MFA model should protect internal and later
+  external portal accounts?
 - Which feedback types and statistical formulas are required first, and which
   roles may see them?
 - Which Webapp frontend stack and supported browser/platform baseline make the
@@ -166,9 +168,24 @@ Last updated: 2026-08-11
 - Safety: do not open credentials or `.env*`; keep `.tmp/` untracked; publish no
   customer references from Frau Dr. Stefanie Beckers source material; do not
   infer a Mediationsqualification.
-- Next concrete action: verify the scheduled Friday crawl after it completes,
-  then validate and test the Würzburg workstation as encrypted off-server
-  backup target. In parallel, receive the portal user-rights list and synthetic
-  Excel field model before turning `initial-data-model.md` into a versioned
-  migration. Keep staging empty and free of real data until the backup gate is
-  closed.
+- Auth status: ADR 0003 is approved. Migration `0002`, API contract, FastAPI
+  health scaffold, cookie/password/token/HMAC primitives and 16 synthetic tests
+  are implemented locally. Migration `0002` is applied and verified on VPS
+  staging: 22 tables total, seven empty Auth tables, correct owner/runtime
+  rights, protected readable pre/post dumps and unchanged service health. Login
+  routes, persistence repository, real accounts and deployable service
+  configuration do not exist yet.
+- Versioning status: commit and push of the complete portal/Auth/migration
+  change set were explicitly approved on 2026-08-13. The change set excludes
+  `.tmp/`, `.venv/`, generated package metadata, real `.env` files and secrets;
+  no deployment is part of the push.
+- Recommended next work block after versioning: implement the database/session
+  repository plus protected current-session and logout endpoints. Definition of
+  Done: token hashes only, idle/absolute expiry and revocation enforced,
+  deny-by-default authentication dependency, synthetic repository/API tests and
+  no real accounts or deployed backend.
+- Parallel organizational gates: run Janay's real request-workflow walkthrough
+  before final status automation, and validate the Wuerzburg workstation as an
+  encrypted off-server backup/restore target before any real data.
+- Separate approvals still required: backend deployment,
+  production deployment and use of real business or personal data.
