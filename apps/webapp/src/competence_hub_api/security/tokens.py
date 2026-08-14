@@ -1,21 +1,30 @@
 import hashlib
 import hmac
 import secrets
-from dataclasses import dataclass
+from dataclasses import dataclass, field as dataclass_field
 
 TOKEN_BYTES = 32
+MAX_TOKEN_CHARACTERS = 128
 
 
 @dataclass(frozen=True)
 class IssuedToken:
-    plaintext: str
-    digest: bytes
+    plaintext: str = dataclass_field(repr=False)
+    digest: bytes = dataclass_field(repr=False)
 
 
 def digest_token(token: str) -> bytes:
     if not token:
         raise ValueError("token must not be empty")
-    return hashlib.sha256(token.encode("ascii")).digest()
+    if len(token) > MAX_TOKEN_CHARACTERS:
+        raise ValueError("token is too long")
+
+    try:
+        encoded_token = token.encode("ascii")
+    except UnicodeEncodeError as error:
+        raise ValueError("token must contain ASCII characters only") from error
+
+    return hashlib.sha256(encoded_token).digest()
 
 
 def keyed_digest(value: str, key: bytes) -> bytes:

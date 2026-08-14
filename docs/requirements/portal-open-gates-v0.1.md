@@ -1,31 +1,39 @@
 # Portal Open Gates v0.1
 
-Stand: 13.08.2026
+Stand: 14.08.2026
 
 ## Gate A - vor dem jeweiligen Implementierungsschritt
 
 ### Anfrageworkflow
 
-Mit Janay beziehungsweise der spaeteren Bearbeitung einen realen Fall von der
-ersten Firmenanfrage bis zum Abschluss durchspielen. Offen sind insbesondere:
+Janays operatives Feedback vom 14.08.2026 beschreibt den Weg von der ersten
+Anfrage ueber parallele Coach-Verfuegbarkeitspruefung, Angebot, Auftrag,
+Durchfuehrung, Feedback, Rechnung und Zahlung bis zum Abschluss. Die sichere
+Auswertung steht in `janay-request-workflow-feedback-2026-08-14.md`.
 
-- Beginn und Parallelitaet der Coach-Suche
-- Reihenfolge Coach-Zusage, Angebot und Auftrag
-- Pause, Reaktivierung, Ablehnung und kein passender Coach
-- Terminierung, Abschluss und Feedback
-- erlaubte Statusuebergaenge und automatische Aktionen
+Vor Transitionregeln und Automation bleiben insbesondere offen:
+
+- finale Statusnamen, erlaubte Uebergaenge, Reaktivierung und Actor-Rechte
+- rechtlich freigegebene Auftragsannahme und Stornierungsregeln
+- Vertraulichkeitsfreigabe vor Nennung der Kundenidentitaet an Coaches
+- Quelle der Wahrheit fuer Angebot, Rechnung und Zahlung
+- Aufbewahrung und Minimalinhalt von Aktivitaets-/Abschlussnachweisen
+- Erinnerungs-, Vertretungs- und Eskalationsregeln
 
 Bis dahin sind Datenstruktur, Draftstatus, Wireframes und Spezifikation erlaubt;
-harte Transitionregeln und Automation nicht.
+harte Transitionregeln und Automation nicht. Die im Feedback enthaltene
+48-Stunden-Angabe, Klickannahme und Ergebnisbewertung sind nicht freigegeben.
 
 ### Authentifizierung
 
 ADR 0003 wurde von Manuel am 13.08.2026 freigegeben; die testbaren Anforderungen
 stehen in `internal-authentication-v0.1.md`. Migration `0002`, API-Vertrag,
 Sicherheitsprimitive und synthetische Tests sind vorbereitet; die Migration ist
-auf der leeren VPS-Staging-Datenbank angewendet und verifiziert. Vor einem
-laufenden Login bleiben Repository-/API-Implementierung und Security-Review
-erforderlich. ADR 0003 entscheidet:
+auf der leeren VPS-Staging-Datenbank angewendet und verifiziert. Login-,
+Session-, MFA-, Lifecycle- und Outbox-Repositories/APIs sind lokal implementiert
+und ueber 13/13 synthetische Staging-Pfade verifiziert. Ein laufender Dienst,
+echte Konten, externe Zustellung und Produktion bleiben durch Security-,
+Operations-, Daten- und Deployment-Gates gesperrt. ADR 0003 entscheidet:
 
 - Session oder Tokenmodell
 - Passwort-/Einladungs-/Resetverfahren

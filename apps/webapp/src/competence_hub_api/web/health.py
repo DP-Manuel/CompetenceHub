@@ -10,8 +10,8 @@ def liveness() -> dict[str, str]:
 
 
 @router.get("/health/ready")
-def readiness(request: Request) -> JSONResponse:
-    if request.app.state.readiness_probe():
+async def readiness(request: Request) -> JSONResponse:
+    if await request.app.state.readiness_probe():
         return JSONResponse({"status": "ready"})
 
     return JSONResponse(

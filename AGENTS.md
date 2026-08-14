@@ -51,13 +51,31 @@ Read this file before editing.
 - Update stale `next`, `waiting`, `blocked`, `not applied` and similar claims in
   `PROJECT_PLAN.md`, `PROJECT_STATUS.md` and `PROJECT_LOG.md` during the same
   session.
-- End with exactly one recommended next work block including purpose, required
-  inputs, deliverables and Definition of Done. Keep parallel organizational
-  gates and alternative workstreams separate from that recommendation.
+- End with one clearly recommended next work block including purpose, required
+  inputs, deliverables and Definition of Done. Also keep an ordered rolling
+  horizon of the next four to eight likely steps visible in `PROJECT_PLAN.md`
+  and summarized in `PROJECT_STATUS.md`; mark later steps with lower confidence
+  instead of presenting them as committed work.
+- Separate the current execution/sprint backlog from the broader project or
+  product backlog. Keep WIP small while preserving later product value.
+- For every rolling-horizon step, record the intended outcome, status,
+  dependency or gate, planned test/evidence and confidence. Reconcile the
+  horizon after meaningful completion or changed information instead of only
+  appending another next task.
+- Define decision, requirements, privacy/data, security, content/rights,
+  operations, deployment and stakeholder-acceptance gates where relevant. A
+  gated item cannot be reported as ready or done without its evidence.
+- Keep parallel organizational gates and alternative workstreams separate from
+  the recommended next block and the ordered implementation horizon.
 - State explicitly whether commit, push, deployment and real-data use occurred
   or still need separate approval.
 - Any command Manuel must execute must be repeated in the final response that
   requests the action; intermediary commentary is not a durable handoff.
+- Durable handoff gate: before ending a turn that waits for Manuel to execute a
+  command, verify that the same final response contains every current command
+  in execution order, the required working directory or terminal split, the
+  expected safe output and any secret-handling warning. A final response that
+  only refers to commands shown earlier is incomplete and must not be sent.
 
 ## Structure
 

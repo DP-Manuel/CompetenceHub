@@ -6,6 +6,93 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-08-14 | staging-harness-depth | Preflight fixtures and run real PostgreSQL paths early
+
+- Triggering project situation: the first real Outbox Staging run successively
+  exposed a 31-byte synthetic key, PostgreSQL UUID inference in a multi-row
+  `VALUES` fixture and an unnecessary `FOR SHARE` lock that conflicted with the
+  intended read-only role privilege.
+- Friction or risk: the full local fake-repository suite was green, but fixture
+  constants, PostgreSQL typing and lock/privilege semantics could only fail in
+  the real adapter. Re-running the full two-minute harness for each shallow
+  issue cost time and obscured the one genuine security-relevant finding.
+- Proposed improvement: `write-tests`, `integrate-backend` and `audit-security`
+  should add a deterministic Staging preflight for key lengths, migration
+  presence, fixture SQL preparation and runtime privilege assumptions; provide
+  a focused secure runner target for a newly added Staging file before the
+  complete regression harness; keep final full-suite and zero-residue gates.
+- Project response: fixture constants and UUID casts were corrected; the role
+  lock was removed rather than broadening privileges; a regression assertion
+  now forbids `FOR SHARE` in the role lookup. Final evidence is 13/13 Staging
+  paths and zero residue.
+- Reuse potential: high
+- Risk if ignored: high for security-critical PostgreSQL adapters
+- Status: captured; canonical CodexSkills update not yet proposed/applied.
+
+### 2026-08-14 | terminal-context-guard | Make shell context executable, not only visible
+
+- Triggering project situation: a clearly labelled Linux/VPS command block was
+  pasted into local Windows PowerShell after the tunnel test. PowerShell then
+  interpreted Linux `sudo`, `grep` and backslash continuations as local commands.
+- Friction or risk: headings alone do not prevent terminal-context mistakes;
+  operational output becomes noisy and a less safe command could target the
+  wrong machine.
+- Proposed improvement: operational handoffs should begin with a terminal
+  identity gate (`ssh ...`, then verify the expected prompt) and use separate
+  fenced blocks for local PowerShell and remote Bash. For longer sequences,
+  prefer a reviewed uploaded verification script or a harmless platform guard
+  before state-changing commands.
+- Project response: no remote command had executed; the handoff was resent with
+  an explicit `PS ...>` versus `manuel@ubuntu:~$` checkpoint and then completed.
+- Reuse potential: high
+- Risk if ignored: high for deployment/database operations
+- Status: captured; evaluate for `create-deployment-plan` and operations handoff guidance.
+
+### 2026-08-14 | postgres-adapter-evidence | Fake repositories cannot close SQL gates
+
+- Triggering project situation: MFA repository unit tests validated parameter
+  shape and transaction sequencing, but a temporarily misplaced SQL bind name
+  would only have failed against PostgreSQL and was found during manual review.
+- Friction or risk: mocked SQLAlchemy results can create false confidence for
+  migrations, bind parameters, PostgreSQL syntax, row counts and concurrency.
+- Proposed improvement: `integrate-backend`, `write-tests` and
+  `audit-security` should require an explicit real-database integration gate
+  for security-critical SQL adapters and must label fake-engine evidence as
+  structural unit evidence only.
+- Project response: SB-06 remains local; SB-07 explicitly requires migration
+  0003 plus enrollment/replay/recovery/rate/session tests on isolated
+  PostgreSQL before the slice may be called Staging-complete.
+- Reuse potential: high
+- Risk if ignored: high
+- Status: captured; not yet synchronized to canonical CodexSkills.
+
+### 2026-08-13 | rolling-steering-horizon | Show 4-8 next steps with gates and tests
+
+- Triggering project situation: Manuel repeatedly received one correct next
+  technical step, but could not reliably see whether the larger Auth, portal,
+  operations and product path remained coherent.
+- Current skill behavior: `manage-project-state` covered roadmap, sprint and
+  next actions, but did not require a persistent multi-step steering horizon or
+  distinguish execution backlog from project/product backlog.
+- Friction or risk: local optimization can displace the broader plan; gates and
+  expected verification appear too late; completed items can remain mixed with
+  future work; distant assumptions can look as certain as ready work.
+- Implemented improvement: require an ordered four-to-eight-step horizon with
+  outcome, status, dependency/gate, intended test/evidence and honest
+  confidence; keep Project Backlog and Execution/Sprint Backlog separate; make
+  horizon reconciliation part of every material completion checkpoint.
+- Project evidence: Competence Hub now maps Runtime -> Staging session proof ->
+  Login -> MFA -> Invitation/reset -> Portal UI -> Staging service -> Internal
+  acceptance, with data/security/operations/production/requirements/content
+  gates and test targets.
+- Proposed destination: implemented in canonical CodexSkills
+  `manage-project-state` plus its `project-memory-files.md` reference and in the
+  downstream project harness.
+- Reuse potential: high
+- Risk if ignored: high
+- Status: implemented locally and canonically, validated and after Manuel's
+  explicit approval synchronized to the active runtime on 2026-08-13.
+
 ### 2026-08-06 | project-state-cadence | Require a steering checkpoint after material changes
 
 - Triggering project situation: Several rapid frontend, stakeholder and
@@ -68,7 +155,21 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 - Risk if ignored: high for operations work
 - Proposed destination: CodexSkills `coordinate-software-project`,
   `create-deployment-plan`, `integrate-backend` and operations handoff guidance
-- Status: proposed; applied as a project-local handoff rule on 2026-08-13
+- Recurrence 2026-08-14: the exact failure repeated during SB-03. Two required
+  SSH/Staging command blocks appeared in commentary, while the final response
+  only said to run the commands "above". Manuel could watch the commands vanish
+  from the durable view. This happened despite the existing project-local rule
+  and active `manage-project-state` synchronization.
+- Root cause refinement: a written instruction is insufficient without a
+  deterministic pre-send gate. Any final response that waits for user command
+  execution must be rejected as incomplete if it refers to an earlier message
+  instead of embedding the complete current command block itself.
+- Implemented project safeguard 2026-08-14: `AGENTS.md` now requires command
+  order, working directory/terminal split, expected output and secret warning
+  in the same durable response. This recurrence should become a canonical skill
+  validation/checklist item, not only prose guidance.
+- Status: repeated/high-priority compliance failure; strengthened locally;
+  canonical CodexSkills checklist/evaluation update required
 
 ### 2026-08-05 | multi-workstation-preview-bootstrap | Make Windows network-drive preview setup portable and restart-safe
 

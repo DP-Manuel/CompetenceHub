@@ -38,8 +38,11 @@ async def test_readiness_is_honest_until_dependencies_are_connected() -> None:
 
 @pytest.mark.anyio
 async def test_readiness_can_be_supplied_by_the_runtime_adapter() -> None:
+    async def ready() -> bool:
+        return True
+
     async with AsyncClient(
-        transport=ASGITransport(app=create_app(readiness_probe=lambda: True)),
+        transport=ASGITransport(app=create_app(readiness_probe=ready)),
         base_url="https://test.invalid",
     ) as client:
         response = await client.get("/health/ready")

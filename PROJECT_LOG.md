@@ -2,6 +2,416 @@
 
 Newest entries first.
 
+## 2026-08-14 | review/planning | Auth-Paket geprueft und Pilottermin 28.08 gesetzt
+
+- Der abschliessende Code-/Security-Review fuer SB-01 bis SB-09 fand keinen
+  offenen hohen oder kritischen Befund. Der Umfang bleibt synthetisch und
+  deploymentfrei; `.tmp/`, `.env*`, Dumps und Secrets sind ausgeschlossen.
+- Manuel hat Commit und Push fuer das gepruefte Paket freigegeben. Deployment,
+  produktive Konten und Echtdaten bleiben eigene Gates.
+- Neue operative Pilotmarke ist der 28.08.2026: Die kanonische Website soll
+  ueber den freigegebenen Produktionspfad erreichbar sein und Janay soll die
+  erste freigegebene Firma samt Kontakt im geschuetzten Portal erfassen koennen.
+- Terminstatus: gefaehrdet, aber mit enger Pilot-Schnittlinie noch erreichbar.
+  Kritischer Pfad sind Runtime/Zustellung, Firmen-/Kontakt-CRUD, minimale UI,
+  Backup-Restore, Produktionsfreigabe sowie reale Rollen-/MFA-Einrichtung.
+- Der Rolling Horizon wurde auf acht rueckwaerts geplante Schritte bis zum
+  Pilot-Go-live umgestellt; Coaches, Matching, Feedback, Statistiken, Vertraege
+  und weitere Automatisierung bleiben ausserhalb dieses ersten Datenpiloten.
+
+## 2026-08-14 | backend/staging/security | Migration 0004 und Outbox-Gate abgeschlossen
+
+- Manuel hat Migration `0004` separat fuer das leere, synthetische VPS-Staging
+  freigegeben. SHA-256-Pruefsummen, 22-Tabellen-Ausgangslage, Migrationen
+  `0001`-`0003`, vier aktive Dienste und localhost-only PostgreSQL wurden vorab
+  bestaetigt; der geschuetzte 74-KiB Pre-Dump liegt mit Modus `0600` vor.
+- Die Migrator-Rolle hat `0004` atomar mit `COMMIT` angewendet. Der
+  rollback-only Smoke bestand ohne Rueckstaende; danach gehoeren alle 24
+  Tabellen `competence_hub_owner`, beide neuen Tabellen sind leer und die App
+  darf deren benoetigte DML-Operationen, aber weder Schemaerstellung noch
+  Migrationsmetadatenzugriff ausfuehren.
+- Der reale PostgreSQL-Lauf deckte drei Harness-/Adapterprobleme auf: einen
+  31-Byte-Testschluessel, fehlende UUID-Casts im synthetischen Fixture und einen
+  unnoetigen `FOR SHARE`-Lock auf der read-only Rollentabelle. Die ersten beiden
+  wurden im Test korrigiert; der Lock wurde im Repository entfernt, statt der
+  Runtime-Rolle gefaehrlich `UPDATE` auf Rollen zu geben. Ein Regressionstest
+  sichert diese Least-Privilege-Entscheidung.
+- Finaler Nachweis: `13 passed in 156.91s` gegen isoliertes Staging. Geprueft
+  wurden Idempotenz-Replay/-Konflikt, verschluesseltes Enqueueing, Zustellung,
+  terminaler Fehler mit Token-Widerruf, Minimierung, Cleanup und unbekannter
+  Reset. Alle elf Datenbereiche blieben bei null Datensaetzen.
+- Migrationen `0001`-`0004`, 24 Owner-Tabellen, Rollen-`SELECT=t` und
+  Rollen-`UPDATE=f`, vier aktive Dienste sowie `127.0.0.1:5432` wurden
+  unabhaengig bestaetigt. Der geschuetzte 86-KiB Post-Dump ist kataloglesbar,
+  gehoert `postgres:postgres` und besitzt Modus `0600`.
+- Keine echten Konten/Daten, kein Mailanbieter, kein persistenter Backend- oder
+  Worker-Dienst, kein Deployment, Commit oder Push. `.tmp/` blieb unberuehrt.
+
+## 2026-08-14 | backend/security | ADR 0005 und Auth-Outbox lokal umgesetzt
+
+- ADR 0005 wurde durch Manuel freigegeben und als akzeptiert dokumentiert.
+- Migration `0004` und ein rollback-only Smoke sind lokal vorbereitet, aber
+  nicht auf Staging angewendet.
+- Einladung und bekannter Passwort-Reset schreiben Token-Digest und AES-256-
+  GCM-verschluesselten Outbox-Payload atomar; unbekannte Reset-Adressen erzeugen
+  keinen Token- oder Outbox-Datensatz.
+- Admin-Einladungen besitzen persistente HMAC-Idempotenz. Identische Replays
+  liefern dieselbe Nutzerreferenz ohne neuen Token; veraenderte Requests mit
+  demselben Key werden als Konflikt abgewiesen.
+- Die Adminroute erzwingt MFA-Sitzung, Adminrolle, frische Authentisierung,
+  Origin, CSRF, `Idempotency-Key` und ausschliesslich die Anfangsrolle
+  `internal`. API-Antworten enthalten keine Roh-Tokens.
+- Der providerneutrale Worker nutzt atomare Leases, `SKIP LOCKED`, begrenzte
+  Retries, stabile Delivery-IDs, terminalen Token-Widerruf und loescht bei
+  Abschluss Empfaengeradresse sowie Payload. Cleanup-Fristen bleiben explizit
+  konfigurierbar.
+- Verifikation: 56 fokussierte Tests und Vollsuite `214 passed, 13 skipped`;
+  der neue Outbox-Staging-Harness ist opt-in vorbereitet. Kein offener hoher
+  oder kritischer lokaler Befund.
+- Kein Commit, Push, Deployment, Staging-Eingriff, Mailanbieter, Runtime-Secret,
+  echtes Konto oder Echtdatum. `.tmp/` blieb unberuehrt.
+
+## 2026-08-14 | backend/security | Einladungs- und Reset-Lifecycle lokal abgesichert
+
+- SB-08 deckt lokal nun Initial-Admin, Einladung und Passwort-Reset ab:
+  Single-use, Ablauf, Widerruf, Rate Limits, Audit und das Widerrufen aller
+  Sitzungen nach einem Reset sind in Service und PostgreSQL-Repository
+  umgesetzt.
+- Generische oeffentliche HTTP-Grenzen fuer Reset-Anfrage, Reset-Bestaetigung
+  und Einladungsannahme geben keine Kontoexistenz preis und bleiben ohne
+  konfigurierte Runtime-Dienste kontrolliert `503`.
+- Einladungsannahme fuehrt ausschliesslich in die MFA-Einrichtung; ein Reset
+  erzeugt keine Sitzung. Roh-Tokens werden nicht persistiert oder in HTTP-
+  Antworten ausgegeben.
+- Die Admin-Einladungsroute und produktive Zustellung bleiben absichtlich
+  gesperrt, bis ADR 0005 zu transaktionaler Outbox, verschluesselter Payload und
+  persistenter Idempotenz entschieden ist.
+- Verifikation: Lifecycle-Service 11 Tests, Service/Repository 19 Tests,
+  Auth-API 38 Tests und Vollsuite `194 passed, 12 skipped`; Compile und
+  Abhaengigkeitspruefung bestanden. Kein offener hoher oder kritischer Befund
+  im fokussierten Review.
+- Kein Commit, Push, Deployment, Staging-Eingriff, Provider, echtes Konto oder
+  Echtdatum. `.tmp/` blieb unberuehrt.
+
+## 2026-08-14 | backend/security | Initial-Admin-CLI lokal umgesetzt
+
+- SB-08 wurde mit dem blockierenden Initial-Admin-Teilslice begonnen.
+- Der neue interaktive CLI-Pfad besitzt keine Default-Zugangsdaten, nimmt kein
+  Passwort als Argument an und verweigert nicht-interaktive Ausfuehrung.
+- Eine verpflichtende absolute lokale SHA-256-Fingerabdruckdatei ergaenzt die
+  bestehende Passphrase-Policy; leere oder fehlerhafte Quellen schliessen den
+  Pfad.
+- PostgreSQL serialisiert Bootstrap-Versuche per transaktionalem Advisory Lock.
+  Ein vorhandener wirksamer Admin stoppt vor Schreibzugriff; Nutzer, Adminrolle,
+  Argon2id-Credential und datensparsames Audit entstehen atomar.
+- Verifikation: 21 fokussierte Tests sowie die Vollsuite mit `164 passed, 12
+  skipped`; Compile, `pip check` und CLI-Help-Smoke bestanden.
+- Review: `initial-admin-cli-security-review-2026-08-14.md`, kein offener hoher
+  oder kritischer Befund. Fingerabdruckquelle, Staging-Rehearsal und reale
+  Kontoanlage bleiben separate Gates.
+- SB-08 bleibt fuer Einladung und Passwort-Reset offen. Kein Deployment,
+  Commit, Push, echtes Konto oder Echtdatum.
+
+## 2026-08-14 | staging/security | SB-07 vollstaendig abgeschlossen
+
+- Der unabhaengige Abschlusscheck bestaetigt null Datensaetze in allen neun
+  geprueften Portal-, Auth- und Auditbereichen.
+- `schema_migrations` enthaelt genau die erwarteten Stufen `0001`, `0002` und
+  `0003`.
+- Chatbot, Nginx, Fail2ban und PostgreSQL sind jeweils `active`; PostgreSQL
+  meldet `listen_addresses = localhost` und lauscht nur auf
+  `127.0.0.1:5432`.
+- Zusammen mit rollback-only Smoke, 12/12 MFA-Pfaden sowie geschuetzten,
+  kataloglesbaren Pre-/Post-Dumps ist SB-07 ohne offenen hohen oder kritischen
+  Befund abgeschlossen.
+- Naechster empfohlener Block: SB-08, Initial-Admin-CLI plus Einladungs- und
+  Passwort-Reset-Lifecycle lokal mit synthetischen Daten.
+- Kein Deployment, Commit, Push, echtes Konto oder Echtdatum.
+
+## 2026-08-14 | staging/backup | Post-0003-Dump verifiziert
+
+- Nach dem erfolgreichen 12/12-MFA-Lauf wurde der Post-Dump
+  `competence-hub-staging-post-0003-2026-08-14.dump` erstellt.
+- Der Custom-Format-Katalog ist mit PostgreSQL 16.14 lesbar und enthaelt das
+  erwartete `competence_hub`-Schema mit Owner `competence_hub_owner`.
+- Post-Dump: 74 KiB; Pre-Dump: 73 KiB. Beide gehoeren `postgres:postgres` und
+  sind mit Modus `0600` geschuetzt.
+- SB-07 bleibt bis zum unabhaengigen Nullbestand, Migrationsstand,
+  localhost-only Nachweis und unveraenderten Zustand aller vier Dienste offen.
+- Kein Deployment, Commit, Push, echtes Konto oder Echtdatum.
+
+## 2026-08-14 | staging/integration | Vollstaendiger MFA-Lauf bestanden
+
+- Der opt-in PostgreSQL-Harness bestand alle 12 Session-, First-Factor- und
+  MFA-Staging-Pfade in 134,98 Sekunden.
+- Abgedeckt sind unter anderem Passwortlogin, TOTP-Enrollment, verschluesselte
+  Speicherung, Bestaetigung, Replay-Ablehnung, einmaliger Recovery-Verbrauch,
+  Rate-Limit und Rotation in eine neue Vollsession.
+- Der Lauf nutzte nur temporaer eingegebene App-/Migrator-Passwoerter ueber
+  einen lokalen SSH-Tunnel; keine Zugangsdaten wurden in Dateien oder Git
+  geschrieben.
+- SB-07 bleibt bis zum unabhaengigen Nullbestand, geschuetzten lesbaren
+  Post-Dump, localhost-only Nachweis und unveraenderten Dienstzustand offen.
+- Kein Deployment, Commit, Push, echtes Konto oder Echtdatum.
+
+## 2026-08-14 | staging/verification | Migration 0003 Smoke bestanden
+
+- Der administrative rollback-only Smoke fuer Migration `0003` lief nach der
+  gezielten Uebergabe der temporaeren Datei an `postgres` erfolgreich durch:
+  `BEGIN`, synthetischer Insert, Assertions und `ROLLBACK`.
+- Anschliessend standen Portalbenutzer, Login-Challenges, Sessions,
+  TOTP-Credentials, Recovery-Codes, Rate-Limit-Buckets und Auditereignisse
+  jeweils bei null. Es verblieben keine synthetischen Daten.
+- Migration `0003` wurde nicht erneut ausgefuehrt. Der vorherige Fehler war
+  ausschliesslich ein Dateirechte-Handoff und ist damit geschlossen.
+- Naechster Schritt: den vollstaendigen MFA-Staging-Harness ueber einen
+  temporaeren SSH-Tunnel ausfuehren, danach Post-Dump und Dienstzustand pruefen.
+- Kein Deployment, Commit, Push, echtes Konto oder Echtdatum.
+
+## 2026-08-14 | staging/migration | Migration 0003 angewendet, Smoke nachzuholen
+
+- Migration `0003` wurde auf der leeren Staging-Datenbank erfolgreich
+  angewendet und ist in `schema_migrations` registriert.
+- `auth_totp_credentials.last_accepted_time_step bigint NULL` und
+  `auth_recovery_codes.key_version text NOT NULL` sind vorhanden.
+- Der geschuetzte Pre-Dump
+  `competence-hub-staging-pre-0003-2026-08-14.dump` existiert mit 73 KiB,
+  Eigentuermer `postgres` und Modus `0600`.
+- Der rollback-only Smoke startete nicht, weil seine `/tmp`-Datei korrekt mit
+  `0600`, aber noch im Eigentum von `manuel` stand. Das ist ein Dateirechte-
+  Handoff, kein SQL- oder Migrationsfehler; Migration nicht erneut ausfuehren.
+- Naechster Schritt: Smoke-Datei an `postgres` uebergeben, Smoke ausfuehren und
+  Nullbestand bestaetigen. Kein Deployment, Commit, Push oder Echtdaten.
+
+## 2026-08-14 | approval/preparation | Migration 0003 fuer Staging freigegeben
+
+- Manuel hat Migration `0003` separat fuer die leere PostgreSQL-Staging-
+  Datenbank freigegeben.
+- Der opt-in Harness prueft nun zusaetzlich Passwortlogin, TOTP-Enrollment,
+  verschluesselte Speicherung, Session-Rotation, Replay-Ablehnung, einmaligen
+  Recovery-Verbrauch, MFA-Rate-Limit und Cleanup gegen echtes PostgreSQL.
+- Lokale Vorbereitung: `148 passed, 12 skipped`; der neue Skip ist der ohne
+  Tunnel bewusst deaktivierte MFA-Staging-Pfad. PowerShell-Syntax des Runners
+  ist gueltig.
+- Noch nicht ausgefuehrt: Transfer, Pre-Dump, Migration, rollback-only Smoke,
+  Staging-Harness, Post-Dump und Dienstpruefung.
+- Keine echten Konten/Fachdaten, kein Deployment, Commit oder Push.
+
+## 2026-08-14 | decision | ADR 0004 freigegeben
+
+- Manuel hat ADR 0004 fuer TOTP-Kryptografie und das Recovery-Modell explizit
+  freigegeben.
+- Damit sind PyOTP, versionierte AES-256-GCM-Umschlaege, ein getrennter
+  versionierter Recovery-HMAC-Keyring, Replay-Schutz und Session-Rotation als
+  technische Richtung akzeptiert.
+- Die Freigabe umfasst keine Anwendung von Migration `0003`, keine
+  Runtime-Secrets, echten Konten, Fachdaten, kein Deployment, Commit oder Push.
+- Naechstes Gate: separate Freigabe von Migration `0003` fuer das leere
+  PostgreSQL-Staging mit geschuetzten Dumps und synthetischer Verifikation.
+
+## 2026-08-14 | backend/security | MFA-Slice SB-06 lokal abgeschlossen
+
+- TOTP-Enrollment, TOTP-Pruefung, Recovery-Code-Pruefung und Rotation von der
+  Pre-Auth-Challenge in eine neue serverseitige Vollsession umgesetzt.
+- PyOTP `2.10.x` uebernimmt TOTP/Provisioning; `cryptography` `49.x` schuetzt
+  TOTP-Secrets per AES-256-GCM mit frischer Nonce, benutzergebundener
+  Associated Data und versioniertem externem Keyring.
+- Zehn Recovery-Codes mit je 80 Bit werden nur einmal nach Enrollment
+  ausgegeben; PostgreSQL erhaelt ausschliesslich HMAC-Digest und Key-Version.
+- Migration `0003` bereitet atomaren Replay-Schutz ueber den hoechsten
+  akzeptierten TOTP-Zeitschritt sowie Recovery-Key-Versionen vor. Migration und
+  rollback-only Smoke liegen lokal, sind aber nicht auf Staging angewendet.
+- Challenge-Verbrauch, Replay-Zaehler oder Recovery-Verbrauch, Sessionanlage
+  und Audit liegen jeweils in einer Transaktion. Deaktivierung oder Rollenentzug
+  wird auch beim finalen Transaktionsschritt erneut geprueft.
+- Vollsuite: `148 passed, 11 skipped`; `compileall` bestanden; `pip check` ohne
+  gebrochene Abhaengigkeiten; `git diff --check` ohne Patchfehler.
+- Sicherheitsreview:
+  `docs/architecture/mfa-runtime-security-review-2026-08-14.md`; kein offener
+  hoher oder kritischer Befund im lokalen Slice.
+- Keine Staging-Aenderung, Runtime-Secrets, echten Konten, Fachdaten, kein
+  Commit, Push oder Deployment. ADR 0004 wurde anschliessend freigegeben.
+- Naechster Block: Migration `0003` und den vollstaendigen synthetischen
+  MFA-Fluss separat fuer Staging freigeben.
+
+## 2026-08-14 | security/staging | First-Factor-Gate SB-05 abgeschlossen
+
+- Der kombinierte Session-/Login-Lauf bestand alle 11 PostgreSQL-Staging-Pfade
+  in 103,75 Sekunden.
+- First-Factor-Login, Rollen/Aktivstatus, Challenge-/CSRF-Hashes, fuenf Minuten
+  Laufzeit, Audit, fuenfter Fehlversuch, progressive Sperre, Sessionpfade und
+  Readiness sind damit gegen PostgreSQL 16 belegt.
+- Cleanup bestaetigt null Portalbenutzer, Credentials, Login-Challenges,
+  Sessions, Rate-Limit-Buckets und Auditereignisse. Chatbot, Nginx, Fail2ban und
+  PostgreSQL blieben `active`.
+- Der fokussierte Review dokumentiert drei bereits behobene Low-Risk-Punkte und
+  keinen offenen hohen oder kritischen Befund. Proxy-Trust, vorgeschalteter
+  DoS-Schutz und produktive Schluesselrotation bleiben Deployment-Gates.
+- Review: `docs/architecture/first-factor-login-security-review-2026-08-14.md`.
+  Keine echten Konten/Fachdaten, kein Deployment, Commit oder Push.
+- Naechster Block: TOTP/recovery und sichere Rotation zur Vollsitzung mit
+  synthetischen Daten.
+
+## 2026-08-14 | backend/staging | Login-Cleanup und Dienste bestaetigt
+
+- Nach dem vorbereiteten Auth-Staging-Lauf sind Portalbenutzer, Credentials,
+  Login-Challenges, Sessions, Rate-Limit-Buckets und Auditereignisse jeweils
+  bei null.
+- `dp-chatbot`, Nginx, Fail2ban und PostgreSQL sind weiterhin `active`.
+- Damit waren Cleanup und betriebliche Isolation belegt. Die anschliessend
+  uebermittelte pytest-Abschlusszeile hat SB-05 inzwischen vollstaendig
+  geschlossen.
+- Keine echten Konten oder Fachdaten, kein Deployment, Commit oder Push.
+
+## 2026-08-14 | backend/auth | First-Factor-Login lokal umgesetzt
+
+- `POST /api/v1/auth/login` mit strikter JSON-Grenze, 32-KiB-Limit,
+  unbekannten-Feld-Ablehnung und generischen Fehlerantworten umgesetzt.
+- Unbekannte, inaktive und externe Rollen durchlaufen denselben
+  Argon2id-Vergleich. Nach korrektem Passwort entsteht ausschliesslich eine
+  fuenf Minuten gueltige MFA-Pre-Auth-Challenge, keine Vollsitzung.
+- Konto- und Netzwerk-Peer-Buckets werden mit einem externen, mindestens 256 Bit
+  starken HMAC-Schluessel pseudonymisiert. Der fuenfte Fehler in 15 Minuten
+  startet eine progressive Sperre; rohe Mailadresse/IP werden nicht persistiert.
+- Audit unterscheidet unauthentifizierten Fehlversuch von erfolgreichem ersten
+  Faktor. `X-Forwarded-For` bleibt bis zu einer expliziten Proxy-Trust-
+  Konfiguration unberuecksichtigt.
+- Nachweis: 86 lokale Tests bestanden, elf Opt-in-Staging-Tests ohne explizite
+  Zugangskonfiguration kontrolliert uebersprungen; Compileall, `pip check` und
+  Diff-Check bestanden.
+- Ein PostgreSQL-Staging-Test fuer Challenge-Hashes, Audit, Rollen/Aktivstatus,
+  den fuenften Fehlversuch und garantiertes Cleanup ist vorbereitet, aber noch
+  nicht ausgefuehrt. Keine echten Konten, keine Serveraenderung, kein Commit,
+  Push oder Deployment.
+
+## 2026-08-14 | security/backend | Session- und Runtime-Review SB-04 abgeschlossen
+
+- Der lokale Session-/Runtime-Slice wurde fokussiert auf Konfiguration,
+  Datenbankrollen, Token-/Cookie-Verarbeitung, CSRF, Fehlerausgaben, Readiness
+  und das synthetische Staging-Harness geprueft.
+- Behoben wurden vier Defense-in-Depth-Risiken: direkte Settings-Konstruktion
+  kann die Validierung nicht mehr umgehen, die Runtime akzeptiert nur die
+  eingeschraenkte Rolle `competence_hub_app`, Tokenwerte erscheinen nicht mehr
+  in Dataclass-Repraesentationen und SQL-Parameter bleiben in Fehlern verborgen.
+- Nachweis: 61 lokale Tests bestanden, sieben Opt-in-Staging-Tests ohne explizite
+  Konfiguration kontrolliert uebersprungen; Compileall, `pip check` und
+  Diff-Check bestanden. Der vorausgehende echte Staging-Lauf blieb bei 7/7.
+- Ergebnis: kein offener hoher oder kritischer Befund im geprueften Slice. Das
+  ist keine Produktionsfreigabe; Login, Rate Limits, MFA, reale Konten und
+  Deployment bleiben ausserhalb des abgeschlossenen Blocks.
+- Review: `docs/architecture/session-runtime-security-review-2026-08-14.md`.
+  Kein Commit, Push, Deployment oder Einsatz echter Daten.
+- Der damals empfohlene First-Factor-Block ist inzwischen als SB-05 lokal und
+  auf isoliertem Staging abgeschlossen.
+
+## 2026-08-14 | backend/staging | Session-Integration SB-03 abgeschlossen
+
+- Opt-in Harness mit getrennten App- und Migrator-Verbindungen, ausschliesslich
+  synthetischen Benutzern/Sitzungen und garantiertem Cleanup umgesetzt.
+- Erster Staging-Lauf deckte einen mehrdeutigen optionalen SQL-Parameter im
+  Fixture-Setup auf; die Setup-Transaktion wurde jeweils zurueckgerollt. Der Fix
+  verwendet explizite Parameter und blendet SQL-Parameter in Fehlern/Logs aus.
+- Zweiter Lauf bestaetigte sechs fachliche Pfade; die Readiness war ueber den
+  SSH-Tunnel langsamer als das feste Zwei-Sekunden-Limit. Der Timeout ist nun
+  begrenzt konfigurierbar: Standard 5, maximal 30, im Tunneltest 15 Sekunden.
+- Finaler Nachweis: 7/7 Staging-Tests bestanden. Geprueft wurden aktive,
+  abgelaufene, widerrufene, inaktive und rollenfalsche Sessions, Idle-Refresh,
+  Origin/CSRF-Logout, Audit und echte PostgreSQL-Readiness.
+- Unabhaengiger Abschlusscheck: null Portalbenutzer, null Auth-Sessions, null
+  Auditereignisse; nur Migrationen `0001`/`0002`; Chatbot, Nginx, Fail2ban und
+  PostgreSQL jeweils `active`.
+- Lokaler Nachweis: 58 Tests bestanden, sieben Staging-Tests ohne Zugangsdaten
+  kontrolliert uebersprungen; Compileall, `pip check`, PowerShell-Syntax und
+  Diff-Check bestanden.
+- Grenzen zum Zeitpunkt des Blocks: keine echten Konten/Fachdaten, keine
+  Secret-Datei, keine Migration, kein Backend-Deployment, Commit oder Push.
+  Der anschliessende Security-Review SB-04 ist inzwischen abgeschlossen.
+
+## 2026-08-14 | process/feedback | Befehlsuebergabe erneut fehlgeschlagen
+
+- Beim Start des Staging-Integrationstests standen die erforderlichen Befehle
+  nur im Zwischenstand; die sichtbare Abschlussantwort verwies unbrauchbar auf
+  die Befehle "oben". Manuel hat den wiederholten Verlust direkt beobachtet.
+- Die Projektregel und ein Skill-Feedback-Eintrag existierten bereits. Als
+  Ursache gilt daher fehlende Abschlusskontrolle, nicht fehlende Dokumentation.
+- `AGENTS.md` enthaelt nun ein ausdrueckliches Durable-Handoff-Gate: Eine auf
+  Manuels Kommandoausfuehrung wartende Antwort ist ohne vollstaendige Befehle,
+  Reihenfolge, Arbeitskontext, erwartetes Ergebnis und Secret-Hinweis in
+  derselben Abschlussnachricht unvollstaendig.
+- Der Wiederholungsfall ist in `SKILL_FEEDBACK_LOG.md` als hochpriorisierte
+  kanonische Skill-/Eval-Verbesserung erfasst. Kein Commit, Push oder Deployment.
+
+## 2026-08-14 | requirements/backend | Janay-Feedback und Runtime-Block umgesetzt
+
+- Janays interne Rueckmeldung wurde in eine sichere Fachnotiz ueberfuehrt. Sie
+  konkretisiert Erstanfrage, parallele Coach-Verfuegbarkeitspruefung ohne
+  vorzeitige Kundennennung, Angebot/Auftrag, Durchfuehrung, Feedback, Rechnung,
+  Zahlung sowie Pause, Abbruch und fehlendes Matching.
+- Nicht als Freigabe uebernommen wurden insbesondere 48-Stunden-Zusage,
+  Klickannahme, Paketdetails, Ergebnisversprechen und Bewertung aus dem
+  Beispielszenario. Statusuebergaenge, rechtliche Annahme, Datenschutz,
+  Finance-Quelle und Abschlussnachweise bleiben gegatet.
+- Backend SB-02 ist lokal umgesetzt: validierte Prozesskonfiguration ohne
+  Secret-Datei, nur Loopback-PostgreSQL/asyncpg, exakte HTTPS-Origin, asynchroner
+  Engine-Lifecycle und datenbankgestuetzte Readiness mit Timeout und sauberem
+  Shutdown.
+- Verifikation: 52 synthetische Tests, Compileall und `pip check` bestanden;
+  Konfigurations-, Secret-Leakage-, Readiness-Fehler- und Lifecycle-Pfade sind
+  abgedeckt. Der Default-Appzustand bleibt nicht bereit und deny-by-default.
+- Grenzen: keine `.env*`, `.tmp/`, Zugangsdaten, echten Konten oder Fachdaten
+  gelesen oder verwendet; keine Serveraenderung, kein Commit, Push oder
+  Deployment.
+- Naechster empfohlener Block: SB-03, synthetischer Session-/API-Nachweis gegen
+  die isolierte Staging-Datenbank mit vollstaendiger Bereinigung und
+  anschliessender Service-Health-Pruefung.
+
+## 2026-08-13 | skills/process | Manage-project-state aktiv synchronisiert
+
+- Manuel hat den globalen Sync ausdruecklich freigegeben.
+- Der validierte kanonische Skill `manage-project-state` wurde mit vorheriger
+  Sicherung gezielt nach `%USERPROFILE%\.codex\skills` synchronisiert.
+- Backup der ersetzten aktiven Version:
+  `%USERPROFILE%\.codex\skill-backups\20260813-161514\manage-project-state`.
+- Der anschliessende Drift-Check meldete `manage-project-state` und alle
+  weiteren aktiven Projektskills als `OK`.
+- Fremde offene Aenderungen im kanonischen CodexSkills-Repository blieben
+  unangetastet; kein Commit, Push oder Deployment.
+
+## 2026-08-13 | planning/process | Rollierenden 8-Schritt-Horizont eingefuehrt
+
+- Manuel hat verbindlich festgelegt, dass Status und Abschluss nicht nur den
+  naechsten Einzelschritt, sondern vier bis acht geordnete Folgeschritte zeigen.
+- `PROJECT_PLAN.md` trennt nun aktuellen Execution-/Sprint-Backlog, rollierenden
+  Acht-Schritt-Horizont und groesseren Project Backlog.
+- Jeder Horizontschritt nennt Ergebnis, Abhaengigkeit/Gate, geplanten
+  Testnachweis und distanzabhaengige Konfidenz. Sechs querschnittliche Gates
+  decken Daten, Sicherheit, Betrieb, Produktion, Anforderungen und Content ab.
+- `AGENTS.md` macht Pflege und Reconciliation dieses Horizonts fuer kuenftige
+  Arbeitsbloecke verbindlich; `PROJECT_STATUS.md` enthaelt die kompakte Sicht.
+- CodexSkills: `manage-project-state` und seine Project-Memory-Referenz wurden
+  kanonisch um Project Backlog, Execution Backlog, 4-8-Schritt-Horizont, Gates
+  und vorgesehene Verifikation erweitert. Fremde offene CodexSkills-Aenderungen
+  blieben unangetastet.
+- Grenzen: Planungs-/Skillverbesserung; kein Commit, Push oder Deployment.
+
+## 2026-08-13 | implementation/security | Session- und Logout-Slice lokal umgesetzt
+
+- Implementierung: Async-SQLAlchemy-/asyncpg-Persistenz fuer interne
+  MFA-Sitzungen sowie `GET` und `DELETE /api/v1/auth/session` ergaenzt.
+- Schutz: Nur aktive `admin`-/`internal`-Benutzer mit gueltiger MFA-, Idle- und
+  Absolutzeit werden akzeptiert. Browser-Token gelangen ausschliesslich als
+  SHA-256-Digest zur Persistenzschicht; Standardverdrahtung bleibt geschlossen.
+- Logout: aktive Sitzungen verlangen exakte Origin und sitzungsgebundenes CSRF.
+  Widerruf und datensparsames Auditereignis erfolgen atomar; ungueltige
+  Sitzungen werden idempotent mit Cookie-Loeschung beantwortet.
+- Verifikation: 30 synthetische Tests bestanden. PostgreSQL-Adaptermapping,
+  generische 401-, CSRF-/Origin-403-, Cookie- und Token-Negativpfade sind
+  abgedeckt; noch kein echter Staging-Verbindungs- oder SQL-Integrationstest.
+- Grenzen: keine `.env`, Secrets, echten Konten oder Fachdaten gelesen oder
+  erzeugt; keine Serveraenderung, kein Commit, Push oder Deployment.
+- Naechster empfohlener Block: isolierte Runtime-Konfiguration,
+  Datenbank-Lifecycle/Readiness und synthetischer Staging-Integrationstest.
+
 ## 2026-08-13 | versioning | Portal- und Auth-Grundlage gepusht
 
 - Feature-Commit `8feb2c8` (`Add portal schema and internal auth foundation`)

@@ -3,6 +3,7 @@ import base64
 import pytest
 
 from competence_hub_api.security.tokens import (
+    MAX_TOKEN_CHARACTERS,
     TOKEN_BYTES,
     digest_token,
     issue_token,
@@ -18,6 +19,8 @@ def test_issued_token_contains_256_bits_and_only_digest_is_for_storage() -> None
     assert len(issued.digest) == 32
     assert issued.plaintext.encode("ascii") != issued.digest
     assert digest_token(issued.plaintext) == issued.digest
+    assert issued.plaintext not in repr(issued)
+    assert repr(issued) == "IssuedToken()"
 
 
 def test_tokens_are_unique() -> None:
@@ -27,6 +30,14 @@ def test_tokens_are_unique() -> None:
 def test_empty_token_is_rejected() -> None:
     with pytest.raises(ValueError):
         digest_token("")
+
+
+def test_non_ascii_and_oversized_tokens_are_rejected() -> None:
+    with pytest.raises(ValueError):
+        digest_token("synthetic-token-ä")
+
+    with pytest.raises(ValueError):
+        digest_token("a" * (MAX_TOKEN_CHARACTERS + 1))
 
 
 def test_low_entropy_identifier_uses_external_hmac_key() -> None:

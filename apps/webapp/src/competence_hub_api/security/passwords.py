@@ -1,6 +1,8 @@
 import hashlib
+import re
 from collections.abc import Collection
 from dataclasses import dataclass
+from pathlib import Path
 
 from argon2 import PasswordHasher
 from argon2.exceptions import InvalidHashError, VerifyMismatchError
@@ -52,3 +54,23 @@ class PasswordService:
             return self._hasher.check_needs_rehash(encoded_hash)
         except InvalidHashError:
             return True
+
+
+_SHA256_FINGERPRINT = re.compile(r"^[0-9a-f]{64}$")
+
+
+def load_compromised_password_fingerprints(path: Path) -> frozenset[str]:
+    fingerprints: set[str] = set()
+    with path.open("r", encoding="ascii") as source:
+        for line_number, line in enumerate(source, start=1):
+            value = line.strip().casefold()
+            if not value:
+                continue
+            if not _SHA256_FINGERPRINT.fullmatch(value):
+                raise ValueError(
+                    f"invalid SHA-256 fingerprint at line {line_number}"
+                )
+            fingerprints.add(value)
+    if not fingerprints:
+        raise ValueError("compromised-password fingerprint source is empty")
+    return frozenset(fingerprints)
