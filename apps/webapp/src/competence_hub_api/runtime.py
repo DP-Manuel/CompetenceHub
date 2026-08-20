@@ -17,6 +17,8 @@ from competence_hub_api.auth.postgres_session_repository import (
 )
 from competence_hub_api.config import RuntimeSettings
 from competence_hub_api.main import create_app
+from competence_hub_api.portal.companies import CompanyService
+from competence_hub_api.portal.postgres_companies import PostgresCompanyRepository
 from competence_hub_api.security.passwords import PasswordPolicy, PasswordService
 from competence_hub_api.security.secret_encryption import SecretCipher
 
@@ -73,6 +75,7 @@ def create_runtime_app(
         rate_limit_hmac_key=settings.rate_limit_hmac_key,
         session_idle_timeout=settings.session_idle_timeout,
     )
+    company_service = CompanyService(PostgresCompanyRepository(engine))
 
     async def readiness_probe() -> bool:
         return await database_is_ready(
@@ -92,6 +95,7 @@ def create_runtime_app(
         session_repository=session_repository,
         login_service=login_service,
         mfa_service=mfa_service,
+        company_service=company_service,
         allowed_origin=settings.allowed_origin,
         session_idle_timeout=settings.session_idle_timeout,
         lifespan=lifespan,

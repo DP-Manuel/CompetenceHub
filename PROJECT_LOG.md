@@ -2,6 +2,46 @@
 
 Newest entries first.
 
+## 2026-08-20 | backend/staging | Erster Firmen-/Kontakt-Lauf diagnostiziert
+
+- Der erweiterte PostgreSQL-Staging-Runner bestand 12 von 14 Pfaden. Beide
+  Fehler waren reproduzierbare Test-/Adapterprobleme, keine Datenmigration und
+  kein Ausfall des VPS: Der MFA-Test nutzte einen veralteten festen Zeitpunkt,
+  und asyncpg konnte den optionalen Suchparameter der Firmenliste ohne
+  expliziten PostgreSQL-Texttyp nicht ableiten.
+- Der MFA-Test verankert seine kontrollierte Uhr nun an `clock_timestamp()` der
+  Staging-Datenbank. Die Firmensuche castet den optionalen Suchparameter
+  ausdruecklich auf `text`; ein SQL-Regressionstest sichert dies.
+- Fokussierte Tests, lokale Vollsuite, Kompilierung, `pip check` und
+  `git diff --check` sind nach der Korrektur gruen. Der erneute reale Lauf
+  bestand alle 14 Pfade; seine synthetischen Daten wurden entfernt und
+  Chatbot, Nginx, Fail2ban sowie PostgreSQL blieben aktiv. Deployment, Konten
+  und Echtdaten sind weiterhin nicht erfolgt.
+
+## 2026-08-20 | backend/portal | Firmen- und Kontakt-Pilot lokal umgesetzt
+
+- Der kritische Pfad zum 28.08 wurde als schmaler vertikaler B2B-Slice
+  fortgesetzt: `admin` und `internal` koennen Firmen samt erstem Kontakt atomar
+  anlegen, begrenzt suchen/lesen, weitere Kontakte hinzufuegen und Pilotfelder
+  kontrolliert korrigieren.
+- Schreibzugriffe verlangen aktive MFA-Sitzung, exakte Origin und
+  sitzungsgebundenes CSRF. Bodies sind auf 32 KiB begrenzt, Antworten `no-store`
+  und unbekannte Felder verboten; es gibt keinen Delete-Endpunkt.
+- Audit schreibt nur Actor, Aktion, Objekttyp/-ID, Ergebnis und Zeitpunkt,
+  niemals Firmennotiz, Kontaktdaten oder Requestpayload. Der Startstatus
+  `prospect` ist explizit provisorisch und nicht als Fachworkflow freigegeben.
+- Der Security-/Privacy-Review fand eine zu breite Listenform: interne Notizen
+  waeren mitselektiert worden. Ein separates minimiertes Summary-Modell behebt
+  dies; Regressionstests sichern SQL und API-Antwort.
+- Neue Service-, PostgreSQL-Adapter-, API- und Runtime-Tests bestanden 24/24;
+  die Vollsuite bestand mit 231 Tests und 14 erwarteten opt-in-Staging-Skips.
+- Ein opt-in PostgreSQL-Test fuer CRUD, Audit und Null-Rueckstaende ist im
+  Runner vorbereitet. Staging-Ausfuehrung, UI, persistenter Dienst, Konten,
+  Echtdaten, Deployment, Commit und Push sind nicht erfolgt.
+- Restgrenzen: Firmenanlage ist noch nicht persistent idempotent; der spaetere
+  UI-Slice muss Doppel-Submit verhindern. Finales Feld-/Statusvokabular,
+  Off-Server-Restore, Zustellung und Produktionsfreigabe bleiben Gates.
+
 ## 2026-08-14 | review/planning | Auth-Paket geprueft und Pilottermin 28.08 gesetzt
 
 - Der abschliessende Code-/Security-Review fuer SB-01 bis SB-09 fand keinen

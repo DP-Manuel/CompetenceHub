@@ -26,7 +26,6 @@ TOTP_KEY_VERSION = "synthetic-totp-v1"
 TOTP_ENCRYPTION_KEY = b"t" * 32
 RECOVERY_KEY_VERSION = "synthetic-recovery-v1"
 RECOVERY_HMAC_KEY = b"r" * 32
-FIXED_NOW = datetime(2026, 8, 14, 14, 0, 5, tzinfo=UTC)
 CLIENT_IP = "192.0.2.60"
 RATE_LIMIT_CLIENT_IP = "192.0.2.61"
 
@@ -117,6 +116,10 @@ async def test_staging_mfa_enrollment_replay_recovery_rotation_and_cleanup() -> 
         pool_pre_ping=True,
         hide_parameters=True,
     )
+    async with admin_engine.connect() as connection:
+        database_now = await connection.scalar(text("SELECT clock_timestamp()"))
+    assert isinstance(database_now, datetime)
+    test_now = database_now.astimezone(UTC) + timedelta(minutes=5)
     user_id = uuid4()
     email = f"synthetic-mfa-{uuid4().hex}@example.invalid"
     bucket_hashes = (
@@ -139,7 +142,7 @@ async def test_staging_mfa_enrollment_replay_recovery_rotation_and_cleanup() -> 
         recovery_hmac_active_key_version=RECOVERY_KEY_VERSION,
     )
     app = create_runtime_app(settings, engine_factory=lambda _: app_engine)
-    app.state.clock = lambda: FIXED_NOW
+    app.state.clock = lambda: test_now
 
     try:
         await _insert_internal_user(admin_engine, user_id=user_id, email=email)
@@ -159,7 +162,7 @@ async def test_staging_mfa_enrollment_replay_recovery_rotation_and_cleanup() -> 
             assert enrollment.status_code == 201
             totp = pyotp.parse_uri(enrollment.json()["provisioning_uri"])
             assert isinstance(totp, pyotp.TOTP)
-            current_code = totp.at(FIXED_NOW.timestamp())
+            current_code = totp.at(test_now.timestamp())
 
             confirmation = await client.post(
                 "/api/v1/auth/mfa/totp/enrollment/confirm",
@@ -293,7 +296,7 @@ async def test_staging_mfa_enrollment_replay_recovery_rotation_and_cleanup() -> 
         assert credential["key_version"] == TOTP_KEY_VERSION
         assert credential["enabled_at"] is not None
         assert credential["last_accepted_time_step"] == int(
-            FIXED_NOW.timestamp() // 30
+            test_now.timestamp() // 30
         )
         assert totp.secret.encode("ascii") not in bytes(credential["encrypted_secret"])
         assert recovery_summary["total"] == 10

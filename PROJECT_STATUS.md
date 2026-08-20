@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-08-14
+Last updated: 2026-08-20
 
 ## Snapshot
 
@@ -24,17 +24,15 @@ Last updated: 2026-08-14
   Mediation topic, direct E-Mail inquiry path, legal links, role-oriented login
   preview, PostgreSQL 16 staging installation, separated database roles and a
   successful synthetic local dump/restore rehearsal.
-- Canonical `main` includes feature commit `8feb2c8` and status commit
-  `1205b28` with the portal domain, PostgreSQL migrations `0001`/`0002`,
-  approved Auth ADR/API contract and FastAPI foundation. The local uncommitted
-  slice now adds PostgreSQL login/session APIs, first-factor login, complete
-  TOTP/recovery/session rotation, an initial-Admin CLI and invitation/password-
-  reset services with generic public HTTP boundaries. Migration `0003` and its
-  complete 12/12 MFA Staging proof are finished. The local full suite reports
-  214 passed and 13 opt-in Staging skips. ADR 0005, transactional outbox,
-  persistent idempotency and the Admin invitation API are implemented locally;
-  migration `0004`, its rollback smoke and the complete 13/13 Outbox Staging
-  proof are finished. No backend or worker is persistently connected or
+- Canonical `main` at `18b8bf5` contains the reviewed authentication
+  foundation. PostgreSQL migrations `0001` through `0004`, rollback smokes and
+  the prior complete 13/13 Auth/Outbox Staging proof are finished. The local
+  uncommitted slice adds the protected company/contact API and reports 231
+  local passes with 14 expected opt-in Staging skips. Its first expanded
+  Staging run passed 12/14 paths; a stale fixed MFA test time and an untyped
+  optional company-search parameter caused the two failures. The corrected
+  rerun passed 14/14 with zero synthetic residue, and all four co-hosted VPS
+  services remained active. No backend or worker is persistently connected or
   deployed as a service.
 - In progress: stakeholder review of the centered Hub and `/ueber-uns` through
   the manually published GitHub-Pages review environment.
@@ -122,9 +120,9 @@ Last updated: 2026-08-14
   enter the first approved company through an MFA-protected, least-privilege
   portal workflow.
 - Schedule health: at risk / orange. The database, migrations and Auth/Outbox
-  foundation are well proved, but productive runtime, company/contact CRUD,
-  portal UI, account onboarding, off-server restore evidence and production
-  rollout still sit on the critical path.
+  foundation are well proved and company/contact CRUD is now local, but its
+  Staging proof, portal UI, productive runtime, account onboarding, off-server
+  restore evidence and production rollout still sit on the critical path.
 - Build evidence: Astro checks 36 files with 0 errors, 0 warnings and 0 hints;
   the static build generates 28 pages, including `/ueber-uns/`.
 - Smoke evidence: local HTTP 200 for homepage, Mindforge, Coach overview,
@@ -144,13 +142,12 @@ Last updated: 2026-08-14
 
 ## Delivery Horizon
 
-- Recommended next work block: freeze the 2026-08-28 pilot cut line. Required
-  inputs: first users and exact roles, minimum company/contact fields, approved
-  invitation-delivery path, Wuerzburg backup target and Thomas Ross's
-  production path. Deliverables: one acceptance list and backward schedule for
-  the smallest deployable Janay workflow. Definition of Done: every gate has an
-  owner/date and the intended user can create, read and correct one synthetic
-  company with audit evidence in the planned topology.
+- Recommended next work block: freeze the narrow 2026-08-28 pilot cut line.
+  Required inputs: named first users and roles, final minimum company/contact
+  fields, invitation-delivery decision, Wuerzburg backup owner/target and the
+  approved production path. Deliverables: acceptance list, RBAC/field matrix,
+  non-goals, gate owners and backward schedule. Definition of Done: UI,
+  account, delivery and deployment work share one unambiguous pilot boundary.
 - First-factor evidence: 86 local tests pass; 11/11 Auth paths pass against
   isolated PostgreSQL Staging in 103.75 seconds. Cleanup leaves all six checked
   Auth data areas at zero, all four services remain active and the focused
@@ -166,13 +163,21 @@ Last updated: 2026-08-14
   persistent idempotency, Admin invitation API and bounded worker/cleanup
   boundaries. The complete suite reports 214 passed and 13 Staging skips; compile,
   dependency and CLI-help checks pass. No real account was created.
-- Rolling delivery horizon: (1) version the reviewed Auth foundation, (2)
-  freeze pilot users/roles/fields and release ownership, (3) wire lifecycle and
-  invitation delivery, (4) implement protected company/contact API CRUD, (5)
-  build Janay's minimal accessible portal UI, (6) prepare isolated VPS services
-  and the canonical static release, (7) close backup/security/production gates
-  and run synthetic acceptance, (8) release the narrow pilot and accept the
-  first approved company by 2026-08-28. Confidence decreases after step 3.
+- Company/contact evidence: the protected local API now creates company plus
+  first contact atomically, supports bounded list/detail and controlled
+  corrections, requires internal MFA plus Origin/CSRF for writes, writes
+  payload-free audit events and exposes no delete route. A review finding that
+  exposed internal notes in the list shape was fixed through a minimized
+  summary model. The full suite reports 231 passed and 14 opt-in Staging skips.
+  The corrected real run passed 14/14, removed its synthetic rows and left all
+  four co-hosted services active.
+- Rolling delivery horizon: (1) freeze users/roles/fields and release
+  ownership, (2) wire lifecycle and invitation delivery, (3) build Janay's
+  minimal accessible portal UI, (4) prepare isolated VPS services and the
+  canonical static release, (5) close off-server backup/operations gates, (6)
+  onboard named users and run synthetic acceptance, (7) release the narrow
+  pilot and accept the first approved company by 2026-08-28. Confidence
+  decreases after step 2.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.
 

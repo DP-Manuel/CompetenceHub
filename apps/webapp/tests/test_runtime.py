@@ -11,6 +11,7 @@ from competence_hub_api.auth.postgres_session_repository import (
     PostgresSessionRepository,
 )
 from competence_hub_api.auth.login_service import LoginService
+from competence_hub_api.portal.companies import CompanyService
 from competence_hub_api.config import RuntimeSettings
 from competence_hub_api.runtime import (
     create_database_engine,
@@ -136,6 +137,7 @@ async def test_runtime_app_wires_repository_origin_and_readiness() -> None:
 
     assert isinstance(app.state.session_repository, PostgresSessionRepository)
     assert isinstance(app.state.login_service, LoginService)
+    assert isinstance(app.state.company_service, CompanyService)
     assert app.state.allowed_origin == "https://portal.example.invalid"
     assert app.state.totp_secret_cipher.active_key_version == "synthetic-v1"
     assert app.state.recovery_hmac_active_key_version == "synthetic-v1"

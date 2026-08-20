@@ -161,3 +161,21 @@ reachable by the VPS backend.
 
 See `docs/architecture/server-database-bootstrap.md` and
 `docs/architecture/initial-data-model.md` before server or database changes.
+
+## Company And Contact Pilot API
+
+The first protected business slice is implemented locally under
+`/api/v1/portal/companies`. Active `admin` and `internal` MFA sessions can
+create a company with its first contact atomically, list/read company details,
+add contacts and correct the bounded pilot fields. Mutations require exact
+Origin plus session CSRF; all responses remain `no-store`, audit records omit
+payload details and no delete endpoint exists.
+
+The runtime factory wires this repository, but no persistent backend service,
+portal UI, real user or real company data has been deployed. The company status
+starts with the provisional internal value `prospect`; it is not a final
+workflow vocabulary. The opt-in Staging harness now also covers real
+PostgreSQL CRUD, audit and zero-residue cleanup. See
+`../../docs/architecture/company-contact-api-contract-v0.1.md` and the focused
+review in
+`../../docs/architecture/company-contact-security-review-2026-08-20.md`.
