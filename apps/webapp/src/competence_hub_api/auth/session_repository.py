@@ -32,6 +32,15 @@ class SessionRepository(Protocol):
         now: datetime,
     ) -> SessionPrincipal | None: ...
 
+    async def rotate_active_session_csrf(
+        self,
+        token_hash: bytes,
+        *,
+        csrf_token_hash: bytes,
+        now: datetime,
+        idle_timeout: timedelta,
+    ) -> SessionPrincipal | None: ...
+
     async def revoke_session(
         self,
         token_hash: bytes,

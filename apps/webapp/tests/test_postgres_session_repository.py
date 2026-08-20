@@ -104,6 +104,30 @@ async def test_find_returns_none_for_unknown_or_inactive_session() -> None:
 
 
 @pytest.mark.anyio
+async def test_csrf_rotation_is_atomic_and_uses_only_digests() -> None:
+    row = _row()
+    row["csrf_token_hash"] = memoryview(b"n" * 32)
+    engine = FakeEngine([row])
+    repository = PostgresSessionRepository(engine)
+
+    principal = await repository.rotate_active_session_csrf(
+        b"s" * 32,
+        csrf_token_hash=b"n" * 32,
+        now=NOW,
+        idle_timeout=timedelta(minutes=30),
+    )
+
+    assert principal is not None
+    assert principal.csrf_token_hash == b"n" * 32
+    assert engine.connection.executed[0][1] == {
+        "token_hash": b"s" * 32,
+        "csrf_token_hash": b"n" * 32,
+        "now": NOW,
+        "idle_timeout_seconds": 1800,
+    }
+
+
+@pytest.mark.anyio
 async def test_revoke_uses_fixed_reason_and_session_digest() -> None:
     engine = FakeEngine()
     repository = PostgresSessionRepository(engine)

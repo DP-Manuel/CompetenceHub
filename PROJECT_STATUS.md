@@ -24,15 +24,30 @@ Last updated: 2026-08-20
   Mediation topic, direct E-Mail inquiry path, legal links, role-oriented login
   preview, PostgreSQL 16 staging installation, separated database roles and a
   successful synthetic local dump/restore rehearsal.
-- Canonical `main` at `18b8bf5` contains the reviewed authentication
-  foundation. PostgreSQL migrations `0001` through `0004`, rollback smokes and
-  the prior complete 13/13 Auth/Outbox Staging proof are finished. The local
-  uncommitted slice adds the protected company/contact API and reports 231
-  local passes with 14 expected opt-in Staging skips. Its first expanded
+- Canonical `main` at `6e52f52` contains the reviewed authentication
+  foundation and protected company/contact API. PostgreSQL migrations `0001`
+  through `0004`, rollback smokes and the prior complete 13/13 Auth/Outbox
+  Staging proof are finished. The local suite reports 231 passes with 14
+  expected opt-in Staging skips. The first expanded
   Staging run passed 12/14 paths; a stale fixed MFA test time and an untyped
   optional company-search parameter caused the two failures. The corrected
   rerun passed 14/14 with zero synthetic residue, and all four co-hosted VPS
-  services remained active. No backend or worker is persistently connected or
+  services remained active. The accepted local ADR-0006 portal package now
+  serves login/MFA/session and company/contact UI from the same FastAPI origin;
+  241 local tests pass. All 14 tunnel-dependent Staging paths then passed in
+  171.95 seconds, including CSRF rotation; checked residue is zero and all four
+  VPS services remain active. A synthetic loopback-HTTPS fixture, isolated
+  Edge runner and 17-item browser checklist are now prepared. The local suite
+  passes 248 tests with 14 expected opt-in Staging skips; the focused UI/
+  fixture tests and an HTTPS/MFA/Secure-cookie/CSP smoke also pass. The first
+  manual BA-01 attempt exposed a browser-only disable-before-FormData defect
+  across seven forms; it is fixed and regression-protected, with the live
+  browser retest then passed. Manuel marked the remaining browser checklist
+  passed except BA-14 as qualified. Recovery-code layout, MFA explanation and
+  stale reauth/form state were corrected; BA-09, BA-10 and BA-14 then passed
+  their focused retests. All 17 browser checks are accepted; the local runner
+  is stopped, port 8443 is free and its ephemeral test context is removed. No
+  backend or worker is persistently connected or
   deployed as a service.
 - In progress: stakeholder review of the centered Hub and `/ueber-uns` through
   the manually published GitHub-Pages review environment.
@@ -119,10 +134,12 @@ Last updated: 2026-08-20
   website should use the approved production path and Janay should be able to
   enter the first approved company through an MFA-protected, least-privilege
   portal workflow.
-- Schedule health: at risk / orange. The database, migrations and Auth/Outbox
-  foundation are well proved and company/contact CRUD is now local, but its
-  Staging proof, portal UI, productive runtime, account onboarding, off-server
-  restore evidence and production rollout still sit on the critical path.
+- Schedule health: at risk / orange. Database, migrations, Auth/Outbox,
+  company/contact API and the local portal UI are implemented; the expanded
+  portal harness has 14/14 Staging evidence and all 17 manual browser checks
+  passed and runner cleanup is complete. Productive runtime, account
+  onboarding, off-server restore evidence and production
+  rollout remain on the critical path.
 - Build evidence: Astro checks 36 files with 0 errors, 0 warnings and 0 hints;
   the static build generates 28 pages, including `/ueber-uns/`.
 - Smoke evidence: local HTTP 200 for homepage, Mindforge, Coach overview,
@@ -142,12 +159,22 @@ Last updated: 2026-08-20
 
 ## Delivery Horizon
 
-- Recommended next work block: freeze the narrow 2026-08-28 pilot cut line.
-  Required inputs: named first users and roles, final minimum company/contact
-  fields, invitation-delivery decision, Wuerzburg backup owner/target and the
-  approved production path. Deliverables: acceptance list, RBAC/field matrix,
-  non-goals, gate owners and backward schedule. Definition of Done: UI,
-  account, delivery and deployment work share one unambiguous pilot boundary.
+- Recommended next work block: close the named-user,
+  invitation-handoff, app-origin/DNS and acceptance-scheduling gate matrix.
+  Required inputs are personal work addresses for Manuel and Janay, the
+  approved invitation handoff, final app hostname/DNS owner and Janay/Thomas
+  dates. Definition of Done: named least-privilege accounts, MFA handoff,
+  origin and acceptance ownership are explicit without creating real accounts.
+- Cutline evidence: `docs/requirements/pilot-cutline-2026-08-28.md` now
+  proposes Manuel=`admin`, Frau Janay Rappelt=`internal`, the existing minimal
+  company/contact fields, explicit non-goals, ten acceptance checks, owners and
+  a daily backward plan. Personal account addresses, invitation delivery,
+  final app DNS, Wuerzburg backup evidence and acceptance dates remain open.
+- UI architecture: ADR 0006 is accepted. The modular static client is packaged
+  with FastAPI on one app origin, adds no frontend framework or Node production
+  runtime and keeps the public Astro website independent. Local implementation
+  and security/accessibility review plus isolated Staging acceptance are
+  complete; real-browser acceptance remains open.
 - First-factor evidence: 86 local tests pass; 11/11 Auth paths pass against
   isolated PostgreSQL Staging in 103.75 seconds. Cleanup leaves all six checked
   Auth data areas at zero, all four services remain active and the focused
@@ -171,13 +198,12 @@ Last updated: 2026-08-20
   summary model. The full suite reports 231 passed and 14 opt-in Staging skips.
   The corrected real run passed 14/14, removed its synthetic rows and left all
   four co-hosted services active.
-- Rolling delivery horizon: (1) freeze users/roles/fields and release
-  ownership, (2) wire lifecycle and invitation delivery, (3) build Janay's
-  minimal accessible portal UI, (4) prepare isolated VPS services and the
-  canonical static release, (5) close off-server backup/operations gates, (6)
-  onboard named users and run synthetic acceptance, (7) release the narrow
-  pilot and accept the first approved company by 2026-08-28. Confidence
-  decreases after step 2.
+- Rolling delivery horizon: (1) close named user/invitation/DNS/acceptance
+  decisions, (2) package dedicated fail-closed runtime services, (3)
+  reverse-proxy/static-release rollback rehearsal, (4) close off-server
+  backup/operations gates, (5) onboard named users and run supervised
+  synthetic acceptance, (6) release the narrow pilot and accept the
+  first approved company by 2026-08-28. Confidence decreases after step 2.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.
 

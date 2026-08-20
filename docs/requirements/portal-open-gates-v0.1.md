@@ -1,6 +1,11 @@
 # Portal Open Gates v0.1
 
-Stand: 14.08.2026
+Stand: 20.08.2026
+
+Pilotbezug: Die engste Grenze fuer den 28.08.2026 steht in
+`pilot-cutline-2026-08-28.md`. Der Firmen-/Kontakt-API-Pfad ist mit 14/14
+synthetischen Staging-Pfaden nachgewiesen. Reale Konten, Zustellung, Echtdaten
+und Produktion bleiben von den nachfolgenden Gates abhaengig.
 
 ## Gate A - vor dem jeweiligen Implementierungsschritt
 
@@ -55,11 +60,13 @@ Vor Echtdaten:
 - Aufbewahrungs- und Loeschregeln
 - Verantwortlichkeiten und Notfallzugriff
 
-## Gate B - vor fachlichem CRUD-Abschluss
+## Gate B - vor fachlicher Erweiterung des Pilot-CRUD
 
-- Unternehmen: Rechtsname gegen Anzeigename, Anschrift und Kundennummer nur bei
-  echtem Arbeitsbedarf.
-- Ansprechpartner: Primaerkontakt ja oder nein.
+- Unternehmen: Der Pilot startet mit `name`, optionaler Branche und interner
+  Notiz. Rechtsname gegen Anzeigename, Anschrift und Kundennummer nur bei
+  belegtem Arbeitsbedarf additiv aufnehmen.
+- Ansprechpartner: Der Pilot verlangt mindestens einen Kontakt; ein
+  Primaerkontaktkennzeichen bleibt deferred.
 - Coach/Leistung: optionale Relation bestaetigen oder verwerfen; keine
   Pflichtzuordnung vorwegnehmen.
 - Rollen: vier Arbeitscodes formal bestaetigen; Rechtebasis ist bereits v0.1.

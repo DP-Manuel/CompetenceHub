@@ -108,6 +108,73 @@ _FIND_ACTIVE_SESSION = text(
     """
 )
 
+_ROTATE_ACTIVE_SESSION_CSRF = text(
+    """
+    WITH rotated_session AS (
+        UPDATE competence_hub.auth_sessions AS session
+        SET
+            csrf_token_hash = :csrf_token_hash,
+            last_seen_at = :now,
+            idle_expires_at = LEAST(
+                session.absolute_expires_at,
+                :now + make_interval(
+                    secs => CAST(:idle_timeout_seconds AS double precision)
+                )
+            )
+        FROM competence_hub.portal_users AS portal_user
+        WHERE session.portal_user_id = portal_user.id
+          AND session.token_hash = :token_hash
+          AND session.authentication_level = 'mfa'
+          AND session.revoked_at IS NULL
+          AND session.idle_expires_at > :now
+          AND session.absolute_expires_at > :now
+          AND portal_user.active
+          AND EXISTS (
+              SELECT 1
+              FROM competence_hub.user_roles AS user_role
+              JOIN competence_hub.roles AS role
+                ON role.id = user_role.role_id
+              WHERE user_role.user_id = portal_user.id
+                AND role.active
+                AND role.code IN ('admin', 'internal')
+          )
+        RETURNING
+            session.id,
+            session.portal_user_id,
+            session.authenticated_at,
+            session.idle_expires_at,
+            session.absolute_expires_at,
+            session.csrf_token_hash
+    )
+    SELECT
+        rotated_session.id AS session_id,
+        rotated_session.portal_user_id AS user_id,
+        portal_user.display_name,
+        rotated_session.authenticated_at,
+        rotated_session.idle_expires_at,
+        rotated_session.absolute_expires_at,
+        rotated_session.csrf_token_hash,
+        array_agg(role.code ORDER BY role.code) AS roles
+    FROM rotated_session
+    JOIN competence_hub.portal_users AS portal_user
+      ON portal_user.id = rotated_session.portal_user_id
+    JOIN competence_hub.user_roles AS user_role
+      ON user_role.user_id = rotated_session.portal_user_id
+    JOIN competence_hub.roles AS role
+      ON role.id = user_role.role_id
+     AND role.active
+     AND role.code IN ('admin', 'internal')
+    GROUP BY
+        rotated_session.id,
+        rotated_session.portal_user_id,
+        portal_user.display_name,
+        rotated_session.authenticated_at,
+        rotated_session.idle_expires_at,
+        rotated_session.absolute_expires_at,
+        rotated_session.csrf_token_hash
+    """
+)
+
 _REVOKE_SESSION = text(
     """
     WITH revoked_session AS (
@@ -187,6 +254,44 @@ class PostgresSessionRepository:
             result = await connection.execute(
                 _FIND_ACTIVE_SESSION,
                 {"token_hash": token_hash, "now": now},
+            )
+            row = result.mappings().one_or_none()
+
+        if row is None:
+            return None
+
+        return SessionPrincipal(
+            session_id=row["session_id"],
+            user_id=row["user_id"],
+            display_name=row["display_name"],
+            roles=tuple(row["roles"]),
+            authenticated_at=row["authenticated_at"],
+            idle_expires_at=row["idle_expires_at"],
+            absolute_expires_at=row["absolute_expires_at"],
+            csrf_token_hash=bytes(row["csrf_token_hash"]),
+        )
+
+    async def rotate_active_session_csrf(
+        self,
+        token_hash: bytes,
+        *,
+        csrf_token_hash: bytes,
+        now: datetime,
+        idle_timeout: timedelta,
+    ) -> SessionPrincipal | None:
+        idle_timeout_seconds = int(idle_timeout.total_seconds())
+        if idle_timeout_seconds <= 0:
+            raise ValueError("idle timeout must be positive")
+
+        async with self._engine.begin() as connection:
+            result = await connection.execute(
+                _ROTATE_ACTIVE_SESSION_CSRF,
+                {
+                    "token_hash": token_hash,
+                    "csrf_token_hash": csrf_token_hash,
+                    "now": now,
+                    "idle_timeout_seconds": idle_timeout_seconds,
+                },
             )
             row = result.mappings().one_or_none()
 

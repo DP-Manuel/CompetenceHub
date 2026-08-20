@@ -20,6 +20,7 @@ class FakeSessionRepository:
         self.principal = principal
         self.refreshed: list[tuple[bytes, datetime, timedelta]] = []
         self.found: list[tuple[bytes, datetime]] = []
+        self.rotated: list[tuple[bytes, bytes, datetime, timedelta]] = []
         self.revoked: list[tuple[bytes, datetime, str]] = []
 
     async def refresh_active_session(
@@ -39,6 +40,17 @@ class FakeSessionRepository:
         now: datetime,
     ) -> SessionPrincipal | None:
         self.found.append((token_hash, now))
+        return self.principal
+
+    async def rotate_active_session_csrf(
+        self,
+        token_hash: bytes,
+        *,
+        csrf_token_hash: bytes,
+        now: datetime,
+        idle_timeout: timedelta,
+    ) -> SessionPrincipal | None:
+        self.rotated.append((token_hash, csrf_token_hash, now, idle_timeout))
         return self.principal
 
     async def revoke_session(
@@ -137,6 +149,64 @@ async def test_unknown_or_expired_session_gets_generic_unauthorized() -> None:
 
     assert response.status_code == 401
     assert response.json()["code"] == "authentication_failed"
+
+
+@pytest.mark.anyio
+async def test_active_session_can_rotate_page_memory_csrf_after_reload(
+    principal: SessionPrincipal,
+) -> None:
+    repository = FakeSessionRepository(principal)
+    async with _client(repository) as client:
+        client.cookies.set(SESSION_COOKIE_NAME, SESSION_TOKEN)
+        response = await client.post(
+            "/api/v1/auth/session/csrf",
+            headers={"Origin": ALLOWED_ORIGIN},
+        )
+
+    assert response.status_code == 204
+    csrf_token = response.headers["x-csrf-token"]
+    assert repository.rotated == [
+        (
+            digest_token(SESSION_TOKEN),
+            digest_token(csrf_token),
+            NOW,
+            timedelta(minutes=30),
+        )
+    ]
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("origin", [None, "https://wrong.test.invalid"])
+async def test_csrf_rotation_rejects_missing_or_wrong_origin(
+    principal: SessionPrincipal,
+    origin: str | None,
+) -> None:
+    repository = FakeSessionRepository(principal)
+    headers = {} if origin is None else {"Origin": origin}
+    async with _client(repository) as client:
+        client.cookies.set(SESSION_COOKIE_NAME, SESSION_TOKEN)
+        response = await client.post(
+            "/api/v1/auth/session/csrf",
+            headers=headers,
+        )
+
+    assert response.status_code == 403
+    assert response.json()["code"] == "request_verification_failed"
+    assert repository.rotated == []
+
+
+@pytest.mark.anyio
+async def test_csrf_rotation_rejects_expired_session() -> None:
+    repository = FakeSessionRepository(None)
+    async with _client(repository) as client:
+        client.cookies.set(SESSION_COOKIE_NAME, SESSION_TOKEN)
+        response = await client.post(
+            "/api/v1/auth/session/csrf",
+            headers={"Origin": ALLOWED_ORIGIN},
+        )
+
+    assert response.status_code == 401
+    assert "x-csrf-token" not in response.headers
 
 
 @pytest.mark.anyio

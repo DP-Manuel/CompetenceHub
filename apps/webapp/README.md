@@ -1,6 +1,6 @@
 # Webapp
 
-Reserved workspace for the later Competence Hub administration application.
+Workspace for the protected Competence Hub administration pilot.
 
 ## Status
 
@@ -172,10 +172,70 @@ Origin plus session CSRF; all responses remain `no-store`, audit records omit
 payload details and no delete endpoint exists.
 
 The runtime factory wires this repository, but no persistent backend service,
-portal UI, real user or real company data has been deployed. The company status
+real user or real company data has been deployed. The company status
 starts with the provisional internal value `prospect`; it is not a final
 workflow vocabulary. The opt-in Staging harness now also covers real
 PostgreSQL CRUD, audit and zero-residue cleanup. See
 `../../docs/architecture/company-contact-api-contract-v0.1.md` and the focused
 review in
 `../../docs/architecture/company-contact-security-review-2026-08-20.md`.
+
+## Same-Origin Pilot Portal
+
+ADR 0006 and the 2026-08-28 pilot cutline are accepted for local synthetic
+implementation. FastAPI now packages a build-free HTML/CSS/JavaScript portal
+under `/portal/`; `/` redirects there. The same origin serves the existing
+login/MFA/session APIs and the protected company/contact pilot API. The client
+keeps challenge and session CSRF material only in page memory and never uses
+browser storage. After a page reload, `POST /api/v1/auth/session/csrf` rotates
+the active session's CSRF digest and returns the new plaintext once in the
+response header.
+
+The portal covers login, TOTP/recovery, first MFA enrollment, session restore,
+logout, company search/detail/create/correction and contact create/correction.
+It uses local assets only, a restrictive CSP, `no-store`, explicit empty/error
+states, duplicate-submit guards, semantic labels, visible focus and responsive
+layouts. The complete local suite passes 248 tests, with 14 additional opt-in
+Staging tests skipped when no tunnel is present. On 2026-08-20 all 14
+opt-in paths passed against isolated PostgreSQL Staging in 171.95 seconds,
+including session CSRF rotation; cleanup left users, sessions, companies,
+contacts and audit events at zero and all four co-hosted services active. No
+DNS, Nginx, systemd, account, real-data or deployment action is authorized by
+this implementation. See
+`../../docs/architecture/pilot-portal-ui-security-accessibility-review-2026-08-20.md`.
+
+### Local Browser Acceptance
+
+The opt-in browser harness runs the production portal shell against a synthetic,
+volatile in-memory backend over loopback HTTPS. It does not read environment
+files, connect to PostgreSQL, persist records or use real identities:
+
+```powershell
+cd apps\webapp
+.\scripts\run-browser-acceptance.ps1
+```
+
+The runner creates a one-day self-signed loopback certificate and an isolated
+temporary Edge profile, opens `https://127.0.0.1:8443/portal/`, and prints only
+public `example.invalid` test identities. The certificate exception applies to
+that isolated Edge window; do not use it for other websites. Close the window
+before confirming the prompt. The runner then stops the local fixture and
+removes its temporary certificate, profile and logs.
+
+Use another unused port when necessary:
+
+```powershell
+.\scripts\run-browser-acceptance.ps1 -Port 8444
+```
+
+The durable desktop, 390-pixel, keyboard, zoom and reduced-motion checklist is
+`../../docs/architecture/pilot-portal-browser-acceptance-checklist-2026-08-20.md`.
+This harness is acceptance tooling only and must never be wired into a deployed
+runtime or used with real company or personal data.
+
+For the pilot, a user confirms each new login with the current six-digit code
+from their authenticator app. The default session remains active for up to 30
+minutes without activity and no longer than eight hours in total; ordinary
+company and contact operations do not prompt for MFA individually. Recovery
+codes are single-use emergency substitutes when the authenticator is
+unavailable. They must be stored separately and securely.

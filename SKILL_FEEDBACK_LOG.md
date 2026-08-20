@@ -6,6 +6,29 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-08-20 | browser-evidence-preflight | Browser tooling before UI completion
+
+- Triggering project situation: the portal passed static, API, package and
+  PostgreSQL gates, but the final browser gate found no existing Playwright,
+  Selenium or WebSocket automation support. Edge Headless also rendered with a
+  500-CSS-pixel minimum while cropping a requested 390-pixel screenshot.
+- Friction or risk: a cropped image can be misdiagnosed as CSS overflow, and a
+  security-correct Secure-cookie flow cannot be honestly exercised through a
+  quick HTTP-only mock at the end of a slice.
+- Proposed improvement: `integrate-frontend`, `check-accessibility`,
+  `write-tests` and `coordinate-software-project` should inventory supported
+  browser tooling, HTTPS/Secure-cookie test needs, viewport emulation and
+  evidence capture at slice start. Distinguish screenshot pixel dimensions
+  from the browser's CSS viewport and require a documented fallback before UI
+  implementation is called complete.
+- Project response: no dependency or cookie downgrade was introduced. The
+  14/14 PostgreSQL gate is closed. A loopback-HTTPS In-Memory-Fixture, isolated
+  temporary Edge runner and durable 17-item checklist now make desktop/390px
+  browser acceptance explicit and reproducible without real data.
+- Reuse potential: high
+- Risk if ignored: medium-high for authenticated responsive interfaces
+- Status: captured; canonical CodexSkills update not yet proposed/applied.
+
 ### 2026-08-14 | staging-harness-depth | Preflight fixtures and run real PostgreSQL paths early
 
 - Triggering project situation: the first real Outbox Staging run successively

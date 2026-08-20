@@ -1,8 +1,11 @@
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import AsyncContextManager
 
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 from competence_hub_api.auth.account_lifecycle import (
     AccountLifecycleService,
@@ -24,6 +27,7 @@ from competence_hub_api.web.middleware import SecurityHeadersMiddleware
 ReadinessProbe = Callable[[], Awaitable[bool]]
 Clock = Callable[[], datetime]
 Lifespan = Callable[[FastAPI], AsyncContextManager[None]]
+PORTAL_UI_DIRECTORY = Path(__file__).with_name("portal_ui")
 
 
 async def not_ready() -> bool:
@@ -68,6 +72,16 @@ def create_app(
     app.include_router(auth_router)
     app.include_router(admin_router)
     app.include_router(companies_router)
+
+    @app.get("/", include_in_schema=False)
+    async def portal_root() -> RedirectResponse:
+        return RedirectResponse(url="/portal/", status_code=307)
+
+    app.mount(
+        "/portal",
+        StaticFiles(directory=PORTAL_UI_DIRECTORY, html=True),
+        name="portal-ui",
+    )
     return app
 
 

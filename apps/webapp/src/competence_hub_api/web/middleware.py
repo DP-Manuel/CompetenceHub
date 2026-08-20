@@ -21,7 +21,15 @@ class SecurityHeadersMiddleware:
                 headers = MutableHeaders(scope=message)
                 headers["Cache-Control"] = "no-store"
                 headers["Content-Security-Policy"] = (
-                    "default-src 'none'; frame-ancestors 'none'"
+                    "default-src 'none'; "
+                    "base-uri 'none'; "
+                    "connect-src 'self'; "
+                    "font-src 'self'; "
+                    "form-action 'self'; "
+                    "frame-ancestors 'none'; "
+                    "img-src 'self'; "
+                    "script-src 'self'; "
+                    "style-src 'self'"
                 )
                 headers["Referrer-Policy"] = "no-referrer"
                 headers["X-Content-Type-Options"] = "nosniff"

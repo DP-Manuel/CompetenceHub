@@ -332,25 +332,34 @@ async def test_staging_active_session_refreshes_idle_expiry(
     ) as client:
         _set_session_cookie(client, staging_fixture.active)
         response = await client.get("/api/v1/auth/session")
+        csrf_response = await client.post(
+            "/api/v1/auth/session/csrf",
+            headers={"Origin": ALLOWED_ORIGIN},
+        )
 
     assert response.status_code == 200
     assert response.json()["user"]["roles"] == ["internal"]
+    assert csrf_response.status_code == 204
+    rotated_csrf_token = csrf_response.headers["x-csrf-token"]
+    assert rotated_csrf_token != staging_fixture.active.csrf_token
 
     async with staging_fixture.admin_engine.connect() as connection:
-        after = await connection.scalar(
-            text(
-                """
-                SELECT idle_expires_at
-                FROM competence_hub.auth_sessions
-                WHERE id = :session_id
-                """
-            ),
-            {"session_id": staging_fixture.active.session_id},
-        )
+        after = (
+            await connection.execute(
+                text(
+                    """
+                    SELECT idle_expires_at, csrf_token_hash
+                    FROM competence_hub.auth_sessions
+                    WHERE id = :session_id
+                    """
+                ),
+                {"session_id": staging_fixture.active.session_id},
+            )
+        ).mappings().one()
 
     assert before is not None
-    assert after is not None
-    assert after > before
+    assert after["idle_expires_at"] > before
+    assert bytes(after["csrf_token_hash"]) == digest_token(rotated_csrf_token)
 
 
 async def test_staging_logout_checks_csrf_then_revokes_and_audits(

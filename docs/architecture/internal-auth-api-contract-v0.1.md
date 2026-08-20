@@ -3,8 +3,9 @@
 Stand: 14.08.2026
 
 Status: Implementierungsvertrag auf Grundlage des freigegebenen ADR 0003.
-`POST /api/v1/auth/login`, `GET /api/v1/auth/session` und
-`DELETE /api/v1/auth/session` sind lokal mit PostgreSQL-Repositories,
+`POST /api/v1/auth/login`, `GET /api/v1/auth/session`,
+`POST /api/v1/auth/session/csrf` und `DELETE /api/v1/auth/session` sind lokal
+mit PostgreSQL-Repositories,
 deny-by-default Verdrahtung und synthetischen Tests umgesetzt.
 Runtime-Konfiguration und sieben isolierte Session-Staging-Pfade sind
 verifiziert; Cleanup und Service-Health waren erfolgreich. Der neue Login- und
@@ -112,8 +113,8 @@ verbraucht die Challenge und rotiert in eine neue Vollsession. Antwort: `204`
 mit Session-Cookie und neuem Session-CSRF-Header. Wiederverwendung oder Fehler:
 generisches `401`; Rate Limit: `429`.
 
-Lokaler Stand: implementiert. Die spaetere Staging-Integration muss die
-atomare Einmalverwendung unter realem PostgreSQL noch belegen.
+Lokaler Stand: implementiert. Die atomare Einmalverwendung ist im vollstaendigen
+MFA-Staging-Harness gegen PostgreSQL belegt.
 
 ### `GET /api/v1/auth/session`
 
@@ -125,6 +126,20 @@ Lokaler Stand: implementiert. Die Abfrage akzeptiert nur aktive Benutzer mit
 aktiver Rolle `admin` oder `internal`, gueltigem MFA-Level sowie gueltiger Idle-
 und Absolutzeit. Sie aktualisiert die Idle-Zeit atomar, speichert und uebergibt
 aber nur den Hash des Browser-Tokens an die Persistenzschicht.
+
+### `POST /api/v1/auth/session/csrf`
+
+Erfordert eine aktive MFA-Sitzung und die exakt konfigurierte Browser-Origin.
+Der Endpunkt rotiert den sitzungsgebundenen CSRF-Digest atomar und liefert das
+neue Klartext-Token einmalig im Response-Header `X-CSRF-Token`. Antwort: `204`.
+Der Client nutzt dies nach einem Seiten-Reload, weil CSRF-Material gemaess ADR
+0006 nicht in Browser-Speichern persistiert wird. Fehlende/falsche Origin:
+`403`; ungueltige oder abgelaufene Sitzung: `401` ohne Token-Header.
+
+Stand 20.08.2026: implementiert und durch Repository-, API- und synthetische
+Portaltests belegt. Der reale PostgreSQL-Pfad bestand im vollstaendigen
+Staging-Harness gemeinsam mit den uebrigen 13 Pfaden; Cleanup und vier
+Service-Healthchecks waren erfolgreich.
 
 ### `DELETE /api/v1/auth/session`
 

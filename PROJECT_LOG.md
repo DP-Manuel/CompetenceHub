@@ -2,6 +2,135 @@
 
 Newest entries first.
 
+## 2026-08-20 | portal/browser/acceptance | BA-01 bis BA-17 bestanden
+
+- Manuel bestaetigte nach den Nacharbeiten BA-09, BA-10 und BA-14 als
+  bestanden. Damit sind alle 17 manuellen Funktions-, Responsive- und
+  Accessibility-Pruefungen des Same-Origin-Pilotportals akzeptiert.
+- Automatisierte Evidenz bleibt 248 lokale Passes plus 14 opt-in Staging-Skips;
+  der reale isolierte Datenbanklauf bestand 14/14 mit null Rueckstaenden und
+  vier aktiven VPS-Diensten.
+- Der lokale Runner wurde danach sauber beendet. Port 8443 ist frei; das
+  temporaere Edge-Profil und das selbstsignierte Zertifikat wurden entfernt.
+  SB-15 ist damit fachlich und operativ abgeschlossen.
+- Naechster Umsetzungsblock nach Cleanup ist die Gate-Matrix fuer persoenliche
+  Erstnutzer, Einladungs-/MFA-Uebergabe, App-Origin/DNS und Janay-/Thomas-
+  Abnahmetermine. Kein Deployment, Konto, Echtdatum, Commit oder Push erfolgte.
+
+## 2026-08-20 | portal/browser/feedback | Recovery- und Re-Login-Nacharbeiten umgesetzt
+
+- Manuel absolvierte die 17-Punkte-Browsercheckliste und markierte alle
+  Kernablaeufe bestanden; BA-14 blieb wegen eines haengenden Re-Login-
+  Fehlerzustands nur eingeschraenkt bestanden.
+- Recovery-Codes werden nun als zehn getrennte responsive Eintraege statt in
+  einer kollidierenden Mehrspaltenliste dargestellt. Die UI erklaert, dass
+  jeder Code ein einmal verwendbarer Notfallersatz fuer den Authenticator ist.
+- Bei der MFA-Einrichtung erscheint nicht mehr die technische `otpauth://`-URI,
+  sondern nur der manuell einzutragende Schluessel samt Sicherheitshinweis.
+  Sichtbare Portaltexte verwenden jetzt korrekte deutsche Umlaute.
+- Nach MFA-Re-Login werden Schreib-CSRF bei Bedarf erneut rotiert, alte
+  Formularfehler entfernt und Mutationselemente anhand des aktuellen
+  Schreibzustands aktiviert. Abbrechen stellt Firmendetails aus dem zuletzt
+  gespeicherten Zustand wieder her; Entwuerfe geraten nicht mehr in einen
+  sichtbar haengenden Fehlerzustand.
+- Fokussierte 25 Tests und die Vollsuite sind gruen: 248 bestanden, 14 opt-in
+  Staging-Pfade ohne Tunnel uebersprungen; Compileall, `pip check`, JavaScript-
+  Syntax und Diff-Pruefung sind ebenfalls gruen. BA-09/10/14 werden gezielt
+  nachgetestet. Kein Deployment, Konto, Echtdatum, Commit oder Push erfolgte.
+
+## 2026-08-20 | portal/browser/debug | BA-01 Browser-Loginfehler behoben
+
+- Manuels erster echter Browserlauf zeigte trotz korrekter synthetischer
+  Zugangsdaten die generische Eingabefehlermeldung. Der direkte HTTPS-Login
+  gegen denselben laufenden Fixture-Prozess blieb mit `202` erfolgreich.
+- Ursache: `setBusy` deaktivierte alle Formularfelder, bevor `FormData` erzeugt
+  wurde. Browser schliessen deaktivierte Felder normgerecht aus FormData aus;
+  E-Mail und Passwort erreichten die API daher als `null`.
+- Der zentrale Submit-Helper erfasst nun validierte Formdaten vor der
+  Doppelklicksperre. Der Fix gilt fuer alle sieben betroffenen Login-, MFA-,
+  Enrollment-, Firmen- und Kontaktformulare; ein Regressionstest sichert
+  Reihenfolge und vollstaendige Verwendung.
+- Fokussierte Tests 9/9 und anschliessende Vollsuite sind gruen: 245 bestanden,
+  14 opt-in Staging-Pfade ohne Tunnel uebersprungen; Compileall, `pip check`,
+  JavaScript-Syntax und Diff-Pruefung sind ebenfalls gruen. Der laufende lokale
+  Fixture liefert die korrigierte Datei aus; manueller BA-01-Retest ist offen.
+- Kein Deployment, Konto, Echtdatum, Commit oder Push erfolgte.
+
+## 2026-08-20 | portal/browser | Lokale Browser-Abnahme reproduzierbar vorbereitet
+
+- Fuer SB-15 existiert nun eine rein synthetische In-Memory-Abnahme-App, die
+  den produktionsnahen Portalclient ueber lokales Loopback-HTTPS bedient. Sie
+  liest keine ENV-Datei, verbindet keine Datenbank und speichert keine Daten.
+- Ein PowerShell-Runner erzeugt ein eintaegiges selbstsigniertes
+  Loopback-Zertifikat und ein isoliertes temporaeres Edge-Profil. Nach dem
+  Test werden Server, Profil, Zertifikat und Logs entfernt.
+- Die dauerhafte Checkliste umfasst 17 Funktions-, Responsive- und
+  Accessibility-Pruefungen fuer Desktop, exakt 390 CSS-Pixel, Tastatur, Fokus,
+  200-Prozent-Zoom und Reduced Motion. Nur `example.invalid`-Identitaeten und
+  synthetische Firmendaten sind erlaubt.
+- Vollsuite: 258 Tests gesammelt, 244 bestanden und 14 opt-in Staging-Pfade
+  ohne Tunnel erwartungsgemaess uebersprungen. Der fokussierte Portal-/Session-
+  Lauf bestand 22/22; Compileall, `pip check`, JavaScript- und PowerShell-Syntax
+  sind gruen. Der echte lokale HTTPS-Smoke bestaetigt `202 mfa_required`, CSP
+  sowie Secure/HttpOnly/SameSite-Cookies.
+- Offen bleibt Manuels manueller BA-01-bis-BA-17-Lauf. Kein Deployment, Konto,
+  Echtdatum, Commit oder Push erfolgte in diesem Paket.
+
+## 2026-08-20 | portal/staging | Same-Origin-Portal besteht 14/14 Pfade
+
+- Der freigegebene SB-15-Staging-Lauf bestand alle 14 synthetischen Pfade in
+  171.95 Sekunden, einschliesslich der neuen CSRF-Rotation nach Seitenreload.
+- Der unabhaengige Nachlauf bestaetigte null Nutzer, Sitzungen, Firmen,
+  Firmenkontakte und Auditereignisse. Chatbot, Nginx, Fail2ban und PostgreSQL
+  blieben jeweils `active`.
+- Damit sind Datenbank-, Cleanup- und Co-Hosting-Gate des Portal-Slices gruen.
+  Offen bleibt der echte Browsernachweis fuer Desktop/390 Pixel, Tastatur,
+  Fokus, Zoom, Reduced Motion und den gesamten synthetischen Nutzerablauf.
+- Kein Deployment, Konto, Echtdatum, Commit oder Push wurde durch diesen Lauf
+  ausgefuehrt. Tunnel und Datenbankkennwoerter gehoeren nicht ins Repository.
+
+## 2026-08-20 | portal/frontend/security | ADR 0006 lokal umgesetzt
+
+- Manuel hat Pilot-Cutline und ADR 0006 fuer den lokalen synthetischen Slice
+  freigegeben; DNS, Konten, Echtdaten und Deployment sind davon ausgenommen.
+- FastAPI paketiert nun einen frameworkfreien Same-Origin-Portalclient unter
+  `/portal/`. Der vertikale Slice deckt Login, TOTP/Recovery, erstes
+  MFA-Enrollment, Session-Restore/Logout sowie Firmen- und Kontaktworkflow ab.
+- Nach Reload rotiert `POST /api/v1/auth/session/csrf` das CSRF-Material einer
+  aktiven MFA-Sitzung. Nur der Digest wird gespeichert; der Klartext bleibt im
+  Seitenspeicher und wird nicht in Browser-Storage persistiert.
+- CSP, `no-store`, lokale Assets, sichere DOM-Ausgabe, Formular-Labels,
+  eindeutige ID-Bezuege, Fokus-/Responsive-/Reduced-Motion-Stile,
+  Fehler-/Leerzustaende und Doppel-Submit-Sperren wurden umgesetzt und
+  regressionstestbar gemacht.
+- Vollsuite: `241 passed, 14 skipped`; die Skips sind die opt-in PostgreSQL-
+  Staging-Pfade ohne Tunnel. Compileall, JavaScript-Syntax und `pip check` sind
+  gruen. Der fokussierte Review findet keinen offenen hohen oder kritischen
+  Befund.
+- Naechster Block ist SB-15: 14/14 Staging inklusive CSRF-Rotation, Cleanup und
+  vier Service-Checks sowie realer Browserlauf auf Desktop und 390 Pixel mit
+  ausschließlich synthetischen Daten. Commit, Push und Deployment erfolgten
+  fuer dieses Paket noch nicht.
+
+## 2026-08-20 | release/planning | Portal-Slice versioniert und Pilotgrenze vorbereitet
+
+- Der Firmen-/Kontakt-Slice wurde nach 14/14 Staging-Pfaden als `6e52f52`
+  committed und nach `origin/main` gepusht. `.tmp/`, Secrets, Konten,
+  Echtdaten und Deployment blieben ausgeschlossen.
+- `pilot-cutline-2026-08-28.md` konsolidiert als naechstes Paket Pilotziel,
+  erste Rollen, minimale Felder, Non-Goals, zehn Abnahmekriterien, Gate-Owner,
+  vorgeschlagene Domains und den Rueckwaertsplan bis 28.08.
+- Vorgeschlagene Erstkonten sind Manuel als `admin` und Frau Janay Rappelt als
+  `internal`, jeweils mit persoenlicher Arbeitsadresse. Die Funktionsmailbox
+  bleibt Kontaktkanal und ist kein geteilter Login.
+- Fuer den engen Pilot wird eine gemeinsame App-Origin fuer Portal und API
+  empfohlen. Das vermeidet unnoetige CORS-/Cookie-Komplexitaet; eine getrennte
+  API-Subdomain bleibt spaeter moeglich. Nutzeradressen, Einladungsweg,
+  DNS-Name, Wuerzburg-Backupnachweis und Abnahmetermine bleiben freizugeben.
+- ADR 0006 formulierte diese same-origin, frameworkfreie Pilot-UI als
+  Freigabevorlage; sie wurde anschliessend von Manuel akzeptiert und lokal
+  umgesetzt (siehe neuesten Eintrag).
+
 ## 2026-08-20 | backend/staging | Erster Firmen-/Kontakt-Lauf diagnostiziert
 
 - Der erweiterte PostgreSQL-Staging-Runner bestand 12 von 14 Pfaden. Beide

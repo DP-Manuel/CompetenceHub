@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="color-scheme" content="light">
+    <title>Portal | Competence Hub</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Zum Inhalt</a>
+
+    <header class="app-header">
+      <a class="brand" href="/portal/" aria-label="Competence Hub Portal">
+        <span>Competence</span>
+        <strong>Hub</strong>
+      </a>
+      <div class="session-summary" id="session-summary" hidden>
+        <span id="session-user"></span>
+        <button class="button button-quiet" id="logout-button" type="button">
+          Abmelden
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="auth-view" id="login-view" aria-labelledby="login-title">
+        <div class="auth-intro">
+          <p class="eyebrow">Geschützter Arbeitsbereich</p>
+          <h1 id="login-title">Willkommen im Competence Hub</h1>
+          <p>Interner Zugang für die koordinierte Firmenbetreuung.</p>
+        </div>
+
+        <form class="auth-form" id="login-form" novalidate>
+          <div class="field">
+            <label for="login-email">Arbeits-E-Mail</label>
+            <input
+              id="login-email"
+              name="email"
+              type="email"
+              autocomplete="username"
+              maxlength="254"
+              required
+            >
+          </div>
+          <div class="field">
+            <label for="login-password">Passwort</label>
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              maxlength="128"
+              required
+            >
+          </div>
+          <label class="check-row" for="show-password">
+            <input id="show-password" type="checkbox">
+            Passwort anzeigen
+          </label>
+          <p class="form-error" id="login-error" role="alert" hidden></p>
+          <button class="button button-primary" type="submit">Anmelden</button>
+        </form>
+      </section>
+
+      <section class="auth-view" id="mfa-view" aria-labelledby="mfa-title" hidden>
+        <div class="auth-intro">
+          <p class="eyebrow">Zweiter Faktor</p>
+          <h1 id="mfa-title">Anmeldung bestätigen</h1>
+          <p>Nutzen Sie normalerweise den aktuellen Code Ihrer Authenticator-App. Ein Recovery-Code ist nur für den Notfall gedacht und funktioniert genau einmal.</p>
+        </div>
+
+        <form class="auth-form" id="mfa-form" novalidate>
+          <fieldset class="segmented-control">
+            <legend class="sr-only">Bestätigungsart</legend>
+            <label>
+              <input type="radio" name="mfa-method" value="totp" checked>
+              <span>Authenticator</span>
+            </label>
+            <label>
+              <input type="radio" name="mfa-method" value="recovery">
+              <span>Recovery-Code</span>
+            </label>
+          </fieldset>
+          <div class="field">
+            <label for="mfa-code" id="mfa-code-label">Sechsstelliger Code</label>
+            <input
+              id="mfa-code"
+              name="code"
+              type="text"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="64"
+              required
+            >
+          </div>
+          <p class="form-error" id="mfa-error" role="alert" hidden></p>
+          <div class="button-row">
+            <button class="button button-primary" type="submit">Bestätigen</button>
+            <button class="button button-secondary" data-action="restart-login" type="button">
+              Zurück
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="auth-view" id="enrollment-view" aria-labelledby="enrollment-title" hidden>
+        <div class="auth-intro">
+          <p class="eyebrow">MFA einrichten</p>
+          <h1 id="enrollment-title">Authenticator verbinden</h1>
+          <p>Hinterlegen Sie diesen Schlüssel einmalig in Ihrer Authenticator-App. Danach bestätigen Sie neue Anmeldungen mit dem jeweils aktuellen sechsstelligen Code.</p>
+        </div>
+
+        <div class="auth-form">
+          <div class="secret-display">
+            <span class="field-label">Manueller Einrichtungsschlüssel</span>
+            <code id="provisioning-secret"></code>
+            <p class="field-hint">Behandeln Sie den Schlüssel wie ein Passwort und leeren Sie nach dem Kopieren die Zwischenablage.</p>
+            <button class="button button-secondary" id="copy-provisioning" type="button">
+              Kopieren
+            </button>
+          </div>
+          <form id="enrollment-form" novalidate>
+            <div class="field">
+              <label for="enrollment-code">Erster sechsstelliger Code</label>
+              <input
+                id="enrollment-code"
+                name="code"
+                type="text"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                maxlength="64"
+                required
+              >
+            </div>
+            <p class="form-error" id="enrollment-error" role="alert" hidden></p>
+            <button class="button button-primary" type="submit">Einrichtung abschließen</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="auth-view" id="recovery-view" aria-labelledby="recovery-title" hidden>
+        <div class="auth-intro">
+          <p class="eyebrow">Einmalig sichern</p>
+          <h1 id="recovery-title">Ihre Recovery-Codes</h1>
+          <p>Diese Notfallcodes ersetzen den Authenticator nur, wenn Sie keinen Zugriff auf die App haben. Jeder Code funktioniert genau einmal.</p>
+        </div>
+        <div class="auth-form">
+          <ol class="recovery-codes" id="recovery-codes"></ol>
+          <button class="button button-secondary" id="copy-recovery" type="button">
+            Codes kopieren
+          </button>
+          <label class="check-row" for="recovery-confirmed">
+            <input id="recovery-confirmed" type="checkbox">
+            Ich habe die Recovery-Codes sicher und getrennt abgelegt
+          </label>
+          <button class="button button-primary" id="enter-portal" type="button" disabled>
+            Portal öffnen
+          </button>
+        </div>
+      </section>
+
+      <section class="portal-view" id="portal-view" aria-labelledby="portal-title" hidden>
+        <header class="page-heading">
+          <div>
+            <p class="eyebrow">Firmen und Kontakte</p>
+            <h1 id="portal-title">Firmenbetreuung</h1>
+          </div>
+          <button class="button button-primary" id="open-company-dialog" type="button">
+            Firma anlegen
+          </button>
+        </header>
+
+        <div class="notice" id="reauth-notice" role="status" hidden>
+          <p>Lesender Zugriff ist aktiv. Für Änderungen ist eine erneute Anmeldung erforderlich.</p>
+          <button class="button button-secondary" id="reauth-button" type="button">
+            Erneut anmelden
+          </button>
+        </div>
+
+        <form class="search-bar" id="company-search-form" role="search">
+          <div class="field">
+            <label for="company-search">Firma suchen</label>
+            <input id="company-search" name="query" type="search" maxlength="200">
+          </div>
+          <button class="button button-secondary" type="submit">Suchen</button>
+        </form>
+
+        <div class="workspace">
+          <section class="company-index" aria-labelledby="company-list-title">
+            <div class="section-heading">
+              <h2 id="company-list-title">Unternehmen</h2>
+              <span id="company-count" aria-live="polite"></span>
+            </div>
+            <p class="empty-state" id="company-empty" hidden>Noch keine Firmen gefunden.</p>
+            <ul class="company-list" id="company-list"></ul>
+          </section>
+
+          <section class="company-detail" id="company-detail" aria-labelledby="company-detail-title">
+            <div class="detail-placeholder" id="detail-placeholder">
+              <p class="eyebrow">Details</p>
+              <h2 id="company-detail-title">Firma auswählen</h2>
+              <p>Waehlen Sie links einen Eintrag aus.</p>
+            </div>
+
+            <div id="detail-content" hidden>
+              <div class="section-heading detail-heading">
+                <div>
+                  <p class="eyebrow">Unternehmen</p>
+                  <h2 id="detail-company-name"></h2>
+                  <p id="detail-company-meta"></p>
+                </div>
+                <button class="button button-secondary mutation-control" id="edit-company-button" type="button">
+                  Bearbeiten
+                </button>
+              </div>
+
+              <p class="internal-note" id="detail-company-notes"></p>
+
+              <form class="edit-form" id="edit-company-form" hidden novalidate>
+                <div class="field">
+                  <label for="edit-company-name">Firmenname</label>
+                  <input id="edit-company-name" name="name" maxlength="200" required>
+                </div>
+                <div class="field">
+                  <label for="edit-company-industry">Branche</label>
+                  <input id="edit-company-industry" name="industry" maxlength="200">
+                </div>
+                <div class="field">
+                  <label for="edit-company-notes">Interne Notiz</label>
+                  <textarea id="edit-company-notes" name="internal_notes" maxlength="4000" rows="4"></textarea>
+                </div>
+                <p class="form-error" id="edit-company-error" role="alert" hidden></p>
+                <div class="button-row">
+                  <button class="button button-primary mutation-control" type="submit">Änderungen speichern</button>
+                  <button class="button button-secondary" id="cancel-company-edit" type="button">Abbrechen</button>
+                </div>
+              </form>
+
+              <div class="contacts-heading">
+                <h3>Kontakte</h3>
+                <button class="button button-secondary mutation-control" id="open-contact-dialog" type="button">
+                  Kontakt hinzufügen
+                </button>
+              </div>
+              <ul class="contact-list" id="contact-list"></ul>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <p class="toast" id="status-message" role="status" aria-live="polite" hidden></p>
+
+    <dialog id="company-dialog" aria-labelledby="company-dialog-title">
+      <form class="dialog-form" id="create-company-form" method="dialog" novalidate>
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Neuer Datensatz</p>
+            <h2 id="company-dialog-title">Firma anlegen</h2>
+          </div>
+          <button class="icon-button" data-dialog-close="company-dialog" type="button" aria-label="Dialog schließen">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="form-grid">
+          <div class="field field-wide">
+            <label for="create-company-name">Firmenname</label>
+            <input id="create-company-name" name="name" maxlength="200" required>
+          </div>
+          <div class="field field-wide">
+            <label for="create-company-industry">Branche</label>
+            <input id="create-company-industry" name="industry" maxlength="200">
+          </div>
+          <div class="field field-wide">
+            <label for="create-company-notes">Interne Notiz</label>
+            <textarea id="create-company-notes" name="internal_notes" maxlength="4000" rows="3"></textarea>
+          </div>
+          <h3 class="field-wide">Erster Kontakt</h3>
+          <div class="field">
+            <label for="create-contact-first-name">Vorname</label>
+            <input id="create-contact-first-name" name="first_name" maxlength="100" required>
+          </div>
+          <div class="field">
+            <label for="create-contact-last-name">Nachname</label>
+            <input id="create-contact-last-name" name="last_name" maxlength="100" required>
+          </div>
+          <div class="field">
+            <label for="create-contact-email">E-Mail</label>
+            <input id="create-contact-email" name="email" type="email" maxlength="254" required>
+          </div>
+          <div class="field">
+            <label for="create-contact-phone">Telefon</label>
+            <input id="create-contact-phone" name="phone" type="tel" maxlength="50">
+          </div>
+          <div class="field field-wide">
+            <label for="create-contact-function">Funktion</label>
+            <input id="create-contact-function" name="job_function" maxlength="200">
+          </div>
+        </div>
+        <p class="form-error" id="create-company-error" role="alert" hidden></p>
+        <div class="button-row dialog-actions">
+          <button class="button button-primary mutation-control" type="submit">Firma anlegen</button>
+          <button class="button button-secondary" data-dialog-close="company-dialog" type="button">Abbrechen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="contact-dialog" aria-labelledby="contact-dialog-title">
+      <form class="dialog-form" id="add-contact-form" method="dialog" novalidate>
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Unternehmen ergänzen</p>
+            <h2 id="contact-dialog-title">Kontakt hinzufügen</h2>
+          </div>
+          <button class="icon-button" data-dialog-close="contact-dialog" type="button" aria-label="Dialog schließen">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="add-contact-first-name">Vorname</label>
+            <input id="add-contact-first-name" name="first_name" maxlength="100" required>
+          </div>
+          <div class="field">
+            <label for="add-contact-last-name">Nachname</label>
+            <input id="add-contact-last-name" name="last_name" maxlength="100" required>
+          </div>
+          <div class="field field-wide">
+            <label for="add-contact-email">E-Mail</label>
+            <input id="add-contact-email" name="email" type="email" maxlength="254" required>
+          </div>
+          <div class="field">
+            <label for="add-contact-phone">Telefon</label>
+            <input id="add-contact-phone" name="phone" type="tel" maxlength="50">
+          </div>
+          <div class="field">
+            <label for="add-contact-function">Funktion</label>
+            <input id="add-contact-function" name="job_function" maxlength="200">
+          </div>
+        </div>
+        <p class="form-error" id="add-contact-error" role="alert" hidden></p>
+        <div class="button-row dialog-actions">
+          <button class="button button-primary mutation-control" type="submit">Kontakt speichern</button>
+          <button class="button button-secondary" data-dialog-close="contact-dialog" type="button">Abbrechen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

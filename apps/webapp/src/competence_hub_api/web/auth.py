@@ -35,7 +35,7 @@ from competence_hub_api.security.cookies import (
     set_login_cookie,
     set_session_cookie,
 )
-from competence_hub_api.security.tokens import digest_token
+from competence_hub_api.security.tokens import digest_token, issue_token
 from competence_hub_api.security.passwords import PasswordPolicyError
 from competence_hub_api.web.problems import problem_response
 
@@ -523,6 +523,34 @@ async def get_session(request: Request) -> Response:
         return _authentication_failed()
 
     return JSONResponse(jsonable_encoder(_session_payload(principal)))
+
+
+@router.post("/session/csrf", status_code=204)
+async def rotate_session_csrf(request: Request) -> Response:
+    repository = _repository(request)
+    token_hash = _session_digest(request)
+    if repository is None or token_hash is None:
+        return _authentication_failed()
+    if not _origin_is_valid(request):
+        return problem_response(
+            status=403,
+            code="request_verification_failed",
+            title="Anfrage konnte nicht verifiziert werden",
+        )
+
+    csrf_token = issue_token()
+    principal = await repository.rotate_active_session_csrf(
+        token_hash,
+        csrf_token_hash=csrf_token.digest,
+        now=_now(request),
+        idle_timeout=request.app.state.session_idle_timeout,
+    )
+    if principal is None:
+        return _authentication_failed()
+
+    response = Response(status_code=204)
+    response.headers["X-CSRF-Token"] = csrf_token.plaintext
+    return response
 
 
 @router.delete("/session", status_code=204)
