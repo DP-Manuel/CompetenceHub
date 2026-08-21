@@ -552,6 +552,10 @@ execution backlog limits current WIP; the rolling horizon preserves likely
 sequencing. Items become more provisional with distance and are reconciled
 after every meaningful completion, blocker or stakeholder decision.
 
+The compact visual flow and milestone gate view is maintained in
+`docs/requirements/readiness-gate-board-2026-08-28.md`. It summarizes this
+plan but does not replace the evidence and decisions recorded here.
+
 ### External Dependency And Lead-Time Radar
 
 External decisions, data, access and approvals are requested before their

@@ -2,6 +2,19 @@
 
 Newest entries first.
 
+## 2026-08-21 | steering | Visual readiness gate board consolidated
+
+- A compact Kanban-style gate board now consolidates Done, Ready, Waiting and
+  Blocked work for the 28.08. technical cutline and 25.09. production target.
+- Every gate names its owner, latest useful date, acceptance evidence and
+  effect if it remains open. The pull rule prioritizes Wuerzburg backup/restore,
+  an earlier EDV response or a separately approved read-only SFTP inventory.
+- Both milestones are yellow: achievable on current technical evidence, but
+  dependent on backup restore, EDV, Legal, contracts, named accounts and
+  stakeholder Go/No-Go. No budget baseline is documented.
+- No implementation, connection, deployment, real-data use, commit or push
+  occurred in this steering-only block.
+
 ## 2026-08-21 | git | Operations rehearsal package committed and pushed
 
 - Commit `9210ea1` (`Prepare backup and SFTP release rehearsals`) was pushed

@@ -219,6 +219,10 @@ Last updated: 2026-08-21
 
 ## Delivery Horizon
 
+- Visual steering board: `docs/requirements/readiness-gate-board-2026-08-28.md`
+  consolidates Done/Ready/Waiting/Blocked flow, owners, dates, evidence and the
+  28.08./25.09. milestone signals. Both milestones are currently yellow:
+  technically achievable, but dependent on the named external gates.
 - Current Git checkpoint: commit `9210ea1` with SB-21/SB-22 is pushed to
   `origin/main`; local and remote branches were synchronized afterward. The
   push triggered no deployment and did not authorize remote operations.
