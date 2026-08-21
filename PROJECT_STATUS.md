@@ -219,6 +219,9 @@ Last updated: 2026-08-21
 
 ## Delivery Horizon
 
+- Current Git checkpoint: commit `9210ea1` with SB-21/SB-22 is pushed to
+  `origin/main`; local and remote branches were synchronized afterward. The
+  push triggered no deployment and did not authorize remote operations.
 - SB-22 is complete locally: the Website now has a secret-free SFTP target
   contract, fail-closed artifact preparer and operator runbook. Dirty artifacts,
   wrong hashes/domains, unresolved targets, unverified host keys/Webroots and

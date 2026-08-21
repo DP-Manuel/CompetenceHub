@@ -2,6 +2,20 @@
 
 Newest entries first.
 
+## 2026-08-21 | git | Operations rehearsal package committed and pushed
+
+- Commit `9210ea1` (`Prepare backup and SFTP release rehearsals`) was pushed
+  successfully to `origin/main` without branch divergence.
+- The commit contains the SB-21 PostgreSQL backup/restore package, the SB-22
+  guarded Website SFTP rehearsal package, their tests/runbooks, project-memory
+  reconciliation and the explicit `.tmp/` Git exclusion.
+- Verification before commit: 304 local Webapp tests passed with 14 expected
+  opt-in Staging skips; Dependency/Wheel/install checks, 17 focused operations/
+  SFTP tests, PowerShell parsing and the 38-file/28-page Astro production build
+  were green.
+- No GitHub Pages, SFTP, VPS, SMTP, DNS or production deployment was triggered.
+  No credentials or real data were read, committed or transferred.
+
 ## 2026-08-21 | release/operations | Website SFTP rehearsal package prepared
 
 - SB-22 is complete locally. A secret-free target contract, local artifact
