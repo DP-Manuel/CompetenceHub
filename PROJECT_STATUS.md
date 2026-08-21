@@ -26,7 +26,8 @@ Last updated: 2026-08-21
   Mediation topic, direct E-Mail inquiry path, legal links, role-oriented login
   preview, PostgreSQL 16 staging installation, separated database roles and a
   successful synthetic local dump/restore rehearsal.
-- Canonical `main` at `c1f4cc8` contains the reviewed authentication
+- Release-candidate source commit `5db1e03` is pushed to `origin/main` and
+  contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
   through `0004`, rollback smokes and the prior complete 13/13 Auth/Outbox
   Staging proof are finished. The local suite reports 231 passes with 14
@@ -179,6 +180,10 @@ Last updated: 2026-08-21
   `f444a36c0ef1e51e4fd208f85621d15d54ccde9535c24927eaaced76ab5d2f9f`;
   generated test artifacts were removed. Native systemd/Nginx checks remain a
   Linux rehearsal gate.
+- Release-candidate publication: commit `5db1e03` was pushed to `origin/main`.
+  Its clean Webapp and Website manifests both report `dirty: false`,
+  `deployment_authorized: false` and commit `5db1e030aa39`. This Git push did
+  not deploy either artifact.
 - Production-indexing safeguard: archived `/system`, `/seminare`,
   `/qualifizierung`, public `/login` previews and prototype routes emit
   `noindex`; the homepage remains indexable.

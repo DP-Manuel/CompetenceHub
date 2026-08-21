@@ -2,6 +2,21 @@
 
 Newest entries first.
 
+## 2026-08-21 | release/git | Release Candidate committed and pushed
+
+- Commit `5db1e03` (`Prepare Competence Hub production release candidate`) ist
+  erfolgreich nach `origin/main` gepusht worden.
+- Der finale Clean-Source-Build gegen `5db1e03` meldet fuer Webapp und Website
+  `dirty: false` und `deployment_authorized: false`. Das Webapp-Paket bestand
+  287 lokale Tests, 14 erwartete Staging-Skips, Dependency-/Compile-/Wheel-
+  und Fail-closed-Pruefungen; das Website-Paket pruefte 38 Astro-Dateien ohne
+  Diagnose und baute 28 Seiten.
+- Beide Archive enthalten weder `.env` noch `.tmp`. Lokal bleibt nur der
+  gesperrte `.tmp/`-Ordner ungetrackt.
+- Der Push hat kein GitHub-Pages-, SFTP-, VPS-, SMTP- oder sonstiges Deployment
+  ausgeloest. Naechster Block bleibt die hostbezogene DNS/TLS/Nginx/SMTP-
+  Validierung nach der EDV-Antwort.
+
 ## 2026-08-21 | review/release | Release Candidate fachlich und technisch geprueft
 
 - Der gebuendelte Review von Website, Portal, SMTP-Worker und Releasepaket hat

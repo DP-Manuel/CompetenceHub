@@ -11,7 +11,8 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 - Workflow model: hybrid Scrum/Kanban for multi-day delivery
 - Current phase, sprint, milestone, board status, or release: public website
   stabilization plus isolated authenticated-portal foundation
-- Current status: yellow / controlled risk; canonical `main` at `c1f4cc8` contains the
+- Current status: yellow / controlled risk; release-candidate source commit
+  `5db1e03` is pushed to `origin/main` and contains the
   verified public website and the accepted same-origin pilot portal. The full
   local suite passes 287 tests with 14 expected opt-in Staging skips, all 14
   isolated PostgreSQL paths passed, and BA-01 through BA-17 are accepted in a
