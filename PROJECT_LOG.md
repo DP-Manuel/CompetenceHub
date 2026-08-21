@@ -2,6 +2,66 @@
 
 Newest entries first.
 
+## 2026-08-21 | release/operations | Website SFTP rehearsal package prepared
+
+- SB-22 is complete locally. A secret-free target contract, local artifact
+  preparer and operator runbook now separate checksum/archive validation,
+  host-key and remote-root confirmation, Webspace inventory, mandatory
+  backup-before-replace, upload, smoke and rollback into explicit gates.
+- The preparer never invokes an SFTP client. It rejects Dirty builds, wrong
+  domains or hashes, unresolved placeholders, unverified host keys/Webroots,
+  path traversal, case-colliding ZIP entries, symlinks and oversized archives.
+  Its generated plan keeps remote inventory, backup, change authorization,
+  legal release, production smoke and rollback marked incomplete.
+- Seventeen combined operations/SFTP tests pass, including five behavioral
+  PowerShell cases. The PowerShell parser is green. The Astro check reports 38
+  files without diagnostics and the production build creates 28 pages. The
+  first sandboxed Vite run hit the known Windows `spawn EPERM`; the approved
+  rerun completed successfully.
+- The final combined Webapp release gate reports 304 passed and 14 expected
+  opt-in Staging skips. Dependency checks, Wheel build and isolated install
+  pass. The 32-entry verification archive was correctly marked Dirty and
+  `deployment_authorized: false`, contained no `.env`/`.tmp` entry and was
+  removed after inspection. `.tmp/` is now explicitly ignored by Git.
+- No SFTP connection, upload, Webspace read, credential access, commit, push,
+  deployment or real-data use occurred. The next recommended block is the
+  native Wuerzburg off-server backup and restore rehearsal in the week of
+  2026-08-24.
+
+## 2026-08-21 | steering | Wuerzburg gate moved to next-week window
+
+- Manuel will next be at the controlled Wuerzburg workstation during the week
+  of 2026-08-24. EXT-05 therefore remains prepared but is intentionally not
+  executed today; its exact rehearsal slot is due by 2026-08-28.
+- SB-22 is the independent current recommendation: prepare the Website SFTP
+  release, remote-backup and rollback package locally without credentials,
+  connection, upload or deployment.
+- EDV response, contract confirmation and appointment requests continue on the
+  dated external-dependency radar. No commit, push or deployment occurred.
+
+## 2026-08-21 | operations/steering | Backup package and lead-time radar
+
+- EDV, contracts, legal review, Janay/Thomas appointments, mailbox operations
+  and the Wuerzburg backup target now have request, chase, escalation and latest
+  useful dates in `PROJECT_PLAN.md`.
+- SB-21 is complete locally: encrypted daily/monthly PostgreSQL backup,
+  freshness/integrity monitor, guarded Windows off-server pull, isolated
+  restore check, hardened systemd/config templates and an executable gate
+  runbook are versioned. The VPS is restricted to a public GPG key and local
+  PostgreSQL socket; the private key stays on the restore environment.
+- Eleven focused operations tests and Bash/PowerShell syntax pass. The full
+  local release gate reports 298 passed and 14 expected Staging skips, clean
+  dependency/compile/Wheel checks, all required files in the archive and zero
+  `.env`/`.tmp` entries. Linux deployment files are pinned to LF line endings.
+  The dirty verification artifact was removed after inspection and is not
+  deployable evidence.
+- A reusable visual Kanban/dependency-radar concept for Manuel and future team
+  use was recorded in `SKILL_FEEDBACK_LOG.md`; CodexSkills itself was not
+  changed in this block.
+- No commit, push, VPS change, external transfer, real-data use or deployment
+  occurred. EXT-05 still requires the protected Wuerzburg target, public-key
+  handoff and a supervised rehearsal/restore window.
+
 ## 2026-08-21 | release/git | Release Candidate committed and pushed
 
 - Commit `5db1e03` (`Prepare Competence Hub production release candidate`) ist

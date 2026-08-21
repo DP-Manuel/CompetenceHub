@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+fail() {
+    printf 'competence-hub restore check: %s\n' "$1" >&2
+    exit 1
+}
+
+readonly PG_SOCKET="/var/run/postgresql"
+
+usage() {
+    printf 'Usage: %s --backup-set /absolute/path --gnupg-home /absolute/path --confirm-isolated-restore\n' "$0" >&2
+    exit 2
+}
+
+backup_set=""
+gnupg_home=""
+confirmed="false"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --backup-set) [[ $# -ge 2 ]] || usage; backup_set="$2"; shift 2 ;;
+        --gnupg-home) [[ $# -ge 2 ]] || usage; gnupg_home="$2"; shift 2 ;;
+        --confirm-isolated-restore) confirmed="true"; shift ;;
+        *) usage ;;
+    esac
+done
+
+[[ "$confirmed" == "true" ]] || fail "explicit isolated-restore confirmation is required"
+[[ "$(id -un)" == "postgres" ]] || fail "run this command as the postgres operating-system user"
+umask 077
+for command_name in createdb dropdb find gpg pg_restore psql realpath sha256sum stat; do
+    command -v "$command_name" >/dev/null 2>&1 || fail "required command is missing: $command_name"
+done
+
+[[ "$backup_set" == /* && -d "$backup_set" && ! -L "$backup_set" ]] || fail "backup set must be an absolute non-symlink directory"
+backup_set="$(realpath -e "$backup_set")"
+[[ -f "$backup_set/COMPLETE" && -f "$backup_set/SHA256SUMS" ]] || fail "backup set is incomplete"
+[[ -z "$(find "$backup_set" -mindepth 1 -maxdepth 1 -type l -print -quit)" ]] \
+    || fail "backup set contains a symlink"
+[[ -z "$(find "$backup_set" -mindepth 1 -maxdepth 1 -type d -print -quit)" ]] \
+    || fail "backup set contains an unexpected directory"
+[[ "$gnupg_home" == /* && -d "$gnupg_home" && ! -L "$gnupg_home" ]] || fail "GPG home must be an absolute non-symlink directory"
+gnupg_home="$(realpath -e "$gnupg_home")"
+[[ "$(stat -c %U "$gnupg_home")" == "postgres" ]] || fail "GPG home must be owned by postgres"
+[[ "$(stat -c %a "$gnupg_home")" == "700" ]] || fail "GPG home must have mode 0700"
+
+(
+    cd "$backup_set"
+    checksum_count=0
+    while IFS= read -r checksum_line || [[ -n "$checksum_line" ]]; do
+        [[ "$checksum_line" != */* && "$checksum_line" != *\\* ]] \
+            || fail "checksum manifest contains a path"
+        [[ "$checksum_line" =~ ^[a-fA-F0-9]{64}[[:space:]][[:space:]][A-Za-z0-9._-]+$ ]] \
+            || fail "checksum manifest contains a malformed entry"
+        ((checksum_count += 1))
+    done < SHA256SUMS
+    [[ "$checksum_count" -eq 3 ]] || fail "checksum manifest must contain exactly three entries"
+    sha256sum --check --strict SHA256SUMS >/dev/null
+)
+mapfile -t dump_files < <(find "$backup_set" -mindepth 1 -maxdepth 1 -type f -name '*.dump.gpg' -print)
+[[ ${#dump_files[@]} -eq 1 ]] || fail "backup set must contain exactly one encrypted database dump"
+
+restore_root="$(mktemp -d /var/backups/competence-hub/restore-check-XXXXXX)"
+target_database="competence_hub_restore_check_$(date -u +%Y%m%d%H%M%S)_$$"
+[[ "$target_database" =~ ^competence_hub_restore_check_[0-9]{14}_[0-9]+$ ]] || fail "unsafe restore database name"
+cleanup() {
+    if [[ -n "${target_database:-}" ]]; then
+        dropdb --host "$PG_SOCKET" --if-exists -- "$target_database" >/dev/null 2>&1 \
+            || printf 'competence-hub restore check: WARNING: temporary database cleanup failed: %s\n' "$target_database" >&2
+    fi
+    if [[ -n "${restore_root:-}" && -d "$restore_root" ]]; then
+        find "$restore_root" -mindepth 1 -maxdepth 1 -type f -delete
+        rmdir "$restore_root" 2>/dev/null || true
+    fi
+}
+trap cleanup EXIT
+
+plain_dump="$restore_root/database.dump"
+gpg --homedir "$gnupg_home" --batch --yes --no-tty --output "$plain_dump" --decrypt "${dump_files[0]}"
+pg_restore --list "$plain_dump" >/dev/null
+createdb --host "$PG_SOCKET" --encoding=UTF8 --template=template0 -- "$target_database"
+pg_restore --host "$PG_SOCKET" --exit-on-error --no-owner --no-privileges --dbname "$target_database" "$plain_dump"
+
+schema_count="$(psql --host "$PG_SOCKET" --dbname "$target_database" --no-psqlrc --tuples-only --no-align \
+    --command "SELECT count(*) FROM pg_namespace WHERE nspname = 'competence_hub';")"
+table_count="$(psql --host "$PG_SOCKET" --dbname "$target_database" --no-psqlrc --tuples-only --no-align \
+    --command "SELECT count(*) FROM pg_tables WHERE schemaname = 'competence_hub';")"
+[[ "$schema_count" == "1" && "$table_count" =~ ^[1-9][0-9]*$ ]] \
+    || fail "restored database does not contain the expected application schema"
+
+printf 'competence-hub restore check: restored %s application tables into temporary database %s\n' \
+    "$table_count" "$target_database"
+dropdb --host "$PG_SOCKET" -- "$target_database" || fail "temporary restore database could not be removed"
+target_database=""
+find "$restore_root" -mindepth 1 -maxdepth 1 -type f -delete
+rmdir "$restore_root" || fail "temporary plaintext directory could not be removed"
+restore_root=""
+trap - EXIT
+printf 'competence-hub restore check: temporary database and plaintext dump were removed\n'

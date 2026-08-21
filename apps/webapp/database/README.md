@@ -94,3 +94,16 @@ backup directory is owned by `postgres` with mode `0700`.
 Do not put passwords in command arguments, scripts, Git or shell history. Do
 not apply this migration to a database containing real data without a separate
 release plan and verified external restore point.
+
+## Prepared Backup And Restore Operations
+
+The repository now contains secret-free backup, monitor, restore-check and
+systemd examples under `deploy/`. They encrypt database and globals payloads to
+an approved public GPG fingerprint, keep provisional 30-daily/12-monthly restore
+points, detect stale/incomplete/plaintext backup state and restore only into a
+temporary local check database. The complete operating and gate procedure is
+documented in `docs/architecture/postgresql-backup-restore-runbook.md`.
+
+These files are prepared but not installed or enabled. Real data remains
+prohibited until an encrypted external copy is restored successfully and
+retention, active alerting and recovery ownership are approved.

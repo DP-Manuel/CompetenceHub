@@ -6,6 +6,36 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-08-21 | visual-external-dependency-radar | Surface lead time before work blocks
+
+- Triggering project situation: App-DNS, SMTP, legal approval, contracts,
+  onboarding appointments and an off-server backup target all have external
+  owners and multi-day response times, but several became prominent only when
+  their dependent technical slice reached the front of the backlog.
+- Friction or risk: a technically healthy project can still miss its deadline
+  because requests, acknowledgements, reminders and escalation windows start
+  too late. A long Markdown plan also does not give Manuel, as a visual worker,
+  or a future team a fast shared view of flow and blockers.
+- Proposed improvement: `manage-project-state` and
+  `coordinate-software-project` should create an external-dependency lead-time
+  radar during horizon planning. Track owner, dependent slice, request-by and
+  request date, expected response, latest useful date, next chase, escalation,
+  fallback and age. Calculate request-by from response, rework and escalation
+  buffers; warn before the dependent item enters current WIP.
+- Visual/team extension: offer a compact Kanban-style project view with lanes
+  such as `Ready`, `Doing`, `Waiting externally`, `Review/Gate` and `Done`, plus
+  deadline/traffic-light markers, ownership, blocked-by links and a rolling
+  four-to-eight-step horizon. It should remain derivable from repository
+  project memory so a later team shares one source of truth rather than a
+  separate manually maintained board.
+- Project response: `PROJECT_PLAN.md` now contains a dated external-dependency
+  radar and promotes an independent operations slice while the EDV response is
+  pending. No separate visual tool has been introduced.
+- Reuse potential: very high for deadline-driven and team-based projects.
+- Risk if ignored: high; external latency becomes hidden schedule risk.
+- Status: captured as skill feedback only; no canonical CodexSkills change in
+  this work block.
+
 ### 2026-08-20 | browser-evidence-preflight | Browser tooling before UI completion
 
 - Triggering project situation: the portal passed static, API, package and

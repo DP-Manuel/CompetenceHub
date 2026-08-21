@@ -16,6 +16,7 @@ release-artifacts/
 # Local tooling
 tools/node-*/
 tools/*.zip
+.tmp/
 
 # Internal source material
 Quellen/

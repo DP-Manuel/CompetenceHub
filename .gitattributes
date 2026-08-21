@@ -1,0 +1,6 @@
+deploy/scripts/competence-hub-postgres-backup text eol=lf
+deploy/scripts/competence-hub-postgres-backup-monitor text eol=lf
+deploy/scripts/competence-hub-postgres-restore-check text eol=lf
+deploy/systemd/*.example text eol=lf
+deploy/nginx/*.example text eol=lf
+deploy/postgresql/*.example text eol=lf

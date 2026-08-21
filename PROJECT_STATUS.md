@@ -11,6 +11,11 @@ Last updated: 2026-08-21
   Go/No-Go are still open.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling six-step horizon.
+- External-dependency steering: a dated lead-time radar now tracks EDV, legal,
+  contract, onboarding, mailbox and off-server-backup inputs before they block
+  current WIP. EXT-01 is waiting; SB-21 is complete locally and EXT-05 now
+  needs its protected target, public-key handoff and rehearsal window during
+  Manuel's next Wuerzburg office visit in the week of 2026-08-24.
 - Current phase: Competence Hub public website stabilization plus isolated
   portal/backend foundation.
 - Current goal: professional, mobile-first B2B and B2C website for offers from
@@ -63,6 +68,15 @@ Last updated: 2026-08-21
   and installed its Wheel in isolation. The complete synthetic onboarding
   chain passed isolated Staging. SMTP and deployment remain disabled until
   external values and gates close.
+- Completed locally: SB-21 adds a fail-closed encrypted PostgreSQL backup,
+  daily integrity/age monitor, provisional 30-daily/12-monthly retention,
+  guarded Windows pull and isolated local restore check. VPS encryption accepts
+  only an exact public-key fingerprint and rejects private keys; database tools
+  use the local Unix socket. Eleven focused tests plus Bash/PowerShell syntax
+  pass. The complete dirty-tree verification passed 298 tests with 14 expected
+  Staging skips, installed its Wheel in isolation and packaged every operations
+  file with zero `.env`/`.tmp` entries. Linux checkout files are pinned to LF.
+  The disposable artifact was removed.
 - Waiting: remaining profile details and rights where still open; explicit
   qualification and approval before any Coach is assigned to Mediation;
   legal-provider decision, approval of Janay's remaining workflow gates and
@@ -205,12 +219,27 @@ Last updated: 2026-08-21
 
 ## Delivery Horizon
 
-- Recommended next work block: after the EDV response, render and natively
-  validate the App-DNS/TLS/Nginx/SMTP configuration without real accounts or
-  data. Definition of Done: exact App-Origin and sender are approved, no
-  placeholder remains, `systemd-analyze verify` and `nginx -t` pass, and one
-  approved synthetic delivery leaves no secret or Outbox residue. Deployment
-  still requires a separate approval.
+- SB-22 is complete locally: the Website now has a secret-free SFTP target
+  contract, fail-closed artifact preparer and operator runbook. Dirty artifacts,
+  wrong hashes/domains, unresolved targets, unverified host keys/Webroots and
+  unsafe archives stop. Seventeen combined operations/SFTP tests, the PowerShell
+  parser and the 38-file/28-page Astro production build pass. The complete
+  Webapp release gate also passes 304 tests with 14 expected Staging skips,
+  Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
+  non-deployable verification artifact was removed and `.tmp/` is now ignored
+  by Git. No connection or deployment occurred.
+- Recommended next work block: SB-23, use the controlled Wuerzburg workstation
+  during the week of 2026-08-24 to prove the encrypted PostgreSQL off-server
+  backup and restore chain. Definition of Done: native package validation, one
+  synthetic encrypted set, guarded transfer and restore from that exact
+  external copy pass; PostgreSQL remains localhost-only, co-hosted services
+  remain healthy and no real data or production activation occurs. An earlier
+  EDV response promotes host-specific DNS/TLS/Nginx/SMTP validation.
+- Lead-time radar: EDV receipt check is due 2026-08-25, reminder 2026-08-27
+  and escalation from 2026-08-28 if required. Contract schedule confirmation
+  is due 2026-08-26; Janay/Thomas appointment requests and the Wuerzburg backup
+  window should be placed by 2026-08-28. Legal review must be scheduled by
+  2026-09-04 to preserve the 2026-09-25 launch deadline.
 - SB-19 evidence: the existing isolated Outbox Staging test now continues
   through single-use invitation acceptance, password hashing, TOTP enrollment,
   Recovery-code generation and active session creation. It compiles and skips
@@ -258,12 +287,13 @@ Last updated: 2026-08-21
   Staging skips; compileall, `pip check` and JavaScript syntax pass. The final
   review also enforces same-origin action links and single-recipient delivery.
   No external SMTP connection or message occurred.
-- Rolling delivery horizon: (1) use the EDV reply to render and natively
-  validate DNS/TLS/SMTP configuration, (2) rehearse reverse proxy, static
-  release and rollback, (3) close off-server backup/operations gates, (4)
-  onboard named users and run supervised synthetic acceptance, (5) obtain
-  Legal/Thomas Go/No-Go, (6) release the narrow pilot and first approved company
-  no later than 2026-09-25.
+- Rolling delivery horizon: (1) close the encrypted Wuerzburg off-server
+  backup/restore gate, (2) use the EDV reply to render and natively validate
+  DNS/TLS/Nginx/SMTP, (3) perform read-only SFTP host-key/Webroot inventory and
+  generate the pinned clean Website package, (4) rehearse Website and Webapp
+  activation/rollback without real data, (5) onboard named users and run
+  supervised acceptance, (6) obtain Legal/Thomas Go/No-Go and release the
+  narrow pilot plus first approved company no later than 2026-09-25.
   Confidence decreases after step 3.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.

@@ -1,0 +1,12 @@
+[Unit]
+Description=Check Competence Hub PostgreSQL backup health daily
+
+[Timer]
+OnCalendar=*-*-* 08:00:00 UTC
+RandomizedDelaySec=10min
+AccuracySec=1min
+Persistent=true
+Unit=competence-hub-postgres-backup-monitor.service
+
+[Install]
+WantedBy=timers.target

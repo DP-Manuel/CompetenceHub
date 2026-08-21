@@ -1,0 +1,8 @@
+# Secret-free Competence Hub PostgreSQL backup configuration.
+# Install as /etc/competence-hub/backup.conf with owner root:postgres and 0640.
+
+BACKUP_DATABASE=competence_hub_staging
+BACKUP_GPG_RECIPIENT=__GPG_RECIPIENT_FINGERPRINT__
+BACKUP_KEEP_DAILY=30
+BACKUP_KEEP_MONTHLY=12
+BACKUP_MAX_AGE_HOURS=30

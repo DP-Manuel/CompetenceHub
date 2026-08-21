@@ -106,6 +106,11 @@ Smokes:
 Rollback: vorheriges Webspace-Artefakt wiederherstellen, Kernrouten erneut
 pruefen und Ursache protokollieren.
 
+Das lokale, nicht verbindende Vorbereitungspaket und die getrennten Gates fuer
+Remote-Inventur, Webspace-Backup und Replace sind in
+`website-sftp-release-rehearsal-runbook.md` beschrieben. Ohne bestaetigten
+Remote-Webroot wird kein ausfuehrbarer Upload- oder Loeschplan erzeugt.
+
 ## Portal-/API-/Worker-Release und Rollback
 
 Vorbedingungen:

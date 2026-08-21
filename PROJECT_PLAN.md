@@ -552,14 +552,38 @@ execution backlog limits current WIP; the rolling horizon preserves likely
 sequencing. Items become more provisional with distance and are reconciled
 after every meaningful completion, blocker or stakeholder decision.
 
+### External Dependency And Lead-Time Radar
+
+External decisions, data, access and approvals are requested before their
+dependent slice becomes current WIP. The dates below are steering thresholds,
+not promises made by the named stakeholders. Review the radar at every material
+checkpoint and at least weekly. A waiting item must show its owner, next chase,
+latest useful date, affected work and a safe fallback.
+
+| ID | External input / owner | Requested or schedule by | Planning target / latest useful | Early warning / escalation | Affected work and fallback | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| EXT-01 | App-DNS, TLS path, SMTP contract and sender routing / EDV | Requested 2026-08-21 | Target 2026-08-25; latest useful 2026-09-04 | Confirm receipt 2026-08-25; remind 2026-08-27; escalate from 2026-08-28 | Blocks host-specific config and live invitations; continue secret-free operations work and synthetic mail | Waiting |
+| EXT-02 | Final contracts / Lars Donner and responsible business stakeholders | Confirm schedule by 2026-08-26 | Target 2026-08-28; latest useful 2026-09-11 | Escalate scope/date risk from 2026-09-01 | Blocks approved first-company workflow; keep pilot data synthetic | Planned |
+| EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Request slots by 2026-08-28 | Target 2026-09-11; latest useful 2026-09-18 | Escalate missing appointments from 2026-09-04 | Blocks named-user acceptance and production release; retain reviewed release candidate | Planned |
+| EXT-04 | Final legal operator, Impressum and legal review | Name review slot by 2026-09-04 | Target 2026-09-15; latest useful 2026-09-18 | Escalate launch risk from 2026-09-11 | Blocks live launch; keep current legal placeholders and no promotion | Waiting |
+| EXT-05 | Controlled Wuerzburg off-server backup target and access window / Manuel | Manuel is next in Wuerzburg during 2026-08-24 through 2026-08-28; exact slot by 2026-08-28 | Target 2026-09-04; latest useful 2026-09-11 | Escalate data-readiness risk from 2026-09-05 | Blocks real data; tooling is locally prepared, but target/key/restore evidence remain open | Prepared; next-week execution window |
+| EXT-06 | Mailbox response, absence and ownership procedure / Janay and Manuel | Request by 2026-09-04 | Target 2026-09-11; latest useful 2026-09-18 | Escalate service-readiness risk from 2026-09-12 | Blocks advertised contact service level; publish no unsupported response promise | Planned |
+
+Lead-time rule: calculate `request by` from the latest useful date minus a
+realistic response, rework and escalation buffer. When an acknowledgement or
+target date is missed, show the schedule impact immediately and promote an
+independent ready slice instead of silently waiting.
+
 ### Current Execution Backlog
 
 Current sprint goal: turn the accepted synthetic same-origin portal into a
 reversible production-shaped pilot package while keeping accounts, real data
 and public activation behind explicit gates. API, database, browser acceptance
 and source versioning are complete. Website release metadata/artifacts and
-initial API/Nginx templates are prepared; current WIP is the complete
-synthetic onboarding proof and deployable runtime rehearsal.
+initial API/Nginx templates are prepared; the synthetic onboarding and
+deployable runtime rehearsal and secret-free backup/restore package are
+complete locally. Current implementation WIP is empty while EXT-01 and EXT-05
+inputs are chased; the first gate to close determines the next native rehearsal.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -583,17 +607,22 @@ synthetic onboarding proof and deployable runtime rehearsal.
 | SB-18 | Done locally | Complete invitation-by-E-Mail vertical slice and production runtime packaging | accepted ADR 0005; SMTP contract/sender remains blocked; no real delivery | configured Runtime wires Lifecycle/password policy/encrypted outbox; TLS-only authenticated SMTP adapter and one-shot worker; fragment-based invitation/reset links and Portal forms; Admin-only idempotent internal invitation; systemd service/timer examples; 274 local passes plus 14 opt-in skips, compile/pip/JS checks green |
 | SB-19 | Done | Prove the complete synthetic onboarding chain and rehearse runtime packaging | SB-18; no external SMTP; isolated local capture adapter and Staging tunnel | corrected expanded harness passed 14/14 in 151.77 seconds; Admin invite -> encrypted outbox -> capture token -> password -> TOTP -> Recovery-Codes -> active session plus replay rejection; users/sessions/outbox/audit all zero afterward; Chatbot, Nginx, Fail2ban and PostgreSQL active |
 | SB-20 | Done locally | Build the reproducible backend/worker release artifact and executable rehearsal runbook | SB-19; no deployment; external SMTP and App-DNS may remain placeholders | exact runtime lock, deterministic Wheel/ZIP plus internal inventory and external manifest/checksum, isolated install/fail-closed smoke, deployment-template contract, executable install/health/rollback runbook; final review enforces same-origin action links, single-recipient mail and canonical proxy redirects; 287 local passes plus 14 skips; repeated dirty builds were byte-identical and the committed clean build reported `dirty: false` with successful isolated Wheel installation |
+| SB-21 | Done locally | Prepare secret-free PostgreSQL backup, retention, monitoring and external-restore rehearsal package | no production change; no real data; external Wuerzburg target may remain unavailable | encrypted daily/monthly backup, local monitor, guarded Windows pull, isolated restore check, hardened systemd/config templates and runbook; 11 focused operations tests and Bash/PowerShell syntax pass; full release gate passes 298 tests with 14 expected Staging skips, packages every required file and contains no `.env`/`.tmp` entry |
+| SB-22 | Done locally | Prepare a guarded Website SFTP release, remote-backup and rollback rehearsal package | existing static release builder; no credentials in Git; no upload or deployment approval | secret-free target contract, local preparer and runbook; checksum/archive, host-key and verified remote-root guards; mandatory backup-before-replace plus smoke/rollback gates; 17 focused operations/SFTP tests, PowerShell parser, 38-file/28-page Astro build and full 304-pass/14-skip release gate green |
 
-Recommended next block: render and natively validate the App-DNS/TLS/Nginx/SMTP
-configuration after the EDV response. Purpose: turn the reviewed templates
-into a host-specific, secret-external rehearsal configuration without enabling
-production. Inputs: approved App hostname, DNS target, TLS path, SMTP host/
-port/mode/identity and sender. Deliverables: reviewed configuration kept
-outside Git, native `systemd-analyze verify`/`nginx -t` evidence and one
-approved synthetic delivery test. Definition of Done: exact Origin and sender
-match, no placeholder or secret leaks, Worker retry/residue checks pass and all
-existing VPS services stay active. Deployment and real data remain separate
-gates.
+Recommended next block: SB-23, validate the PostgreSQL backup package natively
+and create a verified encrypted off-server candidate from the controlled
+Wuerzburg workstation during the week of 2026-08-24. Purpose: close the
+highest-priority real-data gate without deploying the Webapp. Inputs: the
+committed SB-21 package, a workstation-generated encryption key whose private
+part never reaches the VPS, protected local storage and explicit rehearsal
+approval. Deliverables: native script/systemd validation, one synthetic
+encrypted backup set, guarded transfer to Wuerzburg, restore from that exact
+external copy and service-health evidence. Definition of Done: encryption,
+integrity, retention/monitoring and restore pass; PostgreSQL remains localhost-
+only, all co-hosted services remain active and no real data or production
+activation occurs. An earlier EDV response may promote host-specific
+DNS/TLS/Nginx/SMTP validation.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -602,12 +631,12 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- |
-| 1 | High | Render and validate App-DNS, TLS, reverse-proxy and SMTP configuration | EDV request sent 2026-08-21; response pending; Thomas production path; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender and no shared login |
-| 2 | Medium-high | Rehearse Website SFTP release and VPS package activation/rollback without real data | Step 1; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
-| 3 | Medium | Close off-server backup/restore, retention, monitoring and emergency-access gates | controlled Wuerzburg target and named successor | encrypted external-copy restore, backup alert, retention/runbook and recovery evidence |
-| 4 | Medium-low | Create named accounts, assign least privilege and run supervised synthetic acceptance | Steps 1-3; legal progress; scheduled Janay/Thomas dates | E-Mail invitation, MFA onboarding, role matrix and Janay walkthrough |
-| 5 | Low | Obtain final Legal and Thomas Go/No-Go | final operator/Impressum, contracts and acceptance evidence | signed gate matrix, rollback owner and production window |
-| 6 | Low | Release the narrow pilot and first approved company no later than 2026-09-25 | Step 5 go; all real-data and production gates | production smoke, audit/least privilege, backup evidence, first-record acceptance and rollback readiness |
+| 1 | High | Validate the database backup package natively and create a verified encrypted off-server candidate | EXT-05 next-week target/window, workstation-generated key and rehearsal approval | systemd/Bash validation, encrypted synthetic set, guarded pull, restore from external copy and service health |
+| 2 | High | Render and validate App-DNS, TLS, reverse-proxy and SMTP configuration | EXT-01; Thomas production path; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender and no shared login |
+| 3 | High | Confirm the exact Website SFTP target without changing it and generate the pinned local rehearsal package | explicit read-only connection approval; trusted host-key source; SB-22 | host-key match, `pwd`/complete inventory, target-contract validation and locally verified clean artifact |
+| 4 | Medium-high | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 1-3; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
+| 5 | Medium-low | Create named accounts and run supervised acceptance | Steps 1-4; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |
+| 6 | Low | Close Legal/Go-No-Go and release the narrow pilot by 2026-09-25 | EXT-02 through EXT-06; all real-data and production gates | signed gate matrix, production smoke, backup evidence, first approved company and rollback readiness |
 
 ### Cross-Cutting Gates
 

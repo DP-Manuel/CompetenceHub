@@ -135,11 +135,17 @@ try {
     New-Item -ItemType Directory -Force -Path $docsRoot | Out-Null
     Copy-Item -LiteralPath (Join-Path $repoRoot "docs\architecture\production-release-plan-2026-09-25.md") -Destination $docsRoot
     Copy-Item -LiteralPath (Join-Path $repoRoot "docs\architecture\webapp-release-rehearsal-runbook.md") -Destination $docsRoot
+    Copy-Item -LiteralPath (Join-Path $repoRoot "docs\architecture\postgresql-backup-restore-runbook.md") -Destination $docsRoot
 
     $templateContracts = @{
         "deploy\systemd\competence-hub-api.service.example" = @("__PORT__")
         "deploy\systemd\competence-hub-token-worker.service.example" = @()
         "deploy\systemd\competence-hub-token-worker.timer.example" = @()
+        "deploy\systemd\competence-hub-postgres-backup.service.example" = @()
+        "deploy\systemd\competence-hub-postgres-backup.timer.example" = @()
+        "deploy\systemd\competence-hub-postgres-backup-monitor.service.example" = @()
+        "deploy\systemd\competence-hub-postgres-backup-monitor.timer.example" = @()
+        "deploy\postgresql\backup.conf.example" = @("__GPG_RECIPIENT_FINGERPRINT__")
         "deploy\nginx\competence-hub-app.conf.example" = @(
             "__APP_HOSTNAME__",
             "__PORT__",

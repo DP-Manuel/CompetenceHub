@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "canonical_url": "https://competencehub.donner-partner.de",
+  "redirect_url": "https://competence-hub.donner-partner.de",
+  "sftp_host": "__CONFIRMED_SFTP_HOST__",
+  "sftp_port": 22,
+  "sftp_host_key_sha256": "__VERIFIED_SFTP_HOST_KEY_SHA256__",
+  "remote_web_root": "__CONFIRMED_SFTP_WEB_ROOT__",
+  "remote_web_root_verified": false,
+  "expected_entrypoint": "index.html"
+}

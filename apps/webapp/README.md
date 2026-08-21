@@ -177,6 +177,15 @@ The Portal now contains password-reset request/confirmation, invitation
 acceptance followed by MFA enrollment, and an Admin-only internal invitation
 form. It does not expose a token in query strings or browser storage.
 
+Secret-free PostgreSQL backup, freshness/integrity monitoring, a guarded
+Windows off-server pull and an isolated restore-check package are prepared
+under `../../deploy/`. They enforce localhost-only PostgreSQL, public-key-only
+encryption on the VPS, bounded daily/monthly retention and temporary restore
+database naming. None of these examples is installed or enabled. The external
+copy, restore proof, active alert route and final retention approval remain
+production gates; see
+`../../docs/architecture/postgresql-backup-restore-runbook.md`.
+
 Start the configured app through the factory only after supplying those values
 through an approved local or service-manager mechanism:
 

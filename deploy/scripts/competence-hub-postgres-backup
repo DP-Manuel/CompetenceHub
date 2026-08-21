@@ -1,0 +1,169 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+readonly CONFIG_PATH="/etc/competence-hub/backup.conf"
+readonly BACKUP_ROOT="/var/backups/competence-hub/automated"
+readonly GPG_HOME="/var/lib/competence-hub-backup/gnupg"
+readonly PG_SOCKET="/var/run/postgresql"
+
+fail() {
+    printf 'competence-hub backup: %s\n' "$1" >&2
+    exit 1
+}
+
+require_command() {
+    command -v "$1" >/dev/null 2>&1 || fail "required command is missing: $1"
+}
+
+read_config() {
+    local raw key value
+    declare -A seen=()
+
+    [[ -f "$CONFIG_PATH" && ! -L "$CONFIG_PATH" ]] || fail "configuration must be a regular non-symlink file"
+    [[ "$(stat -c %U "$CONFIG_PATH")" == "root" ]] || fail "configuration must be owned by root"
+    [[ "$(stat -c %G "$CONFIG_PATH")" == "postgres" ]] || fail "configuration group must be postgres"
+    [[ "$(stat -c %a "$CONFIG_PATH")" == "640" ]] || fail "configuration must have mode 0640"
+    while IFS= read -r raw || [[ -n "$raw" ]]; do
+        raw="${raw%$'\r'}"
+        [[ -z "$raw" || "$raw" == \#* ]] && continue
+        [[ "$raw" == *=* ]] || fail "invalid configuration line"
+        key="${raw%%=*}"
+        value="${raw#*=}"
+        [[ "$key" =~ ^[A-Z_]+$ && -n "$value" ]] || fail "invalid configuration entry"
+        [[ -z "${seen[$key]:-}" ]] || fail "duplicate configuration key: $key"
+        seen[$key]="true"
+        case "$key" in
+            BACKUP_DATABASE) BACKUP_DATABASE="$value" ;;
+            BACKUP_GPG_RECIPIENT) BACKUP_GPG_RECIPIENT="${value^^}" ;;
+            BACKUP_KEEP_DAILY) BACKUP_KEEP_DAILY="$value" ;;
+            BACKUP_KEEP_MONTHLY) BACKUP_KEEP_MONTHLY="$value" ;;
+            BACKUP_MAX_AGE_HOURS) BACKUP_MAX_AGE_HOURS="$value" ;;
+            *) fail "unknown configuration key: $key" ;;
+        esac
+    done < "$CONFIG_PATH"
+}
+
+validate_config() {
+    [[ "${BACKUP_DATABASE:-}" =~ ^[a-z][a-z0-9_]{2,62}$ ]] || fail "invalid database name"
+    [[ "$BACKUP_DATABASE" != "postgres" && "$BACKUP_DATABASE" != template* ]] || fail "system databases are not valid backup targets"
+    [[ "${BACKUP_GPG_RECIPIENT:-}" =~ ^[A-F0-9]{40}$ ]] || fail "GPG recipient must be a 40-character fingerprint"
+    [[ "${BACKUP_KEEP_DAILY:-}" =~ ^[1-9][0-9]*$ ]] || fail "daily retention must be positive"
+    [[ "${BACKUP_KEEP_MONTHLY:-}" =~ ^[1-9][0-9]*$ ]] || fail "monthly retention must be positive"
+    [[ "${BACKUP_MAX_AGE_HOURS:-}" =~ ^[1-9][0-9]*$ ]] || fail "maximum age must be positive"
+    ((BACKUP_KEEP_DAILY <= 365)) || fail "daily retention exceeds the reviewed maximum"
+    ((BACKUP_KEEP_MONTHLY <= 120)) || fail "monthly retention exceeds the reviewed maximum"
+    ((BACKUP_MAX_AGE_HOURS <= 168)) || fail "maximum age exceeds seven days"
+    [[ -d "$GPG_HOME" && ! -L "$GPG_HOME" ]] || fail "GPG home must be a regular directory"
+    [[ "$(stat -c %U "$GPG_HOME")" == "postgres" ]] || fail "GPG home must be owned by postgres"
+    [[ "$(stat -c %a "$GPG_HOME")" == "700" ]] || fail "GPG home must have mode 0700"
+
+    local configured_fingerprints
+    configured_fingerprints="$(gpg --homedir "$GPG_HOME" --batch --with-colons --fingerprint "$BACKUP_GPG_RECIPIENT" 2>/dev/null \
+        | awk -F: '$1 == "fpr" { print toupper($10) }')"
+    grep -Fxq "$BACKUP_GPG_RECIPIENT" <<< "$configured_fingerprints" \
+        || fail "configured GPG recipient is not available"
+    if gpg --homedir "$GPG_HOME" --batch --with-colons --list-secret-keys 2>/dev/null \
+        | grep -Eq '^(sec|ssb):'; then
+        fail "private GPG keys are not allowed on the backup server"
+    fi
+}
+
+prune_sets() {
+    local bucket="$1" keep="$2" pattern="$3" index name target
+    local -a names=()
+
+    mapfile -t names < <(find "$bucket" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | LC_ALL=C sort -r)
+    for name in "${names[@]}"; do
+        [[ "$name" =~ $pattern ]] || fail "unexpected directory in retention bucket: $name"
+    done
+    for ((index = keep; index < ${#names[@]}; index++)); do
+        name="${names[$index]}"
+        target="$bucket/$name"
+        [[ "$(realpath -e "$target")" == "$bucket/$name" ]] || fail "refusing to prune non-canonical target"
+        chmod 0700 "$target"
+        find "$target" -mindepth 1 -maxdepth 1 -type f -delete
+        rmdir -- "$target" || fail "backup set contains unexpected entries: $target"
+    done
+}
+
+[[ "$(id -un)" == "postgres" ]] || fail "run this command as the postgres operating-system user"
+umask 077
+
+for command_name in awk find flock gpg grep install pg_dump pg_dumpall psql realpath sha256sum stat; do
+    require_command "$command_name"
+done
+
+BACKUP_DATABASE=""
+BACKUP_GPG_RECIPIENT=""
+BACKUP_KEEP_DAILY=""
+BACKUP_KEEP_MONTHLY=""
+BACKUP_MAX_AGE_HOURS=""
+read_config
+validate_config
+
+install -d -o postgres -g postgres -m 0700 "$BACKUP_ROOT" "$BACKUP_ROOT/daily" "$BACKUP_ROOT/monthly"
+[[ "$(realpath -e "$BACKUP_ROOT")" == "$BACKUP_ROOT" ]] || fail "backup root is not canonical"
+
+exec 9>"$BACKUP_ROOT/.backup.lock"
+flock -n 9 || fail "another backup process is already active"
+
+readonly stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+readonly day="$(date -u +%Y-%m-%d)"
+readonly month="$(date -u +%Y-%m)"
+readonly final_set="$BACKUP_ROOT/daily/$day"
+[[ ! -e "$final_set" ]] || fail "a completed or partial backup set already exists for $day"
+
+work_dir="$(mktemp -d "$BACKUP_ROOT/.work-${stamp}-XXXXXX")"
+cleanup() {
+    if [[ -n "${work_dir:-}" && -d "$work_dir" ]]; then
+        chmod 0700 "$work_dir" 2>/dev/null || true
+        find "$work_dir" -mindepth 1 -maxdepth 1 -type f -delete
+        rmdir "$work_dir" 2>/dev/null || true
+    fi
+}
+trap cleanup EXIT
+
+readonly base="competence-hub-${BACKUP_DATABASE}-${stamp}"
+readonly plain_dump="$work_dir/$base.dump"
+readonly plain_globals="$work_dir/$base.globals.sql"
+readonly encrypted_dump="$plain_dump.gpg"
+readonly encrypted_globals="$plain_globals.gpg"
+
+database_name="$(psql --host "$PG_SOCKET" --dbname "$BACKUP_DATABASE" --no-psqlrc --tuples-only --no-align --command 'SELECT current_database();')"
+[[ "$database_name" == "$BACKUP_DATABASE" ]] || fail "database connection check failed"
+schema_count="$(psql --host "$PG_SOCKET" --dbname "$BACKUP_DATABASE" --no-psqlrc --tuples-only --no-align \
+    --command "SELECT count(*) FROM pg_namespace WHERE nspname = 'competence_hub';")"
+[[ "$schema_count" == "1" ]] || fail "expected competence_hub schema is missing"
+table_count="$(psql --host "$PG_SOCKET" --dbname "$BACKUP_DATABASE" --no-psqlrc --tuples-only --no-align \
+    --command "SELECT count(*) FROM pg_tables WHERE schemaname = 'competence_hub';")"
+[[ "$table_count" =~ ^[1-9][0-9]*$ ]] || fail "application schema contains no tables"
+
+pg_dumpall --host "$PG_SOCKET" --globals-only --no-role-passwords > "$plain_globals"
+pg_dump --host "$PG_SOCKET" --dbname "$BACKUP_DATABASE" --format=custom --compress=9 --file "$plain_dump"
+
+gpg --homedir "$GPG_HOME" --batch --yes --no-tty --trust-model always \
+    --recipient "$BACKUP_GPG_RECIPIENT" --output "$encrypted_dump" --encrypt "$plain_dump"
+gpg --homedir "$GPG_HOME" --batch --yes --no-tty --trust-model always \
+    --recipient "$BACKUP_GPG_RECIPIENT" --output "$encrypted_globals" --encrypt "$plain_globals"
+
+rm -f -- "$plain_dump" "$plain_globals"
+printf 'created_at_utc=%s\ndatabase=%s\nschema=competence_hub\ntable_count=%s\nencryption=openpgp\nrole_passwords_included=false\n' \
+    "$stamp" "$BACKUP_DATABASE" "$table_count" > "$work_dir/METADATA"
+(
+    cd "$work_dir"
+    sha256sum "$(basename "$encrypted_dump")" "$(basename "$encrypted_globals")" METADATA > SHA256SUMS
+)
+touch "$work_dir/COMPLETE"
+find "$work_dir" -mindepth 1 -maxdepth 1 -type f -exec chmod 0400 {} +
+chmod 0500 "$work_dir"
+mv -- "$work_dir" "$final_set"
+work_dir=""
+
+if [[ ! -e "$BACKUP_ROOT/monthly/$month" ]]; then
+    cp -al -- "$final_set" "$BACKUP_ROOT/monthly/$month"
+fi
+
+prune_sets "$BACKUP_ROOT/daily" "$BACKUP_KEEP_DAILY" '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+prune_sets "$BACKUP_ROOT/monthly" "$BACKUP_KEEP_MONTHLY" '^[0-9]{4}-[0-9]{2}$'
+
+printf 'competence-hub backup: completed encrypted set %s with %s application tables\n' "$final_set" "$table_count"

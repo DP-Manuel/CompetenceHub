@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+readonly CONFIG_PATH="/etc/competence-hub/backup.conf"
+readonly BACKUP_ROOT="/var/backups/competence-hub/automated"
+
+fail() {
+    printf 'competence-hub backup monitor: %s\n' "$1" >&2
+    exit 1
+}
+
+read_maximum_age() {
+    local raw key value found=""
+    declare -A seen=()
+    [[ -f "$CONFIG_PATH" && ! -L "$CONFIG_PATH" ]] || fail "configuration must be a regular non-symlink file"
+    [[ "$(stat -c %U "$CONFIG_PATH")" == "root" ]] || fail "configuration must be owned by root"
+    [[ "$(stat -c %G "$CONFIG_PATH")" == "postgres" ]] || fail "configuration group must be postgres"
+    [[ "$(stat -c %a "$CONFIG_PATH")" == "640" ]] || fail "configuration must have mode 0640"
+    while IFS= read -r raw || [[ -n "$raw" ]]; do
+        raw="${raw%$'\r'}"
+        [[ -z "$raw" || "$raw" == \#* ]] && continue
+        [[ "$raw" == *=* ]] || fail "invalid configuration line"
+        key="${raw%%=*}"
+        value="${raw#*=}"
+        [[ "$key" =~ ^[A-Z_]+$ && -n "$value" ]] || fail "invalid configuration entry"
+        [[ -z "${seen[$key]:-}" ]] || fail "duplicate configuration key: $key"
+        seen[$key]="true"
+        case "$key" in
+            BACKUP_MAX_AGE_HOURS) found="$value" ;;
+            BACKUP_DATABASE|BACKUP_GPG_RECIPIENT|BACKUP_KEEP_DAILY|BACKUP_KEEP_MONTHLY) ;;
+            *) fail "unknown configuration key: $key" ;;
+        esac
+    done < "$CONFIG_PATH"
+    [[ "$found" =~ ^[1-9][0-9]*$ ]] || fail "maximum age must be positive"
+    printf '%s' "$found"
+}
+
+[[ "$(id -un)" == "postgres" ]] || fail "run this command as the postgres operating-system user"
+umask 077
+for command_name in find gpg realpath sha256sum stat; do
+    command -v "$command_name" >/dev/null 2>&1 || fail "required command is missing: $command_name"
+done
+[[ -d "$BACKUP_ROOT/daily" && ! -L "$BACKUP_ROOT" ]] || fail "backup root is unavailable or unsafe"
+[[ "$(realpath -e "$BACKUP_ROOT")" == "$BACKUP_ROOT" ]] || fail "backup root is not canonical"
+
+maximum_age_hours="$(read_maximum_age)"
+latest_name="$(find "$BACKUP_ROOT/daily" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | LC_ALL=C sort -r | head -n 1)"
+[[ "$latest_name" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || fail "no valid daily backup set exists"
+latest_set="$BACKUP_ROOT/daily/$latest_name"
+[[ -f "$latest_set/COMPLETE" && ! -L "$latest_set" ]] || fail "latest backup set is incomplete or unsafe"
+[[ -z "$(find "$latest_set" -mindepth 1 -maxdepth 1 -type l -print -quit)" ]] \
+    || fail "latest backup set contains a symlink"
+
+completed_epoch="$(stat -c %Y "$latest_set/COMPLETE")"
+now_epoch="$(date -u +%s)"
+age_seconds=$((now_epoch - completed_epoch))
+((age_seconds >= 0)) || fail "latest backup timestamp is in the future"
+((age_seconds <= maximum_age_hours * 3600)) || fail "latest backup exceeds maximum age"
+
+if find "$BACKUP_ROOT" -type f \( -name '*.dump' -o -name '*.sql' \) -print -quit | grep -q .; then
+    fail "unencrypted database material exists below the automated backup root"
+fi
+
+(
+    cd "$latest_set"
+    checksum_count=0
+    while IFS= read -r checksum_line || [[ -n "$checksum_line" ]]; do
+        [[ "$checksum_line" != */* && "$checksum_line" != *\\* ]] \
+            || fail "checksum manifest contains a path"
+        [[ "$checksum_line" =~ ^[a-fA-F0-9]{64}[[:space:]][[:space:]][A-Za-z0-9._-]+$ ]] \
+            || fail "checksum manifest contains a malformed entry"
+        ((checksum_count += 1))
+    done < SHA256SUMS
+    [[ "$checksum_count" -eq 3 ]] || fail "checksum manifest must contain exactly three entries"
+    sha256sum --check --strict SHA256SUMS >/dev/null
+)
+mapfile -t encrypted_files < <(find "$latest_set" -mindepth 1 -maxdepth 1 -type f -name '*.gpg' -print)
+[[ ${#encrypted_files[@]} -eq 2 ]] || fail "latest backup set must contain exactly two encrypted payloads"
+packet_home="$(mktemp -d)"
+trap 'find "$packet_home" -mindepth 1 -depth -delete; rmdir "$packet_home" 2>/dev/null || true' EXIT
+for encrypted_file in "${encrypted_files[@]}"; do
+    gpg --homedir "$packet_home" --batch --list-packets "$encrypted_file" >/dev/null 2>&1 \
+        || fail "invalid OpenPGP payload: $encrypted_file"
+done
+
+printf 'competence-hub backup monitor: latest set %s is complete, encrypted and %s seconds old\n' \
+    "$latest_name" "$age_seconds"
