@@ -2,6 +2,194 @@
 
 Newest entries first.
 
+## 2026-08-21 | review/release | Release Candidate fachlich und technisch geprueft
+
+- Der gebuendelte Review von Website, Portal, SMTP-Worker und Releasepaket hat
+  keine offenen hohen oder kritischen Befunde. Account-Action-Links muessen
+  jetzt exakt auf dem erlaubten HTTPS-Portal-Origin liegen.
+- Eine gemeinsame strikte E-Mail-Pruefung und eine zweite Schutzschicht im
+  SMTP-Adapter verhindern Verteiler-/Mehrfachempfaengerwerte. Ein fehlerhafter
+  Outbox-Empfaenger wird kontrolliert als Zustellfehler behandelt, statt den
+  Worker unkontrolliert zu beenden.
+- Der Nginx-Entwurf leitet HTTP fest auf den freigegebenen App-Host um, blendet
+  die Serverversion aus und setzt HSTS am HTTPS-VHost. Tokens bleiben im URL-
+  Fragment, werden sofort aus der Browserzeile entfernt und nicht gespeichert.
+- Vollstaendige Verifikation: `pip check`, 287 lokale Tests bestanden, 14
+  tunnelpflichtige Staging-Tests erwartungsgemaess uebersprungen, Compileall,
+  JavaScript-Syntax und PowerShell-Parser sind gruen. Produktion und GitHub-
+  Review pruefen 38 Astro-Dateien ohne Diagnose und bauen je 28 Seiten.
+- Zwei vollstaendige post-review Webapp-Builds waren bytegleich
+  (`f444a36c0ef1e51e4fd208f85621d15d54ccde9535c24927eaaced76ab5d2f9f`).
+  Webapp- und Website-ZIPs enthielten weder `.env` noch `.tmp`; alle
+  Testartefakte wurden danach entfernt.
+- Nach der Commit-Freigabe bestand auch der Clean-Source-Webapp-Build: nur der
+  gesperrte `.tmp/`-Ordner blieb ungetrackt, das Manifest meldete
+  `dirty: false`, und Wheel-Installation sowie Fail-closed-Smokes waren gruen.
+  SB-20 ist damit lokal abgeschlossen.
+- Die App-DNS-/SMTP-Anfrage wurde am 21.08.2026 an die EDV versendet; Antwort
+  und externe Werte stehen aus. Keine SMTP-Verbindung, E-Mail, DNS-Aenderung,
+  VPS-Aktivierung, SFTP-Uebertragung, Echtdatenverwendung, Commit, Push oder
+  Deployment erfolgte.
+
+## 2026-08-21 | release/operations | Reproduzierbares Webapp-Paket vorbereitet
+
+- `scripts/build-webapp-release.ps1` prueft den exakten Runtime-Lock,
+  `pip check`, die lokale Suite und Compileall, baut das Anwendungs-Wheel,
+  installiert es isoliert und prueft das Fail-closed-Verhalten von API und
+  Worker ohne Konfiguration.
+- Das erzeugte ZIP enthaelt Wheel, Migrationen, Rollback-Smokes,
+  Deploymentvorlagen, Runbooks und ein internes SHA-256-Dateiinventar. Ein
+  externes JSON-Manifest und eine `sha256sum`-kompatible Pruefdatei begleiten
+  das Artefakt. Zwei vollstaendige Wiederholungsbuilds erzeugten bytegleich
+  denselben ZIP-Hash.
+- Der Clean-Worktree-Guard beruecksichtigt jetzt auch ungetrackte Dateien und
+  nimmt ausschliesslich den gesperrten `.tmp/`-Ordner aus. Damit kann neuer,
+  nicht versionierter Code nicht als sauberer Release erscheinen.
+- Die systemd-Vorlagen verwenden ein releasebezogenes Virtual Environment
+  hinter `/opt/competence-hub/current`; das Linux-Runbook beschreibt
+  Installation, externe Konfiguration, Migration, native Validierung, Smoke,
+  Stop-Kriterien und atomaren Rollback.
+- Ein versandfertiger EDV-Entwurf fragt App-DNS, TLS, SMTP/TLS,
+  Absenderfreigabe, SPF/DKIM/DMARC und Adressrouting ab, ohne ein Passwort per
+  E-Mail anzufordern.
+- Verifikation: 274 lokale Tests bestanden, 14 opt-in Staging-Tests wurden
+  erwartungsgemaess uebersprungen; Dependency-, Compile-, Installations-,
+  Manifest-, Ausschluss-, Clean-Guard- und Reproduzierbarkeitspruefung sind
+  gruen. Native systemd-/Nginx-Pruefung bleibt fuer Linux vorgesehen.
+- Keine SMTP-Verbindung, E-Mail, DNS-Aenderung, VPS-Aktivierung, SFTP-
+  Uebertragung, Echtdatenverwendung, Commit, Push oder Deployment erfolgte.
+
+## 2026-08-21 | staging/acceptance | Vollstaendiges Onboarding 14/14 bestanden
+
+- Der korrigierte isolierte Staging-Harness bestand alle 14 Pfade in 151.77
+  Sekunden. Der neue durchgehende Pfad prueft Admin-Einladung,
+  verschluesselte Outbox, Capture-Zustellung, einmalige Tokenannahme,
+  Passwortvergabe, TOTP-Einrichtung, Recovery-Codes und aktive Sitzung.
+- Das Cleanup hinterliess jeweils null Nutzer, Sessions, Outbox- und
+  Auditzeilen. Damit existieren keine synthetischen Testreste.
+- `dp-chatbot`, Nginx, Fail2ban und PostgreSQL blieben aktiv. Der gemeinsame
+  VPS-Betrieb wurde durch den Test nicht beeintraechtigt.
+- SB-19 ist abgeschlossen. Naechster Implementierungsblock ist das
+  reproduzierbare Backend-/Worker-Releaseartefakt mit Manifest, Hash und
+  exaktem Installations-/Smoke-/Rollback-Runbook. Kein SMTP-Versand,
+  Deployment, reales Konto, Echtdatum, Commit oder Push erfolgte.
+
+## 2026-08-21 | staging/debug | Onboarding-Harness auf PostgreSQL-Uhr umgestellt
+
+- Der erste erweiterte Staging-Lauf bestand 13/14 Pfade. Der neue Onboarding-
+  Pfad erreichte die TOTP-Bestaetigung, scheiterte aber beim Session-Insert:
+  seine feste Testzeit vom 14.08. lag vor dem realen PostgreSQL-`created_at`
+  vom 21.08. und verletzte dadurch korrekt die Expiry-Constraint.
+- Der Harness bezieht seine Referenzzeit nun direkt ueber
+  `clock_timestamp()` aus PostgreSQL und arbeitet mit einem kontrollierten
+  Fuenf-Minuten-Vorlauf, analog zum bereits bewaehrten MFA-Staging-Test.
+- Die vollstaendige lokale Suite bleibt mit 274 Passes und 14 erwarteten
+  opt-in Staging-Skips gruen; Compileall und `pip check` bestehen. Der
+  kontrollierte 14/14-Wiederholungslauf steht aus.
+- Kein Schema-, Migrations-, Produktivdaten-, Mail- oder Deploymentfehler lag
+  vor; der Fehler war auf die Testuhr begrenzt.
+
+## 2026-08-21 | webapp/runtime | Einladungs- und Reset-Slice lokal geschlossen
+
+- Die konfigurierte FastAPI-Runtime verdrahtet jetzt den PostgreSQL-Account-
+  Lifecycle, die externe kompromittierte-Passwort-Fingerprintquelle und die
+  AES-GCM-verschluesselte Token-Outbox. Getrennte Idempotenz-/Outbox-Schluessel
+  sind Pflicht; fehlende oder unsichere Werte stoppen den Start.
+- Das Portal nimmt Einladungs- und Passwort-Reset-Links an, entfernt Tokens
+  sofort aus der Adresszeile, speichert sie nicht im Browser und fuehrt eine
+  Einladung direkt in die bestehende MFA-Einrichtung. Admins koennen genau die
+  Pilotrolle `internal` idempotent per persoenlicher Arbeits-E-Mail einladen.
+- Ein providerneutraler SMTP-Adapter erzwingt Authentifizierung sowie STARTTLS
+  oder implizites TLS. Ein One-Shot-Outbox-Worker und geheimnisfreie systemd-
+  Service-/Timerbeispiele sind vorbereitet; ohne externe SMTP-Werte laeuft
+  kein Versand.
+- Die komplette lokale Suite besteht mit 274 Tests und 14 erwarteten opt-in
+  Staging-Skips. Compileall, `pip check` und JavaScript-Syntax sind gruen.
+- Kein SMTP-Kontakt, E-Mail-Versand, reales Konto, Echtdatum, SFTP-Upload,
+  VPS-Eingriff, Deployment, Commit oder Push erfolgte.
+- Naechster Block ist der durchgehende synthetische Onboarding-Nachweis von
+  Admin-Einladung bis MFA/Portal, zuerst lokal mit Capture-Mail und danach auf
+  isoliertem Staging mit Null-Rueckstaenden.
+- Der vorhandene isolierte Outbox-Staging-Test wurde bereits bis
+  Einladungsannahme, Replay-Ablehnung, Passwort, TOTP, Recovery-Codes und aktive
+  Sitzung erweitert. Lokale Sammlung/Compile sind sauber; der echte Lauf mit
+  SSH-Tunnel und anschliessender Service-/Null-Rueckstands-Pruefung steht aus.
+
+## 2026-08-21 | release/website | Erstes Produktionspaket lokal vorbereitet
+
+- Die kanonische Website-Domain ist in Astro gesetzt. Jede Seite liefert eine
+  kanonische URL und `og:url`; der GitHub-Reviewbuild entfernt seinen Basispfad
+  korrekt und verweist ebenfalls auf die Produktionsdomain.
+- `robots.txt` sperrt im Review alle Crawler. Produktion erlaubt Hauptinhalte,
+  sperrt Login/Archiv/Prototyp und verweist auf eine aus den Coachdaten und
+  Kernrouten erzeugte Sitemap.
+- Ein PowerShell-Builder erstellt aus einem sauberen Commit ein ZIP plus JSON-
+  Manifest, Commit-ID und SHA-256. Dirty Builds werden standardmaessig
+  abgewiesen und sind nur fuer isolierte Tests explizit markierbar. Der
+  Temp-Test bestaetigte je ein Artefakt/Manifest, passenden Hash und Cleanup.
+- Geheimnisfreie Beispielvorlagen fuer einen dedizierten FastAPI-systemd-
+  Dienst und den Nginx-Reverse-Proxy sind angelegt. Der Mail-Worker fehlt
+  absichtlich, bis sein Einstiegspunkt und SMTP-Vertrag implementiert sind.
+- Produktions- und Reviewbuild pruefen 38 Dateien ohne Diagnosen und erzeugen
+  28 Seiten plus `robots.txt` und Sitemap. Kein SFTP-Upload, VPS-Eingriff,
+  E-Mail-Versand, Konto, Echtdatum, Commit oder Push erfolgte.
+- ADR-0005-Abgleich zeigte den naechsten kritischen Slice: Runtime-Lifecycle,
+  SMTP-Worker, sichere Links und Portal-Annahme-/Resetoberflaeche muessen als
+  durchgehender Einladungsweg umgesetzt werden; SMTP-Werte bleiben bis zur
+  EDV-Antwort fail-closed.
+
+## 2026-08-21 | planning/operations | Termine, Mailwege und SFTP-Richtung konkretisiert
+
+- Der 28.08. ist kein harter Produktivtermin mehr, sondern der
+  Technical-Readiness-Meilenstein nach erwarteter Vertragsfertigstellung.
+  Janays Onboarding und Thomas Ross' Go/No-Go folgen danach; der harte Termin
+  ist 25.09. vor Manuels dreiwoechiger Abwesenheit. Legal-/Betreiberangaben
+  werden voraussichtlich Mitte September vorliegen.
+- EDV hat beide Website-Subdomains auf denselben IONOS-Webspace gelegt und
+  Wildcard-TLS bestaetigt. Manuel besitzt den SFTP-Zugang zum Startverzeichnis;
+  Werte und Passwoerter bleiben ausserhalb von Git und Dokumentation. Ein
+  Upload erfolgte nicht.
+- Persoenliche Portalidentitaeten sind
+  `roedel.kg@donner-partner.eu` (`admin`) und
+  `rappelt.wue@donner-partner.eu` (`internal`). Einladungen sollen per E-Mail
+  erfolgen. Funktions-/Weiterleitungsadressen werden nicht als geteilter Login
+  verwendet.
+- `competencehub@donner-partner.de` bleibt Janays oeffentliche Kontaktmailbox.
+  `admin@competencehub.donner-partner.de` ist als Technikalias zu Manuel
+  vorgeschlagen, benoetigt aber EDV-Bestaetigung. SMTP-Parameter und eine
+  freigegebene Systemabsenderadresse fehlen noch.
+- Der Wuerzburger Rechner ist kontrolliert zugaenglich; Verschluesselungs- und
+  Restore-Nachweis koennen voraussichtlich in den naechsten ein bis zwei Wochen
+  erfolgen. Echtdaten bleiben bis dahin gesperrt.
+- SFTP schliesst nur den statischen Astro-Pfad. Portal/API/Worker benoetigen
+  weiterhin eine auf den VPS gerichtete App-Subdomain, Nginx und eigene
+  systemd-Dienste. Kein Deployment, Konto oder Echtdatum erfolgte.
+
+## 2026-08-21 | steering/restart | Pilotstand abgeglichen und kritischen Pfad bereinigt
+
+- `main` und `origin/main` stehen beide auf `c1f4cc8`; der sichere Arbeitsbaum
+  war zu Beginn sauber. Der manuelle GitHub-Pages-Workflow bleibt ohne
+  Push-Trigger. Zwischen dessen Review-Commit und `main` gibt es keine
+  Aenderung an `apps/website`, die sichtbare Website-Review ist daher nicht
+  hinter dem aktuellen Website-Code zurueck.
+- Die lokale Webapp-Suite ist erneut gruen; 14 opt-in Staging-Pfade wurden ohne
+  Tunnel erwartungsgemaess uebersprungen. Astro prueft 36 Dateien ohne Fehler,
+  Warnungen oder Hinweise und baut 28 Seiten.
+- Projektplan und Status wurden nach dem Portal-Push nachgezogen: BA-01 bis
+  BA-17, Versionierung und Runner-Cleanup sind abgeschlossen. Aktuelle WIP ist
+  die Pilot-Aktivierung statt weiterer Frontendfunktionalitaet.
+- Ein Produktionsreview fand, dass `/system`, `/seminare`, `/qualifizierung`
+  und die oeffentlichen Login-Vorschauen anders als die Prototypseiten noch
+  indexierbar waren. Diese Routen senden nun `noindex`; die Startseite bleibt
+  indexierbar. Der anschliessende Astro-Check bleibt mit 36 Dateien und null
+  Diagnosen gruen, der Build erzeugt 28 Seiten.
+- Fuenf Arbeitstage bleiben bis 28.08. Die Softwarebasis ist belastbar; offen
+  sind persoenliche Konten und Uebergabe, Runtime/Worker-Paket, DNS/Reverse
+  Proxy, verschluesselter externer Restore, Legal-/Produktionsfreigabe und
+  beaufsichtigte Abnahme. Ohne diese Evidenz bleiben Echtdaten gesperrt.
+- Kein Deployment, Konto, Echtdatum, Servereingriff, Commit oder Push erfolgte
+  in diesem Statuscheck.
+
 ## 2026-08-20 | portal/browser/acceptance | BA-01 bis BA-17 bestanden
 
 - Manuel bestaetigte nach den Nacharbeiten BA-09, BA-10 und BA-14 als

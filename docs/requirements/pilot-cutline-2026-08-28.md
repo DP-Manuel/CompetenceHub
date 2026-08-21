@@ -1,6 +1,6 @@
-# Competence Hub Pilot Cutline - 28.08.2026
+# Competence Hub Technical-Readiness Cutline - 28.08.2026
 
-Stand: 20.08.2026
+Stand: 21.08.2026
 
 Status: Von Manuel am 20.08.2026 als verbindliche Pilotgrenze freigegeben.
 Technischer Umfang und synthetische Nachweise sind belastbar; die unten
@@ -8,28 +8,36 @@ markierten Organisations- und Produktionsgates benoetigen weiterhin ihre
 benannte Freigabe oder Evidenz. Die Freigabe autorisiert keine Konten,
 Echtdaten, DNS-/Serveraenderung oder Veroeffentlichung.
 
-## Pilotziel
+## Readiness-Ziel
 
-Am 28.08.2026 ist die kanonische oeffentliche Website ueber den freigegebenen
-Produktionspfad erreichbar. Frau Janay Rappelt kann sich mit einem persoenlichen,
-MFA-geschuetzten Konto im getrennten Competence-Hub-Portal anmelden und eine
-freigegebene Firma mit mindestens einem Geschaeftskontakt anlegen, wiederfinden,
-lesen und in den erlaubten Feldern korrigieren. Jede Aenderung ist
-datenminimiert auditiert und durch ein verifiziertes Backup wiederherstellbar.
+Am 28.08.2026 sind die Vertraege voraussichtlich fertig und das technische
+Produktionspaket soll weitgehend vorbereitet sein. Eine oeffentliche
+Freigabe, reale Konten und der erste Firmenrecord duerfen danach erfolgen,
+sobald Legal-, Backup-, DNS/Runtime- und Go/No-Go-Gates geschlossen sind.
+Spaetester Produktivtermin ist 25.09.2026 vor Manuels dreiwoechiger Abwesenheit.
 
-Ein Datenbank-, API- oder UI-Teilerfolg allein erfuellt das Pilotziel nicht.
+Ein Datenbank-, API- oder UI-Teilerfolg allein erfuellt das spaetere
+Produktivziel nicht. Der 28.08. darf als Readiness-Meilenstein ohne Echtdaten
+abgeschlossen werden, wenn verbleibende Gates mit Owner und Termin sichtbar
+sind.
 
 ## Erste Nutzer und Rollen
 
 | Person | Pilotrolle | Zweck | Loginidentitaet | Status/Gate |
 | --- | --- | --- | --- | --- |
-| Manuel | `admin` | technische Administration, Konten, Betrieb und Notfallreaktion | persoenliche D+P-Arbeitsadresse; final bestaetigen | Name/Rolle bestaetigt; Adresse und Nachfolge-/Break-glass-Regel offen |
-| Frau Janay Rappelt | `internal` | Firmen und Kontakte erfassen und korrigieren | persoenliche D+P-Arbeitsadresse; final liefern | Name/Rolle bestaetigt; Adresse, Onboardingtermin und Vertretung offen |
+| Manuel | `admin` | technische Administration, Konten, Betrieb und Notfallreaktion | `roedel.kg@donner-partner.eu` | Name/Rolle/Adresse bestaetigt; Nachfolge-/Break-glass-Regel offen |
+| Frau Janay Rappelt | `internal` | Firmen und Kontakte erfassen und korrigieren | `rappelt.wue@donner-partner.eu` | Name/Rolle/Adresse bestaetigt; Onboardingtermin und Vertretung offen |
 
 `competencehub@donner-partner.de` bleibt die oeffentliche, von Frau Janay
 Rappelt verantwortete Funktionsmailbox. Sie ist keine persoenliche
 Authentifizierungsidentitaet und wird nicht von mehreren Personen als
 Portal-Login geteilt.
+
+`admin@competencehub.donner-partner.de` ist als technischer Weiterleitungsalias
+zu Manuel vorgeschlagen. EDV muss Existenz, Mailrouting und Absendernutzung
+separat bestaetigen. Der Alias ist kein Portal-Login. Einladungen werden per
+E-Mail zugestellt; SMTP-Host, Port, TLS-Modus, Authentisierung und freigegebene
+Absenderadresse sind noch zu liefern.
 
 Coach-, Firmenkontakt- und Teilnehmerkonten sind nicht Teil dieses Piloten.
 Die Rollen bleiben im Datenmodell erhalten, erhalten aber keine realen Konten.
@@ -94,11 +102,11 @@ werden erst nach belegtem Arbeitsbedarf additiv entschieden.
 
 ## Gate- und Owner-Matrix
 
-| Gate | Owner/Freigabe | Erforderliche Evidenz | Status 20.08. |
+| Gate | Owner/Freigabe | Erforderliche Evidenz | Status 21.08. |
 | --- | --- | --- | --- |
 | Fachlicher Pilotumfang | Manuel und Frau Janay Rappelt | diese Cutline und Feld-/Ablaufabnahme | vorgeschlagen; Janay-Abnahme offen |
-| Konten und Rollen | Manuel | persoenliche Adressen, Rollenliste, Onboardingtermin, Break-glass-Regel | Namen/Rollen gesetzt; Details offen |
-| Einladungszustellung | Manuel; Mailbetrieb nach D+P-Vorgabe | freigegebener Mailadapter oder separat security-gepruefter persoenlicher Uebergabeweg | offen; keine Tokenanzeige in API/Logs |
+| Konten und Rollen | Manuel | persoenliche Adressen, Rollenliste, Onboardingtermin, Break-glass-Regel | Namen/Rollen/Adressen gesetzt; Termine und Notfallregel offen |
+| Einladungszustellung | Manuel; Mailbetrieb nach D+P-Vorgabe | SMTP-Vertrag, freigegebener Absender und gepruefter Mailadapter | E-Mail entschieden; technische Mailparameter offen; keine Tokenanzeige in API/Logs |
 | Off-Server-Backup | Manuel | verschluesselter Download zum D+P-Rechner Wuerzburg plus Restoreprotokoll | Zielkandidat gesetzt; Verschluesselung/Zugriff/Restore offen |
 | Website-Produktion | Thomas Ross | freigegebenes Artefakt, Rollbackkopie, Domain/TLS/Recht/Kontakt-Smoke | offen |
 | Backend-Produktion | Thomas Ross; Betrieb Manuel | eigene Services, Secrets, Reverse Proxy, Monitoring, Rollback und Chatbot-Isolation | offen |
@@ -125,27 +133,29 @@ bestaetigte Wildcard-Zertifikat nur `*.donner-partner.de` abdeckt.
 | Termin | Ergebnis/Gate |
 | --- | --- |
 | 20.08. | Firmen-/Kontakt-API mit 14/14 Staging-Pfaden versioniert; Pilot-Cutline vorgeschlagen |
-| 21.08. | Feldcut und Same-Origin-Portalentscheidung akzeptiert; Runtime-/Portal-UI-Slice lokal mit 241 Tests gruen. Nutzeradressen, Einladungsweg, DNS-Owner und Backupnachweis bleiben offen |
-| 24.08. | Portal-UI fuer Login/MFA und Firmenworkflow lokal barrierearm und E2E-geprueft |
+| 21.08. | Same-Origin-Portal als `c1f4cc8` versioniert; 248 lokale Tests, 14/14 Staging-Pfade und BA-01 bis BA-17 gruen. Nutzeradressen, Einladungsweg, DNS-Owner, Backupnachweis und Abnahmetermine bleiben offen |
+| 24.08. | Aktivierungsmatrix geschlossen; Runtime-/Worker-Paket fail-closed vorbereitet und lokal geprueft |
 | 25.08. | getrennte VPS-Dienste, Reverse Proxy und statisches Website-Artefakt in freigegebener Staging-/Releaseprobe |
 | 26.08. | verschluesselter Off-Server-Dump und Restore aus Wuerzburg nachgewiesen; Konten vorbereitet |
 | 27.08. | internes End-to-End, Sicherheits-/Rollback-Smoke und Go/No-Go mit Manuel, Janay und Thomas Ross |
-| 28.08. | kontrollierte Freigabe, Produktions-Smoke und erster freigegebener Firmenrecord oder dokumentiertes No-Go ohne Echtdaten |
+| 28.08. | technisches Readiness-Paket, Vertragsstand und dokumentierte Restgates; noch kein Echtdatenzwang |
+| bis Mitte September | Legal-/Betreiberangaben, App-DNS/SMTP, Backup-Restore, Onboarding- und Go/No-Go-Termine schliessen |
+| 25.09. | spaeteste kontrollierte Freigabe mit Produktions-Smoke und erstem freigegebenen Firmenrecord oder dokumentiertes No-Go ohne Echtdaten |
 
-Der Plan ist eng. Der lokale technische Slice liegt vor, aber jede nicht bis
-21.08. geschlossene Organisationsentscheidung reduziert den 28.08. auf
-Website- oder synthetischen Portalbetrieb; Echtdaten werden nicht zugelassen,
-um den Termin scheinbar zu halten.
+Der lokale technische Slice liegt vor. Der 28.08. ist bewusst ein
+Readiness-Meilenstein; Echtdaten werden nicht zugelassen, um einen Termin
+scheinbar zu halten. Wegen der erwarteten Legal-Informationen Mitte September
+muessen technische Restarbeiten vorher weitgehend abgeschlossen sein.
 
 ## Unmittelbar benoetigte Entscheidungen
 
-1. Persoenliche Arbeits-E-Mail fuer Manuels Admin- und Janays Intern-Konto.
-2. Bestaetigung, dass die oben genannten Pilotfelder bis nach dem Erstrecord
+1. Bestaetigung, dass die oben genannten Pilotfelder bis nach dem Erstrecord
    ausreichen.
-3. Freigegebener Einladungsweg: D+P-/IONOS-SMTP oder separat gepruefter
-   persoenlicher Uebergabeweg; kein externer SaaS-Provider.
-4. Bestaetigung der vorgeschlagenen gemeinsamen App-Origin und des DNS-Owners.
-5. Nachweis von Datentraegerverschluesselung und eingeschraenktem Zugriff am
+2. SMTP-Host, Port, TLS-Modus, Authentisierung, freigegebener Absender und
+   Reply-To fuer E-Mail-Einladungen; kein externer SaaS-Provider.
+3. Bestaetigung der vorgeschlagenen gemeinsamen App-Origin und des DNS-Owners.
+4. Nachweis von Datentraegerverschluesselung und eingeschraenktem Zugriff am
    Wuerzburger Backuprechner sowie Termin fuer den Restore-Test.
-6. Datum/Uhrzeit fuer Janays Onboarding und die Abnahme am 27.08.
-7. Produktions-Go/No-Go-Termin mit Thomas Ross.
+5. Datum/Uhrzeit fuer Janays Onboarding nach dem 28.08.
+6. Produktions-Go/No-Go-Termin mit Thomas Ross vor dem 25.09.
+7. Finale Betreiber-/Rechtsangaben, erwartet bis Mitte September.

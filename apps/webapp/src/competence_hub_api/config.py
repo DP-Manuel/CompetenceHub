@@ -5,18 +5,36 @@ import base64
 import binascii
 import json
 import os
+from pathlib import Path
 import re
 from types import MappingProxyType
-from urllib.parse import urlsplit
+from urllib.parse import SplitResult, urlsplit
 
 from sqlalchemy.engine import make_url
 from sqlalchemy.exc import ArgumentError
+
+from competence_hub_api.security.email_addresses import is_single_email_address
+from competence_hub_api.security.passwords import load_compromised_password_fingerprints
 
 DATABASE_URL_ENV = "COMPETENCE_HUB_DATABASE_URL"
 ALLOWED_ORIGIN_ENV = "COMPETENCE_HUB_ALLOWED_ORIGIN"
 SESSION_IDLE_MINUTES_ENV = "COMPETENCE_HUB_SESSION_IDLE_MINUTES"
 READINESS_TIMEOUT_SECONDS_ENV = "COMPETENCE_HUB_READINESS_TIMEOUT_SECONDS"
 RATE_LIMIT_HMAC_KEY_ENV = "COMPETENCE_HUB_RATE_LIMIT_HMAC_KEY"
+IDEMPOTENCY_HMAC_KEY_ENV = "COMPETENCE_HUB_IDEMPOTENCY_HMAC_KEY"
+OUTBOX_KEYRING_ENV = "COMPETENCE_HUB_OUTBOX_KEYRING"
+OUTBOX_ACTIVE_KEY_VERSION_ENV = "COMPETENCE_HUB_OUTBOX_ACTIVE_KEY_VERSION"
+COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV = (
+    "COMPETENCE_HUB_COMPROMISED_PASSWORD_FINGERPRINTS_PATH"
+)
+ACCOUNT_ACTION_BASE_URL_ENV = "COMPETENCE_HUB_ACCOUNT_ACTION_BASE_URL"
+SMTP_HOST_ENV = "COMPETENCE_HUB_SMTP_HOST"
+SMTP_PORT_ENV = "COMPETENCE_HUB_SMTP_PORT"
+SMTP_TLS_MODE_ENV = "COMPETENCE_HUB_SMTP_TLS_MODE"
+SMTP_USERNAME_ENV = "COMPETENCE_HUB_SMTP_USERNAME"
+SMTP_PASSWORD_ENV = "COMPETENCE_HUB_SMTP_PASSWORD"
+SMTP_FROM_ENV = "COMPETENCE_HUB_SMTP_FROM"
+SMTP_REPLY_TO_ENV = "COMPETENCE_HUB_SMTP_REPLY_TO"
 TOTP_KEYRING_ENV = "COMPETENCE_HUB_TOTP_KEYRING"
 TOTP_ACTIVE_KEY_VERSION_ENV = "COMPETENCE_HUB_TOTP_ACTIVE_KEY_VERSION"
 RECOVERY_HMAC_KEYRING_ENV = "COMPETENCE_HUB_RECOVERY_HMAC_KEYRING"
@@ -37,6 +55,16 @@ class RuntimeSettings:
     session_idle_timeout: timedelta
     readiness_timeout_seconds: int = 5
     rate_limit_hmac_key: bytes = field(default=b"", repr=False)
+    idempotency_hmac_key: bytes = field(default=b"", repr=False)
+    outbox_encryption_keys: Mapping[str, bytes] = field(
+        default_factory=dict,
+        repr=False,
+    )
+    outbox_active_key_version: str = ""
+    compromised_password_fingerprints: frozenset[str] = field(
+        default_factory=frozenset,
+        repr=False,
+    )
     totp_encryption_keys: Mapping[str, bytes] = field(
         default_factory=dict,
         repr=False,
@@ -63,6 +91,31 @@ class RuntimeSettings:
         if len(self.rate_limit_hmac_key) < 32:
             raise RuntimeConfigurationError(
                 f"{RATE_LIMIT_HMAC_KEY_ENV} must decode to at least 256 bits"
+            )
+        if len(self.idempotency_hmac_key) < 32:
+            raise RuntimeConfigurationError(
+                f"{IDEMPOTENCY_HMAC_KEY_ENV} must decode to at least 256 bits"
+            )
+        normalized_outbox_keys = dict(self.outbox_encryption_keys)
+        if not normalized_outbox_keys:
+            raise RuntimeConfigurationError(f"{OUTBOX_KEYRING_ENV} must not be empty")
+        for version, key in normalized_outbox_keys.items():
+            _validate_key_version(version, OUTBOX_KEYRING_ENV)
+            if len(key) != 32:
+                raise RuntimeConfigurationError(
+                    f"{OUTBOX_KEYRING_ENV} values must decode to exactly 256 bits"
+                )
+        _validate_key_version(
+            self.outbox_active_key_version,
+            OUTBOX_ACTIVE_KEY_VERSION_ENV,
+        )
+        if self.outbox_active_key_version not in normalized_outbox_keys:
+            raise RuntimeConfigurationError(
+                f"{OUTBOX_ACTIVE_KEY_VERSION_ENV} must identify a configured key"
+            )
+        if not self.compromised_password_fingerprints:
+            raise RuntimeConfigurationError(
+                f"{COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV} must contain fingerprints"
             )
         normalized_keyring = dict(self.totp_encryption_keys)
         if not normalized_keyring:
@@ -102,6 +155,11 @@ class RuntimeSettings:
             )
         object.__setattr__(
             self,
+            "outbox_encryption_keys",
+            MappingProxyType(normalized_outbox_keys),
+        )
+        object.__setattr__(
+            self,
             "totp_encryption_keys",
             MappingProxyType(normalized_keyring),
         )
@@ -133,6 +191,35 @@ class RuntimeSettings:
             _required(values, RATE_LIMIT_HMAC_KEY_ENV),
             RATE_LIMIT_HMAC_KEY_ENV,
         )
+        idempotency_hmac_key = _base64_key(
+            _required(values, IDEMPOTENCY_HMAC_KEY_ENV),
+            IDEMPOTENCY_HMAC_KEY_ENV,
+        )
+        outbox_encryption_keys = _base64_keyring(
+            _required(values, OUTBOX_KEYRING_ENV),
+            name=OUTBOX_KEYRING_ENV,
+        )
+        outbox_active_key_version = _required(
+            values,
+            OUTBOX_ACTIVE_KEY_VERSION_ENV,
+        )
+        fingerprint_path_value = _required(
+            values,
+            COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV,
+        )
+        fingerprint_path = Path(fingerprint_path_value)
+        if not fingerprint_path.is_absolute():
+            raise RuntimeConfigurationError(
+                f"{COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV} must be absolute"
+            )
+        try:
+            compromised_password_fingerprints = (
+                load_compromised_password_fingerprints(fingerprint_path)
+            )
+        except (OSError, ValueError) as error:
+            raise RuntimeConfigurationError(
+                f"{COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV} is not a valid fingerprint source"
+            ) from error
         totp_encryption_keys = _base64_keyring(
             _required(values, TOTP_KEYRING_ENV),
         )
@@ -156,10 +243,101 @@ class RuntimeSettings:
             session_idle_timeout=timedelta(minutes=idle_minutes),
             readiness_timeout_seconds=readiness_timeout_seconds,
             rate_limit_hmac_key=rate_limit_hmac_key,
+            idempotency_hmac_key=idempotency_hmac_key,
+            outbox_encryption_keys=outbox_encryption_keys,
+            outbox_active_key_version=outbox_active_key_version,
+            compromised_password_fingerprints=compromised_password_fingerprints,
             totp_encryption_keys=totp_encryption_keys,
             totp_active_key_version=totp_active_key_version,
             recovery_hmac_keys=recovery_hmac_keys,
             recovery_hmac_active_key_version=recovery_hmac_active_key_version,
+        )
+
+
+@dataclass(frozen=True)
+class TokenDeliverySettings:
+    database_url: str = field(repr=False)
+    outbox_encryption_keys: Mapping[str, bytes] = field(repr=False)
+    outbox_active_key_version: str
+    allowed_origin: str
+    account_action_base_url: str
+    smtp_host: str
+    smtp_port: int
+    smtp_tls_mode: str
+    smtp_username: str = field(repr=False)
+    smtp_password: str = field(repr=False)
+    smtp_from: str
+    smtp_reply_to: str
+
+    def __post_init__(self) -> None:
+        _validate_database_url(self.database_url)
+        normalized_outbox_keys = dict(self.outbox_encryption_keys)
+        if not normalized_outbox_keys:
+            raise RuntimeConfigurationError(f"{OUTBOX_KEYRING_ENV} must not be empty")
+        for version, key in normalized_outbox_keys.items():
+            _validate_key_version(version, OUTBOX_KEYRING_ENV)
+            if len(key) != 32:
+                raise RuntimeConfigurationError(
+                    f"{OUTBOX_KEYRING_ENV} values must decode to exactly 256 bits"
+                )
+        _validate_key_version(self.outbox_active_key_version, OUTBOX_ACTIVE_KEY_VERSION_ENV)
+        if self.outbox_active_key_version not in normalized_outbox_keys:
+            raise RuntimeConfigurationError(
+                f"{OUTBOX_ACTIVE_KEY_VERSION_ENV} must identify a configured key"
+            )
+        _validate_allowed_origin(self.allowed_origin)
+        _validate_account_action_base_url(
+            self.account_action_base_url,
+            allowed_origin=self.allowed_origin,
+        )
+        _validate_smtp_host(self.smtp_host)
+        if not 1 <= self.smtp_port <= 65535:
+            raise RuntimeConfigurationError(
+                f"{SMTP_PORT_ENV} must be an integer between 1 and 65535"
+            )
+        if self.smtp_tls_mode not in {"starttls", "implicit"}:
+            raise RuntimeConfigurationError(
+                f"{SMTP_TLS_MODE_ENV} must be starttls or implicit"
+            )
+        if not self.smtp_username or not self.smtp_password:
+            raise RuntimeConfigurationError("SMTP authentication is required")
+        _validate_email_address(self.smtp_from, SMTP_FROM_ENV)
+        _validate_email_address(self.smtp_reply_to, SMTP_REPLY_TO_ENV)
+        object.__setattr__(
+            self,
+            "outbox_encryption_keys",
+            MappingProxyType(normalized_outbox_keys),
+        )
+
+    @classmethod
+    def from_environment(
+        cls,
+        environment: Mapping[str, str] | None = None,
+    ) -> "TokenDeliverySettings":
+        values = os.environ if environment is None else environment
+        return cls(
+            database_url=_required(values, DATABASE_URL_ENV),
+            outbox_encryption_keys=_base64_keyring(
+                _required(values, OUTBOX_KEYRING_ENV),
+                name=OUTBOX_KEYRING_ENV,
+            ),
+            outbox_active_key_version=_required(
+                values,
+                OUTBOX_ACTIVE_KEY_VERSION_ENV,
+            ),
+            allowed_origin=_required(values, ALLOWED_ORIGIN_ENV),
+            account_action_base_url=_required(values, ACCOUNT_ACTION_BASE_URL_ENV),
+            smtp_host=_required(values, SMTP_HOST_ENV),
+            smtp_port=_positive_integer(
+                _required(values, SMTP_PORT_ENV),
+                SMTP_PORT_ENV,
+                maximum=65535,
+            ),
+            smtp_tls_mode=_required(values, SMTP_TLS_MODE_ENV).casefold(),
+            smtp_username=_required(values, SMTP_USERNAME_ENV),
+            smtp_password=_required(values, SMTP_PASSWORD_ENV),
+            smtp_from=_required(values, SMTP_FROM_ENV),
+            smtp_reply_to=_required(values, SMTP_REPLY_TO_ENV),
         )
 
 
@@ -292,3 +470,49 @@ def _validate_allowed_origin(value: str) -> None:
         raise RuntimeConfigurationError(
             f"{ALLOWED_ORIGIN_ENV} must be an exact HTTPS origin"
         )
+
+
+def _validate_account_action_base_url(value: str, *, allowed_origin: str) -> None:
+    try:
+        target = urlsplit(value)
+        target.port
+    except ValueError as error:
+        raise RuntimeConfigurationError(
+            f"{ACCOUNT_ACTION_BASE_URL_ENV} must be a valid HTTPS portal URL"
+        ) from error
+    if (
+        target.scheme != "https"
+        or not target.hostname
+        or target.username is not None
+        or target.password is not None
+        or target.query
+        or target.fragment
+        or target.path != "/portal/"
+        or _origin_identity(target) != _origin_identity(urlsplit(allowed_origin))
+    ):
+        raise RuntimeConfigurationError(
+            f"{ACCOUNT_ACTION_BASE_URL_ENV} must be a valid HTTPS portal URL"
+        )
+
+
+def _validate_smtp_host(value: str) -> None:
+    if (
+        not value
+        or any(character.isspace() for character in value)
+        or "://" in value
+        or "/" in value
+    ):
+        raise RuntimeConfigurationError(f"{SMTP_HOST_ENV} must be a hostname")
+
+
+def _validate_email_address(value: str, name: str) -> None:
+    if not is_single_email_address(value):
+        raise RuntimeConfigurationError(f"{name} must be a single email address")
+
+
+def _origin_identity(value: SplitResult) -> tuple[str, str, int]:
+    return (
+        value.scheme.casefold(),
+        (value.hostname or "").casefold(),
+        value.port or 443,
+    )

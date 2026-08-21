@@ -19,6 +19,7 @@ dependencies = [
 
 [project.scripts]
 competence-hub-admin = "competence_hub_api.admin_cli:main"
+competence-hub-token-worker = "competence_hub_api.token_delivery_worker:main"
 
 [project.optional-dependencies]
 test = [

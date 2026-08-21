@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-08-20
+Last updated: 2026-08-21
 
 ## Vision
 
@@ -11,26 +11,23 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 - Workflow model: hybrid Scrum/Kanban for multi-day delivery
 - Current phase, sprint, milestone, board status, or release: public website
   stabilization plus isolated authenticated-portal foundation
-- Current status: orange / at risk; canonical `main` at `6e52f52` contains the
-  verified public website, Auth foundation and protected company/contact API,
-  including 14/14 isolated PostgreSQL Staging evidence. The 2026-08-28 pilot
-  cutline and ADR 0006 are accepted. A packaged same-origin portal for
-  login/MFA/session and Janay's bounded company/contact workflow is implemented
-  locally. The complete suite passes 241 tests with 14 opt-in Staging tests
-  skipped without a tunnel; compile, JavaScript and dependency checks pass.
-  The PostgreSQL CSRF-rotation path is now included in the successful 14/14
-  Staging proof; real-browser evidence remains open. Nothing in this local
-  package is deployed or used with accounts
-  or real data. The milestone remains achievable only if account, invitation,
-  DNS/runtime, backup, legal and acceptance gates close promptly.
-- Main blocker: legal/content launch approval and the operating model for the
-  future backend are not finalized. EDV has confirmed that IONOS can host the
-  static Astro website but cannot provide a permanent Node/Python runtime, and
-  its MySQL database cannot be used directly by a backend on the existing VPS.
-- Next decision needed: choose and verify an encrypted off-server backup target
-  before productive data is permitted. PostgreSQL 16 staging is installed and
-  locally restore-tested. The exact operating company follows with the final
-  Impressum.
+- Current status: yellow / controlled risk; canonical `main` at `c1f4cc8` contains the
+  verified public website and the accepted same-origin pilot portal. The full
+  local suite passes 287 tests with 14 expected opt-in Staging skips, all 14
+  isolated PostgreSQL paths passed, and BA-01 through BA-17 are accepted in a
+  real browser. The local runner is stopped and its ephemeral context removed.
+  No persistent Competence-Hub backend/worker service, real account, real data
+  or production deployment exists yet.
+- Main blocker: 2026-08-28 is now the technical-readiness milestone tied to
+  completed contracts, not the final production deadline. The hard deadline is
+  2026-09-25 before Manuel's three-week absence. Runtime services, App-DNS,
+  SMTP delivery, encrypted off-server restore evidence, legal website approval
+  and production Go/No-Go remain open. The software slice is proven;
+  operational activation is now the critical path.
+- Next decision needed: close the pilot activation matrix for personal account
+  identities, invitation handoff, final app hostname/DNS owner, backup target,
+  onboarding/acceptance dates and production approval. Productive data remains
+  blocked until the external-copy restore and all production gates are proven.
 
 ## Scope
 
@@ -486,37 +483,66 @@ phase model.
 
 ## Timeline And Budget Signals
 
-- Target date or milestone: website MVP completed by 2026-07-23; operational
-  pilot by 2026-08-28, when Janay should be able to enter the first approved
-  company through the protected portal and the public website should be served
-  from the canonical production domain/IP path.
+- Target dates: website MVP completed by 2026-07-23; contracts and technical
+  readiness targeted for 2026-08-28; controlled production readiness and
+  Janay onboarding targeted for mid-September; hard delivery deadline
+  2026-09-25 before Manuel's three-week absence.
 - Budget or effort assumption: unknown
-- Confidence: medium-low for the 2026-08-28 pilot. The database/Auth foundation
-  is strong, but productive runtime, company/contact CRUD, portal UI, real
-  account onboarding, off-server restore evidence and both static/backend
-  deployment are still open.
-- Risks to time or budget: seven working days including 2026-08-20 remain;
-  email/token delivery,
-  exact pilot fields/users/roles, legal operator/Impressum, production approval,
-  off-server backup and correct-domain rollout are critical-path decisions.
+- Confidence: high for the 2026-08-28 technical-readiness package and medium
+  for production by 2026-09-25. The database, Auth, company/contact API and
+  browser UI are proven; production operations and organizational gates are
+  not. Legal input is expected around mid-September and leaves little repair
+  margin before the hard deadline.
+- Risks to time or budget: App-DNS, SMTP details/sender authorization,
+  runtime/worker packaging, legal operator/Impressum, production approval,
+  encrypted external restore and correct-domain rollout are on the critical
+  path. Janay and Thomas acceptance dates remain unscheduled.
 
 ## Risks And Blockers
 
-- Risk: The website could become a generic landing page if goals and audience stay unclear.
-- Impact: weaker content, design, and conversion quality.
-- Owner: Manuel with Codex support.
-- Next mitigation: run a short product/context intake before implementation.
+- **Schedule / activation:** five working days remain before the 2026-08-28
+  readiness milestone; production must follow no later than 2026-09-25.
+  Runtime, DNS, SMTP, backup, account handoff and production approval are still
+  open. Owner: Manuel, with Thomas Ross for production approval. Mitigation:
+  freeze features and work only the activation gates in order.
+- **Real-data recovery:** the VPS has protected local dumps but no verified
+  encrypted external restore. Owner: Manuel. Mitigation: validate the
+  Wuerzburg target and prove restore from the exact downloaded copy before any
+  real company/contact record.
+- **Legal website release:** the concrete operating company, final Impressum,
+  Datenschutz/AGB applicability and mailbox absence process remain open.
+  Owners: Lars Donner/final company, Janay Rappelt and Thomas Ross. Mitigation:
+  obtain explicit release evidence or issue a documented No-Go for production.
+- **Single-operator risk:** Manuel currently owns VPS operations without a
+  confirmed successor/break-glass path. Mitigation: name controlled emergency
+  access and test the handoff before productive operation.
+- **Co-hosting risk:** Chatbot and Competence Hub share a VPS. Mitigation:
+  dedicated identity, directories, ports, logs and services plus pre/post
+  health and rollback checks; no Chatbot restart as part of Hub deployment.
 
 ## Quality Gates
 
-- Tests: project-specific checks once a stack exists.
-- Manual verification: review responsive desktop/mobile layout and main user flows.
-- Security/privacy: avoid committing secrets; identify forms, analytics, cookies, and personal data before implementation.
-- Legal/privacy: operational recruiting, placement, platform, app, and participant data flows require legal/DSGVO review before launch.
-- Accessibility: keyboard navigation, semantic structure, contrast, focus states, alt text, and responsive readability.
-- Performance: lightweight assets, stable layout, image optimization, and build performance checks.
-- Deployment/release: deployment target and rollback approach to be defined.
-- Artifact-specific checks: website copy, imprint/legal pages, brand asset licensing, and browser compatibility.
+- **Tests:** 248 local Webapp tests pass with 14 expected opt-in Staging skips;
+  14/14 isolated PostgreSQL paths passed. Re-run local suite before packaging
+  and Staging suite after runtime/reverse-proxy changes.
+- **Website build:** Astro must report zero diagnostics and build all expected
+  routes. Current evidence: 36 checked files, 28 generated pages.
+- **Browser/accessibility:** BA-01 through BA-17 are accepted, including
+  desktop, 390 CSS pixels, keyboard, focus, zoom and reduced motion. Repeat the
+  critical login/company path on the deployed origin.
+- **Security/privacy:** no secrets or `.env*` in Git; least privilege, exact
+  Origin/CSRF, MFA, no-store, minimized lists/audit and negative role tests are
+  mandatory. No open high/critical finding may cross deployment.
+- **Data/operations:** no real data before encrypted off-server copy, restore
+  from that exact copy, retention/error ownership, monitoring and rollback are
+  proven.
+- **Legal/content:** final operator/Impressum, Datenschutz/AGB applicability,
+  contact process and rights approvals are required for production. Archive,
+  prototype and public login-preview routes must remain `noindex` or be
+  removed/redirected.
+- **Release:** static website and backend use separate reproducible artifacts,
+  rollback points and smoke tests. GitHub Pages remains manual review only and
+  does not satisfy production acceptance.
 
 ## Delivery Steering
 
@@ -527,10 +553,12 @@ after every meaningful completion, blocker or stakeholder decision.
 
 ### Current Execution Backlog
 
-Current sprint goal: prove the accepted same-origin pilot portal as one
-synthetic login-to-company vertical slice. API and database foundations are
-complete; current WIP is real-browser acceptance after successful isolated
-Staging proof. Productive delivery, accounts and real data remain excluded.
+Current sprint goal: turn the accepted synthetic same-origin portal into a
+reversible production-shaped pilot package while keeping accounts, real data
+and public activation behind explicit gates. API, database, browser acceptance
+and source versioning are complete. Website release metadata/artifacts and
+initial API/Nginx templates are prepared; current WIP is the complete
+synthetic onboarding proof and deployable runtime rehearsal.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -544,35 +572,41 @@ Staging proof. Productive delivery, accounts and real data remain excluded.
 | SB-08 | Done locally | Initial-admin CLI plus invitation/reset lifecycle in synthetic mode | SB-07; interactive secret entry; approved offline compromised-password source before real use | CLI, service/repository, generic public reset/invitation-accept boundaries, focused reviews and fail-closed runtime complete |
 | SB-09 | Done | Transactional Auth-token outbox, persistent idempotency, Admin invitation API and migration 0004 | Accepted ADR 0005 and separate migration approval; synthetic data only | 214 local tests plus 13/13 Staging paths in 156.91 seconds; rollback smoke, zero residue, protected readable pre/post dumps, migrations 0001-0004, 24 owner tables, least-privilege role lookup, localhost-only PostgreSQL and four active services |
 | SB-10 | Done | Bounded pre-commit code/security review and versioning package for SB-01 through SB-09 | SB-09 evidence complete; Manuel approved commit/push | no open high/critical finding, reviewed file scope, 214 local tests plus 13/13 Staging paths, clean dependency/compile/diff evidence, secrets and `.tmp/` excluded |
-| SB-11 | Done for scope | Freeze the 2026-08-28 pilot cut line | accepted by Manuel; personal account addresses, invitation path, app DNS, Wuerzburg backup evidence and acceptance dates remain parallel organizational gates | accepted `pilot-cutline-2026-08-28.md` defines roles, fields, non-goals, acceptance, owners and backward plan |
+| SB-11 | Done for scope | Freeze the 2026-08-28 readiness cut line | accepted by Manuel; account addresses and E-Mail invitation channel are set; SMTP, app DNS, Wuerzburg backup evidence and acceptance dates remain parallel gates | accepted `pilot-cutline-2026-08-28.md` defines roles, fields, non-goals, acceptance, owners and backward plan |
 | SB-12 | Done locally | Protected company/contact create, read and correct API with audit | Existing migration 0001; admin/internal RBAC; provisional `prospect` default | 231 local tests, compile/pip clean, bounded bodies/list, Origin/CSRF, no-store, minimized summary, no delete and opt-in Staging test prepared |
 | SB-13 | Done | Prove company/contact repository and permission boundary on isolated PostgreSQL Staging | SSH tunnel; synthetic data only; existing migrations 0001-0004 | corrected rerun 14/14; real CRUD/audit, runtime DELETE/audit denials, zero residue and four active co-hosted services |
 | SB-14 | Done locally and on Staging | Same-origin static pilot portal shell and vertical login/MFA/company UI | accepted ADR 0006 and SB-11; synthetic operation only | packaged client, CSRF reload rotation, accessible local UI, 241 local tests and 14/14 PostgreSQL Staging paths with zero residue/four active services |
 | SB-15 | Done | Complete real-browser acceptance of the portal vertical slice | SB-14; supported Edge browser; synthetic data only | BA-01 through BA-17 passed, including Recovery/MFA/reauth retests; 248 local tests plus 14 opt-in skips, HTTPS/MFA/cookie/CSP smoke and 14/14 Staging pass; runner stopped, port 8443 free and ephemeral profile/certificate removed |
+| SB-16 | Done locally | Prevent indexing of archived, prototype and public login-preview routes | website production-readiness review | `/system`, `/seminare`, `/qualifizierung`, `/login` and login subpages emit `noindex`; homepage remains indexable; Astro 36-file check and 28-page build pass |
+| SB-17 | Done locally | Prepare static Website production artifact contract and initial VPS templates | canonical Website domain; no deployment approval | canonical/OG URLs, production/review robots split, Coach-driven sitemap, ZIP plus manifest/SHA-256 builder, API systemd and Nginx examples; 38-file Astro checks and both production/review builds pass; release-builder hash/cleanup test passes |
+| SB-18 | Done locally | Complete invitation-by-E-Mail vertical slice and production runtime packaging | accepted ADR 0005; SMTP contract/sender remains blocked; no real delivery | configured Runtime wires Lifecycle/password policy/encrypted outbox; TLS-only authenticated SMTP adapter and one-shot worker; fragment-based invitation/reset links and Portal forms; Admin-only idempotent internal invitation; systemd service/timer examples; 274 local passes plus 14 opt-in skips, compile/pip/JS checks green |
+| SB-19 | Done | Prove the complete synthetic onboarding chain and rehearse runtime packaging | SB-18; no external SMTP; isolated local capture adapter and Staging tunnel | corrected expanded harness passed 14/14 in 151.77 seconds; Admin invite -> encrypted outbox -> capture token -> password -> TOTP -> Recovery-Codes -> active session plus replay rejection; users/sessions/outbox/audit all zero afterward; Chatbot, Nginx, Fail2ban and PostgreSQL active |
+| SB-20 | Done locally | Build the reproducible backend/worker release artifact and executable rehearsal runbook | SB-19; no deployment; external SMTP and App-DNS may remain placeholders | exact runtime lock, deterministic Wheel/ZIP plus internal inventory and external manifest/checksum, isolated install/fail-closed smoke, deployment-template contract, executable install/health/rollback runbook; final review enforces same-origin action links, single-recipient mail and canonical proxy redirects; 287 local passes plus 14 skips; repeated dirty builds were byte-identical and the committed clean build reported `dirty: false` with successful isolated Wheel installation |
 
-Recommended next block: close the pilot activation decision matrix. Purpose:
-remove organizational ambiguity before
-packaging a production-shaped runtime or creating accounts. Required inputs:
-personal work addresses for Manuel and Janay, approved invitation handoff,
-final app hostname/DNS owner and Janay/Thomas acceptance dates. Deliverables:
-signed gate matrix covering named users, least-privilege roles, invitation/MFA
-handoff, origin/DNS and acceptance owners. Definition of Done: no shared login,
-every gate has an owner/evidence/date, and unresolved production or real-data
-items remain explicitly blocked rather than being inferred.
+Recommended next block: render and natively validate the App-DNS/TLS/Nginx/SMTP
+configuration after the EDV response. Purpose: turn the reviewed templates
+into a host-specific, secret-external rehearsal configuration without enabling
+production. Inputs: approved App hostname, DNS target, TLS path, SMTP host/
+port/mode/identity and sender. Deliverables: reviewed configuration kept
+outside Git, native `systemd-analyze verify`/`nginx -t` evidence and one
+approved synthetic delivery test. Definition of Done: exact Origin and sender
+match, no placeholder or secret leaks, Worker retry/residue checks pass and all
+existing VPS services stay active. Deployment and real data remain separate
+gates.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
 
-### Rolling 8-Step Horizon
+### Rolling Delivery Horizon (6 Steps)
 
 | # | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- |
-| 1 | High | Close named-user, invitation-handoff, app-origin and acceptance scheduling decisions | personal work addresses; approved handoff; DNS owner; Janay/Thomas dates | signed gate matrix, no shared login, scheduled MFA onboarding and explicit acceptance owners |
-| 2 | Medium | Wire fail-closed production-shaped runtime and package dedicated backend/worker services | Step 1; external key ownership; dedicated identities/config/logs | config-negative, package/install/restart, worker lifecycle, retry/minimization, log/secret scan and Chatbot isolation tests |
-| 3 | Medium-low | Rehearse reverse proxy, TLS, static website release and rollback without public activation | Step 2; approved hostnames and Thomas Ross path; final legal pages | health/readiness, domain/TLS/redirect/header, resource isolation and rollback evidence |
-| 4 | Low | Close off-server backup/restore, retention, monitoring and emergency-access gates | D+P-controlled Wuerzburg target and named successor | encrypted external-copy restore, backup alert, retention/runbook and recovery evidence |
-| 5 | Low | Create named accounts, assign least privilege and run supervised synthetic acceptance | Steps 1-4 and separate account approval | MFA onboarding, role matrix, Janay walkthrough, defect/security triage and explicit go/no-go |
-| 6 | Low | Release the narrow pilot and let Janay enter the first approved company by 2026-08-28 | Step 5 go; legal/contract basis; Echtdaten- and production gates | production smoke, audit/least privilege, backup evidence, first-record acceptance and rollback readiness |
+| 1 | High | Render and validate App-DNS, TLS, reverse-proxy and SMTP configuration | EDV request sent 2026-08-21; response pending; Thomas production path; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender and no shared login |
+| 2 | Medium-high | Rehearse Website SFTP release and VPS package activation/rollback without real data | Step 1; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
+| 3 | Medium | Close off-server backup/restore, retention, monitoring and emergency-access gates | controlled Wuerzburg target and named successor | encrypted external-copy restore, backup alert, retention/runbook and recovery evidence |
+| 4 | Medium-low | Create named accounts, assign least privilege and run supervised synthetic acceptance | Steps 1-3; legal progress; scheduled Janay/Thomas dates | E-Mail invitation, MFA onboarding, role matrix and Janay walkthrough |
+| 5 | Low | Obtain final Legal and Thomas Go/No-Go | final operator/Impressum, contracts and acceptance evidence | signed gate matrix, rollback owner and production window |
+| 6 | Low | Release the narrow pilot and first approved company no later than 2026-09-25 | Step 5 go; all real-data and production gates | production smoke, audit/least privilege, backup evidence, first-record acceptance and rollback readiness |
 
 ### Cross-Cutting Gates
 
@@ -592,12 +626,14 @@ progress in parallel but do not silently expand the execution backlog.
 - **G-CONTENT:** public Coach/topic changes require factual, qualification,
   portrait/rights and publication approval; Mediation remains qualification-
   gated.
-- **G-PILOT-28:** the 2026-08-28 milestone is met only when the canonical public
-  website is reachable through the approved production path, the protected
-  portal is deployed separately, Janay has an MFA-protected least-privilege
-  account, and she can create/read/correct one approved company plus contact
-  with an audit trail and verified backup. A database-only or UI-only state is
-  not sufficient.
+- **G-READY-28:** the 2026-08-28 readiness milestone requires versioned,
+  tested and rollback-ready Website/Portal packages plus an explicit matrix of
+  remaining DNS, SMTP, backup, Legal, account and Go/No-Go gates. Deployment,
+  real accounts and real data may follow afterward but no later than 25.09.
+- **G-PROD-25:** production by 2026-09-25 additionally requires the canonical
+  Website, separately deployed Portal, Janay's MFA-protected least-privilege
+  account, a verified external restore and successful first approved company
+  plus contact. A database-only or UI-only state is not sufficient.
 
 ### Project Backlog Beyond The Horizon
 
@@ -611,26 +647,26 @@ progress in parallel but do not silently expand the execution backlog.
 - SEO/GEO content inventory and evidence matrix remain a connected but separate
   public-website workstream.
 
-Parallel organizational work: validate the encrypted Wuerzburg backup target,
-provide personal account
-addresses, complete the final legal operator/Impressum and mailbox absence
-cover, and secure Thomas Ross's static/backend production path. Foundation
-commit/push completed as `6e52f52`; the accepted cutline, ADR 0006 and local
-portal package and browser harness are uncommitted. Deployment and real-data
-use remain separate gated actions.
+Parallel organizational work: send the prepared App-DNS/SMTP request in
+`docs/architecture/edv-app-dns-smtp-request-2026-08-21.md`, validate the
+encrypted Wuerzburg backup target, complete the final legal operator/Impressum
+and mailbox absence cover, and secure Thomas Ross's static/backend production
+path. The last canonical commit remains `c1f4cc8`; the release-preparation
+work after it is not committed or pushed. Deployment and real-data use remain
+separate gated actions.
 
 ## Restart Note
 
-Prepared on: 2026-08-20
+Prepared on: 2026-08-21
 
-- Canonical `main`: `6e52f52`; protected company/contact API and 14/14
-  synthetic Staging evidence are versioned.
-- Active local package: accepted cutline and ADR 0006 plus the packaged
-  same-origin portal, CSRF reload rotation, tests and reviews; no persistent
-  service, account, deployment or real data.
-- Evidence: 241 local tests pass; all 14 opt-in PostgreSQL Staging paths passed
-  in 171.95 seconds with zero checked residue and four active services.
-  Compileall, JavaScript syntax and `pip check` passed.
+- Canonical `main`: `c1f4cc8`; accepted cutline, ADR 0006, same-origin portal,
+  browser harness and all current tests/reviews are versioned.
+- Evidence: 248 local tests pass with 14 expected opt-in Staging skips; all 14
+  PostgreSQL Staging paths and BA-01 through BA-17 passed. The 2026-08-21
+  Astro check/build again reports 36 files without diagnostics and 28 built
+  pages. The local browser runner is stopped and cleaned up.
+- No persistent service, account, deployment or real data exists. Continue with
+  the activation gate matrix and production-shaped runtime package.
 
 Resume here:
 
@@ -644,7 +680,7 @@ Resume here:
    `docs/assets/designstyle.md`.
 3. Check `git status --short`; `.tmp/` must remain untracked and untouched.
 4. Review accepted `docs/decisions/0006-same-origin-pilot-portal-ui.md`, the
-   pilot cutline and the current uncommitted portal package.
+   pilot cutline and committed portal package at `c1f4cc8`.
 5. SB-15 browser acceptance, isolated Staging evidence and local runner cleanup
    are complete. Continue with the named-user, invitation, app-origin and
    acceptance-date gate matrix; do not create

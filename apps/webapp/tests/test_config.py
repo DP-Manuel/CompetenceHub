@@ -1,12 +1,18 @@
 from datetime import timedelta
 import base64
 import json
+from pathlib import Path
 
 import pytest
 
 from competence_hub_api.config import (
     ALLOWED_ORIGIN_ENV,
+    ACCOUNT_ACTION_BASE_URL_ENV,
+    COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV,
     DATABASE_URL_ENV,
+    IDEMPOTENCY_HMAC_KEY_ENV,
+    OUTBOX_ACTIVE_KEY_VERSION_ENV,
+    OUTBOX_KEYRING_ENV,
     RATE_LIMIT_HMAC_KEY_ENV,
     READINESS_TIMEOUT_SECONDS_ENV,
     RECOVERY_HMAC_ACTIVE_KEY_VERSION_ENV,
@@ -16,6 +22,14 @@ from competence_hub_api.config import (
     TOTP_KEYRING_ENV,
     RuntimeConfigurationError,
     RuntimeSettings,
+    SMTP_FROM_ENV,
+    SMTP_HOST_ENV,
+    SMTP_PASSWORD_ENV,
+    SMTP_PORT_ENV,
+    SMTP_REPLY_TO_ENV,
+    SMTP_TLS_MODE_ENV,
+    SMTP_USERNAME_ENV,
+    TokenDeliverySettings,
 )
 
 DATABASE_URL = (
@@ -25,6 +39,11 @@ DATABASE_URL = (
 RATE_LIMIT_HMAC_KEY = b"synthetic-rate-limit-key-32-bytes"
 TOTP_KEY = b"t" * 32
 RECOVERY_HMAC_KEY = b"r" * 32
+IDEMPOTENCY_HMAC_KEY = b"i" * 32
+OUTBOX_KEY = b"o" * 32
+FINGERPRINT_PATH = Path(__file__).with_name("fixtures").joinpath(
+    "compromised-password-fingerprints.txt"
+)
 
 
 def valid_environment() -> dict[str, str]:
@@ -32,6 +51,14 @@ def valid_environment() -> dict[str, str]:
         DATABASE_URL_ENV: DATABASE_URL,
         ALLOWED_ORIGIN_ENV: "https://portal.example.invalid",
         RATE_LIMIT_HMAC_KEY_ENV: base64.b64encode(RATE_LIMIT_HMAC_KEY).decode("ascii"),
+        IDEMPOTENCY_HMAC_KEY_ENV: base64.b64encode(IDEMPOTENCY_HMAC_KEY).decode(
+            "ascii"
+        ),
+        OUTBOX_KEYRING_ENV: json.dumps(
+            {"synthetic-v1": base64.b64encode(OUTBOX_KEY).decode("ascii")}
+        ),
+        OUTBOX_ACTIVE_KEY_VERSION_ENV: "synthetic-v1",
+        COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV: str(FINGERPRINT_PATH),
         TOTP_KEYRING_ENV: json.dumps(
             {"synthetic-v1": base64.b64encode(TOTP_KEY).decode("ascii")}
         ),
@@ -47,6 +74,25 @@ def valid_environment() -> dict[str, str]:
     }
 
 
+def valid_delivery_environment() -> dict[str, str]:
+    return {
+        DATABASE_URL_ENV: DATABASE_URL,
+        ALLOWED_ORIGIN_ENV: "https://portal.example.invalid",
+        OUTBOX_KEYRING_ENV: json.dumps(
+            {"synthetic-v1": base64.b64encode(OUTBOX_KEY).decode("ascii")}
+        ),
+        OUTBOX_ACTIVE_KEY_VERSION_ENV: "synthetic-v1",
+        ACCOUNT_ACTION_BASE_URL_ENV: "https://portal.example.invalid/portal/",
+        SMTP_HOST_ENV: "smtp.example.invalid",
+        SMTP_PORT_ENV: "587",
+        SMTP_TLS_MODE_ENV: "starttls",
+        SMTP_USERNAME_ENV: "synthetic-user",
+        SMTP_PASSWORD_ENV: "synthetic-password",
+        SMTP_FROM_ENV: "portal@example.invalid",
+        SMTP_REPLY_TO_ENV: "support@example.invalid",
+    }
+
+
 def test_runtime_settings_accept_safe_loopback_configuration() -> None:
     environment = valid_environment()
     environment[SESSION_IDLE_MINUTES_ENV] = "15"
@@ -58,12 +104,18 @@ def test_runtime_settings_accept_safe_loopback_configuration() -> None:
     assert settings.session_idle_timeout == timedelta(minutes=15)
     assert settings.readiness_timeout_seconds == 5
     assert settings.rate_limit_hmac_key == RATE_LIMIT_HMAC_KEY
+    assert settings.idempotency_hmac_key == IDEMPOTENCY_HMAC_KEY
+    assert settings.outbox_encryption_keys == {"synthetic-v1": OUTBOX_KEY}
+    assert settings.outbox_active_key_version == "synthetic-v1"
+    assert settings.compromised_password_fingerprints == frozenset({"0" * 64})
     assert settings.totp_encryption_keys == {"synthetic-v1": TOTP_KEY}
     assert settings.totp_active_key_version == "synthetic-v1"
     assert settings.recovery_hmac_keys == {"synthetic-v1": RECOVERY_HMAC_KEY}
     assert settings.recovery_hmac_active_key_version == "synthetic-v1"
     assert "synthetic-password" not in repr(settings)
     assert RATE_LIMIT_HMAC_KEY.hex() not in repr(settings)
+    assert IDEMPOTENCY_HMAC_KEY.hex() not in repr(settings)
+    assert OUTBOX_KEY.hex() not in repr(settings)
     assert TOTP_KEY.hex() not in repr(settings)
     assert RECOVERY_HMAC_KEY.hex() not in repr(settings)
 
@@ -78,6 +130,10 @@ def test_direct_runtime_settings_cannot_bypass_validation() -> None:
             allowed_origin="https://portal.example.invalid",
             session_idle_timeout=timedelta(minutes=30),
             rate_limit_hmac_key=RATE_LIMIT_HMAC_KEY,
+            idempotency_hmac_key=IDEMPOTENCY_HMAC_KEY,
+            outbox_encryption_keys={"synthetic-v1": OUTBOX_KEY},
+            outbox_active_key_version="synthetic-v1",
+            compromised_password_fingerprints=frozenset({"0" * 64}),
             totp_encryption_keys={"synthetic-v1": TOTP_KEY},
             totp_active_key_version="synthetic-v1",
             recovery_hmac_keys={"synthetic-v1": RECOVERY_HMAC_KEY},
@@ -91,6 +147,10 @@ def test_direct_runtime_settings_cannot_bypass_validation() -> None:
         DATABASE_URL_ENV,
         ALLOWED_ORIGIN_ENV,
         RATE_LIMIT_HMAC_KEY_ENV,
+        IDEMPOTENCY_HMAC_KEY_ENV,
+        OUTBOX_KEYRING_ENV,
+        OUTBOX_ACTIVE_KEY_VERSION_ENV,
+        COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV,
         TOTP_KEYRING_ENV,
         TOTP_ACTIVE_KEY_VERSION_ENV,
         RECOVERY_HMAC_KEYRING_ENV,
@@ -184,6 +244,65 @@ def test_runtime_settings_reject_invalid_rate_limit_hmac_keys(
 
 
 @pytest.mark.parametrize(
+    "environment_name",
+    [IDEMPOTENCY_HMAC_KEY_ENV],
+)
+@pytest.mark.parametrize(
+    "encoded_key",
+    ["not valid base64", base64.b64encode(b"too-short").decode("ascii")],
+)
+def test_runtime_settings_reject_invalid_lifecycle_hmac_keys(
+    environment_name: str,
+    encoded_key: str,
+) -> None:
+    environment = valid_environment()
+    environment[environment_name] = encoded_key
+
+    with pytest.raises(RuntimeConfigurationError, match=environment_name):
+        RuntimeSettings.from_environment(environment)
+
+
+@pytest.mark.parametrize(
+    "keyring",
+    [
+        "not-json",
+        "{}",
+        json.dumps({"invalid version": base64.b64encode(OUTBOX_KEY).decode("ascii")}),
+        json.dumps({"v1": base64.b64encode(b"too-short").decode("ascii")}),
+    ],
+)
+def test_runtime_settings_reject_invalid_outbox_keyrings(keyring: str) -> None:
+    environment = valid_environment()
+    environment[OUTBOX_KEYRING_ENV] = keyring
+
+    with pytest.raises(RuntimeConfigurationError, match=OUTBOX_KEYRING_ENV):
+        RuntimeSettings.from_environment(environment)
+
+
+def test_runtime_settings_reject_unknown_active_outbox_key_version() -> None:
+    environment = valid_environment()
+    environment[OUTBOX_ACTIVE_KEY_VERSION_ENV] = "missing-v2"
+
+    with pytest.raises(
+        RuntimeConfigurationError,
+        match=OUTBOX_ACTIVE_KEY_VERSION_ENV,
+    ):
+        RuntimeSettings.from_environment(environment)
+
+
+@pytest.mark.parametrize("path", ["relative.txt", "C:/missing/fingerprints.txt"])
+def test_runtime_settings_reject_invalid_fingerprint_sources(path: str) -> None:
+    environment = valid_environment()
+    environment[COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV] = path
+
+    with pytest.raises(
+        RuntimeConfigurationError,
+        match=COMPROMISED_PASSWORD_FINGERPRINTS_PATH_ENV,
+    ):
+        RuntimeSettings.from_environment(environment)
+
+
+@pytest.mark.parametrize(
     "keyring",
     [
         "not-json",
@@ -238,3 +357,39 @@ def test_runtime_settings_reject_unknown_active_recovery_key_version() -> None:
         match=RECOVERY_HMAC_ACTIVE_KEY_VERSION_ENV,
     ):
         RuntimeSettings.from_environment(environment)
+
+
+def test_token_delivery_settings_accept_strict_smtp_configuration() -> None:
+    settings = TokenDeliverySettings.from_environment(valid_delivery_environment())
+
+    assert settings.account_action_base_url == "https://portal.example.invalid/portal/"
+    assert settings.allowed_origin == "https://portal.example.invalid"
+    assert settings.smtp_port == 587
+    assert settings.smtp_tls_mode == "starttls"
+    assert settings.outbox_encryption_keys == {"synthetic-v1": OUTBOX_KEY}
+    assert "synthetic-password" not in repr(settings)
+    assert "synthetic-user" not in repr(settings)
+
+
+@pytest.mark.parametrize(
+    ("name", "value"),
+    [
+        (ACCOUNT_ACTION_BASE_URL_ENV, "http://portal.example.invalid/portal/"),
+        (ACCOUNT_ACTION_BASE_URL_ENV, "https://portal.example.invalid/"),
+        (ACCOUNT_ACTION_BASE_URL_ENV, "https://other.example.invalid/portal/"),
+        (ACCOUNT_ACTION_BASE_URL_ENV, "https://portal.example.invalid/other/portal/"),
+        (ACCOUNT_ACTION_BASE_URL_ENV, "https://portal.example.invalid/portal/?token=x"),
+        (SMTP_HOST_ENV, "https://smtp.example.invalid"),
+        (SMTP_PORT_ENV, "0"),
+        (SMTP_TLS_MODE_ENV, "plain"),
+        (SMTP_FROM_ENV, "not-an-email"),
+        (SMTP_FROM_ENV, "portal@example.invalid,attacker@example.invalid"),
+        (SMTP_REPLY_TO_ENV, "support@example.invalid\r\nBcc: attacker@example.invalid"),
+    ],
+)
+def test_token_delivery_settings_reject_unsafe_values(name: str, value: str) -> None:
+    environment = valid_delivery_environment()
+    environment[name] = value
+
+    with pytest.raises(RuntimeConfigurationError):
+        TokenDeliverySettings.from_environment(environment)

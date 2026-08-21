@@ -11,6 +11,7 @@ from competence_hub_api.auth.postgres_session_repository import (
     PostgresSessionRepository,
 )
 from competence_hub_api.auth.login_service import LoginService
+from competence_hub_api.auth.account_lifecycle import AccountLifecycleService
 from competence_hub_api.portal.companies import CompanyService
 from competence_hub_api.config import RuntimeSettings
 from competence_hub_api.runtime import (
@@ -79,6 +80,10 @@ def runtime_settings() -> RuntimeSettings:
         session_idle_timeout=timedelta(minutes=30),
         readiness_timeout_seconds=5,
         rate_limit_hmac_key=b"synthetic-rate-limit-key-32-bytes",
+        idempotency_hmac_key=b"synthetic-idempotency-key-32bytes",
+        outbox_encryption_keys={"synthetic-v1": b"o" * 32},
+        outbox_active_key_version="synthetic-v1",
+        compromised_password_fingerprints=frozenset({"0" * 64}),
         totp_encryption_keys={"synthetic-v1": b"t" * 32},
         totp_active_key_version="synthetic-v1",
         recovery_hmac_keys={"synthetic-v1": b"r" * 32},
@@ -137,9 +142,11 @@ async def test_runtime_app_wires_repository_origin_and_readiness() -> None:
 
     assert isinstance(app.state.session_repository, PostgresSessionRepository)
     assert isinstance(app.state.login_service, LoginService)
+    assert isinstance(app.state.account_lifecycle_service, AccountLifecycleService)
     assert isinstance(app.state.company_service, CompanyService)
     assert app.state.allowed_origin == "https://portal.example.invalid"
     assert app.state.totp_secret_cipher.active_key_version == "synthetic-v1"
+    assert app.state.outbox_cipher.active_key_version == "synthetic-v1"
     assert app.state.recovery_hmac_active_key_version == "synthetic-v1"
 
     async with AsyncClient(

@@ -4,6 +4,7 @@ from typing import Protocol
 from uuid import UUID
 
 from competence_hub_api.auth.login_service import normalize_email
+from competence_hub_api.security.email_addresses import is_single_email_address
 
 
 class InitialAdminAlreadyExistsError(RuntimeError):
@@ -64,12 +65,5 @@ class InitialAdminService:
 
 
 def _validate_email(value: str) -> None:
-    if (
-        len(value) < 3
-        or len(value) > 254
-        or "@" not in value
-        or value.startswith("@")
-        or value.endswith("@")
-        or any(character.isspace() for character in value)
-    ):
+    if not is_single_email_address(value):
         raise ValueError("invalid email")

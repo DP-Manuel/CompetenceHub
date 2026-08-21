@@ -16,11 +16,17 @@ const {
 } = Astro.props;
 
 const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
+const canonicalSite = new URL("https://competencehub.donner-partner.de");
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+const reviewBase = base === "/" ? "/" : base.slice(0, -1);
+const canonicalPath = reviewMode && Astro.url.pathname.startsWith(reviewBase)
+  ? Astro.url.pathname.slice(reviewBase.length) || "/"
+  : Astro.url.pathname;
+const canonicalUrl = new URL(canonicalPath, canonicalSite).toString();
 
 const navigation = [
   { label: "Start", href: "" },
@@ -55,6 +61,8 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <link rel="canonical" href={canonicalUrl} />
     {(reviewMode || noindex) && (
       <meta name="robots" content="noindex, nofollow, noarchive" />
     )}

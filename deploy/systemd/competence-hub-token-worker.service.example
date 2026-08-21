@@ -1,0 +1,25 @@
+[Unit]
+Description=Competence Hub token delivery worker
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=competencehub
+Group=competencehub
+WorkingDirectory=/opt/competence-hub/current
+EnvironmentFile=/etc/competence-hub/webapp.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/competence-hub/current/venv/bin/competence-hub-token-worker
+TimeoutStartSec=45s
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true

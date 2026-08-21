@@ -11,6 +11,7 @@ htmlcov/
 # Build output
 dist/
 .astro/
+release-artifacts/
 
 # Local tooling
 tools/node-*/

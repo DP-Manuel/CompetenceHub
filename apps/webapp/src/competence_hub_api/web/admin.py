@@ -15,6 +15,7 @@ from competence_hub_api.auth.account_lifecycle import (
 from competence_hub_api.auth.login_service import normalize_email
 from competence_hub_api.auth.session_repository import SessionPrincipal
 from competence_hub_api.security.cookies import SESSION_COOKIE_NAME
+from competence_hub_api.security.email_addresses import is_single_email_address
 from competence_hub_api.security.tokens import digest_token
 from competence_hub_api.web.problems import problem_response
 
@@ -33,12 +34,7 @@ class InvitationRequest(BaseModel):
     @classmethod
     def validate_email(cls, value: str) -> str:
         normalized = normalize_email(value)
-        if (
-            "@" not in normalized
-            or normalized.startswith("@")
-            or normalized.endswith("@")
-            or any(character.isspace() for character in normalized)
-        ):
+        if not is_single_email_address(normalized):
             raise ValueError("invalid email")
         return normalized
 

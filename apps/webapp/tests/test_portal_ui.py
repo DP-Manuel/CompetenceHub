@@ -72,6 +72,9 @@ async def test_portal_shell_is_noindex_and_uses_only_external_local_assets() -> 
     assert 'autocomplete="current-password"' in response.text
     assert 'aria-live="polite"' in response.text
     assert 'id="provisioning-secret"' in response.text
+    assert 'id="password-reset-request-view"' in response.text
+    assert 'id="account-token-view"' in response.text
+    assert 'id="admin-invitation-panel"' in response.text
     assert "Jeder Code funktioniert genau einmal" in response.text
     assert "Für Änderungen" in response.text
 
@@ -112,7 +115,34 @@ def test_portal_captures_form_values_before_disabling_controls() -> None:
     disable = javascript.index("return setBusy(form, true) ? data : null;")
 
     assert capture < disable
-    assert javascript.count("const data = beginFormSubmission(form);") == 7
+    assert javascript.count("const data = beginFormSubmission(form);") == 10
+
+
+def test_portal_consumes_account_tokens_from_fragment_without_persisting_them() -> None:
+    javascript = (
+        files("competence_hub_api")
+        .joinpath("portal_ui", "app.js")
+        .read_text(encoding="utf-8")
+    )
+
+    assert "window.location.hash" in javascript
+    assert "window.history.replaceState" in javascript
+    assert 'state.accountAction = { purpose, token };' in javascript
+    assert "localStorage" not in javascript
+    assert "sessionStorage" not in javascript
+    assert "window.location.searchParams" not in javascript
+
+
+def test_portal_admin_invitation_is_idempotent_and_internal_only() -> None:
+    javascript = (
+        files("competence_hub_api")
+        .joinpath("portal_ui", "app.js")
+        .read_text(encoding="utf-8")
+    )
+
+    assert 'role_codes: ["internal"]' in javascript
+    assert 'headers: { "Idempotency-Key": state.pendingInvitation.key }' in javascript
+    assert 'roles.includes("admin")' in javascript
 
 
 def test_portal_recovers_mutation_state_after_reauthentication() -> None:

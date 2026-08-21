@@ -30,10 +30,10 @@ slice contains security primitives, honest health/readiness endpoints,
   staging database.
 
 The default application remains deny-by-default: no repository or allowed
-browser origin is wired into `app`, and readiness stays false. The runtime
-factory validates external process configuration, creates a dedicated async
-  PostgreSQL engine and auth repositories, reports database-backed readiness and
-  disposes the engine on shutdown. No real account, secret file or deployable
+browser origin is wired into `app`, and readiness stays false. The configured
+runtime factory validates external process configuration, creates a dedicated
+async PostgreSQL engine and auth repositories, reports database-backed readiness
+and disposes the engine on shutdown. No real account, secret file or deployable
   service configuration exists. Repository and API tests use
   synthetic data only. The session repository/API and runtime readiness passed
 seven opt-in integration tests against isolated Staging on 2026-08-14; cleanup
@@ -89,6 +89,14 @@ secret file:
 - `COMPETENCE_HUB_RATE_LIMIT_HMAC_KEY`: required standard-base64 value decoding
   to at least 32 random bytes. It pseudonymizes rate-limit identifiers and must
   be supplied through the approved external service configuration, never Git.
+- `COMPETENCE_HUB_IDEMPOTENCY_HMAC_KEY`: separate standard-base64 HMAC key with
+  at least 32 random bytes for invitation request identities.
+- `COMPETENCE_HUB_OUTBOX_KEYRING`: JSON object of versioned standard-base64
+  AES-256 keys for invitation/reset tokens held briefly in the outbox.
+- `COMPETENCE_HUB_OUTBOX_ACTIVE_KEY_VERSION`: configured outbox key version for
+  newly queued tokens.
+- `COMPETENCE_HUB_COMPROMISED_PASSWORD_FINGERPRINTS_PATH`: absolute path to the
+  protected, non-empty SHA-256 fingerprint source used by password changes.
 - `COMPETENCE_HUB_TOTP_KEYRING`: required JSON object mapping non-secret key
   version labels to standard-base64 AES-256 keys. Old keys remain present only
   while credentials encrypted with them still exist.
@@ -129,7 +137,9 @@ The local account-lifecycle service now covers internal invitations, generic
 password-reset requests, token acceptance, rate limiting, Argon2id password
 replacement, MFA-enrollment challenge rotation and all-session revocation. The
 public request/confirm/accept routes use strict bodies, exact Origin checks and
-generic errors. Runtime wiring remains absent, so these routes fail closed.
+generic errors. The configured runtime now wires the PostgreSQL lifecycle
+repository, password policy and encrypted outbox; the unconfigured default app
+continues to fail closed.
 
 No productive token delivery exists. The contracted Admin invitation route is
 now implemented locally with MFA-session, fresh-auth, Admin-role, Origin, CSRF,
@@ -137,16 +147,35 @@ non-privileged-role and `Idempotency-Key` enforcement. Accepted ADR 0005 is
 implemented through prepared migration `0004`, HMAC-only idempotency records,
 an AES-256-GCM encrypted transactional outbox, leased worker claims, bounded
 retries, terminal token revocation and explicit metadata cleanup cutoffs. Raw
-tokens never appear in API responses or normal persistence. Runtime wiring is
-still absent, so all account-lifecycle routes remain fail-closed by default.
+tokens never appear in API responses or normal persistence.
 
-No mail adapter, provider, sender domain, runtime key or worker service is
+The local provider-neutral SMTP adapter, one-shot worker entry point and
+secret-free systemd service/timer examples are implemented. They require an
+approved SMTP contract and every external setting below, otherwise startup
+fails closed. No real mail server, sender, runtime key or worker service is
 configured. Migration `0004` is applied and rollback-smoke-tested on isolated
 Staging; the complete synthetic harness passed 13/13 paths in 156.91 seconds,
 left all eleven checked data areas empty and produced protected catalog-readable
 pre/post dumps. Selecting retention periods, wiring external keys and enabling
 any worker or real delivery remain separate gates. See
 `../../docs/architecture/auth-token-outbox-security-review-2026-08-14.md`.
+
+The worker additionally requires:
+
+- `COMPETENCE_HUB_ACCOUNT_ACTION_BASE_URL`: exact HTTPS Portal URL ending in
+  `/portal/` on the exact `COMPETENCE_HUB_ALLOWED_ORIGIN`; action tokens are
+  appended after `#` and removed from the browser address immediately.
+- `COMPETENCE_HUB_SMTP_HOST`, `COMPETENCE_HUB_SMTP_PORT` and
+  `COMPETENCE_HUB_SMTP_TLS_MODE`: approved SMTP endpoint using `starttls` or
+  implicit TLS; plaintext SMTP is rejected.
+- `COMPETENCE_HUB_SMTP_USERNAME` and `COMPETENCE_HUB_SMTP_PASSWORD`: external
+  service credentials, never repository values.
+- `COMPETENCE_HUB_SMTP_FROM`: authorized system sender.
+- `COMPETENCE_HUB_SMTP_REPLY_TO`: monitored mailbox for user questions.
+
+The Portal now contains password-reset request/confirmation, invitation
+acceptance followed by MFA enrollment, and an Admin-only internal invitation
+form. It does not expose a token in query strings or browser storage.
 
 Start the configured app through the factory only after supplying those values
 through an approved local or service-manager mechanism:
@@ -239,3 +268,17 @@ minutes without activity and no longer than eight hours in total; ordinary
 company and contact operations do not prompt for MFA individually. Recovery
 codes are single-use emergency substitutes when the authenticator is
 unavailable. They must be stored separately and securely.
+
+## Release bundle
+
+From the repository root, `scripts/build-webapp-release.ps1` runs the local
+tests, dependency check and compile check, builds the application wheel,
+installs it into an isolated smoke environment, verifies fail-closed runtime
+configuration and creates a ZIP plus manifest and SHA-256 checksum under
+`release-artifacts/webapp`. Tracked changes are rejected unless the explicit
+`-AllowDirty` development switch is used.
+
+The bundle includes `requirements-production.lock`, migrations, verification
+SQL, deployment templates and the rehearsal runbook. Runtime dependencies are
+exact-version locked; an approved, hashed Linux wheelhouse or approved package
+index remains a separate production supply-chain gate.

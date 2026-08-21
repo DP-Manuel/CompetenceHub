@@ -6,6 +6,7 @@ from uuid import UUID
 
 from competence_hub_api.auth.login_service import normalize_email
 from competence_hub_api.auth.session_repository import SessionPrincipal
+from competence_hub_api.security.email_addresses import is_single_email_address
 
 PROVISIONAL_COMPANY_STATUS = "prospect"
 INTERNAL_ROLES = frozenset({"admin", "internal"})
@@ -273,14 +274,7 @@ def _normalize_contact(contact: NewCompanyContact) -> NewCompanyContact:
 
 def _email(value: str) -> str:
     normalized = normalize_email(value)
-    if (
-        len(normalized) < 3
-        or len(normalized) > 254
-        or "@" not in normalized
-        or normalized.startswith("@")
-        or normalized.endswith("@")
-        or any(character.isspace() for character in normalized)
-    ):
+    if not is_single_email_address(normalized):
         raise ValueError("invalid email")
     return normalized
 

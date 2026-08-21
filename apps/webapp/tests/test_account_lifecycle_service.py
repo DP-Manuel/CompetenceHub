@@ -207,6 +207,24 @@ async def test_invitation_rejects_insufficient_actor_or_roles_before_token_work(
 
 
 @pytest.mark.anyio
+async def test_invitation_rejects_multiple_recipient_addresses() -> None:
+    repository = FakeLifecycleRepository()
+
+    with pytest.raises(ValueError, match="invalid email"):
+        await _service(repository).issue_invitation(
+            actor=_actor(),
+            email="person@example.invalid,attacker@example.invalid",
+            display_name="Synthetic Person",
+            role_codes=("internal",),
+            idempotency_key=IDEMPOTENCY_KEY,
+            client_ip="192.0.2.40",
+            now=NOW,
+        )
+
+    assert repository.invitations == []
+
+
+@pytest.mark.anyio
 async def test_unknown_reset_request_has_generic_queued_shape() -> None:
     repository = FakeLifecycleRepository()
     repository.reset_user_id = None

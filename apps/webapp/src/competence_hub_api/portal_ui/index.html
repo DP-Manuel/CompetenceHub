@@ -60,7 +60,56 @@
             Passwort anzeigen
           </label>
           <p class="form-error" id="login-error" role="alert" hidden></p>
-          <button class="button button-primary" type="submit">Anmelden</button>
+          <div class="button-row">
+            <button class="button button-primary" type="submit">Anmelden</button>
+            <button class="text-button" id="open-password-reset" type="button">
+              Passwort vergessen
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="auth-view" id="password-reset-request-view" aria-labelledby="password-reset-request-title" hidden>
+        <div class="auth-intro">
+          <p class="eyebrow">Zugang wiederherstellen</p>
+          <h1 id="password-reset-request-title">Passwort zurücksetzen</h1>
+          <p>Geben Sie Ihre Arbeits-E-Mail ein. Falls ein aktives Konto vorhanden ist, erhalten Sie einen zeitlich begrenzten Link.</p>
+        </div>
+        <form class="auth-form" id="password-reset-request-form" novalidate>
+          <div class="field">
+            <label for="password-reset-email">Arbeits-E-Mail</label>
+            <input id="password-reset-email" name="email" type="email" autocomplete="username" maxlength="254" required>
+          </div>
+          <p class="form-error" id="password-reset-request-error" role="alert" hidden></p>
+          <p class="form-success" id="password-reset-request-status" role="status" hidden></p>
+          <div class="button-row">
+            <button class="button button-primary" type="submit">Link anfordern</button>
+            <button class="button button-secondary" data-action="restart-login" type="button">Zurück</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="auth-view" id="account-token-view" aria-labelledby="account-token-title" hidden>
+        <div class="auth-intro">
+          <p class="eyebrow" id="account-token-eyebrow">Sicherer Zugang</p>
+          <h1 id="account-token-title">Zugang einrichten</h1>
+          <p id="account-token-description">Legen Sie ein persönliches Passwort fest. Danach richten Sie Ihren zweiten Faktor ein.</p>
+        </div>
+        <form class="auth-form" id="account-token-form" novalidate>
+          <div class="field">
+            <label for="account-token-password">Neues Passwort</label>
+            <input id="account-token-password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+            <p class="field-hint">Mindestens 12 Zeichen. Verwenden Sie ein einzigartiges Passwort.</p>
+          </div>
+          <div class="field">
+            <label for="account-token-password-confirm">Passwort wiederholen</label>
+            <input id="account-token-password-confirm" name="password_confirm" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+          </div>
+          <p class="form-error" id="account-token-error" role="alert" hidden></p>
+          <div class="button-row">
+            <button class="button button-primary" id="account-token-submit" type="submit">Zugang aktivieren</button>
+            <button class="button button-secondary" data-action="restart-login" type="button">Abbrechen</button>
+          </div>
         </form>
       </section>
 
@@ -178,6 +227,28 @@
             Erneut anmelden
           </button>
         </div>
+
+        <section class="admin-panel" id="admin-invitation-panel" aria-labelledby="admin-invitation-title" hidden>
+          <div>
+            <p class="eyebrow">Interner Zugang</p>
+            <h2 id="admin-invitation-title">Kollegin oder Kollegen einladen</h2>
+            <p>Die Einladung wird an die persönliche Arbeits-E-Mail gesendet. Der Zugang erhält zunächst die Rolle „Intern“.</p>
+          </div>
+          <form id="admin-invitation-form" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="invitation-display-name">Anzeigename</label>
+                <input id="invitation-display-name" name="display_name" maxlength="200" required>
+              </div>
+              <div class="field">
+                <label for="invitation-email">Arbeits-E-Mail</label>
+                <input id="invitation-email" name="email" type="email" autocomplete="off" maxlength="254" required>
+              </div>
+            </div>
+            <p class="form-error" id="admin-invitation-error" role="alert" hidden></p>
+            <button class="button button-secondary mutation-control" type="submit">Einladung senden</button>
+          </form>
+        </section>
 
         <form class="search-bar" id="company-search-form" role="search">
           <div class="field">

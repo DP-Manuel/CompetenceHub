@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Competence Hub token delivery worker
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+AccuracySec=10s
+Persistent=false
+Unit=competence-hub-token-worker.service
+
+[Install]
+WantedBy=timers.target

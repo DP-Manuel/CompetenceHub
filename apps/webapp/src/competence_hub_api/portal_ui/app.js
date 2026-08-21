@@ -6,6 +6,10 @@ const API = {
   recoveryVerify: "/api/v1/auth/mfa/recovery/verify",
   enrollment: "/api/v1/auth/mfa/totp/enrollment",
   enrollmentConfirm: "/api/v1/auth/mfa/totp/enrollment/confirm",
+  passwordResetRequest: "/api/v1/auth/password-reset/request",
+  passwordResetConfirm: "/api/v1/auth/password-reset/confirm",
+  invitationAccept: "/api/v1/auth/invitations/accept",
+  adminInvitations: "/api/v1/admin/users/invitations",
   companies: "/api/v1/portal/companies",
 };
 
@@ -15,11 +19,15 @@ const state = {
   session: null,
   companies: [],
   selectedCompany: null,
+  accountAction: null,
+  pendingInvitation: null,
   submitting: new Set(),
 };
 
 const views = {
   login: document.querySelector("#login-view"),
+  passwordResetRequest: document.querySelector("#password-reset-request-view"),
+  accountToken: document.querySelector("#account-token-view"),
   mfa: document.querySelector("#mfa-view"),
   enrollment: document.querySelector("#enrollment-view"),
   recovery: document.querySelector("#recovery-view"),
@@ -113,6 +121,9 @@ async function problemMessage(response, fallback) {
       request_verification_failed: "Die sichere Anfrage konnte nicht bestätigt werden.",
       invalid_request: "Bitte prüfen Sie die eingegebenen Daten.",
       rate_limit_exceeded: "Zu viele Versuche. Bitte warten Sie einen Moment.",
+      request_not_accepted: "Der Link ist ungültig oder abgelaufen.",
+      idempotency_conflict: "Die Einladung steht im Konflikt mit einer vorherigen Anfrage.",
+      account_conflict: "Für diese E-Mail kann derzeit keine Einladung erstellt werden.",
       company_record_not_found: "Der Datensatz wurde nicht gefunden.",
       portal_unavailable: "Das Portal ist derzeit nicht verfügbar.",
     };
@@ -144,10 +155,127 @@ async function request(path, options = {}) {
 
 function showLogin(message = "") {
   state.challengeCsrf = null;
+  state.accountAction = null;
   byId("session-summary").hidden = true;
   setError("login-error", message);
   showView("login");
   byId("login-email").focus();
+}
+
+function showPasswordResetRequest() {
+  setError("password-reset-request-error");
+  byId("password-reset-request-status").hidden = true;
+  showView("passwordResetRequest");
+  byId("password-reset-email").focus();
+}
+
+function consumeAccountActionFromFragment() {
+  const fragment = window.location.hash;
+  const match = /^#\/(einladung|passwort-zuruecksetzen)\?(.+)$/.exec(fragment);
+  if (!match) {
+    return false;
+  }
+  const token = new URLSearchParams(match[2]).get("token") || "";
+  window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  if (!token || token.length > 128) {
+    showLogin("Der Link ist ungültig oder unvollständig.");
+    return true;
+  }
+  const purpose = match[1] === "einladung" ? "invitation" : "password_reset";
+  state.accountAction = { purpose, token };
+  const invitation = purpose === "invitation";
+  byId("account-token-eyebrow").textContent = invitation
+    ? "Einladung annehmen"
+    : "Passwort zurücksetzen";
+  byId("account-token-title").textContent = invitation
+    ? "Zugang einrichten"
+    : "Neues Passwort festlegen";
+  byId("account-token-description").textContent = invitation
+    ? "Legen Sie Ihr persönliches Passwort fest. Anschließend richten Sie den zweiten Faktor ein."
+    : "Legen Sie ein neues persönliches Passwort fest. Bestehende Sitzungen werden beendet.";
+  byId("account-token-submit").textContent = invitation
+    ? "Zugang aktivieren"
+    : "Passwort speichern";
+  showView("accountToken");
+  byId("account-token-password").focus();
+  return true;
+}
+
+async function handlePasswordResetRequest(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  setError("password-reset-request-error");
+  byId("password-reset-request-status").hidden = true;
+  const data = beginFormSubmission(form);
+  if (data === null) {
+    return;
+  }
+  try {
+    const response = await request(API.passwordResetRequest, {
+      method: "POST",
+      body: { email: data.get("email") },
+    });
+    if (!response.ok) {
+      setError("password-reset-request-error", await problemMessage(response, "Anfrage nicht möglich."));
+      return;
+    }
+    form.reset();
+    const status = byId("password-reset-request-status");
+    status.textContent = "Falls ein aktives Konto vorhanden ist, wurde ein Link versendet.";
+    status.hidden = false;
+  } catch {
+    setError("password-reset-request-error", "Das Portal ist momentan nicht erreichbar.");
+  } finally {
+    setBusy(form, false);
+  }
+}
+
+async function handleAccountToken(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  setError("account-token-error");
+  const data = beginFormSubmission(form);
+  if (data === null) {
+    return;
+  }
+  const password = String(data.get("password") || "");
+  if (password !== data.get("password_confirm")) {
+    setError("account-token-error", "Die eingegebenen Passwörter stimmen nicht überein.");
+    setBusy(form, false);
+    return;
+  }
+  if (!state.accountAction) {
+    setError("account-token-error", "Der Link ist ungültig oder abgelaufen.");
+    setBusy(form, false);
+    return;
+  }
+  try {
+    const invitation = state.accountAction.purpose === "invitation";
+    const response = await request(
+      invitation ? API.invitationAccept : API.passwordResetConfirm,
+      {
+        method: "POST",
+        body: { token: state.accountAction.token, password },
+      },
+    );
+    if (!response.ok) {
+      setError("account-token-error", await problemMessage(response, "Anfrage nicht möglich."));
+      return;
+    }
+    state.accountAction = null;
+    form.reset();
+    if (!invitation) {
+      showLogin("Das Passwort wurde geändert. Bitte melden Sie sich neu an.");
+      return;
+    }
+    const body = await response.json();
+    state.challengeCsrf = body.csrf_token;
+    await beginEnrollment();
+  } catch {
+    setError("account-token-error", "Das Portal ist momentan nicht erreichbar.");
+  } finally {
+    setBusy(form, false);
+  }
 }
 
 async function restoreSession() {
@@ -202,10 +330,56 @@ async function enterPortal() {
   }
   byId("session-user").textContent = state.session.user.display_name;
   byId("session-summary").hidden = false;
+  byId("admin-invitation-panel").hidden = !state.session.user.roles.includes("admin");
   clearPortalWorkflowErrors();
   applyMutationAvailability();
   showView("portal");
   await loadCompanies();
+}
+
+async function handleAdminInvitation(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  setError("admin-invitation-error");
+  if (!state.sessionCsrf) {
+    setError("admin-invitation-error", "Bitte melden Sie sich für Einladungen erneut an.");
+    return;
+  }
+  const data = beginFormSubmission(form);
+  if (data === null) {
+    return;
+  }
+  const body = {
+    display_name: data.get("display_name"),
+    email: data.get("email"),
+    role_codes: ["internal"],
+  };
+  const fingerprint = JSON.stringify(body);
+  if (!state.pendingInvitation || state.pendingInvitation.fingerprint !== fingerprint) {
+    state.pendingInvitation = {
+      fingerprint,
+      key: window.crypto.randomUUID(),
+    };
+  }
+  try {
+    const response = await request(API.adminInvitations, {
+      method: "POST",
+      csrf: "session",
+      headers: { "Idempotency-Key": state.pendingInvitation.key },
+      body,
+    });
+    if (!response.ok) {
+      setError("admin-invitation-error", await problemMessage(response, "Einladung konnte nicht erstellt werden."));
+      return;
+    }
+    form.reset();
+    state.pendingInvitation = null;
+    announce("Die Einladung wurde zur Zustellung vorgemerkt.");
+  } catch {
+    setError("admin-invitation-error", "Einladung konnte nicht erstellt werden.");
+  } finally {
+    setBusy(form, false);
+  }
 }
 
 function applyMutationAvailability() {
@@ -738,13 +912,17 @@ async function handleLogout() {
 
 function bindEvents() {
   byId("login-form").addEventListener("submit", handleLogin);
+  byId("password-reset-request-form").addEventListener("submit", handlePasswordResetRequest);
+  byId("account-token-form").addEventListener("submit", handleAccountToken);
   byId("mfa-form").addEventListener("submit", handleMfa);
   byId("enrollment-form").addEventListener("submit", handleEnrollmentConfirmation);
   byId("create-company-form").addEventListener("submit", handleCreateCompany);
   byId("edit-company-form").addEventListener("submit", handleCompanyUpdate);
   byId("add-contact-form").addEventListener("submit", handleAddContact);
+  byId("admin-invitation-form").addEventListener("submit", handleAdminInvitation);
   byId("logout-button").addEventListener("click", handleLogout);
   byId("reauth-button").addEventListener("click", () => showLogin());
+  byId("open-password-reset").addEventListener("click", showPasswordResetRequest);
 
   byId("show-password").addEventListener("change", (event) => {
     byId("login-password").type = event.currentTarget.checked ? "text" : "password";
@@ -827,4 +1005,6 @@ function bindEvents() {
 }
 
 bindEvents();
-restoreSession();
+if (!consumeAccountActionFromFragment()) {
+  restoreSession();
+}
