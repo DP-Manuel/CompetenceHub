@@ -2,6 +2,18 @@
 
 Newest entries first.
 
+## 2026-08-21 | handoff | Week closed with colleague update
+
+- The colleague-facing update for 17.08.-21.08. summarizes the accepted pilot
+  portal, company/contact slice, release packages, operations rehearsals,
+  quality evidence, external gates and next-week focus without exposing
+  credentials or internal operational commands.
+- Milestone signal remains yellow: technical readiness by 28.08. and controlled
+  production by 25.09. are achievable, but depend on Wuerzburg restore evidence,
+  EDV, contracts, Legal, named accounts and stakeholder Go/No-Go.
+- The week closes with no production deployment, real-data use or external mail
+  delivery. Next pull remains SB-23 in Wuerzburg or earlier EXT-01 processing.
+
 ## 2026-08-21 | steering | Visual readiness gate board consolidated
 
 - A compact Kanban-style gate board now consolidates Done, Ready, Waiting and
