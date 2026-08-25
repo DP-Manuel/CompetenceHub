@@ -125,6 +125,24 @@ count, script exit status, source set, elapsed time and cleanup result without
 recording data or secrets. Repeat at least quarterly once production data is
 allowed, and before relying on a changed backup or encryption procedure.
 
+On the controlled Windows restore workstation, use the guarded Docker variant
+only after the external copy, BitLocker source and isolated execution are
+confirmed. The PostgreSQL image is pinned by digest and must already be present;
+the script never downloads an image. GnuPG requests the private-key passphrase
+through local pinentry. No port or container network is enabled, and the
+temporary plaintext plus container are removed in `finally`:
+
+```powershell
+.\deploy\scripts\restore-competence-hub-backup-docker.ps1 `
+  -BackupSet 'D:\CompetenceHub\competence-hub-backups\YYYY-MM-DD' `
+  -GpgHome "$env:LOCALAPPDATA\CompetenceHub\backup-gnupg" `
+  -ConfirmProtectedSource `
+  -ConfirmIsolatedRestore
+```
+
+Any image download is a separate network and supply-chain decision. Record its
+exact digest and approval before the first use.
+
 ## Monitoring And Alerting
 
 The monitor verifies:

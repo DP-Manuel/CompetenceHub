@@ -1,21 +1,29 @@
 # Project Status
 
-Last updated: 2026-08-21
+Last updated: 2026-08-25
 
 ## Snapshot
 
 - Overall status: yellow. The website and complete synthetic portal
-  slice are verified. The 2026-08-28 target is now technical readiness after
-  contract completion; the hard production deadline is 2026-09-25. Runtime,
-  App-DNS, SMTP, named accounts, external restore evidence, legal approval and
-  Go/No-Go are still open.
+  slice are verified. The 2026-08-28 target remains a technical-readiness
+  checkpoint. The former 2026-09-25 production deadline is being moved; no
+  replacement date is confirmed yet. Production runtime scheduling/alerting,
+  App-DNS, SMTP, named accounts, legal approval and Go/No-Go are still open.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling six-step horizon.
 - External-dependency steering: a dated lead-time radar now tracks EDV, legal,
   contract, onboarding, mailbox and off-server-backup inputs before they block
-  current WIP. EXT-01 is waiting; SB-21 is complete locally and EXT-05 now
-  needs its protected target, public-key handoff and rehearsal window during
-  Manuel's next Wuerzburg office visit in the week of 2026-08-24.
+  current WIP. EXT-01 is waiting; SB-21 and the native EXT-05 rehearsal are
+  complete. A USB
+  target is now present in Wuerzburg and BitLocker To Go is fully enabled.
+  The restore workstation system drive is also BitLocker-encrypted, the USB
+  will be kept in the safe and Janay is the named recovery owner. The
+  workstation-only RSA-4096 GPG key and public export are verified. Recovery-
+  code/passphrase escrow is confirmed without exposing either value. Public-key
+  handoff and the complete SB-21 package are hash-verifiably staged on the VPS.
+  Root/postgres installation, native backup/monitor, guarded external transfer
+  and exact-copy restore passed with timers disabled and all co-hosted services
+  healthy. Production scheduling/alerting and the other data gates remain.
 - Current phase: Competence Hub public website stabilization plus isolated
   portal/backend foundation.
 - Current goal: professional, mobile-first B2B and B2C website for offers from
@@ -170,15 +178,15 @@ Last updated: 2026-08-21
 - Technical-readiness milestone: 2026-08-28, aligned with expected contract
   completion. Janay onboarding and production Go/No-Go will occur afterward;
   dates remain open.
-- Hard deadline: 2026-09-25 before Manuel's three-week absence. Legal/operator
-  information is expected around mid-September.
-- Schedule health: yellow-orange. Database, migrations, Auth/Outbox,
+- Former production target: 2026-09-25. Manuel expects a further postponement;
+  the replacement milestone and stakeholder Go/No-Go date remain to be set.
+- Schedule health: yellow. Database, migrations, Auth/Outbox,
   company/contact API and the local portal UI are implemented; the expanded
   portal harness has 14/14 Staging evidence and all 17 manual browser checks
   passed and runner cleanup is complete. Productive runtime, account
   onboarding, off-server restore evidence and production
-  rollout remain on the critical path, but the revised September window is
-  achievable if runtime/DNS/SMTP work starts before legal approval arrives.
+  rollout remain on the critical path. The additional calendar buffer reduces
+  immediate date pressure but does not relax any production or real-data gate.
 - Build evidence: Astro checks 38 files with 0 errors, 0 warnings and 0 hints;
   the static build generates 28 pages, including `/ueber-uns/`.
 - Release evidence: production and GitHub-review builds both pass. Production
@@ -219,11 +227,15 @@ Last updated: 2026-08-21
 
 ## Delivery Horizon
 
+- Activation inputs: the reviewed 24.08 operator pack is represented by
+  `docs/requirements/activation-input-contract-2026-08-24.md`; durable gate
+  evidence is indexed in `docs/operations/go-live-evidence-index.md`. The
+  private workbook remains outside Git.
 - Visual steering board: `docs/requirements/readiness-gate-board-2026-08-28.md`
   consolidates Done/Ready/Waiting/Blocked flow, owners, dates, evidence and the
   28.08./25.09. milestone signals. Both milestones are currently yellow:
   technically achievable, but dependent on the named external gates.
-- Current Git checkpoint: commit `9210ea1` with SB-21/SB-22 is pushed to
+- Current Git checkpoint before this update: commit `7dcaf6d` is pushed to
   `origin/main`; local and remote branches were synchronized afterward. The
   push triggered no deployment and did not authorize remote operations.
 - SB-22 is complete locally: the Website now has a secret-free SFTP target
@@ -235,13 +247,15 @@ Last updated: 2026-08-21
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: SB-23, use the controlled Wuerzburg workstation
-  during the week of 2026-08-24 to prove the encrypted PostgreSQL off-server
-  backup and restore chain. Definition of Done: native package validation, one
-  synthetic encrypted set, guarded transfer and restore from that exact
-  external copy pass; PostgreSQL remains localhost-only, co-hosted services
-  remain healthy and no real data or production activation occurs. An earlier
-  EDV response promotes host-specific DNS/TLS/Nginx/SMTP validation.
+- Recommended next work block: close the temporary remote-export cleanup and
+  pull the next ready infrastructure gate. Prefer EXT-01 host-specific
+  DNS/TLS/Nginx/SMTP validation when EDV replies; otherwise prepare the
+  read-only SFTP inventory only after a trusted host-key value or explicitly
+  accepted trust procedure is available. SB-23 is complete: backup, monitor,
+  Guarded Pull and two restores from the exact `D:` copy passed; 24 tables were
+  restored, and cleanup left no container or plaintext residue. Real data and
+  production activation remain blocked by the remaining operational, Legal,
+  account and Go/No-Go gates.
 - Lead-time radar: EDV receipt check is due 2026-08-25, reminder 2026-08-27
   and escalation from 2026-08-28 if required. Contract schedule confirmation
   is due 2026-08-26; Janay/Thomas appointment requests and the Wuerzburg backup
@@ -294,13 +308,14 @@ Last updated: 2026-08-21
   Staging skips; compileall, `pip check` and JavaScript syntax pass. The final
   review also enforces same-origin action links and single-recipient delivery.
   No external SMTP connection or message occurred.
-- Rolling delivery horizon: (1) close the encrypted Wuerzburg off-server
-  backup/restore gate, (2) use the EDV reply to render and natively validate
+- Rolling delivery horizon: (1) remove the temporary VPS export after explicit
+  cleanup approval, (2) use the EDV reply to render and natively validate
   DNS/TLS/Nginx/SMTP, (3) perform read-only SFTP host-key/Webroot inventory and
   generate the pinned clean Website package, (4) rehearse Website and Webapp
   activation/rollback without real data, (5) onboard named users and run
   supervised acceptance, (6) obtain Legal/Thomas Go/No-Go and release the
-  narrow pilot plus first approved company no later than 2026-09-25.
+  narrow pilot plus first approved company on the replacement production date
+  once it is confirmed.
   Confidence decreases after step 3.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.

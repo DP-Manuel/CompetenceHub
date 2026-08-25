@@ -28,9 +28,11 @@ def test_backup_script_fails_closed_and_encrypts_before_publication() -> None:
     assert "duplicate configuration key" in script
     assert 'rm -f -- "$plain_dump" "$plain_globals"' in script
     assert 'touch "$work_dir/COMPLETE"' in script
-    assert script.index('chmod 0500 "$work_dir"') < script.index(
-        'mv -- "$work_dir" "$final_set"'
+    assert 'chmod 0500 "$work_dir"' not in script
+    assert script.index('mv -- "$work_dir" "$final_set"') < script.index(
+        'chmod 0500 "$final_set"'
     )
+    assert 'fail "published backup set permissions could not be secured"' in script
     assert script.index('rm -f -- "$plain_dump" "$plain_globals"') < script.index(
         'touch "$work_dir/COMPLETE"'
     )
@@ -45,6 +47,7 @@ def test_backup_monitor_checks_age_integrity_encryption_and_plaintext() -> None:
 
     assert "BACKUP_MAX_AGE_HOURS" in script
     assert "sha256sum --check --strict" in script
+    assert "--no-tty --list-only" in script
     assert "--list-packets" in script
     assert "unencrypted database material" in script
     assert "exactly two encrypted payloads" in script
@@ -129,6 +132,25 @@ def test_windows_pull_is_guarded_and_never_deletes_remote_data() -> None:
     assert "Get-FileHash" in script
     assert "The remote export was not deleted" in script
     assert "ssh " not in script.lower()
+
+
+def test_windows_docker_restore_is_pinned_isolated_and_cleans_up() -> None:
+    script = read(SCRIPTS_ROOT / "restore-competence-hub-backup-docker.ps1")
+
+    assert "ConfirmProtectedSource" in script
+    assert "ConfirmIsolatedRestore" in script
+    assert "Restore source must be separate from the repository" in script
+    assert "SHA256SUMS must contain exactly three entries" in script
+    assert "contains plaintext database material" in script
+    assert "this script never pulls images" in script
+    assert "--pull never" in script
+    assert "--network none" in script
+    assert "--exit-on-error --no-owner" in script
+    assert "--no-privileges" in script
+    assert "finally" in script
+    assert "Remove-Item -LiteralPath $plainDump -Force" in script
+    assert "Remove-Item -LiteralPath $restoreRoot -Recurse -Force" in script
+    assert "docker pull" not in script.lower()
 
 
 def test_operations_shell_scripts_have_valid_bash_syntax() -> None:

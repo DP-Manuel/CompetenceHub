@@ -79,7 +79,8 @@ mapfile -t encrypted_files < <(find "$latest_set" -mindepth 1 -maxdepth 1 -type 
 packet_home="$(mktemp -d)"
 trap 'find "$packet_home" -mindepth 1 -depth -delete; rmdir "$packet_home" 2>/dev/null || true' EXIT
 for encrypted_file in "${encrypted_files[@]}"; do
-    gpg --homedir "$packet_home" --batch --list-packets "$encrypted_file" >/dev/null 2>&1 \
+    gpg --homedir "$packet_home" --batch --no-tty --list-only \
+        --list-packets "$encrypted_file" >/dev/null 2>&1 \
         || fail "invalid OpenPGP payload: $encrypted_file"
 done
 

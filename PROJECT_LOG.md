@@ -2,6 +2,124 @@
 
 Newest entries first.
 
+## 2026-08-25 | operations/steering | Activation pack reviewed and SB-23 precheck started
+
+- The explicitly released 24.08 activation pack was reviewed as untrusted
+  operator input and converted into a versioned, secret-free activation input
+  contract plus a compact Go-Live Evidence Index. The private workbook remains
+  in `Quellen` and was not copied into Git.
+- Git was clean and already synchronized with `origin/main`; no pull was
+  required. The current remote checkpoint is `7dcaf6d`.
+- The supplied `D:` USB candidate is healthy, removable, almost empty and about
+  2 GB. The initial check found no BitLocker protection. Manuel then enabled
+  BitLocker To Go interactively without exposing the password. The final status
+  is fully encrypted, protection on, Aes128, 100 percent and unlocked. No
+  backup, secret or real data was written to the medium.
+- A durable SB-23 Wuerzburg execution note now preserves the interactive
+  BitLocker command, secret-handling boundary, GPG/key-custody gate and the
+  later exact-copy transfer/restore sequence. The focused operations package
+  passes all 11 tests. BitLocker management, SSH and SCP are present. Gpg4win
+  5.1.0 was installed through Winget with a verified installer hash and exposes
+  GnuPG 2.5.21. No key has been generated yet because encrypted local key
+  storage and recovery ownership must be confirmed first.
+- The former 2026-09-25 production deadline is expected to move. It is now
+  marked for rebaseline without inventing a replacement date. Technical,
+  security, legal, operations and real-data gates remain unchanged.
+- The local `C:` restore environment is also fully BitLocker-encrypted
+  (`XtsAes128`, protection on, 100 percent). The USB medium will be stored in
+  the safe and Janay Rappelt is the named emergency/recovery owner. Actual
+  recovery-code/passphrase escrow remains to be confirmed; no recovery value
+  or private key entered project files or chat.
+- A passphrase-protected RSA-4096 backup key was created in the encrypted local
+  GPG home. Its public fingerprint and export hash were verified, the public
+  key was exported to the BitLocker USB and no private-key material was found
+  there. An initially misdirected metadata check created two empty GPG files in
+  the user root; both were identified by creation time and removed immediately,
+  then the corrected check passed without residue.
+- Manuel confirmed both BitLocker protector types and the safe storage of the
+  Recovery code and GPG passphrase without transmitting either secret. The
+  SB-23 target/key/custody precheck is complete; only public-key handoff and the
+  native synthetic backup/transfer/restore evidence remain.
+- SSH key authentication to the approved VPS succeeded without a password
+  prompt. Only the verified public key was copied to Manuel's home; its remote
+  SHA-256, size, owner and mode match the local evidence. The eight secret-free
+  SB-21 files were staged in a new owner-only directory. Every local/remote
+  SHA-256 pair matches. Nothing was installed, enabled or executed as root.
+- Manuel installed the staged package under the reviewed root/postgres paths.
+  The VPS GPG home contains the exact public fingerprint and no reported
+  private key. Native unit verification passed, both timers remain disabled
+  and Chatbot, Nginx, Fail2ban and PostgreSQL are active. At this checkpoint no
+  backup had run yet.
+- The first manual backup attempt failed closed before publication: the script
+  removed write permission from its work directory before moving it into the
+  daily retention directory. A minimal `postgres` rename probe reproduced the
+  same `Permission denied` outside systemd; ownership, ext4 mount options,
+  systemd write paths and the kernel log ruled out the surrounding platform.
+  Cleanup left no plaintext or partial backup set, only the expected lock and
+  empty retention directories.
+- The publication order is corrected locally: the complete work directory is
+  moved first and the final directory is then made read-only, with targeted
+  cleanup if that final permission step fails. The focused operations package
+  passes all 11 tests, including updated regression coverage. The exact fixed
+  script is staged, not installed, as
+  `/home/manuel/competence-hub-backup-install-20260825/competence-hub-postgres-backup.20260825-fix1`;
+  local and remote SHA-256 are both
+  `c8b6edcc7d79a077da8e2a8231e6756641873d5bb65c9114fb1327600672d1cb`,
+  and remote `bash -n` passes.
+- After installing that fix, the native backup unit completed successfully and
+  published read-only daily and monthly encrypted sets. The monitor then failed
+  closed at its OpenPGP packet validation. A native probe confirmed the payload
+  is valid and that GnuPG 2.4.4 returns success when packet inspection uses
+  `--list-only`; the unrelated direct-run working-directory warning is avoided
+  by starting operator probes from `/`.
+- The monitor now uses `--no-tty --list-only --list-packets`. All 11 focused
+  operations tests pass. The exact monitor fix is staged, not installed, as
+  `/home/manuel/competence-hub-backup-install-20260825/competence-hub-postgres-backup-monitor.20260825-fix2`;
+  local and remote SHA-256 are both
+  `335da9998893240c7a284334f8a075d4d9f75776ce558d476e87522ed7a60bdd`,
+  and remote `bash -n` passes.
+- Manuel installed Fix 2 and reran only the monitor. It completed successfully
+  with `Result=success`, `ExecMainStatus=0` and identified the 2026-08-25 set as
+  complete, encrypted and 307 seconds old. Chatbot, Nginx, Fail2ban and
+  PostgreSQL all remained active. Backup and monitor evidence are now green;
+  guarded external transfer and exact-copy restore remain open.
+- The completed set was staged in the owner-only VPS export path. Its three
+  manifest checks passed and the inventory contained only two encrypted
+  payloads plus `METADATA`, `SHA256SUMS` and `COMPLETE`.
+- The guarded pull created and independently verified
+  `D:\CompetenceHub\competence-hub-backups\2026-08-25` on the previously
+  evidenced BitLocker To Go target. It refused overwrite by contract, verified
+  all three checksums, required exactly two `.gpg` payloads and found no
+  plaintext backup material. The temporary remote export was deliberately not
+  deleted before restore acceptance.
+- Local Docker Desktop is installed and was started for restore-environment
+  discovery, but no PostgreSQL image is present. Downloading the official
+  image was blocked by the project's no-external-provider boundary and did not
+  occur. Exact-copy restore now waits for an explicit choice between that
+  one-time dependency download and an internal synthetic VPS restore path.
+- Manuel explicitly approved the one-time official Docker Hub download for
+  `postgres:16-bookworm`; no project or backup data was sent. The local image is
+  pinned as
+  `postgres@sha256:bb3e1a57e5407e0a5280b4211980a5e537f4abd234a87014ac979849a78dd825`.
+- Restore from the exact verified `D:` copy passed twice: first as the supervised
+  proof and then through the new reusable guarded Windows/Docker restore tool.
+  The isolated networkless PostgreSQL 16 instance contained one application
+  schema and 24 application tables; the synthetic snapshot contained zero
+  portal users. Cleanup left zero restore containers, zero temporary restore
+  directories and zero plaintext dump files. All four VPS services remained
+  active.
+- `restore-competence-hub-backup-docker.ps1` now preserves the proven procedure:
+  protected external source and explicit restore confirmations, repository
+  separation, reparse/plaintext rejection, exact checksums, digest pinning,
+  `--pull never`, `--network none`, local GPG pinentry, isolated restore and
+  `finally` cleanup. The runbook documents its use and 12/12 focused operations
+  tests plus PowerShell parsing pass.
+- SB-23 and the synthetic G-BACKUP rehearsal are complete. This evidence closes
+  the external-copy/restore prerequisite only; real data remains blocked by
+  production scheduling/monitoring, Legal, named accounts and Go/No-Go.
+- No deployment, external transfer, real-data use, production change, commit
+  or push occurred in this block.
+
 ## 2026-08-21 | handoff | Week closed with colleague update
 
 - The colleague-facing update for 17.08.-21.08. summarizes the accepted pilot

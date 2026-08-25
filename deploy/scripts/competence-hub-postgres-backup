@@ -155,9 +155,14 @@ printf 'created_at_utc=%s\ndatabase=%s\nschema=competence_hub\ntable_count=%s\ne
 )
 touch "$work_dir/COMPLETE"
 find "$work_dir" -mindepth 1 -maxdepth 1 -type f -exec chmod 0400 {} +
-chmod 0500 "$work_dir"
 mv -- "$work_dir" "$final_set"
 work_dir=""
+if ! chmod 0500 "$final_set"; then
+  chmod 0700 "$final_set" 2>/dev/null || true
+  find "$final_set" -mindepth 1 -maxdepth 1 -type f -delete 2>/dev/null || true
+  rmdir "$final_set" 2>/dev/null || true
+  fail "published backup set permissions could not be secured"
+fi
 
 if [[ ! -e "$BACKUP_ROOT/monthly/$month" ]]; then
     cp -al -- "$final_set" "$BACKUP_ROOT/monthly/$month"
