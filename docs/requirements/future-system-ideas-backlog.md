@@ -1,6 +1,6 @@
 # Future System Ideas Backlog
 
-Last updated: 2026-08-07
+Last updated: 2026-08-25
 
 ## Purpose
 
@@ -14,6 +14,9 @@ The backlog preserves brainstorming input so it can later be turned into user st
 - Confirmed portal direction from Manuel on 2026-08-07: authenticated user and
   role administration, company and Coach records, feedback and role-scoped
   statistics. Detailed rights and an Excel data-input workbook will follow.
+- Janay's future calendar request from 2026-08-25: confirmed appointments
+  should reach Coaches in their calendar without assuming that every Coach uses
+  Outlook.
 - Direction: build a simple but expandable web-based system, similar in business coverage to the old Sophisto-like administration system, but independent.
 - Reference system: `http://sophisto.de/` should be reviewed later; initial fetch attempt on 2026-06-16 timed out.
 
@@ -154,6 +157,35 @@ Current pain point from the old workflow: participants must be created, booked i
 - IDEA-COACH-003: Coaches and lecturers should eventually see previous work and basic statistics.
 - IDEA-COACH-004: Staff may also be coaches or lecturers, so the role model must allow one person to hold multiple roles.
 - IDEA-COACH-005: Staff should be able to release seminar opportunities so coaches or lecturers can indicate interest.
+- IDEA-COACH-006: The first calendar-delivery increment should generate a
+  standards-compliant iCalendar (`.ics`) invitation for a confirmed assignment
+  so Outlook, Google Calendar, Apple Calendar and other compatible clients are
+  supported without provider lock-in.
+- IDEA-COACH-007: Appointment creation, updates and cancellation must retain a
+  stable event identifier so calendar clients update the existing event instead
+  of creating duplicates.
+- IDEA-COACH-008: Calendar delivery must define the authoritative appointment
+  record, organizer or sender, time zone and daylight-saving behavior, location
+  or meeting link, and the minimum information a Coach needs.
+- IDEA-COACH-009: Internal notes, customer-sensitive context and unnecessary
+  personal data must not be included in calendar invitations.
+- IDEA-COACH-010: Direct Outlook synchronization through Microsoft Graph may be
+  evaluated only as a later optional integration after provider need, OAuth
+  permissions, tenant administration, privacy, token custody, monitoring and
+  support ownership are approved. A non-Outlook path must remain available.
+- IDEA-COACH-011: Availability/free-busy synchronization is a separate discovery
+  item and is not implied by sending an appointment invitation.
+
+Future acceptance evidence for the first calendar-delivery increment:
+
+- A confirmed synthetic appointment imports correctly into Outlook and at least
+  one non-Outlook calendar.
+- Update and cancellation tests change the same event and create no duplicate.
+- Time zone and daylight-saving tests preserve the intended local appointment
+  time.
+- The invitation contains no internal notes or unnecessary personal data.
+- Delivery failure is visible to authorized staff and does not silently mark an
+  appointment as delivered.
 
 ### Participant App Track
 

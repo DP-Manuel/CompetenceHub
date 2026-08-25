@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-08-21
+Last updated: 2026-08-25
 
 ## Vision
 
@@ -11,24 +11,26 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 - Workflow model: hybrid Scrum/Kanban for multi-day delivery
 - Current phase, sprint, milestone, board status, or release: public website
   stabilization plus isolated authenticated-portal foundation
-- Current status: yellow / controlled risk; release-candidate source commit
-  `5db1e03` is pushed to `origin/main` and contains the
-  verified public website and the accepted same-origin pilot portal. The full
-  local suite passes 287 tests with 14 expected opt-in Staging skips, all 14
+- Current status: yellow for production and green for the completed technical-
+  readiness scope. Source commit `ea276b9` is pushed to `origin/main` and
+  contains the verified public website, accepted same-origin pilot portal and
+  completed encrypted external backup/restore rehearsal. The current full local
+  suite passes 305 tests with 14 expected opt-in Staging skips, all 14
   isolated PostgreSQL paths passed, and BA-01 through BA-17 are accepted in a
   real browser. The local runner is stopped and its ephemeral context removed.
   No persistent Competence-Hub backend/worker service, real account, real data
   or production deployment exists yet.
-- Main blocker: 2026-08-28 is now the technical-readiness milestone tied to
-  completed contracts, not the final production deadline. The hard deadline is
-  2026-09-25 before Manuel's three-week absence. Runtime services, App-DNS,
-  SMTP delivery, encrypted off-server restore evidence, legal website approval
-  and production Go/No-Go remain open. The software slice is proven;
-  operational activation is now the critical path.
-- Next decision needed: close the pilot activation matrix for personal account
-  identities, invitation handoff, final app hostname/DNS owner, backup target,
-  onboarding/acceptance dates and production approval. Productive data remains
-  blocked until the external-copy restore and all production gates are proven.
+- Main blocker: the former 2026-09-25 production deadline is retired. Manuel's
+  current planning assumption is a first small controlled start only after his
+  return in mid-October 2026; the exact date remains open. Runtime services,
+  App-DNS, SMTP delivery, production backup scheduling/alerting, legal website
+  approval, named-user onboarding and production Go/No-Go remain open. The
+  software and external-restore rehearsals are proven; operational activation
+  and organizational approval are the critical path.
+- Next decision needed: after the EDV response expected no earlier than
+  2026-09-14, confirm the exact post-vacation pilot date and close app hostname,
+  SMTP/sender, production timer/alert ownership, Legal, onboarding and Go/No-Go
+  gates. Productive data remains blocked until all production gates close.
 
 ## Scope
 
@@ -484,16 +486,17 @@ phase model.
 
 ## Timeline And Budget Signals
 
-- Target dates: website MVP completed by 2026-07-23; contracts and technical
-  readiness targeted for 2026-08-28. The former controlled-production target
-  of 2026-09-25 is being moved; its replacement date is not yet confirmed.
+- Target dates: website MVP completed by 2026-07-23; technical readiness is
+  green for the 2026-08-28 scope. The former controlled-production target of
+  2026-09-25 is retired. The current planning window for a first small pilot is
+  the second half of October 2026 after Manuel's return; the exact date requires
+  EDV, Legal, onboarding and Go/No-Go confirmation.
 - Budget or effort assumption: unknown
 - Confidence: medium-high for the 2026-08-28 technical-readiness checkpoint.
-  Production confidence is not dateable until the replacement milestone and
-  external gates are confirmed. The database, Auth, company/contact API and
-  browser UI are proven; production operations and organizational gates are
-  not. Legal input is expected around mid-September and leaves little repair
-  margin before the hard deadline.
+  Production confidence is medium for a post-vacation October pilot if EDV and
+  Legal input arrive during September. The database, Auth, company/contact API,
+  browser UI and external restore are proven; production operations and
+  organizational gates are not.
 - Risks to time or budget: App-DNS, SMTP details/sender authorization,
   runtime/worker packaging, legal operator/Impressum, production approval,
   encrypted external restore and correct-domain rollout are on the critical
@@ -501,15 +504,15 @@ phase model.
 
 ## Risks And Blockers
 
-- **Schedule / activation:** the 2026-08-28 readiness checkpoint remains, while
-  the former 2026-09-25 production deadline is being rebaselined.
-  Runtime, DNS, SMTP, backup, account handoff and production approval are still
+- **Schedule / activation:** technical readiness is green; the former
+  2026-09-25 production deadline is retired and the first small pilot is planned
+  no earlier than the second half of October. Runtime, DNS, SMTP, production
+  backup scheduling/alerting, account handoff and production approval remain
   open. Owner: Manuel, with Thomas Ross for production approval. Mitigation:
-  freeze features and work only the activation gates in order.
-- **Real-data recovery:** the VPS has protected local dumps but no verified
-  encrypted external restore. Owner: Manuel. Mitigation: validate the
-  Wuerzburg target and prove restore from the exact downloaded copy before any
-  real company/contact record.
+  keep implementation WIP small and close activation gates in order.
+- **Real-data recovery:** the encrypted external-copy restore rehearsal passed.
+  Before real data, enable an approved production schedule and alert route and
+  retain the exact-copy restore discipline. Owner: Manuel.
 - **Legal website release:** the concrete operating company, final Impressum,
   Datenschutz/AGB applicability and mailbox absence process remain open.
   Owners: Lars Donner/final company, Janay Rappelt and Thomas Ross. Mitigation:
@@ -567,11 +570,11 @@ latest useful date, affected work and a safe fallback.
 | ID | External input / owner | Requested or schedule by | Planning target / latest useful | Early warning / escalation | Affected work and fallback | Status |
 | --- | --- | --- | --- | --- | --- | --- |
 | EXT-01 | App-DNS, TLS path, SMTP contract and sender routing / EDV | Requested 2026-08-21; response expected no earlier than 2026-09-14 | Earliest planning input 2026-09-14; production latest useful date follows rebaseline | Review receipt 2026-09-14; chase from 2026-09-15 and expose replacement-launch impact immediately | Blocks host-specific config and live invitations; continue full secret-free release/readiness checks and synthetic work | Waiting until 2026-09-14 |
-| EXT-02 | Final contracts / Lars Donner and responsible business stakeholders | Confirm schedule by 2026-08-26 | Target 2026-08-28; latest useful 2026-09-11 | Escalate scope/date risk from 2026-09-01 | Blocks approved first-company workflow; keep pilot data synthetic | Planned |
-| EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Request slots by 2026-08-28 | Target 2026-09-11; latest useful 2026-09-18 | Escalate missing appointments from 2026-09-04 | Blocks named-user acceptance and production release; retain reviewed release candidate | Planned |
-| EXT-04 | Final legal operator, Impressum and legal review | Name review slot by 2026-09-04 | Target 2026-09-15; latest useful 2026-09-18 | Escalate launch risk from 2026-09-11 | Blocks live launch; keep current legal placeholders and no promotion | Waiting |
+| EXT-02 | Final contracts / Lars Donner and responsible business stakeholders | Confirm status after 2026-08-28 | Complete before named-user acceptance | Escalate if contract workflow is still unclear by 2026-09-18 | Blocks approved first-company workflow; keep pilot data synthetic | Waiting for final status |
+| EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Prepare September scheduling request | Target after Manuel's return in mid-October; exact date open | Confirm slots no later than 2026-10-02 or expose pilot impact | Blocks named-user acceptance and production release; retain reviewed release candidate | Planned for post-vacation pilot |
+| EXT-04 | Final legal operator, Impressum and legal review | Name review slot during September | Complete before post-vacation Go/No-Go | Escalate if no review path exists by 2026-10-02 | Blocks promoted live launch; keep current legal placeholders and no promotion | Waiting |
 | EXT-05 | Controlled Wuerzburg off-server backup target and access window / Manuel | Completed 2026-08-25 | Quarterly after real-data activation and before relying on changed backup/encryption behavior | Reopen on failed backup, monitor, transfer or restore | Synthetic rehearsal complete: encrypted set, monitor, guarded external copy and exact-copy restore passed; production scheduling/alerting remains G-OPS work | Done for rehearsal |
-| EXT-06 | Mailbox response, absence and ownership procedure / Janay and Manuel | Request by 2026-09-04 | Target 2026-09-11; latest useful 2026-09-18 | Escalate service-readiness risk from 2026-09-12 | Blocks advertised contact service level; publish no unsupported response promise | Planned |
+| EXT-06 | Mailbox response, absence and ownership procedure / Janay and Manuel | Clarify during September | Complete before post-vacation Go/No-Go | Escalate if no owner/cover is confirmed by 2026-10-02 | Blocks advertised contact service level; publish no unsupported response promise | Planned |
 
 Lead-time rule: calculate `request by` from the latest useful date minus a
 realistic response, rework and escalation buffer. When an acknowledgement or
@@ -587,8 +590,9 @@ and source versioning are complete. Website release metadata/artifacts and
 initial API/Nginx templates are prepared; the synthetic onboarding and
 deployable runtime rehearsal and secret-free backup/restore package are
 complete, and SB-23 has native exact-copy evidence. No implementation slice is
-currently doing. EXT-01 remains parallel; temporary export cleanup or the first
-fully satisfied infrastructure gate determines the next bounded block.
+currently doing. The temporary export cleanup is complete. EXT-01 remains
+parallel; the first fully satisfied infrastructure gate determines the next
+bounded block.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -661,8 +665,9 @@ progress in parallel but do not silently expand the execution backlog.
   tested and rollback-ready Website/Portal packages plus an explicit matrix of
   remaining DNS, SMTP, backup, Legal, account and Go/No-Go gates. Deployment,
   real accounts and real data follow only after their separate gates.
-- **G-PROD-25:** the former 2026-09-25 target is under rebaseline. Production
-  still requires the canonical
+- **G-PROD:** the former 2026-09-25 target is retired. The first small pilot is
+  planned no earlier than the second half of October, with its exact date still
+  open. Production still requires the canonical
   Website, separately deployed Portal, Janay's MFA-protected least-privilege
   account, a verified external restore and successful first approved company
   plus contact. A database-only or UI-only state is not sufficient.
@@ -674,31 +679,41 @@ progress in parallel but do not silently expand the execution backlog.
   approved transition workflow.
 - Company/Coach feedback, customer voices and evidence-governed statistics.
 - Role-scoped dashboards and reporting formulas after Product-Owner approval.
-- Contract, invoice, calendar, document and mobile/PWA slices as independent
-  epics with their own privacy, security and operational gates.
+- Contract, invoice, document and mobile/PWA slices as independent epics with
+  their own privacy, security and operational gates.
+- Provider-neutral Coach appointment delivery as a later calendar epic: begin
+  with standards-compliant `.ics` invitations for Outlook and non-Outlook
+  clients; treat direct Microsoft Graph synchronization and availability lookup
+  as separately gated later integrations. Required decisions include the
+  appointment source of truth, organizer/sender, update/cancellation semantics,
+  time zones, minimum disclosed data, delivery monitoring and integration
+  ownership. Evidence must cover Outlook plus one non-Outlook client, stable
+  event updates/cancellations, time-zone correctness and data minimization.
 - SEO/GEO content inventory and evidence matrix remain a connected but separate
   public-website workstream.
 
-Parallel organizational work: send the prepared App-DNS/SMTP request in
-`docs/architecture/edv-app-dns-smtp-request-2026-08-21.md`, validate the
-encrypted Wuerzburg backup target, complete the final legal operator/Impressum
-and mailbox absence cover, and secure Thomas Ross's static/backend production
-path. The last canonical commit remains `c1f4cc8`; the release-preparation
-work after it is not committed or pushed. Deployment and real-data use remain
+Parallel organizational work: process the expected EDV response from
+2026-09-14 onward, confirm contract status, complete the final legal operator/
+Impressum and mailbox absence cover, schedule Janay's onboarding and secure
+Thomas Ross's static/backend production Go/No-Go path. The encrypted Wuerzburg
+restore rehearsal is complete; production timers and alert routing remain
+disabled until their separate approval. Deployment and real-data use remain
 separate gated actions.
 
 ## Restart Note
 
-Prepared on: 2026-08-21
+Prepared on: 2026-08-25
 
-- Canonical `main`: `c1f4cc8`; accepted cutline, ADR 0006, same-origin portal,
-  browser harness and all current tests/reviews are versioned.
-- Evidence: 248 local tests pass with 14 expected opt-in Staging skips; all 14
-  PostgreSQL Staging paths and BA-01 through BA-17 passed. The 2026-08-21
-  Astro check/build again reports 36 files without diagnostics and 28 built
-  pages. The local browser runner is stopped and cleaned up.
+- Canonical `main`: `ea276b9`; accepted cutline, ADR 0006, same-origin portal,
+  browser harness, clean release evidence and SB-23 restore evidence are
+  versioned.
+- Evidence: 305 local tests pass with 14 expected opt-in Staging skips; all 14
+  PostgreSQL Staging paths and BA-01 through BA-17 passed. Astro reports 38
+  files without diagnostics and 28 built pages. The local browser runner and
+  temporary VPS export are stopped/removed; the exact encrypted `D:` copy is
+  retained.
 - No persistent service, account, deployment or real data exists. Continue with
-  the activation gate matrix and production-shaped runtime package.
+  trusted read-only SFTP inventory or the first newly satisfied activation gate.
 
 Resume here:
 
@@ -712,7 +727,7 @@ Resume here:
    `docs/assets/designstyle.md`.
 3. Check `git status --short`; `.tmp/` must remain untracked and untouched.
 4. Review accepted `docs/decisions/0006-same-origin-pilot-portal-ui.md`, the
-   pilot cutline and committed portal package at `c1f4cc8`.
+   pilot cutline and current canonical checkpoint `ea276b9`.
 5. SB-15 browser acceptance, isolated Staging evidence and local runner cleanup
    are complete. Continue with the named-user, invitation, app-origin and
    acceptance-date gate matrix; do not create
@@ -750,6 +765,15 @@ Resume here:
 
 ## Decisions
 
+- 2026-08-25: The former 2026-09-25 production deadline is retired. Plan the
+  first small controlled pilot no earlier than the second half of October after
+  Manuel's return; the exact date remains subject to EDV, Legal, onboarding and
+  Go/No-Go evidence. Technical readiness and the encrypted external-copy
+  restore rehearsal are green, but production timers and alert routing remain
+  disabled pending approval.
+- 2026-08-25: Provider-neutral `.ics` invitations are the preferred first
+  calendar-delivery increment for Coaches. Direct Microsoft Graph/Outlook sync
+  and availability lookup remain later, separately gated integrations.
 - 2026-08-14: Manuel accepted ADR 0005. The local implementation uses an
   encrypted transactional outbox, HMAC-based persistent idempotency, leased
   bounded worker claims and terminal data minimization. Manuel later approved

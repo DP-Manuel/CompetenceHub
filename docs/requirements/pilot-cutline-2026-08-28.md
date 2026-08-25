@@ -1,5 +1,11 @@
 # Competence Hub Technical-Readiness Cutline - 28.08.2026
 
+> Zeitplanhinweis vom 25.08.2026: Die technische 28.08.-Cutline bleibt als
+> historischer Readiness-Meilenstein gueltig. Der in diesem Dokument genannte
+> 25.09.-Produktivtermin ist aufgehoben; ein erster kleiner Pilot ist fruehestens
+> fuer die zweite Oktoberhaelfte nach Manuels Rueckkehr vorgesehen. Das genaue
+> Datum bleibt gate-abhaengig und offen.
+
 Stand: 21.08.2026
 
 Status: Von Manuel am 20.08.2026 als verbindliche Pilotgrenze freigegeben.

@@ -1,17 +1,22 @@
-# Competence Hub Production Release Plan - 25.09.2026
+# Competence Hub Production Release Plan - Rebaselined
 
-Stand: 21.08.2026
+Stand: 25.08.2026
 
 Status: Vorbereitung. Dieser Plan autorisiert weder Upload noch DNS-Aenderung,
 Serverinstallation, Kontoerstellung oder Echtdaten. Zugangsdaten und Secrets
 bleiben ausserhalb des Repositories.
 
+Der Dateiname bleibt als historischer Verweis auf den frueheren Zieltermin
+erhalten. Der 25.09.2026 ist nicht mehr die Produktionsdeadline. Aktueller
+Planungskorridor fuer einen ersten kleinen kontrollierten Start ist fruehestens
+die zweite Oktoberhaelfte nach Manuels Rueckkehr; ein exaktes Datum ist offen.
+
 ## Ziel und Releasegrenze
 
-Bis 28.08. soll das technische Readiness-Paket weitgehend stehen. Nach
-Vertragsabschluss folgen Legal, Infrastrukturabnahme, persoenliches Onboarding
-und kontrollierter Produktivstart. Spaetester Termin ist 25.09. vor Manuels
-dreiwoechiger Abwesenheit.
+Das technische Readiness-Paket fuer den 28.08. ist gruen. Nach EDV-Antwort,
+Vertragsabschluss und Legal folgen Infrastrukturabnahme, persoenliches
+Onboarding und kontrollierter Produktivstart. Der fruehere 25.09.-Termin ist
+aufgehoben; der neue Pilottermin wird erst mit den Stakeholdern bestaetigt.
 
 Der Release besteht aus zwei getrennten Artefakten:
 
@@ -46,27 +51,25 @@ bereitstellen.
 - SMTP-Adapter mit lokaler Testzustellung und minimierten Fehlercodes pruefen.
 - Keine DNS-Aenderung, kein SFTP-Upload, kein reales Konto und kein Echtdatum.
 
-### Phase 2 - bis 11.09.: Infrastruktur- und Restoreprobe
+### Phase 2 - September: Infrastruktur- und Betriebsabschluss
 
 - App-DNS auf den VPS vorbereiten und TLS ausstellen, noch ohne Fachfreigabe.
 - Getrennte Backend-/Worker-Dienste installieren und mit synthetischen Daten
   gegen Staging pruefen.
 - Website-Webstand vor einem Testupload extern sichern; Upload und Ruecknahme
   mit freigegebenem Artefakt proben.
-- Verschluesselten Dump vom kontrollierten Wuerzburger Rechner abrufen und aus
-  genau dieser Kopie isoliert wiederherstellen.
+- Den bereits bestandenen externen Restore als Produktionsverfahren einplanen;
+  Backup-/Monitor-Timer und Alarmweg erst nach expliziter Freigabe aktivieren.
 - Chatbot vor/nach jedem VPS-Schritt pruefen; kein gemeinsamer Restart.
 
-### Phase 3 - bis 18.09.: Legal, Konten und Abnahme
+### Phase 3 - bis zur Rueckkehr: Legal und Terminierung
 
 - Finalen Betreiber, Impressum, Datenschutz-/AGB-Anwendbarkeit und
   Kontaktprozess freigeben.
-- Manuel und Janay per persoenlicher E-Mail einladen; MFA beaufsichtigt
-  einrichten; Recovery-Codes getrennt sichern.
-- Janay fuehrt den synthetischen Firmen-/Kontaktworkflow aus.
-- Thomas Ross dokumentiert Go/No-Go und offene Restpunkte.
+- Finalen Pilottermin, Janay-Onboarding und Thomas-Ross-Go/No-Go fuer die Zeit
+  nach Manuels Rueckkehr terminieren.
 
-### Phase 4 - bis 25.09.: Kontrollierte Produktion
+### Phase 4 - fruehestens zweite Oktoberhaelfte: Kontrollierter Pilot
 
 - Freigegebene Website und Portalversionen mit Commit/Artefakthash festhalten.
 - Website mit vorherigem Webspace-Backup per SFTP veroeffentlichen.
@@ -153,7 +156,7 @@ erfolgreichem Restore-Gate zugelassen.
    `portal@donner-partner.de` mit Reply-To
    `competencehub@donner-partner.de` statt eines unueberwachten `noreply`.
 4. Bestaetigung und Routing des Technikalias; nicht als Login verwenden.
-5. Janay-Onboarding und Thomas-Ross-Go/No-Go vor 25.09.
+5. Janay-Onboarding und Thomas-Ross-Go/No-Go fuer den bestaetigten Pilottermin.
 6. Datentraegerverschluesselung, Restoretermin und Nachfolgezugriff.
 7. Finaler Betreiber und freigegebene Rechtstexte.
 
@@ -170,8 +173,8 @@ Lokal umgesetzt und automatisiert geprueft sind:
 - Passwort-Reset, Einladungsannahme, anschliessende MFA-Einrichtung und eine
   Admin-only, idempotente Einladung fuer die Rolle `internal` im Portal.
 
-Der lokale Stand besteht 274 Tests bei 14 absichtlich opt-in Staging-Skips;
-Compileall, Abhaengigkeiten und JavaScript-Syntax sind sauber. Der komplette
+Der aktuelle Clean-Source-Stand besteht 305 Tests bei 14 absichtlich opt-in
+Staging-Skips; Compileall, Abhaengigkeiten und JavaScript-Syntax sind sauber. Der komplette
 synthetische Onboarding-Pfad bestand anschliessend 14/14 Staging-Tests und
 hinterliess keine Nutzer-, Session-, Outbox- oder Audit-Reste. Es wurde keine
 externe SMTP-Verbindung aufgebaut.
@@ -179,8 +182,9 @@ externe SMTP-Verbindung aufgebaut.
 Das Webapp-Release wird als versionsfixiertes Wheel-Bundle mit internem
 Dateiinventar, externem Manifest und SHA-256-Pruefsumme erzeugt. Zwei
 vollstaendige lokale Wiederholungsbuilds lieferten bytegleich denselben
-ZIP-Hash. Ein sauberer, nicht als `dirty` markierter Release-Nachweis folgt
-erst nach einem freigegebenen Commit. Vor realer Einladung fehlen weiterhin
+ZIP-Hash. Der saubere Release-Nachweis von Commit `70e92ba` ist nicht als
+`dirty` markiert; der aktuelle Projektcheckpoint ist `ea276b9`. Vor realer
+Einladung fehlen weiterhin
 App-DNS/TLS, die freigegebenen SMTP-/Absenderwerte, ein gepruefter Linux-
 Wheelhouse- oder Paketquellenweg, Monitoring/Retention sowie die beaufsichtigte
 Abnahme. Die Worker-Konfiguration bleibt bis dahin fail-closed.

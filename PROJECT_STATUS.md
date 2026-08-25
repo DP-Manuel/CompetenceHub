@@ -7,8 +7,9 @@ Last updated: 2026-08-25
 - Overall status: yellow for production, green for the 2026-08-28 technical-
   readiness checkpoint. The website and complete synthetic portal slice,
   clean release package and external restore rehearsal are verified. The former
-  2026-09-25 production deadline is being moved; no
-  replacement date is confirmed yet. Production runtime scheduling/alerting,
+  2026-09-25 production deadline is retired. A first small controlled start is
+  now planned no earlier than the second half of October, after Manuel's return;
+  the exact date remains open. Production runtime scheduling/alerting,
   App-DNS, SMTP, named accounts, legal approval and Go/No-Go are still open.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling six-step horizon.
@@ -124,17 +125,18 @@ Last updated: 2026-08-25
   owner, migrator and restricted app roles.
 - Operational server gates: UFW defaults to deny incoming traffic and exposes
   only 22/80/443; Fail2ban protects SSH. PostgreSQL uses peer authentication on
-  local sockets and SCRAM-SHA-256 on loopback TCP. A local protected dump and
-  synthetic restore rehearsal succeeded. No encrypted off-server copy exists,
-  so productive company or personal data remains blocked.
+  local sockets and SCRAM-SHA-256 on loopback TCP. The encrypted exact-copy
+  external restore rehearsal succeeded. Productive company or personal data
+  remains blocked until production timers/alerts and all Legal, account,
+  runtime and Go/No-Go gates close.
 - Maintenance timing: the originally planned Saturday window was superseded
   by the approved Friday change on 2026-08-07 before the scheduled crawl. The
   crawl timer remains active for about 15:22 UTC / 17:22 Europe/Berlin.
 - Backup decision: no Cloud/Object Storage purchase is currently authorized.
-  PostgreSQL remains staging-only with synthetic data. Productive data requires
-  an encrypted external copy to D+P-controlled storage and a restore test. The
-  D+P workstation at the Würzburg site is the preferred candidate, pending
-  disk-encryption/access checks and restore from the downloaded copy.
+  PostgreSQL remains staging-only with synthetic data. The BitLocker-protected
+  D+P medium, encrypted transfer and restore from the exact external copy are
+  proven. Backup and monitor timers remain deliberately disabled until a
+  production schedule, alert route and operator response are approved.
 - Portal direction: Product-Owner workbook v0.2 has been evaluated. The
   B2B-first core covers users/multiple roles, companies/contacts,
   Coaches/topics/services, coaching requests and audit. The RBAC matrix for
@@ -162,6 +164,12 @@ Last updated: 2026-08-25
   installable authenticated client after the Webapp core. Nothing has been
   implemented; no store or native release is decided. Website/PWA, backend API
   and PostgreSQL remain separated, with no direct client database access.
+- Deferred calendar direction: Janay requested that confirmed Coach appointments
+  reach Coaches' calendars. The provider-neutral baseline is a standards-based
+  `.ics` invitation compatible with Outlook and other common calendars. Direct
+  Microsoft Graph/Outlook synchronization and free/busy lookup remain separate
+  later integrations behind privacy, permission, token-custody and operations
+  decisions. No calendar implementation is in the current execution backlog.
 - Confirmed ownership: Manuel owns VPS operations, patching, monitoring,
   backups and incident response. Thomas Roß, EDV-Leiter, owns production
   approval. Separate app/API subdomains are approved in principle.
@@ -179,14 +187,16 @@ Last updated: 2026-08-25
 - Technical-readiness milestone: 2026-08-28, aligned with expected contract
   completion. Janay onboarding and production Go/No-Go will occur afterward;
   dates remain open.
-- Former production target: 2026-09-25. Manuel expects a further postponement;
-  the replacement milestone and stakeholder Go/No-Go date remain to be set.
-- Schedule health: yellow. Database, migrations, Auth/Outbox,
+- Former production target: 2026-09-25, now retired. Current planning window:
+  first small controlled start no earlier than the second half of October after
+  Manuel's return. The exact milestone and stakeholder Go/No-Go date remain to
+  be set.
+- Schedule health: yellow but less time-critical. Database, migrations, Auth/Outbox,
   company/contact API and the local portal UI are implemented; the expanded
   portal harness has 14/14 Staging evidence and all 17 manual browser checks
   passed and runner cleanup is complete. Productive runtime, account
   onboarding, off-server restore evidence and production
-  rollout remain on the critical path. The additional calendar buffer reduces
+  rollout remain on the critical path. The post-vacation October window reduces
   immediate date pressure but does not relax any production or real-data gate.
 - Build evidence: Astro checks 38 files with 0 errors, 0 warnings and 0 hints;
   the static build generates 28 pages, including `/ueber-uns/`.
@@ -234,9 +244,9 @@ Last updated: 2026-08-25
   private workbook remains outside Git.
 - Visual steering board: `docs/requirements/readiness-gate-board-2026-08-28.md`
   consolidates Done/Ready/Waiting/Blocked flow, owners, dates, evidence and the
-  28.08./25.09. milestone signals. Both milestones are currently yellow:
-  technically achievable, but dependent on the named external gates.
-- Current Git checkpoint before this update: commit `7dcaf6d` is pushed to
+  completed 28.08. technical checkpoint plus the rebaselined post-vacation
+  pilot. Technical readiness is green; production is yellow behind named gates.
+- Current Git checkpoint before this update: commit `ea276b9` is pushed to
   `origin/main`; local and remote branches were synchronized afterward. The
   push triggered no deployment and did not authorize remote operations.
 - SB-22 is complete locally: the Website now has a secret-free SFTP target
@@ -260,11 +270,10 @@ Last updated: 2026-08-25
   restored, and cleanup left no container or plaintext residue. Real data and
   production activation remain blocked by the remaining operational, Legal,
   account and Go/No-Go gates.
-- Lead-time radar: EDV receipt check is due 2026-08-25, reminder 2026-08-27
-  and escalation from 2026-08-28 if required. Contract schedule confirmation
-  is due 2026-08-26; Janay/Thomas appointment requests and the Wuerzburg backup
-  window should be placed by 2026-08-28. Legal review must be scheduled by
-  2026-09-04 to preserve the 2026-09-25 launch deadline.
+- Lead-time radar: EDV input is not expected before 2026-09-14 and should be
+  reviewed then or chased from 2026-09-15. Contract and Legal status should be
+  clarified during September. Janay/Thomas acceptance slots and the exact pilot
+  date should be confirmed by 2026-10-02 to protect a second-half October start.
 - SB-19 evidence: the existing isolated Outbox Staging test now continues
   through single-use invitation acceptance, password hashing, TOTP enrollment,
   Recovery-code generation and active session creation. It compiles and skips
@@ -315,14 +324,14 @@ Last updated: 2026-08-25
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) refresh the complete release/readiness evidence,
-  (2) use the EDV reply to render and natively validate DNS/TLS/Nginx/SMTP,
-  (3) perform read-only SFTP host-key/Webroot inventory and
-  generate the pinned clean Website package, (4) rehearse Website and Webapp
-  activation/rollback without real data, (5) onboard named users and run
-  supervised acceptance, (6) obtain Legal/Thomas Go/No-Go and release the
-  narrow pilot plus first approved company on the replacement production date
-  once it is confirmed.
+- Rolling delivery horizon: (1) establish trusted SFTP host-key evidence and
+  perform a read-only Webroot inventory, (2) use the EDV reply to render and
+  natively validate DNS/TLS/Nginx/SMTP, (3) pull any bounded approved frontend/
+  content increment while external gates wait, (4) rehearse Website and Webapp
+  activation/rollback without real data, including production backup timer and
+  alert behavior, (5) onboard named users and run supervised acceptance,
+  (6) obtain Legal/Thomas Go/No-Go and release the narrow pilot plus first
+  approved company in the confirmed post-vacation window.
   Confidence decreases after step 3.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.

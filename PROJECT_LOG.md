@@ -2,6 +2,35 @@
 
 Newest entries first.
 
+## 2026-08-25 | steering/closeout | Pilot rebaselined to post-vacation October window
+
+- Manuel retired the former 2026-09-25 production deadline. The current
+  planning assumption is a first small controlled start no earlier than the
+  second half of October after his return; the exact date remains open.
+- Current plan, status, visual gate board, historical cutline warning and the
+  production release plan were reconciled. Completed technical readiness and
+  SB-23 external restore evidence are green; stale claims that no external
+  restore existed or that the release refresh remained next were removed.
+- Open critical path: trusted read-only SFTP inventory; EDV DNS/TLS/SMTP input
+  from 2026-09-14 onward; production backup/monitor schedule and alert route;
+  contract/Legal/mailbox closure; named-user onboarding; Thomas Ross Go/No-Go.
+- Calendar delivery remains a deferred product epic and does not enter current
+  WIP. No deployment, account creation, production timer enablement or real-data
+  use occurred.
+
+## 2026-08-25 | requirements/steering | Provider-neutral Coach calendar request captured
+
+- Janay requested a future workflow in which confirmed appointments reach the
+  assigned Coach's calendar. Manuel noted that Coaches may use Outlook or other
+  calendar products and that the capability is not urgent.
+- The future-system backlog now defines standards-compliant `.ics` invitations
+  as the provider-neutral first increment. Direct Microsoft Graph/Outlook sync
+  and availability lookup remain later, separately gated integration options.
+- Future evidence must cover Outlook and at least one non-Outlook client,
+  stable update/cancellation behavior, correct time zones, visible delivery
+  failure and data minimization. No implementation, deployment or real-data use
+  occurred.
+
 ## 2026-08-25 | operations/steering | SB-23 cleanup closed and EDV lead time rebaselined
 
 - Manuel explicitly approved deletion of only the temporary owner-only export
