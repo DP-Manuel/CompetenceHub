@@ -247,11 +247,15 @@ Last updated: 2026-08-25
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: close the temporary remote-export cleanup and
-  pull the next ready infrastructure gate. Prefer EXT-01 host-specific
-  DNS/TLS/Nginx/SMTP validation when EDV replies; otherwise prepare the
-  read-only SFTP inventory only after a trusted host-key value or explicitly
-  accepted trust procedure is available. SB-23 is complete: backup, monitor,
+- Recommended next work block: refresh the complete technical-readiness and
+  release evidence from commit `e6ddbb1` plus the cleanup update while EXT-01
+  is unavailable before 2026-09-14. Purpose: prove that the packaged Website,
+  Webapp and new reusable restore tooling remain internally consistent without
+  waiting on EDV or touching production. Definition of Done: full release gate,
+  package inventory, operations tests, status/board reconciliation and no
+  secret or `.tmp` artifact pass. Host-specific DNS/TLS/Nginx/SMTP validation
+  starts after EXT-01; read-only SFTP inventory still requires trusted host-key
+  evidence or an explicitly accepted trust procedure. SB-23 is complete: backup, monitor,
   Guarded Pull and two restores from the exact `D:` copy passed; 24 tables were
   restored, and cleanup left no container or plaintext residue. Real data and
   production activation remain blocked by the remaining operational, Legal,
@@ -308,9 +312,12 @@ Last updated: 2026-08-25
   Staging skips; compileall, `pip check` and JavaScript syntax pass. The final
   review also enforces same-origin action links and single-recipient delivery.
   No external SMTP connection or message occurred.
-- Rolling delivery horizon: (1) remove the temporary VPS export after explicit
-  cleanup approval, (2) use the EDV reply to render and natively validate
-  DNS/TLS/Nginx/SMTP, (3) perform read-only SFTP host-key/Webroot inventory and
+- Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
+  that date and chase from 2026-09-15; no host-specific or live-mail claim is
+  made before evidence arrives.
+- Rolling delivery horizon: (1) refresh the complete release/readiness evidence,
+  (2) use the EDV reply to render and natively validate DNS/TLS/Nginx/SMTP,
+  (3) perform read-only SFTP host-key/Webroot inventory and
   generate the pinned clean Website package, (4) rehearse Website and Webapp
   activation/rollback without real data, (5) onboard named users and run
   supervised acceptance, (6) obtain Legal/Thomas Go/No-Go and release the

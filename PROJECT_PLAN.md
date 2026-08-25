@@ -566,7 +566,7 @@ latest useful date, affected work and a safe fallback.
 
 | ID | External input / owner | Requested or schedule by | Planning target / latest useful | Early warning / escalation | Affected work and fallback | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| EXT-01 | App-DNS, TLS path, SMTP contract and sender routing / EDV | Requested 2026-08-21 | Target 2026-08-25; latest useful 2026-09-04 | Confirm receipt 2026-08-25; remind 2026-08-27; escalate from 2026-08-28 | Blocks host-specific config and live invitations; continue secret-free operations work and synthetic mail | Waiting |
+| EXT-01 | App-DNS, TLS path, SMTP contract and sender routing / EDV | Requested 2026-08-21; response expected no earlier than 2026-09-14 | Earliest planning input 2026-09-14; production latest useful date follows rebaseline | Review receipt 2026-09-14; chase from 2026-09-15 and expose replacement-launch impact immediately | Blocks host-specific config and live invitations; continue full secret-free release/readiness checks and synthetic work | Waiting until 2026-09-14 |
 | EXT-02 | Final contracts / Lars Donner and responsible business stakeholders | Confirm schedule by 2026-08-26 | Target 2026-08-28; latest useful 2026-09-11 | Escalate scope/date risk from 2026-09-01 | Blocks approved first-company workflow; keep pilot data synthetic | Planned |
 | EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Request slots by 2026-08-28 | Target 2026-09-11; latest useful 2026-09-18 | Escalate missing appointments from 2026-09-04 | Blocks named-user acceptance and production release; retain reviewed release candidate | Planned |
 | EXT-04 | Final legal operator, Impressum and legal review | Name review slot by 2026-09-04 | Target 2026-09-15; latest useful 2026-09-18 | Escalate launch risk from 2026-09-11 | Blocks live launch; keep current legal placeholders and no promotion | Waiting |
@@ -616,14 +616,13 @@ fully satisfied infrastructure gate determines the next bounded block.
 | SB-22 | Done locally | Prepare a guarded Website SFTP release, remote-backup and rollback rehearsal package | existing static release builder; no credentials in Git; no upload or deployment approval | secret-free target contract, local preparer and runbook; checksum/archive, host-key and verified remote-root guards; mandatory backup-before-replace plus smoke/rollback gates; 17 focused operations/SFTP tests, PowerShell parser, 38-file/28-page Astro build and full 304-pass/14-skip release gate green |
 | SB-23 | Done | Prove encrypted external copy and isolated restore from that exact copy | D+P-controlled encrypted target, workstation-only private key, synthetic data and rehearsal approval | backup and corrected monitor green; guarded `D:` copy hash-verified; digest-pinned networkless PostgreSQL 16 restored 24 tables twice; reusable guarded script 12/12; zero container/plaintext residue; four VPS services active |
 
-Recommended next block: clean up the temporary owner-only VPS export after
-explicit approval, then pull the first available infrastructure gate. Prefer
-host-specific DNS/TLS/Nginx/SMTP validation when EXT-01 arrives; otherwise
-perform only a read-only SFTP inventory after trusted host-key evidence or an
-explicitly accepted trust procedure is available. Purpose: advance deployment
-readiness without changing production content. Definition of Done for the next
-selected slice: evidence is native and secret-free, no remote content changes,
-all existing services remain healthy, and project gates are reconciled.
+Recommended next block: refresh the complete technical-readiness and release
+evidence after SB-23 and its reusable restore tooling. EXT-01 is not expected
+before 2026-09-14, so this independent block verifies the packaged Website,
+Webapp, operations files and clean-source contract without changing production.
+Definition of Done: full release gate and package inventory pass, no secret or
+`.tmp` artifact is included, project status/board are reconciled and any failure
+is localized before the 2026-08-28 technical checkpoint.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -632,8 +631,8 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- |
-| 1 | High | Remove only the accepted temporary VPS export and preserve the external `D:` copy | SB-23 evidence accepted; explicit cleanup approval | exact-path absence on VPS, external copy remains and source backup remains monitored |
-| 2 | High | Render and validate App-DNS, TLS, reverse-proxy and SMTP configuration | EXT-01; Thomas production path; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender and no shared login |
+| 1 | High | Refresh full technical-readiness and release evidence after SB-23 | SB-23 complete; no external input required | full release gate, package inventory, operations tests, no secret/`.tmp`, reconciled board |
+| 2 | High | Render and validate App-DNS, TLS, reverse-proxy and SMTP configuration | EXT-01 not expected before 2026-09-14; Thomas production path; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender and no shared login |
 | 3 | High | Confirm the exact Website SFTP target without changing it and generate the pinned local rehearsal package | explicit read-only connection approval; trusted host-key source; SB-22 | host-key match, `pwd`/complete inventory, target-contract validation and locally verified clean artifact |
 | 4 | Medium-high | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 1-3; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
 | 5 | Medium-low | Create named accounts and run supervised acceptance | Steps 1-4; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |

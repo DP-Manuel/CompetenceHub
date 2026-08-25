@@ -18,7 +18,7 @@ offenen zeitkritischen Gates abhaengig. Es ist keine Produktionsfreigabe.
 
 | DONE | READY / NEXT | WAITING EXTERNAL | BLOCKED UNTIL GATES CLOSE |
 | --- | --- | --- | --- |
-| Auth, MFA, Rollen und Firmen-/Kontakt-Slice lokal und auf Staging synthetisch bewiesen | SB-23-Export nach Freigabe gezielt bereinigen; dann erstes verfuegbares Infrastruktur-Gate ziehen | EXT-01: App-DNS, TLS-/Proxy-Pfad, SMTP-Vertrag und Absender durch EDV | Echtdaten und erster realer Firmenrecord |
+| Auth, MFA, Rollen und Firmen-/Kontakt-Slice lokal und auf Staging synthetisch bewiesen | Vollstaendigen Release-/Readiness-Nachweis nach SB-23 aktualisieren | EXT-01: App-DNS, TLS-/Proxy-Pfad, SMTP-Vertrag und Absender durch EDV; nicht vor 14.09. erwartet | Echtdaten und erster realer Firmenrecord |
 | Portal-Browserabnahme BA-01 bis BA-17 abgeschlossen | Bei frueher EDV-Antwort: hostbezogene Konfiguration rendern und nativ validieren | EXT-02: Vertragsstand und fachliche Freigabe | Produktive Einladungs-E-Mails und reale Konten |
 | Reproduzierbare Website- und Webapp-Artefaktvertraege vorhanden | Nach separater Verbindungsfreigabe: SFTP-Host-Key, `pwd` und vollstaendige Remote-Inventur nur lesend pruefen | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go terminieren | Oeffentliche Bewerbung und Produktions-Go-Live |
 | Lokales PostgreSQL-Backup-/Monitor-/Restore-Paket vorbereitet | Nach Inventur: gepinntes lokales SFTP-Rehearsal-Paket erzeugen | EXT-04: finaler Betreiber, Impressum und Rechtspruefung | Automatisierter Website-Replace oder Remote-Loeschung |
@@ -37,7 +37,7 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | G-WEBSITE: statisches Produktionsartefakt | DONE lokal | Manuel | 28.08. | 38 Astro-Dateien ohne Diagnose, 28 Seiten, SHA-/Manifestvertrag | Noch kein SFTP-Upload |
 | G-WEBAPP: reproduzierbares Runtime-Paket | DONE lokal | Manuel | 28.08. | Wheel/ZIP, isolierte Installation, Fail-closed Runtime und Runbook | Noch keine VPS-Aktivierung |
 | G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL | Manuel / Wuerzburg | erledigt 25.08.; quartalsweise nach Echtdatenstart | verschluesselter Satz und Monitor gruen; Guarded Pull; digest-gepinnter netzloser Restore mit 24 Tabellen; 12/12; null Klartext-/Containerrest; vier Dienste active | Produktions-Timer/Alarmierung bleibt G-OPS; andere Echtdaten-Gates gelten weiter |
-| G-EDV: App-DNS/TLS/SMTP | WAITING | EDV | Ziel 25.08.; spaetestens 04.09. | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
+| G-EDV: App-DNS/TLS/SMTP | WAITING UNTIL 14.09. | EDV | Antwort nicht vor 14.09. erwartet; Produktionsdatum folgt Rebaseline | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
 | G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING APPROVAL | Manuel / Thomas Ross | vor Website-Go-Live | Gepruefter Host-Key, read-only Inventur, vollstaendige Vorabkopie mit Hashliste | Kein Website-Replace |
 | G-CONTRACT: finaler Vertragsweg | WAITING | Lars Donner / Fachseite | Ziel 28.08.; spaetestens 11.09. | Freigegebener Vertragsstand und Prozess | Kein freigegebener erster Firmenprozess |
 | G-LEGAL: Betreiber und Rechtstexte | WAITING | Lars Donner / Rechtspruefung | Ziel 15.09.; spaetestens 18.09. | Finaler Betreiber, Impressum und anwendbare Datenschutz-/AGB-Fassung | Kein beworbener Livegang |
@@ -47,8 +47,8 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 
 ## Pull-Regel
 
-1. Nach expliziter Freigabe wird nur der temporaere VPS-Export entfernt; die
-   originale VPS-Sicherung und die verifizierte `D:`-Kopie bleiben bestehen.
+1. Der vollstaendige Release-/Readiness-Nachweis wird nach abgeschlossenem
+   SB-23 neu erzeugt; dies benoetigt keine externe Antwort.
 2. Trifft EXT-01 vorher ein, wird stattdessen die hostbezogene Konfiguration
    gerendert und validiert.
 3. Liegt eine ausdrueckliche SFTP-Verbindungsfreigabe plus vertrauenswuerdiger

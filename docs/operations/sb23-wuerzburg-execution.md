@@ -218,6 +218,19 @@ Exact-Copy-Restore vom 25.08.2026:
   Safe. Produktionszeitplan/Alarmierung, Legal, Konten und Go/No-Go bleiben
   separate Echtdaten- und Produktionsgates.
 
+Abschluss-Cleanup vom 25.08.2026:
+
+- Manuel gab die Loeschung exakt des temporaeren Pfads
+  `/home/manuel/competence-hub-backup-export/2026-08-25` frei.
+- Ein erster Aufruf wurde vor Remote-Ausfuehrung durch lokale PowerShell-
+  Substitution gestoppt. Der korrigierte Literalpfad-Aufruf verifizierte beide
+  aufgeloesten Pfade, entfernte nur das freigegebene Datumsverzeichnis und
+  bestaetigte dessen Abwesenheit.
+- Originales VPS-Backup und externe `D:`-Kopie blieben bestehen. Die drei
+  externen Checksummen sind erneut gruen; Backup/Monitor melden Erfolg und alle
+  vier Dienste sind `active`.
+- SB-23 ist damit ohne offene temporaere Exportkopie abgeschlossen.
+
 ## Gates D bis F
 
 Nach A bis C folgen ausschliesslich nach erneutem Operator-Check:

@@ -2,6 +2,25 @@
 
 Newest entries first.
 
+## 2026-08-25 | operations/steering | SB-23 cleanup closed and EDV lead time rebaselined
+
+- Manuel explicitly approved deletion of only the temporary owner-only export
+  `/home/manuel/competence-hub-backup-export/2026-08-25`. The first remote
+  command was stopped locally by an unintended PowerShell substitution before
+  any deletion. The corrected literal-path command verified both resolved paths,
+  removed exactly the approved dated directory and confirmed its absence.
+- The original monitored VPS backup was not touched. Backup and monitor units
+  still report `Result=success` and `ExecMainStatus=0`; Chatbot, Nginx,
+  Fail2ban and PostgreSQL remain active.
+- The external BitLocker `D:` copy remains present and all three manifest
+  checks pass after remote cleanup. SB-23 has no remaining cleanup action.
+- EDV input for App-DNS/TLS/SMTP is now expected no earlier than 2026-09-14.
+  EXT-01 and dependent host-specific/live-mail work were rebaselined rather
+  than silently treated as late. The next independent block is a refreshed full
+  technical-readiness/release check; no production activation is implied.
+- No deployment or real-data use occurred. Commit/push for this status update
+  remain separate.
+
 ## 2026-08-25 | operations/steering | Activation pack reviewed and SB-23 precheck started
 
 - The explicitly released 24.08 activation pack was reviewed as untrusted
