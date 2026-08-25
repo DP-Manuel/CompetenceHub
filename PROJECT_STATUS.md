@@ -4,9 +4,10 @@ Last updated: 2026-08-25
 
 ## Snapshot
 
-- Overall status: yellow. The website and complete synthetic portal
-  slice are verified. The 2026-08-28 target remains a technical-readiness
-  checkpoint. The former 2026-09-25 production deadline is being moved; no
+- Overall status: yellow for production, green for the 2026-08-28 technical-
+  readiness checkpoint. The website and complete synthetic portal slice,
+  clean release package and external restore rehearsal are verified. The former
+  2026-09-25 production deadline is being moved; no
   replacement date is confirmed yet. Production runtime scheduling/alerting,
   App-DNS, SMTP, named accounts, legal approval and Go/No-Go are still open.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
@@ -247,15 +248,14 @@ Last updated: 2026-08-25
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: refresh the complete technical-readiness and
-  release evidence from commit `e6ddbb1` plus the cleanup update while EXT-01
-  is unavailable before 2026-09-14. Purpose: prove that the packaged Website,
-  Webapp and new reusable restore tooling remain internally consistent without
-  waiting on EDV or touching production. Definition of Done: full release gate,
-  package inventory, operations tests, status/board reconciliation and no
-  secret or `.tmp` artifact pass. Host-specific DNS/TLS/Nginx/SMTP validation
-  starts after EXT-01; read-only SFTP inventory still requires trusted host-key
-  evidence or an explicitly accepted trust procedure. SB-23 is complete: backup, monitor,
+- Recommended next work block: keep implementation WIP empty until a bounded
+  gate becomes ready. First choice is a read-only SFTP inventory after trusted
+  host-key evidence or an explicitly accepted trust procedure; EXT-01 host-
+  specific DNS/TLS/Nginx/SMTP validation follows no earlier than 2026-09-14.
+  Product/frontend work may be pulled separately when new approved feedback or
+  content arrives, without weakening the production gates. The refreshed clean
+  release evidence is complete: 305 passes/14 skips, 38-file Astro check,
+  28-page build and a 33-entry package without `.env`/`.tmp`. SB-23 is complete: backup, monitor,
   Guarded Pull and two restores from the exact `D:` copy passed; 24 tables were
   restored, and cleanup left no container or plaintext residue. Real data and
   production activation remain blocked by the remaining operational, Legal,

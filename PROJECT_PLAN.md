@@ -616,13 +616,14 @@ fully satisfied infrastructure gate determines the next bounded block.
 | SB-22 | Done locally | Prepare a guarded Website SFTP release, remote-backup and rollback rehearsal package | existing static release builder; no credentials in Git; no upload or deployment approval | secret-free target contract, local preparer and runbook; checksum/archive, host-key and verified remote-root guards; mandatory backup-before-replace plus smoke/rollback gates; 17 focused operations/SFTP tests, PowerShell parser, 38-file/28-page Astro build and full 304-pass/14-skip release gate green |
 | SB-23 | Done | Prove encrypted external copy and isolated restore from that exact copy | D+P-controlled encrypted target, workstation-only private key, synthetic data and rehearsal approval | backup and corrected monitor green; guarded `D:` copy hash-verified; digest-pinned networkless PostgreSQL 16 restored 24 tables twice; reusable guarded script 12/12; zero container/plaintext residue; four VPS services active |
 
-Recommended next block: refresh the complete technical-readiness and release
-evidence after SB-23 and its reusable restore tooling. EXT-01 is not expected
-before 2026-09-14, so this independent block verifies the packaged Website,
-Webapp, operations files and clean-source contract without changing production.
-Definition of Done: full release gate and package inventory pass, no secret or
-`.tmp` artifact is included, project status/board are reconciled and any failure
-is localized before the 2026-08-28 technical checkpoint.
+The refreshed technical-readiness block is complete from clean commit
+`70e92ba`: 305 Webapp tests pass with 14 expected Staging skips, the 33-entry
+release ZIP includes the restore tool and no `.env`/`.tmp`, and the Website
+passes a 38-file check plus 28-page build. No implementation slice is doing.
+Recommended next block: read-only SFTP inventory only after trusted host-key
+evidence or an explicitly accepted trust procedure. EXT-01 host-specific
+validation remains waiting until at least 2026-09-14. New approved frontend or
+content feedback may form a separate bounded workstream while those gates wait.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -631,9 +632,9 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- |
-| 1 | High | Refresh full technical-readiness and release evidence after SB-23 | SB-23 complete; no external input required | full release gate, package inventory, operations tests, no secret/`.tmp`, reconciled board |
+| 1 | High | Confirm the exact Website SFTP target without changing it and generate the pinned local rehearsal package | explicit read-only connection approval; trusted host-key source or accepted trust procedure; SB-22 | host-key match, `pwd`/complete inventory, target-contract validation and locally verified clean artifact |
 | 2 | High | Render and validate App-DNS, TLS, reverse-proxy and SMTP configuration | EXT-01 not expected before 2026-09-14; Thomas production path; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender and no shared login |
-| 3 | High | Confirm the exact Website SFTP target without changing it and generate the pinned local rehearsal package | explicit read-only connection approval; trusted host-key source; SB-22 | host-key match, `pwd`/complete inventory, target-contract validation and locally verified clean artifact |
+| 3 | Medium-high | Pull the next approved frontend/content increment while infrastructure waits | new stakeholder feedback or approved content; separate workstream | mobile/accessibility/SEO build evidence and no production-gate regression |
 | 4 | Medium-high | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 1-3; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
 | 5 | Medium-low | Create named accounts and run supervised acceptance | Steps 1-4; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |
 | 6 | Low | Close Legal/Go-No-Go and release the narrow pilot on the replacement production date | EXT-02 through EXT-06; confirmed rebaseline; all real-data and production gates | signed gate matrix, production smoke, backup evidence, first approved company and rollback readiness |

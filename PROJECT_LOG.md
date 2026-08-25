@@ -18,8 +18,19 @@ Newest entries first.
   EXT-01 and dependent host-specific/live-mail work were rebaselined rather
   than silently treated as late. The next independent block is a refreshed full
   technical-readiness/release check; no production activation is implied.
-- No deployment or real-data use occurred. Commit/push for this status update
-  remain separate.
+- Clean commit `70e92ba` was used for the refreshed release evidence. The full
+  Webapp gate passed 305 tests with 14 expected opt-in Staging skips, dependency
+  checks, bytecode compilation, Wheel build, isolated installation and
+  fail-closed smoke. The 33-entry ZIP includes the guarded Docker restore tool,
+  contains no `.env`/`.tmp` entry and matches SHA-256
+  `1db5418713625350a2fdc4ce779a32814227d1de5187d674d6726911deabe766`.
+- The Website production build also passed: Astro checked 38 files with zero
+  errors, warnings or hints and generated 28 pages. Deployment was not
+  performed. The 2026-08-28 technical-readiness checkpoint is therefore green
+  for local/rehearsal scope; production remains yellow/replanned behind the
+  external gates.
+- No deployment or real-data use occurred. Commit/push for the final readiness
+  evidence remain separate.
 
 ## 2026-08-25 | operations/steering | Activation pack reviewed and SB-23 precheck started
 

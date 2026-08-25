@@ -6,7 +6,7 @@ Stand: 2026-08-25
 
 | Ziel | Status | Einordnung | Naechster Beweis |
 | --- | --- | --- | --- |
-| Technisches Readiness-Paket bis 28.08.2026 | GELB | Software, Website-/Webapp-Pakete, Staging sowie externer Backup-/Restore-Beweis sind gruen. App-DNS/SMTP und Produktionsbetrieb bleiben extern abhaengig. | EXT-01-Antwort und hostbezogene Validierung |
+| Technisches Readiness-Paket bis 28.08.2026 | GRUEN TECHNISCH | Clean-Source Website-/Webapp-Pakete, Staging sowie externer Backup-/Restore-Beweis sind gruen. App-DNS/SMTP und Produktionsbetrieb bleiben separate externe Gates. | Gate-Stand am 28.08. bestaetigen; keine automatische Produktion |
 | Erste freigegebene Firmen nach Vertragsabschluss | GELB | Datenmodell, geschuetzter Firmen-/Kontakt-Slice und synthetischer Restore sind bewiesen. Echtdaten bleiben bis Legal-, Konten-, Produktions- und Go/No-Go-Gate gesperrt. | Freigegebener Vertrag, benannte Konten und Betriebsfreigabe |
 | Kontrollierter Produktionsstart | NEU PLANEN | Der bisherige 25.09.2026-Termin wird verschoben; ein Ersatztermin ist noch nicht bestaetigt. Alle Produktionsgates bleiben bindend. | Ersatztermin mit Ownern und Rueckwaertsplan festlegen |
 | Budget | UNBEKANNT | Im Projekt ist kein belastbarer Budgetrahmen dokumentiert. | Nur bei kostenpflichtigem Backup-, Mail- oder Hostingbedarf entscheiden |
@@ -33,9 +33,9 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | Gate | Status | Owner | Spaetester sinnvoller Termin | Evidence / Abnahme | Wirkung bei offenem Gate |
 | --- | --- | --- | --- | --- | --- |
 | G-CODE: gepruefter Source-Checkpoint | DONE | Manuel | erledigt 21.08. | Commits `9210ea1`, `e8c7d53`; Remote synchron | Kein neuer Release aus ungeprueftem Source |
-| G-TEST: lokale und Staging-Qualitaet | DONE fuer aktuellen Slice | Manuel | erledigt | 304 lokale Passes, 14 erwartete Staging-Skips, vorherige 14/14 Staging- und BA-01..17-Nachweise | Bei Codeaenderung Gate erneut pruefen |
-| G-WEBSITE: statisches Produktionsartefakt | DONE lokal | Manuel | 28.08. | 38 Astro-Dateien ohne Diagnose, 28 Seiten, SHA-/Manifestvertrag | Noch kein SFTP-Upload |
-| G-WEBAPP: reproduzierbares Runtime-Paket | DONE lokal | Manuel | 28.08. | Wheel/ZIP, isolierte Installation, Fail-closed Runtime und Runbook | Noch keine VPS-Aktivierung |
+| G-TEST: lokale und Staging-Qualitaet | DONE fuer aktuellen Slice | Manuel | aktualisiert 25.08. | 305 lokale Passes, 14 erwartete Staging-Skips, vorherige 14/14 Staging- und BA-01..17-Nachweise | Bei Codeaenderung Gate erneut pruefen |
+| G-WEBSITE: statisches Produktionsartefakt | DONE lokal | Manuel | aktualisiert 25.08. | 38 Astro-Dateien ohne Diagnose, 28 Seiten, SHA-/Manifestvertrag | Noch kein SFTP-Upload |
+| G-WEBAPP: reproduzierbares Runtime-Paket | DONE lokal | Manuel | aktualisiert 25.08. | Clean Commit `70e92ba`; 33 Eintraege, Restore-Tool enthalten, keine `.env`/`.tmp`, SHA-256 `1db54187...be766`; Wheel/ZIP, isolierte Installation und Fail-closed Runtime | Noch keine VPS-Aktivierung |
 | G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL | Manuel / Wuerzburg | erledigt 25.08.; quartalsweise nach Echtdatenstart | verschluesselter Satz und Monitor gruen; Guarded Pull; digest-gepinnter netzloser Restore mit 24 Tabellen; 12/12; null Klartext-/Containerrest; vier Dienste active | Produktions-Timer/Alarmierung bleibt G-OPS; andere Echtdaten-Gates gelten weiter |
 | G-EDV: App-DNS/TLS/SMTP | WAITING UNTIL 14.09. | EDV | Antwort nicht vor 14.09. erwartet; Produktionsdatum folgt Rebaseline | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
 | G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING APPROVAL | Manuel / Thomas Ross | vor Website-Go-Live | Gepruefter Host-Key, read-only Inventur, vollstaendige Vorabkopie mit Hashliste | Kein Website-Replace |
@@ -47,8 +47,8 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 
 ## Pull-Regel
 
-1. Der vollstaendige Release-/Readiness-Nachweis wird nach abgeschlossenem
-   SB-23 neu erzeugt; dies benoetigt keine externe Antwort.
+1. Read-only SFTP-Inventur erst nach vertrauenswuerdigem Host-Key-Nachweis oder
+   ausdruecklich akzeptiertem Trust-Verfahren; keine Remote-Aenderung.
 2. Trifft EXT-01 vorher ein, wird stattdessen die hostbezogene Konfiguration
    gerendert und validiert.
 3. Liegt eine ausdrueckliche SFTP-Verbindungsfreigabe plus vertrauenswuerdiger
