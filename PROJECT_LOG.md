@@ -2,6 +2,47 @@
 
 Newest entries first.
 
+## 2026-09-01 | frontend/requirements/steering | Feedback packet 27.08 consolidated locally
+
+- Follow-up review fixed five concrete frontend regressions: the Coach rail no
+  longer pauses indefinitely under a resting pointer; open FAQ cards no longer
+  stretch their closed neighbors; CTA and process-card clearances are explicit;
+  Mindforge exposes Assessment Center as a fourth clickable Hero node; and the
+  therapy boundary uses a controlled two-line heading without an orphaned word.
+- Real-browser evidence at 1440 and 390 pixels: the Coach viewport moved from
+  0 to 270 pixels after 7.2 seconds with `paused=false`; the open FAQ measured
+  214 pixels while its closed neighbor remained 98 pixels; process clearance is
+  30 pixels; CTA clearance is 20 pixels; four Mindforge nodes have zero
+  collisions and no tested page has horizontal overflow.
+- Manuel explicitly authorized commit, push and review deployment after these
+  corrections. Production infrastructure, direct form delivery, calendar
+  implementation and real-data use remain outside that authorization.
+- Reviewed only the explicitly authorized `Quellen/27.08.2026` packet; private
+  source files remain outside Git and temporary extraction is removed after QA.
+- Grouped Beratung under Mindforge, consolidated the public service navigation,
+  separated qualification-gated Supervision/Mediation and balanced the four
+  principal service cards in a 2x2 layout.
+- Refined the Living Hub: all surrounding nodes remain links, the asymmetric
+  layout has no desktop collisions, subtle node pulses respect reduced motion,
+  and Beratung replaces the former health node. The Coach rail now provides
+  previous, pause/play and next controls instead of relying on an opaque loop.
+- Updated the contact form semantics: Name, E-Mail and Thema are marked
+  required; Anliegen is optional. Direct same-origin delivery is specified in
+  `docs/requirements/public-contact-request-delivery.md` but not activated
+  without mail/privacy/abuse/operations evidence; the current mail-client
+  handoff remains honestly described.
+- Expanded the future-system backlog for rolling three-month Coach
+  availability, topic/format/capacity status, non-binding seat reservations,
+  staff release, concurrent reservations and provider-neutral calendar
+  invitations. The proposed threshold 25 remains explicitly provisional.
+- Verification: Astro check/build reports 38 files with zero diagnostics and
+  28 generated pages; exact 390-pixel browser emulation shows no page overflow;
+  eight desktop Hub nodes have zero collisions; manual Coach-next changes the
+  viewport and pauses automatic movement.
+- No commit, push, deployment, direct message delivery, calendar implementation
+  or real-data use occurred. Next recommended block is stakeholder browser
+  review, followed by separately approved versioning.
+
 ## 2026-08-25 | steering/closeout | Pilot rebaselined to post-vacation October window
 
 - Manuel retired the former 2026-09-25 production deadline. The current

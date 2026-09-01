@@ -39,17 +39,11 @@ const coachPreview = coaches.map((coach) => ({
   initials: coach.initials,
 }));
 
-const coachPreviewRail = [...coachPreview, ...coachPreview].map(
-  (coach, index) => ({
-    ...coach,
-    duplicate: index >= coachPreview.length,
-  }),
-);
 ---
 
 <BaseLayout
   title="Competence Hub | Coaching für Unternehmen und Privatpersonen"
-  description="Competence Hub verbindet Unternehmen und Privatpersonen mit Mindforge Life Coaching, Businesscoaching, Recruiting und ausgewählten Coaches."
+  description="Competence Hub verbindet Unternehmen und Privatpersonen mit Mindforge Coaching und Beratung, Recruiting, Gruppenformaten und ausgewählten Coaches."
   bodyClass="home-page"
 >
   <LivingHubPrototype variant="c" prototypeMode={false}>
@@ -75,39 +69,57 @@ const coachPreviewRail = [...coachPreview, ...coachPreview].map(
             Profile mit klaren Schwerpunkten und unterschiedlichen fachlichen
             Zugängen.
           </p>
-          <button
-            class="coach-preview__toggle"
-            type="button"
-            aria-pressed="false"
-            aria-label="Coach-Laufband pausieren"
-            title="Coach-Laufband pausieren"
-            data-coach-toggle
-          >
-            <span data-coach-pause-icon><Icon name="pause" size={20} /></span>
-            <span data-coach-play-icon hidden><Icon name="play" size={20} /></span>
-          </button>
+          <div class="coach-preview__controls" role="group" aria-label="Coach-Profile steuern">
+            <button
+              class="coach-preview__control"
+              type="button"
+              aria-label="Vorheriges Coach-Profil"
+              title="Vorheriges Coach-Profil"
+              data-coach-previous
+            >
+              <span class="coach-preview__control-icon--previous">
+                <Icon name="arrow-right" size={20} />
+              </span>
+            </button>
+            <button
+              class="coach-preview__control"
+              type="button"
+              aria-pressed="false"
+              aria-label="Coach-Laufband pausieren"
+              title="Coach-Laufband pausieren"
+              data-coach-toggle
+            >
+              <span data-coach-pause-icon><Icon name="pause" size={20} /></span>
+              <span data-coach-play-icon hidden><Icon name="play" size={20} /></span>
+            </button>
+            <button
+              class="coach-preview__control"
+              type="button"
+              aria-label="Nächstes Coach-Profil"
+              title="Nächstes Coach-Profil"
+              data-coach-next
+            >
+              <Icon name="arrow-right" size={20} />
+            </button>
+          </div>
         </div>
       </div>
       <div
         class="coach-preview__carousel"
         data-coach-carousel
-        style={`--coach-duration: ${coachPreview.length * 9}s`}
       >
-        <div class="coach-preview__viewport">
+        <div class="coach-preview__viewport" data-coach-viewport>
           <div class="coach-preview__track" data-coach-track>
-        {coachPreviewRail.map((coach) => (
+        {coachPreview.map((coach) => (
           <a
             class="coach-preview__card"
             href={url(coach.href)}
-            aria-hidden={coach.duplicate ? "true" : undefined}
-            tabindex={coach.duplicate ? -1 : undefined}
-            data-coach-duplicate={coach.duplicate ? "true" : undefined}
           >
             <span class:list={["coach-preview__visual", { "coach-preview__visual--image": coach.image }]}>
               {coach.image ? (
                 <img
                   src={url(coach.image)}
-                  alt={coach.duplicate ? "" : `Porträt von ${coach.name}`}
+                  alt={`Porträt von ${coach.name}`}
                   width={coach.imageWidth ?? 830}
                   height={coach.imageHeight ?? 830}
                   loading="lazy"
@@ -160,21 +172,39 @@ const coachPreviewRail = [...coachPreview, ...coachPreview].map(
 
   carousels.forEach((carousel) => {
     const track = carousel.querySelector<HTMLElement>("[data-coach-track]");
-    const firstCard = track?.querySelector<HTMLElement>(".coach-preview__card");
-    const firstDuplicate = track?.querySelector<HTMLElement>(
-      '[data-coach-duplicate="true"]',
+    const viewport = carousel.querySelector<HTMLElement>("[data-coach-viewport]");
+    const cards = Array.from(
+      track?.querySelectorAll<HTMLElement>(".coach-preview__card") || [],
     );
-    const toggle = carousel
-      .closest(".coach-preview")
-      ?.querySelector<HTMLButtonElement>("[data-coach-toggle]");
+    const section = carousel.closest(".coach-preview");
+    const toggle = section?.querySelector<HTMLButtonElement>("[data-coach-toggle]");
+    const previous = section?.querySelector<HTMLButtonElement>("[data-coach-previous]");
+    const next = section?.querySelector<HTMLButtonElement>("[data-coach-next]");
     const pauseIcon = toggle?.querySelector<HTMLElement>("[data-coach-pause-icon]");
     const playIcon = toggle?.querySelector<HTMLElement>("[data-coach-play-icon]");
 
-    if (!track || !firstCard || !firstDuplicate || !toggle) return;
+    if (!track || !viewport || cards.length === 0 || !toggle || !previous || !next) return;
 
-    const updateShift = () => {
-      const shift = firstDuplicate.offsetLeft - firstCard.offsetLeft;
-      track.style.setProperty("--coach-shift", `${shift}px`);
+    let currentIndex = 0;
+    let autoAdvance: number | undefined;
+
+    const showCard = (target: number) => {
+      currentIndex = (target + cards.length) % cards.length;
+      viewport.scrollTo({
+        left: cards[currentIndex].offsetLeft - track.offsetLeft,
+        behavior: "smooth",
+      });
+    };
+
+    const stopAutoAdvance = () => {
+      if (autoAdvance !== undefined) window.clearInterval(autoAdvance);
+      autoAdvance = undefined;
+    };
+
+    const startAutoAdvance = () => {
+      stopAutoAdvance();
+      if (carousel.dataset.paused === "true") return;
+      autoAdvance = window.setInterval(() => showCard(currentIndex + 1), 6500);
     };
 
     const setPaused = (paused: boolean) => {
@@ -189,14 +219,31 @@ const coachPreviewRail = [...coachPreview, ...coachPreview].map(
         : "Coach-Laufband pausieren";
       if (pauseIcon) pauseIcon.hidden = paused;
       if (playIcon) playIcon.hidden = !paused;
+      paused ? stopAutoAdvance() : startAutoAdvance();
     };
 
     carousel.classList.add("is-ready");
-    requestAnimationFrame(updateShift);
-    new ResizeObserver(updateShift).observe(carousel);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setPaused(true);
+    } else {
+      setPaused(false);
+    }
 
     toggle.addEventListener("click", () => {
       setPaused(carousel.dataset.paused !== "true");
     });
+
+    previous.addEventListener("click", () => {
+      setPaused(true);
+      showCard(currentIndex - 1);
+    });
+
+    next.addEventListener("click", () => {
+      setPaused(true);
+      showCard(currentIndex + 1);
+    });
+
+    viewport.addEventListener("focusin", stopAutoAdvance);
+    viewport.addEventListener("focusout", startAutoAdvance);
   });
 </script>

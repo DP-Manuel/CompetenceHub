@@ -12,19 +12,11 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 const services = [
   {
     eyebrow: "Mindforge",
-    title: "Life Coaching, Resilienz und Mindset",
-    text: "Für persönliche Entwicklung bei Privatpersonen, Mitarbeitenden und Führungskräften.",
+    title: "Coaching und Beratung bündeln",
+    text: "Life Coaching und Business Coaching für Selbstzahlende sowie Firmencoaching und abgestimmte Beratung für Unternehmen.",
     href: "mindforge",
     id: undefined,
     icon: "sparkles" as const,
-  },
-  {
-    eyebrow: "Businesscoaching",
-    title: "Entwicklung gezielt begleiten",
-    text: "Für Führung, Zusammenarbeit und berufliche Entwicklung.",
-    href: "businesscoaching",
-    id: undefined,
-    icon: "briefcase" as const,
   },
   {
     eyebrow: "Recruiting & Personalentwicklung",
@@ -35,27 +27,27 @@ const services = [
     icon: "building" as const,
   },
   {
-    eyebrow: "Psychologische Beratung",
-    title: "Belastungen fundiert einordnen",
-    text: "Für Prävention und psychologische Fragen im beruflichen Kontext.",
-    href: "kontakt",
-    id: "gesundheit",
-    icon: "heart-pulse" as const,
-  },
-  {
-    eyebrow: "Supervision, Workshops & Vorträge",
-    title: "Teams gemeinsam weiterbringen",
-    text: "Für Reflexion, Wissenstransfer und Lernimpulse in Gruppen.",
+    eyebrow: "Workshops & Vorträge",
+    title: "Wissen gemeinsam weitergeben",
+    text: "Für Wissenstransfer, Lernimpulse und konkrete Themen in Gruppen.",
     href: "kontakt",
     id: "gruppenformate",
     icon: "users" as const,
+  },
+  {
+    eyebrow: "Supervision & Mediation",
+    title: "Zusammenarbeit professionell reflektieren",
+    text: "Supervision wird passend zum Bedarf vermittelt. Mediation folgt nur nach bestätigter Qualifikation und Verfügbarkeit im Netzwerk.",
+    href: "kontakt",
+    id: "supervision-mediation",
+    icon: "message-circle" as const,
   },
 ];
 
 const faqs = [
   {
-    question: "Was ist der Unterschied zwischen Mindforge Life Coaching und Businesscoaching?",
-    answer: "Mindforge Life Coaching richtet den Blick auf persönliche Resilienz, Mindset und Entwicklung. Businesscoaching begleitet stärker rollen-, führungs- oder organisationsbezogene Fragestellungen. Beide Formate können aufeinander aufbauen.",
+    question: "Welche Angebote bündelt Mindforge?",
+    answer: "Mindforge verbindet Life Coaching und Business Coaching für Selbstzahlende mit Firmencoaching und abgestimmter Beratung für Unternehmen. Das konkrete Angebot wird nach Zielgruppe und Anliegen eingeordnet.",
   },
   {
     question: "Können auch Privatpersonen Mindforge nutzen?",
@@ -63,7 +55,7 @@ const faqs = [
   },
   {
     question: "Wie startet eine Anfrage?",
-    answer: "Über die Kontaktseite werden Anlass, Zielgruppe, gewünschter Schwerpunkt und Zeitraum per E-Mail beschrieben. Danach wird der passende nächste Schritt gemeinsam geklärt.",
+    answer: "Über die Kontaktseite werden Anlass, Zielgruppe, gewünschter Schwerpunkt und Zeitraum beschrieben. Danach wird der passende nächste Schritt gemeinsam geklärt.",
   },
   {
     question: "Erbringt Competence Hub die Leistungen selbst?",
@@ -78,7 +70,7 @@ const faqs = [
 
 <BaseLayout
   title="Leistungen | Competence Hub"
-  description="Competence Hub verbindet Privatpersonen und Unternehmen mit Mindforge Life Coaching, Businesscoaching, Recruiting, Assessment Center, psychologischer Beratung und Gruppenformaten."
+  description="Competence Hub verbindet Privatpersonen und Unternehmen mit Mindforge Coaching und Beratung, Recruiting, Assessment Center, Supervision, Mediation und Gruppenformaten."
 >
   <main class="subpage">
     <ConnectedPageHero
@@ -92,21 +84,21 @@ const faqs = [
       related={[
         {
           label: "Mindforge",
-          detail: "Life Coaching",
+          detail: "Coaching & Beratung",
           href: "mindforge",
           icon: "sparkles",
         },
         {
-          label: "Businesscoaching",
-          detail: "Führung & Teams",
-          href: "businesscoaching",
-          icon: "leadership",
+          label: "Assessment Center",
+          detail: "Auswahl & Entwicklung",
+          href: "unternehmen#assessment-center",
+          icon: "user-round",
         },
         {
-          label: "Unternehmen",
-          detail: "Bedarf klären",
-          href: "unternehmen",
-          icon: "building",
+          label: "Workshops & Vorträge",
+          detail: "Gemeinsam lernen",
+          href: "#gruppenformate",
+          icon: "users",
         },
       ]}
     >
@@ -117,7 +109,7 @@ const faqs = [
       </div>
     </ConnectedPageHero>
 
-    <section class="offer-grid" id="angebote" aria-label="Angebotsübersicht">
+    <section class="offer-grid offer-grid--services" id="angebote" aria-label="Angebotsübersicht">
       {services.map((service) => (
         <article class="offer-card" id={service.id}>
           <span class="offer-card__icon"><Icon name={service.icon} size={30} /></span>

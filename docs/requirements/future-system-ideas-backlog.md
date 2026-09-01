@@ -1,6 +1,6 @@
 # Future System Ideas Backlog
 
-Last updated: 2026-08-25
+Last updated: 2026-09-01
 
 ## Purpose
 
@@ -17,6 +17,9 @@ The backlog preserves brainstorming input so it can later be turned into user st
 - Janay's future calendar request from 2026-08-25: confirmed appointments
   should reach Coaches in their calendar without assuming that every Coach uses
   Outlook.
+- Website and calendar workshop notes supplied on 2026-08-27: Coaches should
+  be able to publish bounded future availability and companies may reserve
+  seats before an internally approved group offer becomes binding.
 - Direction: build a simple but expandable web-based system, similar in business coverage to the old Sophisto-like administration system, but independent.
 - Reference system: `http://sophisto.de/` should be reviewed later; initial fetch attempt on 2026-06-16 timed out.
 
@@ -175,6 +178,33 @@ Current pain point from the old workflow: participants must be created, booked i
   support ownership are approved. A non-Outlook path must remain available.
 - IDEA-COACH-011: Availability/free-busy synchronization is a separate discovery
   item and is not implied by sending an appointment invitation.
+- IDEA-COACH-012: A Coach should be able to publish selected availability for
+  no more than a configurable rolling planning window, initially proposed as
+  three months.
+- IDEA-COACH-013: Availability must distinguish topic, format, date/time,
+  capacity and lifecycle status; topic colors may support scanning but may not
+  be the only way information is conveyed.
+- IDEA-COACH-014: Companies should be able to reserve a bounded number of
+  places for a visible group opportunity without the reservation immediately
+  becoming a binding booking.
+- IDEA-COACH-015: The initially proposed minimum group size of 25 is a business
+  rule requiring Product-Owner and contract confirmation, not a universal
+  hard-coded threshold.
+- IDEA-COACH-016: Reaching the approved reservation threshold should notify
+  authorized internal staff. Only authorized staff may release the opportunity
+  for binding booking.
+- IDEA-COACH-017: The lifecycle should at least distinguish draft, visible for
+  reservation, threshold reached, internally approved/bookable, full,
+  cancelled and completed. Exact transitions and actors require approval.
+- IDEA-COACH-018: Capacity changes, parallel reservations, expiry, cancellation,
+  waiting lists and overbooking prevention must be defined before
+  implementation.
+- IDEA-COACH-019: Public availability must expose no private Coach calendar
+  detail or customer identity. Only explicitly released slots and approved
+  offer information may leave the authenticated system.
+- IDEA-COACH-020: Calendar invitation delivery for a confirmed assignment and
+  public reservation/booking availability are separate increments with
+  separate security, privacy and acceptance gates.
 
 Future acceptance evidence for the first calendar-delivery increment:
 
@@ -186,6 +216,20 @@ Future acceptance evidence for the first calendar-delivery increment:
 - The invitation contains no internal notes or unnecessary personal data.
 - Delivery failure is visible to authorized staff and does not silently mark an
   appointment as delivered.
+
+Future acceptance evidence for availability and group reservation:
+
+- A Coach can release, revise and withdraw a synthetic slot inside the approved
+  planning window without exposing unrelated calendar entries.
+- Topic, availability and status remain understandable without relying on
+  color alone and work by keyboard and on a 390-pixel viewport.
+- Concurrent synthetic reservations cannot exceed capacity.
+- Reaching the configured threshold creates one internal notification and does
+  not make the offer binding automatically.
+- Only an authorized internal role can change a threshold-reached opportunity
+  to bookable; the transition is audit-visible.
+- Cancellation, expiry and capacity reduction follow approved rules and leave
+  no orphaned reservation or invitation.
 
 ### Participant App Track
 

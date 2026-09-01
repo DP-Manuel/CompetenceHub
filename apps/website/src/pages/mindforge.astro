@@ -95,13 +95,13 @@ const businessOffers = [
 
 <BaseLayout
   title="Mindforge Coaching | Competence Hub"
-  description="Mindforge bündelt im Competence Hub Life Coaching und Businesscoaching für persönliche, berufliche und organisationale Entwicklung."
+  description="Mindforge bündelt im Competence Hub Life Coaching und Business Coaching für Selbstzahlende sowie Firmencoaching und Beratung für Unternehmen."
 >
   <main class="subpage mindforge-page">
     <ConnectedPageHero
       eyebrow="Mindforge im Competence Hub"
       title="Mental stark. Resilient. Bereit für Entwicklung."
-      lead="Life Coaching und Businesscoaching für Menschen, die Belastungen besser einordnen, Handlungsspielräume erweitern und persönliche oder berufliche Entwicklung wirksam gestalten möchten."
+      lead="Life Coaching und Business Coaching für Selbstzahlende sowie Firmencoaching und Beratung für Unternehmen, die Entwicklung wirksam gestalten möchten."
       centerLabel="Mindforge"
       centerDetail="Life & Business Coaching"
       centerIcon="sparkles"
@@ -120,10 +120,16 @@ const businessOffers = [
           icon: "building",
         },
         {
-          label: "Businesscoaching",
-          detail: "Führung & Organisation",
-          href: "businesscoaching",
-          icon: "leadership",
+          label: "Beratung",
+          detail: "Orientierung & Klärung",
+          href: "#beratung",
+          icon: "message-circle",
+        },
+        {
+          label: "Assessment Center",
+          detail: "Auswahl & Entwicklung",
+          href: "unternehmen#assessment-center",
+          icon: "user-round",
         },
       ]}
     >
@@ -145,13 +151,30 @@ const businessOffers = [
     </ConnectedPageHero>
 
     <section class="mindforge-intro" aria-labelledby="mindforge-philosophy-title">
-      <p class="eyebrow">Die Idee</p>
+      <p class="eyebrow">Mindforge-Ansatz</p>
       <h2 id="mindforge-philosophy-title">Entwicklung beginnt mit einem klaren Blick auf die eigene Situation.</h2>
       <p>
         Mindforge verbindet fundierte Reflexion mit alltagstauglichen
         Methoden. Im Mittelpunkt stehen nicht fertige Standards, sondern die
         Person, ihr Anliegen und der Rahmen, in dem Veränderung gelingen soll.
       </p>
+    </section>
+
+    <section class="assessment-bridge" id="beratung" aria-labelledby="mindforge-consulting-title">
+      <div>
+        <p class="eyebrow">Beratung unter Mindforge</p>
+        <h2 id="mindforge-consulting-title">Orientierung, wenn Coaching allein nicht die ganze Frage abbildet</h2>
+      </div>
+      <div>
+        <p>
+          Beratungsanteile werden unter Mindforge eingeordnet, wenn neben der
+          persönlichen Reflexion auch fachliche Orientierung, eine
+          Standortbestimmung oder die Klärung des passenden Vorgehens gefragt
+          ist. Inhalt und verantwortliche Expertise werden vorab transparent
+          abgestimmt.
+        </p>
+        <a class="text-link" href={url("kontakt")}>Beratungsbedarf einordnen</a>
+      </div>
     </section>
 
     <section class="feature-grid mindforge-formats" aria-label="Durchführungsformate">
@@ -192,8 +215,8 @@ const businessOffers = [
     <section class="pricing-group" id="privatpersonen" aria-labelledby="private-pricing-title">
       <div class="pricing-group__heading">
         <div>
-          <p class="eyebrow">Mindforge für Privatpersonen</p>
-          <h2 id="private-pricing-title">Klarer Rahmen für persönliche Entwicklung</h2>
+          <p class="eyebrow">Mindforge für Selbstzahlende</p>
+          <h2 id="private-pricing-title">Life und Business Coaching für persönliche Entwicklung</h2>
         </div>
         <p>Alle Preise für Privatpersonen verstehen sich inklusive Mehrwertsteuer.</p>
       </div>
@@ -213,8 +236,8 @@ const businessOffers = [
     <section class="pricing-group pricing-group--business" id="unternehmen" aria-labelledby="business-pricing-title">
       <div class="pricing-group__heading">
         <div>
-          <p class="eyebrow">Mindforge für Unternehmen</p>
-          <h2 id="business-pricing-title">Resilienz und Entwicklung verlässlich begleiten</h2>
+          <p class="eyebrow">Firmencoaching für Unternehmen</p>
+          <h2 id="business-pricing-title">Resilienz, Führung und Entwicklung verlässlich begleiten</h2>
         </div>
         <p>Alle Preise für Unternehmen verstehen sich zuzüglich Mehrwertsteuer.</p>
       </div>
@@ -252,7 +275,10 @@ const businessOffers = [
     <section class="notice-panel">
       <div>
         <p class="eyebrow">Klare Grenze</p>
-        <h2>Life Coaching ist kein Therapieangebot</h2>
+        <h2>
+          Life Coaching ist
+          <span class="notice-panel__line">kein Therapieangebot</span>
+        </h2>
       </div>
       <p>
         Mindforge unterstützt persönliche und berufliche Entwicklung. Das
@@ -264,7 +290,7 @@ const businessOffers = [
     <section class="cta-panel">
       <div>
         <p class="eyebrow">Unverbindlich starten</p>
-        <h2>Welcher Rahmen passt zu Ihrem Anliegen?</h2>
+        <h2>Welches Angebot passt zu Ihrem Anliegen?</h2>
         <p>Im kostenfreien Erstgespräch klären wir Chemie, Ziel und nächsten Schritt.</p>
       </div>
       <a class="button" href={url("kontakt")}>Erstgespräch anfragen</a>

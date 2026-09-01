@@ -583,16 +583,15 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: turn the accepted synthetic same-origin portal into a
-reversible production-shaped pilot package while keeping accounts, real data
-and public activation behind explicit gates. API, database, browser acceptance
-and source versioning are complete. Website release metadata/artifacts and
-initial API/Nginx templates are prepared; the synthetic onboarding and
-deployable runtime rehearsal and secret-free backup/restore package are
-complete, and SB-23 has native exact-copy evidence. No implementation slice is
-currently doing. The temporary export cleanup is complete. EXT-01 remains
-parallel; the first fully satisfied infrastructure gate determines the next
-bounded block.
+Current sprint goal: keep the accepted synthetic same-origin portal reversible
+and production-shaped while incorporating approved public-website feedback as
+a separate bounded slice. API, database, browser acceptance, release packaging
+and external-copy restore evidence are complete. SB-24 consolidates the
+27.08 website feedback locally; direct contact delivery, calendar availability
+and seat reservations remain separately gated. No implementation slice is
+currently doing. EXT-01 remains parallel; the first fully satisfied
+infrastructure or stakeholder-acceptance gate determines the next bounded
+block.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -619,29 +618,33 @@ bounded block.
 | SB-21 | Done locally | Prepare secret-free PostgreSQL backup, retention, monitoring and external-restore rehearsal package | no production change; no real data; external Wuerzburg target may remain unavailable | encrypted daily/monthly backup, local monitor, guarded Windows pull, isolated restore check, hardened systemd/config templates and runbook; 11 focused operations tests and Bash/PowerShell syntax pass; full release gate passes 298 tests with 14 expected Staging skips, packages every required file and contains no `.env`/`.tmp` entry |
 | SB-22 | Done locally | Prepare a guarded Website SFTP release, remote-backup and rollback rehearsal package | existing static release builder; no credentials in Git; no upload or deployment approval | secret-free target contract, local preparer and runbook; checksum/archive, host-key and verified remote-root guards; mandatory backup-before-replace plus smoke/rollback gates; 17 focused operations/SFTP tests, PowerShell parser, 38-file/28-page Astro build and full 304-pass/14-skip release gate green |
 | SB-23 | Done | Prove encrypted external copy and isolated restore from that exact copy | D+P-controlled encrypted target, workstation-only private key, synthetic data and rehearsal approval | backup and corrected monitor green; guarded `D:` copy hash-verified; digest-pinned networkless PostgreSQL 16 restored 24 tables twice; reusable guarded script 12/12; zero container/plaintext residue; four VPS services active |
+| SB-24 | Done locally, review deployment authorized | Consolidate approved 27.08 public-website feedback without expanding backend scope | authorized source packet; existing content/rights rules; no direct form endpoint or calendar implementation | Mindforge now contains Coaching and Beratung; services/navigation are consolidated; four cards use a balanced 2x2 layout; Hub nodes are clickable, non-overlapping and reduced-motion aware; Coach rail auto-runs despite pointer hover and retains manual controls; FAQ cards size independently; Mindforge exposes a fourth Assessment-Center node; spacing and controlled line breaks pass desktop/390-pixel browser QA; Astro check/build pass |
 
 The refreshed technical-readiness block is complete from clean commit
 `70e92ba`: 305 Webapp tests pass with 14 expected Staging skips, the 33-entry
 release ZIP includes the restore tool and no `.env`/`.tmp`, and the Website
 passes a 38-file check plus 28-page build. No implementation slice is doing.
-Recommended next block: read-only SFTP inventory only after trusted host-key
-evidence or an explicitly accepted trust procedure. EXT-01 host-specific
-validation remains waiting until at least 2026-09-14. New approved frontend or
-content feedback may form a separate bounded workstream while those gates wait.
+Recommended next block: publish the explicitly authorized SB-24 GitHub-Pages
+review checkpoint, verify its review URL and record the evidence. Then prepare the read-only
+SFTP inventory only after trusted host-key evidence or an explicitly accepted
+trust procedure. EXT-01 host-specific validation remains waiting until at
+least 2026-09-14. No direct form delivery, calendar booking, deployment or
+real-data use on production infrastructure is authorized by SB-24.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
 
-### Rolling Delivery Horizon (6 Steps)
+### Rolling Delivery Horizon (7 Steps)
 
 | # | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- |
-| 1 | High | Confirm the exact Website SFTP target without changing it and generate the pinned local rehearsal package | explicit read-only connection approval; trusted host-key source or accepted trust procedure; SB-22 | host-key match, `pwd`/complete inventory, target-contract validation and locally verified clean artifact |
-| 2 | High | Render and validate App-DNS, TLS, reverse-proxy and SMTP configuration | EXT-01 not expected before 2026-09-14; Thomas production path; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender and no shared login |
-| 3 | Medium-high | Pull the next approved frontend/content increment while infrastructure waits | new stakeholder feedback or approved content; separate workstream | mobile/accessibility/SEO build evidence and no production-gate regression |
-| 4 | Medium-high | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 1-3; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
-| 5 | Medium-low | Create named accounts and run supervised acceptance | Steps 1-4; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |
-| 6 | Low | Close Legal/Go-No-Go and release the narrow pilot on the replacement production date | EXT-02 through EXT-06; confirmed rebaseline; all real-data and production gates | signed gate matrix, production smoke, backup evidence, first approved company and rollback readiness |
+| 1 | High | Review and accept the bounded 27.08 website increment | SB-24 local preview; stakeholder content/visual acceptance | desktop and 390-pixel walkthrough, Hub/Coach-control interaction, contact-field review and recorded acceptance findings |
+| 2 | High | Version the accepted website increment and confirm a clean reproducible artifact | Step 1; explicit commit/push approval; no deployment implication | reviewed diff, Astro check/build, clean Git scope and remote commit evidence |
+| 3 | High | Confirm the exact Website SFTP target without changing it | explicit read-only connection approval; trusted host-key source or accepted trust procedure; SB-22 | host-key match, `pwd`/complete inventory and target-contract validation |
+| 4 | Medium-high | Render and validate App-DNS, TLS, reverse-proxy, SMTP and direct-contact delivery configuration | EXT-01 not expected before 2026-09-14; G-CONTACT; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender, anti-spam path and synthetic contact delivery |
+| 5 | Medium | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 2-4; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
+| 6 | Medium-low | Create named accounts and run supervised acceptance | Steps 1-5; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |
+| 7 | Low | Close Legal/Go-No-Go and release the narrow pilot on the confirmed replacement date | EXT-02 through EXT-06; all real-data and production gates | signed gate matrix, production smoke, backup evidence, first approved company and rollback readiness |
 
 ### Cross-Cutting Gates
 
@@ -661,6 +664,15 @@ progress in parallel but do not silently expand the execution backlog.
 - **G-CONTENT:** public Coach/topic changes require factual, qualification,
   portrait/rights and publication approval; Mediation remains qualification-
   gated.
+- **G-CONTACT:** replace the current local-mail-client handoff only after the
+  receiving mailbox, sender/SMTP or API path, privacy text, retention, abuse
+  protection, error behavior, monitoring and synthetic end-to-end delivery are
+  approved and tested. Required fields must stay minimal and transparent.
+- **G-CALENDAR:** Coach availability and seat reservations require an approved
+  topic taxonomy, capacity/threshold rules, reservation expiry/cancellation,
+  role permissions, concurrency behavior, notification ownership and privacy
+  model before implementation. The proposed minimum group size of 25 is not a
+  fixed business rule until confirmed.
 - **G-READY-28:** the 2026-08-28 readiness checkpoint requires versioned,
   tested and rollback-ready Website/Portal packages plus an explicit matrix of
   remaining DNS, SMTP, backup, Legal, account and Go/No-Go gates. Deployment,
@@ -681,14 +693,17 @@ progress in parallel but do not silently expand the execution backlog.
 - Role-scoped dashboards and reporting formulas after Product-Owner approval.
 - Contract, invoice, document and mobile/PWA slices as independent epics with
   their own privacy, security and operational gates.
-- Provider-neutral Coach appointment delivery as a later calendar epic: begin
-  with standards-compliant `.ics` invitations for Outlook and non-Outlook
-  clients; treat direct Microsoft Graph synchronization and availability lookup
-  as separately gated later integrations. Required decisions include the
-  appointment source of truth, organizer/sender, update/cancellation semantics,
-  time zones, minimum disclosed data, delivery monitoring and integration
-  ownership. Evidence must cover Outlook plus one non-Outlook client, stable
-  event updates/cancellations, time-zone correctness and data minimization.
+- Provider-neutral Coach calendar as a later portal epic: Coaches publish a
+  rolling three-month availability window with topic, format, capacity and
+  status; companies may place non-binding seat reservations; staff are notified
+  when an approved threshold is reached and alone may release a binding offer
+  or booking. Status must never be conveyed by color alone. Begin confirmed
+  appointment delivery with standards-compliant `.ics` invitations for Outlook
+  and non-Outlook clients; treat direct Microsoft Graph synchronization and
+  free/busy lookup as separately gated integrations. Evidence must cover role
+  boundaries, concurrent reservations, expiry/cancellation/wait-list behavior,
+  threshold notification, Outlook plus one non-Outlook client, stable event
+  updates/cancellations, time-zone correctness and data minimization.
 - SEO/GEO content inventory and evidence matrix remain a connected but separate
   public-website workstream.
 
@@ -702,7 +717,7 @@ separate gated actions.
 
 ## Restart Note
 
-Prepared on: 2026-08-25
+Prepared on: 2026-09-01
 
 - Canonical `main`: `ea276b9`; accepted cutline, ADR 0006, same-origin portal,
   browser harness, clean release evidence and SB-23 restore evidence are
@@ -712,8 +727,10 @@ Prepared on: 2026-08-25
   files without diagnostics and 28 built pages. The local browser runner and
   temporary VPS export are stopped/removed; the exact encrypted `D:` copy is
   retained.
-- No persistent service, account, deployment or real data exists. Continue with
-  trusted read-only SFTP inventory or the first newly satisfied activation gate.
+- No persistent service, account, deployment or real data exists. SB-24 is a
+  local public-website increment awaiting stakeholder review and separate
+  versioning approval. Continue with that review, then trusted read-only SFTP
+  inventory or the first newly satisfied activation gate.
 
 Resume here:
 
@@ -758,6 +775,12 @@ Resume here:
 - Which content maintenance model should support the non-technical colleague: developer-led Astro edits, Astro plus CMS/API, WordPress, or later webapp-fed content?
 - Are the workshop prices 850/680 EUR per person or per event, and do they include VAT, room, and catering?
 - Is the 200 EUR talk price per participant, and is the minimum group size of 25 binding?
+- For Coach availability, is 25 a minimum group size, a notification threshold
+  or a format-specific capacity, and who may override it?
+- How long may a non-binding seat reservation remain active, which party may
+  cancel it, and when does a wait list begin?
+- Which mailbox, sender identity, anti-spam mechanism, retention period and
+  privacy text govern direct website contact delivery?
 - Who will be long-term technical owner for GitHub, hosting, deployment, domains/subdomains, and dependency updates?
 - Which access handover documentation is required before Manuel can safely transfer technical ownership?
 - May the media designer's original seminar illustrations and logo exports be reused on the public website, and in which file formats will they be supplied?
@@ -765,6 +788,19 @@ Resume here:
 
 ## Decisions
 
+- 2026-09-01: Beratung is grouped under Mindforge together with Coaching.
+  Public top-level offers are consolidated into Mindforge, Recruiting and
+  Personalentwicklung, Workshops and Vortraege, plus separately qualified
+  Supervision and Mediation. Life and Business Coaching address self-payers;
+  Firmencoaching addresses companies.
+- 2026-09-01: Direct website contact delivery is an approved target but is not
+  active. The current mail-client handoff stays honestly labeled until
+  G-CONTACT closes; no endpoint, mailbox delivery or personal-data processing
+  is inferred from the static prototype.
+- 2026-09-01: Three-month Coach availability and hotel-style seat reservations
+  are captured as a later portal epic. The proposed threshold of 25 remains an
+  open business rule; no booking/calendar implementation is authorized by this
+  requirements decision.
 - 2026-08-25: The former 2026-09-25 production deadline is retired. Plan the
   first small controlled pilot no earlier than the second half of October after
   Manuel's return; the exact date remains subject to EDV, Legal, onboarding and

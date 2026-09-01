@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-08-25
+Last updated: 2026-09-01
 
 ## Snapshot
 
@@ -38,9 +38,19 @@ Last updated: 2026-08-25
   six Coach profiles, updated Herr T. Wegner-Ney profile, approved Frau
   Dr. Stefanie Becker profile with portrait and without customer references,
   qualification-gated
-  Mediation topic, direct E-Mail inquiry path, legal links, role-oriented login
+  Mediation topic, honest mail-client inquiry path, legal links, role-oriented login
   preview, PostgreSQL 16 staging installation, separated database roles and a
   successful synthetic local dump/restore rehearsal.
+- Done locally, GitHub-Pages review deployment authorized: the authorized 27.08 website
+  feedback is consolidated. Beratung now sits under Mindforge; public offers
+  and navigation are reduced to clearer top-level groups; the four service
+  cards form a balanced 2x2 layout; Hub nodes are clickable, spaced and gently
+  pulsing with reduced-motion support; the Coach rail has real previous/pause/
+  next controls; required contact fields are explicit and Anliegen remains
+  optional. Follow-up QA confirms independent FAQ heights, a fourth clickable
+  Assessment-Center bubble on Mindforge, 30-pixel process-card clearance and
+  automatic Coach movement even while the pointer rests over the rail. No
+  direct form endpoint or calendar booking was activated.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -89,12 +99,18 @@ Last updated: 2026-08-25
   The disposable artifact was removed.
 - Waiting: remaining profile details and rights where still open; explicit
   qualification and approval before any Coach is assigned to Mediation;
-  legal-provider decision, approval of Janay's remaining workflow gates and
-  validation of the encrypted Wuerzburg off-server backup target.
+  legal-provider decision, approval of Janay's remaining workflow gates,
+  direct-contact delivery inputs and stakeholder acceptance of SB-24. The
+  encrypted Wuerzburg off-server rehearsal itself is complete.
 - Blocked for live launch: responsible legal entity, final Datenschutz/AGB
   applicability, mailbox response/absence process, content approval and an
   explicitly scheduled production deployment.
 - Public contact decision: `competencehub@donner-partner.de`.
+- Direct-contact status: the desired same-origin form delivery is specified in
+  `docs/requirements/public-contact-request-delivery.md` but remains gated by
+  mailbox/sender routing, privacy/retention, abuse protection, monitoring and
+  synthetic end-to-end evidence. The website therefore still prepares an
+  E-Mail in the local mail client and says so explicitly.
 - Public mailbox owner: Janay Rappelt.
 - Personal portal identities: Manuel uses
   `roedel.kg@donner-partner.eu`; Janay uses
@@ -164,12 +180,14 @@ Last updated: 2026-08-25
   installable authenticated client after the Webapp core. Nothing has been
   implemented; no store or native release is decided. Website/PWA, backend API
   and PostgreSQL remain separated, with no direct client database access.
-- Deferred calendar direction: Janay requested that confirmed Coach appointments
-  reach Coaches' calendars. The provider-neutral baseline is a standards-based
-  `.ics` invitation compatible with Outlook and other common calendars. Direct
-  Microsoft Graph/Outlook synchronization and free/busy lookup remain separate
-  later integrations behind privacy, permission, token-custody and operations
-  decisions. No calendar implementation is in the current execution backlog.
+- Deferred calendar direction: Coaches should later publish rolling three-month
+  availability with topic, format, capacity and status. Companies may place
+  non-binding seat reservations; an approved threshold triggers an internal
+  notification and staff alone release a binding offer/booking. The suggested
+  value 25 is provisional. Confirmed appointments should first use provider-
+  neutral `.ics` invitations; direct Microsoft Graph/Outlook synchronization
+  remains separate. No calendar implementation is in the current execution
+  backlog.
 - Confirmed ownership: Manuel owns VPS operations, patching, monitoring,
   backups and incident response. Thomas Roß, EDV-Leiter, owns production
   approval. Separate app/API subdomains are approved in principle.
@@ -198,8 +216,11 @@ Last updated: 2026-08-25
   onboarding, off-server restore evidence and production
   rollout remain on the critical path. The post-vacation October window reduces
   immediate date pressure but does not relax any production or real-data gate.
-- Build evidence: Astro checks 38 files with 0 errors, 0 warnings and 0 hints;
-  the static build generates 28 pages, including `/ueber-uns/`.
+- Build evidence: after SB-24, Astro checks 38 files with 0 errors, 0 warnings
+  and 0 hints; the static build generates 28 pages, including `/ueber-uns/`.
+  Exact 390-pixel browser emulation finds no document overflow on homepage or
+  contact. Eight desktop Hub nodes have no geometric collisions, and the Coach
+  rail's next control advances the viewport and changes to paused state.
 - Release evidence: production and GitHub-review builds both pass. Production
   emits canonical/OG URLs, selective robots rules and a Coach-driven sitemap;
   review emits full crawler blocking and points canonicals to production. The
@@ -258,12 +279,12 @@ Last updated: 2026-08-25
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: keep implementation WIP empty until a bounded
-  gate becomes ready. First choice is a read-only SFTP inventory after trusted
-  host-key evidence or an explicitly accepted trust procedure; EXT-01 host-
-  specific DNS/TLS/Nginx/SMTP validation follows no earlier than 2026-09-14.
-  Product/frontend work may be pulled separately when new approved feedback or
-  content arrives, without weakening the production gates. The refreshed clean
+- Recommended next work block: commit and push the explicitly accepted SB-24
+  scope, run the manual crawler-blocked GitHub-Pages review deployment and
+  verify the public review URL. Afterward, the first infrastructure
+  choice remains a read-only SFTP inventory with trusted host-key evidence;
+  EXT-01 host-specific DNS/TLS/Nginx/SMTP/contact validation follows no earlier
+  than 2026-09-14. The refreshed clean
   release evidence is complete: 305 passes/14 skips, 38-file Astro check,
   28-page build and a 33-entry package without `.env`/`.tmp`. SB-23 is complete: backup, monitor,
   Guarded Pull and two restores from the exact `D:` copy passed; 24 tables were
@@ -324,15 +345,13 @@ Last updated: 2026-08-25
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) establish trusted SFTP host-key evidence and
-  perform a read-only Webroot inventory, (2) use the EDV reply to render and
-  natively validate DNS/TLS/Nginx/SMTP, (3) pull any bounded approved frontend/
-  content increment while external gates wait, (4) rehearse Website and Webapp
-  activation/rollback without real data, including production backup timer and
-  alert behavior, (5) onboard named users and run supervised acceptance,
-  (6) obtain Legal/Thomas Go/No-Go and release the narrow pilot plus first
-  approved company in the confirmed post-vacation window.
-  Confidence decreases after step 3.
+- Rolling delivery horizon: (1) stakeholder-review SB-24, (2) version the
+  accepted increment, (3) establish trusted SFTP evidence and inventory the
+  Webroot read-only, (4) use the EDV reply to validate DNS/TLS/Nginx/SMTP and
+  direct-contact delivery, (5) rehearse Website/Webapp activation and rollback
+  without real data, (6) onboard named users and run supervised acceptance,
+  (7) obtain Legal/Thomas Go/No-Go and release the narrow pilot plus first
+  approved company. Confidence decreases after step 4.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.
 
@@ -370,6 +389,10 @@ Last updated: 2026-08-25
 - Which real references, examples, numbers or quotes may be published?
 - Which long-term editorial workflow and technical owner maintain the Astro
   website?
+- Which sender/mailbox, retention, privacy text and anti-spam control govern
+  direct contact-form delivery?
+- Which availability topics, capacities, reservation expiry/cancellation rules
+  and staff threshold govern the later Coach calendar?
 
 ## Restart Handoff
 

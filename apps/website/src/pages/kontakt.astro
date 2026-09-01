@@ -10,10 +10,12 @@ const fallbackMailto = `mailto:${primaryEmail}?subject=${fallbackSubject}`;
 const topics = [
   "Mindforge für Privatpersonen",
   "Mindforge für Unternehmen",
-  "Businesscoaching",
+  "Life oder Business Coaching für Selbstzahlende",
+  "Firmencoaching",
+  "Beratung",
   "Assessment Center",
-  "Psychologische Beratung & Prävention",
-  "Supervision, Workshop oder Vortrag",
+  "Supervision oder Mediation",
+  "Workshop oder Vortrag",
   "Recruiting & Personalentwicklung",
   "Coach-Auswahl",
   "Noch nicht sicher",
@@ -22,7 +24,7 @@ const topics = [
 
 <BaseLayout
   title="Kontakt und Anfrage | Competence Hub"
-  description="Kontakt zu Competence Hub für Mindforge Life Coaching, Businesscoaching, Assessment Center und Coaching-Anfragen von Unternehmen oder Privatpersonen."
+  description="Kontakt zu Competence Hub für Mindforge Coaching und Beratung, Firmencoaching, Assessment Center und Anfragen von Unternehmen oder Privatpersonen."
 >
   <main class="subpage">
     <section class="contact-page">
@@ -60,25 +62,26 @@ const topics = [
         <div class="contact-form__heading contact-form__wide">
           <p class="eyebrow">Anfrage vorbereiten</p>
           <h2>Worum geht es?</h2>
+          <p class="contact-form__required-note"><span aria-hidden="true">*</span> Pflichtfeld</p>
         </div>
 
         <label>
-          Unternehmen <small>(optional)</small>
+          <span>Unternehmen <small>(optional)</small></span>
           <input name="company" autocomplete="organization" />
         </label>
 
         <label>
-          Name
+          <span>Name <span class="required-marker" aria-hidden="true">*</span></span>
           <input name="contact" autocomplete="name" required />
         </label>
 
         <label class="contact-form__wide">
-          E-Mail-Adresse
+          <span>E-Mail-Adresse <span class="required-marker" aria-hidden="true">*</span></span>
           <input name="email" type="email" autocomplete="email" required />
         </label>
 
         <label class="contact-form__wide">
-          Thema
+          <span>Thema <span class="required-marker" aria-hidden="true">*</span></span>
           <select name="topic" required>
             <option value="">Bitte auswählen</option>
             {topics.map((topic) => <option value={topic}>{topic}</option>)}
@@ -86,20 +89,20 @@ const topics = [
         </label>
 
         <label class="contact-form__wide">
-          Anliegen
+          <span>Anliegen <small>(optional)</small></span>
           <textarea
             name="message"
             rows="5"
             placeholder="Situation, Zielgruppe und gewünschter Zeitraum"
-            required
           ></textarea>
         </label>
 
         <button class="button contact-form__wide" type="submit">
-          E-Mail-Anfrage vorbereiten
+          Anfrage vorbereiten
         </button>
         <p class="form-note contact-form__wide">
-          Der Button öffnet Ihr E-Mail-Programm. Die Website speichert keine Formulardaten.
+          Bis die sichere Direktübermittlung freigegeben ist, öffnet der Button
+          Ihr E-Mail-Programm. Die Website speichert keine Formulardaten.
         </p>
       </form>
     </section>

@@ -26,7 +26,7 @@ interface Props {
   centerLabel: string;
   centerDetail: string;
   centerIcon: IconName;
-  related: [RelatedNode, RelatedNode, RelatedNode];
+  related: RelatedNode[];
   titleId: string;
 }
 
@@ -47,15 +47,25 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 const url = (path = "") =>
   path.startsWith("#") ? path : `${base}${path.replace(/^\//, "")}`;
 
-const paths = [
-  "M260 260 L260 72",
-  "M260 260 L442 270",
-  "M260 260 L145 420",
-];
+const paths = related.length === 4
+  ? [
+      "M260 260 L260 72",
+      "M260 260 L448 260",
+      "M260 260 L260 448",
+      "M260 260 L72 260",
+    ]
+  : [
+      "M260 260 L260 72",
+      "M260 260 L442 270",
+      "M260 260 L145 420",
+    ];
 ---
 
 <section
-  class="connected-page-hero"
+  class:list={[
+    "connected-page-hero",
+    { "connected-page-hero--4-nodes": related.length === 4 },
+  ]}
   data-connected-page-hero
   aria-labelledby={titleId}
 >
@@ -68,7 +78,7 @@ const paths = [
 
   <div class="connected-page-hero__visual">
     <p class="visually-hidden" id={`${titleId}-connections`}>
-      Der aktuelle Bereich ist mit drei passenden nächsten Wegen verbunden.
+      Der aktuelle Bereich ist mit {related.length} passenden nächsten Wegen verbunden.
       Die Außenknoten führen direkt zum jeweiligen Angebot oder Abschnitt.
     </p>
 
