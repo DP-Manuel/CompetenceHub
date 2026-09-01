@@ -2,6 +2,21 @@
 
 Newest entries first.
 
+## 2026-09-01 | release/deployment | SB-24 review published and verified
+
+- Committed the approved website, requirements and project-state scope as
+  `82c192b` (`Refine website feedback and Mindforge navigation`) and pushed it
+  to `origin/main` without including `Quellen`, credentials or temporary QA.
+- Manually triggered the crawler-blocked GitHub-Pages review workflow. Actions
+  run `33502638029` completed both build and deployment successfully.
+- Public verification: `/`, `/mindforge/` and `/leistungen/` return HTTP 200;
+  each retains `noindex, nofollow, noarchive`; Mindforge contains the published
+  Assessment-Center link. Pushes remain non-deploying by default.
+- This is a review deployment only. IONOS production, direct contact delivery,
+  calendar implementation, accounts and real data remain separately gated.
+- Next recommended block: trusted read-only SFTP Webroot inventory, followed by
+  host-specific EDV configuration no earlier than the expected 2026-09-14 input.
+
 ## 2026-09-01 | frontend/requirements/steering | Feedback packet 27.08 consolidated locally
 
 - Follow-up review fixed five concrete frontend regressions: the Coach rail no

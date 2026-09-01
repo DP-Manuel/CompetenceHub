@@ -41,7 +41,7 @@ Last updated: 2026-09-01
   Mediation topic, honest mail-client inquiry path, legal links, role-oriented login
   preview, PostgreSQL 16 staging installation, separated database roles and a
   successful synthetic local dump/restore rehearsal.
-- Done locally, GitHub-Pages review deployment authorized: the authorized 27.08 website
+- Done and GitHub-Pages review deployed: the authorized 27.08 website
   feedback is consolidated. Beratung now sits under Mindforge; public offers
   and navigation are reduced to clearer top-level groups; the four service
   cards form a balanced 2x2 layout; Hub nodes are clickable, spaced and gently
@@ -122,11 +122,12 @@ Last updated: 2026-09-01
   sender/routing request was sent to EDV on 2026-08-21; its answer remains open.
 - Legal contact: Lars Donner; the concrete operating company, contract/invoice
   details and final Impressum are still pending.
-- Deployment status: GitHub-Pages review commit `19a6f49` was manually
-  published successfully through Actions run `31172489046` and is available at
+- Deployment status: SB-24 feature commit `82c192b` was pushed and manually
+  published successfully through Actions run `33502638029`; the review is available at
   `https://dp-manuel.github.io/CompetenceHub/`. Homepage and `/ueber-uns/`
-  return HTTP 200. The review banner and `noindex, nofollow, noarchive` remain
-  active. Pushes still do not deploy automatically.
+  as well as `/mindforge/` and `/leistungen/` return HTTP 200. The review banner
+  and `noindex, nofollow, noarchive` remain active; the published Mindforge page
+  contains the Assessment-Center link. Pushes still do not deploy automatically.
 - Hosting status: EDV confirmed the IONOS webspace as production hosting for
   static/PHP files. Both Competence-Hub subdomains point there and are covered
   by wildcard TLS. Permanent Node/Python services are not possible.
@@ -279,10 +280,8 @@ Last updated: 2026-09-01
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: commit and push the explicitly accepted SB-24
-  scope, run the manual crawler-blocked GitHub-Pages review deployment and
-  verify the public review URL. Afterward, the first infrastructure
-  choice remains a read-only SFTP inventory with trusted host-key evidence;
+- Recommended next work block: the first infrastructure choice is now a
+  read-only SFTP inventory with trusted host-key evidence;
   EXT-01 host-specific DNS/TLS/Nginx/SMTP/contact validation follows no earlier
   than 2026-09-14. The refreshed clean
   release evidence is complete: 305 passes/14 skips, 38-file Astro check,
@@ -345,13 +344,13 @@ Last updated: 2026-09-01
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) stakeholder-review SB-24, (2) version the
-  accepted increment, (3) establish trusted SFTP evidence and inventory the
-  Webroot read-only, (4) use the EDV reply to validate DNS/TLS/Nginx/SMTP and
-  direct-contact delivery, (5) rehearse Website/Webapp activation and rollback
-  without real data, (6) onboard named users and run supervised acceptance,
-  (7) obtain Legal/Thomas Go/No-Go and release the narrow pilot plus first
-  approved company. Confidence decreases after step 4.
+- Rolling delivery horizon: (1) establish trusted SFTP evidence and inventory
+  the Webroot read-only, (2) use the EDV reply to validate DNS/TLS/Nginx/SMTP
+  and direct-contact delivery, (3) rehearse Website/Webapp activation and
+  rollback without real data, (4) implement and prove direct contact or retain
+  the honest fallback, (5) onboard named users and run supervised acceptance,
+  (6) obtain Legal/Thomas Go/No-Go and release the narrow pilot plus first
+  approved company. Confidence decreases after step 3.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.
 

@@ -618,33 +618,31 @@ block.
 | SB-21 | Done locally | Prepare secret-free PostgreSQL backup, retention, monitoring and external-restore rehearsal package | no production change; no real data; external Wuerzburg target may remain unavailable | encrypted daily/monthly backup, local monitor, guarded Windows pull, isolated restore check, hardened systemd/config templates and runbook; 11 focused operations tests and Bash/PowerShell syntax pass; full release gate passes 298 tests with 14 expected Staging skips, packages every required file and contains no `.env`/`.tmp` entry |
 | SB-22 | Done locally | Prepare a guarded Website SFTP release, remote-backup and rollback rehearsal package | existing static release builder; no credentials in Git; no upload or deployment approval | secret-free target contract, local preparer and runbook; checksum/archive, host-key and verified remote-root guards; mandatory backup-before-replace plus smoke/rollback gates; 17 focused operations/SFTP tests, PowerShell parser, 38-file/28-page Astro build and full 304-pass/14-skip release gate green |
 | SB-23 | Done | Prove encrypted external copy and isolated restore from that exact copy | D+P-controlled encrypted target, workstation-only private key, synthetic data and rehearsal approval | backup and corrected monitor green; guarded `D:` copy hash-verified; digest-pinned networkless PostgreSQL 16 restored 24 tables twice; reusable guarded script 12/12; zero container/plaintext residue; four VPS services active |
-| SB-24 | Done locally, review deployment authorized | Consolidate approved 27.08 public-website feedback without expanding backend scope | authorized source packet; existing content/rights rules; no direct form endpoint or calendar implementation | Mindforge now contains Coaching and Beratung; services/navigation are consolidated; four cards use a balanced 2x2 layout; Hub nodes are clickable, non-overlapping and reduced-motion aware; Coach rail auto-runs despite pointer hover and retains manual controls; FAQ cards size independently; Mindforge exposes a fourth Assessment-Center node; spacing and controlled line breaks pass desktop/390-pixel browser QA; Astro check/build pass |
+| SB-24 | Done and review deployed | Consolidate approved 27.08 public-website feedback without expanding backend scope | authorized source packet; existing content/rights rules; no direct form endpoint or calendar implementation | Mindforge now contains Coaching and Beratung; services/navigation are consolidated; Coach rail auto-runs despite pointer hover and retains manual controls; FAQ cards size independently; Mindforge exposes a fourth Assessment-Center node; spacing, desktop/390-pixel browser QA and Astro build pass; feature commit `82c192b` pushed; manual review workflow `33502638029` green; public review pages HTTP 200 and crawler-blocked |
 
 The refreshed technical-readiness block is complete from clean commit
 `70e92ba`: 305 Webapp tests pass with 14 expected Staging skips, the 33-entry
 release ZIP includes the restore tool and no `.env`/`.tmp`, and the Website
 passes a 38-file check plus 28-page build. No implementation slice is doing.
-Recommended next block: publish the explicitly authorized SB-24 GitHub-Pages
-review checkpoint, verify its review URL and record the evidence. Then prepare the read-only
-SFTP inventory only after trusted host-key evidence or an explicitly accepted
-trust procedure. EXT-01 host-specific validation remains waiting until at
-least 2026-09-14. No direct form delivery, calendar booking, deployment or
-real-data use on production infrastructure is authorized by SB-24.
+Recommended next block: prepare the read-only SFTP inventory only after trusted
+host-key evidence or an explicitly accepted trust procedure. EXT-01 host-
+specific validation remains waiting until at least 2026-09-14. No direct form
+delivery, calendar booking, production deployment or real-data use is
+authorized by SB-24.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
 
-### Rolling Delivery Horizon (7 Steps)
+### Rolling Delivery Horizon (6 Steps)
 
 | # | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- |
-| 1 | High | Review and accept the bounded 27.08 website increment | SB-24 local preview; stakeholder content/visual acceptance | desktop and 390-pixel walkthrough, Hub/Coach-control interaction, contact-field review and recorded acceptance findings |
-| 2 | High | Version the accepted website increment and confirm a clean reproducible artifact | Step 1; explicit commit/push approval; no deployment implication | reviewed diff, Astro check/build, clean Git scope and remote commit evidence |
-| 3 | High | Confirm the exact Website SFTP target without changing it | explicit read-only connection approval; trusted host-key source or accepted trust procedure; SB-22 | host-key match, `pwd`/complete inventory and target-contract validation |
-| 4 | Medium-high | Render and validate App-DNS, TLS, reverse-proxy, SMTP and direct-contact delivery configuration | EXT-01 not expected before 2026-09-14; G-CONTACT; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender, anti-spam path and synthetic contact delivery |
-| 5 | Medium | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 2-4; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
-| 6 | Medium-low | Create named accounts and run supervised acceptance | Steps 1-5; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |
-| 7 | Low | Close Legal/Go-No-Go and release the narrow pilot on the confirmed replacement date | EXT-02 through EXT-06; all real-data and production gates | signed gate matrix, production smoke, backup evidence, first approved company and rollback readiness |
+| 1 | High | Confirm the exact Website SFTP target without changing it | explicit read-only connection approval; trusted host-key source or accepted trust procedure; SB-22 | host-key match, `pwd`/complete inventory and target-contract validation |
+| 2 | High | Render and validate App-DNS, TLS, reverse-proxy, SMTP and direct-contact delivery configuration | EXT-01 not expected before 2026-09-14; G-CONTACT; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender, anti-spam path and synthetic contact delivery |
+| 3 | Medium-high | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 1-2; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
+| 4 | Medium | Close the bounded direct-contact increment or retain the honest mail-client fallback | Step 2; privacy, retention, abuse and operations approval | negative validation tests, synthetic delivery/failure evidence, accessibility and rollback or documented defer decision |
+| 5 | Medium-low | Create named accounts and run supervised acceptance | Steps 1-4; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |
+| 6 | Low | Close Legal/Go-No-Go and release the narrow pilot on the confirmed replacement date | EXT-02 through EXT-06; all real-data and production gates | signed gate matrix, production smoke, backup evidence, first approved company and rollback readiness |
 
 ### Cross-Cutting Gates
 
