@@ -2,6 +2,35 @@
 
 Newest entries first.
 
+## 2026-09-03 | frontend/content | Use-case routes and first customer voice prepared
+
+- Re-read only the explicitly authorized `Quellen/14.08.2026` folder. Janay's
+  process feedback remains the internal journey source; the newly supplied
+  Concept Clean document provides the first concrete customer feedback.
+- Added two stories to `/unternehmen`: a clearly labelled illustrative
+  leadership journey and a source-bounded Concept Clean communication-course
+  journey. Both use an alternating five-step route on desktop and a linear
+  ordered route on mobile.
+- Preserved the Concept Clean quotation while adding no unsupported customer,
+  result, price, participant, timing or service-level claim. The illustrative
+  draft's 48-hour commitment, package/session details, click acceptance, 5/5
+  rating and promised improvements were deliberately excluded.
+- Added the durable content/evidence note
+  `docs/requirements/public-use-cases-and-customer-voice-2026-09-03.md`.
+  The embedded customer logo was not copied. Production publication of the
+  company name and quotation remains `G-CONTENT`-gated until customer-side
+  release evidence is retained.
+- Verification: Astro checks 39 files with zero errors, warnings or hints and
+  builds 29 pages. Desktop screenshots show the intended winding route. An
+  exact Edge DevTools 390-pixel check reports document width `390`, both story
+  widths within `18..372`, and `0 px` overflow for both stories and all ten
+  step bodies. No interactive or motion dependency was introduced.
+- The temporary preview and browser-debug processes were stopped; ports `4321`
+  and `9333` are free. No source document, logo, credential, production
+  deployment or real-data operation is included. The bounded Website/content
+  change and project memory are committed and pushed together; a push does not
+  trigger the manual review workflow.
+
 ## 2026-09-03 | website/release | Local IONOS Apache artifact completed
 
 - Added a production `.htaccess` that prepares HTTP/alias redirects to the

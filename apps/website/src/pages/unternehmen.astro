@@ -49,6 +49,82 @@ const benefits = [
   "passende Expertise für Thema und Unternehmenskontext",
 ];
 
+const caseStories = [
+  {
+    id: "fuehrung-neue-rolle",
+    eyebrow: "Use Case 01 · Beispielhafter Ablauf",
+    title: "Eine neue Führungskraft findet in ihre Rolle",
+    lead:
+      "Das Szenario zeigt einen möglichen Weg durch den Competence Hub. Es ist ein Beispiel und keine Kundenreferenz oder Ergebniszusage.",
+    tone: "example",
+    steps: [
+      {
+        label: "Ausgangslage",
+        title: "Fachliche Stärke trifft auf eine neue Rolle",
+        text: "Ein langjähriger Fachexperte übernimmt erstmals Führungsverantwortung. Delegation, Arbeitslast und Unruhe im Team werden zum Thema.",
+      },
+      {
+        label: "Bedarf klären",
+        title: "Anliegen und gewünschte Wirkung werden greifbar",
+        text: "Im Erstgespräch werden Rollenklärung, Aufgabenverteilung, Kommunikation und Konfliktprävention gemeinsam eingeordnet.",
+      },
+      {
+        label: "Expertise verbinden",
+        title: "Passende Coaches werden ausgewählt",
+        text: "Fachlicher Schwerpunkt, Zielgruppe, Unternehmenskontext, gewünschtes Format und Verfügbarkeit bestimmen die Auswahl.",
+      },
+      {
+        label: "Rahmen abstimmen",
+        title: "Unternehmen, Coachee und Coach starten gemeinsam",
+        text: "Im Kick-off entsteht ein gemeinsames Verständnis von Auftrag, Zielrichtung, Zusammenarbeit und vertraulichem Rahmen.",
+      },
+      {
+        label: "Transfer begleiten",
+        title: "Erkenntnisse werden in den Alltag übersetzt",
+        text: "Der vereinbarte Prozess bleibt anpassbar. Zum Abschluss werden Erfahrungen, nächste Schritte und Feedback strukturiert zusammengeführt.",
+      },
+    ],
+  },
+  {
+    id: "concept-clean-kommunikation",
+    eyebrow: "Use Case 02 · Kundenrückmeldung",
+    title: "Kommunikation, die zum Arbeitsalltag passt",
+    lead:
+      "Concept Clean beschreibt einen Kommunikationskurs für Mitarbeitende, bei dem Matching, Inhalte und Zeiten auf den betrieblichen Kontext abgestimmt wurden.",
+    tone: "customer",
+    steps: [
+      {
+        label: "Anfrage",
+        title: "Ein Kommunikationskurs wird gebucht",
+        text: "Der Ausgangspunkt ist ein konkreter Entwicklungsbedarf für Mitarbeitende im Unternehmen.",
+      },
+      {
+        label: "Matching",
+        title: "Der passende Dozent wird verbunden",
+        text: "Concept Clean hebt besonders hervor, dass das Matching flexibel und nicht nach einem starren Standard erfolgte.",
+      },
+      {
+        label: "Ausrichtung",
+        title: "Fachsprache und Teamalltag geben den Fokus vor",
+        text: "Die branchenspezifische Fachsprache und die tägliche Kommunikation im Team wurden zum Kern der Einheiten.",
+      },
+      {
+        label: "Durchführung",
+        title: "Die Termine passen zu den Arbeitszeiten",
+        text: "Die Einheiten ließen sich gut mit den Arbeitszeiten der Mitarbeitenden vereinbaren.",
+      },
+      {
+        label: "Rückmeldung",
+        title: "Der Weg wird als reibungslos erlebt",
+        text: "Von der ersten Anfrage bis zur Durchführung bewertet Concept Clean den Ablauf durchgehend positiv.",
+      },
+    ],
+    quote:
+      "Wir haben über Donner und Partner einen Kommunikationskurs für unsere Mitarbeiter gebucht. Von der ersten Anfrage bis zur Durchführung lief alles absolut reibungslos. Besonders begeistert hat uns das flexible Matching: Der Dozent hat nicht einfach den Standard unterrichtet, sondern den Fokus genau auf unsere branchenspezifische Fachsprache und die tägliche Kommunikation im Team gelegt. Die Einheiten ließen sich super mit den Arbeitszeiten unserer Mitarbeiter vereinbaren.",
+    quoteSource: "Concept Clean",
+  },
+] as const;
+
 const assessmentApplications = [
   {
     title: "Recruiting & Personalauswahl",
@@ -209,6 +285,71 @@ const faqs = [
       </div>
       <div class="benefit-grid">
         {benefits.map((benefit) => <span>{benefit}</span>)}
+      </div>
+    </section>
+
+    <section class="use-case-section" aria-labelledby="use-case-title">
+      <div class="section-heading use-case-section__heading">
+        <p class="eyebrow">Vom Anliegen zur Umsetzung</p>
+        <h2 id="use-case-title">Zwei Wege durch den Competence Hub</h2>
+        <p>
+          Der genaue Verlauf richtet sich nach Anlass, Zielgruppe und Format.
+          Die folgenden Geschichten machen sichtbar, wie die einzelnen Ebenen
+          zusammenspielen können.
+        </p>
+      </div>
+
+      <div class="case-story-list">
+        {caseStories.map((story) => (
+          <article
+            class:list={[
+              "case-story",
+              `case-story--${story.tone}`,
+            ]}
+            id={story.id}
+          >
+            <header class="case-story__header">
+              <div>
+                <p class="eyebrow">{story.eyebrow}</p>
+                <h3>{story.title}</h3>
+              </div>
+              <p>{story.lead}</p>
+            </header>
+
+            <div class="case-story__route">
+              <svg
+                class="case-story__curve"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M50 0 C88 6 88 19 50 25 C12 31 12 44 50 50 C88 56 88 69 50 75 C12 81 12 94 50 100" />
+              </svg>
+              <ol class="case-story__steps">
+                {story.steps.map((step, index) => (
+                  <li class="case-story__step">
+                    <div class="case-story__step-copy">
+                      <small>{step.label}</small>
+                      <h4>{step.title}</h4>
+                      <p>{step.text}</p>
+                    </div>
+                    <span class="case-story__marker" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            {"quote" in story && (
+              <blockquote class="case-story__quote">
+                <p>„{story.quote}“</p>
+                <cite>{story.quoteSource}</cite>
+              </blockquote>
+            )}
+          </article>
+        ))}
       </div>
     </section>
 

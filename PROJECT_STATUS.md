@@ -51,6 +51,16 @@ Last updated: 2026-09-03
   Assessment-Center bubble on Mindforge, 30-pixel process-card clearance and
   automatic Coach movement even while the pointer rests over the rail. No
   direct form endpoint or calendar booking was activated.
+- Completed locally: `/unternehmen` now contains two source-governed visual
+  stories. A clearly labelled illustrative leadership path and a Concept Clean
+  communication-course path each use a semantic five-step winding route that
+  becomes linear on mobile. The customer quote remains faithful to the
+  supplied feedback; unsupported response times, package sizes, ratings,
+  outcomes and click acceptance were excluded. No customer logo was copied.
+  Desktop visual review and exact 390-pixel layout checks report no document,
+  story or step overflow; Astro checks 39 files without diagnostics and builds
+  29 pages. Production publication of the named Concept Clean quote remains
+  gated on retained customer-side release evidence and stakeholder acceptance.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -97,7 +107,8 @@ Last updated: 2026-09-03
   Staging skips, installed its Wheel in isolation and packaged every operations
   file with zero `.env`/`.tmp` entries. Linux checkout files are pinned to LF.
   The disposable artifact was removed.
-- Waiting: remaining profile details and rights where still open; explicit
+- Waiting: retained Concept Clean name/quote publication evidence, remaining
+  profile details and rights where still open; explicit
   qualification and approval before any Coach is assigned to Mediation;
   legal-provider decision, approval of Janay's remaining workflow gates,
   direct-contact delivery inputs and stakeholder acceptance of SB-24. The
@@ -128,6 +139,8 @@ Last updated: 2026-09-03
   as well as `/mindforge/` and `/leistungen/` return HTTP 200. The review banner
   and `noindex, nofollow, noarchive` remain active; the published Mindforge page
   contains the Assessment-Center link. Pushes still do not deploy automatically.
+  SB-27 source is versioned on `main` but is not part of that review deployment
+  or IONOS production.
 - Hosting status: EDV confirmed the IONOS webspace as production hosting for
   static/PHP files. Both Competence-Hub subdomains point there and are covered
   by wildcard TLS. Permanent Node/Python services are not possible.
@@ -276,6 +289,14 @@ Last updated: 2026-09-03
   a secret-free local `C:\tmp` verification copy.
 
 ## Delivery Horizon
+
+- Immediate content gate: obtain Concept Clean's customer-side approval for
+  the named quote and Janay's visual/content acceptance. With separate review-
+  deployment approval, publish only to the crawler-blocked GitHub review and
+  verify source wording, desktop/mobile layout, HTTP status and robots headers.
+- Ready independent work: complete the SEO/GEO Content Inventory and Content-
+  Evidence Matrix for `/`, `/unternehmen`, `/leistungen`, `/businesscoaching`
+  and `/mindforge`; do not create guide pages or unsupported authority claims.
 
 - Activation inputs: the reviewed 24.08 operator pack is represented by
   `docs/requirements/activation-input-contract-2026-08-24.md`; durable gate
