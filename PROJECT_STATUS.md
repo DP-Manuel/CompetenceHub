@@ -146,8 +146,11 @@ Last updated: 2026-09-03
   includes a conservative Apache `.htaccess`, an accessible noindex 404 page
   and fail-closed ZIP checks for `.htaccess`, `404.html` and `index.html`.
   Seven focused tests pass; Astro checks 39 files without diagnostics and
-  builds 29 pages. Apache behavior remains unclaimed until the corrected IONOS
-  Webroot is available for a separately approved rehearsal.
+  builds 29 pages. The clean `f7afd3247c10` ZIP is marked `dirty: false`,
+  contains all required root files and has SHA-256
+  `8378655a120441cf5cd6c6e95709688e6ec3c000e93e2813761f07ed44f7e0a9`.
+  Apache behavior remains unclaimed until the corrected IONOS Webroot is
+  available for a separately approved rehearsal.
 - Database/server status: IONOS MySQL is accessible only from its own webspace
   and is not used by the VPS backend. On 2026-08-07 the VPS was patched and
   rebooted into kernel `6.8.0-137-generic`; Chatbot, Nginx and Fail2ban remained

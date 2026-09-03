@@ -14,8 +14,10 @@ Newest entries first.
   API and fail-closed source/archive checks for `.htaccess`, `404.html` and
   `index.html`, avoiding platform-dependent omission of point files.
 - Verification: seven focused Website-SFTP/Apache tests pass; Astro checks 39
-  files with zero errors, warnings or hints and builds 29 pages. The dirty
-  verification ZIP contains all three required root entries.
+  files with zero errors, warnings or hints and builds 29 pages. A clean
+  release build from `f7afd3247c10` is marked `dirty: false`, contains
+  `.htaccess`, `404.html` and `index.html`, and has SHA-256
+  `8378655a120441cf5cd6c6e95709688e6ec3c000e93e2813761f07ed44f7e0a9`.
 - No IONOS connection, upload, Apache activation, production deployment or
   real-data use occurred. Next recommended block remains the read-only Webroot
   inventory after EDV repairs the missing SFTP home.
