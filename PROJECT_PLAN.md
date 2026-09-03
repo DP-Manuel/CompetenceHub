@@ -619,13 +619,17 @@ block.
 | SB-22 | Done locally | Prepare a guarded Website SFTP release, remote-backup and rollback rehearsal package | existing static release builder; no credentials in Git; no upload or deployment approval | secret-free target contract, local preparer and runbook; checksum/archive, host-key and verified remote-root guards; mandatory backup-before-replace plus smoke/rollback gates; 17 focused operations/SFTP tests, PowerShell parser, 38-file/28-page Astro build and full 304-pass/14-skip release gate green |
 | SB-23 | Done | Prove encrypted external copy and isolated restore from that exact copy | D+P-controlled encrypted target, workstation-only private key, synthetic data and rehearsal approval | backup and corrected monitor green; guarded `D:` copy hash-verified; digest-pinned networkless PostgreSQL 16 restored 24 tables twice; reusable guarded script 12/12; zero container/plaintext residue; four VPS services active |
 | SB-24 | Done and review deployed | Consolidate approved 27.08 public-website feedback without expanding backend scope | authorized source packet; existing content/rights rules; no direct form endpoint or calendar implementation | Mindforge now contains Coaching and Beratung; services/navigation are consolidated; Coach rail auto-runs despite pointer hover and retains manual controls; FAQ cards size independently; Mindforge exposes a fourth Assessment-Center node; spacing, desktop/390-pixel browser QA and Astro build pass; feature commit `82c192b` pushed; manual review workflow `33502638029` green; public review pages HTTP 200 and crawler-blocked |
+| SB-25 | Waiting external: authenticated, assigned Webroot missing | Confirm the exact IONOS Website Webroot without changing it | EDV must repair or reassign missing SFTP home; SB-22; host key and credentials verified | password authentication and SFTP subsystem acceptance proven; server then closes because the assigned `/htdocs/projektwue` target does not exist; after EDV repair collect `pwd`, complete hidden-file inventory, provider-file classification and target-contract validation; no upload or remote change occurred |
 
 The refreshed technical-readiness block is complete from clean commit
 `70e92ba`: 305 Webapp tests pass with 14 expected Staging skips, the 33-entry
 release ZIP includes the restore tool and no `.env`/`.tmp`, and the Website
-passes a 38-file check plus 28-page build. No implementation slice is doing.
-Recommended next block: prepare the read-only SFTP inventory only after trusted
-host-key evidence or an explicitly accepted trust procedure. EXT-01 host-
+passes a 38-file check plus 28-page build. No implementation slice is doing;
+SB-25 is waiting on a corrected IONOS SFTP start directory.
+Recommended next block: send the prepared EDV SFTP-path correction request and
+repeat the read-only inventory after confirmation. Host key and credentials
+are verified; `pwd`, the complete Webroot inventory and target-contract
+validation remain blocked by the missing server directory. EXT-01 host-
 specific validation remains waiting until at least 2026-09-14. No direct form
 delivery, calendar booking, production deployment or real-data use is
 authorized by SB-24.
@@ -635,14 +639,14 @@ progress in parallel but do not silently expand the execution backlog.
 
 ### Rolling Delivery Horizon (6 Steps)
 
-| # | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
-| --- | --- | --- | --- | --- |
-| 1 | High | Confirm the exact Website SFTP target without changing it | explicit read-only connection approval; trusted host-key source or accepted trust procedure; SB-22 | host-key match, `pwd`/complete inventory and target-contract validation |
-| 2 | High | Render and validate App-DNS, TLS, reverse-proxy, SMTP and direct-contact delivery configuration | EXT-01 not expected before 2026-09-14; G-CONTACT; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender, anti-spam path and synthetic contact delivery |
-| 3 | Medium-high | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 1-2; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
-| 4 | Medium | Close the bounded direct-contact increment or retain the honest mail-client fallback | Step 2; privacy, retention, abuse and operations approval | negative validation tests, synthetic delivery/failure evidence, accessibility and rollback or documented defer decision |
-| 5 | Medium-low | Create named accounts and run supervised acceptance | Steps 1-4; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |
-| 6 | Low | Close Legal/Go-No-Go and release the narrow pilot on the confirmed replacement date | EXT-02 through EXT-06; all real-data and production gates | signed gate matrix, production smoke, backup evidence, first approved company and rollback readiness |
+| # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Waiting external | High | Confirm the exact Website SFTP target without changing it | EDV repairs/reassigns missing SFTP home; host key and credentials verified; SB-22 | authentication proven; after repair capture `pwd`/complete inventory and target-contract validation |
+| 2 | Waiting external | High | Render and validate App-DNS, TLS, reverse-proxy, SMTP and direct-contact delivery configuration | EXT-01 not expected before 2026-09-14; G-CONTACT; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender, anti-spam path and synthetic contact delivery |
+| 3 | Pending | Medium-high | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 1-2; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
+| 4 | Pending | Medium | Close the bounded direct-contact increment or retain the honest mail-client fallback | Step 2; privacy, retention, abuse and operations approval | negative validation tests, synthetic delivery/failure evidence, accessibility and rollback or documented defer decision |
+| 5 | Pending | Medium-low | Create named accounts and run supervised acceptance | Steps 1-4; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |
+| 6 | Pending | Low | Close Legal/Go-No-Go and release the narrow pilot on the confirmed replacement date | EXT-02 through EXT-06; all real-data and production gates | signed gate matrix, production smoke, backup evidence, first approved company and rollback readiness |
 
 ### Cross-Cutting Gates
 
@@ -715,20 +719,20 @@ separate gated actions.
 
 ## Restart Note
 
-Prepared on: 2026-09-01
+Prepared on: 2026-09-02
 
-- Canonical `main`: `ea276b9`; accepted cutline, ADR 0006, same-origin portal,
-  browser harness, clean release evidence and SB-23 restore evidence are
-  versioned.
+- Canonical `main`: `e5eb186`; accepted cutline, ADR 0006, same-origin portal,
+  browser harness, clean release evidence, SB-23 restore evidence and the
+  deployed SB-24 Website review are versioned.
 - Evidence: 305 local tests pass with 14 expected opt-in Staging skips; all 14
   PostgreSQL Staging paths and BA-01 through BA-17 passed. Astro reports 38
   files without diagnostics and 28 built pages. The local browser runner and
   temporary VPS export are stopped/removed; the exact encrypted `D:` copy is
   retained.
-- No persistent service, account, deployment or real data exists. SB-24 is a
-  local public-website increment awaiting stakeholder review and separate
-  versioning approval. Continue with that review, then trusted read-only SFTP
-  inventory or the first newly satisfied activation gate.
+- No new persistent service, account, IONOS production deployment or real data
+  exists. SB-24 is available on the crawler-blocked GitHub-Pages review. The
+  IONOS ED25519 host key is independently verified; continue with the
+  interactive read-only SFTP inventory and do not upload or download yet.
 
 Resume here:
 

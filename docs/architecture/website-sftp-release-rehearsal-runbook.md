@@ -62,6 +62,13 @@ Nur nach einer ausdruecklichen Freigabe fuer die Verbindung:
 
 Diese Phase veraendert keine Remote-Datei.
 
+Der ED25519-Host-Key fuer den im privaten Zielvertrag hinterlegten IONOS-
+Providerhost wurde am 2026-09-02 ohne Anmeldung beobachtet und gegen die
+offizielle IONOS-Fingerprintliste verifiziert. Der bestaetigte Fingerprint lautet
+`SHA256:1gx2w8Rtv3wCgi7Jh8myf/KVd72cRQbow03UP8P095Q`. Verbindungsablauf,
+Stop-Regeln und noch offene Inventurfelder stehen in
+`website-sftp-read-only-inventory-2026-09-02.md`.
+
 ## Phase C: Backup vor Replace
 
 Nur nach bestaetigter Inventur und separater Aenderungsfreigabe:

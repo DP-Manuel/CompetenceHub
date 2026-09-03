@@ -2,6 +2,45 @@
 
 Newest entries first.
 
+## 2026-09-03 | operations/diagnosis | IONOS SFTP start directory blocks inventory
+
+- Manuel's real SFTP account authenticated successfully by password against the
+  independently verified IONOS ED25519 host key. The server accepted the SFTP
+  subsystem and then immediately sent EOF.
+- A separate read-only SSH diagnosis authenticated successfully and identified
+  the exact server-side cause: the assigned IONOS home targeting
+  `/htdocs/projektwue` does not exist. The
+  account is intentionally restricted by `rssh` to SFTP; that restriction must
+  remain in place.
+- Prepared `docs/architecture/edv-sftp-webroot-fix-request-2026-09-03.md` asking
+  EDV to repair/reassign the start directory and confirm both domains' exact
+  Document Root. No credential is included.
+- No directory listing, download, upload, deletion, deployment or real-data use
+  occurred. SB-25 now waits externally; after EDV correction, repeat only
+  `pwd` and `ls -la` before designing any remote change.
+
+## 2026-09-02 | operations/security | IONOS SFTP host key independently verified
+
+- Probed the approved private IONOS SFTP target on port `22` without real
+  username, password or user-key authentication. The server presented ED25519 fingerprint
+  `SHA256:1gx2w8Rtv3wCgi7Jh8myf/KVd72cRQbow03UP8P095Q`.
+- The fingerprint exactly matches the official IONOS Webhosting SSH
+  fingerprint overview. The public host-key evidence, compatibility note,
+  read-only commands and stop rules are documented in
+  `docs/architecture/website-sftp-read-only-inventory-2026-09-02.md`.
+- The Windows `ssh-keyscan` could not negotiate the server's first modern KEX.
+  A normal isolated OpenSSH probe used secure `curve25519-sha256`, disabled
+  password and public-key authentication and wrote only an untracked temporary
+  host-key observation.
+- Verification: `git diff --check` passes and all six focused Website-SFTP
+  rehearsal tests pass. The first sandboxed Pytest attempts were blocked only
+  by Windows Temp-directory ACLs; the approved identical run outside that
+  restriction completed successfully.
+- No credential login, file inventory, download, upload, deletion, deployment
+  or real-data use occurred. Next recommended block: Manuel performs the
+  interactive `pwd` and `ls -la` inventory; then classify every remote path and
+  validate the private SFTP target contract.
+
 ## 2026-09-01 | release/deployment | SB-24 review published and verified
 
 - Committed the approved website, requirements and project-state scope as

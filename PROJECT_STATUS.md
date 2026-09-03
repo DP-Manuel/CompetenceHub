@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-09-01
+Last updated: 2026-09-03
 
 ## Snapshot
 
@@ -133,7 +133,12 @@ Last updated: 2026-09-01
   by wildcard TLS. Permanent Node/Python services are not possible.
 - Static deployment access: Manuel holds the SFTP server, username and password
   for the Website start directory. Credentials remain outside Git and project
-  documentation. No SFTP upload has been performed.
+  documentation. On 2026-09-02 the server's observed ED25519 fingerprint
+  exactly matched the official IONOS fingerprint list. On 2026-09-03 password
+  authentication succeeded, but the server closed SFTP because the assigned
+  `/htdocs/projektwue` target does not exist.
+  The account remains correctly SFTP-only; EDV must repair the path. No Webroot
+  inventory or SFTP upload has been performed.
 - Database/server status: IONOS MySQL is accessible only from its own webspace
   and is not used by the VPS backend. On 2026-08-07 the VPS was patched and
   rebooted into kernel `6.8.0-137-generic`; Chatbot, Nginx and Fail2ban remained
@@ -280,8 +285,10 @@ Last updated: 2026-09-01
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: the first infrastructure choice is now a
-  read-only SFTP inventory with trusted host-key evidence;
+- Recommended next work block: send the prepared EDV correction request for
+  the missing SFTP start directory, then repeat the interactive read-only
+  inventory. Host key and credentials are proven; `pwd`, hidden-file inventory,
+  provider-file classification and target-contract validation are blocked;
   EXT-01 host-specific DNS/TLS/Nginx/SMTP/contact validation follows no earlier
   than 2026-09-14. The refreshed clean
   release evidence is complete: 305 passes/14 skips, 38-file Astro check,
@@ -344,8 +351,8 @@ Last updated: 2026-09-01
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) establish trusted SFTP evidence and inventory
-  the Webroot read-only, (2) use the EDV reply to validate DNS/TLS/Nginx/SMTP
+- Rolling delivery horizon: (1) let EDV repair the missing SFTP home and finish
+  the read-only Webroot inventory, (2) use the EDV reply to validate DNS/TLS/Nginx/SMTP
   and direct-contact delivery, (3) rehearse Website/Webapp activation and
   rollback without real data, (4) implement and prove direct contact or retain
   the honest fallback, (5) onboard named users and run supervised acceptance,
