@@ -138,7 +138,10 @@ Last updated: 2026-09-03
   authentication succeeded, but the server closed SFTP because the assigned
   `/htdocs/projektwue` target does not exist.
   The account remains correctly SFTP-only; EDV must repair the path. No Webroot
-  inventory or SFTP upload has been performed.
+  inventory or SFTP upload has been performed. Both public subdomains resolve
+  to the same IONOS IPv4/IPv6 target and serve the valid wildcard TLS
+  certificate, but HTTP and HTTPS currently return a 403 IONOS parking page;
+  HTTP-to-HTTPS and alias-to-canonical redirects are not active.
 - Database/server status: IONOS MySQL is accessible only from its own webspace
   and is not used by the VPS backend. On 2026-08-07 the VPS was patched and
   rebooted into kernel `6.8.0-137-generic`; Chatbot, Nginx and Fail2ban remained

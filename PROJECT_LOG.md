@@ -15,6 +15,12 @@ Newest entries first.
 - Prepared `docs/architecture/edv-sftp-webroot-fix-request-2026-09-03.md` asking
   EDV to repair/reassign the start directory and confirm both domains' exact
   Document Root. No credential is included.
+- Public read-only checks confirm that both subdomains resolve to the same
+  IONOS IPv4/IPv6 target and serve the valid `*.donner-partner.de` certificate.
+  HTTP and HTTPS nevertheless return a 403 IONOS parking page on both names;
+  neither HTTP-to-HTTPS nor alias-to-canonical redirect is active. The EDV
+  request now includes these findings and confirms
+  `competencehub@donner-partner.de` with Frau Janay Rappelt as mailbox owner.
 - No directory listing, download, upload, deletion, deployment or real-data use
   occurred. SB-25 now waits externally; after EDV correction, repeat only
   `pwd` and `ls -la` before designing any remote change.

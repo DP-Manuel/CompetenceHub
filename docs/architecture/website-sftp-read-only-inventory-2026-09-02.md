@@ -103,3 +103,18 @@ Naechster Gate-Schritt: EDV korrigiert oder bestaetigt das Startverzeichnis und
 die Document-Root-Zuordnung beider Domains. Danach wird nur `pwd` und `ls -la`
 erneut ausgefuehrt. Die vorbereitete Nachricht steht in
 `edv-sftp-webroot-fix-request-2026-09-03.md`.
+
+## Oeffentlicher Gegencheck 2026-09-03
+
+- Beide Subdomains liefern dieselbe IONOS-IPv4- und IPv6-Adresse.
+- HTTPS validiert fuer das ausgelieferte Wildcard-Zertifikat; das Zertifikat
+  nennt `*.donner-partner.de` und `donner-partner.de` und ist vom 2026-05-22
+  bis 2026-12-02 gueltig.
+- HTTP und HTTPS antworten auf beiden Subdomains mit `403 Forbidden` und einer
+  IONOS-Parkingseite.
+- Die Bindestrich-Variante leitet noch nicht auf die kanonische Domain um;
+  HTTP leitet noch nicht auf HTTPS um.
+
+Das bestaetigt DNS und TLS nur teilweise. Es beweist keinen nutzbaren Webroot
+und keine releasefaehige Domain-Zuordnung. Bis zur EDV-Korrektur erfolgt kein
+Upload in ein erratenes Alternativverzeichnis.
