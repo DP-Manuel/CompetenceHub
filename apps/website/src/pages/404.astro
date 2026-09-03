@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import "../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+---
+
+<BaseLayout
+  title="Seite nicht gefunden | Competence Hub"
+  description="Die angeforderte Seite ist nicht verfügbar. Kehren Sie zur Competence-Hub-Startseite zurück oder nehmen Sie Kontakt auf."
+  noindex
+>
+  <main class="subpage">
+    <section class="page-hero page-hero--accent">
+      <p class="eyebrow">Fehler 404</p>
+      <h1>Diese Seite finden wir nicht.</h1>
+      <p>
+        Der aufgerufene Link ist möglicherweise veraltet oder die Adresse wurde
+        nicht vollständig eingegeben.
+      </p>
+      <div class="actions">
+        <a class="button" href={url()}>Zur Startseite</a>
+        <a class="button button--ghost" href={url("kontakt")}>Kontakt</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

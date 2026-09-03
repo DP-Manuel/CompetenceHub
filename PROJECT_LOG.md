@@ -2,6 +2,24 @@
 
 Newest entries first.
 
+## 2026-09-03 | website/release | Local IONOS Apache artifact completed
+
+- Added a production `.htaccess` that prepares HTTP/alias redirects to the
+  canonical HTTPS domain, maps the static 404 page and sets bounded security
+  headers. HSTS and a script/style-restricting CSP remain deliberately gated
+  until every production host is proven.
+- Added an accessible, indexierungsfreie 404 page with working Start and
+  contact paths for production and the GitHub-Pages review base.
+- Replaced `Compress-Archive` in the Website release builder with the .NET ZIP
+  API and fail-closed source/archive checks for `.htaccess`, `404.html` and
+  `index.html`, avoiding platform-dependent omission of point files.
+- Verification: seven focused Website-SFTP/Apache tests pass; Astro checks 39
+  files with zero errors, warnings or hints and builds 29 pages. The dirty
+  verification ZIP contains all three required root entries.
+- No IONOS connection, upload, Apache activation, production deployment or
+  real-data use occurred. Next recommended block remains the read-only Webroot
+  inventory after EDV repairs the missing SFTP home.
+
 ## 2026-09-03 | operations/diagnosis | IONOS SFTP start directory blocks inventory
 
 - Manuel's real SFTP account authenticated successfully by password against the
@@ -21,6 +39,7 @@ Newest entries first.
   neither HTTP-to-HTTPS nor alias-to-canonical redirect is active. The EDV
   request now includes these findings and confirms
   `competencehub@donner-partner.de` with Frau Janay Rappelt as mailbox owner.
+- Manuel sent the consolidated correction request to EDV on 2026-09-03.
 - No directory listing, download, upload, deletion, deployment or real-data use
   occurred. SB-25 now waits externally; after EDV correction, repeat only
   `pwd` and `ls -la` before designing any remote change.

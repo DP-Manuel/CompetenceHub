@@ -20,6 +20,9 @@ SCRIPT = (
 )
 TARGET_EXAMPLE = REPO_ROOT / "deploy" / "website" / "sftp-target.example.json"
 RUNBOOK = REPO_ROOT / "docs" / "architecture" / "website-sftp-release-rehearsal-runbook.md"
+APACHE_CONFIG = REPO_ROOT / "apps" / "website" / "public" / ".htaccess"
+NOT_FOUND_PAGE = REPO_ROOT / "apps" / "website" / "src" / "pages" / "404.astro"
+BUILD_SCRIPT = REPO_ROOT / "scripts" / "build-website-release.ps1"
 
 
 def powershell() -> str | None:
@@ -35,6 +38,7 @@ def write_fixture(
 ) -> tuple[Path, Path, Path]:
     artifact = root / "competence-hub-website-abcdef123456-test.zip"
     entries = archive_entries or {
+        ".htaccess": b"DirectoryIndex index.html",
         "index.html": b"<!doctype html><title>Competence Hub</title>",
         "assets/site.css": b"body { color: #222; }",
     }
@@ -135,6 +139,7 @@ def test_sftp_rehearsal_prepares_verified_local_package(tmp_path: Path) -> None:
     assert len(packages) == 1
     package = packages[0]
     assert (package / "release" / "index.html").is_file()
+    assert (package / "release" / ".htaccess").is_file()
     assert (package / "release" / "assets" / "site.css").is_file()
     plan = json.loads((package / "release-plan.json").read_text(encoding="utf-8-sig"))
     assert plan["artifact_verified"] is True
@@ -178,3 +183,24 @@ def test_sftp_rehearsal_rejects_nested_environment_file(tmp_path: Path) -> None:
     )
     assert result.returncode != 0
     assert "forbidden entry segment" in (result.stdout + result.stderr)
+
+
+def test_website_apache_contract_is_canonical_and_conservative() -> None:
+    config = APACHE_CONFIG.read_text(encoding="utf-8")
+    not_found = NOT_FOUND_PAGE.read_text(encoding="utf-8")
+    build_script = BUILD_SCRIPT.read_text(encoding="utf-8")
+
+    assert "ErrorDocument 404 /404.html" in config
+    assert "RewriteCond %{HTTPS} !=on [OR]" in config
+    assert "!^competencehub\\.donner-partner\\.de$ [NC]" in config
+    assert "https://competencehub.donner-partner.de%{REQUEST_URI}" in config
+    assert 'X-Content-Type-Options "nosniff"' in config
+    assert 'X-Frame-Options "DENY"' in config
+    assert "frame-ancestors 'none'" in config
+    assert "Strict-Transport-Security" not in config
+    assert "Options +Indexes" not in config
+    assert "noindex" in not_found
+    assert 'url("kontakt")' in not_found
+    assert "ZipFile]::CreateFromDirectory" in build_script
+    assert '@("index.html", "404.html", ".htaccess")' in build_script
+    assert "Compress-Archive" not in build_script

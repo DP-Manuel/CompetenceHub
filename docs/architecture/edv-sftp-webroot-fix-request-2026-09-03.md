@@ -2,7 +2,7 @@
 
 Stand: 2026-09-03
 
-Status: Versand durch Manuel ausstehend.
+Status: Am 2026-09-03 durch Manuel an die EDV versendet; Antwort ausstehend.
 
 ## Betreff
 

@@ -620,16 +620,18 @@ block.
 | SB-23 | Done | Prove encrypted external copy and isolated restore from that exact copy | D+P-controlled encrypted target, workstation-only private key, synthetic data and rehearsal approval | backup and corrected monitor green; guarded `D:` copy hash-verified; digest-pinned networkless PostgreSQL 16 restored 24 tables twice; reusable guarded script 12/12; zero container/plaintext residue; four VPS services active |
 | SB-24 | Done and review deployed | Consolidate approved 27.08 public-website feedback without expanding backend scope | authorized source packet; existing content/rights rules; no direct form endpoint or calendar implementation | Mindforge now contains Coaching and Beratung; services/navigation are consolidated; Coach rail auto-runs despite pointer hover and retains manual controls; FAQ cards size independently; Mindforge exposes a fourth Assessment-Center node; spacing, desktop/390-pixel browser QA and Astro build pass; feature commit `82c192b` pushed; manual review workflow `33502638029` green; public review pages HTTP 200 and crawler-blocked |
 | SB-25 | Waiting external: authenticated, assigned Webroot missing | Confirm the exact IONOS Website Webroot without changing it | EDV must repair or reassign missing SFTP home; SB-22; host key and credentials verified | password authentication and SFTP subsystem acceptance proven; server then closes because the assigned `/htdocs/projektwue` target does not exist; public DNS/TLS reach the same IONOS target but both HTTP/HTTPS names return a 403 parking page without redirects; after EDV repair collect `pwd`, complete hidden-file inventory, provider-file classification and target-contract validation; no upload or remote change occurred |
+| SB-26 | Done locally | Make the static Website artifact self-contained for conservative IONOS Apache delivery | SB-17/SB-22; no remote Apache or Webroot assumption | production `.htaccess` prepares HTTPS/canonical redirects, 404 mapping and bounded security headers without HSTS; accessible noindex 404 page added; release builder uses .NET ZIP and fails unless `.htaccess`, `404.html` and `index.html` exist in source and archive; 7 focused tests and 39-file/29-page Astro build green; dirty verification ZIP contains all three required root entries; no upload or deployment |
 
 The refreshed technical-readiness block is complete from clean commit
 `70e92ba`: 305 Webapp tests pass with 14 expected Staging skips, the 33-entry
 release ZIP includes the restore tool and no `.env`/`.tmp`, and the Website
 passes a 38-file check plus 28-page build. No implementation slice is doing;
 SB-25 is waiting on a corrected IONOS SFTP start directory.
-Recommended next block: send the prepared EDV SFTP-path correction request and
+Recommended next block: wait for the already sent EDV SFTP-path correction and
 repeat the read-only inventory after confirmation. Host key and credentials
 are verified; `pwd`, the complete Webroot inventory and target-contract
-validation remain blocked by the missing server directory. EXT-01 host-
+validation remain blocked by the missing server directory. The independent
+local Apache release contract is complete. EXT-01 host-
 specific validation remains waiting until at least 2026-09-14. No direct form
 delivery, calendar booking, production deployment or real-data use is
 authorized by SB-24.

@@ -61,9 +61,41 @@ $artifactBase = "competence-hub-website-$commit-$timestamp$suffix"
 New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
 $archive = Join-Path $OutputDirectory "$artifactBase.zip"
 $manifest = Join-Path $OutputDirectory "$artifactBase.json"
-$distGlob = Join-Path $websiteRoot "dist\*"
+$distRoot = Join-Path $websiteRoot "dist"
 
-Compress-Archive -Path $distGlob -DestinationPath $archive -CompressionLevel Optimal
+foreach ($requiredFile in @("index.html", "404.html", ".htaccess")) {
+    if (-not (Test-Path -LiteralPath (Join-Path $distRoot $requiredFile) -PathType Leaf)) {
+        throw "Website build is missing required production file: $requiredFile"
+    }
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::CreateFromDirectory(
+    $distRoot,
+    $archive,
+    [System.IO.Compression.CompressionLevel]::Optimal,
+    $false
+)
+
+$zip = [System.IO.Compression.ZipFile]::OpenRead($archive)
+try {
+    $entryNames = @($zip.Entries | ForEach-Object { $_.FullName.Replace("\", "/") })
+    foreach ($requiredEntry in @("index.html", "404.html", ".htaccess")) {
+        if ($requiredEntry -cnotin $entryNames) {
+            throw "Website release archive is missing required entry: $requiredEntry"
+        }
+    }
+}
+catch {
+    if (Test-Path -LiteralPath $archive) {
+        Remove-Item -LiteralPath $archive -Force
+    }
+    throw
+}
+finally {
+    $zip.Dispose()
+}
+
 $hash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
 
 [ordered]@{

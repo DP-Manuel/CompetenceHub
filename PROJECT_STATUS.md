@@ -142,6 +142,12 @@ Last updated: 2026-09-03
   to the same IONOS IPv4/IPv6 target and serve the valid wildcard TLS
   certificate, but HTTP and HTTPS currently return a 403 IONOS parking page;
   HTTP-to-HTTPS and alias-to-canonical redirects are not active.
+- Independent local Website delivery readiness: the production artifact now
+  includes a conservative Apache `.htaccess`, an accessible noindex 404 page
+  and fail-closed ZIP checks for `.htaccess`, `404.html` and `index.html`.
+  Seven focused tests pass; Astro checks 39 files without diagnostics and
+  builds 29 pages. Apache behavior remains unclaimed until the corrected IONOS
+  Webroot is available for a separately approved rehearsal.
 - Database/server status: IONOS MySQL is accessible only from its own webspace
   and is not used by the VPS backend. On 2026-08-07 the VPS was patched and
   rebooted into kernel `6.8.0-137-generic`; Chatbot, Nginx and Fail2ban remained
@@ -288,7 +294,7 @@ Last updated: 2026-09-03
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: send the prepared EDV correction request for
+- Recommended next work block: wait for the sent EDV correction request for
   the missing SFTP start directory, then repeat the interactive read-only
   inventory. Host key and credentials are proven; `pwd`, hidden-file inventory,
   provider-file classification and target-contract validation are blocked;

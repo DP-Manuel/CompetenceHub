@@ -31,6 +31,8 @@ Veroeffentlichung aus. Ein Git-Push ist ebenfalls kein Produktions-Release.
 
 1. Nach einem freigegebenen Commit die Website mit
    `scripts/build-website-release.ps1` bauen. Ohne `-AllowDirty` arbeiten.
+   Der Builder muss `index.html`, die indexierungsfreie `404.html` und die
+   produktive `.htaccess` sowohl in `dist` als auch im ZIP nachweisen.
 2. Nach Phase B `deploy/website/sftp-target.example.json` ausserhalb von Git
    kopieren und Host, geprueften Host-Key sowie den durch Remote-Inventur
    bestaetigten Webroot eintragen. `remote_web_root_verified` erst dann auf
@@ -48,6 +50,12 @@ Ein erfolgreiches lokales Paket behaelt absichtlich folgende Werte:
 - `legal_release_gate_closed: false`
 
 Sie duerfen nicht durch das Vorbereitungsskript auf `true` gesetzt werden.
+
+Die produktive `.htaccess` erzwingt lokal vorbereitet die kanonische
+HTTPS-Domain, setzt die Fehlerseite und konservative Sicherheitsheader. HSTS
+bleibt bis zur vollstaendigen Produktionsabnahme aller betroffenen Hosts aus.
+Die Apache-Wirksamkeit wird erst nach bestaetigtem Webroot in einer getrennten
+Rehearsal-Freigabe getestet.
 
 ## Phase B: Remote-Inventur
 
