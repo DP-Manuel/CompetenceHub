@@ -300,8 +300,11 @@ Last updated: 2026-09-04
   Matrix and Core Page Content Plan for `/`, `/unternehmen`, `/leistungen`,
   `/businesscoaching` and `/mindforge` are complete in `docs/content/`. The next
   ready block is the bounded CP-01 through CP-08 stakeholder decision set,
-  beginning with page ownership, service taxonomy and commercial review. No
-  public rewrite, guide page or unsupported authority claim is authorized.
+  beginning with page ownership, service taxonomy and commercial review. A
+  German decision packet and E-Mail draft are ready in
+  `docs/content/priority-a-stakeholder-review-packet-2026-09-04.md`; they have
+  not been sent automatically. No public rewrite, guide page or unsupported
+  authority claim is authorized.
 
 - Activation inputs: the reviewed 24.08 operator pack is represented by
   `docs/requirements/activation-input-contract-2026-08-24.md`; durable gate

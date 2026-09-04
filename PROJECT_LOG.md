@@ -25,6 +25,9 @@ Newest entries first.
   links, CTA, CP-01 through CP-08 decisions and a later verification plan.
 - Next independent block: assign content owners and close or explicitly defer
   the bounded stakeholder decisions while EDV remains pending.
+- Prepared a German stakeholder review packet with CP-01 through CP-08,
+  recommended defaults, compact response format, E-Mail draft, public review
+  URL and a return gate. No message was sent automatically.
 
 ## 2026-09-04 | content/release | Concept Clean reference approved
 

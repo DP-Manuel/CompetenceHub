@@ -339,6 +339,7 @@ Completed baseline artifacts:
 - `docs/content/priority-a-content-inventory-2026-09-04.md`
 - `docs/content/priority-a-content-evidence-matrix-2026-09-04.md`
 - `docs/content/priority-a-core-page-content-plan-2026-09-04.md`
+- `docs/content/priority-a-stakeholder-review-packet-2026-09-04.md`
 
 The baseline confirms that `/unternehmen` contains the only currently approved
 customer authority item: the bounded Concept Clean name, quotation and
@@ -637,6 +638,7 @@ while infrastructure and stakeholder gates are waiting.
 | SB-27 | Done, approved and review deployed | Add two source-governed use-case stories and the first Concept Clean customer voice to `/unternehmen` | authorized read of `Quellen/14.08.2026`; no invented claims; Manuel confirmed Concept Clean public-reference approval 2026-09-04 | illustrative leadership story visibly labelled; Concept Clean path limited to supplied facts; no logo copied; semantic ordered routes, desktop visual QA, exact 390-pixel `0 px` overflow evidence and 39-file/29-page Astro build green; GitHub Pages review run `33848941115` green; public HTTP/content/meta-robots smoke passed; Janay acceptance remains open; IONOS production and real-data use remain separate |
 | SB-28 | Done locally | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five Priority A routes | separate content workstream; repository evidence only; no private raw sources, new guide pages or invented authority signals | two versioned documents record target group, use case, expertise, first-party information, CTA, evidence/approval state, owner gaps and claim gaps for all five routes; no public copy or deployment changed |
 | SB-29 | Done locally; stakeholder decisions open | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; route overlap must remain explicit | five routes now have a primary job, answer direction, evidence plan, limits, internal links, CTA, decision owner type and later verification plan; CP-01 through CP-08 remain open; no public implementation |
+| SB-30 | Done locally; awaiting dispatch and replies | Prepare the early stakeholder request for CP-01 through CP-08 | SB-29; no assumption may replace a named approval | German review packet contains decision table, recommended defaults, compact answer format, E-Mail draft, review URL and return gate; no message sent automatically |
 
 The refreshed technical-readiness block is complete from clean commit
 `70e92ba`: 305 Webapp tests pass with 14 expected Staging skips, the 33-entry
@@ -666,7 +668,7 @@ progress in parallel but do not silently expand the execution backlog.
 | 1 | Done | High | Publish SB-27 to the crawler-blocked review and hand it to Janay | Concept Clean name/quote and review deployment approved; no logo use | run `33848941115` green; public HTTP 200, expected stories and `noindex, nofollow, noarchive` meta verified |
 | 2 | Done | High | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five priority pages | separate content workstream; no new guide pages or invented authority signals | SB-28 records every required field and explicit evidence/owner gaps in two versioned documents |
 | 3 | Done locally | High | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; resolve route intent and overlap as explicit decisions | SB-29 defines five route plans, CP-01 through CP-08 and later verification evidence |
-| 4 | Ready; stakeholder input | High | Assign page owners and decide taxonomy, commercial facts and route boundaries | SB-29; named business and subject-matter approvers | approved/deferred CP-01 through CP-08 with owner, date and evidence reference |
+| 4 | Waiting stakeholder; packet ready | High | Assign page owners and decide taxonomy, commercial facts and route boundaries | SB-29/SB-30; Manuel sends the prepared request to named business and subject-matter approvers | approved/deferred CP-01 through CP-08 with owner, date and evidence reference |
 | 5 | Waiting external | High | Confirm the exact Website SFTP target and validate App-DNS/SMTP/contact configuration | EDV repairs SFTP home and supplies EXT-01 details; host key/credentials verified | read-only inventory, target contract, DNS/TLS preflight, exact Origin and synthetic mail evidence |
 | 6 | Pending | Medium | Rehearse Website SFTP release and VPS package activation/rollback without real data | Step 5; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
 | 7 | Pending | Medium-low | Close direct contact and named-user acceptance | Steps 5-6; privacy/operations approval; EXT-03; legal progress | negative contact tests or documented fallback; E-Mail invitation, MFA, least privilege and Janay walkthrough |
