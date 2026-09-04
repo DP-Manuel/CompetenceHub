@@ -1,6 +1,6 @@
 # Wochenupdate Competence Hub
 
-Zeitraum: 31.08. bis 04.09.2026
+Zeitraum: 22.08. bis 04.09.2026
 
 Hallo zusammen,
 
@@ -8,6 +8,16 @@ hier das kurze Wochenupdate zum Competence Hub:
 
 ## Diese Woche abgeschlossen
 
+- Der externe Backup- und Wiederherstellungsweg für die PostgreSQL-Datenbank
+  wurde vollständig erprobt. Ein verschlüsseltes Backup wurde auf den
+  BitLocker-geschützten Würzburger Datenträger übertragen und aus genau dieser
+  Kopie zweimal erfolgreich in einer isolierten Umgebung wiederhergestellt.
+- Der Backup-Datenträger wird im Safe aufbewahrt; Janay ist als
+  Notfallverantwortliche benannt. Passwörter, Wiederherstellungscodes und
+  private Schlüssel wurden nicht in das Projekt übernommen.
+- Die technische Readiness-Prüfung für Website und Portal wurde aktualisiert.
+  Releasepakete, Prüfsummen, Backupkontrolle und Rückfallwege sind reproduzierbar
+  vorbereitet.
 - Die Website wurde anhand des letzten internen Feedbacks weiter überarbeitet.
   Unter anderem sind die Angebotsstruktur, Mindforge-Navigation, FAQ-Darstellung,
   Abstände und die interaktiven Themenbereiche klarer und ruhiger geworden.
@@ -28,6 +38,8 @@ hier das kurze Wochenupdate zum Competence Hub:
 
 ## Qualitätsstand
 
+- 305 automatisierte Webapp-Tests sind erfolgreich; die zusätzlichen
+  Staging-Prüfungen bleiben bewusst an eine kontrollierte Verbindung gebunden.
 - Die aktuelle Website-Prüfung läuft ohne Fehler, Warnungen oder Hinweise durch.
 - 29 statische Seiten werden erfolgreich erzeugt.
 - Desktop- und Mobilansichten wurden geprüft; bei 390 Pixel Breite besteht kein
@@ -48,6 +60,8 @@ zweite Oktoberhälfte vorgesehen.
 
 - Die EDV muss das fehlende SFTP-Startverzeichnis beziehungsweise den korrekten
   Document Root auf dem IONOS-Webspace bereitstellen.
+- Der automatische produktive Backup-Zeitplan und der Alarmierungsweg müssen
+  vor der Verarbeitung echter Daten noch freigegeben werden.
 - App-Domain, SMTP-/Mailversand und Kontaktformular müssen abschließend technisch
   bestätigt und getestet werden.
 - Für die fünf Kernseiten stehen noch einige fachliche Entscheidungen und

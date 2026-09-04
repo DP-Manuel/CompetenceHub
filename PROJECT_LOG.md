@@ -2,12 +2,14 @@
 
 Newest entries first.
 
-## 2026-09-04 | stakeholder update | Wochenupdate vorbereitet
+## 2026-09-04 | stakeholder update | Zweiwöchiges Urlaubsupdate vorbereitet
 
-- Das direkt in Teams einsetzbare Wochenupdate für den Zeitraum 31.08. bis
-  04.09.2026 fasst Website- und Kundenstimmenfortschritt, SEO/GEO-Vorbereitung,
-  IONOS-Blocker, Qualitätsstand, offene Freigaben und die nächsten fünf Schritte
-  ohne interne technische Detailtiefe zusammen.
+- Das direkt in Teams einsetzbare Update umfasst nach Manuels Korrektur den
+  vollständigen Zeitraum 22.08. bis 04.09.2026. Es ergänzt den erfolgreichen
+  verschlüsselten externen Backup-/Restore-Nachweis und fasst Website- und
+  Kundenstimmenfortschritt, SEO/GEO-Vorbereitung, IONOS-Blocker, Qualitätsstand,
+  offene Freigaben und die nächsten fünf Schritte ohne interne technische
+  Detailtiefe zusammen.
 - Das Update hält Produktionsstatus und Datenschutzgrenze ausdrücklich fest:
   kein IONOS-Produktivstart, kein produktiver Mailversand und keine realen
   Kundendaten.
