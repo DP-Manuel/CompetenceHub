@@ -2,6 +2,30 @@
 
 Newest entries first.
 
+## 2026-09-04 | content/release | Review deployed and Priority A evidence inventoried
+
+- Deployed the approved SB-27 company stories to the crawler-blocked GitHub
+  Pages review. Workflow run `33848941115` completed successfully.
+- Public smoke at `/CompetenceHub/unternehmen/` returned HTTP 200, contained
+  the leadership and Concept Clean stories and retained the expected
+  `noindex, nofollow, noarchive` meta directive. IONOS production was not
+  changed.
+- Added `docs/content/priority-a-content-inventory-2026-09-04.md` and
+  `docs/content/priority-a-content-evidence-matrix-2026-09-04.md` for `/`,
+  `/unternehmen`, `/leistungen`, `/businesscoaching` and `/mindforge`.
+- The baseline records audience, concrete use case, expertise, available
+  first-party information, CTA, evidence status, approval boundary, owner gaps
+  and claim gaps. It used repository evidence only and did not open private raw
+  sources or create new public copy, guides, quotations, cases or statistics.
+- `/unternehmen` currently contains the only approved customer authority item:
+  the bounded Concept Clean name, quotation and communication-course path.
+  The illustrative leadership path remains explicitly non-evidentiary.
+- Added `docs/content/priority-a-core-page-content-plan-2026-09-04.md`. It gives
+  every route one primary job, evidence and limitation boundaries, internal
+  links, CTA, CP-01 through CP-08 decisions and a later verification plan.
+- Next independent block: assign content owners and close or explicitly defer
+  the bounded stakeholder decisions while EDV remains pending.
+
 ## 2026-09-04 | content/release | Concept Clean reference approved
 
 - Manuel confirmed publication approval for the prepared Concept Clean company

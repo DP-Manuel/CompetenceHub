@@ -252,9 +252,10 @@ See `docs/architecture/portal-domain-model-v0.1.md`,
 
 ## Workstream: SEO, GEO & First-Party Authority
 
-Status: planned; inventory and evidence planning only. No new guide pages,
-content implementation, publication, or deployment is authorized by this
-workstream yet.
+Status: Phases 1 through 3 completed as planning drafts on 2026-09-04;
+stakeholder ownership, taxonomy, commercial and boundary decisions are next.
+No new guide pages, content implementation, publication, or deployment is
+authorized by this workstream yet.
 
 ### Objective And Relationship To The Frontend
 
@@ -332,6 +333,18 @@ workstream yet.
      a stable set of realistic AI-search questions, source mentions, content
      gaps, contact paths, and subject-matter feedback.
    - Treat observations as learning signals, not as guarantees of visibility.
+
+Completed baseline artifacts:
+
+- `docs/content/priority-a-content-inventory-2026-09-04.md`
+- `docs/content/priority-a-content-evidence-matrix-2026-09-04.md`
+- `docs/content/priority-a-core-page-content-plan-2026-09-04.md`
+
+The baseline confirms that `/unternehmen` contains the only currently approved
+customer authority item: the bounded Concept Clean name, quotation and
+communication-course path. Other current offer descriptions remain first-party
+information that needs named editorial, subject-matter or commercial review;
+they are not silently promoted to evidence.
 
 ### Priority A Inventory Baseline
 
@@ -621,24 +634,27 @@ while infrastructure and stakeholder gates are waiting.
 | SB-24 | Done and review deployed | Consolidate approved 27.08 public-website feedback without expanding backend scope | authorized source packet; existing content/rights rules; no direct form endpoint or calendar implementation | Mindforge now contains Coaching and Beratung; services/navigation are consolidated; Coach rail auto-runs despite pointer hover and retains manual controls; FAQ cards size independently; Mindforge exposes a fourth Assessment-Center node; spacing, desktop/390-pixel browser QA and Astro build pass; feature commit `82c192b` pushed; manual review workflow `33502638029` green; public review pages HTTP 200 and crawler-blocked |
 | SB-25 | Waiting external: authenticated, assigned Webroot missing | Confirm the exact IONOS Website Webroot without changing it | EDV must repair or reassign missing SFTP home; SB-22; host key and credentials verified | password authentication and SFTP subsystem acceptance proven; server then closes because the assigned `/htdocs/projektwue` target does not exist; public DNS/TLS reach the same IONOS target but both HTTP/HTTPS names return a 403 parking page without redirects; after EDV repair collect `pwd`, complete hidden-file inventory, provider-file classification and target-contract validation; no upload or remote change occurred |
 | SB-26 | Done locally | Make the static Website artifact self-contained for conservative IONOS Apache delivery | SB-17/SB-22; no remote Apache or Webroot assumption | production `.htaccess` prepares HTTPS/canonical redirects, 404 mapping and bounded security headers without HSTS; accessible noindex 404 page added; release builder uses .NET ZIP and fails unless `.htaccess`, `404.html` and `index.html` exist in source and archive; 7 focused tests and 39-file/29-page Astro build green; clean `f7afd3247c10` artifact is `dirty: false`, contains all three required root entries and has SHA-256 `8378655a120441cf5cd6c6e95709688e6ec3c000e93e2813761f07ed44f7e0a9`; no upload or deployment |
-| SB-27 | Done and publication-approved; review deployment in progress | Add two source-governed use-case stories and the first Concept Clean customer voice to `/unternehmen` | authorized read of `Quellen/14.08.2026`; no invented claims; Manuel confirmed Concept Clean public-reference approval 2026-09-04 | illustrative leadership story visibly labelled; Concept Clean path limited to supplied facts; no logo copied; semantic ordered routes, desktop visual QA, exact 390-pixel `0 px` overflow evidence and 39-file/29-page Astro build green; review deployment authorized, IONOS production and real-data use remain separate |
+| SB-27 | Done, approved and review deployed | Add two source-governed use-case stories and the first Concept Clean customer voice to `/unternehmen` | authorized read of `Quellen/14.08.2026`; no invented claims; Manuel confirmed Concept Clean public-reference approval 2026-09-04 | illustrative leadership story visibly labelled; Concept Clean path limited to supplied facts; no logo copied; semantic ordered routes, desktop visual QA, exact 390-pixel `0 px` overflow evidence and 39-file/29-page Astro build green; GitHub Pages review run `33848941115` green; public HTTP/content/meta-robots smoke passed; Janay acceptance remains open; IONOS production and real-data use remain separate |
+| SB-28 | Done locally | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five Priority A routes | separate content workstream; repository evidence only; no private raw sources, new guide pages or invented authority signals | two versioned documents record target group, use case, expertise, first-party information, CTA, evidence/approval state, owner gaps and claim gaps for all five routes; no public copy or deployment changed |
+| SB-29 | Done locally; stakeholder decisions open | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; route overlap must remain explicit | five routes now have a primary job, answer direction, evidence plan, limits, internal links, CTA, decision owner type and later verification plan; CP-01 through CP-08 remain open; no public implementation |
 
 The refreshed technical-readiness block is complete from clean commit
 `70e92ba`: 305 Webapp tests pass with 14 expected Staging skips, the 33-entry
 release ZIP includes the restore tool and no `.env`/`.tmp`, and the Website
 passes a 38-file check plus 28-page build. No implementation slice is doing;
 SB-25 is waiting on a corrected IONOS SFTP start directory. Concept Clean's
-name/quote publication approval is confirmed; SB-27 is authorized for the
-crawler-blocked review deployment and Janay's visual/content acceptance.
-Recommended next block: complete the independent SEO/GEO Content Inventory and
-first-party Evidence Matrix while EDV remains pending. Required inputs are the
-current five priority pages and already approved repository evidence only.
-Deliverables are a page inventory and evidence/rights matrix. Definition of
-Done: each page records target group, concrete use case, relevant expertise,
-available primary information, CTA, evidence status, gaps and owner without
-creating new guide pages or unsupported authority claims. No direct form
-delivery, calendar booking, IONOS production deployment or real-data use is
-authorized by SB-27.
+name/quote publication approval is confirmed and the crawler-blocked review
+deployment passed its public smoke. SB-28 completed the five-page inventory and
+evidence baseline; SB-29 completed the non-public Core Page Content Plan.
+Recommended next block: obtain the bounded CP-01 through CP-08 content
+decisions early, beginning with page ownership, service taxonomy and commercial
+review. Required inputs are named business/subject-matter approvers and the
+current approved offer facts. Deliverables are an owner/review matrix and
+recorded decisions. Definition of Done: every Priority A route has named
+editorial and subject-matter ownership, and commercial/route-boundary questions
+are approved or explicitly deferred. No direct form delivery, calendar booking,
+IONOS production deployment or real-data use is authorized by this content
+workstream.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -647,13 +663,13 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | In progress | High | Publish SB-27 to the crawler-blocked review and hand it to Janay | Concept Clean name/quote and review deployment approved; no logo use | exact source comparison, desktop/390-pixel QA complete; review HTTP/robots/content smoke pending |
-| 2 | In progress after Step 1 | High | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five priority pages | separate content workstream; no new guide pages or invented authority signals | page-by-page target group, use case, expertise, primary information and CTA evidence |
-| 3 | Waiting external | High | Confirm the exact Website SFTP target without changing it | EDV repairs/reassigns missing SFTP home; host key and credentials verified; SB-22 | authentication proven; after repair capture `pwd`/complete inventory and target-contract validation |
-| 4 | Waiting external | Medium-high | Render and validate App-DNS, TLS, reverse-proxy, SMTP and direct-contact delivery configuration | EXT-01 not expected before 2026-09-14; G-CONTACT; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender, anti-spam path and synthetic contact delivery |
-| 5 | Pending | Medium | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 3-4; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
-| 6 | Pending | Medium-low | Close the bounded direct-contact increment or retain the honest mail-client fallback | Step 4; privacy, retention, abuse and operations approval | negative validation tests, synthetic delivery/failure evidence, accessibility and rollback or documented defer decision |
-| 7 | Pending | Low | Create named accounts and run supervised acceptance | Steps 3-6; EXT-03; legal progress | E-Mail invitation, MFA, least-privilege matrix, Janay walkthrough and no shared accounts |
+| 1 | Done | High | Publish SB-27 to the crawler-blocked review and hand it to Janay | Concept Clean name/quote and review deployment approved; no logo use | run `33848941115` green; public HTTP 200, expected stories and `noindex, nofollow, noarchive` meta verified |
+| 2 | Done | High | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five priority pages | separate content workstream; no new guide pages or invented authority signals | SB-28 records every required field and explicit evidence/owner gaps in two versioned documents |
+| 3 | Done locally | High | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; resolve route intent and overlap as explicit decisions | SB-29 defines five route plans, CP-01 through CP-08 and later verification evidence |
+| 4 | Ready; stakeholder input | High | Assign page owners and decide taxonomy, commercial facts and route boundaries | SB-29; named business and subject-matter approvers | approved/deferred CP-01 through CP-08 with owner, date and evidence reference |
+| 5 | Waiting external | High | Confirm the exact Website SFTP target and validate App-DNS/SMTP/contact configuration | EDV repairs SFTP home and supplies EXT-01 details; host key/credentials verified | read-only inventory, target contract, DNS/TLS preflight, exact Origin and synthetic mail evidence |
+| 6 | Pending | Medium | Rehearse Website SFTP release and VPS package activation/rollback without real data | Step 5; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
+| 7 | Pending | Medium-low | Close direct contact and named-user acceptance | Steps 5-6; privacy/operations approval; EXT-03; legal progress | negative contact tests or documented fallback; E-Mail invitation, MFA, least privilege and Janay walkthrough |
 | 8 | Pending | Low | Close Legal/Go-No-Go and release the narrow pilot on the confirmed replacement date | EXT-02 through EXT-06; all real-data and production gates | signed gate matrix, production smoke, backup evidence, first approved company and rollback readiness |
 
 ### Cross-Cutting Gates

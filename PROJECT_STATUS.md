@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-09-03
+Last updated: 2026-09-04
 
 ## Snapshot
 
@@ -291,13 +291,17 @@ Last updated: 2026-09-03
 
 ## Delivery Horizon
 
-- Immediate content gate: Concept Clean name/quote approval and review-
-  deployment authorization are confirmed. Publish only to the crawler-blocked
-  GitHub review, verify source wording, desktop/mobile layout, HTTP status and
-  robots headers, then collect Janay's visual/content acceptance.
-- Ready independent work: complete the SEO/GEO Content Inventory and Content-
-  Evidence Matrix for `/`, `/unternehmen`, `/leistungen`, `/businesscoaching`
-  and `/mindforge`; do not create guide pages or unsupported authority claims.
+- Review release: Concept Clean name/quote approval is confirmed. GitHub Pages
+  review run `33848941115` succeeded; the public review returned HTTP 200,
+  contained both company stories and the approved Concept Clean reference, and
+  retained `noindex, nofollow, noarchive`. Janay's visual/content acceptance is
+  still open; no logo was published.
+- Independent content work: the SEO/GEO Content Inventory, Content-Evidence
+  Matrix and Core Page Content Plan for `/`, `/unternehmen`, `/leistungen`,
+  `/businesscoaching` and `/mindforge` are complete in `docs/content/`. The next
+  ready block is the bounded CP-01 through CP-08 stakeholder decision set,
+  beginning with page ownership, service taxonomy and commercial review. No
+  public rewrite, guide page or unsupported authority claim is authorized.
 
 - Activation inputs: the reviewed 24.08 operator pack is represented by
   `docs/requirements/activation-input-contract-2026-08-24.md`; durable gate
@@ -385,13 +389,13 @@ Last updated: 2026-09-03
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) let EDV repair the missing SFTP home and finish
-  the read-only Webroot inventory, (2) use the EDV reply to validate DNS/TLS/Nginx/SMTP
-  and direct-contact delivery, (3) rehearse Website/Webapp activation and
-  rollback without real data, (4) implement and prove direct contact or retain
-  the honest fallback, (5) onboard named users and run supervised acceptance,
-  (6) obtain Legal/Thomas Go/No-Go and release the narrow pilot plus first
-  approved company. Confidence decreases after step 3.
+- Rolling delivery horizon: (1) SB-27 review deployment is done, (2) SB-28
+  inventory/evidence baseline is done, (3) SB-29 Core Page Content Plan is done,
+  (4) assign content owners and close or defer CP-01 through CP-08, (5) let EDV
+  repair the SFTP home and validate DNS/SMTP/contact configuration, (6) rehearse
+  activation and rollback without real data, (7) close direct contact and
+  named-user acceptance, and (8) obtain Legal/Thomas Go/No-Go and release the
+  narrow pilot. Confidence decreases after step 5.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.
 
