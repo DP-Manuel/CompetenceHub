@@ -2,6 +2,18 @@
 
 Newest entries first.
 
+## 2026-09-04 | content/release | Concept Clean reference approved
+
+- Manuel confirmed publication approval for the prepared Concept Clean company
+  name and quotation. The `G-CONTENT` gate for this exact reference is closed.
+- The embedded logo remains excluded because logo/asset rights were not part of
+  the bounded implementation and no approved original logo asset was needed.
+- Manuel authorized a crawler-blocked GitHub-Pages review deployment so Janay
+  can inspect both new company stories. IONOS production, direct contact,
+  accounts and real-data use remain separately gated.
+- Next independent work after the review smoke: SEO/GEO Content Inventory and
+  first-party Content-Evidence Matrix for the five priority pages.
+
 ## 2026-09-03 | frontend/content | Use-case routes and first customer voice prepared
 
 - Re-read only the explicitly authorized `Quellen/14.08.2026` folder. Janay's

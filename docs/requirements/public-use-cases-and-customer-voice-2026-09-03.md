@@ -51,15 +51,13 @@ be inferred.
 ## Publication Gate
 
 Manuel requested that the Concept Clean feedback appear on the website on
-2026-09-03. The repository contains the resulting review implementation, but
-the source document itself contains no explicit customer-side publication
-release for the company name, quotation or logo.
+2026-09-03. On 2026-09-04 Manuel confirmed that Concept Clean is approved for
+the prepared public reference. This closes the publication gate for the
+company name and the supplied quotation used in the implementation.
 
-Before production publication, retain evidence that Concept Clean approved the
-named quotation. The embedded logo is not used. Logo publication requires a
-separate explicit rights confirmation and an approved original asset. This is
-part of `G-CONTENT` and does not block local implementation or internal visual
-review.
+The embedded logo is not used. Logo publication remains a separate asset-
+rights decision and requires an approved original asset. The current release
+therefore contains no Concept Clean image or logo.
 
 ## Acceptance Criteria
 

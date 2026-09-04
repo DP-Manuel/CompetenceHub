@@ -621,23 +621,24 @@ while infrastructure and stakeholder gates are waiting.
 | SB-24 | Done and review deployed | Consolidate approved 27.08 public-website feedback without expanding backend scope | authorized source packet; existing content/rights rules; no direct form endpoint or calendar implementation | Mindforge now contains Coaching and Beratung; services/navigation are consolidated; Coach rail auto-runs despite pointer hover and retains manual controls; FAQ cards size independently; Mindforge exposes a fourth Assessment-Center node; spacing, desktop/390-pixel browser QA and Astro build pass; feature commit `82c192b` pushed; manual review workflow `33502638029` green; public review pages HTTP 200 and crawler-blocked |
 | SB-25 | Waiting external: authenticated, assigned Webroot missing | Confirm the exact IONOS Website Webroot without changing it | EDV must repair or reassign missing SFTP home; SB-22; host key and credentials verified | password authentication and SFTP subsystem acceptance proven; server then closes because the assigned `/htdocs/projektwue` target does not exist; public DNS/TLS reach the same IONOS target but both HTTP/HTTPS names return a 403 parking page without redirects; after EDV repair collect `pwd`, complete hidden-file inventory, provider-file classification and target-contract validation; no upload or remote change occurred |
 | SB-26 | Done locally | Make the static Website artifact self-contained for conservative IONOS Apache delivery | SB-17/SB-22; no remote Apache or Webroot assumption | production `.htaccess` prepares HTTPS/canonical redirects, 404 mapping and bounded security headers without HSTS; accessible noindex 404 page added; release builder uses .NET ZIP and fails unless `.htaccess`, `404.html` and `index.html` exist in source and archive; 7 focused tests and 39-file/29-page Astro build green; clean `f7afd3247c10` artifact is `dirty: false`, contains all three required root entries and has SHA-256 `8378655a120441cf5cd6c6e95709688e6ec3c000e93e2813761f07ed44f7e0a9`; no upload or deployment |
-| SB-27 | Done locally; customer publication gate open | Add two source-governed use-case stories and the first Concept Clean customer voice to `/unternehmen` | authorized read of `Quellen/14.08.2026`; no invented claims; named quote needs customer-side production release evidence | illustrative leadership story visibly labelled; Concept Clean path limited to supplied facts; no logo copied; semantic ordered routes, desktop visual QA, exact 390-pixel `0 px` overflow evidence and 39-file/29-page Astro build green; no deployment or real-data use |
+| SB-27 | Done and publication-approved; review deployment in progress | Add two source-governed use-case stories and the first Concept Clean customer voice to `/unternehmen` | authorized read of `Quellen/14.08.2026`; no invented claims; Manuel confirmed Concept Clean public-reference approval 2026-09-04 | illustrative leadership story visibly labelled; Concept Clean path limited to supplied facts; no logo copied; semantic ordered routes, desktop visual QA, exact 390-pixel `0 px` overflow evidence and 39-file/29-page Astro build green; review deployment authorized, IONOS production and real-data use remain separate |
 
 The refreshed technical-readiness block is complete from clean commit
 `70e92ba`: 305 Webapp tests pass with 14 expected Staging skips, the 33-entry
 release ZIP includes the restore tool and no `.env`/`.tmp`, and the Website
 passes a 38-file check plus 28-page build. No implementation slice is doing;
-SB-25 is waiting on a corrected IONOS SFTP start directory and SB-27 awaits a
-short customer-side release record before production publication.
-Recommended next block: obtain Concept Clean's approval for the named quote
-and Janay's visual/content acceptance, then publish SB-27 only to the
-crawler-blocked review environment for stakeholder inspection. Required input:
-release evidence plus review-deployment approval. Deliverable: accepted
-company-story section. Definition of Done: source wording, desktop/mobile
-layout and rights evidence are accepted and the review URL passes HTTP/robots
-checks. In parallel, the independent SEO/GEO Content Inventory and Evidence
-Matrix can proceed without waiting for EDV. No direct form delivery, calendar
-booking, IONOS production deployment or real-data use is authorized by SB-27.
+SB-25 is waiting on a corrected IONOS SFTP start directory. Concept Clean's
+name/quote publication approval is confirmed; SB-27 is authorized for the
+crawler-blocked review deployment and Janay's visual/content acceptance.
+Recommended next block: complete the independent SEO/GEO Content Inventory and
+first-party Evidence Matrix while EDV remains pending. Required inputs are the
+current five priority pages and already approved repository evidence only.
+Deliverables are a page inventory and evidence/rights matrix. Definition of
+Done: each page records target group, concrete use case, relevant expertise,
+available primary information, CTA, evidence status, gaps and owner without
+creating new guide pages or unsupported authority claims. No direct form
+delivery, calendar booking, IONOS production deployment or real-data use is
+authorized by SB-27.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -646,8 +647,8 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Waiting short external | High | Close SB-27 content rights and stakeholder acceptance, then review deploy | Concept Clean approves named quotation; Janay accepts presentation; explicit review-deploy approval | retained approval evidence, exact source comparison, desktop/390-pixel QA, review HTTP/robots smoke |
-| 2 | Ready independent | High | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five priority pages | separate content workstream; no new guide pages or invented authority signals | page-by-page target group, use case, expertise, primary information and CTA evidence |
+| 1 | In progress | High | Publish SB-27 to the crawler-blocked review and hand it to Janay | Concept Clean name/quote and review deployment approved; no logo use | exact source comparison, desktop/390-pixel QA complete; review HTTP/robots/content smoke pending |
+| 2 | In progress after Step 1 | High | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five priority pages | separate content workstream; no new guide pages or invented authority signals | page-by-page target group, use case, expertise, primary information and CTA evidence |
 | 3 | Waiting external | High | Confirm the exact Website SFTP target without changing it | EDV repairs/reassigns missing SFTP home; host key and credentials verified; SB-22 | authentication proven; after repair capture `pwd`/complete inventory and target-contract validation |
 | 4 | Waiting external | Medium-high | Render and validate App-DNS, TLS, reverse-proxy, SMTP and direct-contact delivery configuration | EXT-01 not expected before 2026-09-14; G-CONTACT; no passwords by E-Mail | DNS/TLS preflight, native systemd/Nginx validation, exact Origin, authorized sender, anti-spam path and synthetic contact delivery |
 | 5 | Pending | Medium | Rehearse Website SFTP release and VPS package activation/rollback without real data | Steps 3-4; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
@@ -671,9 +672,9 @@ progress in parallel but do not silently expand the execution backlog.
   finance/closure evidence still gate workflow constraints and automation, but
   do not block the Auth foundation.
 - **G-CONTENT:** public Coach/topic/customer-reference changes require factual,
-  qualification, portrait/logo/quotation rights and publication approval;
-  Mediation remains qualification-gated and named Concept Clean use remains
-  blocked from production until customer-side release evidence is retained.
+  qualification, portrait/logo/quotation rights and publication approval.
+  Mediation remains qualification-gated. Concept Clean company-name and quote
+  use are approved as of 2026-09-04; logo use remains outside that approval.
 - **G-CONTACT:** replace the current local-mail-client handoff only after the
   receiving mailbox, sender/SMTP or API path, privacy text, retention, abuse
   protection, error behavior, monitoring and synthetic end-to-end delivery are

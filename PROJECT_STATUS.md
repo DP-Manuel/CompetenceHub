@@ -59,8 +59,9 @@ Last updated: 2026-09-03
   outcomes and click acceptance were excluded. No customer logo was copied.
   Desktop visual review and exact 390-pixel layout checks report no document,
   story or step overflow; Astro checks 39 files without diagnostics and builds
-  29 pages. Production publication of the named Concept Clean quote remains
-  gated on retained customer-side release evidence and stakeholder acceptance.
+  29 pages. Manuel confirmed Concept Clean publication approval for company
+  name and quotation on 2026-09-04. Logo use remains excluded. The crawler-
+  blocked review deployment is authorized; Janay's acceptance remains open.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -107,8 +108,8 @@ Last updated: 2026-09-03
   Staging skips, installed its Wheel in isolation and packaged every operations
   file with zero `.env`/`.tmp` entries. Linux checkout files are pinned to LF.
   The disposable artifact was removed.
-- Waiting: retained Concept Clean name/quote publication evidence, remaining
-  profile details and rights where still open; explicit
+- Waiting: Janay's visual/content acceptance of the two company stories,
+  remaining profile details and rights where still open; explicit
   qualification and approval before any Coach is assigned to Mediation;
   legal-provider decision, approval of Janay's remaining workflow gates,
   direct-contact delivery inputs and stakeholder acceptance of SB-24. The
@@ -290,10 +291,10 @@ Last updated: 2026-09-03
 
 ## Delivery Horizon
 
-- Immediate content gate: obtain Concept Clean's customer-side approval for
-  the named quote and Janay's visual/content acceptance. With separate review-
-  deployment approval, publish only to the crawler-blocked GitHub review and
-  verify source wording, desktop/mobile layout, HTTP status and robots headers.
+- Immediate content gate: Concept Clean name/quote approval and review-
+  deployment authorization are confirmed. Publish only to the crawler-blocked
+  GitHub review, verify source wording, desktop/mobile layout, HTTP status and
+  robots headers, then collect Janay's visual/content acceptance.
 - Ready independent work: complete the SEO/GEO Content Inventory and Content-
   Evidence Matrix for `/`, `/unternehmen`, `/leistungen`, `/businesscoaching`
   and `/mindforge`; do not create guide pages or unsupported authority claims.
