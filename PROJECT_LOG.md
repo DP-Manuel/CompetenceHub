@@ -2,6 +2,17 @@
 
 Newest entries first.
 
+## 2026-09-04 | stakeholder update/skills | Wochenupdate-Standard eingeführt
+
+- `docs/updates/WEEKLY_UPDATE_STANDARD.md` legt ab jetzt die feste Teams-Struktur
+  mit vier Abschnitten, Abschnittsgrenzen und genau einem kurzen Satz pro Punkt
+  fest; `AGENTS.md` verlangt die Wiederverwendung statt wechselnder Formate.
+- Das Update 22.08. bis 04.09. wurde auf fünf Fortschritts-, drei Qualitäts-,
+  drei Status- und vier Folgepunkte gekürzt, ohne Produktions- oder
+  Datenschutzgrenzen zu verlieren.
+- Die wiederverwendbare Erkenntnis ist als Skill-Feedback für
+  `manage-project-state` erfasst; kein Frontend-Code oder Deployment geändert.
+
 ## 2026-09-04 | stakeholder update | Zweiwöchiges Urlaubsupdate vorbereitet
 
 - Das direkt in Teams einsetzbare Update umfasst nach Manuels Korrektur den

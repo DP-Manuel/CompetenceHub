@@ -43,6 +43,8 @@ Read this file before editing.
 - Keep `PROJECT_STATUS.md` short and current when frequent handoffs, stakeholder updates, or multi-day work are happening.
 - Use `MEETINGS.md` for stakeholder, steering, planning, review, retrospective, or decision meetings.
 - Use `SKILL_FEEDBACK_LOG.md` for proposed CodexSkills improvements discovered during this project.
+- Use `docs/updates/WEEKLY_UPDATE_STANDARD.md` as the binding structure for
+  colleague-facing Teams updates; do not invent a new weekly format.
 - After every meaningful implementation, verification, deployment, operations,
   planning or stakeholder-feedback block, perform a brief skill-learning check:
   identify what should be remembered about Manuel's workflow, which avoidable

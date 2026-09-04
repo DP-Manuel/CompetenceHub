@@ -6,6 +6,24 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-04 | stable-weekly-update-format | Keep recurring stakeholder updates consistent
+
+- Triggering project situation: successive weekly Teams updates used different
+  structures and lengths, so Manuel had to re-explain the expected presentation.
+- Durable preference: keep one fixed section order and use at most one short
+  sentence per bullet; the 04.09 content selection was good but too long.
+- Proposed improvement: `manage-project-state` should discover and reuse a
+  repository-local recurring-update standard before composing a new report.
+  Where none exists, create one from accepted stakeholder feedback and retain
+  it as the default for later reporting periods.
+- Project response: `docs/updates/WEEKLY_UPDATE_STANDARD.md` now fixes purpose,
+  section order, bullet limits, one-line style, evidence rules and storage; the
+  current update was shortened to that standard and `AGENTS.md` requires reuse.
+- Reuse potential: high for recurring Teams, Daily, sprint and steering updates.
+- Risk if ignored: medium; stakeholder communication becomes inconsistent and
+  Manuel repeatedly spends time correcting format instead of reviewing content.
+- Status: implemented as a project standard; canonical skill proposal captured.
+
 ### 2026-09-04 | post-block-skill-learning-check | Make real-work learning routine
 
 - Triggering project situation: Manuel again had to request that an observed
