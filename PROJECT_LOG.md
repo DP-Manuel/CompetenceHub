@@ -2,6 +2,19 @@
 
 Newest entries first.
 
+## 2026-09-04 | stakeholder update | Wochenupdate vorbereitet
+
+- Das direkt in Teams einsetzbare Wochenupdate für den Zeitraum 31.08. bis
+  04.09.2026 fasst Website- und Kundenstimmenfortschritt, SEO/GEO-Vorbereitung,
+  IONOS-Blocker, Qualitätsstand, offene Freigaben und die nächsten fünf Schritte
+  ohne interne technische Detailtiefe zusammen.
+- Das Update hält Produktionsstatus und Datenschutzgrenze ausdrücklich fest:
+  kein IONOS-Produktivstart, kein produktiver Mailversand und keine realen
+  Kundendaten.
+- Kein wiederverwendbares neues Skill-Learning über die bereits dokumentierte
+  Stakeholder- und Projektstatusroutine hinaus.
+- Kein Code, Deployment oder Real-Daten-Zugriff in diesem Block.
+
 ## 2026-09-04 | feedback/skills | Quote placement and learning loop captured
 
 - Manuel's screenshot confirms that the decorative quotation marks in the
