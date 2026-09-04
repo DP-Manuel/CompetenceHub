@@ -404,11 +404,16 @@ Last updated: 2026-09-04
   made before evidence arrives.
 - Rolling delivery horizon: (1) SB-27 review deployment is done, (2) SB-28
   inventory/evidence baseline is done, (3) SB-29 Core Page Content Plan is done,
-  (4) assign content owners and close or defer CP-01 through CP-08, (5) let EDV
-  repair the SFTP home and validate DNS/SMTP/contact configuration, (6) rehearse
-  activation and rollback without real data, (7) close direct contact and
-  named-user acceptance, and (8) obtain Legal/Thomas Go/No-Go and release the
-  narrow pilot. Confidence decreases after step 5.
+  (4) correct the deferred customer-quote punctuation placement, (5) assign
+  content owners and close or defer CP-01 through CP-08, (6) let EDV repair the
+  SFTP home and validate DNS/SMTP/contact configuration, (7) rehearse activation
+  and rollback without real data, and (8) close contact, named-user, Legal and
+  Thomas Go/No-Go gates before the narrow pilot. Confidence decreases after
+  step 6.
+- Deferred visual defect: the opening and closing quotation marks in the
+  Concept Clean card sit at the outer container edges instead of beside the
+  actual first and final quote text. SB-32 owns the desktop/390-pixel correction
+  for the next frontend pass; no code change was requested in this block.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.
 

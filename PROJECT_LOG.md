@@ -2,6 +2,22 @@
 
 Newest entries first.
 
+## 2026-09-04 | feedback/skills | Quote placement and learning loop captured
+
+- Manuel's screenshot confirms that the decorative quotation marks in the
+  Concept Clean card are still positioned against the quote container rather
+  than the first and final text. The issue is recorded as SB-32 for the next
+  frontend pass with desktop and 390-pixel visual acceptance evidence.
+- Added a project-level skill-learning checkpoint to `AGENTS.md`: meaningful
+  work blocks now include a brief check for durable Manuel preferences,
+  repeated friction and evidenced reusable skill improvements. A finding is
+  not required when there is no reusable learning.
+- Captured the broader canonical-skill proposal in `SKILL_FEEDBACK_LOG.md`.
+  The canonical CodexSkills working tree has unrelated active changes, so it
+  was not modified or synchronized in this block.
+- No frontend code or deployment was performed; only project memory and the
+  local skill-learning standard changed.
+
 ## 2026-09-04 | frontend/content | Customer-feedback rail prepared
 
 - Replaced the oversized single-customer composition with the requested heading

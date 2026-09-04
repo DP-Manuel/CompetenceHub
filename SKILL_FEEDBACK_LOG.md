@@ -6,6 +6,34 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-04 | post-block-skill-learning-check | Make real-work learning routine
+
+- Triggering project situation: Manuel again had to request that an observed
+  frontend defect and a broader collaboration preference be carried into the
+  next session and into CodexSkills. Skill reflection has occurred only when
+  explicitly prompted, so useful context about his visual review process risks
+  remaining in chat.
+- Concrete UI evidence: decorative opening and closing quotation marks in the
+  Concept Clean card are positioned at the outer edges of the quote container.
+  They should be typographically anchored to the actual first and last quoted
+  text, with visible but modest spacing. This repair is deliberately deferred
+  to the next frontend pass.
+- Proposed improvement: `coordinate-software-project`, `manage-project-state`
+  and `improve-skill-system` should end meaningful work blocks with a lightweight
+  learning checkpoint: durable user preference, repeated friction, missing
+  test/evidence and reusable skill change. Write only evidenced findings and
+  permit `no reusable learning`, so the check improves future work without
+  creating mandatory noise.
+- Project response: `AGENTS.md` now makes this checkpoint a local standard; the
+  quotation-placement defect is in the execution backlog and rolling horizon.
+  No frontend change or deployment was performed in this block.
+- Reuse potential: very high for long-running AI-assisted projects and future
+  team collaboration.
+- Risk if ignored: medium-high; corrections and working preferences are
+  rediscovered, and skills improve too late or not at all.
+- Status: local standard and feedback captured; canonical CodexSkills change
+  remains pending because its working tree contains unrelated active changes.
+
 ### 2026-08-21 | visual-external-dependency-radar | Surface lead time before work blocks
 
 - Triggering project situation: App-DNS, SMTP, legal approval, contracts,
