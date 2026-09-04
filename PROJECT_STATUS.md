@@ -295,7 +295,9 @@ Last updated: 2026-09-04
   review run `33848941115` succeeded; the public review returned HTTP 200,
   contained both company stories and the approved Concept Clean reference, and
   retained `noindex, nofollow, noarchive`. Janay's visual/content acceptance is
-  still open; no logo was published.
+  still open; no logo was published. A follow-up now moves the exact quotation
+  into a standalone, clearly labelled `Kundenfeedback` section before the use
+  cases; its refreshed review deployment is pending.
 - Independent content work: the SEO/GEO Content Inventory, Content-Evidence
   Matrix and Core Page Content Plan for `/`, `/unternehmen`, `/leistungen`,
   `/businesscoaching` and `/mindforge` are complete in `docs/content/`. The next
@@ -303,8 +305,9 @@ Last updated: 2026-09-04
   beginning with page ownership, service taxonomy and commercial review. A
   German decision packet and E-Mail draft are ready in
   `docs/content/priority-a-stakeholder-review-packet-2026-09-04.md`; they have
-  not been sent automatically. No public rewrite, guide page or unsupported
-  authority claim is authorized.
+  not been sent automatically. Send-ready A4 Word and PDF exports are available
+  under `docs/content/exports/`. No guide page or unsupported authority claim
+  is authorized.
 
 - Activation inputs: the reviewed 24.08 operator pack is represented by
   `docs/requirements/activation-input-contract-2026-08-24.md`; durable gate

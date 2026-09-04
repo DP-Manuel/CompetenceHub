@@ -87,7 +87,7 @@ const caseStories = [
   },
   {
     id: "concept-clean-kommunikation",
-    eyebrow: "Use Case 02 · Kundenrückmeldung",
+    eyebrow: "Use Case 02 · Aus der Praxis",
     title: "Kommunikation, die zum Arbeitsalltag passt",
     lead:
       "Concept Clean beschreibt einen Kommunikationskurs für Mitarbeitende, bei dem Matching, Inhalte und Zeiten auf den betrieblichen Kontext abgestimmt wurden.",
@@ -119,11 +119,15 @@ const caseStories = [
         text: "Von der ersten Anfrage bis zur Durchführung bewertet Concept Clean den Ablauf durchgehend positiv.",
       },
     ],
-    quote:
-      "Wir haben über Donner und Partner einen Kommunikationskurs für unsere Mitarbeiter gebucht. Von der ersten Anfrage bis zur Durchführung lief alles absolut reibungslos. Besonders begeistert hat uns das flexible Matching: Der Dozent hat nicht einfach den Standard unterrichtet, sondern den Fokus genau auf unsere branchenspezifische Fachsprache und die tägliche Kommunikation im Team gelegt. Die Einheiten ließen sich super mit den Arbeitszeiten unserer Mitarbeiter vereinbaren.",
-    quoteSource: "Concept Clean",
   },
 ] as const;
+
+const customerFeedback = {
+  quote:
+    "Wir haben über Donner und Partner einen Kommunikationskurs für unsere Mitarbeiter gebucht. Von der ersten Anfrage bis zur Durchführung lief alles absolut reibungslos. Besonders begeistert hat uns das flexible Matching: Der Dozent hat nicht einfach den Standard unterrichtet, sondern den Fokus genau auf unsere branchenspezifische Fachsprache und die tägliche Kommunikation im Team gelegt. Die Einheiten ließen sich super mit den Arbeitszeiten unserer Mitarbeiter vereinbaren.",
+  source: "Concept Clean",
+  context: "Kommunikationskurs für Mitarbeitende",
+} as const;
 
 const assessmentApplications = [
   {
@@ -288,6 +292,32 @@ const faqs = [
       </div>
     </section>
 
+    <section
+      class="customer-feedback-section"
+      aria-labelledby="customer-feedback-title"
+    >
+      <div class="customer-feedback__intro">
+        <p class="eyebrow">Kundenfeedback</p>
+        <h2 id="customer-feedback-title">
+          So hat Concept Clean die Zusammenarbeit erlebt
+        </h2>
+        <p>
+          Die Rückmeldung bezieht sich auf einen Kommunikationskurs für
+          Mitarbeitende, der an Fachsprache, Teamalltag und Arbeitszeiten
+          angepasst wurde.
+        </p>
+      </div>
+
+      <blockquote class="customer-feedback__quote">
+        <span class="customer-feedback__quote-mark" aria-hidden="true">„</span>
+        <p>{customerFeedback.quote}</p>
+        <footer>
+          <cite>{customerFeedback.source}</cite>
+          <span>{customerFeedback.context}</span>
+        </footer>
+      </blockquote>
+    </section>
+
     <section class="use-case-section" aria-labelledby="use-case-title">
       <div class="section-heading use-case-section__heading">
         <p class="eyebrow">Vom Anliegen zur Umsetzung</p>
@@ -342,12 +372,6 @@ const faqs = [
               </ol>
             </div>
 
-            {"quote" in story && (
-              <blockquote class="case-story__quote">
-                <p>„{story.quote}“</p>
-                <cite>{story.quoteSource}</cite>
-              </blockquote>
-            )}
           </article>
         ))}
       </div>

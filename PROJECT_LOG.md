@@ -2,6 +2,22 @@
 
 Newest entries first.
 
+## 2026-09-04 | frontend/content | Concept Clean feedback made explicit
+
+- Confirmed that the approved Concept Clean quotation was present but visually
+  buried at the end of Use Case 02.
+- Added a standalone `Kundenfeedback` section before the two use cases. It names
+  Concept Clean, states the bounded communication-course context and presents
+  the approved quotation as the primary content rather than duplicating it.
+- Astro checked 39 files with zero errors, warnings or hints and built 29 pages.
+  Browser QA shows the complete section on desktop and `390 px` document width
+  with `390 px` scroll width on mobile.
+- Converted the CP-01 through CP-08 review handout to send-ready A4 Word and PDF
+  files, applied Competence Hub typography/colors and visually checked all four
+  PDF pages. No E-Mail was sent automatically.
+- Review deployment is authorized by Manuel and remains the next release action;
+  IONOS production is unchanged.
+
 ## 2026-09-04 | content/release | Review deployed and Priority A evidence inventoried
 
 - Deployed the approved SB-27 company stories to the crawler-blocked GitHub
