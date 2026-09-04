@@ -15,7 +15,9 @@ Newest entries first.
 - Converted the CP-01 through CP-08 review handout to send-ready A4 Word and PDF
   files, applied Competence Hub typography/colors and visually checked all four
   PDF pages. No E-Mail was sent automatically.
-- Review deployment is authorized by Manuel and remains the next release action;
+- Review workflow `33851401250` built and deployed successfully. Public smoke
+  returned HTTP 200 and confirmed the `Kundenfeedback` label, Concept Clean
+  heading, approved quotation and `noindex, nofollow, noarchive` directive.
   IONOS production is unchanged.
 
 ## 2026-09-04 | content/release | Review deployed and Priority A evidence inventoried
