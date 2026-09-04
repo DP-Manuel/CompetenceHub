@@ -18,7 +18,11 @@ Newest entries first.
   added.
 - Astro checked 40 files with zero findings and built 29 pages. Desktop and
   exact 390-pixel browser QA show one feedback card, no unnecessary controls
-  and `390 px` document/scroll width. Review deployment remains pending.
+  and `390 px` document/scroll width.
+- Commit `3130e0d` was pushed to `origin/main`; review workflow `33852789095`
+  completed successfully. Public smoke returned HTTP 200 for both page and
+  customer logo, confirmed heading, topic and Concept Clean content, and
+  retained `noindex, nofollow, noarchive`. IONOS production remains unchanged.
 
 ## 2026-09-04 | frontend/content | Concept Clean feedback made explicit
 

@@ -51,17 +51,22 @@ Last updated: 2026-09-04
   Assessment-Center bubble on Mindforge, 30-pixel process-card clearance and
   automatic Coach movement even while the pointer rests over the rail. No
   direct form endpoint or calendar booking was activated.
-- Completed locally: `/unternehmen` now contains two source-governed visual
+- Done and crawler-blocked review deployed: `/unternehmen` now contains two source-governed visual
   stories. A clearly labelled illustrative leadership path and a Concept Clean
   communication-course path each use a semantic five-step winding route that
   becomes linear on mobile. The customer quote remains faithful to the
   supplied feedback; unsupported response times, package sizes, ratings,
-  outcomes and click acceptance were excluded. No customer logo was copied.
+  outcomes and click acceptance were excluded.
   Desktop visual review and exact 390-pixel layout checks report no document,
   story or step overflow; Astro checks 39 files without diagnostics and builds
   29 pages. Manuel confirmed Concept Clean publication approval for company
-  name and quotation on 2026-09-04. Logo use remains excluded. The crawler-
-  blocked review deployment is authorized; Janay's acceptance remains open.
+  name and quotation on 2026-09-04 and then explicitly requested the supplied
+  logo in a scalable customer-feedback presentation. The resulting compact
+  rail uses a publication-gated data source, visible logo, collaboration topic,
+  short quotation and separate quotation marks; controls activate only when
+  more entries exist. Workflow `33852789095` deployed successfully; public
+  page and logo return HTTP 200, the expected content is present and the review
+  remains `noindex, nofollow, noarchive`. Janay's acceptance remains open.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
