@@ -55,14 +55,20 @@ Manuel requested that the Concept Clean feedback appear on the website on
 the prepared public reference. This closes the publication gate for the
 company name and the supplied quotation used in the implementation.
 
-The embedded logo is not used. Logo publication remains a separate asset-
-rights decision and requires an approved original asset. The current release
-therefore contains no Concept Clean image or logo.
+The first implementation deliberately excluded the embedded logo. On
+2026-09-04 Manuel then explicitly requested a scalable customer-feedback rail
+with visible customer logos. This extends the bounded Concept Clean approval to
+the supplied logo for this customer-feedback context. The extracted image is
+stored as `apps/website/public/images/customers/concept-clean.png`; it must not
+be reused for unrelated purposes or treated as approval for future customer
+assets.
 
 ## Acceptance Criteria
 
 - The illustrative story is visibly identified as an example.
 - The Concept Clean wording stays faithful to the supplied feedback.
+- The supplied Concept Clean logo is used only in the approved customer-
+  feedback context and retains its aspect ratio.
 - Both stories expose a semantic heading and ordered sequence.
 - The decorative route is ignored by assistive technology.
 - Mobile layouts use a linear route without horizontal overflow or overlapping

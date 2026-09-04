@@ -2,7 +2,12 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
+import { customerFeedbacks } from "../data/customerFeedbacks";
 import "../styles/global.css";
+
+const publishedCustomerFeedbacks = customerFeedbacks.filter(
+  (feedback) => feedback.approvedForPublication,
+);
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
@@ -121,13 +126,6 @@ const caseStories = [
     ],
   },
 ] as const;
-
-const customerFeedback = {
-  quote:
-    "Wir haben über Donner und Partner einen Kommunikationskurs für unsere Mitarbeiter gebucht. Von der ersten Anfrage bis zur Durchführung lief alles absolut reibungslos. Besonders begeistert hat uns das flexible Matching: Der Dozent hat nicht einfach den Standard unterrichtet, sondern den Fokus genau auf unsere branchenspezifische Fachsprache und die tägliche Kommunikation im Team gelegt. Die Einheiten ließen sich super mit den Arbeitszeiten unserer Mitarbeiter vereinbaren.",
-  source: "Concept Clean",
-  context: "Kommunikationskurs für Mitarbeitende",
-} as const;
 
 const assessmentApplications = [
   {
@@ -292,31 +290,110 @@ const faqs = [
       </div>
     </section>
 
-    <section
-      class="customer-feedback-section"
-      aria-labelledby="customer-feedback-title"
-    >
-      <div class="customer-feedback__intro">
-        <p class="eyebrow">Kundenfeedback</p>
-        <h2 id="customer-feedback-title">
-          So hat Concept Clean die Zusammenarbeit erlebt
-        </h2>
+    {publishedCustomerFeedbacks.length > 0 && (
+      <section
+        class="customer-feedback-section"
+        aria-labelledby="customer-feedback-title"
+      >
+      <header class="customer-feedback__heading">
+        <div>
+          <p class="eyebrow">Kundenfeedback</p>
+          <h2 id="customer-feedback-title">
+            Das waren die Eindrücke von unseren Kunden
+          </h2>
+        </div>
         <p>
-          Die Rückmeldung bezieht sich auf einen Kommunikationskurs für
-          Mitarbeitende, der an Fachsprache, Teamalltag und Arbeitszeiten
-          angepasst wurde.
+          Hier sammeln wir Rückmeldungen dazu, wie Unternehmen Matching,
+          Inhalte und Zusammenarbeit erlebt haben.
         </p>
-      </div>
+        {publishedCustomerFeedbacks.length > 1 && (
+          <div
+            class="customer-feedback__controls"
+            role="group"
+            aria-label="Kundenstimmen steuern"
+          >
+            <button
+              class="customer-feedback__control"
+              type="button"
+              aria-label="Vorherige Kundenstimme"
+              title="Vorherige Kundenstimme"
+              data-feedback-previous
+            >
+              <span class="customer-feedback__control-icon--previous">
+                <Icon name="arrow-right" size={20} />
+              </span>
+            </button>
+            <button
+              class="customer-feedback__control"
+              type="button"
+              aria-pressed="false"
+              aria-label="Kundenstimmen pausieren"
+              title="Kundenstimmen pausieren"
+              data-feedback-toggle
+            >
+              <span data-feedback-pause-icon><Icon name="pause" size={20} /></span>
+              <span data-feedback-play-icon hidden><Icon name="play" size={20} /></span>
+            </button>
+            <button
+              class="customer-feedback__control"
+              type="button"
+              aria-label="Nächste Kundenstimme"
+              title="Nächste Kundenstimme"
+              data-feedback-next
+            >
+              <Icon name="arrow-right" size={20} />
+            </button>
+          </div>
+        )}
+      </header>
 
-      <blockquote class="customer-feedback__quote">
-        <span class="customer-feedback__quote-mark" aria-hidden="true">„</span>
-        <p>{customerFeedback.quote}</p>
-        <footer>
-          <cite>{customerFeedback.source}</cite>
-          <span>{customerFeedback.context}</span>
-        </footer>
-      </blockquote>
-    </section>
+      <div class="customer-feedback__carousel" data-feedback-carousel>
+        <div class="customer-feedback__viewport" data-feedback-viewport>
+          <div
+            class:list={[
+              "customer-feedback__track",
+              {
+                "customer-feedback__track--single":
+                  publishedCustomerFeedbacks.length === 1,
+              },
+            ]}
+            data-feedback-track
+          >
+            {publishedCustomerFeedbacks.map((feedback) => (
+              <article class="customer-feedback__card" id={`feedback-${feedback.id}`}>
+                <div class="customer-feedback__logo">
+                  <img
+                    src={url(feedback.logo)}
+                    alt={feedback.logoAlt}
+                    width="500"
+                    height="500"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="customer-feedback__content">
+                  <div class="customer-feedback__topic">
+                    <small>Thema der Zusammenarbeit</small>
+                    <strong>{feedback.topic}</strong>
+                  </div>
+                  <blockquote class="customer-feedback__quote">
+                    <span class="customer-feedback__quote-mark customer-feedback__quote-mark--open" aria-hidden="true">„</span>
+                    <p>{feedback.quote}</p>
+                    <span class="customer-feedback__quote-mark customer-feedback__quote-mark--close" aria-hidden="true">“</span>
+                  </blockquote>
+                  <footer>
+                    <cite>{feedback.company}</cite>
+                    <a class="text-link" href={feedback.detailHref}>
+                      Praxisweg ansehen <Icon name="arrow-right" size={18} />
+                    </a>
+                  </footer>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+      </section>
+    )}
 
     <section class="use-case-section" aria-labelledby="use-case-title">
       <div class="section-heading use-case-section__heading">
@@ -401,3 +478,87 @@ const faqs = [
     </section>
   </main>
 </BaseLayout>
+
+<script>
+  const feedbackCarousels = document.querySelectorAll<HTMLElement>(
+    "[data-feedback-carousel]",
+  );
+
+  feedbackCarousels.forEach((carousel) => {
+    const track = carousel.querySelector<HTMLElement>("[data-feedback-track]");
+    const viewport = carousel.querySelector<HTMLElement>("[data-feedback-viewport]");
+    const cards = Array.from(
+      track?.querySelectorAll<HTMLElement>(".customer-feedback__card") || [],
+    );
+    const section = carousel.closest(".customer-feedback-section");
+    const toggle = section?.querySelector<HTMLButtonElement>("[data-feedback-toggle]");
+    const previous = section?.querySelector<HTMLButtonElement>("[data-feedback-previous]");
+    const next = section?.querySelector<HTMLButtonElement>("[data-feedback-next]");
+    const pauseIcon = toggle?.querySelector<HTMLElement>("[data-feedback-pause-icon]");
+    const playIcon = toggle?.querySelector<HTMLElement>("[data-feedback-play-icon]");
+
+    if (
+      !track ||
+      !viewport ||
+      cards.length < 2 ||
+      !toggle ||
+      !previous ||
+      !next
+    ) return;
+
+    let currentIndex = 0;
+    let autoAdvance: number | undefined;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const showCard = (target: number) => {
+      currentIndex = (target + cards.length) % cards.length;
+      viewport.scrollTo({
+        left: cards[currentIndex].offsetLeft - track.offsetLeft,
+        behavior: reducedMotion.matches ? "auto" : "smooth",
+      });
+    };
+
+    const stopAutoAdvance = () => {
+      if (autoAdvance !== undefined) window.clearInterval(autoAdvance);
+      autoAdvance = undefined;
+    };
+
+    const startAutoAdvance = () => {
+      stopAutoAdvance();
+      if (carousel.dataset.paused === "true") return;
+      autoAdvance = window.setInterval(() => showCard(currentIndex + 1), 7500);
+    };
+
+    const setPaused = (paused: boolean) => {
+      carousel.dataset.paused = paused ? "true" : "false";
+      toggle.setAttribute("aria-pressed", paused ? "true" : "false");
+      toggle.setAttribute(
+        "aria-label",
+        paused ? "Kundenstimmen fortsetzen" : "Kundenstimmen pausieren",
+      );
+      toggle.title = paused
+        ? "Kundenstimmen fortsetzen"
+        : "Kundenstimmen pausieren";
+      if (pauseIcon) pauseIcon.hidden = paused;
+      if (playIcon) playIcon.hidden = !paused;
+      paused ? stopAutoAdvance() : startAutoAdvance();
+    };
+
+    carousel.classList.add("is-ready");
+    setPaused(reducedMotion.matches);
+
+    toggle.addEventListener("click", () => {
+      setPaused(carousel.dataset.paused !== "true");
+    });
+    previous.addEventListener("click", () => {
+      setPaused(true);
+      showCard(currentIndex - 1);
+    });
+    next.addEventListener("click", () => {
+      setPaused(true);
+      showCard(currentIndex + 1);
+    });
+    viewport.addEventListener("focusin", stopAutoAdvance);
+    viewport.addEventListener("focusout", startAutoAdvance);
+  });
+</script>

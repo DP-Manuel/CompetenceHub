@@ -639,7 +639,7 @@ while infrastructure and stakeholder gates are waiting.
 | SB-28 | Done locally | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five Priority A routes | separate content workstream; repository evidence only; no private raw sources, new guide pages or invented authority signals | two versioned documents record target group, use case, expertise, first-party information, CTA, evidence/approval state, owner gaps and claim gaps for all five routes; no public copy or deployment changed |
 | SB-29 | Done locally; stakeholder decisions open | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; route overlap must remain explicit | five routes now have a primary job, answer direction, evidence plan, limits, internal links, CTA, decision owner type and later verification plan; CP-01 through CP-08 remain open; no public implementation |
 | SB-30 | Done locally; awaiting dispatch and replies | Prepare the early stakeholder request for CP-01 through CP-08 | SB-29; no assumption may replace a named approval | German review packet contains decision table, recommended defaults, compact answer format, E-Mail draft, review URL and return gate; send-ready A4 Word and PDF exports are visually checked; no message sent automatically |
-| SB-31 | Done and review deployed | Make the approved Concept Clean feedback unmistakable on `/unternehmen` | EV-CC-001 approval; exact quotation and existing evidence boundary; no logo | standalone `Kundenfeedback` section precedes the two use cases and names Concept Clean visibly; quote is no longer buried inside Use Case 02; Astro checks/build green; desktop and exact 390-pixel browser QA show zero horizontal overflow; review run `33851401250` and public HTTP/content/meta-robots smoke green |
+| SB-31 | Done locally; review refresh pending | Make approved customer feedback unmistakable and scalable on `/unternehmen` | EV-CC-001 name/quote approval plus Manuel's explicit request for visible customer logos; no additional claims | compact customer-feedback rail uses a central publication-gated data source, supplied Concept Clean logo, collaboration topic, short exact quotation and practice-path link; controls/automatic advance activate only with multiple approved entries; 40-file Astro check and 29-page build green; desktop and exact 390-pixel browser QA show one card, zero unnecessary controls and no horizontal overflow |
 
 The refreshed technical-readiness block is complete from clean commit
 `70e92ba`: 305 Webapp tests pass with 14 expected Staging skips, the 33-entry
@@ -666,7 +666,7 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Done | High | Publish SB-27 to the crawler-blocked review and hand it to Janay | Concept Clean name/quote and review deployment approved; no logo use | run `33848941115` green; public HTTP 200, expected stories and `noindex, nofollow, noarchive` meta verified |
+| 1 | Local verification done; deploy pending | High | Publish the compact, scalable customer-feedback rail to the crawler-blocked review | Concept Clean name/quote/logo use approved for this context; no additional claim | Astro/browser QA green; review workflow and public HTTP/content/logo/meta-robots smoke pending |
 | 2 | Done | High | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five priority pages | separate content workstream; no new guide pages or invented authority signals | SB-28 records every required field and explicit evidence/owner gaps in two versioned documents |
 | 3 | Done locally | High | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; resolve route intent and overlap as explicit decisions | SB-29 defines five route plans, CP-01 through CP-08 and later verification evidence |
 | 4 | Waiting stakeholder; packet ready | High | Assign page owners and decide taxonomy, commercial facts and route boundaries | SB-29/SB-30; Manuel sends the prepared request to named business and subject-matter approvers | approved/deferred CP-01 through CP-08 with owner, date and evidence reference |
@@ -693,7 +693,8 @@ progress in parallel but do not silently expand the execution backlog.
 - **G-CONTENT:** public Coach/topic/customer-reference changes require factual,
   qualification, portrait/logo/quotation rights and publication approval.
   Mediation remains qualification-gated. Concept Clean company-name and quote
-  use are approved as of 2026-09-04; logo use remains outside that approval.
+  use are approved as of 2026-09-04; later that day Manuel explicitly requested
+  the supplied logo for the bounded customer-feedback presentation.
 - **G-CONTACT:** replace the current local-mail-client handoff only after the
   receiving mailbox, sender/SMTP or API path, privacy text, retention, abuse
   protection, error behavior, monitoring and synthetic end-to-end delivery are

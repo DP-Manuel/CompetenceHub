@@ -2,6 +2,24 @@
 
 Newest entries first.
 
+## 2026-09-04 | frontend/content | Customer-feedback rail prepared
+
+- Replaced the oversized single-customer composition with the requested heading
+  `Das waren die Eindrücke von unseren Kunden` and a compact feedback card.
+- The card shows the supplied Concept Clean logo, collaboration topic, a short
+  exact excerpt with separated opening/closing quotation marks and a link to
+  the detailed practice route.
+- Added `apps/website/src/data/customerFeedbacks.ts` as the single public data
+  source. Additional approved entries can join the horizontal scroll-snap rail;
+  controls and automatic advance activate only when at least two entries exist,
+  and reduced-motion preference disables smooth scrolling/automatic movement.
+- Manuel's explicit request for customer logos extends EV-CC-001 to the supplied
+  Concept Clean logo in this bounded context. No additional customer claim was
+  added.
+- Astro checked 40 files with zero findings and built 29 pages. Desktop and
+  exact 390-pixel browser QA show one feedback card, no unnecessary controls
+  and `390 px` document/scroll width. Review deployment remains pending.
+
 ## 2026-09-04 | frontend/content | Concept Clean feedback made explicit
 
 - Confirmed that the approved Concept Clean quotation was present but visually

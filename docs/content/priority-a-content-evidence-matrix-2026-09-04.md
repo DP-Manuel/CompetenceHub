@@ -35,7 +35,7 @@ matrix.
 | EV-HUB-001 | Current Competence Hub positioning and visible concern-to-format journey | Explain the current routing concept on core pages | Available - review needed | Name an editorial owner and record a subject-matter review; do not imply guaranteed matching or outcomes |
 | EV-TAX-001 | Public Coach profiles, canonical topics and approved profile relations in the website data layer | Link already public expertise to Coaches and topic entry points | Available - review needed | Each future quotation, qualification claim and new relation needs factual and rights approval |
 | EV-WORKFLOW-001 | Repository abstraction of Janay Rappelt's inquiry-to-closure workflow | Inform requirements and describe a bounded high-level process after editorial review | Available - review needed | Internal workflow input is not a public SLA, legal acceptance path, customer case or promise |
-| EV-CC-001 | Concept Clean communication-course feedback, exact prepared company name and quotation | Current customer-voice block and bounded story on `/unternehmen` | Approved on 2026-09-04 | No logo, additional result, participant number, rating, timing, price or implied guarantee |
+| EV-CC-001 | Concept Clean communication-course feedback, exact prepared company name, quotation and supplied logo | Current customer-feedback rail and bounded story on `/unternehmen` | Name/quotation approved on 2026-09-04; logo use explicitly requested for the customer-feedback presentation later that day | No additional result, participant number, rating, timing, price, implied guarantee or unrelated logo reuse |
 | EV-ILL-001 | Illustrative leadership journey | Explain a possible route through the Hub | Approved only as visibly illustrative content | Must not be labelled or measured as a customer case, reference or outcome |
 | EV-OFFER-001 | Current service, format, process, duration and price copy | Describe current offer orientation | Available - review needed | Named commercial and subject-matter review before production; changes require a new review date |
 | EV-BOUNDARY-001 | Mindforge statement that coaching does not replace psychotherapy, medical advice or acute crisis care | State the current service boundary | Available - review needed | Legal/subject-matter wording review and escalation/contact path should be recorded before production |
@@ -75,4 +75,3 @@ The GEO-video figures of roughly 30-40% visibility improvement and roughly
 promise, KPI, acceptance criterion or fixed page-length rule. Page quality is
 judged by intent fit, factual support, source clarity, usefulness, technical
 SEO, accessibility and approved next steps.
-

@@ -295,9 +295,11 @@ Last updated: 2026-09-04
   review run `33848941115` succeeded; the public review returned HTTP 200,
   contained both company stories and the approved Concept Clean reference, and
   retained `noindex, nofollow, noarchive`. Janay's visual/content acceptance is
-  still open; no logo was published. Follow-up run `33851401250` moved the exact
-  quotation into a standalone, clearly labelled `Kundenfeedback` section before
-  the use cases. Public HTTP, heading, quotation and meta-robots checks pass.
+  still open. Follow-up run `33851401250` moved the exact quotation into a
+  standalone section. Manuel then requested a smaller, scalable customer rail
+  with customer logos, collaboration topic and short quotations. The supplied
+  Concept Clean logo is now explicitly approved for this bounded use; the
+  refreshed review deployment is pending.
 - Independent content work: the SEO/GEO Content Inventory, Content-Evidence
   Matrix and Core Page Content Plan for `/`, `/unternehmen`, `/leistungen`,
   `/businesscoaching` and `/mindforge` are complete in `docs/content/`. The next
