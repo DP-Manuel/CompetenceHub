@@ -17,7 +17,9 @@ Newest entries first.
   erfolgreichen 30-Seiten-Build grün. CDP-Prüfungen bei 1440, 960 und 390
   Pixeln bestätigen keine Überbreite, zwei Angebote im selben Samstag,
   Coachprofil-/Kontaktziele, Detailansicht und `noindex`. Das
-  Review-Deployment folgt vor Abschluss von SB-35.
+  Review-Deployment `34513388689` ist erfolgreich. Öffentliche Smokes liefern
+  HTTP 200 für Kalender, Kontakt und Coachprofile und bestätigen `noindex`,
+  Beispieldaten sowie einen Kalender-Bundle ohne Netzwerkschreibzugriff.
 
 ## 2026-09-10 | product/frontend/calendar | CAL-0 als sichere Kalender-Vorschau vorbereitet
 

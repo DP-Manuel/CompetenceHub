@@ -94,10 +94,11 @@ Last updated: 2026-09-10
   from individual contact requests. The personal Coach calendar remains a
   protected CAL-1 Webapp workflow; Janay is the initial approval owner through
   an assignable permission, not a hard-coded identity.
-- CAL-0.1 is locally complete and awaiting review deployment. The 42-file Astro
-  check and 30-page build are green. Browser checks at 1440, 960 and 390 pixels
-  confirm no horizontal overflow, same-day weekend overlap, the Coach profile
-  and contact links, `noindex` and the usable detail state.
+- CAL-0.1 is review-deployed and awaits Janay's follow-up acceptance. The
+  42-file Astro check, 30-page build and browser checks at 1440, 960 and 390
+  pixels are green. Workflow `34513388689` and the public smoke confirm HTTP
+  200 for calendar/contact/Coach targets, `noindex`, same-day weekend overlap,
+  profile links and a bundle without network writes.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -436,7 +437,7 @@ Last updated: 2026-09-10
 - Rolling delivery horizon: (1) customer feedback is review-deployed, (2) the
   Priority A evidence baseline is done, (3) the Core Page Content Plan is done,
   (4) quote/Use-Case refinements are accepted, (5) CAL-0 is review-deployed and
-  accepted, (6) implement/review CAL-0.1, (7) decide the remaining CAL-D01
+  accepted, (6) CAL-0.1 is review-deployed and awaits acceptance, (7) decide the remaining CAL-D01
   through CAL-D08 and ADR 0007, and (8) design the calendar schema/API/RBAC and
   migration candidate. Confidence decreases after step 7.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual

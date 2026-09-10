@@ -22,7 +22,7 @@ die für Produktentscheidung, Architektur und Test notwendigen Aussagen.
 | Inkrement | Ergebnis | Status |
 | --- | --- | --- |
 | CAL-0 | Interaktive, crawler-gesperrte Website-Vorschau mit ausschließlich synthetischen Terminen | umgesetzt, geprüft, review-deployed und von Janay am 10.09.2026 akzeptiert |
-| CAL-0.1 | Coachprofil-Verlinkung, Individualtermin-Hinweis und überlappende Wochenendangebote in der Vorschau | lokal umgesetzt und geprüft; Review-Deployment und erneute Abnahme offen |
+| CAL-0.1 | Coachprofil-Verlinkung, Individualtermin-Hinweis und überlappende Wochenendangebote in der Vorschau | umgesetzt, geprüft und review-deployed; erneute Abnahme offen |
 | CAL-1 | Coach pflegt eigene Verfügbarkeit in einem rollierenden Drei-Monats-Fenster; intern wird geprüft und veröffentlicht | geplant; benötigt Coach-Konten, RBAC und Statusmodell |
 | CAL-2 | Unternehmen oder Personen sehen veröffentlichte Angebote und merken begrenzt Plätze vor | geplant; benötigt Zugangs-, Datenschutz-, Ablauf- und Missbrauchsschutzentscheidung |
 | CAL-3 | Schwellenwert löst interne Prüfung aus; nur Berechtigte geben ein verbindliches Angebot frei | geplant; benötigt Geschäftsregel, Benachrichtigung und Vertragsprozess |

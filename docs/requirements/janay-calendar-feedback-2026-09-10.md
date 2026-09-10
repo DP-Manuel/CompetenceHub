@@ -41,4 +41,3 @@ hier stehen nur die für Umsetzung, Entscheidung und Abnahme notwendigen Punkte.
   individuellen Terminanfragen und führt zum Kontaktweg.
 - Tastaturbedienung, 390-Pixel-Darstellung, `noindex` und fehlende
   Netzwerkschreibzugriffe bleiben nachgewiesen.
-

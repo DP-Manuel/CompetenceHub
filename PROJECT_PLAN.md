@@ -601,8 +601,8 @@ Current sprint goal: integrate Janay's first bounded CAL-0 follow-up without
 widening the real-data or production boundary. API, database, browser
 acceptance, release packaging and external-copy restore evidence remain
 complete. SB-32/SB-33 and the CAL-0 concept in SB-34 are accepted by Janay.
-SB-35 is the only active implementation slice and covers public profile links,
-the individual-appointment boundary and overlapping weekend examples.
+SB-35 is review-deployed and now waits for Janay's bounded follow-up acceptance;
+no implementation slice is currently doing.
 Productive calendar delivery, availability and seat reservations remain
 separately gated behind requirements and proposed ADR 0007. EXT-01 and Content
 owner decisions continue in parallel while infrastructure and stakeholder
@@ -644,7 +644,7 @@ gates are waiting.
 | SB-32 | Done, review deployed and accepted | Correct the customer-feedback quotation-mark typography | Manuel's visual acceptance feedback; quotation text and evidence stay unchanged | opening and closing marks now sit inline beside the actual quote text with modest spacing; semantic quotation remains intact; desktop browser measurement shows 9-pixel gaps without overlap; review workflow `34479551380` green; Janay confirmed the result on 2026-09-10 |
 | SB-33 | Done, review deployed and accepted | Reconcile the authorized update packets and implement the 04.09 compact Use-Case feedback | authorized 13.08, 14.08, 24.08, 27.08 and 04.09 packets; no invented claims or calendar implementation | feedback ledger records implemented/open/gated items; Use Cases sit side by side, open independently and remain collapsed initially; 1440/960/390-pixel browser QA shows no horizontal overflow; direct hash links open the matching story; public review returns HTTP 200 with `noindex`; Janay confirmed the result on 2026-09-10 |
 | SB-34 | Done, review deployed and accepted | Build a no-data visual prototype for Janay's three-month Coach calendar and place-vormerkung concept | 27.08 workshop note and Janay's 10.09 request; no real availability, persistence, notification or booking; ADR 0007 remains proposed | noindex prototype shows three bounded months, text-plus-color topic filters, example appointments, status-aware details and local seat simulation; 42-file Astro check and 30-page build green; browser checks at 1440/960/390 pixels prove month bounds, disabled reservation during internal review, 44-pixel mobile event targets and no horizontal overflow; review workflow `34482731102` and public route/bundle smoke green; Janay accepted the concept on 2026-09-10 |
-| SB-35 | Done locally; review deployment pending | Apply Janay's first CAL-0.1 feedback while preserving the public/private boundary | authorized 10.09 feedback; only existing approved Coach profiles may be linked; no personal Coach calendar in the static Website | Coach links, planned-group-offer scope note and overlapping weekend examples implemented; requirements assign Coach self-service to authenticated CAL-1 and Janay's approval to a role-based permission; 42-file check and 30-page build green; CDP checks at 1440/960/390 pixels prove no overflow, same-day overlap, profile/contact links, noindex and usable detail state |
+| SB-35 | Done and review deployed; stakeholder acceptance open | Apply Janay's first CAL-0.1 feedback while preserving the public/private boundary | authorized 10.09 feedback; only existing approved Coach profiles may be linked; no personal Coach calendar in the static Website | Coach links, planned-group-offer scope note and overlapping weekend examples implemented; requirements assign Coach self-service to authenticated CAL-1 and Janay's approval to a role-based permission; 42-file check and 30-page build plus 1440/960/390 CDP checks green; workflow `34513388689` and public noindex/profile/contact/bundle/no-write smokes green |
 
 The technical-readiness baseline remains complete: 305 Webapp tests pass with
 14 expected Staging skips, the release ZIP includes the restore tool and no
@@ -653,13 +653,13 @@ The technical-readiness baseline remains complete: 305 Webapp tests pass with
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: finish, review-deploy and revalidate CAL-0.1. Required
-input is Janay's authorized 10.09 feedback; deliverables are linked published
-Coach profiles, a clear individual-appointment path, a weekend-overlap example
-and durable public/private role requirements. Definition of Done: build and
-1440/960/390-pixel browser checks are green, the route remains `noindex`, no
-real availability is claimed, public smoke proves the profile/contact links and
-Janay accepts the bounded follow-up or records specific changes. No real
+Recommended next block: obtain Janay's CAL-0.1 acceptance and decide the
+remaining CAL-D01 through CAL-D08 plus ADR 0007. Required inputs are the
+deployed review URL and named business/privacy/operations owners; deliverables
+are recorded prototype acceptance or bounded follow-up plus dated answers or
+explicit deferrals. Definition of Done: CAL-0.1 is accepted or has specific
+follow-up, each CAL decision has an owner/evidence reference, and ADR 0007 is
+ready for an explicit decision. No real
 availability, persistence, notification, booking,
 calendar delivery, IONOS production deployment or real-data use is authorized.
 
@@ -675,7 +675,7 @@ progress in parallel but do not silently expand the execution backlog.
 | 3 | Done locally | High | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; resolve route intent and overlap as explicit decisions | SB-29 defines five route plans, CP-01 through CP-08 and later verification evidence |
 | 4 | Done and accepted | High | Correct the Concept Clean quote marks and make both Use Cases compact, independent and collapsible | SB-32/SB-33; no copy or evidence change | workflow `34479551380`, browser/public smoke and Janay acceptance green |
 | 5 | Done, review deployed and accepted | High | Validate the three-month Coach-calendar concept without data or booking | SB-34; authorized workshop concept; no productive write path | 1440/960/390-pixel browser evidence, bounded months, filters, status and local simulation; workflow `34482731102` and public noindex/bundle checks green; Janay acceptance recorded 2026-09-10 |
-| 6 | Done locally; review deployment pending | High | Integrate and review-deploy Janay's CAL-0.1 navigation, scope and overlap feedback | SB-35; only published profiles and synthetic appointments; private Coach calendar remains behind future login | 42-file/30-page build and 1440/960/390 browser QA green; same-day overlap, profile/contact links and noindex proven locally; public no-network-write smoke pending deployment |
+| 6 | Done and review deployed; stakeholder acceptance open | High | Integrate and review-deploy Janay's CAL-0.1 navigation, scope and overlap feedback | SB-35; only published profiles and synthetic appointments; private Coach calendar remains behind future login | 42-file/30-page build, 1440/960/390 browser QA, workflow `34513388689` and public same-day/profile/contact/noindex/no-write smoke green |
 | 7 | Waiting stakeholder | High | Decide remaining CAL-D01 through CAL-D08 and accept, amend or reject ADR 0007 | Janay/Manuel plus later Legal/operations owners; CAL-D06/D07 partially clarified | dated decision table; threshold, retention, substitute, notification channel and publication rules explicit |
 | 8 | Pending | Medium | Design calendar schema/API/RBAC and prepare the first migration candidate | Step 7; existing PostgreSQL/FastAPI and deny-by-default patterns | architecture/data/API review, migration rollback smoke, overlap/concurrency and negative permission tests specified |
 
