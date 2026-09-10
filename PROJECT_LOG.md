@@ -10,7 +10,9 @@ Newest entries first.
   Platzmangel.
 - Astro prüft 42 Dateien ohne Befund und baut 30 Seiten. Alle sechs
   Coachprofile bestehen 18 Browser-Geometrieprüfungen bei 1440, 960 und 390
-  Pixeln ohne Spaltenüberschneidung oder horizontale Überbreite.
+  Pixeln ohne Spaltenüberschneidung oder horizontale Überbreite. Workflow
+  `34515246498` ist grün; die öffentliche Coachseite, ihr CSS-Bundle, die
+  vollständige Überschrift und `noindex` bestehen den Smoke-Test.
 - Die offenen CAL-D01 bis CAL-D08 wurden in einer nichttechnischen
   Entscheidungsvorlage mit Empfehlungen, Antwortfeldern und Review-Link
   gebündelt. Eine inhaltlich geprüfte Word-Datei liegt unter
@@ -19,6 +21,8 @@ Newest entries first.
   Nebenläufigkeits-, Datenschutz-, Bedienungs-, Kalenderkompatibilitäts- und
   Betriebstests. Er setzt keine noch offenen Geschäftswerte fest und löst keine
   Migration, Echtdatenverarbeitung oder Produktion aus.
+- Commit `a2e37c5` ist auf `origin/main`. Veröffentlicht wurde ausschließlich
+  die crawler-gesperrte GitHub-Pages-Review, nicht die IONOS-Produktion.
 
 ## 2026-09-10 | feedback/calendar | Erstes CAL-0-Folgefeedback triagiert
 

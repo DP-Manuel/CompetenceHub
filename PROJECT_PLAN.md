@@ -602,8 +602,8 @@ single decision/test package while Janay's CAL-0.1 acceptance is pending,
 without widening the real-data or production boundary. API, database, browser
 acceptance, release packaging and external-copy restore evidence remain
 complete. SB-32/SB-33 and CAL-0 are accepted; SB-35 waits for bounded follow-up
-acceptance. SB-36 is the only implementation slice currently doing; SB-37 is
-documentation-only preparation.
+acceptance. SB-36 and SB-37 are complete; no implementation slice is currently
+doing.
 Productive calendar delivery, availability and seat reservations remain
 separately gated behind requirements and proposed ADR 0007. EXT-01 and Content
 owner decisions continue in parallel while infrastructure and stakeholder
@@ -646,7 +646,7 @@ gates are waiting.
 | SB-33 | Done, review deployed and accepted | Reconcile the authorized update packets and implement the 04.09 compact Use-Case feedback | authorized 13.08, 14.08, 24.08, 27.08 and 04.09 packets; no invented claims or calendar implementation | feedback ledger records implemented/open/gated items; Use Cases sit side by side, open independently and remain collapsed initially; 1440/960/390-pixel browser QA shows no horizontal overflow; direct hash links open the matching story; public review returns HTTP 200 with `noindex`; Janay confirmed the result on 2026-09-10 |
 | SB-34 | Done, review deployed and accepted | Build a no-data visual prototype for Janay's three-month Coach calendar and place-vormerkung concept | 27.08 workshop note and Janay's 10.09 request; no real availability, persistence, notification or booking; ADR 0007 remains proposed | noindex prototype shows three bounded months, text-plus-color topic filters, example appointments, status-aware details and local seat simulation; 42-file Astro check and 30-page build green; browser checks at 1440/960/390 pixels prove month bounds, disabled reservation during internal review, 44-pixel mobile event targets and no horizontal overflow; review workflow `34482731102` and public route/bundle smoke green; Janay accepted the concept on 2026-09-10 |
 | SB-35 | Done and review deployed; stakeholder acceptance open | Apply Janay's first CAL-0.1 feedback while preserving the public/private boundary | authorized 10.09 feedback; only existing approved Coach profiles may be linked; no personal Coach calendar in the static Website | Coach links, planned-group-offer scope note and overlapping weekend examples implemented; requirements assign Coach self-service to authenticated CAL-1 and Janay's approval to a role-based permission; 42-file check and 30-page build plus 1440/960/390 CDP checks green; workflow `34513388689` and public noindex/profile/contact/bundle/no-write smokes green |
-| SB-36 | Done locally; review deployment pending | Keep long Coach CTA headings and punctuation inside their layout column | shared Coach CTA; no copy or navigation change | shared columns can shrink; long German compounds hyphenate only when required; 42-file/30-page Astro build and 18 browser geometry checks across all six profiles at 1440, 960 and 390 pixels are green with zero overlap or horizontal overflow |
+| SB-36 | Done and review deployed | Keep long Coach CTA headings and punctuation inside their layout column | shared Coach CTA; no copy or navigation change | shared columns can shrink; long German compounds hyphenate only when required; 42-file/30-page Astro build and 18 browser geometry checks across all six profiles at 1440, 960 and 390 pixels are green with zero overlap or horizontal overflow; workflow `34515246498` and public page/CSS/noindex smoke green |
 | SB-37 | Done locally; stakeholder answers open | Batch the remaining calendar decisions and define the future quality gates | CAL-0.1 feedback may remain pending; no productive implementation before CAL-D01 through CAL-D08 and ADR 0007 | non-technical eight-decision handout plus content-verified Word export prepared; quality plan covers RBAC, concurrency, privacy, accessibility, `.ics` compatibility, operations and release evidence without fixing unapproved business values |
 
 The technical-readiness baseline remains complete: 305 Webapp tests pass with
@@ -656,14 +656,13 @@ The technical-readiness baseline remains complete: 305 Webapp tests pass with
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: deploy SB-36 to the crawler-blocked review, then obtain
-Janay's CAL-0.1 acceptance and collect CAL-D01 through CAL-D08 plus ADR 0007
-through the prepared handout. Required inputs are the review URL and named
+Recommended next block: obtain Janay's CAL-0.1 acceptance and collect CAL-D01
+through CAL-D08 plus ADR 0007 through the prepared handout. Required inputs are
+the review URL and named
 business/privacy/operations owners; deliverables are recorded acceptance or a
 bounded follow-up plus dated answers or explicit deferrals. Definition of
-Done: the CTA regression is publicly smoke-tested, CAL-0.1 is accepted or has
-specific follow-up, each CAL decision has an owner/evidence reference, and ADR
-0007 is ready for an explicit decision. No real
+Done: CAL-0.1 is accepted or has specific follow-up, each CAL decision has an
+owner/evidence reference, and ADR 0007 is ready for an explicit decision. No real
 availability, persistence, notification, booking,
 calendar delivery, IONOS production deployment or real-data use is authorized.
 
@@ -674,7 +673,7 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Done locally; review deployment pending | High | Remove the long Coach-CTA heading/punctuation overlap across every profile | SB-36; shared component only; no copy change | build plus 18 desktop/zoom/mobile geometry checks green; public profile smoke after deployment |
+| 1 | Done and review deployed | High | Remove the long Coach-CTA heading/punctuation overlap across every profile | SB-36; shared component only; no copy change | build plus 18 desktop/zoom/mobile geometry checks green; workflow `34515246498` and public page/CSS/noindex smoke green |
 | 2 | Waiting stakeholder | High | Accept CAL-0.1 or record a bounded second correction set | Janay; crawler-blocked review; no real availability | dated acceptance or itemized feedback against navigation, overlap and scope separation |
 | 3 | Ready for grouped review | High | Decide CAL-D01 through CAL-D08 and accept, amend or reject ADR 0007 | Janay/Manuel plus later Legal/operations owners; SB-37 handout | every decision marked accepted, changed or deferred with owner/evidence reference |
 | 4 | Waiting external, parallel gate | High | Resolve IONOS Webroot plus App-DNS/SMTP contracts | EDV response expected from 2026-09-14; no upload before read-only inventory | verified SFTP root/inventory, DNS/TLS result and documented SMTP/sender contract |

@@ -102,7 +102,8 @@ Last updated: 2026-09-10
 - A shared Coach-CTA correction keeps long German headings and their final
   punctuation inside the left layout column. All six Coach profiles pass 18
   browser geometry checks at 1440, 960 and 390 pixels without overlap or
-  horizontal overflow; crawler-blocked review deployment is pending.
+  horizontal overflow. Workflow `34515246498` deployed successfully; the
+  public Coach page, CSS bundle, heading and `noindex` smoke are green.
 - The remaining calendar rules are batched in a non-technical stakeholder
   handout with a content-verified Word export. A separate quality plan already
   defines RBAC, concurrency, privacy, accessibility, calendar compatibility
@@ -364,9 +365,10 @@ Last updated: 2026-09-10
   consolidates Done/Ready/Waiting/Blocked flow, owners, dates, evidence and the
   completed 28.08. technical checkpoint plus the rebaselined post-vacation
   pilot. Technical readiness is green; production is yellow behind named gates.
-- Current Git checkpoint before this update: commit `ea276b9` is pushed to
+- Current Git checkpoint: commit `a2e37c5` is pushed to
   `origin/main`; local and remote branches were synchronized afterward. The
-  push triggered no deployment and did not authorize remote operations.
+  crawler-blocked Website review was deployed through workflow `34515246498`;
+  it did not authorize IONOS production or real-data operations.
 - SB-22 is complete locally: the Website now has a secret-free SFTP target
   contract, fail-closed artifact preparer and operator runbook. Dirty artifacts,
   wrong hashes/domains, unresolved targets, unverified host keys/Webroots and
@@ -376,9 +378,8 @@ Last updated: 2026-09-10
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: review-deploy and smoke-test the Coach-CTA
-  correction, then collect Janay's CAL-0.1 acceptance and the grouped CAL-D01
-  through CAL-D08 answers. The handout and future test gates are prepared;
+- Recommended next work block: collect Janay's CAL-0.1 acceptance and the
+  grouped CAL-D01 through CAL-D08 answers. The handout and future test gates are prepared;
   no calendar migration or real-data path begins before those decisions. In
   parallel, review the EDV response from 2026-09-14 or chase it from
   2026-09-15, then repeat the read-only Webroot inventory. Real data and
@@ -438,7 +439,8 @@ Last updated: 2026-09-10
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) review-deploy the Coach-CTA correction, (2)
+- Rolling delivery horizon: (1) the Coach-CTA correction is review-deployed,
+  (2)
   accept or bound CAL-0.1 follow-up, (3) decide CAL-D01 through CAL-D08 and ADR
   0007, (4) resolve the parallel EDV Webroot/DNS/SMTP gate, (5) design CAL-1
   schema/API/RBAC, (6) prepare its migration and Staging smoke, (7) implement
