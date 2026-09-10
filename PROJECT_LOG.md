@@ -18,8 +18,9 @@ Newest entries first.
   das erste anbieterneutrale Inkrement; Outlook/Graph sowie Verfügbarkeit und
   Reservierungen bleiben spätere, getrennt freizugebende Inkremente.
 - Browser-Nachweise bei 1440, 960 und 390 CSS-Pixeln zeigen unabhängiges Öffnen,
-  korrekte Deep Links und keine horizontale Überbreite. Deployment und
-  Real-Daten-Nutzung fanden in diesem Block nicht statt.
+  korrekte Deep Links und keine horizontale Überbreite. Commit `d33feb6` wurde
+  gepusht; Review-Workflow `34479551380` und öffentlicher HTTP-/Inhalts-/
+  `noindex`-Smoke sind grün. IONOS-Produktion und Real-Daten blieben unberührt.
 
 ## 2026-09-04 | stakeholder update/skills | Wochenupdate-Standard eingeführt
 
