@@ -24,6 +24,9 @@ Newest entries first.
 - Commit `7255eee` ist auf `origin/main`; der GitHub-Pages-Workflow
   `34482731102` war erfolgreich. Öffentliche HTTP-, `noindex`-, Beispielinhalt-
   und Bundle-Prüfungen bestätigen die Vorschau ohne Netzwerkschreibzugriff.
+- Janay nahm Gestaltung und Grundkonzept der Vorschau am 10.09.2026 ohne
+  Änderungswunsch positiv ab. Diese Abnahme gilt nur für CAL-0; ADR 0007 und
+  die acht fachlichen Regeln vor produktiver Umsetzung bleiben offen.
 
 ## 2026-09-10 | frontend/feedback/steering | Update-Pakete abgeglichen und Use Cases verdichtet
 

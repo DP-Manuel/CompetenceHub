@@ -87,7 +87,8 @@ Last updated: 2026-09-10
   contact data and performs no persistence, notification or booking. Workflow
   `34482731102` is green; the public route and JavaScript bundle pass HTTP,
   `noindex`, example-data and no-network-write checks. ADR 0007 is proposed;
-  productive calendar work remains gated.
+  productive calendar work remains gated. Janay accepted the visual concept
+  without follow-up changes on 2026-09-10.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -426,7 +427,7 @@ Last updated: 2026-09-10
 - Rolling delivery horizon: (1) customer feedback is review-deployed, (2) the
   Priority A evidence baseline is done, (3) the Core Page Content Plan is done,
   (4) quote/Use-Case refinements are accepted, (5) CAL-0 is review-deployed and
-  awaits workflow acceptance,
+  accepted,
   (6) decide CAL-D01 through CAL-D08 and ADR 0007, (7) design the calendar
   schema/API/RBAC and migration candidate, and (8) implement only the first
   approved vertical slice while independent production gates close. Confidence
