@@ -1,6 +1,11 @@
 ---
 import Icon from "./Icon.astro";
 
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
 const topics = [
   { id: "rhetorik", label: "Rhetorik & Vertrieb" },
   { id: "fuehrung", label: "Führung" },
@@ -8,7 +13,7 @@ const topics = [
 ];
 ---
 
-<main class="calendar-preview" data-calendar-preview>
+<main class="calendar-preview" data-calendar-preview data-base={base}>
   <header class="calendar-preview__intro">
     <div>
       <p class="eyebrow">Interne Vorschau · Beispieltermine</p>
@@ -19,6 +24,11 @@ const topics = [
       Vormerkung wird erst nach interner Prüfung zu einem verbindlichen Angebot.
     </p>
   </header>
+
+  <p class="calendar-preview__scope">
+    <strong>Geplante Vorträge und Gruppenangebote:</strong> Für individuelle
+    Termine sprechen Sie uns bitte <a href={url("kontakt")}>direkt an</a>.
+  </p>
 
   <section class="calendar-toolbar" aria-label="Kalender filtern und Monat auswählen">
     <div class="calendar-topic-filter" role="group" aria-label="Themenfilter">
@@ -72,7 +82,7 @@ const topics = [
         </div>
 
         <dl class="calendar-meta">
-          <div><dt>Coach</dt><dd data-detail-coach></dd></div>
+          <div><dt>Coach</dt><dd><a data-detail-coach></a></dd></div>
           <div><dt>Termin</dt><dd data-detail-date></dd></div>
           <div><dt>Format</dt><dd data-detail-format></dd></div>
         </dl>
@@ -117,6 +127,7 @@ const topics = [
     topicLabel: string;
     title: string;
     coach: string;
+    profilePath: string;
     format: string;
     time: string;
     target: number;
@@ -125,11 +136,13 @@ const topics = [
   };
 
   const prototypes: PrototypeEvent[] = [
-    { id: "sample-1", offset: 7, topic: "rhetorik", topicLabel: "Rhetorik & Vertrieb", title: "Beispieltermin Rhetorik", coach: "Beispielcoach A", format: "Vortrag · Präsenz", time: "09:30–12:00 Uhr", target: 25, reserved: 12, status: "Offen für Vormerkungen" },
-    { id: "sample-2", offset: 16, topic: "fuehrung", topicLabel: "Führung", title: "Beispieltermin Führung", coach: "Beispielcoach B", format: "Workshop · Präsenz", time: "13:00–16:30 Uhr", target: 25, reserved: 21, status: "Offen für Vormerkungen" },
-    { id: "sample-3", offset: 31, topic: "kommunikation", topicLabel: "Kommunikation", title: "Beispieltermin Kommunikation", coach: "Beispielcoach C", format: "Workshop · Online", time: "10:00–12:00 Uhr", target: 25, reserved: 25, status: "Interne Prüfung" },
-    { id: "sample-4", offset: 47, topic: "rhetorik", topicLabel: "Rhetorik & Vertrieb", title: "Beispieltermin Vertrieb", coach: "Beispielcoach A", format: "Impuls · Online", time: "15:00–16:00 Uhr", target: 25, reserved: 8, status: "Offen für Vormerkungen" },
-    { id: "sample-5", offset: 68, topic: "fuehrung", topicLabel: "Führung", title: "Beispieltermin Zusammenarbeit", coach: "Beispielcoach B", format: "Workshop · Präsenz", time: "09:00–13:00 Uhr", target: 25, reserved: 17, status: "Offen für Vormerkungen" },
+    { id: "sample-1", offset: 7, topic: "rhetorik", topicLabel: "Rhetorik & Vertrieb", title: "Beispieltermin Rhetorik", coach: "Herr Goran Celic", profilePath: "coaches/goran-celic", format: "Vortrag · Präsenz", time: "09:30–12:00 Uhr", target: 25, reserved: 12, status: "Offen für Vormerkungen" },
+    { id: "sample-2", offset: 16, topic: "fuehrung", topicLabel: "Führung", title: "Beispieltermin Führung", coach: "Frau Dr. Stefanie Becker", profilePath: "coaches/stefanie-becker", format: "Workshop · Präsenz", time: "13:00–16:30 Uhr", target: 25, reserved: 21, status: "Offen für Vormerkungen" },
+    { id: "sample-3", offset: 31, topic: "kommunikation", topicLabel: "Kommunikation", title: "Beispieltermin Kommunikation", coach: "Herr Christian Galvano", profilePath: "coaches/christian-galvano", format: "Workshop · Online", time: "10:00–12:00 Uhr", target: 25, reserved: 25, status: "Interne Prüfung" },
+    { id: "sample-4", offset: 47, topic: "rhetorik", topicLabel: "Rhetorik & Vertrieb", title: "Beispieltermin Vertrieb", coach: "Herr Goran Celic", profilePath: "coaches/goran-celic", format: "Impuls · Online", time: "15:00–16:00 Uhr", target: 25, reserved: 8, status: "Offen für Vormerkungen" },
+    { id: "sample-5", offset: 68, topic: "fuehrung", topicLabel: "Führung", title: "Beispieltermin Zusammenarbeit", coach: "Frau Dr. Stefanie Becker", profilePath: "coaches/stefanie-becker", format: "Workshop · Präsenz", time: "09:00–13:00 Uhr", target: 25, reserved: 17, status: "Offen für Vormerkungen" },
+    { id: "sample-weekend-1", offset: -1, topic: "rhetorik", topicLabel: "Rhetorik & Vertrieb", title: "Beispieltermin Gesprächsführung", coach: "Herr Goran Celic", profilePath: "coaches/goran-celic", format: "Vortrag · Präsenz", time: "10:00–12:00 Uhr", target: 25, reserved: 9, status: "Offen für Vormerkungen" },
+    { id: "sample-weekend-2", offset: -1, topic: "fuehrung", topicLabel: "Führung", title: "Beispieltermin Führungspraxis", coach: "Frau Dr. Stefanie Becker", profilePath: "coaches/stefanie-becker", format: "Workshop · Präsenz", time: "11:00–13:30 Uhr", target: 25, reserved: 14, status: "Offen für Vormerkungen" },
   ];
 
   const addDays = (date: Date, days: number) => {
@@ -144,7 +157,11 @@ const topics = [
   document.querySelectorAll<HTMLElement>("[data-calendar-preview]").forEach((root) => {
     const now = new Date();
     now.setHours(12, 0, 0, 0);
-    const events = prototypes.map((event) => ({ ...event, date: addDays(now, event.offset) }));
+    const nextSaturday = ((6 - now.getDay() + 7) % 7 || 7) + 7;
+    const events = prototypes.map((event) => ({
+      ...event,
+      date: addDays(now, event.offset === -1 ? nextSaturday : event.offset),
+    }));
     const months = [0, 1, 2].map((offset) => startOfMonth(now, offset));
     let monthIndex = 0;
     let topic = "all";
@@ -161,8 +178,9 @@ const topics = [
     const reservationStatus = root.querySelector<HTMLElement>("[data-reservation-status]");
     const reservationInput = root.querySelector<HTMLInputElement>("#prototype-seat-count");
     const reservationSubmit = root.querySelector<HTMLButtonElement>("[data-reservation-submit]");
+    const detailCoach = root.querySelector<HTMLAnchorElement>("[data-detail-coach]");
 
-    if (!grid || !monthLabel || !empty || !previous || !next || !detailEmpty || !detailContent || !reservationForm || !reservationStatus || !reservationInput || !reservationSubmit) return;
+    if (!grid || !monthLabel || !empty || !previous || !next || !detailEmpty || !detailContent || !reservationForm || !reservationStatus || !reservationInput || !reservationSubmit || !detailCoach) return;
 
     const formatMonth = new Intl.DateTimeFormat("de-DE", { month: "long", year: "numeric" });
     const formatDate = new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" });
@@ -186,7 +204,8 @@ const topics = [
       detailContent.hidden = false;
       setText("[data-detail-topic]", event.topicLabel);
       setText("[data-detail-title]", event.title);
-      setText("[data-detail-coach]", event.coach);
+      detailCoach.textContent = event.coach;
+      detailCoach.href = `${root.dataset.base || "/"}${event.profilePath}`;
       setText("[data-detail-date]", `${formatDate.format(event.date)}, ${event.time}`);
       setText("[data-detail-format]", event.format);
       setText("[data-detail-status]", event.status);
@@ -328,6 +347,23 @@ const topics = [
     font-size: 1.05rem;
   }
 
+  .calendar-preview__scope {
+    margin: 18px 0 0;
+    padding: 14px 18px;
+    border-left: 5px solid var(--color-red);
+    background: var(--color-soft);
+    color: var(--color-muted);
+  }
+
+  .calendar-preview__scope strong { color: var(--color-dark); }
+  .calendar-preview__scope a,
+  .calendar-meta a {
+    color: var(--color-pantone-deep);
+    font-weight: 850;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
   .calendar-toolbar {
     display: flex;
     gap: 24px;
@@ -355,10 +391,16 @@ const topics = [
 
   .calendar-topic-filter button {
     display: inline-flex;
+    min-width: 0;
     min-height: 42px;
     padding: 9px 14px;
     gap: 8px;
     align-items: center;
+  }
+
+  .calendar-topic-filter button > span:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .calendar-topic-filter button:hover,

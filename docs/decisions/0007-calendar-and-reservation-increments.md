@@ -43,6 +43,17 @@ zurückzurollen.
 8. Reservierungen dürfen Kapazität nur in einer Datenbanktransaktion verändern;
    öffentliche Schreibzugriffe erhalten Rate Limit, Datenminimierung und einen
    ausdrücklich freigegebenen Missbrauchsschutz.
+9. Ein öffentlicher Termin verlinkt ein freigegebenes Coachprofil. Das Profil
+   zeigt später ausschließlich veröffentlichte Vorträge und Gruppenangebote;
+   der persönliche Pflegekalender liegt ausschließlich hinter dem Coach-Login.
+10. Parallel und zeitlich überlappend stattfindende Angebote sind zulässig.
+    Konfliktregeln gelten pro Coach oder Ressource und nicht global pro Datum.
+11. Freigabe wird als rollenbasierte Berechtigung modelliert. Janay erhält die
+    initiale fachliche Freigabeverantwortung, ohne ihren Namen im Code oder
+    Schema als Berechtigungsregel zu verankern.
+12. Die Adminrolle darf alle Kalenderoperationen ausführen, um Betrieb und
+    Notfälle zu unterstützen; Authentifizierung, Audit und fachliche
+    Statusübergänge bleiben trotzdem bindend.
 
 ## Consequences
 

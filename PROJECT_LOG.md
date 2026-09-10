@@ -2,6 +2,23 @@
 
 Newest entries first.
 
+## 2026-09-10 | feedback/calendar | Erstes CAL-0-Folgefeedback triagiert
+
+- Janays autorisierte Rückmeldung ergänzt Coachprofil-Verlinkung, getrennte
+  öffentliche und persönliche Kalenderansichten, Wochenendüberschneidungen,
+  den Kontaktweg für individuelle Termine und ihren initialen Freigabeauftrag.
+- CAL-0.1 setzt nur die öffentliche, synthetische Vorschau um: vorhandene
+  freigegebene Profile werden verlinkt, Individualtermine klar abgegrenzt und
+  zwei überlappende Wochenendangebote sichtbar gemacht.
+- Der persönliche Coachkalender bleibt hinter dem zukünftigen Coach-Login.
+  Coach-Selbstpflege, Janay-Freigabe und Adminzugriff sind als rollenbasierte,
+  auditierte CAL-1-Anforderungen dokumentiert; es wurde nichts personencodiert.
+- Die lokale Astro-Prüfung ist mit 42 Dateien, 0 Befunden und einem
+  erfolgreichen 30-Seiten-Build grün. CDP-Prüfungen bei 1440, 960 und 390
+  Pixeln bestätigen keine Überbreite, zwei Angebote im selben Samstag,
+  Coachprofil-/Kontaktziele, Detailansicht und `noindex`. Das
+  Review-Deployment folgt vor Abschluss von SB-35.
+
 ## 2026-09-10 | product/frontend/calendar | CAL-0 als sichere Kalender-Vorschau vorbereitet
 
 - Janay bestätigte die aktuellen Website-Korrekturen und priorisierte den

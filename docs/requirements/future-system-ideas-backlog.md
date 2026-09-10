@@ -209,6 +209,20 @@ Current pain point from the old workflow: participants must be created, booked i
 - IDEA-COACH-020: Calendar invitation delivery for a confirmed assignment and
   public reservation/booking availability are separate increments with
   separate security, privacy and acceptance gates.
+- IDEA-COACH-021: A visible Coach name on a published opportunity should link
+  to the already approved public Coach profile.
+- IDEA-COACH-022: Public Coach profiles may show only released planned talks
+  and group opportunities; personal availability management belongs behind
+  authenticated Coach authorization.
+- IDEA-COACH-023: Parallel and overlapping opportunities, including weekend
+  events, must be supported across different Coaches and resources.
+- IDEA-COACH-024: Individual appointments remain a direct-contact workflow and
+  must not be presented as released public group availability.
+- IDEA-COACH-025: The initial threshold-review owner is Janay; implementation
+  must use an assignable permission with an approved substitute, not a
+  hard-coded identity.
+- IDEA-COACH-026: Administrators may operate the complete calendar workflow but
+  remain subject to authentication, audit and valid lifecycle transitions.
 
 Future acceptance evidence for the first calendar-delivery increment:
 

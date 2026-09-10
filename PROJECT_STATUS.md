@@ -83,12 +83,21 @@ Last updated: 2026-09-10
   and asked to proceed with the calendar concept from the 27.08 notes. A
   no-data CAL-0 prototype is review-deployed: three bounded months, topic
   filters, text-plus-color event labels, example detail/capacity states and a
-  local non-binding seat simulation. It uses no real Coach, appointment or
-  contact data and performs no persistence, notification or booking. Workflow
+  local non-binding seat simulation. It performs no persistence, notification
+  or booking. CAL-0.1 uses only already published Coach profile names and still
+  contains no real appointment, availability or contact data. Workflow
   `34482731102` is green; the public route and JavaScript bundle pass HTTP,
   `noindex`, example-data and no-network-write checks. ADR 0007 is proposed;
-  productive calendar work remains gated. Janay accepted the visual concept
-  without follow-up changes on 2026-09-10.
+  productive calendar work remains gated. Janay accepted the visual concept on
+  2026-09-10 and then supplied a bounded CAL-0.1 follow-up: link published Coach
+  profiles, show overlapping weekend examples and separate planned group offers
+  from individual contact requests. The personal Coach calendar remains a
+  protected CAL-1 Webapp workflow; Janay is the initial approval owner through
+  an assignable permission, not a hard-coded identity.
+- CAL-0.1 is locally complete and awaiting review deployment. The 42-file Astro
+  check and 30-page build are green. Browser checks at 1440, 960 and 390 pixels
+  confirm no horizontal overflow, same-day weekend overlap, the Coach profile
+  and contact links, `noindex` and the usable detail state.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -239,14 +248,14 @@ Last updated: 2026-09-10
   installable authenticated client after the Webapp core. Nothing has been
   implemented; no store or native release is decided. Website/PWA, backend API
   and PostgreSQL remain separated, with no direct client database access.
-- Deferred calendar direction: Coaches should later publish rolling three-month
+- Active calendar discovery direction: Coaches should later publish rolling three-month
   availability with topic, format, capacity and status. Companies may place
   non-binding seat reservations; an approved threshold triggers an internal
   notification and staff alone release a binding offer/booking. The suggested
   value 25 is provisional. Confirmed appointments should first use provider-
   neutral `.ics` invitations; direct Microsoft Graph/Outlook synchronization
-  remains separate. No calendar implementation is in the current execution
-  backlog.
+  remains separate. Only the synthetic CAL-0.1 Website follow-up is in the
+  current execution backlog; productive calendar code is not.
 - Confirmed ownership: Manuel owns VPS operations, patching, monitoring,
   backups and incident response. Thomas Roß, EDV-Leiter, owns production
   approval. Separate app/API subdomains are approved in principle.
@@ -427,11 +436,9 @@ Last updated: 2026-09-10
 - Rolling delivery horizon: (1) customer feedback is review-deployed, (2) the
   Priority A evidence baseline is done, (3) the Core Page Content Plan is done,
   (4) quote/Use-Case refinements are accepted, (5) CAL-0 is review-deployed and
-  accepted,
-  (6) decide CAL-D01 through CAL-D08 and ADR 0007, (7) design the calendar
-  schema/API/RBAC and migration candidate, and (8) implement only the first
-  approved vertical slice while independent production gates close. Confidence
-  decreases after step 6.
+  accepted, (6) implement/review CAL-0.1, (7) decide the remaining CAL-D01
+  through CAL-D08 and ADR 0007, and (8) design the calendar schema/API/RBAC and
+  migration candidate. Confidence decreases after step 7.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.

@@ -7,8 +7,9 @@ Regeln und produktive Umsetzung noch nicht freigegeben.
 
 ## Quelle und Ziel
 
-Grundlage sind Janays Notizen vom 27.08.2026 und ihre positive Website-Abnahme
-mit erneutem Kalenderwunsch vom 10.09.2026. Der Kalender soll verfügbare
+Grundlage sind Janays Notizen vom 27.08.2026, ihre positive Website-Abnahme
+mit erneutem Kalenderwunsch und ihr erstes Kalenderfeedback vom 10.09.2026.
+Der Kalender soll verfügbare
 Coach-Angebote bis zu drei Monate im Voraus sichtbar machen, nach Themen
 unterscheiden und unverbindliche Platzvormerkungen ermöglichen. Eine interne
 Prüfung trennt Vormerkung und verbindliche Buchung.
@@ -21,6 +22,7 @@ die für Produktentscheidung, Architektur und Test notwendigen Aussagen.
 | Inkrement | Ergebnis | Status |
 | --- | --- | --- |
 | CAL-0 | Interaktive, crawler-gesperrte Website-Vorschau mit ausschließlich synthetischen Terminen | umgesetzt, geprüft, review-deployed und von Janay am 10.09.2026 akzeptiert |
+| CAL-0.1 | Coachprofil-Verlinkung, Individualtermin-Hinweis und überlappende Wochenendangebote in der Vorschau | lokal umgesetzt und geprüft; Review-Deployment und erneute Abnahme offen |
 | CAL-1 | Coach pflegt eigene Verfügbarkeit in einem rollierenden Drei-Monats-Fenster; intern wird geprüft und veröffentlicht | geplant; benötigt Coach-Konten, RBAC und Statusmodell |
 | CAL-2 | Unternehmen oder Personen sehen veröffentlichte Angebote und merken begrenzt Plätze vor | geplant; benötigt Zugangs-, Datenschutz-, Ablauf- und Missbrauchsschutzentscheidung |
 | CAL-3 | Schwellenwert löst interne Prüfung aus; nur Berechtigte geben ein verbindliches Angebot frei | geplant; benötigt Geschäftsregel, Benachrichtigung und Vertragsprozess |
@@ -53,6 +55,23 @@ versendet nichts und zeigt keine echte Coach-Verfügbarkeit.
   stabile Kalenderereignis-ID verwenden und keine Duplikate erzeugen.
 - **CAL-FR-010:** Zustellfehler von Kalendereinladungen müssen intern sichtbar
   sein und dürfen keinen erfolgreichen Versand vortäuschen.
+- **CAL-FR-011:** Der Name eines veröffentlichten Coaches soll vom Termin zum
+  vorhandenen öffentlichen Coachprofil führen.
+- **CAL-FR-012:** Das öffentliche Coachprofil darf nur freigegebene geplante
+  Vorträge und Gruppenangebote zeigen. Der persönliche Pflegekalender ist nur
+  im authentifizierten Coachbereich sichtbar.
+- **CAL-FR-013:** Mehrere Angebote verschiedener Coaches dürfen am selben Tag
+  und in überlappenden Zeiträumen stattfinden; das Datenmodell darf dies nicht
+  durch eine globale Datum- oder Zeit-Eindeutigkeit verhindern.
+- **CAL-FR-014:** Individuelle Termine werden über den Kontaktprozess geklärt
+  und nicht als öffentliche freie Vortragstermine dargestellt.
+- **CAL-FR-015:** Coaches dürfen eigene Verfügbarkeiten erstellen, ändern und
+  zurücknehmen, aber keine fremden Coachkalender bearbeiten.
+- **CAL-FR-016:** Eine intern berechtigte Person prüft ein Angebot nach
+  ausreichender Nachfrage und schaltet es frei. Janay ist die initial benannte
+  fachliche Ownerin; die Berechtigung wird nicht an ihren Namen hart codiert.
+- **CAL-FR-017:** Administratoren dürfen alle Kalenderoperationen ausführen,
+  bleiben jedoch an Authentifizierung, Statusregeln und Audit gebunden.
 
 ## Sicherheits- und Datenschutzanforderungen
 
@@ -65,6 +84,9 @@ versendet nichts und zeigt keine echte Coach-Verfügbarkeit.
   Schutzgrenze gegen Überbuchung.
 - Jede Veröffentlichung, relevante Statusänderung, interne Freigabe und
   Stornierung wird ohne vertraulichen Rohpayload auditiert.
+- Öffentliche Coachansicht und persönlicher Pflegekalender werden serverseitig
+  getrennt; `noindex`, Navigation oder ausgeblendete Bedienelemente sind keine
+  Zugriffskontrolle.
 - Der öffentliche Endpunkt benötigt Rate Limit, CSRF-/Origin-Konzept oder eine
   begründete Alternative sowie Schutz gegen automatisierte Massenreservierung.
 
@@ -80,10 +102,10 @@ versendet nichts und zeigt keine echte Coach-Verfügbarkeit.
    Firma beziehungsweise Person im Portal angelegt?
 5. **CAL-D05:** Welche Themen bilden die verbindliche Taxonomie und welche Farbe ist ihnen
    barrierefrei zugeordnet?
-6. **CAL-D06:** Wer erhält die Schwellenwertmeldung, über welchen Kanal und mit welcher
-   Vertretungsregel?
-7. **CAL-D07:** Wann darf der Coachname öffentlich erscheinen, und welche Freigabe gilt für
-   Termine, Profil, Ort, Preis und Format?
+6. **CAL-D06:** Janay ist initial für Prüfung und Freigabe benannt. Über welchen
+   Kanal kommt die Schwellenwertmeldung und wer vertritt sie?
+7. **CAL-D07:** Vorhandene freigegebene Coachprofile dürfen verlinkt werden.
+   Welche Freigabe gilt je Termin für Datum, Ort, Preis und Format?
 8. **CAL-D08:** Welcher Datensatz ist führend für den bestätigten Termin und wer ist
    organisatorischer Absender der `.ics`-Einladung?
 
@@ -94,7 +116,8 @@ versendet nichts und zeigt keine echte Coach-Verfügbarkeit.
 - Monatsschalter verlassen das Drei-Monats-Fenster nicht.
 - Ein Beispieltermin zeigt Details, Vormerkungsstand und eine lokale
   Platzsimulation; Neuladen hinterlässt keine Daten.
-- Alle Namen und Termine sind sichtbar als Beispiele gekennzeichnet.
+- Alle Termine sind sichtbar als Beispiele gekennzeichnet; verwendete
+  Coachnamen stammen ausschließlich aus bereits veröffentlichten Profilen.
 - Bei 390 Pixeln gibt es keine Dokumentüberbreite; Fokus, Kontrast und Status
   sind ohne reine Farbcodierung verständlich.
 - Die Route ist `noindex` und wird nicht als produktiver Kalender verlinkt.

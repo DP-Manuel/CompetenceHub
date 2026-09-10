@@ -6,6 +6,23 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-10 | accepted-baseline-follow-up | Abnahme und Folgefeedback getrennt versionieren
+
+- Triggering project situation: Janay akzeptierte CAL-0 und reichte unmittelbar
+  danach konkrete Ergänzungen für Navigation, Rollen und Terminüberschneidungen
+  ein.
+- Observed friction: Würde die ursprüngliche Abnahme wieder auf `offen` gesetzt,
+  gingen der nachgewiesene Basisstand und die genaue Reichweite des neuen
+  Feedbacks in einem einzigen Status verloren.
+- Reusable improvement candidate: `triage-feedback` und
+  `manage-project-state` sollten nach einer Abnahme neue Wünsche standardmäßig
+  als versioniertes Folgeinkrement führen und öffentliche sowie
+  authentifizierte Rollenansichten explizit trennen.
+- Project action: CAL-0 bleibt akzeptiert; CAL-0.1/SB-35 trägt nur das neue
+  Feedback. Der persönliche Coachkalender wurde nicht in die statische Website
+  gezogen.
+- Destination: Kandidat für CodexSkills nach einem zweiten unabhängigen Fall.
+
 ### 2026-09-10 | visual-prototype-before-gated-workflow | Sichtbares Modell vor Backendentscheidungen
 
 - Triggering project situation: Janays Kalenderidee ist visuell klar, verbindet
