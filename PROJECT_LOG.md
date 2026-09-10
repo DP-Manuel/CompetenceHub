@@ -21,6 +21,9 @@ Newest entries first.
 - Astro prüft 42 Dateien ohne Befund und baut 30 Seiten. Browserchecks bei
   1440, 960 und 390 Pixeln bestätigen drei begrenzte Monate, Filter/Details,
   Statussperre, lokale Simulation, `noindex` und keine Überbreite.
+- Commit `7255eee` ist auf `origin/main`; der GitHub-Pages-Workflow
+  `34482731102` war erfolgreich. Öffentliche HTTP-, `noindex`-, Beispielinhalt-
+  und Bundle-Prüfungen bestätigen die Vorschau ohne Netzwerkschreibzugriff.
 
 ## 2026-09-10 | frontend/feedback/steering | Update-Pakete abgeglichen und Use Cases verdichtet
 

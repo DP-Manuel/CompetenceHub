@@ -81,11 +81,13 @@ Last updated: 2026-09-10
   retains `noindex, nofollow, noarchive`.
 - Janay confirmed on 2026-09-10 that the current Website refinements look good
   and asked to proceed with the calendar concept from the 27.08 notes. A
-  no-data CAL-0 prototype is locally complete: three bounded months, topic
+  no-data CAL-0 prototype is review-deployed: three bounded months, topic
   filters, text-plus-color event labels, example detail/capacity states and a
   local non-binding seat simulation. It uses no real Coach, appointment or
-  contact data and performs no persistence, notification or booking. ADR 0007
-  is proposed; productive calendar work remains gated.
+  contact data and performs no persistence, notification or booking. Workflow
+  `34482731102` is green; the public route and JavaScript bundle pass HTTP,
+  `noindex`, example-data and no-network-write checks. ADR 0007 is proposed;
+  productive calendar work remains gated.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -423,7 +425,8 @@ Last updated: 2026-09-10
   made before evidence arrives.
 - Rolling delivery horizon: (1) customer feedback is review-deployed, (2) the
   Priority A evidence baseline is done, (3) the Core Page Content Plan is done,
-  (4) quote/Use-Case refinements are accepted, (5) deploy and review CAL-0,
+  (4) quote/Use-Case refinements are accepted, (5) CAL-0 is review-deployed and
+  awaits workflow acceptance,
   (6) decide CAL-D01 through CAL-D08 and ADR 0007, (7) design the calendar
   schema/API/RBAC and migration candidate, and (8) implement only the first
   approved vertical slice while independent production gates close. Confidence
