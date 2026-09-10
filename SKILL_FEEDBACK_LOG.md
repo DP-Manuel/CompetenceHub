@@ -6,6 +6,27 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-10 | visual-prototype-before-gated-workflow | Sichtbares Modell vor Backendentscheidungen
+
+- Triggering project situation: Janays Kalenderidee ist visuell klar, verbindet
+  aber Verfügbarkeit, personenbezogene Reservierung, Schwellenwertmeldung,
+  interne Freigabe, Vertrag und externe Kalenderzustellung.
+- Durable preference: Manuel und Stakeholder entscheiden komplexe Abläufe
+  leichter anhand einer sichtbaren, klickbaren Oberfläche als nur anhand einer
+  langen Anforderungsliste.
+- Proposed improvement: `discover-product-context`, `write-requirements` und
+  `coordinate-software-project` sollten bei visuell beschreibbaren, aber
+  fachlich gegateten Workflows einen ausdrücklich synthetischen No-Data-
+  Prototyp als frühes Requirements-Gate anbieten und ihn strikt von produktiver
+  Implementierung trennen.
+- Project response: CAL-0 macht drei Monate, Themen, Status, Kapazität und
+  Vormerkung prüfbar; Anforderungen und ADR 0007 halten die acht Entscheidungen
+  sowie getrennte produktive Inkremente fest.
+- Reuse potential: high for Manuel's stakeholder-driven internal applications.
+- Risk if ignored: high; Backend und Schema würden unklare Geschäftsregeln
+  vorwegnehmen oder Stakeholder könnten einen Mock für echte Funktion halten.
+- Status: project pattern applied; canonical skill proposal captured only.
+
 ### 2026-09-10 | cross-update-reconciliation | Frühere Stakeholder-Pakete aktiv gegenprüfen
 
 - Triggering project situation: Nach mehreren datierten Feedback-Paketen musste

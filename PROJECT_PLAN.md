@@ -597,16 +597,14 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: keep the accepted synthetic same-origin portal reversible
-and production-shaped while incorporating approved public-website feedback as
-a separate bounded slice. API, database, browser acceptance, release packaging
-and external-copy restore evidence are complete. SB-24 and SB-27 are already on
-the crawler-blocked review; SB-32/SB-33 complete the latest local quote and
-Use-Case refinements. Direct contact delivery, calendar delivery, availability
-and seat reservations remain separately gated. No implementation slice is
-currently doing after this verified local block. EXT-01 remains parallel;
-Content owner decisions may proceed independently while infrastructure and
-stakeholder gates are waiting.
+Current sprint goal: validate Janay's three-month Coach-calendar idea visually
+without widening the real-data or production boundary. API, database, browser
+acceptance, release packaging and external-copy restore evidence remain
+complete. SB-32/SB-33 are accepted by Janay; SB-34 is the only active bounded
+slice. Productive calendar delivery, availability and seat reservations remain
+separately gated behind requirements and proposed ADR 0007. EXT-01 and Content
+owner decisions continue in parallel while infrastructure and stakeholder
+gates are waiting.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -641,8 +639,9 @@ stakeholder gates are waiting.
 | SB-29 | Done locally; stakeholder decisions open | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; route overlap must remain explicit | five routes now have a primary job, answer direction, evidence plan, limits, internal links, CTA, decision owner type and later verification plan; CP-01 through CP-08 remain open; no public implementation |
 | SB-30 | Done locally; awaiting dispatch and replies | Prepare the early stakeholder request for CP-01 through CP-08 | SB-29; no assumption may replace a named approval | German review packet contains decision table, recommended defaults, compact answer format, E-Mail draft, review URL and return gate; send-ready A4 Word and PDF exports are visually checked; no message sent automatically |
 | SB-31 | Done; review deployed | Make approved customer feedback unmistakable and scalable on `/unternehmen` | EV-CC-001 name/quote approval plus Manuel's explicit request for visible customer logos; no additional claims | compact customer-feedback rail uses a central publication-gated data source, supplied Concept Clean logo, collaboration topic, short exact quotation and practice-path link; controls/automatic advance activate only with multiple approved entries; 40-file Astro check and 29-page build green; desktop and exact 390-pixel browser QA show one card, zero unnecessary controls and no horizontal overflow; review workflow `33852789095` and public page/logo/content smoke green |
-| SB-32 | Done and review deployed; stakeholder acceptance open | Correct the customer-feedback quotation-mark typography | Manuel's visual acceptance feedback; quotation text and evidence stay unchanged | opening and closing marks now sit inline beside the actual quote text with modest spacing; semantic quotation remains intact; desktop browser measurement shows 9-pixel gaps without overlap; review workflow `34479551380` green |
-| SB-33 | Done and review deployed; stakeholder acceptance open | Reconcile the authorized update packets and implement the 04.09 compact Use-Case feedback | authorized 13.08, 14.08, 24.08, 27.08 and 04.09 packets; no invented claims or calendar implementation | feedback ledger records implemented/open/gated items; Use Cases sit side by side, open independently and remain collapsed initially; 1440/960/390-pixel browser QA shows no horizontal overflow; direct hash links open the matching story; public review returns HTTP 200 with `noindex`; calendar delivery remains explicitly retained as a separate gated epic |
+| SB-32 | Done, review deployed and accepted | Correct the customer-feedback quotation-mark typography | Manuel's visual acceptance feedback; quotation text and evidence stay unchanged | opening and closing marks now sit inline beside the actual quote text with modest spacing; semantic quotation remains intact; desktop browser measurement shows 9-pixel gaps without overlap; review workflow `34479551380` green; Janay confirmed the result on 2026-09-10 |
+| SB-33 | Done, review deployed and accepted | Reconcile the authorized update packets and implement the 04.09 compact Use-Case feedback | authorized 13.08, 14.08, 24.08, 27.08 and 04.09 packets; no invented claims or calendar implementation | feedback ledger records implemented/open/gated items; Use Cases sit side by side, open independently and remain collapsed initially; 1440/960/390-pixel browser QA shows no horizontal overflow; direct hash links open the matching story; public review returns HTTP 200 with `noindex`; Janay confirmed the result on 2026-09-10 |
+| SB-34 | Done locally; review deployment pending | Build a no-data visual prototype for Janay's three-month Coach calendar and place-vormerkung concept | 27.08 workshop note and Janay's 10.09 request; no real availability, persistence, notification or booking; ADR 0007 remains proposed | noindex prototype shows three bounded months, text-plus-color topic filters, example appointments, status-aware details and local seat simulation; 42-file Astro check and 30-page build green; browser checks at 1440/960/390 pixels prove month bounds, disabled reservation during internal review, 44-pixel mobile event targets and no horizontal overflow |
 
 The technical-readiness baseline remains complete: 305 Webapp tests pass with
 14 expected Staging skips, the release ZIP includes the restore tool and no
@@ -650,16 +649,15 @@ The technical-readiness baseline remains complete: 305 Webapp tests pass with
 29-page build. SB-25 is waiting on a corrected IONOS SFTP start directory.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
-Page Content Plan. SB-32/SB-33 are now on the crawler-blocked review.
-Recommended next block: obtain Janay's visual acceptance of the compact
-Use-Case presentation and collect the bounded CP-01 through CP-08 content
-decisions. Required inputs are the existing review URL and named business/
-subject-matter approvers. Deliverables are a recorded acceptance or bounded
-follow-up plus an owner/review matrix for the five Priority A routes.
-Definition of Done: the 150-percent presentation is accepted or has specific
-follow-up, and every CP decision is approved or explicitly deferred with owner
-and evidence reference. No direct form delivery, calendar implementation,
-IONOS production deployment or real-data use is authorized by this block.
+Page Content Plan. Janay accepted SB-32/SB-33 on 2026-09-10. Recommended next
+block: publish SB-34 to the crawler-blocked review and obtain Janay's visual and
+workflow feedback on CAL-0. Required input is the existing review deployment;
+deliverables are a stable prototype URL and recorded answers or follow-up for
+the eight CAL decisions. Definition of Done: the workflow and public smoke are
+green, the route remains `noindex`, Janay accepts the three-month/filter/detail/
+vormerkung concept or records bounded changes, and ADR 0007 is ready for an
+explicit decision. No real availability, persistence, notification, booking,
+calendar delivery, IONOS production deployment or real-data use is authorized.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -671,11 +669,11 @@ progress in parallel but do not silently expand the execution backlog.
 | 1 | Done | High | Publish the compact, scalable customer-feedback rail to the crawler-blocked review | Concept Clean name/quote/logo use approved for this context; no additional claim | Astro/browser QA green; review workflow `33852789095` successful; public page and logo return HTTP 200 and content/meta-robots smoke is green |
 | 2 | Done | High | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five priority pages | separate content workstream; no new guide pages or invented authority signals | SB-28 records every required field and explicit evidence/owner gaps in two versioned documents |
 | 3 | Done locally | High | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; resolve route intent and overlap as explicit decisions | SB-29 defines five route plans, CP-01 through CP-08 and later verification evidence |
-| 4 | Done and review deployed; stakeholder acceptance open | High | Correct the Concept Clean quote marks and make both Use Cases compact, independent and collapsible | SB-32/SB-33; no copy or evidence change | desktop, 960-pixel zoom-equivalent and 390-pixel browser checks; direct-link behavior; semantic ordered routes; no overflow; workflow `34479551380` and public smoke green |
-| 5 | Waiting stakeholder; packet ready | High | Assign page owners and decide taxonomy, commercial facts and route boundaries | SB-29/SB-30; Manuel sends the prepared request to named business and subject-matter approvers | approved/deferred CP-01 through CP-08 with owner, date and evidence reference |
-| 6 | Waiting external | High | Confirm the exact Website SFTP target and validate App-DNS/SMTP/contact configuration | EDV repairs SFTP home and supplies EXT-01 details; host key/credentials verified | read-only inventory, target contract, DNS/TLS preflight, exact Origin and synthetic mail evidence |
-| 7 | Pending | Medium | Rehearse Website SFTP release and VPS package activation/rollback without real data | Step 6; explicit rehearsal approval; protected SFTP/VPS access | artifact hash, complete remote backup, health/readiness/header checks, synthetic outbox, Chatbot isolation and rollback evidence |
-| 8 | Pending | Low | Close contact, named-user, Legal and Go/No-Go gates and release the narrow pilot on the confirmed replacement date | EXT-02 through EXT-06; all real-data and production gates | E-Mail/MFA/least-privilege acceptance, signed gate matrix, production smoke, backup evidence and rollback readiness |
+| 4 | Done and accepted | High | Correct the Concept Clean quote marks and make both Use Cases compact, independent and collapsible | SB-32/SB-33; no copy or evidence change | workflow `34479551380`, browser/public smoke and Janay acceptance green |
+| 5 | Done locally; review deployment pending | High | Validate the three-month Coach-calendar concept without data or booking | SB-34; authorized workshop concept; no productive write path | 1440/960/390-pixel browser evidence, bounded months, filters, status and local simulation; noindex/no real Coach names |
+| 6 | Waiting stakeholder | High | Decide CAL-D01 through CAL-D08 and accept, amend or reject ADR 0007 | Janay/Manuel plus later Legal/operations owners | dated decision table; explicit public-vs-login boundary, threshold meaning, retention, roles and notification owner |
+| 7 | Pending | Medium | Design calendar schema/API/RBAC and prepare the first migration candidate | Step 6; existing PostgreSQL/FastAPI and deny-by-default patterns | architecture/data/API review, migration rollback smoke, concurrency and negative permission tests specified |
+| 8 | Pending | Low | Implement and prove the first approved calendar vertical slice while closing the independent production gates | Step 7 plus EXT-01 through EXT-06 and separate migration/deployment approvals | local/Staging integration, browser acceptance, `.ics` Outlook/non-Outlook evidence where in scope, production smoke and rollback readiness |
 
 ### Cross-Cutting Gates
 
@@ -701,9 +699,11 @@ progress in parallel but do not silently expand the execution backlog.
   receiving mailbox, sender/SMTP or API path, privacy text, retention, abuse
   protection, error behavior, monitoring and synthetic end-to-end delivery are
   approved and tested. Required fields must stay minimal and transparent.
-- **G-CALENDAR:** The first increment is provider-neutral `.ics` delivery for a
-  confirmed appointment and requires an authoritative event record, stable ID,
-  organizer, time-zone, privacy, failure handling and role ownership. Evidence
+- **G-CALENDAR:** The first productive Fachinkrement covers Coach availability,
+  internal review and controlled publication. The first external delivery
+  increment is provider-neutral `.ics` for a confirmed appointment and
+  requires an authoritative event record, stable ID, organizer, time-zone,
+  privacy, failure handling and role ownership. Evidence
   must cover Outlook plus one non-Outlook client, update/cancellation without
   duplicates, daylight-saving behavior and data minimization. Direct Graph
   synchronization is optional and separately gated. Coach availability and

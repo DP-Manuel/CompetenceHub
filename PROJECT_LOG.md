@@ -2,6 +2,26 @@
 
 Newest entries first.
 
+## 2026-09-10 | product/frontend/calendar | CAL-0 als sichere Kalender-Vorschau vorbereitet
+
+- Janay bestätigte die aktuellen Website-Korrekturen und priorisierte den
+  Kalenderwunsch aus den Notizen vom 27.08.2026.
+- Die Anforderung ist in fünf getrennte Inkremente zerlegt: visuelle Vorschau,
+  Coach-Verfügbarkeit mit interner Veröffentlichung, unverbindliche
+  Platzvormerkung, interne Freigabe und `.ics`-Terminzustellung.
+- Der neue `noindex`-Prototyp zeigt ausschließlich dynamisch erzeugte
+  Beispieltermine über drei Monate, Text/Farbe-Themenfilter, Monatsnavigation,
+  Terminstatus, Kapazitätsstand und eine lokale Vormerkungssimulation.
+- Ein Termin in interner Prüfung sperrt weitere Vormerkung; auf Mobilgeräten
+  sind die Ereignistasten 44 Pixel groß. Es gibt keine echte Verfügbarkeit,
+  Speicherung, Nachricht, Buchung oder personenbezogenen Daten.
+- ADR 0007 liegt als Vorschlag vor. Vor Backend oder Migration sind acht
+  fachliche Entscheidungen zu Sichtbarkeit, Schwellenwert, Ablauf, Daten,
+  Themen, Benachrichtigung, Publikation und Terminhoheit offen.
+- Astro prüft 42 Dateien ohne Befund und baut 30 Seiten. Browserchecks bei
+  1440, 960 und 390 Pixeln bestätigen drei begrenzte Monate, Filter/Details,
+  Statussperre, lokale Simulation, `noindex` und keine Überbreite.
+
 ## 2026-09-10 | frontend/feedback/steering | Update-Pakete abgeglichen und Use Cases verdichtet
 
 - Die freigegebenen Pakete vom 13.08., 14.08., 24.08., 27.08. und 04.09. wurden

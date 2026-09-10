@@ -13,15 +13,15 @@ Ergebnisse.
 | Paket | Kernthemen | Stand | Noch offen / Gate |
 | --- | --- | --- | --- |
 | 13.08.2026 | Portal-Fachmodell, Datenmodell, Informationsarchitektur und offene Implementierungsentscheidungen | Portal-Kern, Rollenbasis, Authentifizierung und Firmen-/Kontaktgrenze sind versioniert, getestet und auf Staging nachgewiesen | Statusübergänge, Freigaberegeln, Statistikdefinitionen und spätere Module bleiben fachlich zu entscheiden |
-| 14.08.2026 | Prozessdarstellung, Use Cases und Concept-Clean-Rückmeldung | Zwei belegungsbewusste Praxiswege und die freigegebene Kundenstimme mit Logo sind auf der Review-Seite vorhanden | Janays abschließende Sichtprüfung der kompakten Darstellung bleibt offen |
+| 14.08.2026 | Prozessdarstellung, Use Cases und Concept-Clean-Rückmeldung | Zwei belegungsbewusste Praxiswege und die freigegebene Kundenstimme mit Logo sind auf der Review-Seite vorhanden; Janay bestätigte am 10.09., dass die Darstellung soweit gut aussieht | Nur neue, konkret benannte Folgepunkte werden wieder geöffnet |
 | 24.08.2026 | Aktivierung, Go-live-Nachweise, Backup/Restore und Eingangssteuerung | Release-, Backup-, Monitoring-, Transfer- und Restore-Proben sind mit synthetischen Daten abgeschlossen | Produktive Zeitplanung/Alarmierung, App-DNS, SMTP, Legal, benannte Konten und Go/No-Go bleiben offen |
-| 27.08.2026 | Leistungsstruktur, Hub-Navigation, Coaches, Formulare, Assessment Center und Kalenderideen | Freigegebene Frontend-Korrekturen sind auf der Review-Seite umgesetzt; direkte Formularzustellung ist spezifiziert, aber nicht aktiviert | EDV-Daten sperren die echte Zustellung; Kalender, Verfügbarkeit und Reservierung bleiben getrennte spätere Produktinkremente |
-| 04.09.2026 | Use Cases nebeneinander und aufklappbar; weniger Scrollen bei 150 Prozent | Beide Use Cases sind lokal als kompakte, unabhängige Auswahl nebeneinander umgesetzt; nur der gewählte gewundene Pfad öffnet sich | Review-Deployment und Janays visuelle Abnahme stehen noch aus |
+| 27.08.2026 | Leistungsstruktur, Hub-Navigation, Coaches, Formulare, Assessment Center und Kalenderideen | Freigegebene Frontend-Korrekturen sind auf der Review-Seite umgesetzt; der Kalenderwunsch wurde am 10.09. als aktiver Produktwunsch bestätigt und CAL-0 lokal vorbereitet | EDV-Daten sperren die echte Formularzustellung; fachliche Entscheidungen und ADR 0007 sperren produktive Kalender-/Reservierungsschritte |
+| 04.09.2026 | Use Cases nebeneinander und aufklappbar; weniger Scrollen bei 150 Prozent | Beide Use Cases sind kompakt, unabhängig aufklappbar, review-deployed und von Janay am 10.09. als soweit gut bestätigt | Kein offener Punkt aus diesem Paket |
 
 ## Kalender-Lieferweg
 
-Der Kalender bleibt ein eigener späterer Produktstrang und wird nicht mit der
-aktuellen Website-Korrektur vermischt.
+Der Kalender ist ein eigener aktiver Discovery- und Prototyping-Strang und wird
+nicht mit der öffentlichen Website oder einer produktiven Buchung vermischt.
 
 1. **Bestätigte Termine:** Zuerst wird eine standardkonforme `.ics`-Einladung
    für einen bestätigten Auftrag geplant. Sie muss in Outlook und mindestens

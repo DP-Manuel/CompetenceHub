@@ -67,18 +67,25 @@ Last updated: 2026-09-10
   more entries exist. Workflow `33852789095` deployed successfully; public
   page and logo return HTTP 200, the expected content is present and the review
   remains `noindex, nofollow, noarchive`. Janay's acceptance remains open.
-- Done and crawler-blocked review deployed; stakeholder acceptance open: the 04.09 feedback is reconciled
+- Done, crawler-blocked review deployed and accepted: the 04.09 feedback is reconciled
   with the earlier authorized update packets. Both Use Cases now appear as
   compact side-by-side choices and open independently, so their winding paths
   remain available without forcing the full page length at 150-percent zoom.
   The Concept Clean quotation marks now sit next to the actual opening and
   closing text. Browser checks at 1440, 960 and 390 CSS pixels show no
   horizontal overflow; direct links open the matching story. The calendar is
-  retained as a separate gated epic: provider-neutral `.ics` delivery for
-  confirmed appointments first, optional Outlook/Graph and public
-  availability/reservations later. Workflow `34479551380` is green; the public
+  retained as a separate gated epic: controlled Coach availability comes first;
+  provider-neutral `.ics` is the first external calendar-delivery step, with
+  optional Outlook/Graph later. Workflow `34479551380` is green; the public
   page returns HTTP 200, contains both Use-Case controls and Concept Clean, and
   retains `noindex, nofollow, noarchive`.
+- Janay confirmed on 2026-09-10 that the current Website refinements look good
+  and asked to proceed with the calendar concept from the 27.08 notes. A
+  no-data CAL-0 prototype is locally complete: three bounded months, topic
+  filters, text-plus-color event labels, example detail/capacity states and a
+  local non-binding seat simulation. It uses no real Coach, appointment or
+  contact data and performs no persistence, notification or booking. ADR 0007
+  is proposed; productive calendar work remains gated.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -414,18 +421,16 @@ Last updated: 2026-09-10
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) SB-27 review deployment is done, (2) SB-28
-  inventory/evidence baseline is done, (3) SB-29 Core Page Content Plan is done,
-  (4) obtain Janay's acceptance of the deployed quote/Use-Case refinements, (5) assign
-  content owners and close or defer CP-01 through CP-08, (6) let EDV repair the
-  SFTP home and validate DNS/SMTP/contact configuration, (7) rehearse activation
-  and rollback without real data, and (8) close contact, named-user, Legal and
-  Thomas Go/No-Go gates before the narrow pilot. Confidence decreases after
-  step 6.
-- Closed and review deployed: the Concept Clean quotation marks are inline with the actual
+- Rolling delivery horizon: (1) customer feedback is review-deployed, (2) the
+  Priority A evidence baseline is done, (3) the Core Page Content Plan is done,
+  (4) quote/Use-Case refinements are accepted, (5) deploy and review CAL-0,
+  (6) decide CAL-D01 through CAL-D08 and ADR 0007, (7) design the calendar
+  schema/API/RBAC and migration candidate, and (8) implement only the first
+  approved vertical slice while independent production gates close. Confidence
+  decreases after step 6.
+- Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
-  Use Cases is implemented. SB-32/SB-33 now require only Janay's visual
-  acceptance or a bounded follow-up.
+  Use Cases is implemented. Janay confirmed the result on 2026-09-10.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
   `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ, G-CONTENT,
   G-CONTACT and G-CALENDAR.
