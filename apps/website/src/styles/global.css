@@ -2241,12 +2241,21 @@ p {
   justify-items: start;
 }
 
+.coach-profile-cta > div {
+  min-width: 0;
+}
+
 .coach-profile-cta p {
   margin: 0;
 }
 
 .coach-profile-cta h2 {
-  font-size: clamp(2.25rem, 4vw, 3.4rem);
+  max-width: 100%;
+  font-size: 3rem;
+  hyphens: auto;
+  line-height: 1.08;
+  overflow-wrap: break-word;
+  text-wrap: balance;
 }
 
 .timeline-list {

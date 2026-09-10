@@ -2,6 +2,24 @@
 
 Newest entries first.
 
+## 2026-09-10 | frontend/calendar/steering | CTA-Regel korrigiert und Entscheidungen gebündelt
+
+- Die lange Überschrift auf Frau Dr. Stefanie Beckers Coachseite ragte mit dem
+  Fragezeichen in die rechte CTA-Spalte; die gemeinsame Coach-Komponente lässt
+  ihre Spalten nun schrumpfen und trennt lange deutsche Begriffe nur bei echtem
+  Platzmangel.
+- Astro prüft 42 Dateien ohne Befund und baut 30 Seiten. Alle sechs
+  Coachprofile bestehen 18 Browser-Geometrieprüfungen bei 1440, 960 und 390
+  Pixeln ohne Spaltenüberschneidung oder horizontale Überbreite.
+- Die offenen CAL-D01 bis CAL-D08 wurden in einer nichttechnischen
+  Entscheidungsvorlage mit Empfehlungen, Antwortfeldern und Review-Link
+  gebündelt. Eine inhaltlich geprüfte Word-Datei liegt unter
+  `docs/requirements/exports/` bereit.
+- Ein separater Kalender-Qualitätsplan definiert bereits Rechte-,
+  Nebenläufigkeits-, Datenschutz-, Bedienungs-, Kalenderkompatibilitäts- und
+  Betriebstests. Er setzt keine noch offenen Geschäftswerte fest und löst keine
+  Migration, Echtdatenverarbeitung oder Produktion aus.
+
 ## 2026-09-10 | feedback/calendar | Erstes CAL-0-Folgefeedback triagiert
 
 - Janays autorisierte Rückmeldung ergänzt Coachprofil-Verlinkung, getrennte

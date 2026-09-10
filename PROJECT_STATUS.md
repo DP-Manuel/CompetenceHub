@@ -99,6 +99,14 @@ Last updated: 2026-09-10
   pixels are green. Workflow `34513388689` and the public smoke confirm HTTP
   200 for calendar/contact/Coach targets, `noindex`, same-day weekend overlap,
   profile links and a bundle without network writes.
+- A shared Coach-CTA correction keeps long German headings and their final
+  punctuation inside the left layout column. All six Coach profiles pass 18
+  browser geometry checks at 1440, 960 and 390 pixels without overlap or
+  horizontal overflow; crawler-blocked review deployment is pending.
+- The remaining calendar rules are batched in a non-technical stakeholder
+  handout with a content-verified Word export. A separate quality plan already
+  defines RBAC, concurrency, privacy, accessibility, calendar compatibility
+  and operations evidence without deciding open business values.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -368,18 +376,14 @@ Last updated: 2026-09-10
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: wait for the sent EDV correction request for
-  the missing SFTP start directory, then repeat the interactive read-only
-  inventory. Host key and credentials are proven; `pwd`, hidden-file inventory,
-  provider-file classification and target-contract validation are blocked;
-  EXT-01 host-specific DNS/TLS/Nginx/SMTP/contact validation follows no earlier
-  than 2026-09-14. The refreshed clean
-  release evidence is complete: 305 passes/14 skips, 38-file Astro check,
-  28-page build and a 33-entry package without `.env`/`.tmp`. SB-23 is complete: backup, monitor,
-  Guarded Pull and two restores from the exact `D:` copy passed; 24 tables were
-  restored, and cleanup left no container or plaintext residue. Real data and
-  production activation remain blocked by the remaining operational, Legal,
-  account and Go/No-Go gates.
+- Recommended next work block: review-deploy and smoke-test the Coach-CTA
+  correction, then collect Janay's CAL-0.1 acceptance and the grouped CAL-D01
+  through CAL-D08 answers. The handout and future test gates are prepared;
+  no calendar migration or real-data path begins before those decisions. In
+  parallel, review the EDV response from 2026-09-14 or chase it from
+  2026-09-15, then repeat the read-only Webroot inventory. Real data and
+  production activation remain blocked by operational, Legal, account and
+  Go/No-Go gates.
 - Lead-time radar: EDV input is not expected before 2026-09-14 and should be
   reviewed then or chased from 2026-09-15. Contract and Legal status should be
   clarified during September. Janay/Thomas acceptance slots and the exact pilot
@@ -434,12 +438,13 @@ Last updated: 2026-09-10
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) customer feedback is review-deployed, (2) the
-  Priority A evidence baseline is done, (3) the Core Page Content Plan is done,
-  (4) quote/Use-Case refinements are accepted, (5) CAL-0 is review-deployed and
-  accepted, (6) CAL-0.1 is review-deployed and awaits acceptance, (7) decide the remaining CAL-D01
-  through CAL-D08 and ADR 0007, and (8) design the calendar schema/API/RBAC and
-  migration candidate. Confidence decreases after step 7.
+- Rolling delivery horizon: (1) review-deploy the Coach-CTA correction, (2)
+  accept or bound CAL-0.1 follow-up, (3) decide CAL-D01 through CAL-D08 and ADR
+  0007, (4) resolve the parallel EDV Webroot/DNS/SMTP gate, (5) design CAL-1
+  schema/API/RBAC, (6) prepare its migration and Staging smoke, (7) implement
+  Coach-owned availability plus internal publication, and (8) prepare the
+  controlled post-vacation pilot release candidate. Confidence decreases from
+  step 5 onward.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.

@@ -6,6 +6,43 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-10 | stakeholder-wait-batching | Wartezeit für gebündelte Entscheidungen nutzen
+
+- Triggering project situation: CAL-0.1 wartet bis zum Folgetag auf Janays
+  Sichtprüfung, während acht zusammenhängende Geschäftsregeln später ohnehin
+  entschieden werden müssen.
+- Durable preference: In einer Stakeholder-Wartephase nicht nur den nächsten
+  Einzelpunkt nennen, sondern unabhängige Vorbereitung vorziehen und offene
+  Fragen in einem verständlichen Paket sammeln, damit der nächste Rücklauf
+  mehrere Gates gleichzeitig schließen kann.
+- Proposed improvement: `manage-project-state` und
+  `coordinate-software-project` sollten bei wartendem Feedback automatisch
+  unabhängige Ready-Arbeit, einen gebündelten Entscheidungsrücklauf und bereits
+  mögliche Testplanung anbieten, ohne unbestätigte Regeln zu implementieren.
+- Project response: Ein achtteiliges Kalender-Handout samt Word-Export und ein
+  parameterisierter Qualitätsplan wurden vorbereitet; produktive Umsetzung
+  bleibt hinter CAL-D01 bis CAL-D08 und ADR 0007.
+- Reuse potential: high for stakeholder-led work with asynchronous feedback.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-10 | long-heading-boundary-check | Lange deutsche Überschriften als Komponenten-Gate
+
+- Triggering project situation: Das abschließende Fragezeichen einer langen
+  Coach-CTA-Überschrift ragte optisch in die benachbarte Schaltfläche, obwohl
+  der Seiten-Build fehlerfrei war.
+- Reusable improvement candidate: `integrate-frontend` und
+  `check-accessibility` sollten bei gemeinsamen Überschriften-Komponenten das
+  längste reale deutsche Wort samt Satzzeichen über alle Geschwisterseiten bei
+  Desktop, enger beziehungsweise 150-Prozent-Ansicht und Mobil prüfen. Die
+  Messung muss Elementgrenzen und sichtbares Abschneiden einbeziehen, nicht nur
+  die Dokumentbreite.
+- Project response: Die gemeinsame Spalte erhält `min-width: 0`, der Titel
+  kontrollierte Größe und bedarfsabhängige deutsche Trennung; 18
+  Geometrieprüfungen über sechs Profile und drei Breiten sind grün.
+- Reuse potential: high for German responsive websites.
+- Status: project evidence captured; canonical skill proposal pending a second
+  independent occurrence.
+
 ### 2026-09-10 | accepted-baseline-follow-up | Abnahme und Folgefeedback getrennt versionieren
 
 - Triggering project situation: Janay akzeptierte CAL-0 und reichte unmittelbar
