@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-09-04
+Last updated: 2026-09-10
 
 ## Snapshot
 
@@ -12,7 +12,7 @@ Last updated: 2026-09-04
   the exact date remains open. Production runtime scheduling/alerting,
   App-DNS, SMTP, named accounts, legal approval and Go/No-Go are still open.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
-  rolling six-step horizon.
+  rolling eight-step horizon.
 - External-dependency steering: a dated lead-time radar now tracks EDV, legal,
   contract, onboarding, mailbox and off-server-backup inputs before they block
   current WIP. EXT-01 is waiting; SB-21 and the native EXT-05 rehearsal are
@@ -67,6 +67,16 @@ Last updated: 2026-09-04
   more entries exist. Workflow `33852789095` deployed successfully; public
   page and logo return HTTP 200, the expected content is present and the review
   remains `noindex, nofollow, noarchive`. Janay's acceptance remains open.
+- Done locally, review deployment pending: the 04.09 feedback is reconciled
+  with the earlier authorized update packets. Both Use Cases now appear as
+  compact side-by-side choices and open independently, so their winding paths
+  remain available without forcing the full page length at 150-percent zoom.
+  The Concept Clean quotation marks now sit next to the actual opening and
+  closing text. Browser checks at 1440, 960 and 390 CSS pixels show no
+  horizontal overflow; direct links open the matching story. The calendar is
+  retained as a separate gated epic: provider-neutral `.ics` delivery for
+  confirmed appointments first, optional Outlook/Graph and public
+  availability/reservations later.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -404,18 +414,19 @@ Last updated: 2026-09-04
   made before evidence arrives.
 - Rolling delivery horizon: (1) SB-27 review deployment is done, (2) SB-28
   inventory/evidence baseline is done, (3) SB-29 Core Page Content Plan is done,
-  (4) correct the deferred customer-quote punctuation placement, (5) assign
+  (4) deploy and review the completed quote/Use-Case refinements, (5) assign
   content owners and close or defer CP-01 through CP-08, (6) let EDV repair the
   SFTP home and validate DNS/SMTP/contact configuration, (7) rehearse activation
   and rollback without real data, and (8) close contact, named-user, Legal and
   Thomas Go/No-Go gates before the narrow pilot. Confidence decreases after
   step 6.
-- Deferred visual defect: the opening and closing quotation marks in the
-  Concept Clean card sit at the outer container edges instead of beside the
-  actual first and final quote text. SB-32 owns the desktop/390-pixel correction
-  for the next frontend pass; no code change was requested in this block.
+- Closed locally: the Concept Clean quotation marks are inline with the actual
+  quote text, and the 04.09 request for side-by-side, independently collapsible
+  Use Cases is implemented. SB-32/SB-33 still require review deployment and
+  Janay's visual acceptance.
 - Active gates and intended tests are maintained in `PROJECT_PLAN.md` under
-  `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ and G-CONTENT.
+  `Delivery Steering`: G-DATA, G-SEC, G-OPS, G-PROD, G-REQ, G-CONTENT,
+  G-CONTACT and G-CALENDAR.
 
 ## Decisions Needed
 

@@ -376,9 +376,11 @@ const faqs = [
                     <strong>{feedback.topic}</strong>
                   </div>
                   <blockquote class="customer-feedback__quote">
-                    <span class="customer-feedback__quote-mark customer-feedback__quote-mark--open" aria-hidden="true">„</span>
-                    <p>{feedback.quote}</p>
-                    <span class="customer-feedback__quote-mark customer-feedback__quote-mark--close" aria-hidden="true">“</span>
+                    <p>
+                      <span class="customer-feedback__quote-mark customer-feedback__quote-mark--open" aria-hidden="true">„</span>
+                      {feedback.quote}
+                      <span class="customer-feedback__quote-mark customer-feedback__quote-mark--close" aria-hidden="true">“</span>
+                    </p>
                   </blockquote>
                   <footer>
                     <cite>{feedback.company}</cite>
@@ -406,51 +408,73 @@ const faqs = [
         </p>
       </div>
 
-      <div class="case-story-list">
-        {caseStories.map((story) => (
-          <article
-            class:list={[
-              "case-story",
-              `case-story--${story.tone}`,
-            ]}
-            id={story.id}
-          >
-            <header class="case-story__header">
-              <div>
-                <p class="eyebrow">{story.eyebrow}</p>
-                <h3>{story.title}</h3>
+      <div class="case-story-browser" data-case-story-browser>
+        <div class="case-story-picker" role="group" aria-label="Use Cases auswählen">
+          {caseStories.map((story) => (
+            <button
+              class:list={[
+                "case-story-trigger",
+                `case-story-trigger--${story.tone}`,
+              ]}
+              id={`use-case-trigger-${story.id}`}
+              type="button"
+              aria-expanded="false"
+              aria-controls={story.id}
+              data-case-story-trigger
+            >
+              <span class="case-story-trigger__copy">
+                <span class="eyebrow">{story.eyebrow}</span>
+                <strong class="case-story-trigger__title">{story.title}</strong>
+                <span class="case-story-trigger__lead">{story.lead}</span>
+              </span>
+              <span class="case-story-trigger__action">
+                <span data-case-story-label>Ablauf ansehen</span>
+                <span class="case-story-trigger__symbol" data-case-story-symbol aria-hidden="true">+</span>
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div class="case-story-panels">
+          {caseStories.map((story) => (
+            <article
+              class:list={[
+                "case-story",
+                `case-story--${story.tone}`,
+              ]}
+              id={story.id}
+              aria-labelledby={`use-case-trigger-${story.id}`}
+              data-case-story-panel
+            >
+              <h3 class="visually-hidden">{story.title}</h3>
+              <div class="case-story__route">
+                <svg
+                  class="case-story__curve"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="M50 0 C88 6 88 19 50 25 C12 31 12 44 50 50 C88 56 88 69 50 75 C12 81 12 94 50 100" />
+                </svg>
+                <ol class="case-story__steps">
+                  {story.steps.map((step, index) => (
+                    <li class="case-story__step">
+                      <div class="case-story__step-copy">
+                        <small>{step.label}</small>
+                        <h4>{step.title}</h4>
+                        <p>{step.text}</p>
+                      </div>
+                      <span class="case-story__marker" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
               </div>
-              <p>{story.lead}</p>
-            </header>
-
-            <div class="case-story__route">
-              <svg
-                class="case-story__curve"
-                viewBox="0 0 100 100"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path d="M50 0 C88 6 88 19 50 25 C12 31 12 44 50 50 C88 56 88 69 50 75 C12 81 12 94 50 100" />
-              </svg>
-              <ol class="case-story__steps">
-                {story.steps.map((step, index) => (
-                  <li class="case-story__step">
-                    <div class="case-story__step-copy">
-                      <small>{step.label}</small>
-                      <h4>{step.title}</h4>
-                      <p>{step.text}</p>
-                    </div>
-                    <span class="case-story__marker" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-
-          </article>
-        ))}
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
@@ -480,6 +504,64 @@ const faqs = [
 </BaseLayout>
 
 <script>
+  const caseStoryBrowsers = document.querySelectorAll<HTMLElement>(
+    "[data-case-story-browser]",
+  );
+
+  caseStoryBrowsers.forEach((browser) => {
+    const triggers = Array.from(
+      browser.querySelectorAll<HTMLButtonElement>("[data-case-story-trigger]"),
+    );
+    const panels = Array.from(
+      browser.querySelectorAll<HTMLElement>("[data-case-story-panel]"),
+    );
+
+    const setOpenStory = (selected: HTMLButtonElement | null) => {
+      triggers.forEach((trigger) => {
+        const isOpen = trigger === selected;
+        const panelId = trigger.getAttribute("aria-controls");
+        const panel = panels.find((candidate) => candidate.id === panelId);
+        const label = trigger.querySelector<HTMLElement>("[data-case-story-label]");
+        const symbol = trigger.querySelector<HTMLElement>("[data-case-story-symbol]");
+
+        trigger.setAttribute("aria-expanded", String(isOpen));
+        trigger.classList.toggle("is-open", isOpen);
+        if (panel) {
+          panel.hidden = !isOpen;
+          panel.classList.toggle("is-open", isOpen);
+        }
+        if (label) label.textContent = isOpen ? "Ablauf schließen" : "Ablauf ansehen";
+        if (symbol) symbol.textContent = isOpen ? "−" : "+";
+      });
+    };
+
+    browser.classList.add("is-enhanced");
+    const triggerForHash = () => triggers.find(
+      (trigger) => `#${trigger.getAttribute("aria-controls")}` === window.location.hash,
+    );
+    const initialTrigger = triggerForHash() || null;
+    setOpenStory(initialTrigger);
+    if (initialTrigger) {
+      window.requestAnimationFrame(() =>
+        initialTrigger.scrollIntoView({ block: "start" }),
+      );
+    }
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const wasOpen = trigger.getAttribute("aria-expanded") === "true";
+        setOpenStory(wasOpen ? null : trigger);
+      });
+    });
+
+    window.addEventListener("hashchange", () => {
+      const selected = triggerForHash();
+      if (!selected) return;
+      setOpenStory(selected);
+      window.requestAnimationFrame(() => selected.scrollIntoView({ block: "start" }));
+    });
+  });
+
   const feedbackCarousels = document.querySelectorAll<HTMLElement>(
     "[data-feedback-carousel]",
   );

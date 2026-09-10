@@ -76,3 +76,13 @@ assets.
 - Reduced-motion users do not depend on animation to understand the sequence.
 - No future portal workflow, service level, result, number or customer detail
   is presented as already implemented or guaranteed.
+
+## Follow-up Presentation Decision - 2026-09-10
+
+The 04.09 stakeholder feedback requests less initial scrolling, especially at
+150-percent zoom. Both story summaries therefore appear side by side where
+space permits and each can be expanded independently; only one detailed route
+is visible at a time. The full winding route is retained on larger screens and
+remains linear on mobile. Direct links must open the referenced story, keyboard
+operation and `aria-expanded` state must agree, and the page must remain fully
+readable without JavaScript.

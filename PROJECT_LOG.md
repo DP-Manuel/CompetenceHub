@@ -2,6 +2,25 @@
 
 Newest entries first.
 
+## 2026-09-10 | frontend/feedback/steering | Update-Pakete abgeglichen und Use Cases verdichtet
+
+- Die freigegebenen Pakete vom 13.08., 14.08., 24.08., 27.08. und 04.09. wurden
+  in einer dauerhaften Statusmatrix gegen Umsetzung, offene Punkte und Gates
+  abgeglichen; private Quelldateien bleiben außerhalb von Git.
+- Die beiden Use Cases auf `/unternehmen` stehen jetzt kompakt nebeneinander,
+  öffnen unabhängig voneinander und zeigen nur bei Auswahl den vollständigen
+  gewundenen Pfad. Dadurch bleibt die Seite besonders bei 150 Prozent Zoom
+  deutlich kürzer.
+- Direkte Links öffnen weiterhin den passenden Praxisweg und positionieren den
+  Einstieg unterhalb der festen Navigation. Die Concept-Clean-Anführungszeichen
+  stehen nun mit kleinem Abstand direkt am tatsächlichen Zitattext.
+- Der Kalender ist ausdrücklich erhalten: `.ics` für bestätigte Termine ist
+  das erste anbieterneutrale Inkrement; Outlook/Graph sowie Verfügbarkeit und
+  Reservierungen bleiben spätere, getrennt freizugebende Inkremente.
+- Browser-Nachweise bei 1440, 960 und 390 CSS-Pixeln zeigen unabhängiges Öffnen,
+  korrekte Deep Links und keine horizontale Überbreite. Deployment und
+  Real-Daten-Nutzung fanden in diesem Block nicht statt.
+
 ## 2026-09-04 | stakeholder update/skills | Wochenupdate-Standard eingeführt
 
 - `docs/updates/WEEKLY_UPDATE_STANDARD.md` legt ab jetzt die feste Teams-Struktur

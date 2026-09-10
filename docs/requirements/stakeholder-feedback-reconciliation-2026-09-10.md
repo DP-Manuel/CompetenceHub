@@ -1,0 +1,55 @@
+# Abgleich der Stakeholder-Updates - 2026-09-10
+
+## Zweck und Grenze
+
+Dieser Abgleich hält fest, welche freigegebenen Hinweise aus den Update-Paketen
+vom 13.08., 14.08., 24.08., 27.08. und 04.09.2026 bereits umgesetzt, geplant
+oder weiterhin durch ein Gate gesperrt sind. Die privaten Quelldateien bleiben
+außerhalb von Git; hier stehen nur die für Planung und Abnahme notwendigen
+Ergebnisse.
+
+## Abgleich
+
+| Paket | Kernthemen | Stand | Noch offen / Gate |
+| --- | --- | --- | --- |
+| 13.08.2026 | Portal-Fachmodell, Datenmodell, Informationsarchitektur und offene Implementierungsentscheidungen | Portal-Kern, Rollenbasis, Authentifizierung und Firmen-/Kontaktgrenze sind versioniert, getestet und auf Staging nachgewiesen | Statusübergänge, Freigaberegeln, Statistikdefinitionen und spätere Module bleiben fachlich zu entscheiden |
+| 14.08.2026 | Prozessdarstellung, Use Cases und Concept-Clean-Rückmeldung | Zwei belegungsbewusste Praxiswege und die freigegebene Kundenstimme mit Logo sind auf der Review-Seite vorhanden | Janays abschließende Sichtprüfung der kompakten Darstellung bleibt offen |
+| 24.08.2026 | Aktivierung, Go-live-Nachweise, Backup/Restore und Eingangssteuerung | Release-, Backup-, Monitoring-, Transfer- und Restore-Proben sind mit synthetischen Daten abgeschlossen | Produktive Zeitplanung/Alarmierung, App-DNS, SMTP, Legal, benannte Konten und Go/No-Go bleiben offen |
+| 27.08.2026 | Leistungsstruktur, Hub-Navigation, Coaches, Formulare, Assessment Center und Kalenderideen | Freigegebene Frontend-Korrekturen sind auf der Review-Seite umgesetzt; direkte Formularzustellung ist spezifiziert, aber nicht aktiviert | EDV-Daten sperren die echte Zustellung; Kalender, Verfügbarkeit und Reservierung bleiben getrennte spätere Produktinkremente |
+| 04.09.2026 | Use Cases nebeneinander und aufklappbar; weniger Scrollen bei 150 Prozent | Beide Use Cases sind lokal als kompakte, unabhängige Auswahl nebeneinander umgesetzt; nur der gewählte gewundene Pfad öffnet sich | Review-Deployment und Janays visuelle Abnahme stehen noch aus |
+
+## Kalender-Lieferweg
+
+Der Kalender bleibt ein eigener späterer Produktstrang und wird nicht mit der
+aktuellen Website-Korrektur vermischt.
+
+1. **Bestätigte Termine:** Zuerst wird eine standardkonforme `.ics`-Einladung
+   für einen bestätigten Auftrag geplant. Sie muss in Outlook und mindestens
+   einem Nicht-Outlook-Kalender funktionieren, eine stabile Ereignis-ID nutzen
+   und Aktualisierung sowie Absage ohne Duplikate unterstützen.
+2. **Optionale Outlook-Anbindung:** Eine direkte Microsoft-Graph-Synchronisation
+   folgt nur bei belegtem Bedarf und nach Freigabe von Tenant-Administration,
+   OAuth-Rechten, Datenschutz, Token-Verwahrung, Monitoring und Support.
+3. **Verfügbarkeit und Reservierung:** Veröffentlichte Zeitfenster,
+   Themenfarben, ein vorgeschlagenes Drei-Monats-Fenster und Gruppenplätze sind
+   ein separates Inkrement. Der Vorschlag von mindestens 25 Teilnehmenden ist
+   bis zur fachlichen und vertraglichen Freigabe keine feste Regel.
+
+## Kalender-Gates und Abnahme
+
+- Fachlich: führender Termindatensatz, Ersteller, Status, Zeitzone, Ort oder
+  Meeting-Link, Änderungs- und Absageregeln festlegen.
+- Datenschutz: keine internen Notizen, Kundenidentitäten oder unnötigen
+  personenbezogenen Daten in Einladungen oder öffentlichen Verfügbarkeiten.
+- Rechte: festlegen, wer Termine erstellt, freigibt, ändert, absagt und
+  Verfügbarkeiten veröffentlicht.
+- Betrieb: Zustellfehler müssen für berechtigte Mitarbeitende sichtbar sein;
+  Verantwortliche für Monitoring und Support müssen benannt sein.
+- Test: Import in Outlook und einen weiteren Kalender, Update/Absage ohne
+  Duplikat, Zeitzonen-/Sommerzeittest und Prüfung auf Datenminimierung.
+
+## Nächste Verwendung
+
+Der Abgleich ist bei jedem neuen Stakeholder-Paket zu aktualisieren. Ein Punkt
+darf nur von `offen` auf `umgesetzt` wechseln, wenn die zugehörige Abnahme oder
+das benannte Gate nachgewiesen ist.

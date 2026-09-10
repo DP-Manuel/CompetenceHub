@@ -6,6 +6,27 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-10 | cross-update-reconciliation | Frühere Stakeholder-Pakete aktiv gegenprüfen
+
+- Triggering project situation: Nach mehreren datierten Feedback-Paketen musste
+  Manuel erneut daran erinnern, auch ältere Updates und den Kalender nicht zu
+  vergessen.
+- Durable preference: Bei jedem neuen Feedback-Paket die bereits freigegebenen
+  Pakete erneut gegen `umgesetzt`, `offen`, `wartend` und `gesperrt` abgleichen,
+  statt nur das neueste Dokument isoliert zu bearbeiten.
+- Proposed improvement: `triage-feedback` und `manage-project-state` sollten
+  für langfristige Projekte ein quellenbezogenes Feedback-Ledger pflegen und
+  bei jedem Update ältere offene oder bewusst verschobene Epics sichtbar
+  bestätigen.
+- Project response: `docs/requirements/stakeholder-feedback-reconciliation-2026-09-10.md`
+  führt die Pakete vom 13.08. bis 04.09. zusammen und hält den Kalender mit
+  Inkrementen, Gates und Abnahmetests ausdrücklich fest.
+- Reuse potential: high for multi-week projects with several stakeholders and
+  mixed frontend, product and operations feedback.
+- Risk if ignored: high; deferred capabilities and external dependencies can
+  disappear from the active mental model although they remain business-relevant.
+- Status: project standard evidenced; canonical skill proposal captured only.
+
 ### 2026-09-04 | stable-weekly-update-format | Keep recurring stakeholder updates consistent
 
 - Triggering project situation: successive weekly Teams updates used different
