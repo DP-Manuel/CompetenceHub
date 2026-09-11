@@ -43,8 +43,11 @@ Last updated: 2026-09-11
   company reservations, separate threshold/capacity, decision deadlines,
   minimal fields, governed topics, Janay's task plus E-Mail, publication checks
   and provider-neutral `.ics` delivery are now the approved business baseline.
-  Manuel accepted ADR 0007 on 2026-09-11. The CAL-1 architecture, data, API and
-  RBAC design is complete; migration and activation remain separate gates.
+  Manuel accepted ADR 0007 and CAL-T01 through CAL-T06 on 2026-09-11. The
+  CAL-1 architecture, data, API and RBAC design is complete. Migration `0005`,
+  its rollback-only smoke and three contract tests are prepared locally in
+  commits `f6dc3d4` and `85cb6af`; Staging, accounts, real data and activation remain separate
+  gates.
 - E-Mail workflow input: twelve supplied templates are inventoried as future
   process ideas. Fixed response times, guarantees, refunds, automatic
   rescheduling, discounts, newsletters and E-Mail acceptance are not approved
@@ -125,8 +128,8 @@ Last updated: 2026-09-11
   pixels are green. Workflow `34513388689` and the public smoke confirm HTTP
   200 for calendar/contact/Coach targets, `noindex`, same-day weekend overlap,
   profile links and a bundle without network writes. CAL-D01 through CAL-D08
-  and ADR 0007 are now accepted; productive work remains gated by CAL-T01
-  through CAL-T06 and all later migration/activation gates.
+  and ADR 0007 are now accepted; CAL-T01 through CAL-T06 are also accepted and
+  productive work remains gated by Staging and later activation approvals.
 - A shared Coach-CTA correction keeps long German headings and their final
   punctuation inside the left layout column. All six Coach profiles pass 18
   browser geometry checks at 1440, 960 and 390 pixels without overlap or
@@ -136,7 +139,8 @@ Last updated: 2026-09-11
   all accepted by Janay on 11.09. The reconciled quality plan defines RBAC,
   concurrency, privacy, accessibility, calendar compatibility and operations
   evidence. The CAL-1 design adds revision-safe publication, dedicated reviewer
-  permission and separate public/private projections without creating SQL.
+  permission and separate public/private projections. The additive SQL package
+  is now prepared locally but not applied.
 - The current clean Website production artifact is rebuilt from source
   `5d126cbaec0e`. It contains 51 entries, all required root files, no
   `.env`/`.tmp`, a matching SHA-256 and `deployment_authorized: false`. The new
@@ -415,11 +419,11 @@ Last updated: 2026-09-11
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: Manuel decides CAL-T01 through CAL-T06 now that
-  ADR 0007 and the bounded CAL-1 design are complete. Approval authorizes only
-  local migration `0005` preparation, not Staging, accounts, messages, real
-  data or production. While that decision is pending, close or explicitly
-  defer CP-02/04/07/08. The
+- Recommended next work block: Manuel reviews and explicitly approves or
+  defers the protected synthetic-only Staging application of migration `0005`.
+  The local package is ready; no Staging change, account, message, real data or
+  production action has occurred. In parallel, close or explicitly defer
+  CP-02/04/07/08. The
   provider-neutral backup-notification contract is complete locally; its live
   adapter remains behind EXT-01, and neither real messages nor VPS timers are
   activated. In parallel, review the EDV response from 2026-09-14 or chase it from
@@ -483,12 +487,12 @@ Last updated: 2026-09-11
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) decide CAL-T01 through CAL-T06, (2) close
-  residual CP-02/04/07/08, (3) resolve Webroot/DNS/SMTP and the notifier
-  adapter, (4) author migration `0005` locally, (5) apply it on Staging only
-  after separate approval, (6) implement CAL-1 domain/repository/APIs, (7) add
-  Coach/reviewer Portal UI and browser acceptance, and (8) prepare the
-  controlled Pilot candidate. Confidence decreases from step 6 onward.
+- Rolling delivery horizon: (1) separately approve and prove migration `0005`
+  on isolated Staging, (2) close residual CP-02/04/07/08, (3) resolve
+  Webroot/DNS/SMTP and the notifier adapter, (4) implement CAL-1 domain and
+  repository, (5) add protected/public APIs, (6) add Coach/reviewer Portal UI,
+  (7) connect the accepted static projection and (8) prepare the controlled
+  Pilot candidate. Confidence decreases from step 4 onward.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.
@@ -498,9 +502,8 @@ Last updated: 2026-09-11
 
 ## Decisions Needed
 
-- Accept or amend CAL-T01 through CAL-T06: same-Coach overlap, format codes,
-  technical bounds, immediate public withdrawal, Pilot retention boundary and
-  the additive Admin-assigned `calendar_reviewer` role.
+- Approve or defer applying migration `0005` to isolated Staging with protected
+  pre/post backups, rollback-only smoke and synthetic-only verification.
 - Which Donner + Partner group company is the legal Competence Hub provider?
 - Who may later cover Janay Rappelt's public mailbox during her absence? Until
   then, no public response-time promise applies.

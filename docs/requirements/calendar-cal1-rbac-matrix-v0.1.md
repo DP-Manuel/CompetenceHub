@@ -2,8 +2,8 @@
 
 Stand: 11.09.2026
 
-Status: technical authorization baseline under accepted ADR 0007. The proposed
-`calendar_reviewer` role is not seeded or assigned by this document.
+Status: accepted authorization baseline. Migration `0005` prepares the
+`calendar_reviewer` role but assigns it to no account.
 
 ## Roles And Scope
 
@@ -50,7 +50,7 @@ remain enforced. A role never turns a client-supplied Coach ID into ownership.
 
 ## Assignment Gate
 
-The future migration may seed `calendar_reviewer`, but no account receives it
-until named-account onboarding is authorized. Pilot assignment/removal is
-Admin-only, audited and verified through positive and negative tests. A future
-substitute uses a separate account.
+Migration `0005` seeds `calendar_reviewer`, but no account receives it until
+named-account onboarding is authorized. Pilot assignment/removal is Admin-only,
+audited and verified through positive and negative tests. A future substitute
+uses a separate account.

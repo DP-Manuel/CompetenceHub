@@ -2,9 +2,9 @@
 
 Stand: 11.09.2026
 
-Status: test-ready planning baseline under accepted ADR 0007; no productive
-calendar, reservation, notification or migration is authorized by this
-document.
+Status: test-ready baseline under accepted ADR 0007 and CAL-T01 through
+CAL-T06. Migration `0005` is prepared locally but not authorized for Staging;
+no productive calendar, reservation or notification is active.
 
 ## Purpose
 
@@ -31,8 +31,9 @@ migration and activation gate remains separately decidable.
   never hard-coded as the authorization rule.
 - Admin operations remain authenticated, status-bound and audited.
 - Multiple Coaches can publish overlapping offers on the same day.
-- Conflicting entries for the same Coach or explicitly exclusive resource are
-  rejected or visibly flagged according to the approved business rule.
+- Drafts may overlap. Submission and publication reject overlapping intervals
+  for the same Coach, permit back-to-back intervals and never block another
+  Coach merely because date/time overlap.
 - Public responses expose only approved fields and never private notes,
   customer identities or unpublished availability.
 

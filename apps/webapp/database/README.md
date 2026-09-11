@@ -22,6 +22,10 @@
   smoke passed, the complete synthetic harness passed 13/13 paths and all
   eleven checked data areas remained empty. Protected 74-KiB pre- and 86-KiB
   post-dumps are catalog-readable, owned by `postgres` and mode `0600`.
+- Migration `0005_calendar_availability_and_review.sql` and its rollback-only
+  smoke are prepared locally after approval of CAL-T01 through CAL-T06. They
+  have not been applied to Staging. Native PostgreSQL execution, protected
+  pre/post dumps and zero-residue evidence require a separate approval.
 - The migrated schema contains no business, company or personal data.
 - Only synthetic test data is allowed while the external-backup and privacy
   gates remain open.
@@ -70,6 +74,20 @@ It does not configure a worker, mail adapter, provider, sender domain, retention
 period or runtime secret. The Staging proof completed protected pre/post dumps,
 rollback-only smoke, synthetic idempotency/delivery/failure/cleanup tests,
 zero-residue verification and unchanged service/network health.
+
+## Migration 0005
+
+The prepared additive migration adds stable Coach-owned offers, immutable
+content revisions, append-only review decisions and the unassigned
+`calendar_reviewer` role. It enforces the approved format vocabulary, field
+bounds, capacity/threshold relationship, lifecycle timestamps, revision
+cardinality and non-destructive runtime grants. Same-Coach overlap checks at
+submission/publication remain an atomic repository rule because overlapping
+drafts and different Coaches are explicitly permitted.
+
+The migration contains no account assignment, availability, reservation,
+notification, customer data or real record. Its matching smoke uses only
+`example.invalid` identities and ends with `ROLLBACK`.
 
 ## Safe Staging Procedure
 

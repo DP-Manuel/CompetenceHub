@@ -7,7 +7,7 @@ Stand: 2026-09-11
 | Ziel | Status | Einordnung | Naechster Beweis |
 | --- | --- | --- | --- |
 | Technisches Readiness-Paket | GRUEN TECHNISCH | Website-/Webapp-Pakete, Staging und externer Backup-/Restore-Beweis sind gruen; die aktuelle Website hat zusaetzlich ein festes internes Link-Gate | Nach relevanten Codeaenderungen reproduzierbar neu bauen |
-| Kalender-Discovery und Architektur | GRUEN FACHLICH / DESIGN | CAL-0/CAL-0.1, CAL-D01 bis CAL-D08 und ADR 0007 sind akzeptiert; CAL-1-Entwurf liegt vor | CAL-T01..T06 entscheiden; keine Migration oder Echtdaten ableiten |
+| Kalender-Discovery und Architektur | GRUEN FACHLICH / DESIGN / SQL LOKAL | CAL-0/CAL-0.1, CAL-D01 bis CAL-D08, ADR 0007 und CAL-T01 bis CAL-T06 sind akzeptiert; Migration `0005` plus Smoke liegen lokal vor | Paket pruefen und Staging-Anwendung separat freigeben; keine Echtdaten ableiten |
 | Erste freigegebene Firmen | GELB | Datenmodell, geschuetzter Firmen-/Kontakt-Slice und synthetischer Restore sind bewiesen; Echtdaten bleiben gegated | Vertrag, benannte Konten, Backup-Timer/Alarm und Betriebsfreigabe |
 | Kontrollierter Produktionsstart | GELB / TERMINKANDIDATEN | 17.09. bevorzugt, wenn alle Gates schliessen; 24.09. als Ausweichtermin, sonst spaeter | EDV/Legal klaeren und Onboarding-/Go-No-Go bestaetigen |
 | Budget | UNBEKANNT | Kein belastbarer Budgetrahmen dokumentiert | Nur bei kostenpflichtigem Mail-, Hosting- oder Backupbedarf entscheiden |
@@ -19,8 +19,8 @@ Gates abhaengig. Es ist keine Produktionsfreigabe.
 
 | DONE | READY / NEXT | WAITING EXTERNAL | BLOCKED UNTIL GATES CLOSE |
 | --- | --- | --- | --- |
-| ADR 0007 angenommen und CAL-1-Architektur/API/RBAC entworfen | CAL-T01 bis CAL-T06 annehmen oder aendern | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Echtdaten und erster realer Firmenrecord |
-| CAL-D01 bis CAL-D08 und Pilotablauf von Janay akzeptiert | Nach CAL-T-Freigabe Migration `0005` lokal entwerfen | EXT-03: Onboarding-/Go-No-Go-Terminbestaetigung | Produktive Einladungs-E-Mails und reale Konten |
+| ADR 0007, CAL-T01 bis CAL-T06 und CAL-1-Architektur/API/RBAC angenommen | Migration `0005` fuer isoliertes Staging separat freigeben | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Echtdaten und erster realer Firmenrecord |
+| Migration `0005`, Rollback-Smoke und drei lokale Vertragstests vorbereitet | Nach Staging-Freigabe geschuetztes Pre-Backup, Migration und Smoke ausfuehren | EXT-03: Onboarding-/Go-No-Go-Terminbestaetigung | Produktive Einladungs-E-Mails und reale Konten |
 | Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go fuer 17.09., ersatzweise 24.09. bestaetigen | Oeffentliche Bewerbung und Produktions-Go-Live |
 | Lokaler Backup-Meldungsvertrag mit 21 fokussierten Tests abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-01: SMTP-/Sendervertrag und Benachrichtigungskanal | Produktive Backup-Timer ohne getestete Zustellung |
 | Pilot-Owner entschieden: Manuel Admin, Thomas technischer Break-glass, Janay Mailbox ohne Vertretung | Ab 14.09. EDV-Antwort pruefen; ab 15.09. nachfassen | EXT-06: spaetere Mailboxvertretung bleibt unbesetzt; kein Service-Level versprechen | Automatisierter Website-Replace oder Remote-Loeschung |
@@ -34,13 +34,13 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | Gate | Status | Owner | Ziel / Frist | Evidence / Abnahme | Wirkung bei offenem Gate |
 | --- | --- | --- | --- | --- | --- |
 | G-CODE: gepruefter Source-Checkpoint | DONE / PUSHED | Manuel | aktualisiert 11.09. | Backup-Notifier-Commit `58299ae` und Website-Checkpoint `5d126cb` gepusht | Kein Release aus ungeprueftem Source |
-| G-TEST: lokale und Staging-Qualitaet | DONE fuer aktuellen Slice | Manuel | aktualisiert 11.09. | Website: 43 Astro-Dateien, 30 Seiten, 1.137 interne Referenzen; Webapp: 315 Passes/14 erwartete Staging-Skips, 21 fokussierte Operations-Tests, vorher 14/14 Staging und BA-01..17 | Bei Codeaenderung erneut pruefen |
+| G-TEST: lokale und Staging-Qualitaet | DONE LOKAL / CAL-1 STAGING OPEN | Manuel | aktualisiert 11.09. | Website: 43 Astro-Dateien, 30 Seiten, 1.137 interne Referenzen; Webapp: 318 Passes/14 erwartete Staging-Skips, drei CAL-1-Vertragstests, vorher 14/14 Staging und BA-01..17 | Migration `0005` nativ pruefen; bei Codeaenderung erneut ausfuehren |
 | G-WEBSITE: statisches Produktionsartefakt | DONE LOKAL / REVIEW GREEN | Manuel | aktualisiert 11.09. | Clean `5d126cbaec0e`; 51 Eintraege; SHA-256 `8056d431...5269d4`; `index.html`, `404.html`, `.htaccess`; Workflow `34582211406`; Deploymentflag false | Noch kein SFTP-Upload |
 | G-WEBAPP: reproduzierbares Runtime-Paket | DONE LOKAL | Manuel | vor Backenddeployment neu bauen | Clean Paket mit Restore-Tool, isolierter Installation und Fail-closed Runtime | Noch keine VPS-Aktivierung |
 | G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL / DELIVERY OPEN | Manuel / Wuerzburg | quartalsweise nach Echtdatenstart | Guarded Pull und digest-gepinnter netzloser Restore mit 24 Tabellen; Zeitplan/Retention entschieden; lokaler Meldungsvertrag mit 21 Tests gruen | Timer bleiben aus, bis der EDV-abhaengige Adapter Erfolg und synthetische Stoerung zugestellt hat |
 | G-CALENDAR: CAL-0/CAL-0.1 | DONE REVIEW | Janay / Manuel | akzeptiert 11.09. | Review, Browser-/Netzwerk-Smokes und Janays ausdrueckliche Zustimmung | Produktive CAL-1-Umsetzung bleibt hinter Fachentscheidungen |
 | G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | DONE / ACCEPTED | Janay / Manuel | abgeschlossen 11.09. | Janay akzeptierte alle Regeln/Pilotablauf; Manuel akzeptierte ADR 0007 | Erlaubt Design, aber keine Migration, Konten, Daten oder Aktivierung |
-| G-CALENDAR-DESIGN: CAL-1 Daten/API/RBAC | DONE LOCAL / MIGRATION DECISIONS OPEN | Manuel | aktualisiert 11.09. | revisionssichere Publikation, `calendar_reviewer`, öffentliche/private Projektion und Testmatrix dokumentiert | Migration `0005` wartet auf CAL-T01..T06 und separate Staging-Freigabe |
+| G-CALENDAR-DESIGN: CAL-1 Daten/API/RBAC | DONE LOCAL / SQL PREPARED | Manuel | aktualisiert 11.09. | CAL-T01..T06 akzeptiert; revisionssichere Publikation, `calendar_reviewer`, öffentliche/private Projektion, Migration `0005`, Rollback-Smoke und drei Vertragstests liegen vor | Staging-Anwendung wartet auf eigene Freigabe und geschuetztes Pre-Backup |
 | G-EDV: App-DNS/TLS/SMTP | WAITING UNTIL 14.09. | EDV | ab 14.09. pruefen, ab 15.09. nachfassen | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
 | G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING EXTERNAL | Manuel / Thomas Ross / EDV | vor Website-Go-Live | Host-Key bestaetigt; Anmeldung bewiesen; zugewiesener Webroot fehlt noch | Kein Website-Replace |
 | G-CONTRACT: finaler Vertragsweg | WAITING | Lars Donner / Fachseite | im September klaeren | Freigegebener Vertragsstand und Prozess | Kein freigegebener erster Firmenprozess |
@@ -51,8 +51,9 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 
 ## Pull-Regel
 
-1. ADR 0007 und CAL-D01 bis CAL-D08 sind akzeptiert. Manuel entscheidet
-   CAL-T01 bis CAL-T06; bis dahin entsteht keine Migration.
+1. ADR 0007, CAL-D01 bis CAL-D08 und CAL-T01 bis CAL-T06 sind akzeptiert.
+   Migration `0005` liegt lokal vor; als naechstes folgt nur nach eigener
+   Freigabe der geschuetzte, synthetische Staging-Lauf.
 2. Die EDV-Antwort wird ab 14.09. geprueft und ab 15.09. nachgefasst. Erst nach
    korrigiertem SFTP-Startverzeichnis folgt eine read-only Webroot-Inventur.
 3. Das CP-01-bis-CP-08-Inhaltspaket kann unabhaengig versendet werden; neue

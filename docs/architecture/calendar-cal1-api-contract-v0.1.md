@@ -146,7 +146,7 @@ record values.
 | 404 | `calendar_offer_not_found` | unknown or invisible record |
 | 409 | `calendar_version_conflict` | missing/stale `If-Match`; reload required |
 | 409 | `calendar_transition_conflict` | command invalid in current state |
-| 409 | `calendar_time_conflict` | reserved for approved same-Coach rule |
+| 409 | `calendar_time_conflict` | overlapping submitted/published interval for the same Coach |
 | 503 | `portal_unavailable` | configured service unavailable |
 
 Rate-limit responses remain generic and include `Retry-After`; exact Pilot
@@ -157,6 +157,7 @@ limits are a security/operations decision before implementation.
 - API v1 is additive; existing Auth/company endpoints do not change.
 - Public DTOs are explicit and never mirror database rows.
 - Cursor contents are opaque and protected against tampering.
-- Migration `0005`, routers and UI require separate implementation approval.
+- Migration `0005` is prepared locally; Staging application, routers and UI
+  remain separate approval/implementation steps.
 - Staging application, real Coach accounts and production remain separate
   gates.

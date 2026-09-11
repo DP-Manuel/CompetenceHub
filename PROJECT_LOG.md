@@ -2,6 +2,35 @@
 
 Newest entries first.
 
+## 2026-09-11 | decision/database/testing | CAL-T01 bis CAL-T06 umgesetzt
+
+- Manuel hat CAL-T01 bis CAL-T06 ausdruecklich freigegeben. Damit sind
+  Coach-Ueberschneidungen, Pilotformate, Feldgrenzen, Ruecknahme,
+  Aufbewahrungsgrenze und Reviewer-Rolle fuer CAL-1 entschieden.
+- Migration `0005` bereitet drei additive Kalendertabellen und die noch keinem
+  Konto zugewiesene Rolle `calendar_reviewer` vor. Runtime-DDL, harte
+  Loeschungen und das Aendern von Review-Entscheidungen bleiben verwehrt.
+- Datenbank-Constraints sichern Status/Timestamps, 1..500 Plaetze,
+  Pruefschwelle bis Kapazitaet, kontrollierte Formate und Textgrenzen. Drafts
+  duerfen ueberlappen; der spaetere Repository-Slice muss Submit/Publish fuer
+  denselben Coach transaktional sperren und direkt anschliessende Termine
+  zulassen.
+- Ein ausschliesslich synthetischer Smoke prueft Rolle, Constraints, Grants,
+  ueberlappende Drafts und Review-Evidence und endet mit `ROLLBACK`. Drei lokale
+  Vertragstests sowie die volle Suite mit 318 Passes und 14 erwarteten
+  Staging-Skips, `compileall` und `pip check` sind gruen.
+- Docker Desktop und ein lokaler PostgreSQL-Client waren nicht aktiv; deshalb
+  ist der native SQL-Smoke korrekt als offener Staging-Nachweis markiert. Es
+  gab keine Staging-Aenderung, Kontozuweisung, Echtdaten, Nachricht oder
+  Bereitstellung.
+- Commits `f6dc3d4` und `85cb6af` enthalten das lokale Migrationspaket und die
+  zusaetzliche Eindeutigkeit einer Review-Entscheidung. Naechster empfohlener
+  Block ist die separate Freigabe und kontrollierte Anwendung auf isoliertem
+  Staging mit Pre-/Post-Backup, Smoke, Nullrueckstand und Dienstpruefung.
+- Skill-Learning-Check: Der bestehende Projekt-Skill fordert bereits getrennte
+  Freigaben und dauerhafte Befehls-Handoffs; kein neuer wiederverwendbarer
+  Skill-Befund aus diesem Block.
+
 ## 2026-09-11 | decision/architecture | ADR 0007 angenommen und CAL-1 entworfen
 
 - Manuel hat ADR 0007 ausdrücklich freigegeben. Die Annahme erlaubt die lokale

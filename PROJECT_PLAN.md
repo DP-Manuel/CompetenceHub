@@ -12,12 +12,12 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 - Current phase, sprint, milestone, board status, or release: public website
   stabilization plus isolated authenticated-portal foundation
 - Current status: yellow for production and green for the completed technical-
-  readiness scope. Source checkpoint `58299ae` is pushed to `origin/main` and
-  contains the locally verified backup-notification contract; it builds
+  readiness scope. Source checkpoint `85cb6af` contains the locally verified
+  CAL-1 migration package and builds
   on the pushed Website/content/calendar checkpoint `df62a06` and
   contains the verified public website, accepted same-origin pilot portal and
   completed encrypted external backup/restore rehearsal. The current full local
-  suite passes 315 tests with 14 expected opt-in Staging skips, all 14
+  suite passes 318 tests with 14 expected opt-in Staging skips, all 14
   isolated PostgreSQL paths passed, and BA-01 through BA-17 are accepted in a
   real browser. The local runner is stopped and its ephemeral context removed.
   No persistent Competence-Hub backend/worker service, real account, real data
@@ -29,9 +29,10 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   approval, named-user onboarding and production Go/No-Go remain open. The
   software and external-restore rehearsals are proven; operational activation
   and organizational approval are the critical path.
-- Next decision needed: accept, amend or reject CAL-T01 through CAL-T06 before
-  migration `0005` is authored. ADR 0007 and CAL-D01 through CAL-D08 are
-  accepted. In
+- Next decision needed: authorize or defer the protected, synthetic-only
+  application of migration `0005` on isolated Staging. ADR 0007, CAL-D01
+  through CAL-D08 and CAL-T01 through CAL-T06 are accepted; the local SQL and
+  rollback smoke are prepared. In
   parallel, review or chase the EDV response from 2026-09-14 and close app
   hostname, SMTP/sender, production timer/alert ownership, Legal, onboarding
   and Go/No-Go gates. Productive data remains blocked until all production
@@ -163,16 +164,15 @@ for Git, release, backup and restore responsibilities.
 
 ### Next Blocks
 
-1. **Calendar migration-decision gate:** accept, amend or reject CAL-T01
-   through CAL-T06. ADR 0007 is accepted and the CAL-1 design is complete;
-   migration `0005` remains separate.
+1. **Calendar Staging gate:** review the prepared migration `0005` package and
+   explicitly authorize or defer its protected, synthetic-only Staging run.
 2. **Content decision gate:** close, assign or explicitly defer the residual
    CP-02/04/07/08 items without inventing claims or producing guide pages.
 3. **EDV gate:** review the expected response from 2026-09-14 or chase it from
    2026-09-15, then repeat the read-only SFTP Webroot inventory and finalize
    App-DNS/SMTP contracts without uploading anything prematurely.
-4. **Calendar migration:** after step 1, author migration `0005` and its
-   rollback smoke locally, then request a separate Staging application.
+4. **Calendar application layer:** after successful Staging migration proof,
+   implement CAL-1 domain/repository/API behavior without reservations or mail.
 5. **Production readiness:** confirm the legal operator, Impressum, mailbox
    absence cover, named onboarding dates and Thomas Ross's Go/No-Go before
    activating Website or Webapp production paths.
@@ -542,7 +542,7 @@ phase model.
 
 ## Quality Gates
 
-- **Tests:** 315 local Webapp tests pass with 14 expected opt-in Staging skips;
+- **Tests:** 318 local Webapp tests pass with 14 expected opt-in Staging skips;
   14/14 isolated PostgreSQL paths passed. Re-run local suite before packaging
   and Staging suite after runtime/reverse-proxy changes.
 - **Website build:** Astro must report zero diagnostics and build all expected
@@ -599,14 +599,14 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: process the first Priority-A content decisions and close
-the Pilot operations owner decisions without widening the real-data or
-production boundary. API, database, browser acceptance and external-copy
-restore evidence remain complete. SB-32 through SB-40 are accepted, complete
-or waiting on a named external gate; no productive backend slice is currently
-doing. Productive calendar delivery, availability and seat reservations remain
-separately gated behind accepted ADR 0007 and the CAL-T01..T06 decision gate. EXT-01 and the
-remaining Content owner decisions continue in parallel.
+Current sprint goal: prepare and prove the bounded CAL-1 availability/review
+foundation without widening the real-data or production boundary. API,
+database, browser acceptance and external-copy restore evidence remain
+complete. SB-32 through SB-45 are accepted, complete or waiting on a named
+external gate; no productive backend slice is currently doing. The local
+calendar migration is ready, while Staging, application behavior, seat
+reservations and delivery remain separately gated. EXT-01 and the remaining
+Content owner decisions continue in parallel.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -654,8 +654,9 @@ remaining Content owner decisions continue in parallel.
 | SB-42 | Done planning-only | Convert the supplied E-Mail templates into a safe automation inventory | authorized `Quellen/11.09.2026` mail-template draft; no automatic send or public claim | twelve workflow ideas are classified by event and gate; response-time, guarantee, refund, automatic reschedule, discount, newsletter and legal-acceptance claims remain blocked; transactional, marketing and legally relevant messages are explicitly separated |
 | SB-43 | Done locally | Prepare a provider-neutral backup success/incident notification contract | accepted notification requirement; live channel remains behind EXT-01; no network, recipient, timer or VPS activation | bounded JSON renderer accepts only defined event/code combinations and emits fixed German action text plus stable UTC-day deduplication; 21 focused operations tests, 315 full local passes with 14 expected Staging skips, compileall and dependency checks are green; commit `58299ae`; no message was sent |
 | SB-44 | Done design-only | Accept ADR 0007 and complete CAL-1 architecture, data, API and RBAC boundaries | Manuel's explicit ADR approval; no migration or implementation | revision-safe publication, separate public/private APIs, additive `calendar_reviewer`, optimistic concurrency, public projection and verification matrix documented; CAL-T01..T06 collect remaining migration decisions; no SQL, account, data, message or deployment |
+| SB-45 | Done locally; Staging approval pending | Prepare additive CAL-1 migration `0005` and rollback-only smoke | ADR 0007 and Manuel's approval of CAL-T01..T06; no Staging application, account assignment or real data | three Calendar tables, unassigned `calendar_reviewer`, accepted field/state constraints and non-destructive runtime grants prepared; overlapping drafts preserved while same-Coach submit/publish conflict remains an atomic repository rule; three focused contract tests and the full 318-pass/14-skip local suite, compileall and dependency check are green; native PostgreSQL smoke awaits the separate Staging gate; commits `f6dc3d4` and `85cb6af` |
 
-The technical-readiness baseline remains complete: 315 Webapp tests pass with
+The technical-readiness baseline remains complete: 318 Webapp tests pass with
 14 expected Staging skips, the release ZIP includes the restore tool and no
 `.env`/`.tmp`, and the current Website passes a 43-file Astro check, 30-page
 build and 1,137-reference verification. SB-25 is waiting on a corrected IONOS
@@ -663,12 +664,11 @@ SFTP start directory.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: decide CAL-T01 through CAL-T06 now that ADR 0007 and
-the CAL-1 technical design are complete. Required input is Manuel's explicit
-accept/amend/reject decision. Deliverable after approval is migration `0005`
-plus a rollback-only smoke, still without Staging application. While that
-decision is pending, close or explicitly defer CP-02/04/07/08 and process the
-EDV response from 14.09. The
+Recommended next block: review and, only after Manuel's explicit approval,
+apply migration `0005` to isolated Staging with protected pre/post backups,
+rollback-only smoke and zero-residue evidence. The local package is complete;
+no Staging application has occurred. In parallel, close or explicitly defer
+CP-02/04/07/08 and process the EDV response from 14.09. The
 provider-neutral backup-notification contract is complete locally; only its
 live adapter, recipient routing and timer activation remain gated.
 
@@ -679,13 +679,13 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Ready for Manuel decision | High | Accept or amend CAL-T01 through CAL-T06 | ADR 0007 accepted; CAL-1 design complete | explicit decision on overlap, formats, bounds, withdrawal, retention boundary and reviewer role |
+| 1 | Ready for Manuel decision | High | Apply migration `0005` on isolated Staging or defer it | local package `85cb6af`; separate approval and protected pre-backup | native migration/smoke, zero residue, post-backup, localhost PostgreSQL and four service checks |
 | 2 | Ready content decision | High | Close residual CP-02/04/07/08 | no invented claims or new guide pages | cadence, owners/review dates and profile evidence accepted, assigned or deferred |
 | 3 | Waiting external | High | Resolve Webroot, App-DNS/SMTP and notifier adapter | EDV response expected from 14.09.; no upload/live mail | read-only inventory, DNS/TLS proof, SMTP contract and synthetic receipts |
-| 4 | Pending | High | Author migration `0005` and rollback smoke locally | step 1; no Staging application inferred | SQL review, transactional rollback, ownership/grant and constraint tests |
-| 5 | Pending approval | Medium-high | Apply migration `0005` on isolated Staging | separate Manuel approval, protected pre-backup and synthetic-only window | migration/smoke, zero residue, post-backup, localhost PostgreSQL and four service checks |
-| 6 | Pending | Medium | Implement CAL-1 domain, repository and public/protected APIs | steps 4-5; existing FastAPI/PostgreSQL patterns | unit/API/Staging tests for revisions, concurrency, RBAC, audit and public minimization |
-| 7 | Pending | Medium-low | Add Coach/reviewer Portal UI and browser acceptance | step 6; named synthetic roles | keyboard, focus, 390 px, 200% zoom, stale-edit recovery and role walkthrough |
+| 4 | Pending | Medium-high | Implement CAL-1 domain and repository | successful step 1; no reservation/mail scope | transition, overlap, optimistic-lock, revision and audit unit/integration tests |
+| 5 | Pending | Medium | Implement protected/public CAL-1 APIs | step 4; existing Auth/CSRF/Origin/RBAC patterns | API tests for ownership, reviewer permission, public minimization and generic errors |
+| 6 | Pending | Medium-low | Add Coach/reviewer Portal UI and browser acceptance | step 5; synthetic role assignments only | keyboard, focus, 390 px, 200% zoom, stale-edit recovery and role walkthrough |
+| 7 | Pending | Low | Connect the accepted static calendar projection | steps 4-6 and explicit integration decision | published-only contract test plus no private-field/network regressions |
 | 8 | Pending | Low | Prepare controlled Pilot release candidate | EDV, Legal, mailbox, onboarding, active backup/alerts and Go/No-Go | evidence index, rollback rehearsal, named acceptance and no high/critical finding |
 
 ### Cross-Cutting Gates
@@ -771,10 +771,10 @@ separate gated actions.
 
 Prepared on: 2026-09-11
 
-- Current local checkpoint: `58299ae`; accepted cutline, ADR 0006, same-origin portal,
+- Current local checkpoint: `85cb6af`; accepted cutline, ADR 0006, same-origin portal,
   browser harness, clean release evidence, SB-23 restore evidence and the
   deployed SB-24 Website review are versioned.
-- Evidence: 315 local tests pass with 14 expected opt-in Staging skips; all 14
+- Evidence: 318 local tests pass with 14 expected opt-in Staging skips; all 14
   PostgreSQL Staging paths and BA-01 through BA-17 passed. Astro reports 38
   files without diagnostics and 28 built pages. The local browser runner and
   temporary VPS export are stopped/removed; the exact encrypted `D:` copy is

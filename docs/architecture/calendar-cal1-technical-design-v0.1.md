@@ -2,9 +2,9 @@
 
 Stand: 11.09.2026
 
-Status: implementation-ready design draft after acceptance of ADR 0007. This
-document authorizes no migration, account, real availability, notification or
-deployment.
+Status: accepted design baseline. CAL-T01 through CAL-T06 are accepted and the
+local migration package is prepared. This document authorizes no Staging
+application, account, real availability, notification or deployment.
 
 ## Purpose And Sources
 
@@ -65,8 +65,8 @@ No new service, queue or external integration is needed for CAL-1.
 
 ## Proposed Data Model
 
-Migration `0005` is reserved as the likely next number but must not be created
-or applied without separate approval.
+Migration `0005` is prepared locally. Applying it to Staging remains a separate
+approval gate.
 
 ### `calendar_offers`
 
@@ -83,9 +83,11 @@ Stable identity and ownership of one planned offer.
 | `created_at`, `updated_at` | timestamptz | server controlled |
 | `withdrawn_at` | timestamptz nullable | present only when withdrawn |
 
-There is no uniqueness on date or time. Different Coaches may overlap. A
-same-Coach conflict rule remains a pre-migration decision and must not be
-silently encoded as a global exclusion constraint.
+There is no uniqueness on date or time. Different Coaches and drafts may
+overlap. Submission and publication reject an overlap for the same Coach;
+back-to-back ranges are allowed. The future repository enforces this atomically
+while locking the stable offer/Coach scope, rather than using a global database
+constraint that would also reject permitted drafts.
 
 ### `calendar_offer_revisions`
 
@@ -103,10 +105,10 @@ offer creates a new draft while the prior published revision remains visible.
 | `summary` | text nullable | bounded public copy |
 | `starts_at`, `ends_at` | timestamptz | timezone-aware; end after start |
 | `time_zone` | text | pilot default `Europe/Berlin`; validated IANA identifier |
-| `format_code` | text | controlled; final vocabulary required before migration |
+| `format_code` | text | `online`, `praesenz` or `hybrid` |
 | `public_location` | text nullable | never a secret meeting URL |
-| `capacity` | integer | positive; business maximum still open |
-| `review_threshold` | integer | positive and distinct from capacity |
+| `capacity` | integer | between 1 and 500 |
+| `review_threshold` | integer | between 1 and capacity; private |
 | `decision_deadline` | timestamptz | before start; public after publication |
 | `price_display_text` | text | public amount/note, not a finance record |
 | `created_by_user_id` | UUID | required FK to `portal_users` |
@@ -121,8 +123,9 @@ Required constraints/indexes:
 - state-dependent timestamp and positive-number checks;
 - no runtime cascade deletion of offers or revisions.
 
-Whether `review_threshold <= capacity` is a business rule is still open. CAL-1
-stores both values but does not invent that constraint.
+Title, summary, public location, price display and review note are bounded to
+160, 1,200, 200, 200 and 1,000 characters respectively. The database enforces
+these accepted limits and `review_threshold <= capacity`.
 
 ### `calendar_review_decisions`
 
@@ -199,16 +202,12 @@ or audit rows.
 
 ## Migration And Rollback Plan
 
-Before SQL is authored:
-
-1. approve same-Coach overlap behavior;
-2. approve format codes and numeric/text bounds;
-3. decide whether threshold may exceed capacity;
-4. confirm reviewer-role assignment policy and retention owner.
-
-The migration must be additive, transactional and empty-data safe. Its smoke
-test runs inside a rollback transaction and proves ownership, constraints,
-runtime DML and denied DDL/update/delete privileges.
+CAL-T01 through CAL-T06 closed the overlap, format, bounds, withdrawal,
+retention-boundary and reviewer-role decisions on 11.09.2026. The prepared
+migration is additive, transactional and empty-data safe. Its smoke test runs
+inside a rollback transaction and proves ownership, constraints, runtime DML
+and denied DDL/update/delete privileges. Native execution remains pending the
+separate Staging gate.
 
 Before data use, rollback may reverse the Staging migration. After any real
 availability exists, rollback preserves tables and uses application rollback;
@@ -230,5 +229,6 @@ destructive down-migration is forbidden.
 
 - architecture, ownership, projections and transitions are explicit;
 - API and RBAC contracts are versioned;
-- unresolved values are migration gates rather than guesses;
-- no migration, code, account, real data, message or deployment was created.
+- CAL-T01 through CAL-T06 resolve the migration values without guesses;
+- the local migration package exists, while Staging, application code,
+  accounts, real data, messages and deployment remain unmodified.
