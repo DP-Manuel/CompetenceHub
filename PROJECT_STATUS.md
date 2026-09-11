@@ -382,10 +382,12 @@ Last updated: 2026-09-11
   completed 28.08. technical checkpoint plus the gate-dependent 17.09./24.09.
   candidates. Technical readiness is green; production is yellow behind named
   gates.
-- Current verified implementation checkpoint: commit `ecc074b` is pushed to
-  `origin/main`; local and remote branches were synchronized afterward. The
-  crawler-blocked Website review was deployed through workflow `34515246498`;
-  it did not authorize IONOS production or real-data operations.
+- Current verified implementation checkpoint: commit `5d126cb` is pushed to
+  `origin/main`. The crawler-blocked Website review was deployed through
+  workflow `34582211406`; public route, content and `noindex` smokes are green.
+  The matching clean IONOS artifact contains 51 entries and has SHA-256
+  `8056d431...5269d4`. Neither review nor artifact authorizes IONOS production
+  or real-data operations.
 - SB-22 is complete locally: the Website now has a secret-free SFTP target
   contract, fail-closed artifact preparer and operator runbook. Dirty artifacts,
   wrong hashes/domains, unresolved targets, unverified host keys/Webroots and

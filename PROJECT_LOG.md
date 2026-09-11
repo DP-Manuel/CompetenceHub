@@ -20,8 +20,13 @@ Newest entries first.
   angeglichen.
 - Website-Nachweis: 43 Astro-Dateien ohne Diagnose, 30 Seiten gebaut, 1.137
   interne Referenzen geprueft und vier betroffene Routen in echter
-  390-Pixel-Emulation ohne horizontalen Ueberlauf getestet. Review-Deployment
-  und IONOS-Produktion bleiben getrennt.
+  390-Pixel-Emulation ohne horizontalen Ueberlauf getestet. Commit `5d126cb`
+  wurde gepusht; Review-Workflow `34582211406` und oeffentliche
+  HTTP-/Content-/`noindex`-Smokes sind gruen.
+- Das getrennte saubere IONOS-Artefakt fuer `5d126cbaec0e` enthaelt 51
+  Eintraege, die drei Pflichtdateien und hat SHA-256
+  `8056d43180937ea16633c472fe9d04a5725d5c73413463175c5539e1465269d4`.
+  Sein Deploymentflag ist `false`; ein IONOS-Upload fand nicht statt.
 
 ## 2026-09-11 | stakeholder handoff | Kalenderregeln bei Janay
 

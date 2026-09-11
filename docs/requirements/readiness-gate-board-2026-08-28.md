@@ -32,9 +32,9 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 
 | Gate | Status | Owner | Ziel / Frist | Evidence / Abnahme | Wirkung bei offenem Gate |
 | --- | --- | --- | --- | --- | --- |
-| G-CODE: gepruefter Source-Checkpoint | DONE | Manuel | aktualisiert 11.09. | Website-Feature-Commit `db96b95` und Evidence-Commit `91776df` gepusht | Kein Release aus ungeprueftem Source |
+| G-CODE: gepruefter Source-Checkpoint | DONE | Manuel | aktualisiert 11.09. | Content-/Operations-/Website-Commit `5d126cb` gepusht | Kein Release aus ungeprueftem Source |
 | G-TEST: lokale und Staging-Qualitaet | DONE fuer aktuellen Slice | Manuel | aktualisiert 11.09. | Website: 43 Astro-Dateien, 30 Seiten, 1.137 interne Referenzen; Webapp unveraendert: 305 Passes/14 erwartete Staging-Skips, vorher 14/14 Staging und BA-01..17 | Bei Codeaenderung erneut pruefen |
-| G-WEBSITE: statisches Produktionsartefakt | DONE LOKAL / REVIEW GREEN | Manuel | aktualisiert 11.09. | Clean `db96b9573d2a`; 51 Eintraege; SHA-256 `d322276b...c0481c17`; `index.html`, `404.html`, `.htaccess`; keine `.env`/`.tmp`; Workflow `34577486065`; Deploymentflag false | Noch kein SFTP-Upload |
+| G-WEBSITE: statisches Produktionsartefakt | DONE LOKAL / REVIEW GREEN | Manuel | aktualisiert 11.09. | Clean `5d126cbaec0e`; 51 Eintraege; SHA-256 `8056d431...5269d4`; `index.html`, `404.html`, `.htaccess`; Workflow `34582211406`; Deploymentflag false | Noch kein SFTP-Upload |
 | G-WEBAPP: reproduzierbares Runtime-Paket | DONE LOKAL | Manuel | vor Backenddeployment neu bauen | Clean Paket mit Restore-Tool, isolierter Installation und Fail-closed Runtime | Noch keine VPS-Aktivierung |
 | G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL / OPS OPEN | Manuel / Wuerzburg | quartalsweise nach Echtdatenstart | Guarded Pull und digest-gepinnter netzloser Restore mit 24 Tabellen; Zeitplan und 30/12-Retention entschieden | Timer bleiben aus, bis automatische Erfolg-/Stoerungsmeldung getestet und aktiviert ist |
 | G-CALENDAR: CAL-0/CAL-0.1 | DONE REVIEW | Janay / Manuel | akzeptiert 11.09. | Review, Browser-/Netzwerk-Smokes und Janays ausdrueckliche Zustimmung | Produktive CAL-1-Umsetzung bleibt hinter Fachentscheidungen |
