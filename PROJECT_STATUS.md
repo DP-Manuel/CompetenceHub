@@ -389,10 +389,11 @@ Last updated: 2026-09-11
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: dispatch the updated five-page Word handout and
-  collect the grouped CAL-D01 through CAL-D08 answers by 2026-09-18 where
-  possible. The handout and future test gates are prepared; no
-  calendar migration or real-data path begins before those decisions. In
+- Recommended next work block: while Janay reviews the dispatched five-page
+  Word handout, prepare the Pilot account and operations owner decisions with
+  Manuel. The grouped CAL-D01 through CAL-D08 return is requested by
+  2026-09-18; no calendar migration or real-data path begins before those
+  decisions. In
   parallel, review the EDV response from 2026-09-14 or chase it from
   2026-09-15, then repeat the read-only Webroot inventory. Real data and
   production activation remain blocked by operational, Legal, account and
@@ -452,14 +453,13 @@ Last updated: 2026-09-11
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) refresh the clean Website artifact with
-  mandatory internal-link verification, (2) CAL-0.1 is accepted, (3) decide
-  CAL-D01 through CAL-D08 and ADR
-  0007, (4) resolve the parallel EDV Webroot/DNS/SMTP gate, (5) design CAL-1
-  schema/API/RBAC, (6) prepare its migration and Staging smoke, (7) implement
-  Coach-owned availability plus internal publication, and (8) prepare the
-  controlled post-vacation pilot release candidate. Confidence decreases from
-  step 5 onward.
+- Rolling delivery horizon: (1) receive CAL-D01 through CAL-D08 and decide ADR
+  0007, (2) close Pilot account/operations ownership, (3) collect CP-01 through
+  CP-08 content decisions, (4) resolve the parallel EDV Webroot/DNS/SMTP gate,
+  (5) design CAL-1 schema/API/RBAC, (6) prepare its migration and Staging smoke,
+  (7) implement Coach-owned availability plus internal publication, and (8)
+  prepare the controlled post-vacation pilot release candidate. Confidence
+  decreases from step 5 onward.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.

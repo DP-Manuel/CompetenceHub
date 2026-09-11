@@ -20,7 +20,9 @@ Am 28.08.2026 sind die Vertraege voraussichtlich fertig und das technische
 Produktionspaket soll weitgehend vorbereitet sein. Eine oeffentliche
 Freigabe, reale Konten und der erste Firmenrecord duerfen danach erfolgen,
 sobald Legal-, Backup-, DNS/Runtime- und Go/No-Go-Gates geschlossen sind.
-Spaetester Produktivtermin ist 25.09.2026 vor Manuels dreiwoechiger Abwesenheit.
+Der fruehere Produktivtermin 25.09.2026 ist aufgehoben. Der aktuelle
+Planungskorridor beginnt fruehestens in der zweiten Oktoberhaelfte nach Manuels
+Rueckkehr; ein exaktes Datum bleibt bis zu den externen Freigaben offen.
 
 Ein Datenbank-, API- oder UI-Teilerfolg allein erfuellt das spaetere
 Produktivziel nicht. Der 28.08. darf als Readiness-Meilenstein ohne Echtdaten
@@ -108,14 +110,14 @@ werden erst nach belegtem Arbeitsbedarf additiv entschieden.
 
 ## Gate- und Owner-Matrix
 
-| Gate | Owner/Freigabe | Erforderliche Evidenz | Status 21.08. |
+| Gate | Owner/Freigabe | Erforderliche Evidenz | Aktueller Status |
 | --- | --- | --- | --- |
-| Fachlicher Pilotumfang | Manuel und Frau Janay Rappelt | diese Cutline und Feld-/Ablaufabnahme | vorgeschlagen; Janay-Abnahme offen |
+| Fachlicher Pilotumfang | Manuel und Frau Janay Rappelt | diese Cutline und Feld-/Ablaufabnahme | Cutline von Manuel freigegeben; Janay-Abnahme des Firmen-/Kontaktablaufs offen |
 | Konten und Rollen | Manuel | persoenliche Adressen, Rollenliste, Onboardingtermin, Break-glass-Regel | Namen/Rollen/Adressen gesetzt; Termine und Notfallregel offen |
 | Einladungszustellung | Manuel; Mailbetrieb nach D+P-Vorgabe | SMTP-Vertrag, freigegebener Absender und gepruefter Mailadapter | E-Mail entschieden; technische Mailparameter offen; keine Tokenanzeige in API/Logs |
-| Off-Server-Backup | Manuel | verschluesselter Download zum D+P-Rechner Wuerzburg plus Restoreprotokoll | Zielkandidat gesetzt; Verschluesselung/Zugriff/Restore offen |
-| Website-Produktion | Thomas Ross | freigegebenes Artefakt, Rollbackkopie, Domain/TLS/Recht/Kontakt-Smoke | offen |
-| Backend-Produktion | Thomas Ross; Betrieb Manuel | eigene Services, Secrets, Reverse Proxy, Monitoring, Rollback und Chatbot-Isolation | offen |
+| Off-Server-Backup | Manuel | verschluesselter Download zum D+P-Rechner Wuerzburg plus Restoreprotokoll | synthetischer externer Restore bestanden; Produktionstimer und Alarmweg offen |
+| Website-Produktion | Thomas Ross | freigegebenes Artefakt, Rollbackkopie, Domain/TLS/Recht/Kontakt-Smoke | technisches Paket gruen; SFTP-Webroot, Recht und Go/No-Go offen |
+| Backend-Produktion | Thomas Ross; Betrieb Manuel | eigene Services, Secrets, Reverse Proxy, Monitoring, Rollback und Chatbot-Isolation | lokal/Staging gruen; DNS, SMTP, Timer/Alarm und Go/No-Go offen |
 | Rechtlicher Betreiber | Lars Donner / finale Gesellschaft | finales Impressum, Datenschutz-/AGB-Anwendbarkeit und Vertragsbezug | Gesellschaft/Unterlagen offen |
 | Echtdaten | Manuel plus rechtliche/fachliche Freigabe | G-DATA, G-SEC, G-OPS und G-PROD geschlossen | gesperrt |
 

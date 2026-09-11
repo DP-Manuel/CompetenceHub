@@ -19,7 +19,7 @@ Gates abhaengig. Es ist keine Produktionsfreigabe.
 
 | DONE | READY / NEXT | WAITING EXTERNAL | BLOCKED UNTIL GATES CLOSE |
 | --- | --- | --- | --- |
-| Auth, MFA, Rollen und Firmen-/Kontakt-Slice lokal und auf Staging synthetisch bewiesen | CAL-D01 bis CAL-D08 mit vorbereitetem Handout gesammelt entscheiden | EXT-01: App-DNS, TLS-/Proxy-Pfad, SMTP-Vertrag und Absender; Antwort nicht vor 14.09. erwartet | Echtdaten und erster realer Firmenrecord |
+| Auth, MFA, Rollen und Firmen-/Kontakt-Slice lokal und auf Staging synthetisch bewiesen | Pilot-Zugangs- und Betriebsentscheidungen mit Manuel vorbereiten | CAL-D01 bis CAL-D08: Handout seit 11.09. bei Janay; Ruecklauf bis 18.09. erbeten | Echtdaten und erster realer Firmenrecord |
 | Portal-Browserabnahme BA-01 bis BA-17 abgeschlossen | ADR 0007 danach annehmen, aendern oder ablehnen | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Produktive Einladungs-E-Mails und reale Konten |
 | Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | CP-01 bis CP-08 Content-Entscheidungspaket versenden | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go bis 18.09. anfragen und bis 24.09. terminieren | Oeffentliche Bewerbung und Produktions-Go-Live |
 | Website-Review inklusive CAL-0.1 von Janay akzeptiert | Ab 14.09. EDV-Antwort pruefen; ab 15.09. nachfassen | EXT-06: Mailbox-Reaktion, Vertretung und Ownership mit Janay/Manuel | Automatisierter Website-Replace oder Remote-Loeschung |
@@ -38,7 +38,7 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | G-WEBAPP: reproduzierbares Runtime-Paket | DONE LOKAL | Manuel | vor Backenddeployment neu bauen | Clean Paket mit Restore-Tool, isolierter Installation und Fail-closed Runtime | Noch keine VPS-Aktivierung |
 | G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL | Manuel / Wuerzburg | quartalsweise nach Echtdatenstart | Guarded Pull und digest-gepinnter netzloser Restore mit 24 Tabellen; keine Klartext-/Containerreste | Produktions-Timer/Alarmierung bleibt G-OPS |
 | G-CALENDAR: CAL-0/CAL-0.1 | DONE REVIEW | Janay / Manuel | akzeptiert 11.09. | Review, Browser-/Netzwerk-Smokes und Janays ausdrueckliche Zustimmung | Produktive CAL-1-Umsetzung bleibt hinter Fachentscheidungen |
-| G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | READY FOR DISPATCH | Janay / Manuel / spaetere Fachowner | Ruecklauf moeglichst bis 18.09. | Aktualisiertes fuenfseitiges Word-Handout und Quality Plan vorbereitet | Keine Kalender-Migration oder echten Termine |
+| G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | WAITING STAKEHOLDER | Janay / Manuel / spaetere Fachowner | Ruecklauf moeglichst bis 18.09. | Aktualisiertes fuenfseitiges Word-Handout am 11.09. an Janay versendet | Keine Kalender-Migration oder echten Termine |
 | G-EDV: App-DNS/TLS/SMTP | WAITING UNTIL 14.09. | EDV | ab 14.09. pruefen, ab 15.09. nachfassen | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
 | G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING EXTERNAL | Manuel / Thomas Ross / EDV | vor Website-Go-Live | Host-Key bestaetigt; Anmeldung bewiesen; zugewiesener Webroot fehlt noch | Kein Website-Replace |
 | G-CONTRACT: finaler Vertragsweg | WAITING | Lars Donner / Fachseite | im September klaeren | Freigegebener Vertragsstand und Prozess | Kein freigegebener erster Firmenprozess |

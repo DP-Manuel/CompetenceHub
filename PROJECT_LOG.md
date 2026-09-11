@@ -2,6 +2,17 @@
 
 Newest entries first.
 
+## 2026-09-11 | stakeholder handoff | Kalenderregeln bei Janay
+
+- Manuel bestaetigte den Versand des fachlichen Kalenderpakets an Janay. Das
+  Gate CAL-D01 bis CAL-D08 steht nun auf `waiting stakeholder`; der erbetene
+  Ruecklauf bleibt 18.09.
+- Als naechster unabhaengiger interner Block wird das Pilot-Zugangs- und
+  Betriebspaket vorbereitet. Kalenderarchitektur und Migration bleiben bis zum
+  fachlichen Ruecklauf gesperrt.
+- Die ueberholte 25.09.-Produktivaussage in der Pilot-Cutline wurde auf den
+  fruehestens ab der zweiten Oktoberhaelfte beginnenden Korridor korrigiert.
+
 ## 2026-09-11 | stakeholder package | Fachliche Kalenderabstimmung versandbereit
 
 - Die bereits akzeptierte visuelle Kalenderpruefung wurde aus der offenen
