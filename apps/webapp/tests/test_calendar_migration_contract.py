@@ -14,6 +14,8 @@ def test_calendar_migration_contains_approved_schema_and_bounds() -> None:
     assert "CREATE TABLE competence_hub.calendar_review_decisions" in sql
     assert "VALUES ('calendar_reviewer', 'Kalenderpruefung')" in sql
     assert "format_code IN ('online', 'praesenz', 'hybrid')" in sql
+    assert "time_zone text NOT NULL DEFAULT 'Europe/Berlin'" in sql
+    assert "char_length(time_zone) <= 64" in sql
     assert "capacity BETWEEN 1 AND 500" in sql
     assert "review_threshold BETWEEN 1 AND capacity" in sql
     assert "char_length(title) <= 160" in sql
@@ -21,6 +23,7 @@ def test_calendar_migration_contains_approved_schema_and_bounds() -> None:
     assert "char_length(public_location) <= 200" in sql
     assert "char_length(price_display_text) <= 200" in sql
     assert "char_length(note) <= 1000" in sql
+    assert "calendar_review_decisions_revision_uq UNIQUE (revision_id)" in sql
 
 
 def test_calendar_migration_keeps_runtime_role_non_destructive() -> None:

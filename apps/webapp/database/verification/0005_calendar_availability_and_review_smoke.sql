@@ -308,6 +308,9 @@ FROM submitted_revision revision
 CROSS JOIN reviewer;
 
 DO $$
+DECLARE
+    synthetic_revision_id uuid;
+    synthetic_reviewer_id uuid;
 BEGIN
     IF (SELECT count(*) FROM competence_hub.calendar_review_decisions) <> 1 THEN
         RAISE EXCEPTION 'Synthetic review evidence was not created';
@@ -317,6 +320,25 @@ BEGIN
        OR (SELECT count(*) FROM competence_hub.calendar_offer_revisions) <> 2 THEN
         RAISE EXCEPTION 'Synthetic Calendar graph is incomplete';
     END IF;
+
+    SELECT decision.revision_id, decision.reviewer_user_id
+    INTO synthetic_revision_id, synthetic_reviewer_id
+    FROM competence_hub.calendar_review_decisions decision;
+
+    BEGIN
+        INSERT INTO competence_hub.calendar_review_decisions (
+            revision_id,
+            reviewer_user_id,
+            outcome
+        ) VALUES (
+            synthetic_revision_id,
+            synthetic_reviewer_id,
+            'published'
+        );
+        RAISE EXCEPTION 'Duplicate review decision was accepted';
+    EXCEPTION
+        WHEN unique_violation THEN NULL;
+    END;
 END;
 $$;
 

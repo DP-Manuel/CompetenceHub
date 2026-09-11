@@ -55,7 +55,7 @@ CREATE TABLE competence_hub.calendar_offer_revisions (
     starts_at timestamptz NOT NULL,
     ends_at timestamptz NOT NULL,
     time_zone text NOT NULL DEFAULT 'Europe/Berlin' CHECK (
-        time_zone = 'Europe/Berlin'
+        btrim(time_zone) <> '' AND char_length(time_zone) <= 64
     ),
     format_code text NOT NULL CHECK (
         format_code IN ('online', 'praesenz', 'hybrid')
@@ -153,7 +153,8 @@ CREATE TABLE competence_hub.calendar_review_decisions (
         note IS NULL
         OR (btrim(note) <> '' AND char_length(note) <= 1000)
     ),
-    decided_at timestamptz NOT NULL DEFAULT now()
+    decided_at timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT calendar_review_decisions_revision_uq UNIQUE (revision_id)
 );
 
 CREATE INDEX calendar_review_decisions_revision_idx
