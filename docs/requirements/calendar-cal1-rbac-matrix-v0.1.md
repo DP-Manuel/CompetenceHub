@@ -54,4 +54,3 @@ The future migration may seed `calendar_reviewer`, but no account receives it
 until named-account onboarding is authorized. Pilot assignment/removal is
 Admin-only, audited and verified through positive and negative tests. A future
 substitute uses a separate account.
-

@@ -27,4 +27,3 @@ Bei Zustimmung genügt:
 Änderungen können direkt mit ID genannt werden. Erst danach wird Migration
 `0005` samt Rollback-Smoke lokal entworfen und zur separaten Staging-Freigabe
 vorgelegt.
-
