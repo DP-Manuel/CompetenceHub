@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-09-10
+Last updated: 2026-09-11
 
 ## Snapshot
 
@@ -376,7 +376,7 @@ Last updated: 2026-09-10
   consolidates Done/Ready/Waiting/Blocked flow, owners, dates, evidence and the
   completed 28.08. technical checkpoint plus the rebaselined post-vacation
   pilot. Technical readiness is green; production is yellow behind named gates.
-- Current Git checkpoint: commit `a2e37c5` is pushed to
+- Current verified implementation checkpoint: commit `ecc074b` is pushed to
   `origin/main`; local and remote branches were synchronized afterward. The
   crawler-blocked Website review was deployed through workflow `34515246498`;
   it did not authorize IONOS production or real-data operations.
@@ -398,8 +398,9 @@ Last updated: 2026-09-10
   Go/No-Go gates.
 - Lead-time radar: EDV input is not expected before 2026-09-14 and should be
   reviewed then or chased from 2026-09-15. Contract and Legal status should be
-  clarified during September. Janay/Thomas acceptance slots and the exact pilot
-  date should be confirmed by 2026-10-02 to protect a second-half October start.
+  requested by 2026-09-18. Because Manuel is away from 2026-09-25 for three
+  weeks, Janay/Thomas acceptance slots, the Legal review path and mailbox cover
+  should be confirmed by 2026-09-24 for execution after his return.
 - SB-19 evidence: the existing isolated Outbox Staging test now continues
   through single-use invitation acceptance, password hashing, TOTP enrollment,
   Recovery-code generation and active session creation. It compiles and skips

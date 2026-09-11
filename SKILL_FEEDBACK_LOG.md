@@ -197,6 +197,14 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 - Risk if ignored: high; external latency becomes hidden schedule risk.
 - Status: captured as skill feedback only; no canonical CodexSkills change in
   this work block.
+- Second evidence on 2026-09-11: the recorded 2026-10-02 scheduling threshold
+  fell inside Manuel's known three-week absence beginning 2026-09-25. The
+  project had a radar but did not automatically validate chase and latest-useful
+  dates against owner availability. Requests are now due 2026-09-18 with
+  confirmation by 2026-09-24 and escalation from 2026-09-21.
+- Promotion candidate: the canonical skill should cross-check dependency dates
+  against known absences and require `request`, `chase`, `confirm by` and
+  `execution` dates to be distinct. This now has repeated project evidence.
 
 ### 2026-08-20 | browser-evidence-preflight | Browser tooling before UI completion
 

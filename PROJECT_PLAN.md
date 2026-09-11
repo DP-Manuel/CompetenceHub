@@ -12,7 +12,7 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 - Current phase, sprint, milestone, board status, or release: public website
   stabilization plus isolated authenticated-portal foundation
 - Current status: yellow for production and green for the completed technical-
-  readiness scope. Source commit `7ddd255` is pushed to `origin/main` and
+  readiness scope. Source commit `ecc074b` is pushed to `origin/main` and
   contains the verified public website, accepted same-origin pilot portal and
   completed encrypted external backup/restore rehearsal. The current full local
   suite passes 305 tests with 14 expected opt-in Staging skips, all 14
@@ -585,10 +585,10 @@ latest useful date, affected work and a safe fallback.
 | --- | --- | --- | --- | --- | --- | --- |
 | EXT-01 | App-DNS, TLS path, SMTP contract and sender routing / EDV | Requested 2026-08-21; response expected no earlier than 2026-09-14 | Earliest planning input 2026-09-14; production latest useful date follows rebaseline | Review receipt 2026-09-14; chase from 2026-09-15 and expose replacement-launch impact immediately | Blocks host-specific config and live invitations; continue full secret-free release/readiness checks and synthetic work | Waiting until 2026-09-14 |
 | EXT-02 | Final contracts / Lars Donner and responsible business stakeholders | Confirm status after 2026-08-28 | Complete before named-user acceptance | Escalate if contract workflow is still unclear by 2026-09-18 | Blocks approved first-company workflow; keep pilot data synthetic | Waiting for final status |
-| EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Prepare September scheduling request | Target after Manuel's return in mid-October; exact date open | Confirm slots no later than 2026-10-02 or expose pilot impact | Blocks named-user acceptance and production release; retain reviewed release candidate | Planned for post-vacation pilot |
-| EXT-04 | Final legal operator, Impressum and legal review | Name review slot during September | Complete before post-vacation Go/No-Go | Escalate if no review path exists by 2026-10-02 | Blocks promoted live launch; keep current legal placeholders and no promotion | Waiting |
+| EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Send scheduling request by 2026-09-18 | Confirm slots by 2026-09-24 for dates after Manuel's mid-October return | Escalate on 2026-09-21 if unacknowledged; expose pilot impact before Manuel's 2026-09-25 leave | Blocks named-user acceptance and production release; retain reviewed release candidate | Request due before vacation |
+| EXT-04 | Final legal operator, Impressum and legal review | Name owner and request review path by 2026-09-18 | Confirm owner, required inputs and target date by 2026-09-24; complete before post-vacation Go/No-Go | Escalate on 2026-09-21 if no review path exists | Blocks promoted live launch; keep current legal placeholders and no promotion | Waiting; request due before vacation |
 | EXT-05 | Controlled Wuerzburg off-server backup target and access window / Manuel | Completed 2026-08-25 | Quarterly after real-data activation and before relying on changed backup/encryption behavior | Reopen on failed backup, monitor, transfer or restore | Synthetic rehearsal complete: encrypted set, monitor, guarded external copy and exact-copy restore passed; production scheduling/alerting remains G-OPS work | Done for rehearsal |
-| EXT-06 | Mailbox response, absence and ownership procedure / Janay and Manuel | Clarify during September | Complete before post-vacation Go/No-Go | Escalate if no owner/cover is confirmed by 2026-10-02 | Blocks advertised contact service level; publish no unsupported response promise | Planned |
+| EXT-06 | Mailbox response, absence and ownership procedure / Janay and Manuel | Propose owner/cover model by 2026-09-18 | Confirm by 2026-09-24; complete before post-vacation Go/No-Go | Expose pilot impact before Manuel's 2026-09-25 leave if no cover is named | Blocks advertised contact service level; publish no unsupported response promise | Request due before vacation |
 
 Lead-time rule: calculate `request by` from the latest useful date minus a
 realistic response, rework and escalation buffer. When an acknowledgement or
@@ -600,8 +600,8 @@ independent ready slice instead of silently waiting.
 Current sprint goal: record Janay's CAL-0.1 acceptance and refresh the static
 production-quality evidence without widening the real-data or production
 boundary. API, database, browser acceptance and external-copy restore evidence
-remain complete. SB-32 through SB-37 are accepted or complete; SB-38 is the
-only implementation slice currently doing.
+remain complete. SB-32 through SB-38 are accepted or complete; no technical
+implementation slice is currently doing.
 Productive calendar delivery, availability and seat reservations remain
 separately gated behind requirements and proposed ADR 0007. EXT-01 and Content
 owner decisions continue in parallel while infrastructure and stakeholder

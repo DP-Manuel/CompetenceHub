@@ -21,7 +21,7 @@ Gates abhaengig. Es ist keine Produktionsfreigabe.
 | --- | --- | --- | --- |
 | Auth, MFA, Rollen und Firmen-/Kontakt-Slice lokal und auf Staging synthetisch bewiesen | CAL-D01 bis CAL-D08 mit vorbereitetem Handout gesammelt entscheiden | EXT-01: App-DNS, TLS-/Proxy-Pfad, SMTP-Vertrag und Absender; Antwort nicht vor 14.09. erwartet | Echtdaten und erster realer Firmenrecord |
 | Portal-Browserabnahme BA-01 bis BA-17 abgeschlossen | ADR 0007 danach annehmen, aendern oder ablehnen | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Produktive Einladungs-E-Mails und reale Konten |
-| Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | CP-01 bis CP-08 Content-Entscheidungspaket versenden | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go terminieren | Oeffentliche Bewerbung und Produktions-Go-Live |
+| Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | CP-01 bis CP-08 Content-Entscheidungspaket versenden | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go bis 18.09. anfragen und bis 24.09. terminieren | Oeffentliche Bewerbung und Produktions-Go-Live |
 | Website-Review inklusive CAL-0.1 von Janay akzeptiert | Ab 14.09. EDV-Antwort pruefen; ab 15.09. nachfassen | EXT-06: Mailbox-Reaktion, Vertretung und Ownership mit Janay/Manuel | Automatisierter Website-Replace oder Remote-Loeschung |
 | Sauberes Website-Artefakt `db96b9573d2a` mit 1.137 geprueften internen Referenzen | Nach EDV-Korrektur: SFTP-Webroot nur lesend inventarisieren | Korrigiertes IONOS-SFTP-Startverzeichnis | Unternehmens-/personenbezogene Daten ohne aktiven Backup-/Alarmbetrieb |
 
@@ -42,10 +42,10 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | G-EDV: App-DNS/TLS/SMTP | WAITING UNTIL 14.09. | EDV | ab 14.09. pruefen, ab 15.09. nachfassen | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
 | G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING EXTERNAL | Manuel / Thomas Ross / EDV | vor Website-Go-Live | Host-Key bestaetigt; Anmeldung bewiesen; zugewiesener Webroot fehlt noch | Kein Website-Replace |
 | G-CONTRACT: finaler Vertragsweg | WAITING | Lars Donner / Fachseite | im September klaeren | Freigegebener Vertragsstand und Prozess | Kein freigegebener erster Firmenprozess |
-| G-LEGAL: Betreiber und Rechtstexte | WAITING | Lars Donner / Rechtspruefung | vor Go/No-Go | Finaler Betreiber, Impressum und anwendbare Datenschutz-/AGB-Fassung | Kein beworbener Livegang |
+| G-LEGAL: Betreiber und Rechtstexte | WAITING | Lars Donner / Rechtspruefung | Reviewpfad bis 24.09.; Abschluss vor Go/No-Go | Finaler Betreiber, Impressum und anwendbare Datenschutz-/AGB-Fassung | Kein beworbener Livegang |
 | G-ACCOUNT: benannte Konten und MFA | WAITING | Manuel / Janay | Termin vor Pilot festlegen | E-Mail-Einladung, MFA, Least-Privilege-Matrix, keine Shared Accounts | Kein realer Fachbetrieb |
-| G-ACCEPT: Fachabnahme und Go/No-Go | WAITING | Janay / Thomas Ross | zweite Oktoberhaelfte, Datum offen | Janay-Walkthrough und dokumentiertes Go/No-Go | Keine Produktion |
-| G-MAILBOX: Reaktion und Vertretung | WAITING | Janay / Manuel | vor Go/No-Go | Owner, Vertretung, Reaktionsweg und Testzustellung | Kein versprochenes Service-Level |
+| G-ACCEPT: Fachabnahme und Go/No-Go | WAITING | Janay / Thomas Ross | bis 24.09. fuer die zweite Oktoberhaelfte terminieren | Janay-Walkthrough und dokumentiertes Go/No-Go | Keine Produktion |
+| G-MAILBOX: Reaktion und Vertretung | WAITING | Janay / Manuel | bis 24.09. bestaetigen | Owner, Vertretung, Reaktionsweg und Testzustellung | Kein versprochenes Service-Level |
 
 ## Pull-Regel
 

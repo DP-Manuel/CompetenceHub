@@ -2,6 +2,15 @@
 
 Newest entries first.
 
+## 2026-09-11 | steering/timeline | Externe Termine vor den Urlaub gezogen
+
+- Der bisherige Steuerungstermin 02.10. lag innerhalb von Manuels dreiwöchiger
+  Abwesenheit ab 25.09. und hätte externe Rückläufe zu spät sichtbar gemacht.
+- Janay-Onboarding, Thomas-Ross-Go/No-Go, Legal-Reviewpfad und Mailboxvertretung
+  sollen nun bis 18.09. angefragt und möglichst bis 24.09. für die Zeit nach
+  Manuels Rückkehr bestätigt werden. Bei fehlender Reaktion wird ab 21.09.
+  eskaliert beziehungsweise der Piloteffekt offengelegt.
+
 ## 2026-09-11 | acceptance/quality | CAL-0.1 akzeptiert und Release-Lücke geschlossen
 
 - Janay bewertete die überarbeitete Kalender-Review als sehr gut. CAL-0.1 ist
