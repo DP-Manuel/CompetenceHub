@@ -1,6 +1,7 @@
 # ADR 0007: Kalender und Platzvormerkung in getrennten Inkrementen
 
-Status: Proposed
+Status: Proposed; fachliche Grundlage am 11.09.2026 vollständig bestätigt,
+Architekturfreigabe durch Manuel offen
 
 Date: 2026-09-10
 
@@ -36,8 +37,9 @@ zurückzurollen.
 5. Verfügbarkeit und Vormerkung werden im Competence-Hub-Backend als führende
    Daten gehalten. Externe Kalender sind keine Quelle für öffentliche freie
    Plätze, solange Free/Busy nicht separat freigegeben ist.
-6. Schwellenwert und Kapazität sind Werte je Angebot. `25` wird nicht global
-   hart codiert, bevor die fachliche Bedeutung bestätigt ist.
+6. Schwellenwert und Kapazität sind getrennte Werte je Angebot. `25` ist als
+   änderbarer interner Prüfschwellenwert bestätigt und wird nicht global hart
+   codiert.
 7. Veröffentlichung und verbindliche Freigabe sind getrennte, auditierte
    Statusübergänge. Farbe ergänzt den Status, ersetzt aber nie dessen Text.
 8. Reservierungen dürfen Kapazität nur in einer Datenbanktransaktion verändern;
@@ -95,8 +97,9 @@ bezeichnet und ob die Regel für jedes Format gelten soll.
 
 - CAL-0 erfüllt die visuellen Kriterien aus
   `docs/requirements/coach-availability-calendar-v0.1.md`.
-- Vor Migration und Backendcode sind die acht offenen Fachentscheidungen
-  angenommen oder ausdrücklich verschoben.
+- CAL-D01 bis CAL-D08 und der Pilotablauf wurden am 11.09.2026 fachlich
+  vollständig angenommen; Nachweis:
+  `docs/requirements/calendar-stakeholder-decisions-2026-09-11.md`.
 - CAL-4 weist stabile UID, Import, Update, Absage, Zeitzone,
   Datenminimierung und sichtbare Zustellfehler synthetisch nach.
 - CAL-1 bis CAL-3 weisen RBAC, Audit, Nebenläufigkeit, Kapazitätsgrenze,

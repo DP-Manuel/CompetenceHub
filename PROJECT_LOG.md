@@ -2,6 +2,26 @@
 
 Newest entries first.
 
+## 2026-09-11 | stakeholder/calendar/mail | Janays zweiter Ruecklauf verarbeitet
+
+- Aus dem ausdruecklich freigegebenen Ordner `Quellen/11.09.2026` wurden nur
+  die zwei genannten Word-Dokumente gelesen; die Rohdateien bleiben ausserhalb
+  von Git.
+- Janay markierte CAL-D01 bis CAL-D08 und den kompletten Pilotablauf mit
+  `Passt so`. Die Fachbasis ist damit geschlossen; ADR 0007 bleibt bis zu
+  Manuels ausdruecklicher Architekturentscheidung `Proposed`.
+- Die Coach-Kalender-Anforderungen und der Qualitaetsplan bilden nun
+  oeffentliche Sichtbarkeit, Firmenlogin fuer Vormerkungen, getrennten
+  Schwellenwert/Kapazitaet, Fristen, Minimaldaten, kontrollierte Themen,
+  Janay-Aufgabe plus E-Mail, Publikationspruefung und `.ics` als ersten
+  anbieterneutralen Kalenderweg ab.
+- Die zwoelf E-Mail-Vorlagen wurden als Prozessinventar erfasst. Feste
+  Reaktionszeiten, Durchfuehrungsgarantien, Erstattung, automatische Umbuchung,
+  Rabatte, Newsletter und rechtliche Annahme per E-Mail werden nicht ohne
+  eigene Fach-/Legal-Gates implementiert.
+- Keine Migration, kein Versand, kein Konto, keine Echtdaten und kein
+  produktives Deployment wurden aus dem Ruecklauf ausgeloest.
+
 ## 2026-09-11 | decisions/content/operations | Pilot-Owner und erster Content-Ruecklauf verarbeitet
 
 - Manuel bestaetigte Thomas Ross als technischen Break-glass-Nachfolger. Janay

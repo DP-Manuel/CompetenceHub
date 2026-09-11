@@ -34,6 +34,17 @@ Last updated: 2026-09-11
   and monitoring schedules plus 30 daily/12 monthly retention are accepted.
   Manuel must receive a concise success or incident notice automatically; the
   delivery channel still depends on the EDV/SMTP decision.
+- Calendar business decisions: Janay accepted CAL-D01 through CAL-D08 and the
+  complete Pilot flow on 2026-09-11. Public offer visibility, authenticated
+  company reservations, separate threshold/capacity, decision deadlines,
+  minimal fields, governed topics, Janay's task plus E-Mail, publication checks
+  and provider-neutral `.ics` delivery are now the approved business baseline.
+  ADR 0007 remains proposed until Manuel explicitly decides it.
+- E-Mail workflow input: twelve supplied templates are inventoried as future
+  process ideas. Fixed response times, guarantees, refunds, automatic
+  rescheduling, discounts, newsletters and E-Mail acceptance are not approved
+  for automation. Transactional, marketing and legally relevant messages stay
+  separated.
 - Current phase: Competence Hub public website stabilization plus isolated
   portal/backend foundation.
 - Current goal: professional, mobile-first B2B and B2C website for offers from
@@ -108,25 +119,25 @@ Last updated: 2026-09-11
   42-file Astro check, 30-page build and browser checks at 1440, 960 and 390
   pixels are green. Workflow `34513388689` and the public smoke confirm HTTP
   200 for calendar/contact/Coach targets, `noindex`, same-day weekend overlap,
-  profile links and a bundle without network writes. Productive calendar work
-  remains separately gated behind CAL-D01 through CAL-D08 and ADR 0007.
+  profile links and a bundle without network writes. CAL-D01 through CAL-D08
+  are now accepted; productive work remains gated by Manuel's ADR 0007
+  decision and all later migration/activation gates.
 - A shared Coach-CTA correction keeps long German headings and their final
   punctuation inside the left layout column. All six Coach profiles pass 18
   browser geometry checks at 1440, 960 and 390 pixels without overlap or
   horizontal overflow. Workflow `34515246498` deployed successfully; the
   public Coach page, CSS bundle, heading and `noindex` smoke are green.
-- The remaining calendar rules are batched in a non-technical stakeholder
-  handout with a content-verified Word export. A separate quality plan already
-  defines RBAC, concurrency, privacy, accessibility, calendar compatibility
-  and operations evidence without deciding open business values.
+- The calendar rules were batched in a non-technical stakeholder handout and
+  all accepted by Janay on 11.09. The reconciled quality plan defines RBAC,
+  concurrency, privacy, accessibility, calendar compatibility and operations
+  evidence; ADR 0007 still needs Manuel's explicit decision.
 - The current clean Website production artifact is rebuilt from source
-  `db96b9573d2a`. It contains 51 entries, all required root files, no
+  `5d126cbaec0e`. It contains 51 entries, all required root files, no
   `.env`/`.tmp`, a matching SHA-256 and `deployment_authorized: false`. The new
   release gate verifies 1,137 internal references across 30 HTML files; the
   404 page remains `noindex` and no longer emits a misleading canonical URL.
-  Workflow `34577486065` is green; the public review returns the expected 404
-  and no canonical/OG URL while homepage and calendar remain HTTP 200 and
-  crawler-blocked.
+  Workflow `34582211406` is green; the public review returns HTTP 200 for the
+  affected pages with the expected content and crawler blocking.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -397,12 +408,12 @@ Last updated: 2026-09-11
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: while Janay reviews the dispatched five-page
-  Word handout, prepare a provider-neutral and secret-free backup-notification
-  contract plus local test harness. The actual delivery channel remains behind
-  EXT-01, and neither real messages nor VPS timers are activated. The grouped
-  CAL-D01 through CAL-D08 return is requested by 2026-09-18; no calendar
-  migration or real-data path begins before those decisions. In
+- Recommended next work block: Manuel decides ADR 0007 now that Janay has
+  accepted all eight calendar rules. This decision may authorize the bounded
+  CAL-1 design, but not migration, accounts, messages, real data or production.
+  While ADR 0007 is pending, prepare a provider-neutral and secret-free backup-
+  notification contract plus local test harness. The actual delivery channel
+  remains behind EXT-01, and neither real messages nor VPS timers are activated. In
   parallel, review the EDV response from 2026-09-14 or chase it from
   2026-09-15, then repeat the read-only Webroot inventory. Preferred
   onboarding/Go-No-Go is 17.09. if all gates close, with 24.09. as fallback.
@@ -464,10 +475,10 @@ Last updated: 2026-09-11
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) receive CAL-D01 through CAL-D08 and decide ADR
-  0007, (2) operations ownership is decided, (3) close residual CP-02/04/07/08,
-  (4) resolve the parallel EDV Webroot/DNS/SMTP gate, (5) prepare and test the
-  provider-neutral backup notifier, (6) design CAL-1 schema/API/RBAC, (7)
+- Rolling delivery horizon: (1) decide ADR 0007 after Janay accepted CAL-D01
+  through CAL-D08, (2) operations ownership is decided, (3) prepare and test
+  the provider-neutral backup notifier, (4) close residual CP-02/04/07/08, (5)
+  resolve the parallel EDV Webroot/DNS/SMTP gate, (6) design CAL-1 schema/API/RBAC, (7)
   migrate and implement Coach-owned availability plus internal publication,
   and (8) prepare the controlled Pilot release candidate. Confidence decreases
   from step 6 onward.

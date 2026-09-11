@@ -1,15 +1,15 @@
 # Calendar Quality Plan v0.1
 
-Stand: 10.09.2026
+Stand: 11.09.2026
 
 Status: test-ready planning draft; no productive calendar, reservation,
 notification or migration is authorized by this document.
 
 ## Purpose
 
-This plan turns the accepted visual direction and current calendar
-requirements into release gates. Business values remain parameterized until
-CAL-D01 through CAL-D08 and ADR 0007 are decided.
+This plan turns the accepted visual direction and the approved CAL-D01 through
+CAL-D08 rules into release gates. Per-offer values remain configurable; ADR
+0007 and every migration/activation gate remain separately decidable.
 
 ## Test Levels
 
@@ -57,6 +57,8 @@ CAL-D01 through CAL-D08 and ADR 0007 are decided.
 - A threshold notification does not publish, confirm or contract an offer.
 - Only the approved role can confirm or reject; substitution uses role
   assignment rather than shared credentials.
+- Janay initially receives one Portal task plus one E-Mail. No substitute is
+  currently named, so tests must cover the explicit unassigned-cover state.
 - Notification failure is visible and retryable without duplicate tasks.
 - Confirmation, rejection, material change and cancellation produce
   payload-minimized audit evidence.
@@ -72,6 +74,9 @@ CAL-D01 through CAL-D08 and ADR 0007 are decided.
 - Updates and cancellations change the existing event instead of creating a
   duplicate.
 - Organizer, attendees and description expose only approved data.
+- The authoritative appointment remains in Competence Hub; attendees and the
+  Coach receive the provider-neutral invitation only after explicit internal
+  confirmation.
 - Delivery failure is visible to the responsible internal role and never
   reported as successful.
 - Direct Microsoft Graph synchronization remains outside CAL-4 until its own

@@ -69,6 +69,13 @@ Current pain point from the old workflow: participants must be created, booked i
 - IDEA-MAIL-005: Email sending should support attachments or secure document links, depending on privacy, file-size, and audit requirements.
 - IDEA-MAIL-006: Outbound emails should use approved sender identity, signature, reply-to handling, and logging rules.
 - IDEA-MAIL-007: The system should support reusable or generated email text for sending offers, contracts, and document packages to companies.
+- IDEA-MAIL-008: Transactional, operational, legally relevant and marketing
+  messages must use separate triggers, approvals and evidence paths.
+- IDEA-MAIL-009: The twelve supplied workflow ideas are inventoried in
+  `email-automation-template-inventory-2026-09-11.md`; none is automatically
+  authorized by the wording of the source template.
+- IDEA-MAIL-010: A missing placeholder, unresolved recipient or unapproved
+  promise must stop delivery rather than sending a partial template.
 
 ### Job Posting Management
 
@@ -191,9 +198,9 @@ Current pain point from the old workflow: participants must be created, booked i
 - IDEA-COACH-014: Companies should be able to reserve a bounded number of
   places for a visible group opportunity without the reservation immediately
   becoming a binding booking.
-- IDEA-COACH-015: The initially proposed minimum group size of 25 is a business
-  rule requiring Product-Owner and contract confirmation, not a universal
-  hard-coded threshold.
+- IDEA-COACH-015: On 2026-09-11, `25` was accepted as a configurable internal
+  review threshold per offer, explicitly separate from maximum capacity and
+  not a universal minimum group size.
 - IDEA-COACH-016: Reaching the approved reservation threshold should notify
   authorized internal staff. Only authorized staff may release the opportunity
   for binding booking.

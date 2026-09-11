@@ -1,14 +1,16 @@
 # Coach-Verfügbarkeitskalender v0.1
 
-Stand: 10.09.2026
+Stand: 11.09.2026
 
-Status: Produktwunsch bestätigt; visueller Prototyp freigegeben, fachliche
-Regeln und produktive Umsetzung noch nicht freigegeben.
+Status: Produktwunsch, visueller Prototyp und CAL-D01 bis CAL-D08 fachlich
+freigegeben. ADR 0007, Migration, Echtdaten und produktive Umsetzung bleiben
+separat freizugeben.
 
 ## Quelle und Ziel
 
-Grundlage sind Janays Notizen vom 27.08.2026, ihre positive Website-Abnahme
-mit erneutem Kalenderwunsch und ihr erstes Kalenderfeedback vom 10.09.2026.
+Grundlage sind Janays Notizen vom 27.08.2026, ihre positive Website-Abnahme,
+ihr erstes Kalenderfeedback vom 10.09.2026 und der vollständige fachliche
+Rücklauf vom 11.09.2026.
 Der Kalender soll verfügbare
 Coach-Angebote bis zu drei Monate im Voraus sichtbar machen, nach Themen
 unterscheiden und unverbindliche Platzvormerkungen ermöglichen. Eine interne
@@ -23,9 +25,9 @@ die für Produktentscheidung, Architektur und Test notwendigen Aussagen.
 | --- | --- | --- |
 | CAL-0 | Interaktive, crawler-gesperrte Website-Vorschau mit ausschließlich synthetischen Terminen | umgesetzt, geprüft, review-deployed und von Janay am 10.09.2026 akzeptiert |
 | CAL-0.1 | Coachprofil-Verlinkung, Individualtermin-Hinweis und überlappende Wochenendangebote in der Vorschau | umgesetzt, geprüft, review-deployed und von Janay am 11.09.2026 akzeptiert |
-| CAL-1 | Coach pflegt eigene Verfügbarkeit in einem rollierenden Drei-Monats-Fenster; intern wird geprüft und veröffentlicht | geplant; benötigt Coach-Konten, RBAC und Statusmodell |
-| CAL-2 | Unternehmen oder Personen sehen veröffentlichte Angebote und merken begrenzt Plätze vor | geplant; benötigt Zugangs-, Datenschutz-, Ablauf- und Missbrauchsschutzentscheidung |
-| CAL-3 | Schwellenwert löst interne Prüfung aus; nur Berechtigte geben ein verbindliches Angebot frei | geplant; benötigt Geschäftsregel, Benachrichtigung und Vertragsprozess |
+| CAL-1 | Coach pflegt eigene Verfügbarkeit in einem rollierenden Drei-Monats-Fenster; intern wird geprüft und veröffentlicht | fachlich entschieden; benötigt ADR 0007, Coach-Konten, RBAC und Statusmodell |
+| CAL-2 | Angebote sind öffentlich lesbar; angemeldete Firmenkontakte merken begrenzt Plätze vor | fachlich entschieden; benötigt Datenschutz, Status-/Fristmodell und Missbrauchsschutz |
+| CAL-3 | Angebotsspezifischer Schwellenwert löst Janays interne Prüfung aus; nur Berechtigte bestätigen | fachlich entschieden; benötigt Portalaufgabe, Mail-Gate und Vertragsprozess |
 | CAL-4 | Anbieterneutrale `.ics`-Einladung für einen intern bestätigten Termin | geplant; benötigt führenden Termindatensatz und Versandentscheidung |
 
 CAL-0 dient nur der visuellen und fachlichen Abstimmung. Es speichert nichts,
@@ -90,24 +92,24 @@ versendet nichts und zeigt keine echte Coach-Verfügbarkeit.
 - Der öffentliche Endpunkt benötigt Rate Limit, CSRF-/Origin-Konzept oder eine
   begründete Alternative sowie Schutz gegen automatisierte Massenreservierung.
 
-## Offene Entscheidungen vor CAL-1 bis CAL-4
+## Fachentscheidungen CAL-D01 bis CAL-D08
 
-1. **CAL-D01:** Ist die Sichtung öffentlich, nur nach Firmenlogin oder in beiden Varianten
-   vorgesehen, und dürfen Privatpersonen Plätze vormerken?
-2. **CAL-D02:** Bedeutet `25` Mindestgruppengröße, interner Prüfschwellenwert oder Kapazität;
-   gilt der Wert je Format und wer darf ihn ändern?
-3. **CAL-D03:** Wie lange bleibt eine Vormerkung gültig, wer darf sie ändern/stornieren und
-   was passiert bei Kapazitätsänderung oder zu wenigen Interessierten?
-4. **CAL-D04:** Welche Kontaktangaben sind für eine Vormerkung zwingend und wann wird eine
-   Firma beziehungsweise Person im Portal angelegt?
-5. **CAL-D05:** Welche Themen bilden die verbindliche Taxonomie und welche Farbe ist ihnen
-   barrierefrei zugeordnet?
-6. **CAL-D06:** Janay ist initial für Prüfung und Freigabe benannt. Über welchen
-   Kanal kommt die Schwellenwertmeldung und wer vertritt sie?
-7. **CAL-D07:** Vorhandene freigegebene Coachprofile dürfen verlinkt werden.
-   Welche Freigabe gilt je Termin für Datum, Ort, Preis und Format?
-8. **CAL-D08:** Welcher Datensatz ist führend für den bestätigten Termin und wer ist
-   organisatorischer Absender der `.ics`-Einladung?
+Alle acht Punkte und der Pilotablauf wurden am 11.09.2026 von Janay mit
+`Passt so` bestätigt. Die vollständige, abgeleitete Entscheidungsbasis steht
+in `calendar-stakeholder-decisions-2026-09-11.md`.
+
+- Angebote sind öffentlich sichtbar; nur angemeldete Firmenkontakte merken vor.
+- `25` ist ein änderbarer Prüfschwellenwert je Angebot, nicht die Kapazität.
+- Entscheidungsfrist, Rücknahme und Information bei Änderungen sind Pflicht;
+  eine Vormerkung ist kein Vertrag.
+- Bestehende Firmen-/Kontaktdaten, Platzzahl und Kontaktbestätigung reichen;
+  Telefon und Nachricht bleiben optional.
+- Themen stammen aus einer kontrollierten, von Janay geprüften Taxonomie.
+- Janay erhält Portalaufgabe plus E-Mail; eine spätere Vertretung nutzt einen
+  eigenen Zugang, ist aber aktuell nicht benannt.
+- Alle öffentlichen Angebotsangaben werden vor Veröffentlichung geprüft.
+- Competence Hub führt den bestätigten Termin; `.ics` bleibt anbieterneutral,
+  direkte Outlook-Synchronisation optional.
 
 ## Abnahmekriterien CAL-0
 
@@ -124,8 +126,8 @@ versendet nichts und zeigt keine echte Coach-Verfügbarkeit.
 
 ## Definition of Done für den ersten produktiven Slice
 
-Die acht Entscheidungen sind freigegeben oder explizit verschoben, ADR 0007
-ist angenommen, Datenmodell/API/RBAC und Migration sind geprüft und
+Die acht Entscheidungen sind freigegeben, ADR 0007 ist angenommen,
+Datenmodell/API/RBAC und Migration sind geprüft und
 synthetische Nebenläufigkeits- und Berechtigungstests sind grün. Sobald CAL-4
 in den freigegebenen Umfang gelangt, funktioniert der Kalenderimport in Outlook
 und mindestens einem Nicht-Outlook-Client. Weder echte Daten noch produktive

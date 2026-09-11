@@ -49,7 +49,10 @@ Last updated: 2026-07-16
 ## Price Input Requiring Decision
 
 - Workshop input: `850 EUR standard / 680 EUR discount`.
-- Talk input: `200 EUR` with a minimum group size of 25.
+- Historical talk input: `200 EUR` with a stated minimum group size of 25.
+  The later calendar decision from 2026-09-11 instead defines `25` as a
+  configurable internal review threshold, separate from minimum attendance
+  and maximum capacity. The commercial attendance rule remains open.
 - The source alternates between a flat workshop price and per-person comparisons.
   Prices must not be published until unit, VAT treatment, included catering/room,
   cancellation rules, discount eligibility, and coach remuneration are approved.

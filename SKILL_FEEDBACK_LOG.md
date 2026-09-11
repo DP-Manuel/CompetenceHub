@@ -6,6 +6,25 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-11 | template-intent-gating | Vorlagentexte vor Automation nach Wirkung trennen
+
+- Triggering project situation: Ein fachlicher Word-Entwurf enthielt zugleich
+  Eingangs-, Buchungs-, Kalender-, Angebots-, Feedback-, Newsletter-,
+  Erstattungs- und Empfehlungsnachrichten.
+- Observed friction: Eine scheinbar fertige E-Mail-Vorlage kann feste
+  Reaktionszeiten, Vertragswirkung, Garantien, automatische Umbuchung,
+  Erstattung oder Marketingversprechen enthalten, obwohl diese Regeln noch
+  nicht freigegeben sind.
+- Reusable improvement candidate: `write-requirements`,
+  `coordinate-software-project` und `integrate-backend` sollen externe
+  Vorlagen zuerst nach transaktional, operativ, rechtlich relevant und
+  Marketing klassifizieren. Ausloeser, Owner, Einwilligung, Statusbegriff,
+  Idempotenz, Fehlerweg und Freigabe muessen vor Code sichtbar sein.
+- Project response: Zwoelf Vorlagen wurden nur als gegatetes Prozessinventar
+  uebernommen; keine problematische Aussage wurde automatisiert.
+- Reuse potential: very high for CRM, booking and notification systems.
+- Status: project pattern applied; canonical skill proposal captured only.
+
 ### 2026-09-11 | operational-role-boundary | Fach-, Mailbox- und Technikvertretung getrennt erheben
 
 - Triggering project situation: Die Frage nach Janays Mailboxvertretung wurde
