@@ -44,6 +44,14 @@ Do not implement every idea immediately. First collect evidence, then decide whe
   bleibt hinter CAL-D01 bis CAL-D08 und ADR 0007.
 - Reuse potential: high for stakeholder-led work with asynchronous feedback.
 - Status: project pattern applied; canonical skill proposal captured only.
+- Second evidence on 2026-09-11: Nach der visuellen Kalenderabnahme musste das
+  fachliche Paket nicht nur inhaltlich aktualisiert, sondern auch als wirklich
+  sendbares Word-Dokument geprueft werden. Eine reine Textrücklese haette drei
+  getrennte Ueberschriften/Antwortbloecke uebersehen; die Word-Paginierung
+  fuehrte zu einer klaren fuenfseitigen Fassung.
+- Promotion candidate: Stakeholder-Pakete sollten nach Statusaenderungen auf
+  erledigte Fragen bereinigt und sowohl inhaltlich als auch im Zielformat auf
+  Seitenumbrueche und ausfuellbare Antwortbereiche geprueft werden.
 
 ### 2026-09-10 | long-heading-boundary-check | Lange deutsche Überschriften als Komponenten-Gate
 

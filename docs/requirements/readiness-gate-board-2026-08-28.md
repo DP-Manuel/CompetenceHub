@@ -38,7 +38,7 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | G-WEBAPP: reproduzierbares Runtime-Paket | DONE LOKAL | Manuel | vor Backenddeployment neu bauen | Clean Paket mit Restore-Tool, isolierter Installation und Fail-closed Runtime | Noch keine VPS-Aktivierung |
 | G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL | Manuel / Wuerzburg | quartalsweise nach Echtdatenstart | Guarded Pull und digest-gepinnter netzloser Restore mit 24 Tabellen; keine Klartext-/Containerreste | Produktions-Timer/Alarmierung bleibt G-OPS |
 | G-CALENDAR: CAL-0/CAL-0.1 | DONE REVIEW | Janay / Manuel | akzeptiert 11.09. | Review, Browser-/Netzwerk-Smokes und Janays ausdrueckliche Zustimmung | Produktive CAL-1-Umsetzung bleibt hinter Fachentscheidungen |
-| G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | READY FOR DECISION | Janay / Manuel / spaetere Fachowner | vor CAL-1-Architektur | Handout und Quality Plan vorbereitet | Keine Kalender-Migration oder echten Termine |
+| G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | READY FOR DISPATCH | Janay / Manuel / spaetere Fachowner | Ruecklauf moeglichst bis 18.09. | Aktualisiertes fuenfseitiges Word-Handout und Quality Plan vorbereitet | Keine Kalender-Migration oder echten Termine |
 | G-EDV: App-DNS/TLS/SMTP | WAITING UNTIL 14.09. | EDV | ab 14.09. pruefen, ab 15.09. nachfassen | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
 | G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING EXTERNAL | Manuel / Thomas Ross / EDV | vor Website-Go-Live | Host-Key bestaetigt; Anmeldung bewiesen; zugewiesener Webroot fehlt noch | Kein Website-Replace |
 | G-CONTRACT: finaler Vertragsweg | WAITING | Lars Donner / Fachseite | im September klaeren | Freigegebener Vertragsstand und Prozess | Kein freigegebener erster Firmenprozess |
@@ -71,7 +71,7 @@ Verbindliche Detailquellen:
 
 - `pilot-cutline-2026-08-28.md`
 - `coach-availability-calendar-v0.1.md`
-- `calendar-stakeholder-review-handout-2026-09-10.md`
+- `calendar-stakeholder-review-handout-2026-09-11.md`
 - `calendar-quality-plan-v0.1.md`
 - `../architecture/production-release-plan-2026-09-25.md`
 - `../architecture/postgresql-backup-restore-runbook.md`

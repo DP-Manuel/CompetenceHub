@@ -389,8 +389,9 @@ Last updated: 2026-09-11
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: collect the grouped CAL-D01
-  through CAL-D08 answers. The handout and future test gates are prepared; no
+- Recommended next work block: dispatch the updated five-page Word handout and
+  collect the grouped CAL-D01 through CAL-D08 answers by 2026-09-18 where
+  possible. The handout and future test gates are prepared; no
   calendar migration or real-data path begins before those decisions. In
   parallel, review the EDV response from 2026-09-14 or chase it from
   2026-09-15, then repeat the read-only Webroot inventory. Real data and

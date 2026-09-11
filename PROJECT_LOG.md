@@ -2,6 +2,15 @@
 
 Newest entries first.
 
+## 2026-09-11 | stakeholder package | Fachliche Kalenderabstimmung versandbereit
+
+- Die bereits akzeptierte visuelle Kalenderpruefung wurde aus der offenen
+  Entscheidungsvorlage entfernt. Acht fachliche Entscheidungen bleiben klar
+  von produktiver Umsetzung und Echtdaten getrennt.
+- Das Word-Handout nennt Empfehlungen, direkte Antwortfelder und den erbetenen
+  Ruecklauf bis 18.09. Die fuenfseitige Fassung wurde inhaltlich zurueckgelesen
+  und in Word auf zusammenhaengende Entscheidungsbloecke je Seite geprueft.
+
 ## 2026-09-11 | steering/timeline | Externe Termine vor den Urlaub gezogen
 
 - Der bisherige Steuerungstermin 02.10. lag innerhalb von Manuels dreiwöchiger
