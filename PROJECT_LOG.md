@@ -2,6 +2,27 @@
 
 Newest entries first.
 
+## 2026-09-11 | decisions/content/operations | Pilot-Owner und erster Content-Ruecklauf verarbeitet
+
+- Manuel bestaetigte Thomas Ross als technischen Break-glass-Nachfolger. Janay
+  bleibt Mailbox-Owner ohne aktuelle Abwesenheitsvertretung; diese Rolle wurde
+  bewusst nicht mit Manuels technischer Notfallvertretung vermischt.
+- Taegliche verschluesselte Backups, Monitorlauf, 30 Tages- und 12
+  Monatsstaende sowie eine kurze automatische Erfolgs-/Stoerungsmeldung an
+  Manuel sind entschieden. Der reale Benachrichtigungskanal bleibt hinter der
+  EDV-/SMTP-Antwort; Timer, Konten und Echtdaten wurden nicht aktiviert.
+- Fuer Onboarding und Go/No-Go ist 17.09. bevorzugt und 24.09. als Fallback
+  vorgesehen, sofern die vorgelagerten Gates geschlossen sind.
+- Der bearbeitete Priority-A-Ruecklauf wurde ohne Veraenderung der Word-Datei
+  ausgewertet. CP-01/03/05/06 sind akzeptiert, CP-02/04/07 partiell und CP-08
+  offen. Nur die freigegebene Mindforge-Trennung zwischen Beratungsgespraechen
+  fuer Privatpersonen und Businesscoaching fuer Unternehmen wurde oeffentlich
+  angeglichen.
+- Website-Nachweis: 43 Astro-Dateien ohne Diagnose, 30 Seiten gebaut, 1.137
+  interne Referenzen geprueft und vier betroffene Routen in echter
+  390-Pixel-Emulation ohne horizontalen Ueberlauf getestet. Review-Deployment
+  und IONOS-Produktion bleiben getrennt.
+
 ## 2026-09-11 | stakeholder handoff | Kalenderregeln bei Janay
 
 - Manuel bestaetigte den Versand des fachlichen Kalenderpakets an Janay. Das

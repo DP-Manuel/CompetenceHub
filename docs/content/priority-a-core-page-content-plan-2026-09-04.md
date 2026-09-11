@@ -1,7 +1,9 @@
 # Priority A Core Page Content Plan
 
-Status: planning draft completed on 2026-09-04; stakeholder decisions and
-content approvals are open. This document authorizes no public copy change.
+Status: planning draft completed on 2026-09-04; first stakeholder return
+processed on 2026-09-11. CP-01, CP-03, CP-04 and CP-06 are accepted, CP-05 is
+amended, CP-02 and CP-07 are partial, and CP-08 remains open. See
+`priority-a-stakeholder-decisions-2026-09-11.md` for the bounded evidence.
 
 ## Purpose
 
@@ -35,7 +37,7 @@ new commercial promises.
 | Limits to state | No guaranteed match or outcome; specialist and crisis boundaries remain on the relevant destination pages. |
 | Internal links | `/unternehmen`, `/leistungen`, `/mindforge`, `/coaches`, `/kontakt`. |
 | Primary CTA | `Bedarf besprechen`; audience routes remain secondary. |
-| Required decision | Confirm companies-first hierarchy and assign homepage editorial/subject-matter owner. |
+| Required decision | Companies-first hierarchy accepted. Manuel and Janay are jointly named for content/review; recurring review cadence remains open. |
 
 ## `/unternehmen` Plan
 
@@ -48,7 +50,7 @@ new commercial promises.
 | Limits to state | No promised response time, result, rating, participant count or guaranteed Coach availability. No Concept Clean logo without separate asset approval. |
 | Internal links | `/leistungen` for comparison, `/businesscoaching` for method fit, `/mindforge` for the branded company path, `/coaches` for approved expertise and `/kontakt`. |
 | Primary CTA | `Bedarf besprechen`; `Assessment Center anfragen` remains contextual. |
-| Required decision | Confirm commercial statements and assign company-page editorial and subject-matter owners. Janay's process role does not automatically make her the formal content approver. |
+| Required decision | Current commercial statements accepted in the return. Manuel and Janay are jointly named for content/review; commercial owner, validity date and recurring cadence remain open. |
 
 ## `/leistungen` Plan
 
@@ -61,7 +63,7 @@ new commercial promises.
 | Limits to state | Listing a service does not prove availability, qualification, suitability or outcome. Keep incomplete offers visibly bounded or unpublished. |
 | Internal links | Each category points to one authoritative route; company-oriented categories also link to `/unternehmen`; uncertain visitors go to `/kontakt`. |
 | Primary CTA | `Bedarf klären`; service links are navigation actions, not competing primary CTAs. |
-| Required decision | Approve the canonical service taxonomy and owner; resolve overlap among Coaching, Beratung, Businesscoaching and Mindforge. |
+| Required decision | Current service taxonomy accepted. Manuel and Janay are jointly named; CP-05 defines private Mindforge consultation conversations and company Businesscoaching. |
 
 ## `/businesscoaching` Plan
 
@@ -74,7 +76,7 @@ new commercial promises.
 | Limits to state | No promise of organizational outcome; no invented methodology; distinguish coaching, consulting, mediation and therapy. |
 | Internal links | `/unternehmen` for buyer/process context, `/leistungen` for alternatives, `/mindforge` only where the branded path is relevant, `/coaches` and `/kontakt`. |
 | Primary CTA | `Businesscoaching anfragen`. |
-| Required decision | Choose the primary perspective: recommended company buyer/leader first, participant perspective second. Assign a Businesscoaching subject-matter owner. |
+| Required decision | Businesscoaching is assigned to the company path; Mindforge uses consultation conversations for private persons. Manuel and Janay are jointly named for review. |
 
 ## `/mindforge` Plan
 
@@ -87,24 +89,24 @@ new commercial promises.
 | Limits to state | Coaching does not replace psychotherapy, medical advice or acute crisis care. Avoid guaranteed resilience, sustainable transfer or reliable outcome language without substantiation. |
 | Internal links | `/unternehmen` for full company context, `/businesscoaching` for method fit, `/leistungen` for alternatives, `/kontakt` for classification. |
 | Primary CTA | `Erstgespräch anfragen`; audience anchors remain routing controls. |
-| Required decision | Recommendation: keep one route for now, but maintain strong audience separation and test it with users before considering a split. Assign Mindforge content, commercial and boundary reviewers. |
+| Required decision | One shared route accepted with separate private consultation and company Businesscoaching paths. Manuel and Janay are jointly named; QM/legal boundary reviewer and dates remain incomplete. |
 
 ## Required Stakeholder Decisions
 
-| ID | Decision | Proposed owner | Blocks public rewrite? |
+| ID | Decision | Recorded owner | Status / remaining gate |
 | --- | --- | --- | --- |
-| CP-01 | Confirm the companies-first homepage hierarchy | Product/business owner | Yes for material homepage repositioning |
-| CP-02 | Assign editorial and subject-matter owner plus review cadence for each route | Product/business owner | Yes for governed publication |
-| CP-03 | Approve canonical service taxonomy and boundaries | Business plus relevant subject-matter owners | Yes for `/leistungen` and cross-route consistency |
-| CP-04 | Confirm current prices, durations, inclusions and validity date | Commercial owner | Yes for commercial statements |
-| CP-05 | Confirm Businesscoaching primary perspective and coaching/consulting boundary | Businesscoaching subject-matter owner | Yes for that route's rewrite |
-| CP-06 | Confirm one-route Mindforge recommendation and audience hierarchy | Mindforge/product owner | Yes for structural changes |
-| CP-07 | Review Mindforge health/crisis boundary and escalation wording | Legal/subject-matter owner | Yes for production boundary wording |
-| CP-08 | Decide whether and which approved Coach supplies the first expert contribution | Content owner plus Coach | No for baseline cleanup; yes for attributable expert content |
+| CP-01 | Confirm the companies-first homepage hierarchy | Manuel / Janay | Accepted |
+| CP-02 | Assign editorial and subject-matter owner plus review cadence for each route | Manuel / Janay jointly | Partial: recurring review cadence missing |
+| CP-03 | Approve canonical service taxonomy and boundaries | Manuel / Janay | Accepted; CP-05 supplies the audience distinction |
+| CP-04 | Confirm current prices, durations, inclusions and validity date | Not named | Current values accepted; owner and validity/review date missing |
+| CP-05 | Confirm Businesscoaching primary perspective and coaching/consulting boundary | Manuel / Janay | Amended: consultation conversations for private persons, Businesscoaching for companies |
+| CP-06 | Confirm one-route Mindforge recommendation and audience hierarchy | Manuel / Janay | Accepted |
+| CP-07 | Review Mindforge health/crisis boundary and escalation wording | Janay / QM | Partial: concrete QM owner, legal path and review date missing |
+| CP-08 | Decide whether and which approved Coach supplies the first expert contribution | Not named | Open; no expert content authorized |
 
-The `Proposed owner` column identifies a responsibility type, not an assigned
-person. Janay, Manuel or another stakeholder must not be treated as the formal
-approver until that assignment is confirmed.
+The stakeholder return names Manuel and Janay jointly for the five pages, but
+does not close the missing recurring cadence, commercial ownership or the
+concrete QM/legal review. Those gaps remain visible instead of being inferred.
 
 ## Standard Expert-Input Template
 
@@ -141,4 +143,3 @@ the result without factual, quotation-rights and editorial approval.
   copy.
 - Stakeholder decisions are visible and can be requested early.
 - No public implementation or publication occurred.
-

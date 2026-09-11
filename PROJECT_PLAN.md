@@ -502,25 +502,24 @@ phase model.
 
 - Target dates: website MVP completed by 2026-07-23; technical readiness is
   green for the 2026-08-28 scope. The former controlled-production target of
-  2026-09-25 is retired. The current planning window for a first small pilot is
-  the second half of October 2026 after Manuel's return; the exact date requires
-  EDV, Legal, onboarding and Go/No-Go confirmation.
+  2026-09-25 is retired. The preferred gate-dependent Onboarding/Go-No-Go date
+  is 2026-09-17, with 2026-09-24 as fallback; otherwise a later date is set.
 - Budget or effort assumption: unknown
 - Confidence: medium-high for the 2026-08-28 technical-readiness checkpoint.
-  Production confidence is medium for a post-vacation October pilot if EDV and
-  Legal input arrive during September. The database, Auth, company/contact API,
+  Production confidence is medium-low for 2026-09-17 and medium for 2026-09-24
+  because EDV and Legal inputs remain open. The database, Auth, company/contact API,
   browser UI and external restore are proven; production operations and
   organizational gates are not.
 - Risks to time or budget: App-DNS, SMTP details/sender authorization,
   runtime/worker packaging, legal operator/Impressum, production approval,
   encrypted external restore and correct-domain rollout are on the critical
-  path. Janay and Thomas acceptance dates remain unscheduled.
+  path. Janay and Thomas acceptance dates are proposed but not confirmed.
 
 ## Risks And Blockers
 
 - **Schedule / activation:** technical readiness is green; the former
-  2026-09-25 production deadline is retired and the first small pilot is planned
-  no earlier than the second half of October. Runtime, DNS, SMTP, production
+  2026-09-25 production deadline is retired; 17.09. is preferred and 24.09. is
+  the fallback only if every required gate closes. Runtime, DNS, SMTP, production
   backup scheduling/alerting, account handoff and production approval remain
   open. Owner: Manuel, with Thomas Ross for production approval. Mitigation:
   keep implementation WIP small and close activation gates in order.
@@ -531,9 +530,9 @@ phase model.
   Datenschutz/AGB applicability and mailbox absence process remain open.
   Owners: Lars Donner/final company, Janay Rappelt and Thomas Ross. Mitigation:
   obtain explicit release evidence or issue a documented No-Go for production.
-- **Single-operator risk:** Manuel currently owns VPS operations without a
-  confirmed successor/break-glass path. Mitigation: name controlled emergency
-  access and test the handoff before productive operation.
+- **Single-operator risk:** Manuel currently owns VPS operations. Thomas Ross
+  is confirmed as technical break-glass successor, but his separate identity,
+  MFA and controlled handoff still require implementation and testing.
 - **Co-hosting risk:** Chatbot and Competence Hub share a VPS. Mitigation:
   dedicated identity, directories, ports, logs and services plus pre/post
   health and rollback checks; no Chatbot restart as part of Hub deployment.
@@ -585,10 +584,10 @@ latest useful date, affected work and a safe fallback.
 | --- | --- | --- | --- | --- | --- | --- |
 | EXT-01 | App-DNS, TLS path, SMTP contract and sender routing / EDV | Requested 2026-08-21; response expected no earlier than 2026-09-14 | Earliest planning input 2026-09-14; production latest useful date follows rebaseline | Review receipt 2026-09-14; chase from 2026-09-15 and expose replacement-launch impact immediately | Blocks host-specific config and live invitations; continue full secret-free release/readiness checks and synthetic work | Waiting until 2026-09-14 |
 | EXT-02 | Final contracts / Lars Donner and responsible business stakeholders | Confirm status after 2026-08-28 | Complete before named-user acceptance | Escalate if contract workflow is still unclear by 2026-09-18 | Blocks approved first-company workflow; keep pilot data synthetic | Waiting for final status |
-| EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Send scheduling request by 2026-09-18 | Confirm slots by 2026-09-24 for dates after Manuel's mid-October return | Escalate on 2026-09-21 if unacknowledged; expose pilot impact before Manuel's 2026-09-25 leave | Blocks named-user acceptance and production release; retain reviewed release candidate | Request due before vacation |
+| EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Request the preferred 2026-09-17 slot now; hold 2026-09-24 as fallback | Use 2026-09-17 if all preceding gates close, otherwise 2026-09-24 or a documented later date | Escalate on 2026-09-21 if neither slot is acknowledged; expose the affected pilot date | Blocks named-user acceptance and production release; retain reviewed release candidate | Dates proposed; confirmation open |
 | EXT-04 | Final legal operator, Impressum and legal review | Name owner and request review path by 2026-09-18 | Confirm owner, required inputs and target date by 2026-09-24; complete before post-vacation Go/No-Go | Escalate on 2026-09-21 if no review path exists | Blocks promoted live launch; keep current legal placeholders and no promotion | Waiting; request due before vacation |
 | EXT-05 | Controlled Wuerzburg off-server backup target and access window / Manuel | Completed 2026-08-25 | Quarterly after real-data activation and before relying on changed backup/encryption behavior | Reopen on failed backup, monitor, transfer or restore | Synthetic rehearsal complete: encrypted set, monitor, guarded external copy and exact-copy restore passed; production scheduling/alerting remains G-OPS work | Done for rehearsal |
-| EXT-06 | Mailbox response, absence and ownership procedure / Janay and Manuel | Propose owner/cover model by 2026-09-18 | Confirm by 2026-09-24; complete before post-vacation Go/No-Go | Expose pilot impact before Manuel's 2026-09-25 leave if no cover is named | Blocks advertised contact service level; publish no unsupported response promise | Request due before vacation |
+| EXT-06 | Mailbox response and absence procedure / Janay | Owner confirmed 2026-09-11; no substitute currently exists | Test routing before pilot and keep the uncovered absence period explicit | Reopen when a substitute is named or before any response-time promise | Blocks only an advertised service level, not the technical pilot; publish no unsupported response promise | Known operational gap |
 
 Lead-time rule: calculate `request by` from the latest useful date minus a
 realistic response, rework and escalation buffer. When an acknowledgement or
@@ -597,15 +596,14 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: record Janay's CAL-0.1 acceptance and refresh the static
-production-quality evidence without widening the real-data or production
-boundary. API, database, browser acceptance and external-copy restore evidence
-remain complete. SB-32 through SB-38 are accepted or complete; no technical
-implementation slice is currently doing.
-Productive calendar delivery, availability and seat reservations remain
-separately gated behind requirements and proposed ADR 0007. EXT-01 and Content
-owner decisions continue in parallel while infrastructure and stakeholder
-gates are waiting.
+Current sprint goal: process the first Priority-A content decisions and close
+the Pilot operations owner decisions without widening the real-data or
+production boundary. API, database, browser acceptance and external-copy
+restore evidence remain complete. SB-32 through SB-40 are accepted, complete
+or waiting on a named external gate; no productive backend slice is currently
+doing. Productive calendar delivery, availability and seat reservations remain
+separately gated behind requirements and proposed ADR 0007. EXT-01 and the
+remaining Content owner decisions continue in parallel.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -637,8 +635,8 @@ gates are waiting.
 | SB-26 | Done locally | Make the static Website artifact self-contained for conservative IONOS Apache delivery | SB-17/SB-22; no remote Apache or Webroot assumption | production `.htaccess` prepares HTTPS/canonical redirects, 404 mapping and bounded security headers without HSTS; accessible noindex 404 page added; release builder uses .NET ZIP and fails unless `.htaccess`, `404.html` and `index.html` exist in source and archive; 7 focused tests and 39-file/29-page Astro build green; clean `f7afd3247c10` artifact is `dirty: false`, contains all three required root entries and has SHA-256 `8378655a120441cf5cd6c6e95709688e6ec3c000e93e2813761f07ed44f7e0a9`; no upload or deployment |
 | SB-27 | Done, approved, review deployed and accepted | Add two source-governed use-case stories and the first Concept Clean customer voice to `/unternehmen` | authorized read of `Quellen/14.08.2026`; no invented claims; Manuel confirmed Concept Clean public-reference approval 2026-09-04 | illustrative leadership story visibly labelled; Concept Clean path limited to supplied facts; no logo copied; semantic ordered routes, desktop visual QA, exact 390-pixel `0 px` overflow evidence and 39-file/29-page Astro build green; GitHub Pages review run `33848941115` green; public HTTP/content/meta-robots smoke passed; Janay accepted the consolidated Website presentation on 2026-09-10; IONOS production and real-data use remain separate |
 | SB-28 | Done locally | Complete SEO/GEO Content Inventory and first-party Evidence Matrix for the five Priority A routes | separate content workstream; repository evidence only; no private raw sources, new guide pages or invented authority signals | two versioned documents record target group, use case, expertise, first-party information, CTA, evidence/approval state, owner gaps and claim gaps for all five routes; no public copy or deployment changed |
-| SB-29 | Done locally; stakeholder decisions open | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; route overlap must remain explicit | five routes now have a primary job, answer direction, evidence plan, limits, internal links, CTA, decision owner type and later verification plan; CP-01 through CP-08 remain open; no public implementation |
-| SB-30 | Done locally; awaiting dispatch and replies | Prepare the early stakeholder request for CP-01 through CP-08 | SB-29; no assumption may replace a named approval | German review packet contains decision table, recommended defaults, compact answer format, E-Mail draft, review URL and return gate; send-ready A4 Word and PDF exports are visually checked; no message sent automatically |
+| SB-29 | Done locally; first decisions processed | Prepare the Priority A Core Page Content Plan without changing public copy | SB-28; route overlap must remain explicit | five routes have a primary job, evidence plan and gates; CP-01/03/05/06 are decided, CP-02/04/07 partial and CP-08 open; only the bounded SB-40 wording update followed |
+| SB-30 | Done; first return received | Prepare the early stakeholder request for CP-01 through CP-08 | SB-29; no assumption may replace a named approval | German review packet and A4 exports were completed; Manuel supplied an edited Word return on 11.09., preserved as stakeholder evidence and reconciled in SB-40 |
 | SB-31 | Done, review deployed and accepted | Make approved customer feedback unmistakable and scalable on `/unternehmen` | EV-CC-001 name/quote approval plus Manuel's explicit request for visible customer logos; no additional claims | compact customer-feedback rail uses a central publication-gated data source, supplied Concept Clean logo, collaboration topic, short exact quotation and practice-path link; controls/automatic advance activate only with multiple approved entries; 40-file Astro check and 29-page build green; desktop and exact 390-pixel browser QA show one card, zero unnecessary controls and no horizontal overflow; review workflow `33852789095` and public page/logo/content smoke green; Janay accepted the consolidated Website presentation on 2026-09-10 |
 | SB-32 | Done, review deployed and accepted | Correct the customer-feedback quotation-mark typography | Manuel's visual acceptance feedback; quotation text and evidence stay unchanged | opening and closing marks now sit inline beside the actual quote text with modest spacing; semantic quotation remains intact; desktop browser measurement shows 9-pixel gaps without overlap; review workflow `34479551380` green; Janay confirmed the result on 2026-09-10 |
 | SB-33 | Done, review deployed and accepted | Reconcile the authorized update packets and implement the 04.09 compact Use-Case feedback | authorized 13.08, 14.08, 24.08, 27.08 and 04.09 packets; no invented claims or calendar implementation | feedback ledger records implemented/open/gated items; Use Cases sit side by side, open independently and remain collapsed initially; 1440/960/390-pixel browser QA shows no horizontal overflow; direct hash links open the matching story; public review returns HTTP 200 with `noindex`; Janay confirmed the result on 2026-09-10 |
@@ -647,6 +645,8 @@ gates are waiting.
 | SB-36 | Done and review deployed | Keep long Coach CTA headings and punctuation inside their layout column | shared Coach CTA; no copy or navigation change | shared columns can shrink; long German compounds hyphenate only when required; 42-file/30-page Astro build and 18 browser geometry checks across all six profiles at 1440, 960 and 390 pixels are green with zero overlap or horizontal overflow; workflow `34515246498` and public page/CSS/noindex smoke green |
 | SB-37 | Waiting stakeholder response; dispatched 11.09. | Batch the remaining calendar decisions and define the future quality gates | CAL-0.1 accepted; no productive implementation before CAL-D01 through CAL-D08 and ADR 0007 | non-technical eight-decision handout updated after visual acceptance; five-page Word export is content-verified, pagination-checked and with Janay; requested return by 18.09.; quality plan covers future gates without fixing unapproved business values |
 | SB-38 | Done and review deployed | Add fail-closed internal-reference verification and correct 404 metadata before refreshing the clean Website artifact | current static source; no IONOS connection or production deployment | initial scan found the invalid `/404/` canonical; 404 now emits no canonical/OG URL; durable release gate verifies 1,137 internal references across 30 HTML files; clean `db96b9573d2a` artifact has 51 entries, required root files, no sensitive entries and SHA-256 `d322276b...c0481c17`; workflow `34577486065` and public 404/noindex/home/calendar smoke green; deployment flag false |
+| SB-39 | Done decision-only | Close the currently decidable Pilot account and operations ownership | Manuel's decisions; no account creation, timer activation, secret handling or real data | Manuel remains operational Admin; Thomas Ross is the technical break-glass successor; Janay owns the mailbox without a current substitute; daily backup and monitor schedules plus 30/12 retention are accepted; concise success/incident notification is required but its delivery channel remains behind EXT-01; preferred acceptance date is 17.09. with 24.09. fallback |
+| SB-40 | Done locally; review deployment pending | Reconcile the first Priority-A content return and implement only approved audience wording | edited stakeholder DOCX; no invented approval for partial or empty answers | CP-01/03/05/06 accepted; CP-02/04/07 partial and CP-08 open; Mindforge now distinguishes consultation conversations for private persons from Businesscoaching for companies across the relevant public routes; 43-file Astro check, 30-page build, 1,137-reference verification and true 390-pixel overflow checks across four affected routes are green |
 
 The technical-readiness baseline remains complete: 305 Webapp tests pass with
 14 expected Staging skips, the release ZIP includes the restore tool and no
@@ -656,14 +656,15 @@ SFTP start directory.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block while Janay reviews CAL-D01 through CAL-D08: prepare the
-Pilot account and operations decision package for Manuel. Required inputs are
-the already named initial users plus decisions on Break-glass ownership,
-mailbox cover, backup schedule/monitor response and an onboarding window;
-deliverables are a bounded owner matrix and dated activation gates. Definition
-of Done: each item is accepted, assigned or explicitly deferred without
-creating an account, activating a timer or using real data. Calendar delivery,
-IONOS production deployment and real-data use remain unauthorized.
+Recommended next block while Janay reviews CAL-D01 through CAL-D08: prepare a
+provider-neutral backup-notification contract and test harness. Required inputs
+are the accepted backup/monitor schedule and Manuel as recipient; the actual
+SMTP or alternative delivery endpoint remains behind EXT-01. Deliverables are
+bounded success/failure message shapes, deduplication/escalation behavior,
+secret-free configuration and automated tests. Definition of Done: local tests
+prove one concise success notice and actionable incident notices without
+sending a real message, activating VPS timers or using real data. Calendar
+delivery, IONOS production deployment and real-data use remain unauthorized.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -673,13 +674,13 @@ progress in parallel but do not silently expand the execution backlog.
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Waiting stakeholder response | High | Decide CAL-D01 through CAL-D08 and accept, amend or reject ADR 0007 | Word handout sent to Janay on 11.09.; requested return by 18.09. | every decision marked accepted, changed or deferred with owner/evidence reference |
-| 2 | Ready internal | High | Close the Pilot account and operations owner decisions | Manuel; Janay only for mailbox cover/working practice | owner matrix records Break-glass, mailbox cover, backup schedule/response and onboarding window or explicit deferrals |
-| 3 | Ready parallel | High | Collect CP-01 through CP-08 Core Page content decisions | prepared Word/PDF packet; no invented claims or new guide pages | each content item accepted, assigned or explicitly deferred |
+| 2 | Done decision-only | High | Close the Pilot account and operations owner decisions | Manuel's decisions; no live activation | owner matrix records Thomas Ross as technical break-glass, Janay as mailbox owner without substitute, backup schedule/retention, notification requirement and 17.09./24.09. acceptance window |
+| 3 | Partially decided | High | Close the residual CP-02/04/07/08 Core Page content decisions | first stakeholder return processed; no invented claims or new guide pages | cadence, commercial owner/date, concrete QM/legal reviewer/date and remaining profile evidence are accepted, assigned or explicitly deferred |
 | 4 | Waiting external | High | Resolve IONOS Webroot plus App-DNS/SMTP contracts | EDV response expected from 2026-09-14; no upload before read-only inventory | verified SFTP root/inventory, DNS/TLS result and documented SMTP/sender contract |
-| 5 | Pending | Medium | Design CAL-1 schema, API and deny-by-default RBAC | step 1 and accepted ADR 0007; existing PostgreSQL/FastAPI patterns | architecture/data/API review against `calendar-quality-plan-v0.1.md` |
-| 6 | Pending | Medium | Prepare the CAL-1 migration and rollback-only Staging smoke | step 5; separate migration approval | owner/privilege checks, rollback smoke, overlap constraints and zero-residue evidence |
-| 7 | Pending | Medium-low | Implement Coach-owned availability plus internal review/publication | steps 5-6; named synthetic accounts and browser baseline | unit/API/Staging/browser tests for own-scope, publication, audit, overlap and error recovery |
-| 8 | Pending | Low | Prepare the controlled post-vacation pilot release candidate | EDV, Legal, mailbox cover, onboarding, backup timer/alerts and Thomas Ross Go/No-Go | complete evidence index, rollback rehearsal, named acceptance and no open high/critical finding |
+| 5 | Ready internal | High | Prepare the provider-neutral backup success/incident notifier | accepted schedule and recipient; live channel waits on EXT-01 | unit tests for success, backup failure, stale backup, deduplication and secret-free fail-closed configuration |
+| 6 | Pending | Medium | Design CAL-1 schema, API and deny-by-default RBAC | step 1 and accepted ADR 0007; existing PostgreSQL/FastAPI patterns | architecture/data/API review against `calendar-quality-plan-v0.1.md` |
+| 7 | Pending | Medium-low | Prepare migration and implement Coach-owned availability plus internal publication | step 6; separate migration approval and named synthetic accounts | rollback smoke plus unit/API/Staging/browser tests for own-scope, publication, audit, overlap and error recovery |
+| 8 | Pending | Low | Prepare the controlled Pilot release candidate | EDV, Legal, tested mailbox route, onboarding, active backup/alerts and Thomas Ross Go/No-Go | complete evidence index, rollback rehearsal, named acceptance and no open high/critical finding |
 
 ### Cross-Cutting Gates
 
@@ -721,9 +722,9 @@ progress in parallel but do not silently expand the execution backlog.
   tested and rollback-ready Website/Portal packages plus an explicit matrix of
   remaining DNS, SMTP, backup, Legal, account and Go/No-Go gates. Deployment,
   real accounts and real data follow only after their separate gates.
-- **G-PROD:** the former 2026-09-25 target is retired. The first small pilot is
-  planned no earlier than the second half of October, with its exact date still
-  open. Production still requires the canonical
+- **G-PROD:** the former 2026-09-25 target is retired. The current candidates
+  are 17.09. and 24.09.; both remain conditional on all required gates.
+  Production still requires the canonical
   Website, separately deployed Portal, Janay's MFA-protected least-privilege
   account, a verified external restore and successful first approved company
   plus contact. A database-only or UI-only state is not sufficient.

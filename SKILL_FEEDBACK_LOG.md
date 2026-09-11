@@ -6,6 +6,26 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-11 | operational-role-boundary | Fach-, Mailbox- und Technikvertretung getrennt erheben
+
+- Triggering project situation: Die Frage nach Janays Mailboxvertretung wurde
+  unlogisch mit Manuels Urlaub und Thomas Ross als technischem Notfallkontakt
+  vermischt.
+- Observed friction: Eine allgemeine Frage nach "Vertretung" erzeugt falsche
+  Abhaengigkeiten, obwohl Mailboxbearbeitung, fachliche Freigabe und technischer
+  Break-glass-Zugriff verschiedene Dienste, Risiken und Owner haben.
+- Reusable improvement candidate: `manage-project-state`,
+  `discover-product-context` und Operations-Checklisten sollen Vertretung immer
+  pro Dienst und Rolle erheben: fachlich, Mailbox/Kundenkontakt, technische
+  Administration, Go/No-Go und Recovery. Eine nicht besetzte Rolle wird als
+  bekannter Gap dokumentiert, nicht durch eine andere Vertretung ersetzt.
+- Project response: Thomas Ross ist nur technischer Break-glass-Nachfolger;
+  Janay ist Mailbox-Owner ohne aktuelle Abwesenheitsvertretung. Deshalb bleibt
+  ein oeffentliches Reaktionsversprechen gesperrt, der technische Pilot aber
+  nicht automatisch.
+- Reuse potential: high for small teams and vacation/continuity planning.
+- Status: project pattern applied; canonical skill proposal captured only.
+
 ### 2026-09-11 | release-evidence-freshness | Review und Produktionsartefakt gemeinsam altern lassen
 
 - Triggering project situation: Mehrere aktuelle Frontend-Änderungen waren auf

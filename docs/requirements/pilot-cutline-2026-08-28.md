@@ -2,9 +2,10 @@
 
 > Zeitplanhinweis vom 25.08.2026: Die technische 28.08.-Cutline bleibt als
 > historischer Readiness-Meilenstein gueltig. Der in diesem Dokument genannte
-> 25.09.-Produktivtermin ist aufgehoben; ein erster kleiner Pilot ist fruehestens
-> fuer die zweite Oktoberhaelfte nach Manuels Rueckkehr vorgesehen. Das genaue
-> Datum bleibt gate-abhaengig und offen.
+> 25.09.-Produktivtermin ist aufgehoben. Nach der Rebaselining-Entscheidung vom
+> 11.09. sind 17.09. und ersatzweise 24.09. neue Terminkandidaten, sofern alle
+> vorgelagerten Gates rechtzeitig schliessen; andernfalls folgt ein spaeterer
+> dokumentierter Termin.
 
 Stand: 21.08.2026
 
@@ -20,9 +21,10 @@ Am 28.08.2026 sind die Vertraege voraussichtlich fertig und das technische
 Produktionspaket soll weitgehend vorbereitet sein. Eine oeffentliche
 Freigabe, reale Konten und der erste Firmenrecord duerfen danach erfolgen,
 sobald Legal-, Backup-, DNS/Runtime- und Go/No-Go-Gates geschlossen sind.
-Der fruehere Produktivtermin 25.09.2026 ist aufgehoben. Der aktuelle
-Planungskorridor beginnt fruehestens in der zweiten Oktoberhaelfte nach Manuels
-Rueckkehr; ein exaktes Datum bleibt bis zu den externen Freigaben offen.
+Der fruehere Produktivtermin 25.09.2026 ist aufgehoben. Bevorzugter Kandidat
+fuer Onboarding und Go/No-Go ist 17.09.2026, ersatzweise 24.09.2026. Diese
+Termine sind keine Freigabe: Bleibt ein erforderliches Gate offen, folgt ein
+spaeterer dokumentierter Termin.
 
 Ein Datenbank-, API- oder UI-Teilerfolg allein erfuellt das spaetere
 Produktivziel nicht. Der 28.08. darf als Readiness-Meilenstein ohne Echtdaten
@@ -33,8 +35,8 @@ sind.
 
 | Person | Pilotrolle | Zweck | Loginidentitaet | Status/Gate |
 | --- | --- | --- | --- | --- |
-| Manuel | `admin` | technische Administration, Konten, Betrieb und Notfallreaktion | `roedel.kg@donner-partner.eu` | Name/Rolle/Adresse bestaetigt; Nachfolge-/Break-glass-Regel offen |
-| Frau Janay Rappelt | `internal` | Firmen und Kontakte erfassen und korrigieren | `rappelt.wue@donner-partner.eu` | Name/Rolle/Adresse bestaetigt; Onboardingtermin und Vertretung offen |
+| Manuel | `admin` | technische Administration, Konten, Betrieb und Notfallreaktion | `roedel.kg@donner-partner.eu` | Name/Rolle/Adresse bestaetigt; Thomas Ross als technischer Break-glass-Nachfolger benannt; Einrichtungsnachweis offen |
+| Frau Janay Rappelt | `internal` | Firmen und Kontakte erfassen und korrigieren | `rappelt.wue@donner-partner.eu` | Name/Rolle/Adresse bestaetigt; 17.09. bevorzugt und 24.09. als Ausweichtermin; Mailboxvertretung derzeit unbesetzt |
 
 `competencehub@donner-partner.de` bleibt die oeffentliche, von Frau Janay
 Rappelt verantwortete Funktionsmailbox. Sie ist keine persoenliche
@@ -113,7 +115,7 @@ werden erst nach belegtem Arbeitsbedarf additiv entschieden.
 | Gate | Owner/Freigabe | Erforderliche Evidenz | Aktueller Status |
 | --- | --- | --- | --- |
 | Fachlicher Pilotumfang | Manuel und Frau Janay Rappelt | diese Cutline und Feld-/Ablaufabnahme | Cutline von Manuel freigegeben; Janay-Abnahme des Firmen-/Kontaktablaufs offen |
-| Konten und Rollen | Manuel | persoenliche Adressen, Rollenliste, Onboardingtermin, Break-glass-Regel | Namen/Rollen/Adressen gesetzt; Termine und Notfallregel offen |
+| Konten und Rollen | Manuel | persoenliche Adressen, Rollenliste, Onboardingtermin, Break-glass-Regel | Namen/Rollen/Adressen gesetzt; Thomas Ross benannt; 17.09./24.09. als Terminkandidaten; sichere Einrichtung und Terminbestaetigung offen |
 | Einladungszustellung | Manuel; Mailbetrieb nach D+P-Vorgabe | SMTP-Vertrag, freigegebener Absender und gepruefter Mailadapter | E-Mail entschieden; technische Mailparameter offen; keine Tokenanzeige in API/Logs |
 | Off-Server-Backup | Manuel | verschluesselter Download zum D+P-Rechner Wuerzburg plus Restoreprotokoll | synthetischer externer Restore bestanden; Produktionstimer und Alarmweg offen |
 | Website-Produktion | Thomas Ross | freigegebenes Artefakt, Rollbackkopie, Domain/TLS/Recht/Kontakt-Smoke | technisches Paket gruen; SFTP-Webroot, Recht und Go/No-Go offen |
@@ -147,8 +149,9 @@ bestaetigte Wildcard-Zertifikat nur `*.donner-partner.de` abdeckt.
 | 26.08. | verschluesselter Off-Server-Dump und Restore aus Wuerzburg nachgewiesen; Konten vorbereitet |
 | 27.08. | internes End-to-End, Sicherheits-/Rollback-Smoke und Go/No-Go mit Manuel, Janay und Thomas Ross |
 | 28.08. | technisches Readiness-Paket, Vertragsstand und dokumentierte Restgates; noch kein Echtdatenzwang |
-| bis Mitte September | Legal-/Betreiberangaben, App-DNS/SMTP, Backup-Restore, Onboarding- und Go/No-Go-Termine schliessen |
-| 25.09. | spaeteste kontrollierte Freigabe mit Produktions-Smoke und erstem freigegebenen Firmenrecord oder dokumentiertes No-Go ohne Echtdaten |
+| bis Mitte September | Legal-/Betreiberangaben, App-DNS/SMTP sowie automatische Backup-/Alarmierung soweit moeglich schliessen |
+| 17.09. | bevorzugter Termin fuer beaufsichtigtes Onboarding und Go/No-Go, nur wenn alle benoetigten Gates geschlossen sind |
+| 24.09. | Ausweichtermin unter denselben Gates; andernfalls dokumentierte Verschiebung ohne Echtdaten |
 
 Der lokale technische Slice liegt vor. Der 28.08. ist bewusst ein
 Readiness-Meilenstein; Echtdaten werden nicht zugelassen, um einen Termin
@@ -164,6 +167,7 @@ muessen technische Restarbeiten vorher weitgehend abgeschlossen sein.
 3. Bestaetigung der vorgeschlagenen gemeinsamen App-Origin und des DNS-Owners.
 4. Nachweis von Datentraegerverschluesselung und eingeschraenktem Zugriff am
    Wuerzburger Backuprechner sowie Termin fuer den Restore-Test.
-5. Datum/Uhrzeit fuer Janays Onboarding nach dem 28.08.
-6. Produktions-Go/No-Go-Termin mit Thomas Ross vor dem 25.09.
+5. Datum/Uhrzeit fuer Janays Onboarding; bevorzugt 17.09., ersatzweise 24.09.
+6. Produktions-Go/No-Go-Termin mit Thomas Ross; ebenfalls 17.09. oder 24.09.,
+   sofern alle erforderlichen Gates rechtzeitig geschlossen sind.
 7. Finale Betreiber-/Rechtsangaben, erwartet bis Mitte September.

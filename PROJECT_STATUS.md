@@ -7,9 +7,10 @@ Last updated: 2026-09-11
 - Overall status: yellow for production, green for the 2026-08-28 technical-
   readiness checkpoint. The website and complete synthetic portal slice,
   clean release package and external restore rehearsal are verified. The former
-  2026-09-25 production deadline is retired. A first small controlled start is
-  now planned no earlier than the second half of October, after Manuel's return;
-  the exact date remains open. Production runtime scheduling/alerting,
+  2026-09-25 production deadline is retired. A first small controlled start can
+  be accepted on 2026-09-17 if every preceding gate closes; 2026-09-24 is the
+  preferred fallback, otherwise the start moves to a documented later date.
+  Production runtime scheduling/alerting,
   App-DNS, SMTP, named accounts, legal approval and Go/No-Go are still open.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling eight-step horizon.
@@ -26,6 +27,13 @@ Last updated: 2026-09-11
   Root/postgres installation, native backup/monitor, guarded external transfer
   and exact-copy restore passed with timers disabled and all co-hosted services
   healthy. Production scheduling/alerting and the other data gates remain.
+- Pilot operations decisions: Manuel remains operational Admin; Thomas Ross is
+  the technical break-glass successor, not a general holiday or mailbox cover.
+  Janay owns the Competence Hub mailbox; no substitute is currently named for
+  her absence, so no public response-time promise is permitted. Daily backup
+  and monitoring schedules plus 30 daily/12 monthly retention are accepted.
+  Manuel must receive a concise success or incident notice automatically; the
+  delivery channel still depends on the EDV/SMTP decision.
 - Current phase: Competence Hub public website stabilization plus isolated
   portal/backend foundation.
 - Current goal: professional, mobile-first B2B and B2C website for offers from
@@ -292,19 +300,17 @@ Last updated: 2026-09-11
 - Website MVP deadline: 2026-07-23.
 - First company offers planned: August 2026.
 - Technical-readiness milestone: 2026-08-28, aligned with expected contract
-  completion. Janay onboarding and production Go/No-Go will occur afterward;
-  dates remain open.
-- Former production target: 2026-09-25, now retired. Current planning window:
-  first small controlled start no earlier than the second half of October after
-  Manuel's return. The exact milestone and stakeholder Go/No-Go date remain to
-  be set.
-- Schedule health: yellow but less time-critical. Database, migrations, Auth/Outbox,
+  completion. Janay onboarding and production Go/No-Go remain separate gates.
+- Former production target: 2026-09-25, now retired. The preferred candidate
+  for Onboarding/Go-No-Go is 2026-09-17, with 2026-09-24 as fallback; either
+  date moves if EDV, Legal, operations or acceptance evidence is incomplete.
+- Schedule health: yellow. Database, migrations, Auth/Outbox,
   company/contact API and the local portal UI are implemented; the expanded
   portal harness has 14/14 Staging evidence and all 17 manual browser checks
   passed and runner cleanup is complete. Productive runtime, account
   onboarding, off-server restore evidence and production
-  rollout remain on the critical path. The post-vacation October window reduces
-  immediate date pressure but does not relax any production or real-data gate.
+  rollout remain on the critical path. The earlier candidates increase
+  schedule pressure but do not relax any production or real-data gate.
 - Build evidence: after SB-24, Astro checks 38 files with 0 errors, 0 warnings
   and 0 hints; the static build generates 28 pages, including `/ueber-uns/`.
   Exact 390-pixel browser emulation finds no document overflow on homepage or
@@ -360,13 +366,12 @@ Last updated: 2026-09-11
 - Independent content work: the SEO/GEO Content Inventory, Content-Evidence
   Matrix and Core Page Content Plan for `/`, `/unternehmen`, `/leistungen`,
   `/businesscoaching` and `/mindforge` are complete in `docs/content/`. The next
-  ready block is the bounded CP-01 through CP-08 stakeholder decision set,
-  beginning with page ownership, service taxonomy and commercial review. A
-  German decision packet and E-Mail draft are ready in
-  `docs/content/priority-a-stakeholder-review-packet-2026-09-04.md`; they have
-  not been sent automatically. Send-ready A4 Word and PDF exports are available
-  under `docs/content/exports/`. No guide page or unsupported authority claim
-  is authorized.
+  first edited stakeholder return has been processed. CP-01/03/05/06 are
+  accepted; CP-02/04/07 are partial and CP-08 remains open. Only the approved
+  Mindforge distinction was implemented: consultation conversations serve
+  private persons and Businesscoaching serves companies. The affected routes
+  pass Astro, build, internal-reference and true 390-pixel overflow checks. No
+  guide page or unsupported authority claim is authorized.
 
 - Activation inputs: the reviewed 24.08 operator pack is represented by
   `docs/requirements/activation-input-contract-2026-08-24.md`; durable gate
@@ -374,8 +379,9 @@ Last updated: 2026-09-11
   private workbook remains outside Git.
 - Visual steering board: `docs/requirements/readiness-gate-board-2026-08-28.md`
   consolidates Done/Ready/Waiting/Blocked flow, owners, dates, evidence and the
-  completed 28.08. technical checkpoint plus the rebaselined post-vacation
-  pilot. Technical readiness is green; production is yellow behind named gates.
+  completed 28.08. technical checkpoint plus the gate-dependent 17.09./24.09.
+  candidates. Technical readiness is green; production is yellow behind named
+  gates.
 - Current verified implementation checkpoint: commit `ecc074b` is pushed to
   `origin/main`; local and remote branches were synchronized afterward. The
   crawler-blocked Website review was deployed through workflow `34515246498`;
@@ -390,19 +396,22 @@ Last updated: 2026-09-11
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
 - Recommended next work block: while Janay reviews the dispatched five-page
-  Word handout, prepare the Pilot account and operations owner decisions with
-  Manuel. The grouped CAL-D01 through CAL-D08 return is requested by
-  2026-09-18; no calendar migration or real-data path begins before those
-  decisions. In
+  Word handout, prepare a provider-neutral and secret-free backup-notification
+  contract plus local test harness. The actual delivery channel remains behind
+  EXT-01, and neither real messages nor VPS timers are activated. The grouped
+  CAL-D01 through CAL-D08 return is requested by 2026-09-18; no calendar
+  migration or real-data path begins before those decisions. In
   parallel, review the EDV response from 2026-09-14 or chase it from
-  2026-09-15, then repeat the read-only Webroot inventory. Real data and
+  2026-09-15, then repeat the read-only Webroot inventory. Preferred
+  onboarding/Go-No-Go is 17.09. if all gates close, with 24.09. as fallback.
+  Real data and
   production activation remain blocked by operational, Legal, account and
   Go/No-Go gates.
 - Lead-time radar: EDV input is not expected before 2026-09-14 and should be
   reviewed then or chased from 2026-09-15. Contract and Legal status should be
-  requested by 2026-09-18. Because Manuel is away from 2026-09-25 for three
-  weeks, Janay/Thomas acceptance slots, the Legal review path and mailbox cover
-  should be confirmed by 2026-09-24 for execution after his return.
+  requested by 2026-09-18. The 17.09. and 24.09. acceptance candidates should
+  be confirmed as early as possible. Janay's mailbox currently has no absence
+  cover; Thomas Ross covers only technical emergencies.
 - SB-19 evidence: the existing isolated Outbox Staging test now continues
   through single-use invitation acceptance, password hashing, TOTP enrollment,
   Recovery-code generation and active session creation. It compiles and skips
@@ -454,12 +463,12 @@ Last updated: 2026-09-11
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
 - Rolling delivery horizon: (1) receive CAL-D01 through CAL-D08 and decide ADR
-  0007, (2) close Pilot account/operations ownership, (3) collect CP-01 through
-  CP-08 content decisions, (4) resolve the parallel EDV Webroot/DNS/SMTP gate,
-  (5) design CAL-1 schema/API/RBAC, (6) prepare its migration and Staging smoke,
-  (7) implement Coach-owned availability plus internal publication, and (8)
-  prepare the controlled post-vacation pilot release candidate. Confidence
-  decreases from step 5 onward.
+  0007, (2) operations ownership is decided, (3) close residual CP-02/04/07/08,
+  (4) resolve the parallel EDV Webroot/DNS/SMTP gate, (5) prepare and test the
+  provider-neutral backup notifier, (6) design CAL-1 schema/API/RBAC, (7)
+  migrate and implement Coach-owned availability plus internal publication,
+  and (8) prepare the controlled Pilot release candidate. Confidence decreases
+  from step 6 onward.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.
@@ -470,14 +479,14 @@ Last updated: 2026-09-11
 ## Decisions Needed
 
 - Which Donner + Partner group company is the legal Competence Hub provider?
-- What response expectation and absence cover apply to Janay Rappelt's public
-  mailbox?
+- Who may later cover Janay Rappelt's public mailbox during her absence? Until
+  then, no public response-time promise applies.
 - Who performs the static IONOS deployment and rollback after Thomas Roß's
   production approval?
-- Who receives controlled successor/emergency server access if Manuel is
-  unavailable?
-- Which encrypted off-server backup target, retention and restore-test rhythm
-  are approved?
+- How and when is Thomas Ross's confirmed technical break-glass access created
+  and tested without sharing an account?
+- Which EDV-approved channel delivers Manuel's automatic backup success and
+  incident notices?
 - Which concrete people receive the first synthetic/staging accounts and which
   combinations of the four working roles do they need?
 - Which feedback types and statistical formulas are required first, and which

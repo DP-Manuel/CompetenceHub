@@ -40,7 +40,7 @@ descriptions, semantic HTML, internal links, performance or accessibility.
 | Existing primary information | Current Hub positioning; the visible `Anliegen -> Expertise -> Format -> Begleitung` journey; maintained public Coach/topic data; direct contact ownership through the current contact section. |
 | Current CTA | `Bedarf besprechen`, plus company, Mindforge and Coach-profile paths. |
 | Gaps and risks | No approved expert quotation, customer case or verified statistic on the route. The broad audience should not become a generic all-services promise. The exact matching method remains described at a high level. |
-| Owner and review | Editorial owner is not formally recorded. Subject-matter and stakeholder review date is not evidenced in the repository. |
+| Owner and review | Manuel and Janay are jointly named as of 2026-09-11; recurring review cadence remains open. Companies-first hierarchy is accepted. |
 
 ## `/unternehmen` - Company Needs
 
@@ -53,7 +53,7 @@ descriptions, semantic HTML, internal links, performance or accessibility.
 | Existing primary information | Current company process and offer copy; a clearly labelled illustrative leadership journey; an approved Concept Clean communication-course path and exact customer quotation; current Assessment Center levels and price statements. |
 | Current CTA | `Bedarf besprechen`; specialist CTA `Assessment Center anfragen`; secondary route `Angebote vergleichen`. |
 | Gaps and risks | The illustrative path is explanatory, not evidence. Concept Clean approval covers the prepared company name and quotation, not logo use or additional outcomes. Assessment Center prices and commercial conditions need a named factual review before production launch. No verified performance statistic or expert quotation is inventoried. |
-| Owner and review | Concept Clean name/quote publication approved by Manuel on 2026-09-04. Editorial owner and last full page subject-matter review remain unresolved. |
+| Owner and review | Concept Clean name/quote publication approved by Manuel on 2026-09-04. Manuel and Janay are jointly named for page content/review as of 2026-09-11; recurring cadence and commercial owner/date remain open. |
 
 ## `/leistungen` - Service Orientation
 
@@ -66,33 +66,33 @@ descriptions, semantic HTML, internal links, performance or accessibility.
 | Existing primary information | Current service descriptions, distinctions between service areas, internal links and FAQ answers; canonical Coach-topic assignments from the public data layer. |
 | Current CTA | `Anfrage stellen`, `Mindforge entdecken`, `Für Unternehmen` and `Bedarf klären`. |
 | Gaps and risks | The page serves two audiences and many intents. Service names alone are not evidence of availability, qualification or outcome. Overlap among Mindforge, Businesscoaching, coaching and consulting needs a governed distinction. No approved quote, case or verified statistic is inventoried for this route. |
-| Owner and review | Editorial and service-taxonomy owners are not formally recorded. Last complete factual review is unknown. |
+| Owner and review | Current taxonomy accepted on 2026-09-11; Manuel and Janay are jointly named. Recurring review cadence remains open. |
 
 ## `/businesscoaching` - Leadership And Work Context
 
 | Field | Current finding |
 | --- | --- |
-| Target audience | Company buyers, leaders and teams; the route also speaks to individual professional development. |
+| Target audience | Companies, company decision-makers, leaders and teams. The 2026-09-11 return assigns private Mindforge users to consultation conversations rather than Businesscoaching. |
 | Concrete use case | Leadership, role, communication, collaboration or change challenges need a structured coaching frame. |
 | Central user question | "Is Businesscoaching the right format for this professional situation, and how is it different from consulting?" |
 | Relevant expertise | Businesscoaching, leadership, communication, teams and conflict, role clarification and professional development, limited to approved public Coach expertise. |
 | Existing primary information | Current target-group, topic, two-dimensions and FAQ content; public Coach profiles and topic relations can support future attribution after review. |
 | Current CTA | `Businesscoaching anfragen`; secondary in-page route `Themen ansehen`. |
-| Gaps and risks | No approved expert quotation, concrete case, verified statistic or named first-party method is inventoried. The page's primary buyer versus participant perspective needs clarification. Its boundary to Mindforge company coaching and `/unternehmen` should be explicit before adding more copy. |
-| Owner and review | Editorial and Businesscoaching subject-matter owners are not formally recorded. Last subject-matter review is unknown. |
+| Gaps and risks | No approved expert quotation, concrete case, verified statistic or named first-party method is inventoried. Its boundary to `/unternehmen` should remain explicit and no private-customer Businesscoaching claim should be added. |
+| Owner and review | Manuel and Janay are jointly named as of 2026-09-11; recurring review cadence remains open. |
 
 ## `/mindforge` - Coaching And Advice
 
 | Field | Current finding |
 | --- | --- |
-| Target audience | Self-paying private customers and company personnel-development buyers, separated through page anchors but combined on one route. |
-| Concrete use case | A person or company seeks orientation, resilience, personal or professional development, coaching or bounded advice and wants to understand process and price direction. |
+| Target audience | Private customers seeking consultation conversations and company personnel-development buyers seeking Businesscoaching, separated through page anchors but combined on one route. |
+| Concrete use case | A private person seeks a consultation conversation or a company seeks Businesscoaching and wants to understand process, price direction and boundaries. |
 | Central user question | "Which Mindforge path fits this concern, what happens next, and where are its limits?" |
-| Relevant expertise | Mindforge Life Coaching, Business Coaching, company coaching, advice and Assessment Center links where qualifications and offer rights are approved. |
+| Relevant expertise | Mindforge consultation for private persons, Businesscoaching for companies, bounded advice and Assessment Center links where qualifications and offer rights are approved. |
 | Existing primary information | Current Mindforge positioning, approach, process, format descriptions, self-pay and company price statements, Assessment Center bridge and explicit therapy/medical/crisis boundary. |
 | Current CTA | Audience anchors `Für Privatpersonen` and `Für Unternehmen`; `Erstgespräch anfragen`; `Beratungsbedarf einordnen`. |
 | Gaps and risks | No approved customer case, expert quotation or verified statistic is inventoried. Claims such as `nachhaltiger Transfer`, `fundierter Entwicklungsauftakt` and `verlässlich begleiten` require a named factual/editorial review. Price and duration statements need commercial confirmation. The two-audience structure should be tested before a route split is considered. |
-| Owner and review | Mindforge content owner and last subject-matter review are not formally recorded. Commercial and boundary review remain open. |
+| Owner and review | Manuel and Janay are jointly named as of 2026-09-11. Current commercial statements and one-route structure are accepted; recurring cadence, commercial owner/validity and concrete QM/legal boundary review remain open. |
 
 ## Cross-Page Findings
 
@@ -121,4 +121,3 @@ descriptions, semantic HTML, internal links, performance or accessibility.
   approval.
 - No new guide page, quotation, case, statistic or customer reference was
   created.
-

@@ -1,6 +1,6 @@
 # Activation Input Contract
 
-Stand: 2026-08-25
+Stand: 2026-09-11
 
 ## Zweck
 
@@ -53,9 +53,18 @@ im Projektlog dokumentiert.
 - Das lokale Systemlaufwerk `C:` der Restore-Umgebung wurde ebenfalls als
   `FullyEncrypted`, Schutz aktiv, `XtsAes128`, 100 Prozent nachgewiesen.
 - Der physische Aufbewahrungsort des USB-Sticks ist der Safe. Janay Rappelt ist
-  als Notfall-/Recovery-Verantwortliche benannt. Die tatsaechliche sichere
-  Hinterlegung des BitLocker-Recovery-Codes bleibt noch nachzuweisen.
+  als Notfall-/Recovery-Verantwortliche benannt. Die sichere Hinterlegung des
+  BitLocker-Recovery-Codes und der GPG-Passphrase ist bestaetigt.
 - Es wurden keine Backupdaten, Secrets oder Echtdaten auf `D:` geschrieben.
+- Thomas Ross ist als technischer Break-glass-/Nachfolgeadmin bestaetigt. Der
+  konkrete sichere Zugangs-, MFA-, Aufbewahrungs- und Testweg bleibt vor
+  Produktion nachzuweisen.
+- Janay verantwortet die Funktionsmailbox. Eine Vertretung fuer ihre
+  Abwesenheit ist derzeit nicht benannt; fuer diesen Zeitraum darf keine
+  oeffentliche Reaktionszeit versprochen werden.
+- Backup und Monitor sollen automatisch laufen. Manuel erhaelt nach jeder
+  geplanten Pruefung eine knappe Erfolgs- oder Stoerungsmeldung; Kanal und
+  Testzustellung bleiben bis zur EDV-/SMTP-Antwort offen.
 
 ## Abschlussregel
 
