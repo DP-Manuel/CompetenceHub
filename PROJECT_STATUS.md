@@ -34,6 +34,10 @@ Last updated: 2026-09-11
   and monitoring schedules plus 30 daily/12 monthly retention are accepted.
   Manuel must receive a concise success or incident notice automatically; the
   delivery channel still depends on the EDV/SMTP decision.
+- Backup notification slice: commit `58299ae` provides a local-only, bounded
+  JSON contract for daily success and defined incidents. Event/code pairs,
+  fixed text, UTC timestamps and stable deduplication are tested; the renderer
+  imports no network or process module. No adapter, message or timer is active.
 - Calendar business decisions: Janay accepted CAL-D01 through CAL-D08 and the
   complete Pilot flow on 2026-09-11. Public offer visibility, authenticated
   company reservations, separate threshold/capacity, decision deadlines,
@@ -393,8 +397,9 @@ Last updated: 2026-09-11
   completed 28.08. technical checkpoint plus the gate-dependent 17.09./24.09.
   candidates. Technical readiness is green; production is yellow behind named
   gates.
-- Current verified implementation checkpoint: commit `5d126cb` is pushed to
-  `origin/main`. The crawler-blocked Website review was deployed through
+- Current verified implementation checkpoint: commit `58299ae` adds the
+  backup notification contract and is pushed to `origin/main`. The Website
+  checkpoint `5d126cb` is on `origin/main`; its crawler-blocked review was deployed through
   workflow `34582211406`; public route, content and `noindex` smokes are green.
   The matching clean IONOS artifact contains 51 entries and has SHA-256
   `8056d431...5269d4`. Neither review nor artifact authorizes IONOS production
@@ -411,10 +416,10 @@ Last updated: 2026-09-11
 - Recommended next work block: Manuel decides ADR 0007 now that Janay has
   accepted all eight calendar rules. This decision may authorize the bounded
   CAL-1 design, but not migration, accounts, messages, real data or production.
-  While ADR 0007 is pending, prepare a provider-neutral and secret-free backup-
-  notification contract plus local test harness. The actual delivery channel
-  remains behind EXT-01, and neither real messages nor VPS timers are activated. In
-  parallel, review the EDV response from 2026-09-14 or chase it from
+  While ADR 0007 is pending, close or explicitly defer CP-02/04/07/08. The
+  provider-neutral backup-notification contract is complete locally; its live
+  adapter remains behind EXT-01, and neither real messages nor VPS timers are
+  activated. In parallel, review the EDV response from 2026-09-14 or chase it from
   2026-09-15, then repeat the read-only Webroot inventory. Preferred
   onboarding/Go-No-Go is 17.09. if all gates close, with 24.09. as fallback.
   Real data and
@@ -476,9 +481,10 @@ Last updated: 2026-09-11
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
 - Rolling delivery horizon: (1) decide ADR 0007 after Janay accepted CAL-D01
-  through CAL-D08, (2) operations ownership is decided, (3) prepare and test
-  the provider-neutral backup notifier, (4) close residual CP-02/04/07/08, (5)
-  resolve the parallel EDV Webroot/DNS/SMTP gate, (6) design CAL-1 schema/API/RBAC, (7)
+  through CAL-D08, (2) operations ownership is decided, (3) the local backup
+  notifier is complete, (4) close residual CP-02/04/07/08, (5)
+  resolve the parallel EDV Webroot/DNS/SMTP and live-notifier gate, (6) design
+  CAL-1 schema/API/RBAC, (7)
   migrate and implement Coach-owned availability plus internal publication,
   and (8) prepare the controlled Pilot release candidate. Confidence decreases
   from step 6 onward.

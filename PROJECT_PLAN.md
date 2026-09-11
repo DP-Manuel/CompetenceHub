@@ -12,10 +12,12 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 - Current phase, sprint, milestone, board status, or release: public website
   stabilization plus isolated authenticated-portal foundation
 - Current status: yellow for production and green for the completed technical-
-  readiness scope. Source checkpoint `93347ba` is pushed to `origin/main` and
+  readiness scope. Source checkpoint `58299ae` is pushed to `origin/main` and
+  contains the locally verified backup-notification contract; it builds
+  on the pushed Website/content/calendar checkpoint `df62a06` and
   contains the verified public website, accepted same-origin pilot portal and
   completed encrypted external backup/restore rehearsal. The current full local
-  suite passes 305 tests with 14 expected opt-in Staging skips, all 14
+  suite passes 315 tests with 14 expected opt-in Staging skips, all 14
   isolated PostgreSQL paths passed, and BA-01 through BA-17 are accepted in a
   real browser. The local runner is stopped and its ephemeral context removed.
   No persistent Competence-Hub backend/worker service, real account, real data
@@ -160,15 +162,14 @@ for Git, release, backup and restore responsibilities.
 
 ### Next Blocks
 
-1. **Static quality gate:** make internal reference verification a mandatory
-   production-package step and rebuild the current clean IONOS artifact.
-2. **Calendar decision gate:** decide, amend or explicitly defer CAL-D01
-   through CAL-D08 and ADR 0007 using the stakeholder handout; do not create a
-   migration while the business rules remain open.
+1. **Calendar architecture gate:** accept, amend or reject ADR 0007. Janay has
+   accepted CAL-D01 through CAL-D08; no migration follows from that acceptance.
+2. **Content decision gate:** close, assign or explicitly defer the residual
+   CP-02/04/07/08 items without inventing claims or producing guide pages.
 3. **EDV gate:** review the expected response from 2026-09-14 or chase it from
    2026-09-15, then repeat the read-only SFTP Webroot inventory and finalize
    App-DNS/SMTP contracts without uploading anything prematurely.
-4. **Calendar architecture:** after step 2, design CAL-1 data, API, RBAC and
+4. **Calendar architecture:** after step 1, design CAL-1 data, API, RBAC and
    migration boundaries against the prepared quality plan.
 5. **Production readiness:** confirm the legal operator, Impressum, mailbox
    absence cover, named onboarding dates and Thomas Ross's Go/No-Go before
@@ -539,7 +540,7 @@ phase model.
 
 ## Quality Gates
 
-- **Tests:** 248 local Webapp tests pass with 14 expected opt-in Staging skips;
+- **Tests:** 315 local Webapp tests pass with 14 expected opt-in Staging skips;
   14/14 isolated PostgreSQL paths passed. Re-run local suite before packaging
   and Staging suite after runtime/reverse-proxy changes.
 - **Website build:** Astro must report zero diagnostics and build all expected
@@ -649,8 +650,9 @@ remaining Content owner decisions continue in parallel.
 | SB-40 | Done and review deployed | Reconcile the first Priority-A content return and implement only approved audience wording | edited stakeholder DOCX; no invented approval for partial or empty answers | CP-01/03/05/06 accepted; CP-02/04/07 partial and CP-08 open; Mindforge now distinguishes consultation conversations for private persons from Businesscoaching for companies across the relevant public routes; 43-file Astro check, 30-page build, 1,137-reference verification and true 390-pixel overflow checks across four affected routes are green; commit `5d126cb` pushed; workflow `34582211406` and public HTTP/content/noindex smoke green |
 | SB-41 | Done decision-only | Process Janay's complete Coach-calendar decision return | authorized `Quellen/11.09.2026` calendar return; no raw private file copied | CAL-D01 through CAL-D08 and the Pilot flow are accepted; public reading, authenticated company reservations, per-offer threshold/capacity, deadlines, minimal fields, governed topics, Janay task plus E-Mail, publication checks and provider-neutral calendar delivery are documented; ADR 0007 remains proposed until Manuel approves it |
 | SB-42 | Done planning-only | Convert the supplied E-Mail templates into a safe automation inventory | authorized `Quellen/11.09.2026` mail-template draft; no automatic send or public claim | twelve workflow ideas are classified by event and gate; response-time, guarantee, refund, automatic reschedule, discount, newsletter and legal-acceptance claims remain blocked; transactional, marketing and legally relevant messages are explicitly separated |
+| SB-43 | Done locally | Prepare a provider-neutral backup success/incident notification contract | accepted notification requirement; live channel remains behind EXT-01; no network, recipient, timer or VPS activation | bounded JSON renderer accepts only defined event/code combinations and emits fixed German action text plus stable UTC-day deduplication; 21 focused operations tests, 315 full local passes with 14 expected Staging skips, compileall and dependency checks are green; commit `58299ae`; no message was sent |
 
-The technical-readiness baseline remains complete: 305 Webapp tests pass with
+The technical-readiness baseline remains complete: 315 Webapp tests pass with
 14 expected Staging skips, the release ZIP includes the restore tool and no
 `.env`/`.tmp`, and the current Website passes a 43-file Astro check, 30-page
 build and 1,137-reference verification. SB-25 is waiting on a corrected IONOS
@@ -663,9 +665,10 @@ through CAL-D08. Required input is Manuel's explicit accept/amend/reject
 decision. Deliverables are the final ADR status and a bounded CAL-1 technical
 design handoff. Definition of Done: the architecture boundary is explicit and
 the next design slice may start without authorizing migration, accounts,
-messages, real data or production. While that decision is pending, the
-provider-neutral backup-notification contract remains the first independent
-technical slice.
+messages, real data or production. While that decision is pending, close or
+explicitly defer CP-02/04/07/08 and process the EDV response from 14.09. The
+provider-neutral backup-notification contract is complete locally; only its
+live adapter, recipient routing and timer activation remain gated.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -676,9 +679,9 @@ progress in parallel but do not silently expand the execution backlog.
 | --- | --- | --- | --- | --- | --- |
 | 1 | Ready for Manuel decision | High | Accept, amend or reject ADR 0007 after the complete CAL-D01 through CAL-D08 return | Janay accepted all eight rules and Pilot flow on 11.09. | explicit ADR status; no migration or activation inferred |
 | 2 | Done decision-only | High | Close the Pilot account and operations owner decisions | Manuel's decisions; no live activation | owner matrix records Thomas Ross as technical break-glass, Janay as mailbox owner without substitute, backup schedule/retention, notification requirement and 17.09./24.09. acceptance window |
-| 3 | Ready internal | High | Prepare the provider-neutral backup success/incident notifier | accepted schedule and recipient; live channel waits on EXT-01 | unit tests for success, backup failure, stale backup, deduplication and secret-free fail-closed configuration |
-| 4 | Partially decided | High | Close the residual CP-02/04/07/08 Core Page content decisions | first stakeholder return processed; no invented claims or new guide pages | cadence, commercial owner/date, concrete QM/legal reviewer/date and remaining profile evidence are accepted, assigned or explicitly deferred |
-| 5 | Waiting external | High | Resolve IONOS Webroot plus App-DNS/SMTP contracts | EDV response expected from 2026-09-14; no upload before read-only inventory | verified SFTP root/inventory, DNS/TLS result and documented SMTP/sender contract |
+| 3 | Done locally | High | Prepare the provider-neutral backup success/incident notifier | accepted schedule and recipient; live channel waits on EXT-01 | 21 focused tests; fixed event/code contract, stable deduplication and no network/process dependency; no delivery or timer activation |
+| 4 | Ready content decision | High | Close the residual CP-02/04/07/08 Core Page content decisions | first stakeholder return processed; no invented claims or new guide pages | cadence, commercial owner/date, concrete QM/legal reviewer/date and remaining profile evidence are accepted, assigned or explicitly deferred |
+| 5 | Waiting external | High | Resolve IONOS Webroot plus App-DNS/SMTP contracts and select the notifier adapter | EDV response expected from 2026-09-14; no upload or live mail before evidence | verified SFTP root/inventory, DNS/TLS result, documented SMTP/sender contract and synthetic success/incident receipt |
 | 6 | Pending | Medium | Design CAL-1 schema, API and deny-by-default RBAC | step 1 and accepted ADR 0007; existing PostgreSQL/FastAPI patterns | architecture/data/API review against `calendar-quality-plan-v0.1.md` |
 | 7 | Pending | Medium-low | Prepare migration and implement Coach-owned availability plus internal publication | step 6; separate migration approval and named synthetic accounts | rollback smoke plus unit/API/Staging/browser tests for own-scope, publication, audit, overlap and error recovery |
 | 8 | Pending | Low | Prepare the controlled Pilot release candidate | EDV, Legal, tested mailbox route, onboarding, active backup/alerts and Thomas Ross Go/No-Go | complete evidence index, rollback rehearsal, named acceptance and no open high/critical finding |
@@ -764,12 +767,12 @@ separate gated actions.
 
 ## Restart Note
 
-Prepared on: 2026-09-02
+Prepared on: 2026-09-11
 
-- Canonical `main`: `e5eb186`; accepted cutline, ADR 0006, same-origin portal,
+- Current local checkpoint: `58299ae`; accepted cutline, ADR 0006, same-origin portal,
   browser harness, clean release evidence, SB-23 restore evidence and the
   deployed SB-24 Website review are versioned.
-- Evidence: 305 local tests pass with 14 expected opt-in Staging skips; all 14
+- Evidence: 315 local tests pass with 14 expected opt-in Staging skips; all 14
   PostgreSQL Staging paths and BA-01 through BA-17 passed. Astro reports 38
   files without diagnostics and 28 built pages. The local browser runner and
   temporary VPS export are stopped/removed; the exact encrypted `D:` copy is

@@ -6,6 +6,24 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-11 | mixed-script-test-discovery | Betriebswerkzeuge nach Interpreter prüfen
+
+- Triggering project situation: Ein neuer Python-Renderer kam in einen bisher
+  ausschließlich mit `bash -n` geprüften Skriptordner; zugleich decodierte der
+  Windows-Test seine deutsche Kindprozessausgabe mit einer abweichenden
+  System-Codepage.
+- Observed friction: Der erste Testlauf meldete vier Fehler, obwohl der
+  Meldungsvertrag selbst korrekt war. Die pauschale Dateiauswahl und implizite
+  Encodingannahme hatten den Fehler erzeugt.
+- Reusable improvement candidate: `write-tests`, `create-deployment-plan` und
+  `prepare-release` sollten gemischte Operationsordner anhand Shebang oder
+  explizitem Manifest dem richtigen Syntaxprüfer zuordnen und bei
+  plattformübergreifenden Kindprozessen UTF-8 ausdrücklich setzen.
+- Project response: Bash-Syntaxprüfung filtert nun Bash-Shebangs; Python läuft
+  mit `PYTHONUTF8=1`. Der Gesamtlauf ist grün.
+- Reuse potential: high for Windows/Linux deployment packages.
+- Status: project pattern applied; canonical skill proposal captured only.
+
 ### 2026-09-11 | template-intent-gating | Vorlagentexte vor Automation nach Wirkung trennen
 
 - Triggering project situation: Ein fachlicher Word-Entwurf enthielt zugleich

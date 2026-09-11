@@ -2,6 +2,27 @@
 
 Newest entries first.
 
+## 2026-09-11 | operations/testing | Lokalen Backup-Meldungsvertrag abgeschlossen
+
+- Ein anbieterneutraler Renderer erzeugt ausschließlich begrenzte JSON-
+  Meldungen für den erfolgreichen Tagescheck oder definierte Backup-/Monitor-
+  Störungen. Freitext, Pfade, Empfänger, Secrets, Netzwerk und Unterprozesse
+  liegen außerhalb seiner Schnittstelle.
+- Widersprüchliche Status-, Ereignis- und Fehlercode-Kombinationen werden
+  abgelehnt; feste UTC-Tages-Schlüssel erlauben spätere Deduplizierung.
+- Der erste fokussierte Lauf deckte zwei reine Windows-Harnessfehler auf:
+  Kindprozess-Encoding und pauschale Bash-Prüfung eines gemischten
+  Skriptordners. Nach interpreterbezogener Auswahl und erzwungenem UTF-8 sind
+  21/21 Operations-Tests sowie 315 lokale Tests mit 14 erwarteten Staging-
+  Skips, `compileall` und `pip check` grün.
+- Commit `58299ae` enthält Code, Tests, LF-Regel und Runbook und ist auf
+  `origin/main`. Es wurde keine
+  Nachricht versendet, kein Timer aktiviert und keine VPS-Änderung ausgeführt;
+  die echte Zustellung bleibt hinter EXT-01.
+- Nächster empfohlener Block bleibt Manuels Entscheidung zu ADR 0007. Parallel
+  können CP-02/04/07/08 geschlossen und ab 14.09. der EDV-Rücklauf geprüft
+  werden.
+
 ## 2026-09-11 | stakeholder/calendar/mail | Janays zweiter Ruecklauf verarbeitet
 
 - Aus dem ausdruecklich freigegebenen Ordner `Quellen/11.09.2026` wurden nur

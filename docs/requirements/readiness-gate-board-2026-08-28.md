@@ -20,8 +20,9 @@ Gates abhaengig. Es ist keine Produktionsfreigabe.
 | DONE | READY / NEXT | WAITING EXTERNAL | BLOCKED UNTIL GATES CLOSE |
 | --- | --- | --- | --- |
 | Auth, MFA, Rollen und Firmen-/Kontakt-Slice lokal und auf Staging synthetisch bewiesen | ADR 0007 mit vollständiger Fachbasis annehmen, aendern oder ablehnen | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Echtdaten und erster realer Firmenrecord |
-| CAL-D01 bis CAL-D08 und Pilotablauf von Janay akzeptiert | Provider-neutralen Backup-Bericht samt Testvertrag vorbereiten | EXT-03: Onboarding-/Go-No-Go-Terminbestaetigung | Produktive Einladungs-E-Mails und reale Konten |
+| CAL-D01 bis CAL-D08 und Pilotablauf von Janay akzeptiert | Nach ADR-Freigabe CAL-1-Architektur entwerfen | EXT-03: Onboarding-/Go-No-Go-Terminbestaetigung | Produktive Einladungs-E-Mails und reale Konten |
 | Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go fuer 17.09., ersatzweise 24.09. bestaetigen | Oeffentliche Bewerbung und Produktions-Go-Live |
+| Lokaler Backup-Meldungsvertrag mit 21 fokussierten Tests abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-01: SMTP-/Sendervertrag und Benachrichtigungskanal | Produktive Backup-Timer ohne getestete Zustellung |
 | Pilot-Owner entschieden: Manuel Admin, Thomas technischer Break-glass, Janay Mailbox ohne Vertretung | Ab 14.09. EDV-Antwort pruefen; ab 15.09. nachfassen | EXT-06: spaetere Mailboxvertretung bleibt unbesetzt; kein Service-Level versprechen | Automatisierter Website-Replace oder Remote-Loeschung |
 | Sauberes Website-Artefakt `5d126cbaec0e` mit 1.137 geprueften internen Referenzen | Nach EDV-Korrektur: SFTP-Webroot nur lesend inventarisieren | Korrigiertes IONOS-SFTP-Startverzeichnis | Unternehmens-/personenbezogene Daten ohne aktiven Backup-/Alarmbetrieb |
 
@@ -32,11 +33,11 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 
 | Gate | Status | Owner | Ziel / Frist | Evidence / Abnahme | Wirkung bei offenem Gate |
 | --- | --- | --- | --- | --- | --- |
-| G-CODE: gepruefter Source-Checkpoint | DONE | Manuel | aktualisiert 11.09. | Content-/Operations-/Website-Commit `5d126cb` gepusht | Kein Release aus ungeprueftem Source |
-| G-TEST: lokale und Staging-Qualitaet | DONE fuer aktuellen Slice | Manuel | aktualisiert 11.09. | Website: 43 Astro-Dateien, 30 Seiten, 1.137 interne Referenzen; Webapp unveraendert: 305 Passes/14 erwartete Staging-Skips, vorher 14/14 Staging und BA-01..17 | Bei Codeaenderung erneut pruefen |
+| G-CODE: gepruefter Source-Checkpoint | DONE / PUSHED | Manuel | aktualisiert 11.09. | Backup-Notifier-Commit `58299ae` und Website-Checkpoint `5d126cb` gepusht | Kein Release aus ungeprueftem Source |
+| G-TEST: lokale und Staging-Qualitaet | DONE fuer aktuellen Slice | Manuel | aktualisiert 11.09. | Website: 43 Astro-Dateien, 30 Seiten, 1.137 interne Referenzen; Webapp: 315 Passes/14 erwartete Staging-Skips, 21 fokussierte Operations-Tests, vorher 14/14 Staging und BA-01..17 | Bei Codeaenderung erneut pruefen |
 | G-WEBSITE: statisches Produktionsartefakt | DONE LOKAL / REVIEW GREEN | Manuel | aktualisiert 11.09. | Clean `5d126cbaec0e`; 51 Eintraege; SHA-256 `8056d431...5269d4`; `index.html`, `404.html`, `.htaccess`; Workflow `34582211406`; Deploymentflag false | Noch kein SFTP-Upload |
 | G-WEBAPP: reproduzierbares Runtime-Paket | DONE LOKAL | Manuel | vor Backenddeployment neu bauen | Clean Paket mit Restore-Tool, isolierter Installation und Fail-closed Runtime | Noch keine VPS-Aktivierung |
-| G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL / OPS OPEN | Manuel / Wuerzburg | quartalsweise nach Echtdatenstart | Guarded Pull und digest-gepinnter netzloser Restore mit 24 Tabellen; Zeitplan und 30/12-Retention entschieden | Timer bleiben aus, bis automatische Erfolg-/Stoerungsmeldung getestet und aktiviert ist |
+| G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL / DELIVERY OPEN | Manuel / Wuerzburg | quartalsweise nach Echtdatenstart | Guarded Pull und digest-gepinnter netzloser Restore mit 24 Tabellen; Zeitplan/Retention entschieden; lokaler Meldungsvertrag mit 21 Tests gruen | Timer bleiben aus, bis der EDV-abhaengige Adapter Erfolg und synthetische Stoerung zugestellt hat |
 | G-CALENDAR: CAL-0/CAL-0.1 | DONE REVIEW | Janay / Manuel | akzeptiert 11.09. | Review, Browser-/Netzwerk-Smokes und Janays ausdrueckliche Zustimmung | Produktive CAL-1-Umsetzung bleibt hinter Fachentscheidungen |
 | G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | BUSINESS DONE / ADR WAITING | Janay / Manuel | ADR-Entscheidung als naechstes Gate | Janay hat alle acht Regeln und den Pilotablauf am 11.09. akzeptiert | Keine Kalender-Migration oder echten Termine bis ADR-Freigabe |
 | G-EDV: App-DNS/TLS/SMTP | WAITING UNTIL 14.09. | EDV | ab 14.09. pruefen, ab 15.09. nachfassen | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
