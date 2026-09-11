@@ -646,17 +646,18 @@ gates are waiting.
 | SB-35 | Done, review deployed and accepted | Apply Janay's first CAL-0.1 feedback while preserving the public/private boundary | authorized 10.09 feedback; only existing approved Coach profiles may be linked; no personal Coach calendar in the static Website | Coach links, planned-group-offer scope note and overlapping weekend examples implemented; requirements assign Coach self-service to authenticated CAL-1 and Janay's approval to a role-based permission; 42-file check and 30-page build plus 1440/960/390 CDP checks green; workflow `34513388689` and public noindex/profile/contact/bundle/no-write smokes green; Janay accepted the result on 2026-09-11 |
 | SB-36 | Done and review deployed | Keep long Coach CTA headings and punctuation inside their layout column | shared Coach CTA; no copy or navigation change | shared columns can shrink; long German compounds hyphenate only when required; 42-file/30-page Astro build and 18 browser geometry checks across all six profiles at 1440, 960 and 390 pixels are green with zero overlap or horizontal overflow; workflow `34515246498` and public page/CSS/noindex smoke green |
 | SB-37 | Done locally; stakeholder answers open | Batch the remaining calendar decisions and define the future quality gates | CAL-0.1 accepted; no productive implementation before CAL-D01 through CAL-D08 and ADR 0007 | non-technical eight-decision handout plus content-verified Word export prepared; quality plan covers RBAC, concurrency, privacy, accessibility, `.ics` compatibility, operations and release evidence without fixing unapproved business values |
-| SB-38 | Doing | Add fail-closed internal-reference verification and correct 404 metadata before refreshing the clean Website artifact | current static source; no IONOS connection or deployment | initial scan found the invalid `/404/` canonical; 404 now emits no canonical/OG URL, and the durable release gate verifies 1,137 internal references across 30 HTML files; clean post-commit artifact and review smoke still pending |
+| SB-38 | Done locally; review deployment pending | Add fail-closed internal-reference verification and correct 404 metadata before refreshing the clean Website artifact | current static source; no IONOS connection or deployment | initial scan found the invalid `/404/` canonical; 404 now emits no canonical/OG URL; durable release gate verifies 1,137 internal references across 30 HTML files; clean `db96b9573d2a` artifact has 51 entries, required root files, no sensitive entries and SHA-256 `d322276b...c0481c17`; deployment flag false |
 
 The technical-readiness baseline remains complete: 305 Webapp tests pass with
 14 expected Staging skips, the release ZIP includes the restore tool and no
-`.env`/`.tmp`, and the current Website passes a 42-file Astro check plus
-30-page build. SB-25 is waiting on a corrected IONOS SFTP start directory.
+`.env`/`.tmp`, and the current Website passes a 43-file Astro check, 30-page
+build and 1,137-reference verification. SB-25 is waiting on a corrected IONOS
+SFTP start directory.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: complete SB-38 with a clean post-commit artifact and
-review smoke, then collect CAL-D01 through CAL-D08 plus ADR 0007 through the
+Recommended next block: complete SB-38 with the crawler-blocked review smoke,
+then collect CAL-D01 through CAL-D08 plus ADR 0007 through the
 prepared handout. Required inputs are named
 business/privacy/operations owners; deliverables are recorded acceptance or a
 bounded follow-up plus dated answers or explicit deferrals. Definition of
@@ -672,7 +673,7 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Doing | High | Refresh the clean Website production artifact with a fail-closed internal-reference gate | SB-38; commit first; no SFTP connection or production deployment | 43-file/30-page build, 1,137-reference scan, archive/hash/manifest and review smoke |
+| 1 | Done locally; review deployment pending | High | Refresh the clean Website production artifact with a fail-closed internal-reference gate | SB-38; no SFTP connection or production deployment | 43-file/30-page build, 1,137-reference scan and clean archive/hash/manifest green; review smoke pending |
 | 2 | Done and accepted | High | Close CAL-0.1 visual and functional review | Janay; synthetic crawler-blocked review | Janay accepted the result as very good on 2026-09-11 |
 | 3 | Ready for grouped review | High | Decide CAL-D01 through CAL-D08 and accept, amend or reject ADR 0007 | Janay/Manuel plus later Legal/operations owners; SB-37 handout | every decision marked accepted, changed or deferred with owner/evidence reference |
 | 4 | Waiting external, parallel gate | High | Resolve IONOS Webroot plus App-DNS/SMTP contracts | EDV response expected from 2026-09-14; no upload before read-only inventory | verified SFTP root/inventory, DNS/TLS result and documented SMTP/sender contract |

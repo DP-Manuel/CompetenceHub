@@ -1,6 +1,6 @@
 # Go-Live Evidence Index
 
-Stand: 2026-08-25
+Stand: 2026-09-11
 
 Dieser Index enthaelt nur freigabefaehige Metadaten und Verweise. Secrets,
 Private Keys, Recovery Keys und produktive personenbezogene Daten gehoeren
@@ -25,6 +25,9 @@ nicht hierher.
 | SB-23 | 2026-08-25 | Manuel | Wuerzburg / isolated Docker restore | Restore aus exakter externer Kopie | PASS REHEARSAL | `docs/operations/sb23-wuerzburg-execution.md`; Restore-Ausgabe | synthetisch | 24 Tabellen; Digest `sha256:bb3e1a57...dd825`; 12/12; null Container/Temp/Klartext; quartalsweise nach Echtdatenstart |
 | SB-23-CLEAN | 2026-08-25 | Manuel | VPS export / BitLocker `D:` | temporaeren Remote-Export gezielt entfernt und externe Kopie erneut verifiziert | PASS | Operator-/Manifest-Ausgabe; `PROJECT_LOG.md` | synthetisch verschluesselt | Remote-Datumspfad abwesend; drei Checksummen auf `D:` OK; Backup/Monitor success; vier Dienste active |
 | READINESS-20260825 | 2026-08-25 | Codex / Manuel | clean local source `70e92ba` | vollstaendiger Website-/Webapp-Release-Nachweis nach SB-23 | PASS LOCAL | Release-Builder, Astro-Ausgabe; `PROJECT_LOG.md` | keine/synthetisch | 305 pass, 14 skip; 38 Astro-Dateien, 28 Seiten; ZIP 33 Eintraege, Restore-Tool enthalten, keine `.env`/`.tmp`; SHA-256 `1db54187...be766` |
+| CAL-0.1-ACCEPT | 2026-09-11 | Janay / Manuel | crawler-blocked Website review | Coachlinks, Angebotsgrenze und parallele Wochenendtermine | PASS ACCEPTED | `docs/requirements/janay-calendar-feedback-2026-09-10.md`; `PROJECT_LOG.md` | ausschliesslich synthetisch | Janay bewertet die Fassung als sehr gut; keine produktive Kalenderfreigabe |
+| WEBSITE-LINK-GATE-20260911 | 2026-09-11 | Codex / Manuel | local production build | interne Seiten-, Asset- und Sprungziele | PASS LOCAL | `apps/website/scripts/verify-dist-links.mjs`; `PROJECT_LOG.md` | keine | erster Lauf stoppte an `/404/`; korrigierter Lauf prueft 1.137 Referenzen in 30 HTML-Dateien ohne Fehler |
+| WEBSITE-20260911 | 2026-09-11 | Codex / Manuel | clean local source `db96b9573d2a` | aktuelles statisches IONOS-Produktionsartefakt | PASS LOCAL / NOT DEPLOYED | lokales Release-Artefakt und Manifest; `PROJECT_LOG.md` | keine | 43 Astro-Dateien, 30 Seiten, 51 ZIP-Eintraege, Pflichtdateien vorhanden, keine `.env`/`.tmp`; SHA-256 `d322276b...c0481c17`; Deploymentflag false |
 | EXT-01 | offen | EDV | production infrastructure | DNS/TLS/SMTP-Vertrag | WAITING | strukturierter EDV-Input | keine | keine Live-Mail/Produktivaktivierung |
 | EXT-03 | offen | Manuel / Janay / Thomas | controlled pilot | Named-user-Abnahme und Go/No-Go | WAITING | Onboarding-Protokoll | freigegebener Pilotmodus | Termin offen |
 | EXT-04 | offen | Lars / Legal | public website | Betreiber, Rechtstexte und Freigabe | WAITING | Legal-Freigabe | keine | kein beworbener Livegang |

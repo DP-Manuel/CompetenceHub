@@ -111,6 +111,11 @@ Last updated: 2026-09-10
   handout with a content-verified Word export. A separate quality plan already
   defines RBAC, concurrency, privacy, accessibility, calendar compatibility
   and operations evidence without deciding open business values.
+- The current clean Website production artifact is rebuilt from source
+  `db96b9573d2a`. It contains 51 entries, all required root files, no
+  `.env`/`.tmp`, a matching SHA-256 and `deployment_authorized: false`. The new
+  release gate verifies 1,137 internal references across 30 HTML files; the
+  404 page remains `noindex` and no longer emits a misleading canonical URL.
 - Release-candidate source commit `5db1e03` is pushed to `origin/main` and
   contains the reviewed authentication
   foundation and protected company/contact API. PostgreSQL migrations `0001`
@@ -381,8 +386,8 @@ Last updated: 2026-09-10
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: complete the clean Website artifact refresh
-  with the new internal-reference gate, then collect the grouped CAL-D01
+- Recommended next work block: complete the crawler-blocked review smoke for
+  the Website release hardening, then collect the grouped CAL-D01
   through CAL-D08 answers. The handout and future test gates are prepared; no
   calendar migration or real-data path begins before those decisions. In
   parallel, review the EDV response from 2026-09-14 or chase it from

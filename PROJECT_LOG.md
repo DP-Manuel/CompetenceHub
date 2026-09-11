@@ -16,6 +16,13 @@ Newest entries first.
 - Der aktuelle lokale Nachweis ist grün: Astro prüft 43 Dateien ohne Befund,
   baut 30 Seiten und verifiziert 1.137 interne Referenzen. Clean-Commit,
   erneutes Produktionsartefakt und Review-Smoke folgen im selben Block.
+- Der saubere Commit `db96b95` erzeugt anschließend ein lokales Paket mit 51
+  Einträgen, allen Pflichtdateien, keinen `.env`-/`.tmp`-Einträgen und SHA-256
+  `d322276b...c0481c17`. Das Manifest bleibt korrekt auf
+  `deployment_authorized: false`; IONOS wurde nicht kontaktiert.
+- Das visuelle Gate-Board und der Go-Live-Evidence-Index sind auf den Stand vom
+  11.09. gebracht. Sie trennen Ready-Arbeit, EDV-/Legal-Wartepositionen und
+  produktiv gesperrte Schritte wieder konsistent.
 
 ## 2026-09-10 | frontend/calendar/steering | CTA-Regel korrigiert und Entscheidungen gebündelt
 
