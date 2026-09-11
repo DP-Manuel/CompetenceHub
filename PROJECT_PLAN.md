@@ -29,8 +29,9 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   approval, named-user onboarding and production Go/No-Go remain open. The
   software and external-restore rehearsals are proven; operational activation
   and organizational approval are the critical path.
-- Next decision needed: accept, amend or reject ADR 0007 now that Janay has
-  accepted CAL-D01 through CAL-D08 and the Pilot flow. In
+- Next decision needed: accept, amend or reject CAL-T01 through CAL-T06 before
+  migration `0005` is authored. ADR 0007 and CAL-D01 through CAL-D08 are
+  accepted. In
   parallel, review or chase the EDV response from 2026-09-14 and close app
   hostname, SMTP/sender, production timer/alert ownership, Legal, onboarding
   and Go/No-Go gates. Productive data remains blocked until all production
@@ -162,15 +163,16 @@ for Git, release, backup and restore responsibilities.
 
 ### Next Blocks
 
-1. **Calendar architecture gate:** accept, amend or reject ADR 0007. Janay has
-   accepted CAL-D01 through CAL-D08; no migration follows from that acceptance.
+1. **Calendar migration-decision gate:** accept, amend or reject CAL-T01
+   through CAL-T06. ADR 0007 is accepted and the CAL-1 design is complete;
+   migration `0005` remains separate.
 2. **Content decision gate:** close, assign or explicitly defer the residual
    CP-02/04/07/08 items without inventing claims or producing guide pages.
 3. **EDV gate:** review the expected response from 2026-09-14 or chase it from
    2026-09-15, then repeat the read-only SFTP Webroot inventory and finalize
    App-DNS/SMTP contracts without uploading anything prematurely.
-4. **Calendar architecture:** after step 1, design CAL-1 data, API, RBAC and
-   migration boundaries against the prepared quality plan.
+4. **Calendar migration:** after step 1, author migration `0005` and its
+   rollback smoke locally, then request a separate Staging application.
 5. **Production readiness:** confirm the legal operator, Impressum, mailbox
    absence cover, named onboarding dates and Thomas Ross's Go/No-Go before
    activating Website or Webapp production paths.
@@ -603,7 +605,7 @@ production boundary. API, database, browser acceptance and external-copy
 restore evidence remain complete. SB-32 through SB-40 are accepted, complete
 or waiting on a named external gate; no productive backend slice is currently
 doing. Productive calendar delivery, availability and seat reservations remain
-separately gated behind requirements and proposed ADR 0007. EXT-01 and the
+separately gated behind accepted ADR 0007 and the CAL-T01..T06 decision gate. EXT-01 and the
 remaining Content owner decisions continue in parallel.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
@@ -641,16 +643,17 @@ remaining Content owner decisions continue in parallel.
 | SB-31 | Done, review deployed and accepted | Make approved customer feedback unmistakable and scalable on `/unternehmen` | EV-CC-001 name/quote approval plus Manuel's explicit request for visible customer logos; no additional claims | compact customer-feedback rail uses a central publication-gated data source, supplied Concept Clean logo, collaboration topic, short exact quotation and practice-path link; controls/automatic advance activate only with multiple approved entries; 40-file Astro check and 29-page build green; desktop and exact 390-pixel browser QA show one card, zero unnecessary controls and no horizontal overflow; review workflow `33852789095` and public page/logo/content smoke green; Janay accepted the consolidated Website presentation on 2026-09-10 |
 | SB-32 | Done, review deployed and accepted | Correct the customer-feedback quotation-mark typography | Manuel's visual acceptance feedback; quotation text and evidence stay unchanged | opening and closing marks now sit inline beside the actual quote text with modest spacing; semantic quotation remains intact; desktop browser measurement shows 9-pixel gaps without overlap; review workflow `34479551380` green; Janay confirmed the result on 2026-09-10 |
 | SB-33 | Done, review deployed and accepted | Reconcile the authorized update packets and implement the 04.09 compact Use-Case feedback | authorized 13.08, 14.08, 24.08, 27.08 and 04.09 packets; no invented claims or calendar implementation | feedback ledger records implemented/open/gated items; Use Cases sit side by side, open independently and remain collapsed initially; 1440/960/390-pixel browser QA shows no horizontal overflow; direct hash links open the matching story; public review returns HTTP 200 with `noindex`; Janay confirmed the result on 2026-09-10 |
-| SB-34 | Done, review deployed and accepted | Build a no-data visual prototype for Janay's three-month Coach calendar and place-vormerkung concept | 27.08 workshop note and Janay's 10.09 request; no real availability, persistence, notification or booking; ADR 0007 remains proposed | noindex prototype shows three bounded months, text-plus-color topic filters, example appointments, status-aware details and local seat simulation; 42-file Astro check and 30-page build green; browser checks at 1440/960/390 pixels prove month bounds, disabled reservation during internal review, 44-pixel mobile event targets and no horizontal overflow; review workflow `34482731102` and public route/bundle smoke green; Janay accepted the concept on 2026-09-10 |
+| SB-34 | Done, review deployed and accepted | Build a no-data visual prototype for Janay's three-month Coach calendar and place-vormerkung concept | 27.08 workshop note and Janay's 10.09 request; no real availability, persistence, notification or booking | noindex prototype shows three bounded months, text-plus-color topic filters, example appointments, status-aware details and local seat simulation; 42-file Astro check and 30-page build green; browser checks at 1440/960/390 pixels prove month bounds, disabled reservation during internal review, 44-pixel mobile event targets and no horizontal overflow; review workflow `34482731102` and public route/bundle smoke green; Janay accepted the concept on 2026-09-10 |
 | SB-35 | Done, review deployed and accepted | Apply Janay's first CAL-0.1 feedback while preserving the public/private boundary | authorized 10.09 feedback; only existing approved Coach profiles may be linked; no personal Coach calendar in the static Website | Coach links, planned-group-offer scope note and overlapping weekend examples implemented; requirements assign Coach self-service to authenticated CAL-1 and Janay's approval to a role-based permission; 42-file check and 30-page build plus 1440/960/390 CDP checks green; workflow `34513388689` and public noindex/profile/contact/bundle/no-write smokes green; Janay accepted the result on 2026-09-11 |
 | SB-36 | Done and review deployed | Keep long Coach CTA headings and punctuation inside their layout column | shared Coach CTA; no copy or navigation change | shared columns can shrink; long German compounds hyphenate only when required; 42-file/30-page Astro build and 18 browser geometry checks across all six profiles at 1440, 960 and 390 pixels are green with zero overlap or horizontal overflow; workflow `34515246498` and public page/CSS/noindex smoke green |
-| SB-37 | Done stakeholder handoff | Batch the remaining calendar decisions and define the future quality gates | CAL-0.1 accepted; no productive implementation before CAL-D01 through CAL-D08 and ADR 0007 | non-technical eight-decision handout delivered; Janay accepted every rule and the Pilot flow on 11.09.; quality plan reconciled in SB-41; ADR 0007 remains Manuel's decision |
+| SB-37 | Done stakeholder handoff | Batch the remaining calendar decisions and define the future quality gates | CAL-0.1 accepted; no productive implementation before CAL-D01 through CAL-D08 and ADR 0007 | non-technical eight-decision handout delivered; Janay accepted every rule and the Pilot flow on 11.09.; quality plan reconciled in SB-41; Manuel accepted ADR 0007 on 11.09. |
 | SB-38 | Done and review deployed | Add fail-closed internal-reference verification and correct 404 metadata before refreshing the clean Website artifact | current static source; no IONOS connection or production deployment | initial scan found the invalid `/404/` canonical; 404 now emits no canonical/OG URL; durable release gate verifies 1,137 internal references across 30 HTML files; clean `db96b9573d2a` artifact has 51 entries, required root files, no sensitive entries and SHA-256 `d322276b...c0481c17`; workflow `34577486065` and public 404/noindex/home/calendar smoke green; deployment flag false |
 | SB-39 | Done decision-only | Close the currently decidable Pilot account and operations ownership | Manuel's decisions; no account creation, timer activation, secret handling or real data | Manuel remains operational Admin; Thomas Ross is the technical break-glass successor; Janay owns the mailbox without a current substitute; daily backup and monitor schedules plus 30/12 retention are accepted; concise success/incident notification is required but its delivery channel remains behind EXT-01; preferred acceptance date is 17.09. with 24.09. fallback |
 | SB-40 | Done and review deployed | Reconcile the first Priority-A content return and implement only approved audience wording | edited stakeholder DOCX; no invented approval for partial or empty answers | CP-01/03/05/06 accepted; CP-02/04/07 partial and CP-08 open; Mindforge now distinguishes consultation conversations for private persons from Businesscoaching for companies across the relevant public routes; 43-file Astro check, 30-page build, 1,137-reference verification and true 390-pixel overflow checks across four affected routes are green; commit `5d126cb` pushed; workflow `34582211406` and public HTTP/content/noindex smoke green |
-| SB-41 | Done decision-only | Process Janay's complete Coach-calendar decision return | authorized `Quellen/11.09.2026` calendar return; no raw private file copied | CAL-D01 through CAL-D08 and the Pilot flow are accepted; public reading, authenticated company reservations, per-offer threshold/capacity, deadlines, minimal fields, governed topics, Janay task plus E-Mail, publication checks and provider-neutral calendar delivery are documented; ADR 0007 remains proposed until Manuel approves it |
+| SB-41 | Done decision-only | Process Janay's complete Coach-calendar decision return | authorized `Quellen/11.09.2026` calendar return; no raw private file copied | CAL-D01 through CAL-D08 and the Pilot flow are accepted; public reading, authenticated company reservations, per-offer threshold/capacity, deadlines, minimal fields, governed topics, Janay task plus E-Mail, publication checks and provider-neutral calendar delivery are documented; ADR 0007 accepted 11.09. |
 | SB-42 | Done planning-only | Convert the supplied E-Mail templates into a safe automation inventory | authorized `Quellen/11.09.2026` mail-template draft; no automatic send or public claim | twelve workflow ideas are classified by event and gate; response-time, guarantee, refund, automatic reschedule, discount, newsletter and legal-acceptance claims remain blocked; transactional, marketing and legally relevant messages are explicitly separated |
 | SB-43 | Done locally | Prepare a provider-neutral backup success/incident notification contract | accepted notification requirement; live channel remains behind EXT-01; no network, recipient, timer or VPS activation | bounded JSON renderer accepts only defined event/code combinations and emits fixed German action text plus stable UTC-day deduplication; 21 focused operations tests, 315 full local passes with 14 expected Staging skips, compileall and dependency checks are green; commit `58299ae`; no message was sent |
+| SB-44 | Done design-only | Accept ADR 0007 and complete CAL-1 architecture, data, API and RBAC boundaries | Manuel's explicit ADR approval; no migration or implementation | revision-safe publication, separate public/private APIs, additive `calendar_reviewer`, optimistic concurrency, public projection and verification matrix documented; CAL-T01..T06 collect remaining migration decisions; no SQL, account, data, message or deployment |
 
 The technical-readiness baseline remains complete: 315 Webapp tests pass with
 14 expected Staging skips, the release ZIP includes the restore tool and no
@@ -660,13 +663,12 @@ SFTP start directory.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: decide ADR 0007 now that Janay has accepted CAL-D01
-through CAL-D08. Required input is Manuel's explicit accept/amend/reject
-decision. Deliverables are the final ADR status and a bounded CAL-1 technical
-design handoff. Definition of Done: the architecture boundary is explicit and
-the next design slice may start without authorizing migration, accounts,
-messages, real data or production. While that decision is pending, close or
-explicitly defer CP-02/04/07/08 and process the EDV response from 14.09. The
+Recommended next block: decide CAL-T01 through CAL-T06 now that ADR 0007 and
+the CAL-1 technical design are complete. Required input is Manuel's explicit
+accept/amend/reject decision. Deliverable after approval is migration `0005`
+plus a rollback-only smoke, still without Staging application. While that
+decision is pending, close or explicitly defer CP-02/04/07/08 and process the
+EDV response from 14.09. The
 provider-neutral backup-notification contract is complete locally; only its
 live adapter, recipient routing and timer activation remain gated.
 
@@ -677,14 +679,14 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Ready for Manuel decision | High | Accept, amend or reject ADR 0007 after the complete CAL-D01 through CAL-D08 return | Janay accepted all eight rules and Pilot flow on 11.09. | explicit ADR status; no migration or activation inferred |
-| 2 | Done decision-only | High | Close the Pilot account and operations owner decisions | Manuel's decisions; no live activation | owner matrix records Thomas Ross as technical break-glass, Janay as mailbox owner without substitute, backup schedule/retention, notification requirement and 17.09./24.09. acceptance window |
-| 3 | Done locally | High | Prepare the provider-neutral backup success/incident notifier | accepted schedule and recipient; live channel waits on EXT-01 | 21 focused tests; fixed event/code contract, stable deduplication and no network/process dependency; no delivery or timer activation |
-| 4 | Ready content decision | High | Close the residual CP-02/04/07/08 Core Page content decisions | first stakeholder return processed; no invented claims or new guide pages | cadence, commercial owner/date, concrete QM/legal reviewer/date and remaining profile evidence are accepted, assigned or explicitly deferred |
-| 5 | Waiting external | High | Resolve IONOS Webroot plus App-DNS/SMTP contracts and select the notifier adapter | EDV response expected from 2026-09-14; no upload or live mail before evidence | verified SFTP root/inventory, DNS/TLS result, documented SMTP/sender contract and synthetic success/incident receipt |
-| 6 | Pending | Medium | Design CAL-1 schema, API and deny-by-default RBAC | step 1 and accepted ADR 0007; existing PostgreSQL/FastAPI patterns | architecture/data/API review against `calendar-quality-plan-v0.1.md` |
-| 7 | Pending | Medium-low | Prepare migration and implement Coach-owned availability plus internal publication | step 6; separate migration approval and named synthetic accounts | rollback smoke plus unit/API/Staging/browser tests for own-scope, publication, audit, overlap and error recovery |
-| 8 | Pending | Low | Prepare the controlled Pilot release candidate | EDV, Legal, tested mailbox route, onboarding, active backup/alerts and Thomas Ross Go/No-Go | complete evidence index, rollback rehearsal, named acceptance and no open high/critical finding |
+| 1 | Ready for Manuel decision | High | Accept or amend CAL-T01 through CAL-T06 | ADR 0007 accepted; CAL-1 design complete | explicit decision on overlap, formats, bounds, withdrawal, retention boundary and reviewer role |
+| 2 | Ready content decision | High | Close residual CP-02/04/07/08 | no invented claims or new guide pages | cadence, owners/review dates and profile evidence accepted, assigned or deferred |
+| 3 | Waiting external | High | Resolve Webroot, App-DNS/SMTP and notifier adapter | EDV response expected from 14.09.; no upload/live mail | read-only inventory, DNS/TLS proof, SMTP contract and synthetic receipts |
+| 4 | Pending | High | Author migration `0005` and rollback smoke locally | step 1; no Staging application inferred | SQL review, transactional rollback, ownership/grant and constraint tests |
+| 5 | Pending approval | Medium-high | Apply migration `0005` on isolated Staging | separate Manuel approval, protected pre-backup and synthetic-only window | migration/smoke, zero residue, post-backup, localhost PostgreSQL and four service checks |
+| 6 | Pending | Medium | Implement CAL-1 domain, repository and public/protected APIs | steps 4-5; existing FastAPI/PostgreSQL patterns | unit/API/Staging tests for revisions, concurrency, RBAC, audit and public minimization |
+| 7 | Pending | Medium-low | Add Coach/reviewer Portal UI and browser acceptance | step 6; named synthetic roles | keyboard, focus, 390 px, 200% zoom, stale-edit recovery and role walkthrough |
+| 8 | Pending | Low | Prepare controlled Pilot release candidate | EDV, Legal, mailbox, onboarding, active backup/alerts and Go/No-Go | evidence index, rollback rehearsal, named acceptance and no high/critical finding |
 
 ### Cross-Cutting Gates
 

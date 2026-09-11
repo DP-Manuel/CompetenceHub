@@ -2,9 +2,9 @@
 
 Stand: 11.09.2026
 
-Status: Produktwunsch, visueller Prototyp und CAL-D01 bis CAL-D08 fachlich
-freigegeben. ADR 0007, Migration, Echtdaten und produktive Umsetzung bleiben
-separat freizugeben.
+Status: Produktwunsch, visueller Prototyp, CAL-D01 bis CAL-D08 und ADR 0007
+freigegeben. Migration, Echtdaten und produktive Umsetzung bleiben separat
+freizugeben.
 
 ## Quelle und Ziel
 
@@ -25,7 +25,7 @@ die für Produktentscheidung, Architektur und Test notwendigen Aussagen.
 | --- | --- | --- |
 | CAL-0 | Interaktive, crawler-gesperrte Website-Vorschau mit ausschließlich synthetischen Terminen | umgesetzt, geprüft, review-deployed und von Janay am 10.09.2026 akzeptiert |
 | CAL-0.1 | Coachprofil-Verlinkung, Individualtermin-Hinweis und überlappende Wochenendangebote in der Vorschau | umgesetzt, geprüft, review-deployed und von Janay am 11.09.2026 akzeptiert |
-| CAL-1 | Coach pflegt eigene Verfügbarkeit in einem rollierenden Drei-Monats-Fenster; intern wird geprüft und veröffentlicht | fachlich entschieden; benötigt ADR 0007, Coach-Konten, RBAC und Statusmodell |
+| CAL-1 | Coach pflegt eigene Verfügbarkeit in einem rollierenden Drei-Monats-Fenster; intern wird geprüft und veröffentlicht | fachlich und architektonisch freigegeben; technischer Entwurf liegt vor, Migration/Implementierung separat |
 | CAL-2 | Angebote sind öffentlich lesbar; angemeldete Firmenkontakte merken begrenzt Plätze vor | fachlich entschieden; benötigt Datenschutz, Status-/Fristmodell und Missbrauchsschutz |
 | CAL-3 | Angebotsspezifischer Schwellenwert löst Janays interne Prüfung aus; nur Berechtigte bestätigen | fachlich entschieden; benötigt Portalaufgabe, Mail-Gate und Vertragsprozess |
 | CAL-4 | Anbieterneutrale `.ics`-Einladung für einen intern bestätigten Termin | geplant; benötigt führenden Termindatensatz und Versandentscheidung |

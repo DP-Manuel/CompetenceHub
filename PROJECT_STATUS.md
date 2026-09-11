@@ -43,7 +43,8 @@ Last updated: 2026-09-11
   company reservations, separate threshold/capacity, decision deadlines,
   minimal fields, governed topics, Janay's task plus E-Mail, publication checks
   and provider-neutral `.ics` delivery are now the approved business baseline.
-  ADR 0007 remains proposed until Manuel explicitly decides it.
+  Manuel accepted ADR 0007 on 2026-09-11. The CAL-1 architecture, data, API and
+  RBAC design is complete; migration and activation remain separate gates.
 - E-Mail workflow input: twelve supplied templates are inventoried as future
   process ideas. Fixed response times, guarantees, refunds, automatic
   rescheduling, discounts, newsletters and E-Mail acceptance are not approved
@@ -111,8 +112,8 @@ Last updated: 2026-09-11
   or booking. CAL-0.1 uses only already published Coach profile names and still
   contains no real appointment, availability or contact data. Workflow
   `34482731102` is green; the public route and JavaScript bundle pass HTTP,
-  `noindex`, example-data and no-network-write checks. ADR 0007 is proposed;
-  productive calendar work remains gated. Janay accepted the visual concept on
+  `noindex`, example-data and no-network-write checks. ADR 0007 is accepted;
+  productive calendar work remains separately gated. Janay accepted the visual concept on
   2026-09-10 and then supplied a bounded CAL-0.1 follow-up: link published Coach
   profiles, show overlapping weekend examples and separate planned group offers
   from individual contact requests. The personal Coach calendar remains a
@@ -124,8 +125,8 @@ Last updated: 2026-09-11
   pixels are green. Workflow `34513388689` and the public smoke confirm HTTP
   200 for calendar/contact/Coach targets, `noindex`, same-day weekend overlap,
   profile links and a bundle without network writes. CAL-D01 through CAL-D08
-  are now accepted; productive work remains gated by Manuel's ADR 0007
-  decision and all later migration/activation gates.
+  and ADR 0007 are now accepted; productive work remains gated by CAL-T01
+  through CAL-T06 and all later migration/activation gates.
 - A shared Coach-CTA correction keeps long German headings and their final
   punctuation inside the left layout column. All six Coach profiles pass 18
   browser geometry checks at 1440, 960 and 390 pixels without overlap or
@@ -134,7 +135,8 @@ Last updated: 2026-09-11
 - The calendar rules were batched in a non-technical stakeholder handout and
   all accepted by Janay on 11.09. The reconciled quality plan defines RBAC,
   concurrency, privacy, accessibility, calendar compatibility and operations
-  evidence; ADR 0007 still needs Manuel's explicit decision.
+  evidence. The CAL-1 design adds revision-safe publication, dedicated reviewer
+  permission and separate public/private projections without creating SQL.
 - The current clean Website production artifact is rebuilt from source
   `5d126cbaec0e`. It contains 51 entries, all required root files, no
   `.env`/`.tmp`, a matching SHA-256 and `deployment_authorized: false`. The new
@@ -413,10 +415,11 @@ Last updated: 2026-09-11
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: Manuel decides ADR 0007 now that Janay has
-  accepted all eight calendar rules. This decision may authorize the bounded
-  CAL-1 design, but not migration, accounts, messages, real data or production.
-  While ADR 0007 is pending, close or explicitly defer CP-02/04/07/08. The
+- Recommended next work block: Manuel decides CAL-T01 through CAL-T06 now that
+  ADR 0007 and the bounded CAL-1 design are complete. Approval authorizes only
+  local migration `0005` preparation, not Staging, accounts, messages, real
+  data or production. While that decision is pending, close or explicitly
+  defer CP-02/04/07/08. The
   provider-neutral backup-notification contract is complete locally; its live
   adapter remains behind EXT-01, and neither real messages nor VPS timers are
   activated. In parallel, review the EDV response from 2026-09-14 or chase it from
@@ -480,14 +483,12 @@ Last updated: 2026-09-11
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) decide ADR 0007 after Janay accepted CAL-D01
-  through CAL-D08, (2) operations ownership is decided, (3) the local backup
-  notifier is complete, (4) close residual CP-02/04/07/08, (5)
-  resolve the parallel EDV Webroot/DNS/SMTP and live-notifier gate, (6) design
-  CAL-1 schema/API/RBAC, (7)
-  migrate and implement Coach-owned availability plus internal publication,
-  and (8) prepare the controlled Pilot release candidate. Confidence decreases
-  from step 6 onward.
+- Rolling delivery horizon: (1) decide CAL-T01 through CAL-T06, (2) close
+  residual CP-02/04/07/08, (3) resolve Webroot/DNS/SMTP and the notifier
+  adapter, (4) author migration `0005` locally, (5) apply it on Staging only
+  after separate approval, (6) implement CAL-1 domain/repository/APIs, (7) add
+  Coach/reviewer Portal UI and browser acceptance, and (8) prepare the
+  controlled Pilot candidate. Confidence decreases from step 6 onward.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.
@@ -497,6 +498,9 @@ Last updated: 2026-09-11
 
 ## Decisions Needed
 
+- Accept or amend CAL-T01 through CAL-T06: same-Coach overlap, format codes,
+  technical bounds, immediate public withdrawal, Pilot retention boundary and
+  the additive Admin-assigned `calendar_reviewer` role.
 - Which Donner + Partner group company is the legal Competence Hub provider?
 - Who may later cover Janay Rappelt's public mailbox during her absence? Until
   then, no public response-time promise applies.

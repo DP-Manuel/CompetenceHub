@@ -1,7 +1,8 @@
 # ADR 0007: Kalender und Platzvormerkung in getrennten Inkrementen
 
-Status: Proposed; fachliche Grundlage am 11.09.2026 vollständig bestätigt,
-Architekturfreigabe durch Manuel offen
+Status: Accepted by Manuel on 11.09.2026; fachliche Grundlage vollständig
+bestätigt. Migration, Konten, Echtdaten, Nachrichten und Produktion bleiben
+separate Freigaben.
 
 Date: 2026-09-10
 

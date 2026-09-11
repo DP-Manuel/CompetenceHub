@@ -2,6 +2,27 @@
 
 Newest entries first.
 
+## 2026-09-11 | decision/architecture | ADR 0007 angenommen und CAL-1 entworfen
+
+- Manuel hat ADR 0007 ausdrücklich freigegeben. Die Annahme erlaubt die lokale
+  inkrementelle Vorbereitung, aber weiterhin keine Migration auf Staging,
+  Konten, Echtdaten, Nachrichten oder Produktion.
+- Der CAL-1-Entwurf bindet sich an die vorhandenen Coach-, Themen-, Rollen-,
+  Audit-, FastAPI- und PostgreSQL-Grenzen. Revisionen verhindern, dass ein
+  ungeprüfter Coach-Änderungsstand eine veröffentlichte Fassung überschreibt.
+- Öffentliche und private APIs sind getrennt; der interne Prüfschwellenwert
+  bleibt aus der öffentlichen Projektion. Die additive Rolle
+  `calendar_reviewer` bildet Janays Aufgabe ohne fest codierte Person ab.
+- Ein RBAC-Vertrag und eine Testmatrix decken eigene/fremde Coaches, Reviewer,
+  Internal ohne Freigaberecht, Admin, Firmenkontakt, Öffentlichkeit,
+  Nebenläufigkeit, Audit und Datenminimierung ab.
+- CAL-T01 bis CAL-T06 bündeln die letzten technischen Entscheidungen vor dem
+  lokalen Entwurf von Migration `0005`. Es wurde keine SQL-Datei und keine
+  Laufzeitfunktion erzeugt.
+- Skill-Learning-Check: Die bestehende Gate-Regel des Projekt-Skills deckt den
+  beobachteten Entscheidungsübergang bereits ab; kein zusätzlicher
+  wiederverwendbarer Skill-Vorschlag nötig.
+
 ## 2026-09-11 | operations/testing | Lokalen Backup-Meldungsvertrag abgeschlossen
 
 - Ein anbieterneutraler Renderer erzeugt ausschließlich begrenzte JSON-

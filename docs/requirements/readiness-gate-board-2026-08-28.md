@@ -7,7 +7,7 @@ Stand: 2026-09-11
 | Ziel | Status | Einordnung | Naechster Beweis |
 | --- | --- | --- | --- |
 | Technisches Readiness-Paket | GRUEN TECHNISCH | Website-/Webapp-Pakete, Staging und externer Backup-/Restore-Beweis sind gruen; die aktuelle Website hat zusaetzlich ein festes internes Link-Gate | Nach relevanten Codeaenderungen reproduzierbar neu bauen |
-| Kalender-Discovery und Fachregeln | GRUEN FACHLICH | CAL-0/CAL-0.1 sowie CAL-D01 bis CAL-D08 und Pilotablauf sind von Janay akzeptiert | Manuel entscheidet ADR 0007; keine Migration oder Echtdaten ableiten |
+| Kalender-Discovery und Architektur | GRUEN FACHLICH / DESIGN | CAL-0/CAL-0.1, CAL-D01 bis CAL-D08 und ADR 0007 sind akzeptiert; CAL-1-Entwurf liegt vor | CAL-T01..T06 entscheiden; keine Migration oder Echtdaten ableiten |
 | Erste freigegebene Firmen | GELB | Datenmodell, geschuetzter Firmen-/Kontakt-Slice und synthetischer Restore sind bewiesen; Echtdaten bleiben gegated | Vertrag, benannte Konten, Backup-Timer/Alarm und Betriebsfreigabe |
 | Kontrollierter Produktionsstart | GELB / TERMINKANDIDATEN | 17.09. bevorzugt, wenn alle Gates schliessen; 24.09. als Ausweichtermin, sonst spaeter | EDV/Legal klaeren und Onboarding-/Go-No-Go bestaetigen |
 | Budget | UNBEKANNT | Kein belastbarer Budgetrahmen dokumentiert | Nur bei kostenpflichtigem Mail-, Hosting- oder Backupbedarf entscheiden |
@@ -19,8 +19,8 @@ Gates abhaengig. Es ist keine Produktionsfreigabe.
 
 | DONE | READY / NEXT | WAITING EXTERNAL | BLOCKED UNTIL GATES CLOSE |
 | --- | --- | --- | --- |
-| Auth, MFA, Rollen und Firmen-/Kontakt-Slice lokal und auf Staging synthetisch bewiesen | ADR 0007 mit vollständiger Fachbasis annehmen, aendern oder ablehnen | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Echtdaten und erster realer Firmenrecord |
-| CAL-D01 bis CAL-D08 und Pilotablauf von Janay akzeptiert | Nach ADR-Freigabe CAL-1-Architektur entwerfen | EXT-03: Onboarding-/Go-No-Go-Terminbestaetigung | Produktive Einladungs-E-Mails und reale Konten |
+| ADR 0007 angenommen und CAL-1-Architektur/API/RBAC entworfen | CAL-T01 bis CAL-T06 annehmen oder aendern | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Echtdaten und erster realer Firmenrecord |
+| CAL-D01 bis CAL-D08 und Pilotablauf von Janay akzeptiert | Nach CAL-T-Freigabe Migration `0005` lokal entwerfen | EXT-03: Onboarding-/Go-No-Go-Terminbestaetigung | Produktive Einladungs-E-Mails und reale Konten |
 | Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go fuer 17.09., ersatzweise 24.09. bestaetigen | Oeffentliche Bewerbung und Produktions-Go-Live |
 | Lokaler Backup-Meldungsvertrag mit 21 fokussierten Tests abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-01: SMTP-/Sendervertrag und Benachrichtigungskanal | Produktive Backup-Timer ohne getestete Zustellung |
 | Pilot-Owner entschieden: Manuel Admin, Thomas technischer Break-glass, Janay Mailbox ohne Vertretung | Ab 14.09. EDV-Antwort pruefen; ab 15.09. nachfassen | EXT-06: spaetere Mailboxvertretung bleibt unbesetzt; kein Service-Level versprechen | Automatisierter Website-Replace oder Remote-Loeschung |
@@ -39,7 +39,8 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | G-WEBAPP: reproduzierbares Runtime-Paket | DONE LOKAL | Manuel | vor Backenddeployment neu bauen | Clean Paket mit Restore-Tool, isolierter Installation und Fail-closed Runtime | Noch keine VPS-Aktivierung |
 | G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL / DELIVERY OPEN | Manuel / Wuerzburg | quartalsweise nach Echtdatenstart | Guarded Pull und digest-gepinnter netzloser Restore mit 24 Tabellen; Zeitplan/Retention entschieden; lokaler Meldungsvertrag mit 21 Tests gruen | Timer bleiben aus, bis der EDV-abhaengige Adapter Erfolg und synthetische Stoerung zugestellt hat |
 | G-CALENDAR: CAL-0/CAL-0.1 | DONE REVIEW | Janay / Manuel | akzeptiert 11.09. | Review, Browser-/Netzwerk-Smokes und Janays ausdrueckliche Zustimmung | Produktive CAL-1-Umsetzung bleibt hinter Fachentscheidungen |
-| G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | BUSINESS DONE / ADR WAITING | Janay / Manuel | ADR-Entscheidung als naechstes Gate | Janay hat alle acht Regeln und den Pilotablauf am 11.09. akzeptiert | Keine Kalender-Migration oder echten Termine bis ADR-Freigabe |
+| G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | DONE / ACCEPTED | Janay / Manuel | abgeschlossen 11.09. | Janay akzeptierte alle Regeln/Pilotablauf; Manuel akzeptierte ADR 0007 | Erlaubt Design, aber keine Migration, Konten, Daten oder Aktivierung |
+| G-CALENDAR-DESIGN: CAL-1 Daten/API/RBAC | DONE LOCAL / MIGRATION DECISIONS OPEN | Manuel | aktualisiert 11.09. | revisionssichere Publikation, `calendar_reviewer`, öffentliche/private Projektion und Testmatrix dokumentiert | Migration `0005` wartet auf CAL-T01..T06 und separate Staging-Freigabe |
 | G-EDV: App-DNS/TLS/SMTP | WAITING UNTIL 14.09. | EDV | ab 14.09. pruefen, ab 15.09. nachfassen | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
 | G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING EXTERNAL | Manuel / Thomas Ross / EDV | vor Website-Go-Live | Host-Key bestaetigt; Anmeldung bewiesen; zugewiesener Webroot fehlt noch | Kein Website-Replace |
 | G-CONTRACT: finaler Vertragsweg | WAITING | Lars Donner / Fachseite | im September klaeren | Freigegebener Vertragsstand und Prozess | Kein freigegebener erster Firmenprozess |
@@ -50,8 +51,8 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 
 ## Pull-Regel
 
-1. Janay hat CAL-D01 bis CAL-D08 akzeptiert. Manuel entscheidet ADR 0007;
-   bis dahin entsteht kein Kalender-Schema und keine Migration.
+1. ADR 0007 und CAL-D01 bis CAL-D08 sind akzeptiert. Manuel entscheidet
+   CAL-T01 bis CAL-T06; bis dahin entsteht keine Migration.
 2. Die EDV-Antwort wird ab 14.09. geprueft und ab 15.09. nachgefasst. Erst nach
    korrigiertem SFTP-Startverzeichnis folgt eine read-only Webroot-Inventur.
 3. Das CP-01-bis-CP-08-Inhaltspaket kann unabhaengig versendet werden; neue

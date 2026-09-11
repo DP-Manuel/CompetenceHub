@@ -23,7 +23,8 @@ The backlog preserves brainstorming input so it can later be turned into user st
 - Janay confirmed the public-website refinements and requested that the
   27.08 calendar concept proceed on 2026-09-10. CAL-0 is a synthetic visual
   validation only; productive calendar and reservation increments remain
-  governed by `coach-availability-calendar-v0.1.md` and proposed ADR 0007.
+  governed by `coach-availability-calendar-v0.1.md`, accepted ADR 0007 and the
+  separately gated CAL-1 technical design.
 - Direction: build a simple but expandable web-based system, similar in business coverage to the old Sophisto-like administration system, but independent.
 - Reference system: `http://sophisto.de/` should be reviewed later; initial fetch attempt on 2026-06-16 timed out.
 

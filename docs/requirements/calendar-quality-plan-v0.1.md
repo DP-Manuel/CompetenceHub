@@ -2,14 +2,15 @@
 
 Stand: 11.09.2026
 
-Status: test-ready planning draft; no productive calendar, reservation,
-notification or migration is authorized by this document.
+Status: test-ready planning baseline under accepted ADR 0007; no productive
+calendar, reservation, notification or migration is authorized by this
+document.
 
 ## Purpose
 
 This plan turns the accepted visual direction and the approved CAL-D01 through
-CAL-D08 rules into release gates. Per-offer values remain configurable; ADR
-0007 and every migration/activation gate remain separately decidable.
+CAL-D08 rules into release gates. Per-offer values remain configurable; every
+migration and activation gate remains separately decidable.
 
 ## Test Levels
 
