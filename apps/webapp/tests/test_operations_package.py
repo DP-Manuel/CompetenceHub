@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import ast
+import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 import pytest
 
@@ -53,6 +56,171 @@ def test_backup_monitor_checks_age_integrity_encryption_and_plaintext() -> None:
     assert "exactly two encrypted payloads" in script
     assert "duplicate configuration key" in script
     assert "checksum manifest contains a path" in script
+
+
+def render_backup_notification(*arguments: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPTS_ROOT / "competence-hub-backup-notification-render"),
+            *arguments,
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        env={**os.environ, "PYTHONUTF8": "1"},
+    )
+
+
+def test_backup_notification_renderer_has_no_network_or_process_dependency() -> None:
+    script = SCRIPTS_ROOT / "competence-hub-backup-notification-render"
+    imported_modules: set[str] = set()
+    for node in ast.walk(ast.parse(read(script))):
+        if isinstance(node, ast.Import):
+            imported_modules.update(
+                alias.name.split(".", maxsplit=1)[0] for alias in node.names
+            )
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imported_modules.add(node.module.split(".", maxsplit=1)[0])
+
+    assert imported_modules == {
+        "__future__",
+        "argparse",
+        "datetime",
+        "json",
+        "re",
+    }
+
+
+def test_backup_notification_success_contract_is_concise_and_transport_neutral() -> None:
+    result = render_backup_notification(
+        "--status",
+        "success",
+        "--event",
+        "monitor",
+        "--code",
+        "ok",
+        "--observed-at",
+        "2026-09-11T08:07:00Z",
+    )
+
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload == {
+        "action": "Kein Eingreifen erforderlich.",
+        "code": "ok",
+        "deduplication_key": "backup:2026-09-11:monitor:success:ok",
+        "event": "monitor",
+        "observed_at": "2026-09-11T08:07:00Z",
+        "schema": "competence-hub.backup-notification.v1",
+        "severity": "info",
+        "status": "success",
+        "summary": "Backup und tägliche Integritätsprüfung waren erfolgreich.",
+        "title": "Competence Hub Backup in Ordnung",
+    }
+
+
+def test_backup_notification_incident_is_bounded_and_contains_no_raw_detail() -> None:
+    result = render_backup_notification(
+        "--status",
+        "incident",
+        "--event",
+        "monitor",
+        "--code",
+        "integrity-failed",
+        "--observed-at",
+        "2026-09-11T08:08:00Z",
+    )
+
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["severity"] == "warning"
+    assert payload["deduplication_key"] == (
+        "backup:2026-09-11:monitor:incident:integrity-failed"
+    )
+    serialized = result.stdout.casefold()
+    for forbidden in ("password", "secret", "/var/", "competence_hub_staging"):
+        assert forbidden not in serialized
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    [
+        ("--status", "success", "--event", "backup", "--code", "ok"),
+        (
+            "--status",
+            "incident",
+            "--event",
+            "monitor",
+            "--code",
+            "ok",
+        ),
+        (
+            "--status",
+            "incident",
+            "--event",
+            "monitor",
+            "--code",
+            "unknown",
+        ),
+        (
+            "--status",
+            "incident",
+            "--event",
+            "monitor",
+            "--code",
+            "backup-failed",
+        ),
+        (
+            "--status",
+            "incident",
+            "--event",
+            "backup",
+            "--code",
+            "integrity-failed",
+        ),
+    ],
+)
+def test_backup_notification_rejects_invalid_state_combinations(
+    arguments: tuple[str, ...],
+) -> None:
+    result = render_backup_notification(
+        *arguments,
+        "--observed-at",
+        "2026-09-11T08:08:00Z",
+    )
+
+    assert result.returncode != 0
+    assert result.stdout == ""
+
+
+def test_backup_notification_deduplication_key_is_stable_per_utc_day() -> None:
+    first = render_backup_notification(
+        "--status",
+        "incident",
+        "--event",
+        "backup",
+        "--code",
+        "backup-failed",
+        "--observed-at",
+        "2026-09-11T02:16:00Z",
+    )
+    repeat = render_backup_notification(
+        "--status",
+        "incident",
+        "--event",
+        "backup",
+        "--code",
+        "backup-failed",
+        "--observed-at",
+        "2026-09-11T02:26:00Z",
+    )
+
+    assert first.returncode == repeat.returncode == 0
+    assert json.loads(first.stdout)["deduplication_key"] == json.loads(
+        repeat.stdout
+    )["deduplication_key"]
 
 
 def test_restore_check_is_local_temporary_and_explicit() -> None:
@@ -170,7 +338,12 @@ def test_operations_shell_scripts_have_valid_bash_syntax() -> None:
     if bash is None:
         pytest.skip("A native Bash executable is unavailable for syntax validation")
 
-    scripts = sorted(path for path in SCRIPTS_ROOT.iterdir() if path.is_file())
+    scripts = sorted(
+        path
+        for path in SCRIPTS_ROOT.iterdir()
+        if path.is_file()
+        and path.read_bytes().startswith(b"#!/usr/bin/env bash\n")
+    )
     result = subprocess.run(
         [str(bash), "-n", *(str(path) for path in scripts)],
         check=False,
@@ -186,6 +359,7 @@ def test_linux_operations_files_keep_lf_line_endings_after_checkout() -> None:
     for name in (
         "competence-hub-postgres-backup",
         "competence-hub-postgres-backup-monitor",
+        "competence-hub-backup-notification-render",
         "competence-hub-postgres-restore-check",
     ):
         assert f"deploy/scripts/{name} text eol=lf" in attributes

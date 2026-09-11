@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""Render a bounded backup notification payload without delivering it."""
+
+from __future__ import annotations
+
+import argparse
+from datetime import UTC, datetime
+import json
+import re
+
+
+SCHEMA = "competence-hub.backup-notification.v1"
+UTC_TIMESTAMP = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+INCIDENTS = {
+    "backup-failed": (
+        "Backup fehlgeschlagen",
+        "Der tägliche Sicherungslauf war nicht erfolgreich.",
+        "Backup-Service und Journal prüfen; Timer bis zur Klärung nicht als gesund bewerten.",
+    ),
+    "monitor-failed": (
+        "Backup-Prüfung fehlgeschlagen",
+        "Die tägliche Integritäts- und Frischeprüfung war nicht erfolgreich.",
+        "Monitor-Service und Journal prüfen; den letzten Satz nicht ungeprüft verwenden.",
+    ),
+    "stale-backup": (
+        "Backup ist nicht aktuell",
+        "Es wurde kein ausreichend aktueller Sicherungssatz bestätigt.",
+        "Letzten Sicherungslauf und Timer prüfen und bei Bedarf einen beaufsichtigten Lauf starten.",
+    ),
+    "integrity-failed": (
+        "Backup-Prüfung meldet Integritätsfehler",
+        "Der aktuelle Sicherungssatz hat die Integritätsprüfung nicht bestanden.",
+        "Betroffenen Satz nicht verwenden; gültigen Vorgängersatz sichern und Ursache untersuchen.",
+    ),
+    "plaintext-detected": (
+        "Unverschlüsselte Backup-Datei erkannt",
+        "Die Prüfung hat unverschlüsseltes Datenbankmaterial im Backup-Bereich erkannt.",
+        "Backup-Timer deaktivieren, Zugriff begrenzen und den Vorfall nach Runbook untersuchen.",
+    ),
+    "notification-test": (
+        "Test der Backup-Störungsmeldung",
+        "Die synthetische Störungsmeldung wurde wie geplant erzeugt.",
+        "Zustellung bestätigen; es liegt dadurch kein echter Backup-Fehler vor.",
+    ),
+}
+INCIDENT_EVENTS = {
+    "backup-failed": "backup",
+    "monitor-failed": "monitor",
+    "stale-backup": "monitor",
+    "integrity-failed": "monitor",
+    "plaintext-detected": "monitor",
+    "notification-test": "monitor",
+}
+
+
+def utc_timestamp(value: str) -> datetime:
+    if not UTC_TIMESTAMP.fullmatch(value):
+        raise argparse.ArgumentTypeError("timestamp must use YYYY-MM-DDTHH:MM:SSZ")
+    parsed = datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
+    return parsed
+
+
+def parser() -> argparse.ArgumentParser:
+    result = argparse.ArgumentParser(
+        description="Render one bounded Competence Hub backup notification as JSON."
+    )
+    result.add_argument("--status", required=True, choices=("success", "incident"))
+    result.add_argument("--event", required=True, choices=("backup", "monitor"))
+    result.add_argument("--code", required=True, choices=("ok", *INCIDENTS))
+    result.add_argument(
+        "--observed-at",
+        type=utc_timestamp,
+        default=None,
+        metavar="UTC_TIMESTAMP",
+    )
+    return result
+
+
+def render(*, status: str, event: str, code: str, observed_at: datetime) -> dict[str, str]:
+    if status == "success":
+        if event != "monitor" or code != "ok":
+            raise ValueError("success requires event=monitor and code=ok")
+        title = "Competence Hub Backup in Ordnung"
+        summary = "Backup und tägliche Integritätsprüfung waren erfolgreich."
+        action = "Kein Eingreifen erforderlich."
+        severity = "info"
+    else:
+        if code == "ok":
+            raise ValueError("incident requires an incident code")
+        if INCIDENT_EVENTS[code] != event:
+            raise ValueError(f"{code} requires event={INCIDENT_EVENTS[code]}")
+        title, summary, action = INCIDENTS[code]
+        severity = "critical" if code == "plaintext-detected" else "warning"
+
+    timestamp = observed_at.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    day = timestamp[:10]
+    return {
+        "schema": SCHEMA,
+        "status": status,
+        "severity": severity,
+        "event": event,
+        "code": code,
+        "observed_at": timestamp,
+        "deduplication_key": f"backup:{day}:{event}:{status}:{code}",
+        "title": title,
+        "summary": summary,
+        "action": action,
+    }
+
+
+def main() -> int:
+    arguments = parser().parse_args()
+    observed_at = arguments.observed_at or datetime.now(UTC).replace(microsecond=0)
+    try:
+        payload = render(
+            status=arguments.status,
+            event=arguments.event,
+            code=arguments.code,
+            observed_at=observed_at,
+        )
+    except ValueError as error:
+        parser().error(str(error))
+    print(json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,6 +1,6 @@
 # PostgreSQL Backup And Restore Runbook
 
-Stand: 21.08.2026
+Stand: 11.09.2026
 
 This runbook prepares the Competence Hub PostgreSQL backup, retention,
 monitoring and restore gate. It does not authorize installation, timer
@@ -30,6 +30,7 @@ Staging database remains synthetic and localhost-only.
 
 - `deploy/scripts/competence-hub-postgres-backup`
 - `deploy/scripts/competence-hub-postgres-backup-monitor`
+- `deploy/scripts/competence-hub-backup-notification-render`
 - `deploy/scripts/competence-hub-postgres-restore-check`
 - `deploy/scripts/pull-competence-hub-backup.ps1`
 - `deploy/postgresql/backup.conf.example`
@@ -153,10 +154,19 @@ The monitor verifies:
 - no plaintext `.dump` or `.sql` exists below the automated backup root.
 
 The prepared timer makes failures visible through systemd status and the
-journal. Active notification is not yet implemented because the approved SMTP
-contract and monitored routing are pending from EDV. Until that gate closes,
-Manuel must include both backup units in the daily operational check. A silent
-journal-only failure is not sufficient for production operation.
+journal. The notification renderer now produces a bounded JSON contract for a
+successful daily monitor or a defined incident. It accepts no free-form detail,
+path, recipient or secret and performs no network access. A stable UTC-day
+deduplication key lets a later adapter suppress duplicate retries without
+hiding a different failure class.
+
+Active delivery is not yet implemented because the approved SMTP contract and
+monitored routing are pending from EDV. Until that gate closes, Manuel must
+include both backup units in the daily operational check. Do not wire or enable
+a production timer merely because rendering works; a success notification and
+the synthetic `notification-test` incident must reach the approved recipient
+through the final adapter first. A silent journal-only failure is not
+sufficient for production operation.
 
 ## Failure And Rollback
 
