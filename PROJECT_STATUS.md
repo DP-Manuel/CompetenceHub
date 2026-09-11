@@ -66,7 +66,8 @@ Last updated: 2026-09-10
   short quotation and separate quotation marks; controls activate only when
   more entries exist. Workflow `33852789095` deployed successfully; public
   page and logo return HTTP 200, the expected content is present and the review
-  remains `noindex, nofollow, noarchive`. Janay's acceptance remains open.
+  remains `noindex, nofollow, noarchive`. Janay accepted the consolidated
+  Website presentation on 2026-09-10.
 - Done, crawler-blocked review deployed and accepted: the 04.09 feedback is reconciled
   with the earlier authorized update packets. Both Use Cases now appear as
   compact side-by-side choices and open independently, so their winding paths
@@ -94,11 +95,13 @@ Last updated: 2026-09-10
   from individual contact requests. The personal Coach calendar remains a
   protected CAL-1 Webapp workflow; Janay is the initial approval owner through
   an assignable permission, not a hard-coded identity.
-- CAL-0.1 is review-deployed and awaits Janay's follow-up acceptance. The
+- CAL-0.1 is review-deployed and was accepted by Janay as very good on
+  2026-09-11. The
   42-file Astro check, 30-page build and browser checks at 1440, 960 and 390
   pixels are green. Workflow `34513388689` and the public smoke confirm HTTP
   200 for calendar/contact/Coach targets, `noindex`, same-day weekend overlap,
-  profile links and a bundle without network writes.
+  profile links and a bundle without network writes. Productive calendar work
+  remains separately gated behind CAL-D01 through CAL-D08 and ADR 0007.
 - A shared Coach-CTA correction keeps long German headings and their final
   punctuation inside the left layout column. All six Coach profiles pass 18
   browser geometry checks at 1440, 960 and 390 pixels without overlap or
@@ -264,8 +267,8 @@ Last updated: 2026-09-10
   notification and staff alone release a binding offer/booking. The suggested
   value 25 is provisional. Confirmed appointments should first use provider-
   neutral `.ics` invitations; direct Microsoft Graph/Outlook synchronization
-  remains separate. Only the synthetic CAL-0.1 Website follow-up is in the
-  current execution backlog; productive calendar code is not.
+  remains separate. CAL-0.1 is accepted; only the static SB-38 release-quality
+  refresh is in the current execution backlog. Productive calendar code is not.
 - Confirmed ownership: Manuel owns VPS operations, patching, monitoring,
   backups and incident response. Thomas Roß, EDV-Leiter, owns production
   approval. Separate app/API subdomains are approved in principle.
@@ -378,9 +381,10 @@ Last updated: 2026-09-10
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: collect Janay's CAL-0.1 acceptance and the
-  grouped CAL-D01 through CAL-D08 answers. The handout and future test gates are prepared;
-  no calendar migration or real-data path begins before those decisions. In
+- Recommended next work block: complete the clean Website artifact refresh
+  with the new internal-reference gate, then collect the grouped CAL-D01
+  through CAL-D08 answers. The handout and future test gates are prepared; no
+  calendar migration or real-data path begins before those decisions. In
   parallel, review the EDV response from 2026-09-14 or chase it from
   2026-09-15, then repeat the read-only Webroot inventory. Real data and
   production activation remain blocked by operational, Legal, account and
@@ -439,9 +443,9 @@ Last updated: 2026-09-10
 - Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
   that date and chase from 2026-09-15; no host-specific or live-mail claim is
   made before evidence arrives.
-- Rolling delivery horizon: (1) the Coach-CTA correction is review-deployed,
-  (2)
-  accept or bound CAL-0.1 follow-up, (3) decide CAL-D01 through CAL-D08 and ADR
+- Rolling delivery horizon: (1) refresh the clean Website artifact with
+  mandatory internal-link verification, (2) CAL-0.1 is accepted, (3) decide
+  CAL-D01 through CAL-D08 and ADR
   0007, (4) resolve the parallel EDV Webroot/DNS/SMTP gate, (5) design CAL-1
   schema/API/RBAC, (6) prepare its migration and Staging smoke, (7) implement
   Coach-owned availability plus internal publication, and (8) prepare the

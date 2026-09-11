@@ -2,6 +2,21 @@
 
 Newest entries first.
 
+## 2026-09-11 | acceptance/quality | CAL-0.1 akzeptiert und Release-Lücke geschlossen
+
+- Janay bewertete die überarbeitete Kalender-Review als sehr gut. CAL-0.1 ist
+  damit fachlich und visuell akzeptiert; produktive Verfügbarkeit,
+  Vormerkungen, Benachrichtigungen und Buchungen bleiben weiterhin gesperrt.
+- Der Refresh des statischen Produktionsartefakts deckte eine bisher nicht
+  feste interne Linkprüfung auf. Der erste Lauf stoppte korrekt an der
+  irreführenden kanonischen `/404/`-Adresse der gebauten `404.html`.
+- Die bewusst `noindex` gesetzte Fehlerseite gibt nun keine kanonische Adresse
+  oder `og:url` mehr aus. Ein neuer fester Release-Schritt prüft alle internen
+  Seiten-, Asset- und Sprungziele und stoppt das Paket bei einem Fehler.
+- Der aktuelle lokale Nachweis ist grün: Astro prüft 43 Dateien ohne Befund,
+  baut 30 Seiten und verifiziert 1.137 interne Referenzen. Clean-Commit,
+  erneutes Produktionsartefakt und Review-Smoke folgen im selben Block.
+
 ## 2026-09-10 | frontend/calendar/steering | CTA-Regel korrigiert und Entscheidungen gebündelt
 
 - Die lange Überschrift auf Frau Dr. Stefanie Beckers Coachseite ragte mit dem

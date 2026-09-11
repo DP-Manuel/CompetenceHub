@@ -32,6 +32,10 @@ hier stehen nur die für Umsetzung, Entscheidung und Abnahme notwendigen Punkte.
 
 ## Abnahme CAL-0.1
 
+Status: Janay hat die überarbeitete Review-Fassung am 11.09.2026 ohne weiteren
+Änderungswunsch als sehr gut bewertet. CAL-0.1 ist damit fachlich und visuell
+akzeptiert; diese Abnahme autorisiert noch keine produktive Kalenderfunktion.
+
 - Ein Coachname öffnet das passende bereits veröffentlichte Profil.
 - Die Seite kennzeichnet alle sichtbaren Termine weiterhin eindeutig als
   Beispieldaten und behauptet keine echte Verfügbarkeit.

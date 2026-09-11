@@ -6,6 +6,26 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-11 | release-evidence-freshness | Review und Produktionsartefakt gemeinsam altern lassen
+
+- Triggering project situation: Mehrere aktuelle Frontend-Änderungen waren auf
+  der Review-Seite geprüft, während Gate-Board und letztes ausdrücklich
+  nachgewiesenes IONOS-Artefakt noch den Stand vom 25.08. trugen.
+- Observed friction: Ein grünes Review-Deployment beweist nicht automatisch,
+  dass das getrennte Produktionspaket mit Canonical-, Fehlerseiten- und
+  Webroot-Regeln noch aktuell ist.
+- Reusable improvement candidate: `prepare-release`,
+  `manage-project-state` und `coordinate-software-project` sollten bei jedem
+  relevanten Frontendabschluss die Frische aller getrennten Release-Artefakte
+  und Gate-Boards prüfen. Ein veralteter Nachweis wird sichtbar auf `refresh
+  required` gesetzt und als unabhängiger Ready-Slice angeboten.
+- Project response: Der aktuelle Produktions-Build wurde vorgezogen; eine
+  fehlerhafte 404-Canonical-Adresse fiel auf. Interne Referenzen werden künftig
+  als fester Release-Schritt geprüft und das Gate-Board wird nach dem sauberen
+  Artefakt neu baselined.
+- Reuse potential: very high for multi-target Website deployments.
+- Status: project pattern applied; canonical skill proposal captured only.
+
 ### 2026-09-10 | stakeholder-wait-batching | Wartezeit für gebündelte Entscheidungen nutzen
 
 - Triggering project situation: CAL-0.1 wartet bis zum Folgetag auf Janays

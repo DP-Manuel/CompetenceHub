@@ -45,6 +45,11 @@ try {
     if ($LASTEXITCODE -ne 0) {
         throw "Website build failed with exit code $LASTEXITCODE."
     }
+
+    & npm run verify:dist
+    if ($LASTEXITCODE -ne 0) {
+        throw "Website link verification failed with exit code $LASTEXITCODE."
+    }
 }
 finally {
     Pop-Location
