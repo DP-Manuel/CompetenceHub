@@ -23,6 +23,10 @@ Newest entries first.
 - Das visuelle Gate-Board und der Go-Live-Evidence-Index sind auf den Stand vom
   11.09. gebracht. Sie trennen Ready-Arbeit, EDV-/Legal-Wartepositionen und
   produktiv gesperrte Schritte wieder konsistent.
+- Die crawler-gesperrte Review wurde mit Workflow `34577486065` erfolgreich
+  veröffentlicht. Der öffentliche Smoke liefert für einen unbekannten Pfad
+  HTTP 404, `noindex`, keine Canonical-/OG-URL und die erwartete Hilfeseite;
+  Startseite und Kalender bleiben HTTP 200 und ebenfalls crawler-gesperrt.
 
 ## 2026-09-10 | frontend/calendar/steering | CTA-Regel korrigiert und Entscheidungen gebündelt
 
