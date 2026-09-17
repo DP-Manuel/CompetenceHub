@@ -18,7 +18,7 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   on the pushed Website/content/calendar checkpoint `df62a06` and
   contains the verified public website, accepted same-origin pilot portal and
   completed encrypted external backup/restore rehearsal. The current full local
-  suite passes 337 tests with 15 expected opt-in Staging skips, all prior 14
+  suite passes 338 tests with 15 expected opt-in Staging skips, all prior 14
   isolated PostgreSQL paths passed, and BA-01 through BA-17 are accepted in a
   real browser. The local runner is stopped and its ephemeral context removed.
   No persistent Competence-Hub backend/worker service, real account, real data
@@ -547,7 +547,7 @@ phase model.
 
 ## Quality Gates
 
-- **Tests:** 337 local Webapp tests pass with 15 expected opt-in Staging skips;
+- **Tests:** 338 local Webapp tests pass with 15 expected opt-in Staging skips;
   the prior 14/14 isolated PostgreSQL paths and migration `0005` smoke passed.
   The new CAL-1 repository path still needs its controlled Staging run. Re-run
   local suite before packaging and Staging suite after backend/runtime changes.
@@ -661,9 +661,9 @@ remaining Content owner decisions continue in parallel.
 | SB-43 | Done locally | Prepare a provider-neutral backup success/incident notification contract | accepted notification requirement; live channel remains behind EXT-01; no network, recipient, timer or VPS activation | bounded JSON renderer accepts only defined event/code combinations and emits fixed German action text plus stable UTC-day deduplication; 21 focused operations tests, 315 full local passes with 14 expected Staging skips, compileall and dependency checks are green; commit `58299ae`; no message was sent |
 | SB-44 | Done design-only | Accept ADR 0007 and complete CAL-1 architecture, data, API and RBAC boundaries | Manuel's explicit ADR approval; no migration or implementation | revision-safe publication, separate public/private APIs, additive `calendar_reviewer`, optimistic concurrency, public projection and verification matrix documented; CAL-T01..T06 collect remaining migration decisions; no SQL, account, data, message or deployment |
 | SB-45 | Done on isolated Staging | Prepare and prove additive CAL-1 migration `0005` plus rollback-only smoke | ADR 0007, CAL-T01..T06 and separate Staging approval; synthetic data only | three Calendar tables and unassigned `calendar_reviewer` applied; smoke rolled back to zero Calendar rows; 27 owner tables, migrations 0001-0005, denied runtime DDL/delete rights, protected readable 86/108-KiB pre/post dumps, localhost-only PostgreSQL and four active services verified |
-| SB-46 | Done locally; Staging test pending | Implement the bounded CAL-1 domain and PostgreSQL repository | CAL-1 Domain/Repository approval; migration `0005`; no API/UI/reservation/mail/real data | normalized three-month drafts, own-Coach/Admin/reviewer scopes, idempotent create, immutable submitted revisions, optimistic locking, Coach-row serialization, half-open overlap checks, payload-free atomic audit and revision-safe publication implemented; 337 local passes, 15 expected Staging skips, compile/dependency and focused security checks green; new synthetic Staging integration test is wired into the guarded runner but not executed |
+| SB-46 | Done locally; corrected Staging rerun pending | Implement the bounded CAL-1 domain and PostgreSQL repository | CAL-1 Domain/Repository approval; migration `0005`; no API/UI/reservation/mail/real data | normalized three-month drafts, own-Coach/Admin/reviewer scopes, idempotent create, immutable submitted revisions, optimistic locking, Coach-row serialization, half-open overlap checks, payload-free atomic audit and revision-safe publication implemented; first Staging run passed 14/15 and exposed a UUID/text driver boundary before data insertion; corrected with regression protection; 338 local passes, 15 expected Staging skips and focused security checks green |
 
-The technical-readiness baseline remains complete: 337 Webapp tests pass with
+The technical-readiness baseline remains complete: 338 Webapp tests pass with
 15 expected Staging skips, the release ZIP includes the restore tool and no
 `.env`/`.tmp`, and the current Website passes a 43-file Astro check, 30-page
 build and 1,137-reference verification. SB-25 is waiting on a corrected IONOS
@@ -782,7 +782,7 @@ Prepared on: 2026-09-17
 - Base checkpoint for this slice: `01f64f7`; accepted
   CAL-1 architecture, migration `0005` Staging proof, same-origin portal,
   release evidence and external restore evidence are versioned.
-- Evidence: 337 local tests pass with 15 expected opt-in Staging skips; the
+- Evidence: 338 local tests pass with 15 expected opt-in Staging skips; the
   prior 14 PostgreSQL paths, migration `0005` proof and BA-01 through BA-17
   passed. The new CAL-1 repository Staging test is prepared but not run. The
   local browser runner and temporary VPS export are stopped/removed; the exact

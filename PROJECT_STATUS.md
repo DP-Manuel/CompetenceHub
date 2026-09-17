@@ -50,9 +50,12 @@ Last updated: 2026-09-17
   The approved domain/repository slice is implemented locally with own-Coach,
   Admin and reviewer scopes, idempotent creation, immutable revisions,
   optimistic locking, Coach-scoped overlap serialization and payload-free
-  audit. The complete suite passes 337 tests with 15 expected Staging skips.
-  Its new repository integration test, APIs, UI, accounts, real data and
-  activation remain separate gates.
+  audit. The complete suite passes 338 tests with 15 expected Staging skips.
+  The first guarded Staging run passed 14/15 and exposed an asyncpg UUID/text
+  bind mismatch in the advisory lock before the first Calendar insert. The
+  explicit UUID-first cast and regression test are locally green; the corrected
+  repository rerun, APIs, UI, accounts, real data and activation remain
+  separate gates.
 - E-Mail workflow input: twelve supplied templates are inventoried as future
   process ideas. Fixed response times, guarantees, refunds, automatic
   rescheduling, discounts, newsletters and E-Mail acceptance are not approved

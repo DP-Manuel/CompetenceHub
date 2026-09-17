@@ -12,6 +12,7 @@ from competence_hub_api.portal.calendar import (
 from competence_hub_api.portal.postgres_calendar import (
     PostgresCalendarRepository,
     _AUDIT,
+    _CREATE_REQUEST_LOCK,
     _LOCK_COACH,
     _OVERLAP_EXISTS,
 )
@@ -338,3 +339,9 @@ def test_audit_statement_cannot_store_calendar_payload() -> None:
         "note",
     ):
         assert forbidden not in sql
+
+
+def test_create_lock_binds_uuid_values_before_converting_them_to_text() -> None:
+    sql = " ".join(str(_CREATE_REQUEST_LOCK).lower().split())
+    assert "cast(cast(:actor_user_id as uuid) as text)" in sql
+    assert "cast(cast(:client_request_id as uuid) as text)" in sql

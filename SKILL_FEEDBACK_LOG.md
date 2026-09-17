@@ -6,6 +6,24 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-17 | postgres-bind-type-boundary | Treibertypen nativ pruefen
+
+- Triggering project situation: Ein PostgreSQL Advisory Lock castete UUID-
+  Bindparameter direkt nach Text. Mock-Tests waren gruen, aber `asyncpg`
+  erwartete wegen der SQL-Typableitung Strings und lehnte UUID-Objekte ab.
+- Observed friction: Erst der kontrollierte Staging-Lauf fand die Abweichung,
+  obwohl SQL-Struktur, Transaktionsreihenfolge und lokale Repository-Tests
+  korrekt wirkten.
+- Reusable improvement candidate: `integrate-backend`, `write-tests` und
+  `debug-failures` sollten bei PostgreSQL-spezifischen Funktionen explizite
+  Bindtypen beziehungsweise UUID-vor-Text-Casts und einen nativen Treibertest
+  verlangen; reine Fake-Connection-Tests reichen dafuer nicht.
+- Project response: Advisory-Lock-Parameter werden zuerst als `uuid` gebunden,
+  dann gehasht; ein Regressionstest sichert die SQL-Typgrenze und der native
+  Rerun bleibt ein sichtbares Gate.
+- Reuse potential: high for asyncpg, locks and database-specific SQL.
+- Status: project pattern applied; canonical skill proposal captured only.
+
 ### 2026-09-17 | iana-timezone-portability | Zeitzonendaten explizit paketieren
 
 - Triggering project situation: Die CAL-1-Domain validiert IANA-Zonen wie

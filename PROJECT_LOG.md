@@ -2,6 +2,25 @@
 
 Newest entries first.
 
+## 2026-09-17 | debugging/calendar | UUID-Typgrenze im Staging-Lauf korrigiert
+
+- Der erste vollständige CAL-1-Staging-Lauf bestand 14 der 15 Tests. Der neue
+  Calendar-Test brach vor dem ersten Offer-Insert am Advisory Lock ab:
+  PostgreSQL typisierte die direkt nach `text` gecasteten Bindwerte als Text,
+  waehrend `asyncpg` UUID-Objekte erhielt.
+- Der Lock bindet beide Werte nun zuerst explizit als PostgreSQL-`uuid` und
+  wandelt sie erst danach fuer den stabilen Hashschluessel in Text um. Die
+  Sperrsemantik und der Idempotenzschluessel bleiben unveraendert.
+- Ein Regressionstest sichert die UUID-vor-Text-Typisierung. 20 fokussierte
+  Kalenderpruefungen sowie die Gesamtsuite mit 338 Passes und 15 erwarteten
+  Staging-Skips sind gruen; `compileall` und `pip check` bestehen.
+- Der Fehler trat vor dem ersten Kalenderdatensatz auf; der Test-`finally`-
+  Cleanup blieb aktiv. Der korrigierte native Staging-Rerun und anschliessende
+  Nullrueckstands-/Dienstnachweis stehen noch aus.
+- Skill-Learning-Check: Mock-Repositories erkennen keine DB-Treiber-
+  Bindtypprobleme. Explizite Casts und mindestens ein nativer Test gehoeren bei
+  PostgreSQL-spezifischen Locks zusammen; der Befund ist erfasst.
+
 ## 2026-09-17 | backend/calendar | CAL-1 Domain und Repository lokal umgesetzt
 
 - Manuel gab CAL-1 Domain/Repository ausdruecklich frei. Der Slice fuehrt

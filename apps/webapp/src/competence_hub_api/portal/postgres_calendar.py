@@ -22,7 +22,11 @@ from competence_hub_api.portal.calendar import (
 _CREATE_REQUEST_LOCK = text(
     """
     SELECT pg_advisory_xact_lock(
-        hashtext(CAST(:actor_user_id AS text) || ':' || CAST(:client_request_id AS text))
+        hashtext(
+            CAST(CAST(:actor_user_id AS uuid) AS text)
+            || ':' ||
+            CAST(CAST(:client_request_id AS uuid) AS text)
+        )
     )
     """
 )
