@@ -19,6 +19,8 @@ Newest entries first.
 - Das geschuetzte 108-KiB Post-Backup ist kataloglesbar; beide Dumps gehoeren
   `postgres` und haben Modus `0600`. PostgreSQL bleibt localhost-only und
   Chatbot, Nginx, Fail2ban sowie PostgreSQL sind aktiv.
+- Beide exakt benannten temporaeren SQL-Dateien wurden danach entfernt;
+  `MIGRATION_0005_TMP_CLEAN` und vier aktive Dienste bestaetigen den Abschluss.
 - Keine Echtdaten, Konten, Verfuegbarkeiten, Reservierungen, Nachrichten,
   Timer- oder Produktionsaenderungen wurden erzeugt. Naechster Block ist die
   CAL-1-Domain-/Repository-Implementierung.
