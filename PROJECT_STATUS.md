@@ -47,7 +47,12 @@ Last updated: 2026-09-17
   CAL-1 architecture, data, API and RBAC design is complete. Migration `0005`
   was applied to isolated Staging on 2026-09-17 and its rollback-only smoke,
   zero-residue, ownership, privilege, backup and service checks passed.
-  Application code, accounts, real data and activation remain separate gates.
+  The approved domain/repository slice is implemented locally with own-Coach,
+  Admin and reviewer scopes, idempotent creation, immutable revisions,
+  optimistic locking, Coach-scoped overlap serialization and payload-free
+  audit. The complete suite passes 337 tests with 15 expected Staging skips.
+  Its new repository integration test, APIs, UI, accounts, real data and
+  activation remain separate gates.
 - E-Mail workflow input: twelve supplied templates are inventoried as future
   process ideas. Fixed response times, guarantees, refunds, automatic
   rescheduling, discounts, newsletters and E-Mail acceptance are not approved
@@ -140,7 +145,8 @@ Last updated: 2026-09-17
   concurrency, privacy, accessibility, calendar compatibility and operations
   evidence. The CAL-1 design adds revision-safe publication, dedicated reviewer
   permission and separate public/private projections. The additive SQL package
-  is now prepared locally but not applied.
+  is applied and proven on isolated Staging; the domain/repository application
+  slice is locally green while its new Staging integration path remains open.
 - The current clean Website production artifact is rebuilt from source
   `5d126cbaec0e`. It contains 51 entries, all required root files, no
   `.env`/`.tmp`, a matching SHA-256 and `deployment_authorized: false`. The new
@@ -419,10 +425,11 @@ Last updated: 2026-09-17
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: implement CAL-1 domain and PostgreSQL repository
-  behavior against the verified empty schema. Scope remains transitions,
-  revisions, overlap protection, optimistic locking and minimized audit; no
-  reservation, mail, account, real-data or production action is included. In
+- Recommended next work block: execute the prepared synthetic CAL-1 repository
+  integration test against isolated Staging and prove concurrent overlap
+  protection, revisions, foreign-scope denial, audit and zero residue. No
+  migration, reservation, mail, account, real-data or production action is
+  included. In
   parallel, close or explicitly defer CP-02/04/07/08. The
   provider-neutral backup-notification contract is complete locally; its live
   adapter remains behind EXT-01, and neither real messages nor VPS timers are
@@ -484,7 +491,7 @@ Last updated: 2026-09-17
   No external SMTP connection or message occurred.
 - Lead-time update: no EDV response is available on 17.09.; follow-up is being
   handled. No host-specific or live-mail claim is made before evidence arrives.
-- Rolling delivery horizon: (1) implement CAL-1 domain/repository, (2) close
+- Rolling delivery horizon: (1) prove CAL-1 domain/repository on Staging, (2) close
   residual CP-02/04/07/08, (3) resolve Webroot/DNS/SMTP and the notifier
   adapter, (4) add protected/public APIs, (5) add Coach/reviewer Portal UI,
   (6) connect the accepted static projection, (7) design CAL-2 reservations
@@ -499,8 +506,10 @@ Last updated: 2026-09-17
 
 ## Decisions Needed
 
-- Confirm the implementation start for CAL-1 domain/repository behavior; the
-  Staging migration gate is closed.
+- Approve the controlled synthetic CAL-1 repository integration run on
+  isolated Staging; the implementation and migration gates are locally closed.
+- Which approved source maps a Coach UUID to the canonical public Website
+  profile path? The public calendar API must not derive URLs from display names.
 - Which Donner + Partner group company is the legal Competence Hub provider?
 - Who may later cover Janay Rappelt's public mailbox during her absence? Until
   then, no public response-time promise applies.

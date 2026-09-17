@@ -155,6 +155,10 @@ limits are a security/operations decision before implementation.
 ## Compatibility And Implementation Gate
 
 - API v1 is additive; existing Auth/company endpoints do not change.
+- The current `coaches` table has no canonical public profile path. Before the
+  public endpoint is implemented, an approved mapping or additive schema field
+  must provide `coach.profile_path`; it must never be guessed from a display
+  name.
 - Public DTOs are explicit and never mirror database rows.
 - Cursor contents are opaque and protected against tampering.
 - Migration `0005` is proven on isolated Staging; routers and UI remain

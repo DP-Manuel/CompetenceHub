@@ -6,6 +6,24 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-17 | iana-timezone-portability | Zeitzonendaten explizit paketieren
+
+- Triggering project situation: Die CAL-1-Domain validiert IANA-Zonen wie
+  `Europe/Berlin`; unter Windows fehlte der System-Zeitzonenkatalog, waehrend
+  Linux ihn normalerweise bereitstellt.
+- Observed friction: Fachlich gueltige Kalenderentwuerfe scheiterten nur auf
+  einer Entwicklungsplattform und verdeckten dadurch nachfolgende
+  Feldvalidierungen.
+- Reusable improvement candidate: `integrate-backend`, `write-tests` und
+  `prepare-release` sollten bei `zoneinfo`-Nutzung eine explizite `tzdata`-
+  Abhaengigkeit oder einen nachgewiesenen Systemkatalog verlangen und mindestens
+  eine bekannte sowie eine ungueltige IANA-Zone plattformuebergreifend testen.
+- Project response: `tzdata` wurde in Laufzeitvertrag und exakten Lock
+  aufgenommen; CAL-1 prueft bekannte/ungueltige Zonen und die Gesamtsuite ist
+  gruen.
+- Reuse potential: high for calendars, scheduling and cross-platform Python.
+- Status: project pattern applied; canonical skill proposal captured only.
+
 ### 2026-09-11 | mixed-script-test-discovery | Betriebswerkzeuge nach Interpreter prüfen
 
 - Triggering project situation: Ein neuer Python-Renderer kam in einen bisher

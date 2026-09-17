@@ -2,6 +2,42 @@
 
 Newest entries first.
 
+## 2026-09-17 | backend/calendar | CAL-1 Domain und Repository lokal umgesetzt
+
+- Manuel gab CAL-1 Domain/Repository ausdruecklich frei. Der Slice fuehrt
+  typisierte Entwuerfe und Revisionen, das rollierende Drei-Monats-Fenster,
+  IANA-Zeitzonen sowie die akzeptierten Format-, Text-, Frist- und
+  Kapazitaetsgrenzen ein.
+- Coach-Eigentum wird serverseitig ueber `coaches.portal_user_id` aufgeloest;
+  Admin und die additive Reviewer-Rolle erhalten nur ihre dokumentierten
+  Erweiterungen. `internal` allein und Firmenkontakte bleiben fail-closed.
+- PostgreSQL-Transaktionen sichern idempotentes Anlegen, unveraenderliche
+  eingereichte Fassungen, neue Draft-Revisionen nach Aenderungswunsch oder
+  Publikation, optimistische Versionspruefung und payload-freies Audit.
+- Submit und Publish sperren zuerst den stabilen Coach-Scope und pruefen dann
+  halb offene Zeitintervalle. Dadurch werden parallele Ueberschneidungen
+  desselben Coaches verhindert, direkt anschliessende Termine und andere
+  Coaches bleiben erlaubt.
+- `tzdata` ist nun explizite Laufzeitabhaengigkeit, damit `Europe/Berlin` und
+  andere IANA-Zonen unter Windows und Linux gleich validiert werden.
+- 337 lokale Tests bestehen, 15 kontrollierte Staging-Tests werden ohne Tunnel
+  erwartungsgemaess uebersprungen; `compileall` und `pip check` sind gruen. Der
+  neue Staging-Test prueft synthetische Nebenlaeufigkeit, Revisionen,
+  Fremdzugriff, Audit und Nullrueckstand, wurde aber noch nicht ausgefuehrt.
+- Vor dem oeffentlichen API-Slice braucht `coach.profile_path` eine freigegebene
+  Quelle oder ein additives Feld; der Pfad wird nicht aus dem Anzeigenamen
+  geraten und Migration `0005` wird nicht nachtraeglich veraendert.
+- Der fokussierte Security-Review bestaetigt statische parametrisierte SQL-
+  Statements, fail-closed Rollen/Ownership, transaktionales Audit ohne
+  Inhaltsfelder und keine neuen Secrets; kein hoher oder kritischer Befund ist
+  offen.
+- Keine API, UI, Rollenvergabe, Echtdaten, Nachricht, Migration, Timer oder
+  Bereitstellung wurde ausgeloest. Naechster Block ist der separat kontrollierte
+  Repository-Staging-Beweis.
+- Skill-Learning-Check: IANA-Zeitzonendaten muessen fuer plattformgleiche
+  Validierung explizit paketiert und auf jedem Zielsystem getestet werden; der
+  wiederverwendbare Befund ist im Skill-Feedback erfasst.
+
 ## 2026-09-17 | staging/migration | CAL-1 Migration 0005 bewiesen
 
 - Manuel gab Migration `0005` separat fuer isoliertes Staging frei. Beide SQL-
