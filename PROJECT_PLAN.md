@@ -30,10 +30,10 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   approval, named-user onboarding and production Go/No-Go remain open. The
   software and external-restore rehearsals are proven; operational activation
   and organizational approval are the critical path.
-- Next decision needed: authorize or defer the protected, synthetic-only
-  application of migration `0005` on isolated Staging. ADR 0007, CAL-D01
-  through CAL-D08 and CAL-T01 through CAL-T06 are accepted; the local SQL and
-  rollback smoke are prepared. In
+- Next implementation block: build the CAL-1 domain and PostgreSQL repository
+  against the now verified empty Staging schema. Migration `0005` passed its
+  protected pre/post backup, rollback smoke, zero-residue, ownership, privilege
+  and service-health gates on 2026-09-17. In
   parallel, EDV follow-up is already in progress; once received, close app
   hostname, SMTP/sender and Webroot evidence. Production timer/alert ownership,
   Legal, onboarding and Go/No-Go remain separate gates. Productive data stays
@@ -165,15 +165,16 @@ for Git, release, backup and restore responsibilities.
 
 ### Next Blocks
 
-1. **Calendar Staging gate:** review the prepared migration `0005` package and
-   explicitly authorize or defer its protected, synthetic-only Staging run.
+1. **Calendar domain/repository:** implement CAL-1 transitions, same-Coach
+   overlap protection, optimistic locking, revisions and payload-free audit.
 2. **Content decision gate:** close, assign or explicitly defer the residual
    CP-02/04/07/08 items without inventing claims or producing guide pages.
 3. **EDV gate:** follow-up is already in progress; when the response arrives,
    repeat the read-only SFTP Webroot inventory and finalize App-DNS/SMTP
    contracts without uploading anything prematurely.
-4. **Calendar application layer:** after successful Staging migration proof,
-   implement CAL-1 domain/repository/API behavior without reservations or mail.
+4. **Calendar API layer:** after the domain/repository slice, implement the
+   protected Coach/reviewer and minimized public contracts without reservations
+   or mail.
 5. **Production readiness:** confirm the legal operator, Impressum, mailbox
    absence cover, named onboarding dates and Thomas Ross's Go/No-Go before
    activating Website or Webapp production paths.
@@ -655,7 +656,7 @@ Content owner decisions continue in parallel.
 | SB-42 | Done planning-only | Convert the supplied E-Mail templates into a safe automation inventory | authorized `Quellen/11.09.2026` mail-template draft; no automatic send or public claim | twelve workflow ideas are classified by event and gate; response-time, guarantee, refund, automatic reschedule, discount, newsletter and legal-acceptance claims remain blocked; transactional, marketing and legally relevant messages are explicitly separated |
 | SB-43 | Done locally | Prepare a provider-neutral backup success/incident notification contract | accepted notification requirement; live channel remains behind EXT-01; no network, recipient, timer or VPS activation | bounded JSON renderer accepts only defined event/code combinations and emits fixed German action text plus stable UTC-day deduplication; 21 focused operations tests, 315 full local passes with 14 expected Staging skips, compileall and dependency checks are green; commit `58299ae`; no message was sent |
 | SB-44 | Done design-only | Accept ADR 0007 and complete CAL-1 architecture, data, API and RBAC boundaries | Manuel's explicit ADR approval; no migration or implementation | revision-safe publication, separate public/private APIs, additive `calendar_reviewer`, optimistic concurrency, public projection and verification matrix documented; CAL-T01..T06 collect remaining migration decisions; no SQL, account, data, message or deployment |
-| SB-45 | Done locally; Staging approval pending | Prepare additive CAL-1 migration `0005` and rollback-only smoke | ADR 0007 and Manuel's approval of CAL-T01..T06; no Staging application, account assignment or real data | three Calendar tables, unassigned `calendar_reviewer`, accepted field/state constraints and non-destructive runtime grants prepared; overlapping drafts preserved while same-Coach submit/publish conflict remains an atomic repository rule; three focused contract tests and the full 318-pass/14-skip local suite, compileall and dependency check are green; native PostgreSQL smoke awaits the separate Staging gate; commits `f6dc3d4` and `85cb6af` |
+| SB-45 | Done on isolated Staging | Prepare and prove additive CAL-1 migration `0005` plus rollback-only smoke | ADR 0007, CAL-T01..T06 and separate Staging approval; synthetic data only | three Calendar tables and unassigned `calendar_reviewer` applied; smoke rolled back to zero Calendar rows; 27 owner tables, migrations 0001-0005, denied runtime DDL/delete rights, protected readable 86/108-KiB pre/post dumps, localhost-only PostgreSQL and four active services verified |
 
 The technical-readiness baseline remains complete: 318 Webapp tests pass with
 14 expected Staging skips, the release ZIP includes the restore tool and no
@@ -665,12 +666,12 @@ SFTP start directory.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: review and, only after Manuel's explicit approval,
-apply migration `0005` to isolated Staging with protected pre/post backups,
-rollback-only smoke and zero-residue evidence. The local package is complete;
-no Staging application has occurred. In parallel, close or explicitly defer
-CP-02/04/07/08. EDV follow-up is already in progress; its response is processed
-when available. The
+Recommended next block: implement the bounded CAL-1 domain and PostgreSQL
+repository now that migration `0005` is proven on isolated Staging. Deliverables
+are transitions, revisions, same-Coach overlap protection, optimistic locking,
+audit and targeted tests, still without reservations, mail, real accounts or
+real availability. In parallel, close or explicitly defer CP-02/04/07/08. EDV
+follow-up is already in progress; its response is processed when available. The
 provider-neutral backup-notification contract is complete locally; only its
 live adapter, recipient routing and timer activation remain gated.
 
@@ -681,13 +682,13 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Ready for Manuel decision | High | Apply migration `0005` on isolated Staging or defer it | local package `85cb6af`; separate approval and protected pre-backup | native migration/smoke, zero residue, post-backup, localhost PostgreSQL and four service checks |
+| 1 | Ready | High | Implement CAL-1 domain and repository | migration `0005` proven; no reservation/mail scope | transition, overlap, optimistic-lock, revision and audit unit/integration tests |
 | 2 | Ready content decision | High | Close residual CP-02/04/07/08 | no invented claims or new guide pages | cadence, owners/review dates and profile evidence accepted, assigned or deferred |
 | 3 | Waiting external; follow-up active | High | Resolve Webroot, App-DNS/SMTP and notifier adapter | EDV response outstanding; no duplicate chase, upload or live mail | read-only inventory, DNS/TLS proof, SMTP contract and synthetic receipts |
-| 4 | Pending | Medium-high | Implement CAL-1 domain and repository | successful step 1; no reservation/mail scope | transition, overlap, optimistic-lock, revision and audit unit/integration tests |
-| 5 | Pending | Medium | Implement protected/public CAL-1 APIs | step 4; existing Auth/CSRF/Origin/RBAC patterns | API tests for ownership, reviewer permission, public minimization and generic errors |
-| 6 | Pending | Medium-low | Add Coach/reviewer Portal UI and browser acceptance | step 5; synthetic role assignments only | keyboard, focus, 390 px, 200% zoom, stale-edit recovery and role walkthrough |
-| 7 | Pending | Low | Connect the accepted static calendar projection | steps 4-6 and explicit integration decision | published-only contract test plus no private-field/network regressions |
+| 4 | Pending | Medium-high | Implement protected/public CAL-1 APIs | step 1; existing Auth/CSRF/Origin/RBAC patterns | API tests for ownership, reviewer permission, public minimization and generic errors |
+| 5 | Pending | Medium | Add Coach/reviewer Portal UI and browser acceptance | step 4; synthetic role assignments only | keyboard, focus, 390 px, 200% zoom, stale-edit recovery and role walkthrough |
+| 6 | Pending | Medium-low | Connect the accepted static calendar projection | steps 1, 4-5 and explicit integration decision | published-only contract test plus no private-field/network regressions |
+| 7 | Pending | Low | Design CAL-2 reservation increment | CAL-1 accepted; privacy/retention and abuse decisions | concurrency, capacity, idempotency and data-minimization test plan |
 | 8 | Pending | Low | Prepare controlled Pilot release candidate | EDV, Legal, mailbox, onboarding, active backup/alerts and Go/No-Go | evidence index, rollback rehearsal, named acceptance and no high/critical finding |
 
 ### Cross-Cutting Gates

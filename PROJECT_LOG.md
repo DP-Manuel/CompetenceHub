@@ -2,6 +2,29 @@
 
 Newest entries first.
 
+## 2026-09-17 | staging/migration | CAL-1 Migration 0005 bewiesen
+
+- Manuel gab Migration `0005` separat fuer isoliertes Staging frei. Beide SQL-
+  Dateien wurden per SHA-256 gegen Source `85cb6af` verifiziert.
+- Das geschuetzte Pre-Backup war 86 KiB gross. Der Ausgangszustand umfasste 24
+  Owner-Tabellen, Migrationen 0001-0004, keine Calendar-Tabelle und keine
+  `calendar_reviewer`-Rolle.
+- Die Migration lief transaktional bis `COMMIT`; der synthetische Smoke pruefte
+  Constraints, ueberlappende Drafts, Review-Eindeutigkeit und Runtime-Rechte
+  und endete mit `ROLLBACK`.
+- Der Abschluss zeigt 27 Tabellen unter `competence_hub_owner`, drei leere
+  Calendar-Tabellen, Migrationen 0001-0005 und genau eine aktive, keinem Konto
+  zugewiesene Reviewer-Rolle. Runtime-DDL, Migration-Read, Offer-Delete sowie
+  Decision-Update/Delete bleiben verweigert.
+- Das geschuetzte 108-KiB Post-Backup ist kataloglesbar; beide Dumps gehoeren
+  `postgres` und haben Modus `0600`. PostgreSQL bleibt localhost-only und
+  Chatbot, Nginx, Fail2ban sowie PostgreSQL sind aktiv.
+- Keine Echtdaten, Konten, Verfuegbarkeiten, Reservierungen, Nachrichten,
+  Timer- oder Produktionsaenderungen wurden erzeugt. Naechster Block ist die
+  CAL-1-Domain-/Repository-Implementierung.
+- Skill-Learning-Check: Der getrennte Freigabe-, Preflight-, Apply-, Smoke- und
+  Postflight-Ablauf war wirksam; kein neuer Skill-Befund erforderlich.
+
 ## 2026-09-17 | steering/external | EDV-Ruecklauf weiter ausstehend
 
 - Am 17.09. liegt weiterhin keine EDV-Antwort zu Webroot, App-DNS und SMTP vor;

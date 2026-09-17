@@ -22,10 +22,12 @@
   smoke passed, the complete synthetic harness passed 13/13 paths and all
   eleven checked data areas remained empty. Protected 74-KiB pre- and 86-KiB
   post-dumps are catalog-readable, owned by `postgres` and mode `0600`.
-- Migration `0005_calendar_availability_and_review.sql` and its rollback-only
-  smoke are prepared locally after approval of CAL-T01 through CAL-T06. They
-  have not been applied to Staging. Native PostgreSQL execution, protected
-  pre/post dumps and zero-residue evidence require a separate approval.
+- Migration `0005_calendar_availability_and_review.sql` was applied to isolated
+  Staging on 2026-09-17 after separate approval. Its rollback-only smoke passed;
+  all three Calendar tables remain empty, all 27 tables retain the intended
+  owner and the restricted runtime role has no DDL, migration-read or hard-
+  delete rights. Protected 86-KiB pre- and 108-KiB post-dumps are catalog-
+  readable, owned by `postgres` and mode `0600`.
 - The migrated schema contains no business, company or personal data.
 - Only synthetic test data is allowed while the external-backup and privacy
   gates remain open.
@@ -77,7 +79,7 @@ zero-residue verification and unchanged service/network health.
 
 ## Migration 0005
 
-The prepared additive migration adds stable Coach-owned offers, immutable
+The applied additive migration adds stable Coach-owned offers, immutable
 content revisions, append-only review decisions and the unassigned
 `calendar_reviewer` role. It enforces the approved format vocabulary, field
 bounds, capacity/threshold relationship, lifecycle timestamps, revision
@@ -86,8 +88,9 @@ submission/publication remain an atomic repository rule because overlapping
 drafts and different Coaches are explicitly permitted.
 
 The migration contains no account assignment, availability, reservation,
-notification, customer data or real record. Its matching smoke uses only
-`example.invalid` identities and ends with `ROLLBACK`.
+notification, customer data or real record. Its matching smoke used only
+`example.invalid` identities, ended with `ROLLBACK` and left zero Calendar
+records. PostgreSQL remained loopback-only and all four services stayed active.
 
 ## Safe Staging Procedure
 

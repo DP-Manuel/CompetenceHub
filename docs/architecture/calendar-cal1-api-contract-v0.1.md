@@ -157,7 +157,7 @@ limits are a security/operations decision before implementation.
 - API v1 is additive; existing Auth/company endpoints do not change.
 - Public DTOs are explicit and never mirror database rows.
 - Cursor contents are opaque and protected against tampering.
-- Migration `0005` is prepared locally; Staging application, routers and UI
-  remain separate approval/implementation steps.
+- Migration `0005` is proven on isolated Staging; routers and UI remain
+  separate implementation and acceptance steps.
 - Staging application, real Coach accounts and production remain separate
   gates.

@@ -20,6 +20,7 @@ auf Staging, Konten, Echtdaten, Nachrichten oder Produktion.
 
 ## Umsetzungsstand
 
-Migration `0005` und der rollback-only Smoke-Test sind lokal unter
-`apps/webapp/database` vorbereitet und durch drei Vertragstests abgesichert.
-Die Anwendung auf Staging benoetigt eine eigene ausdrueckliche Freigabe.
+Migration `0005` und der rollback-only Smoke-Test wurden am 17.09.2026 nach
+eigener Freigabe auf isoliertem Staging erfolgreich ausgefuehrt. Drei Calendar-
+Tabellen blieben leer; geschuetzte Pre/Post-Dumps, Rechte, Owner, Loopback-
+Bindung und vier bestehende Dienste wurden verifiziert.

@@ -2,9 +2,9 @@
 
 Stand: 11.09.2026
 
-Status: accepted design baseline. CAL-T01 through CAL-T06 are accepted and the
-local migration package is prepared. This document authorizes no Staging
-application, account, real availability, notification or deployment.
+Status: accepted design baseline. CAL-T01 through CAL-T06 are accepted and
+migration `0005` is proven on isolated Staging. No application code, account,
+real availability, notification or deployment is activated.
 
 ## Purpose And Sources
 
@@ -65,8 +65,8 @@ No new service, queue or external integration is needed for CAL-1.
 
 ## Proposed Data Model
 
-Migration `0005` is prepared locally. Applying it to Staging remains a separate
-approval gate.
+Migration `0005` was separately approved, applied and rollback-smoke-tested on
+isolated Staging on 2026-09-17 with zero Calendar residue.
 
 ### `calendar_offers`
 

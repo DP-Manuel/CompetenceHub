@@ -44,10 +44,10 @@ Last updated: 2026-09-17
   minimal fields, governed topics, Janay's task plus E-Mail, publication checks
   and provider-neutral `.ics` delivery are now the approved business baseline.
   Manuel accepted ADR 0007 and CAL-T01 through CAL-T06 on 2026-09-11. The
-  CAL-1 architecture, data, API and RBAC design is complete. Migration `0005`,
-  its rollback-only smoke and three contract tests are prepared locally in
-  commits `f6dc3d4` and `85cb6af`; Staging, accounts, real data and activation remain separate
-  gates.
+  CAL-1 architecture, data, API and RBAC design is complete. Migration `0005`
+  was applied to isolated Staging on 2026-09-17 and its rollback-only smoke,
+  zero-residue, ownership, privilege, backup and service checks passed.
+  Application code, accounts, real data and activation remain separate gates.
 - E-Mail workflow input: twelve supplied templates are inventoried as future
   process ideas. Fixed response times, guarantees, refunds, automatic
   rescheduling, discounts, newsletters and E-Mail acceptance are not approved
@@ -419,11 +419,11 @@ Last updated: 2026-09-17
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: Manuel reviews and explicitly approves or
-  defers the protected synthetic-only Staging application of migration `0005`.
-  The local package is ready; no Staging change, account, message, real data or
-  production action has occurred. In parallel, close or explicitly defer
-  CP-02/04/07/08. The
+- Recommended next work block: implement CAL-1 domain and PostgreSQL repository
+  behavior against the verified empty schema. Scope remains transitions,
+  revisions, overlap protection, optimistic locking and minimized audit; no
+  reservation, mail, account, real-data or production action is included. In
+  parallel, close or explicitly defer CP-02/04/07/08. The
   provider-neutral backup-notification contract is complete locally; its live
   adapter remains behind EXT-01, and neither real messages nor VPS timers are
   activated. EDV follow-up is already in progress; once the response arrives,
@@ -484,12 +484,12 @@ Last updated: 2026-09-17
   No external SMTP connection or message occurred.
 - Lead-time update: no EDV response is available on 17.09.; follow-up is being
   handled. No host-specific or live-mail claim is made before evidence arrives.
-- Rolling delivery horizon: (1) separately approve and prove migration `0005`
-  on isolated Staging, (2) close residual CP-02/04/07/08, (3) resolve
-  Webroot/DNS/SMTP and the notifier adapter, (4) implement CAL-1 domain and
-  repository, (5) add protected/public APIs, (6) add Coach/reviewer Portal UI,
-  (7) connect the accepted static projection and (8) prepare the controlled
-  Pilot candidate. Confidence decreases from step 4 onward.
+- Rolling delivery horizon: (1) implement CAL-1 domain/repository, (2) close
+  residual CP-02/04/07/08, (3) resolve Webroot/DNS/SMTP and the notifier
+  adapter, (4) add protected/public APIs, (5) add Coach/reviewer Portal UI,
+  (6) connect the accepted static projection, (7) design CAL-2 reservations
+  and (8) prepare the controlled Pilot candidate. Confidence decreases from
+  step 4 onward.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.
@@ -499,8 +499,8 @@ Last updated: 2026-09-17
 
 ## Decisions Needed
 
-- Approve or defer applying migration `0005` to isolated Staging with protected
-  pre/post backups, rollback-only smoke and synthetic-only verification.
+- Confirm the implementation start for CAL-1 domain/repository behavior; the
+  Staging migration gate is closed.
 - Which Donner + Partner group company is the legal Competence Hub provider?
 - Who may later cover Janay Rappelt's public mailbox during her absence? Until
   then, no public response-time promise applies.

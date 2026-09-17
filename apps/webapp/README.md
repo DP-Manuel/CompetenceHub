@@ -10,6 +10,11 @@ schema; no backend service is deployed and no real data exists. Keep webapp
 decisions separate from the public Astro website.
 The website must never connect directly to the database.
 
+Calendar migration `0005` is applied and rollback-smoke-tested on isolated
+Staging as of 2026-09-17. It adds only the empty CAL-1 availability/review
+foundation and an unassigned reviewer role; application behavior, accounts,
+real availability, reservations and production activation remain absent.
+
 `database/bootstrap-staging.sql` reproducibly creates the secret-free role,
 database and schema structure. Login passwords are set only through interactive
 `psql` prompts and never belong in this script.

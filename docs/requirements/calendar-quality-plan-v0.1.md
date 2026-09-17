@@ -3,8 +3,8 @@
 Stand: 11.09.2026
 
 Status: test-ready baseline under accepted ADR 0007 and CAL-T01 through
-CAL-T06. Migration `0005` is prepared locally but not authorized for Staging;
-no productive calendar, reservation or notification is active.
+CAL-T06. Migration `0005` is applied and rollback-smoke-tested on isolated
+Staging; no productive calendar, reservation or notification is active.
 
 ## Purpose
 
