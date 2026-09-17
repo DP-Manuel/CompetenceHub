@@ -22,9 +22,10 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   real browser. The local runner is stopped and its ephemeral context removed.
   No persistent Competence-Hub backend/worker service, real account, real data
   or production deployment exists yet.
-- Main blocker: the former 2026-09-25 production deadline is retired. The
-  preferred gate-dependent candidate is 2026-09-17, with 2026-09-24 as
-  fallback; neither date is a release promise. Runtime services,
+- Main blocker: the former 2026-09-17 candidate has elapsed without the EDV
+  inputs and 2026-09-24 is no longer treated as a release promise. The next
+  controlled start is planned only after Manuel's return, provisionally from
+  the second half of October and still subject to all gates. Runtime services,
   App-DNS, SMTP delivery, production backup scheduling/alerting, legal website
   approval, named-user onboarding and production Go/No-Go remain open. The
   software and external-restore rehearsals are proven; operational activation
@@ -33,10 +34,10 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   application of migration `0005` on isolated Staging. ADR 0007, CAL-D01
   through CAL-D08 and CAL-T01 through CAL-T06 are accepted; the local SQL and
   rollback smoke are prepared. In
-  parallel, review or chase the EDV response from 2026-09-14 and close app
-  hostname, SMTP/sender, production timer/alert ownership, Legal, onboarding
-  and Go/No-Go gates. Productive data remains blocked until all production
-  gates close.
+  parallel, EDV follow-up is already in progress; once received, close app
+  hostname, SMTP/sender and Webroot evidence. Production timer/alert ownership,
+  Legal, onboarding and Go/No-Go remain separate gates. Productive data stays
+  blocked until all production gates close.
 
 ## Scope
 
@@ -168,9 +169,9 @@ for Git, release, backup and restore responsibilities.
    explicitly authorize or defer its protected, synthetic-only Staging run.
 2. **Content decision gate:** close, assign or explicitly defer the residual
    CP-02/04/07/08 items without inventing claims or producing guide pages.
-3. **EDV gate:** review the expected response from 2026-09-14 or chase it from
-   2026-09-15, then repeat the read-only SFTP Webroot inventory and finalize
-   App-DNS/SMTP contracts without uploading anything prematurely.
+3. **EDV gate:** follow-up is already in progress; when the response arrives,
+   repeat the read-only SFTP Webroot inventory and finalize App-DNS/SMTP
+   contracts without uploading anything prematurely.
 4. **Calendar application layer:** after successful Staging migration proof,
    implement CAL-1 domain/repository/API behavior without reservations or mail.
 5. **Production readiness:** confirm the legal operator, Impressum, mailbox
@@ -520,12 +521,12 @@ phase model.
 
 ## Risks And Blockers
 
-- **Schedule / activation:** technical readiness is green; the former
-  2026-09-25 production deadline is retired; 17.09. is preferred and 24.09. is
-  the fallback only if every required gate closes. Runtime, DNS, SMTP, production
-  backup scheduling/alerting, account handoff and production approval remain
-  open. Owner: Manuel, with Thomas Ross for production approval. Mitigation:
-  keep implementation WIP small and close activation gates in order.
+- **Schedule / activation:** technical readiness is green, but 17.09. elapsed
+  without the external inputs and 24.09. is no longer a release commitment.
+  The next controlled start is provisionally in the second half of October.
+  Runtime, DNS, SMTP, production backup scheduling/alerting, account handoff
+  and production approval remain open. Owner: Manuel, with Thomas Ross for
+  production approval. Mitigation: keep WIP small and close gates in order.
 - **Real-data recovery:** the encrypted external-copy restore rehearsal passed.
   Before real data, enable an approved production schedule and alert route and
   retain the exact-copy restore discipline. Owner: Manuel.
@@ -668,7 +669,8 @@ Recommended next block: review and, only after Manuel's explicit approval,
 apply migration `0005` to isolated Staging with protected pre/post backups,
 rollback-only smoke and zero-residue evidence. The local package is complete;
 no Staging application has occurred. In parallel, close or explicitly defer
-CP-02/04/07/08 and process the EDV response from 14.09. The
+CP-02/04/07/08. EDV follow-up is already in progress; its response is processed
+when available. The
 provider-neutral backup-notification contract is complete locally; only its
 live adapter, recipient routing and timer activation remain gated.
 
@@ -681,7 +683,7 @@ progress in parallel but do not silently expand the execution backlog.
 | --- | --- | --- | --- | --- | --- |
 | 1 | Ready for Manuel decision | High | Apply migration `0005` on isolated Staging or defer it | local package `85cb6af`; separate approval and protected pre-backup | native migration/smoke, zero residue, post-backup, localhost PostgreSQL and four service checks |
 | 2 | Ready content decision | High | Close residual CP-02/04/07/08 | no invented claims or new guide pages | cadence, owners/review dates and profile evidence accepted, assigned or deferred |
-| 3 | Waiting external | High | Resolve Webroot, App-DNS/SMTP and notifier adapter | EDV response expected from 14.09.; no upload/live mail | read-only inventory, DNS/TLS proof, SMTP contract and synthetic receipts |
+| 3 | Waiting external; follow-up active | High | Resolve Webroot, App-DNS/SMTP and notifier adapter | EDV response outstanding; no duplicate chase, upload or live mail | read-only inventory, DNS/TLS proof, SMTP contract and synthetic receipts |
 | 4 | Pending | Medium-high | Implement CAL-1 domain and repository | successful step 1; no reservation/mail scope | transition, overlap, optimistic-lock, revision and audit unit/integration tests |
 | 5 | Pending | Medium | Implement protected/public CAL-1 APIs | step 4; existing Auth/CSRF/Origin/RBAC patterns | API tests for ownership, reviewer permission, public minimization and generic errors |
 | 6 | Pending | Medium-low | Add Coach/reviewer Portal UI and browser acceptance | step 5; synthetic role assignments only | keyboard, focus, 390 px, 200% zoom, stale-edit recovery and role walkthrough |
@@ -729,9 +731,9 @@ progress in parallel but do not silently expand the execution backlog.
   tested and rollback-ready Website/Portal packages plus an explicit matrix of
   remaining DNS, SMTP, backup, Legal, account and Go/No-Go gates. Deployment,
   real accounts and real data follow only after their separate gates.
-- **G-PROD:** the former 2026-09-25 target is retired. The current candidates
-  are 17.09. and 24.09.; both remain conditional on all required gates.
-  Production still requires the canonical
+- **G-PROD:** the former September targets are retired. The next controlled
+  start is provisional from the second half of October and remains conditional
+  on all required gates. Production still requires the canonical
   Website, separately deployed Portal, Janay's MFA-protected least-privilege
   account, a verified external restore and successful first approved company
   plus contact. A database-only or UI-only state is not sufficient.
@@ -759,8 +761,8 @@ progress in parallel but do not silently expand the execution backlog.
 - SEO/GEO content inventory and evidence matrix remain a connected but separate
   public-website workstream.
 
-Parallel organizational work: process the expected EDV response from
-2026-09-14 onward, confirm contract status, complete the final legal operator/
+Parallel organizational work: await the already escalated EDV response,
+confirm contract status, complete the final legal operator/
 Impressum and mailbox absence cover, schedule Janay's onboarding and secure
 Thomas Ross's static/backend production Go/No-Go path. The encrypted Wuerzburg
 restore rehearsal is complete; production timers and alert routing remain

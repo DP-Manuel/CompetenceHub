@@ -1,6 +1,6 @@
 # Competence Hub Readiness Gate Board
 
-Stand: 2026-09-11
+Stand: 2026-09-17
 
 ## Ampel
 
@@ -9,7 +9,7 @@ Stand: 2026-09-11
 | Technisches Readiness-Paket | GRUEN TECHNISCH | Website-/Webapp-Pakete, Staging und externer Backup-/Restore-Beweis sind gruen; die aktuelle Website hat zusaetzlich ein festes internes Link-Gate | Nach relevanten Codeaenderungen reproduzierbar neu bauen |
 | Kalender-Discovery und Architektur | GRUEN FACHLICH / DESIGN / SQL LOKAL | CAL-0/CAL-0.1, CAL-D01 bis CAL-D08, ADR 0007 und CAL-T01 bis CAL-T06 sind akzeptiert; Migration `0005` plus Smoke liegen lokal vor | Paket pruefen und Staging-Anwendung separat freigeben; keine Echtdaten ableiten |
 | Erste freigegebene Firmen | GELB | Datenmodell, geschuetzter Firmen-/Kontakt-Slice und synthetischer Restore sind bewiesen; Echtdaten bleiben gegated | Vertrag, benannte Konten, Backup-Timer/Alarm und Betriebsfreigabe |
-| Kontrollierter Produktionsstart | GELB / TERMINKANDIDATEN | 17.09. bevorzugt, wenn alle Gates schliessen; 24.09. als Ausweichtermin, sonst spaeter | EDV/Legal klaeren und Onboarding-/Go-No-Go bestaetigen |
+| Kontrollierter Produktionsstart | GELB / NACH URLAUB | 17.09. ist verstrichen; 24.09. ist kein Releaseversprechen; naechster Korridor fruehestens zweite Oktoberhaelfte | EDV/Legal klaeren und Onboarding-/Go-No-Go neu terminieren |
 | Budget | UNBEKANNT | Kein belastbarer Budgetrahmen dokumentiert | Nur bei kostenpflichtigem Mail-, Hosting- oder Backupbedarf entscheiden |
 
 `GELB` bedeutet: mit den vorhandenen Nachweisen erreichbar, aber von offenen
@@ -21,9 +21,9 @@ Gates abhaengig. Es ist keine Produktionsfreigabe.
 | --- | --- | --- | --- |
 | ADR 0007, CAL-T01 bis CAL-T06 und CAL-1-Architektur/API/RBAC angenommen | Migration `0005` fuer isoliertes Staging separat freigeben | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Echtdaten und erster realer Firmenrecord |
 | Migration `0005`, Rollback-Smoke und drei lokale Vertragstests vorbereitet | Nach Staging-Freigabe geschuetztes Pre-Backup, Migration und Smoke ausfuehren | EXT-03: Onboarding-/Go-No-Go-Terminbestaetigung | Produktive Einladungs-E-Mails und reale Konten |
-| Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go fuer 17.09., ersatzweise 24.09. bestaetigen | Oeffentliche Bewerbung und Produktions-Go-Live |
+| Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go fuer den Oktoberkorridor neu terminieren | Oeffentliche Bewerbung und Produktions-Go-Live |
 | Lokaler Backup-Meldungsvertrag mit 21 fokussierten Tests abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-01: SMTP-/Sendervertrag und Benachrichtigungskanal | Produktive Backup-Timer ohne getestete Zustellung |
-| Pilot-Owner entschieden: Manuel Admin, Thomas technischer Break-glass, Janay Mailbox ohne Vertretung | Ab 14.09. EDV-Antwort pruefen; ab 15.09. nachfassen | EXT-06: spaetere Mailboxvertretung bleibt unbesetzt; kein Service-Level versprechen | Automatisierter Website-Replace oder Remote-Loeschung |
+| Pilot-Owner entschieden: Manuel Admin, Thomas technischer Break-glass, Janay Mailbox ohne Vertretung | EDV-Follow-up laeuft; Antwort nach Eingang verarbeiten | EXT-06: spaetere Mailboxvertretung bleibt unbesetzt; kein Service-Level versprechen | Automatisierter Website-Replace oder Remote-Loeschung |
 | Sauberes Website-Artefakt `5d126cbaec0e` mit 1.137 geprueften internen Referenzen | Nach EDV-Korrektur: SFTP-Webroot nur lesend inventarisieren | Korrigiertes IONOS-SFTP-Startverzeichnis | Unternehmens-/personenbezogene Daten ohne aktiven Backup-/Alarmbetrieb |
 
 WIP-Regel: maximal ein technischer Ausfuehrungsblock gleichzeitig. Externe
@@ -41,12 +41,12 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | G-CALENDAR: CAL-0/CAL-0.1 | DONE REVIEW | Janay / Manuel | akzeptiert 11.09. | Review, Browser-/Netzwerk-Smokes und Janays ausdrueckliche Zustimmung | Produktive CAL-1-Umsetzung bleibt hinter Fachentscheidungen |
 | G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | DONE / ACCEPTED | Janay / Manuel | abgeschlossen 11.09. | Janay akzeptierte alle Regeln/Pilotablauf; Manuel akzeptierte ADR 0007 | Erlaubt Design, aber keine Migration, Konten, Daten oder Aktivierung |
 | G-CALENDAR-DESIGN: CAL-1 Daten/API/RBAC | DONE LOCAL / SQL PREPARED | Manuel | aktualisiert 11.09. | CAL-T01..T06 akzeptiert; revisionssichere Publikation, `calendar_reviewer`, öffentliche/private Projektion, Migration `0005`, Rollback-Smoke und drei Vertragstests liegen vor | Staging-Anwendung wartet auf eigene Freigabe und geschuetztes Pre-Backup |
-| G-EDV: App-DNS/TLS/SMTP | WAITING UNTIL 14.09. | EDV | ab 14.09. pruefen, ab 15.09. nachfassen | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
+| G-EDV: App-DNS/TLS/SMTP | WAITING / FOLLOW-UP ACTIVE | EDV | Antwort ausstehend seit 14.09. | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
 | G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING EXTERNAL | Manuel / Thomas Ross / EDV | vor Website-Go-Live | Host-Key bestaetigt; Anmeldung bewiesen; zugewiesener Webroot fehlt noch | Kein Website-Replace |
 | G-CONTRACT: finaler Vertragsweg | WAITING | Lars Donner / Fachseite | im September klaeren | Freigegebener Vertragsstand und Prozess | Kein freigegebener erster Firmenprozess |
 | G-LEGAL: Betreiber und Rechtstexte | WAITING | Lars Donner / Rechtspruefung | Reviewpfad bis 24.09.; Abschluss vor Go/No-Go | Finaler Betreiber, Impressum und anwendbare Datenschutz-/AGB-Fassung | Kein beworbener Livegang |
-| G-ACCOUNT: benannte Konten und MFA | WAITING ACTIVATION | Manuel / Janay / Thomas Ross | bevorzugt 17.09., ersatzweise 24.09. | E-Mail-Einladung, MFA, Least-Privilege-Matrix, getrennt getesteter technischer Break-glass-Zugang | Kein realer Fachbetrieb |
-| G-ACCEPT: Fachabnahme und Go/No-Go | WAITING | Janay / Thomas Ross | 17.09. bevorzugt, 24.09. als Fallback | Janay-Walkthrough und dokumentiertes Go/No-Go | Keine Produktion |
+| G-ACCOUNT: benannte Konten und MFA | WAITING ACTIVATION | Manuel / Janay / Thomas Ross | fuer Oktoberkorridor neu terminieren | E-Mail-Einladung, MFA, Least-Privilege-Matrix, getrennt getesteter technischer Break-glass-Zugang | Kein realer Fachbetrieb |
+| G-ACCEPT: Fachabnahme und Go/No-Go | WAITING | Janay / Thomas Ross | fuer Oktoberkorridor neu terminieren | Janay-Walkthrough und dokumentiertes Go/No-Go | Keine Produktion |
 | G-MAILBOX: Reaktion und Vertretung | KNOWN GAP | Janay | Routing vor Pilot testen; Vertretung spaeter benennen | Janay ist Owner; aktuell keine Abwesenheitsvertretung; Thomas deckt nur technische Notfaelle | Kein versprochenes Service-Level |
 
 ## Pull-Regel
@@ -54,8 +54,8 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 1. ADR 0007, CAL-D01 bis CAL-D08 und CAL-T01 bis CAL-T06 sind akzeptiert.
    Migration `0005` liegt lokal vor; als naechstes folgt nur nach eigener
    Freigabe der geschuetzte, synthetische Staging-Lauf.
-2. Die EDV-Antwort wird ab 14.09. geprueft und ab 15.09. nachgefasst. Erst nach
-   korrigiertem SFTP-Startverzeichnis folgt eine read-only Webroot-Inventur.
+2. Das EDV-Follow-up laeuft bereits. Erst nach korrigiertem SFTP-Startverzeichnis
+   folgt eine read-only Webroot-Inventur; bis dahin kein Upload.
 3. Das CP-01-bis-CP-08-Inhaltspaket kann unabhaengig versendet werden; neue
    Ratgeberseiten oder unbelegte Aussagen bleiben gesperrt.
 4. Wenn kein Gate schliesst, werden Release-, Sicherheits-, Barrierefreiheits-

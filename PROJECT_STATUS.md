@@ -1,15 +1,15 @@
 # Project Status
 
-Last updated: 2026-09-11
+Last updated: 2026-09-17
 
 ## Snapshot
 
 - Overall status: yellow for production, green for the 2026-08-28 technical-
   readiness checkpoint. The website and complete synthetic portal slice,
   clean release package and external restore rehearsal are verified. The former
-  2026-09-25 production deadline is retired. A first small controlled start can
-  be accepted on 2026-09-17 if every preceding gate closes; 2026-09-24 is the
-  preferred fallback, otherwise the start moves to a documented later date.
+  2026-09-25 production deadline is retired. The 17.09. candidate elapsed
+  without the required EDV inputs, and 24.09. is no longer a release promise.
+  The next controlled start is provisional from the second half of October.
   Production runtime scheduling/alerting,
   App-DNS, SMTP, named accounts, legal approval and Go/No-Go are still open.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
@@ -400,9 +400,9 @@ Last updated: 2026-09-11
   private workbook remains outside Git.
 - Visual steering board: `docs/requirements/readiness-gate-board-2026-08-28.md`
   consolidates Done/Ready/Waiting/Blocked flow, owners, dates, evidence and the
-  completed 28.08. technical checkpoint plus the gate-dependent 17.09./24.09.
-  candidates. Technical readiness is green; production is yellow behind named
-  gates.
+  completed 28.08. technical checkpoint plus the provisional post-vacation
+  start corridor. Technical readiness is green; production is yellow behind
+  named gates.
 - Current verified implementation checkpoint: commit `58299ae` adds the
   backup notification contract and is pushed to `origin/main`. The Website
   checkpoint `5d126cb` is on `origin/main`; its crawler-blocked review was deployed through
@@ -426,17 +426,15 @@ Last updated: 2026-09-11
   CP-02/04/07/08. The
   provider-neutral backup-notification contract is complete locally; its live
   adapter remains behind EXT-01, and neither real messages nor VPS timers are
-  activated. In parallel, review the EDV response from 2026-09-14 or chase it from
-  2026-09-15, then repeat the read-only Webroot inventory. Preferred
-  onboarding/Go-No-Go is 17.09. if all gates close, with 24.09. as fallback.
+  activated. EDV follow-up is already in progress; once the response arrives,
+  repeat the read-only Webroot inventory and close DNS/SMTP evidence. The next
+  controlled start is provisional from the second half of October.
   Real data and
   production activation remain blocked by operational, Legal, account and
   Go/No-Go gates.
-- Lead-time radar: EDV input is not expected before 2026-09-14 and should be
-  reviewed then or chased from 2026-09-15. Contract and Legal status should be
-  requested by 2026-09-18. The 17.09. and 24.09. acceptance candidates should
-  be confirmed as early as possible. Janay's mailbox currently has no absence
-  cover; Thomas Ross covers only technical emergencies.
+- Lead-time radar: the EDV response is overdue, and organizational follow-up is
+  already active. Contract and Legal remain open. Janay's mailbox currently
+  has no absence cover; Thomas Ross covers only technical emergencies.
 - SB-19 evidence: the existing isolated Outbox Staging test now continues
   through single-use invitation acceptance, password hashing, TOTP enrollment,
   Recovery-code generation and active session creation. It compiles and skips
@@ -484,9 +482,8 @@ Last updated: 2026-09-11
   Staging skips; compileall, `pip check` and JavaScript syntax pass. The final
   review also enforces same-origin action links and single-recipient delivery.
   No external SMTP connection or message occurred.
-- Lead-time update: EDV expects no response before 2026-09-14. Review receipt on
-  that date and chase from 2026-09-15; no host-specific or live-mail claim is
-  made before evidence arrives.
+- Lead-time update: no EDV response is available on 17.09.; follow-up is being
+  handled. No host-specific or live-mail claim is made before evidence arrives.
 - Rolling delivery horizon: (1) separately approve and prove migration `0005`
   on isolated Staging, (2) close residual CP-02/04/07/08, (3) resolve
   Webroot/DNS/SMTP and the notifier adapter, (4) implement CAL-1 domain and

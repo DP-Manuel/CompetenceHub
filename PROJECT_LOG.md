@@ -2,6 +2,22 @@
 
 Newest entries first.
 
+## 2026-09-17 | steering/external | EDV-Ruecklauf weiter ausstehend
+
+- Am 17.09. liegt weiterhin keine EDV-Antwort zu Webroot, App-DNS und SMTP vor;
+  die organisatorische Nachverfolgung laeuft bereits und wird nicht durch
+  parallele technische Annahmen ersetzt.
+- Der 17.09. ist als Abnahmekandidat verstrichen; 24.09. ist kein belastbares
+  Releaseversprechen. Der naechste kontrollierte Startkorridor beginnt
+  fruehestens in der zweiten Oktoberhaelfte und bleibt gate-abhaengig.
+- Unabhaengig bereit bleiben die synthetische Staging-Pruefung von Migration
+  `0005`, danach CAL-1-Domain/Repository/API sowie die offenen Content-
+  Entscheidungen CP-02/04/07/08.
+- Kein Upload, Live-Mailversand, produktiver Timer, reales Konto, Echtdatum oder
+  Deployment wurde ausgeloest.
+- Skill-Learning-Check: Die vorhandene Lead-time-/Waiting-External-Regel greift;
+  kein neuer wiederverwendbarer Skill-Befund.
+
 ## 2026-09-11 | decision/database/testing | CAL-T01 bis CAL-T06 umgesetzt
 
 - Manuel hat CAL-T01 bis CAL-T06 ausdruecklich freigegeben. Damit sind
