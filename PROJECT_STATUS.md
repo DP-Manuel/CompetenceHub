@@ -50,12 +50,16 @@ Last updated: 2026-09-17
   The approved domain/repository slice is implemented locally with own-Coach,
   Admin and reviewer scopes, idempotent creation, immutable revisions,
   optimistic locking, Coach-scoped overlap serialization and payload-free
-  audit. The complete suite passes 338 tests with 15 expected Staging skips.
+  audit. The complete suite passes 339 tests with 15 expected Staging skips.
   The first guarded Staging run passed 14/15 and exposed an asyncpg UUID/text
-  bind mismatch in the advisory lock before the first Calendar insert. The
-  explicit UUID-first cast and regression test are locally green; the corrected
-  repository rerun, APIs, UI, accounts, real data and activation remain
-  separate gates.
+  bind mismatch in the advisory lock before the first Calendar insert. After
+  that fix, the focused rerun exposed a second test-only issue: a hard-coded
+  client timestamp conflicted with the PostgreSQL update-trigger clock. The
+  Staging test now derives its controlled clock from PostgreSQL. The corrected
+  Calendar-only path passed in 18.57 seconds and the complete native suite
+  passed 15/15 in 199.11 seconds. The VPS postflight found zero rows in all 19
+  checked dynamic data areas and all four co-hosted services remained active.
+  APIs, UI, accounts, real data and activation remain separate gates.
 - E-Mail workflow input: twelve supplied templates are inventoried as future
   process ideas. Fixed response times, guarantees, refunds, automatic
   rescheduling, discounts, newsletters and E-Mail acceptance are not approved
@@ -428,12 +432,11 @@ Last updated: 2026-09-17
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: execute the prepared synthetic CAL-1 repository
-  integration test against isolated Staging and prove concurrent overlap
-  protection, revisions, foreign-scope denial, audit and zero residue. No
-  migration, reservation, mail, account, real-data or production action is
-  included. In
-  parallel, close or explicitly defer CP-02/04/07/08. The
+- Recommended next work block: define the canonical Coach-ID-to-public-profile
+  mapping boundary and then implement the bounded protected/public CAL-1 API
+  slice against the now-proven repository. No UI, reservation, mail, account,
+  real-data or production action is included. In parallel, close or explicitly
+  defer CP-02/04/07/08. The
   provider-neutral backup-notification contract is complete locally; its live
   adapter remains behind EXT-01, and neither real messages nor VPS timers are
   activated. EDV follow-up is already in progress; once the response arrives,
@@ -494,12 +497,12 @@ Last updated: 2026-09-17
   No external SMTP connection or message occurred.
 - Lead-time update: no EDV response is available on 17.09.; follow-up is being
   handled. No host-specific or live-mail claim is made before evidence arrives.
-- Rolling delivery horizon: (1) prove CAL-1 domain/repository on Staging, (2) close
-  residual CP-02/04/07/08, (3) resolve Webroot/DNS/SMTP and the notifier
-  adapter, (4) add protected/public APIs, (5) add Coach/reviewer Portal UI,
-  (6) connect the accepted static projection, (7) design CAL-2 reservations
-  and (8) prepare the controlled Pilot candidate. Confidence decreases from
-  step 4 onward.
+- Rolling delivery horizon: (1) decide the canonical Coach-profile mapping,
+  (2) add protected/public CAL-1 APIs, (3) add Coach/reviewer Portal UI,
+  (4) connect the accepted static projection, (5) design CAL-2 reservations,
+  (6) rebuild the release/evidence package, (7) rehearse named synthetic Pilot
+  accounts and (8) prepare the controlled Pilot candidate. Confidence decreases
+  from step 3 onward. Content decisions and EDV/Legal gates run in parallel.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.
@@ -509,8 +512,6 @@ Last updated: 2026-09-17
 
 ## Decisions Needed
 
-- Approve the controlled synthetic CAL-1 repository integration run on
-  isolated Staging; the implementation and migration gates are locally closed.
 - Which approved source maps a Coach UUID to the canonical public Website
   profile path? The public calendar API must not derive URLs from display names.
 - Which Donner + Partner group company is the legal Competence Hub provider?

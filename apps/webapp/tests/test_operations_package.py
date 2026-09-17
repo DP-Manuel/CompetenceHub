@@ -288,6 +288,19 @@ def test_release_builder_packages_operations_contract() -> None:
     assert "competence-hub-postgres-backup-monitor.timer.example" in builder
 
 
+def test_staging_runner_keeps_calendar_only_target_as_one_argument() -> None:
+    script = read(
+        REPO_ROOT / "apps" / "webapp" / "scripts" / "run-staging-session-integration.ps1"
+    )
+
+    assert "[switch]$CalendarOnly" in script
+    calendar_branch = script.split("if ($CalendarOnly) {", maxsplit=1)[1].split(
+        "else {", maxsplit=1
+    )[0]
+    assert "tests/test_staging_calendar_integration.py" in calendar_branch
+    assert "@testTargets" not in script
+
+
 def test_windows_pull_is_guarded_and_never_deletes_remote_data() -> None:
     script = read(SCRIPTS_ROOT / "pull-competence-hub-backup.ps1")
 

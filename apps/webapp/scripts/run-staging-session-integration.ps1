@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [int]$LocalPort = 55432
+    [int]$LocalPort = 55432,
+    [switch]$CalendarOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -26,13 +27,19 @@ try {
     $env:COMPETENCE_HUB_TEST_MIGRATOR_DATABASE_URL =
         "postgresql+asyncpg://competence_hub_migrator:${migratorEncoded}@127.0.0.1:${LocalPort}/competence_hub_staging"
 
-    & $python -m pytest -m staging_integration `
-        tests/test_staging_session_integration.py `
-        tests/test_staging_login_integration.py `
-        tests/test_staging_mfa_integration.py `
-        tests/test_staging_outbox_integration.py `
-        tests/test_staging_company_integration.py `
-        tests/test_staging_calendar_integration.py
+    if ($CalendarOnly) {
+        & $python -m pytest -m staging_integration `
+            tests/test_staging_calendar_integration.py
+    }
+    else {
+        & $python -m pytest -m staging_integration `
+            tests/test_staging_session_integration.py `
+            tests/test_staging_login_integration.py `
+            tests/test_staging_mfa_integration.py `
+            tests/test_staging_outbox_integration.py `
+            tests/test_staging_company_integration.py `
+            tests/test_staging_calendar_integration.py
+    }
     if ($LASTEXITCODE -ne 0) {
         throw "Staging integration test failed with exit code $LASTEXITCODE."
     }

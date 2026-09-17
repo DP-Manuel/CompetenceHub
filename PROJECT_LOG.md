@@ -2,6 +2,47 @@
 
 Newest entries first.
 
+## 2026-09-17 | staging/calendar | CAL-1 Repository-Gate abgeschlossen
+
+- Der korrigierte Calendar-only-Lauf bestand den nativen PostgreSQL-Test in
+  18,57 Sekunden. Der anschliessende vollstaendige Staging-Regressionslauf
+  bestand alle 15 Pfade in 199,11 Sekunden.
+- Der Test bewies konkurrierende Einreichungen desselben Coaches,
+  Ueberschneidungsschutz, Revision/Publikation, Fremdzugriffsverweigerung,
+  payload-freies Audit und transaktionalen Cleanup gegen Migration `0005`.
+- Der VPS-Postflight zeigte in allen 19 geprueften dynamischen Auth-, Firmen-,
+  Coach-, Topic-, Kalender- und Auditbereichen null Zeilen. Chatbot, Nginx,
+  Fail2ban und PostgreSQL blieben aktiv.
+- SB-46 und der Repository-Staging-Gate sind damit abgeschlossen. Es wurden
+  keine Rollen zugewiesen, keine realen Konten, Termine oder Nachrichten
+  erzeugt und keine Runtime- oder Produktionsaenderung vorgenommen.
+- Naechster empfohlener Block ist die begrenzte CAL-1-API-Schicht; davor muss
+  die kanonische Quelle fuer Coach-ID zu oeffentlichem Profilpfad entschieden
+  oder die erste API-Fassung ausdruecklich ohne Profilpfad begrenzt werden.
+
+## 2026-09-17 | debugging/calendar | Staging-Test an Datenbankuhr gebunden
+
+- Der gezielte CAL-1-Rerun erreichte nach der UUID-Bindkorrektur die
+  parallelen Submit-Transaktionen. Beide scheiterten an
+  `calendar_offer_revisions_timestamp_order_ck`, weil der Test eine feste
+  Clientzeit von 14:00 UTC mit dem serverseitigen `updated_at`-Trigger der
+  Staging-Datenbank um 13:36 UTC kombinierte.
+- Der Fehler lag im Testvertrag, nicht in der Kalender-Constraint oder der
+  Ueberschneidungslogik. Der Test bezieht seinen synthetischen
+  Operationszeitpunkt nun aus PostgreSQL `clock_timestamp()` und verwendet
+  einen kontrollierten Fuenf-Minuten-Abstand fuer die nachfolgenden
+  Zustandswechsel.
+- Der `-CalendarOnly`-Runner zerlegte beim ersten Diagnoseversuch einen
+  einzelnen Testpfad in Zeichen. Er uebergibt den Pfad nun direkt; ein
+  Regressionstest und der PowerShell-Parser sichern den Aufruf.
+- 22 fokussierte Tests und die vollstaendige lokale Suite mit 339 Passes sowie
+  15 erwarteten Staging-Skips sind gruen. Der erneute native Calendar-only-
+  Lauf und anschliessende Nullrueckstandsnachweis bleiben offen.
+- Skill-Learning-Check: `write-tests` verlangt nun eine autoritative oder
+  gemeinsam injizierte Uhr ueber App-/Datenbankgrenzen; `debug-failures`
+  fuehrt Clock-Source-Mismatch als eigene Ursache. Canonical Skills und aktive
+  Laufzeitkopie sind aktualisiert und alle 30 Skills validiert.
+
 ## 2026-09-17 | debugging/calendar | UUID-Typgrenze im Staging-Lauf korrigiert
 
 - Der erste vollständige CAL-1-Staging-Lauf bestand 14 der 15 Tests. Der neue

@@ -12,7 +12,6 @@ from competence_hub_api.portal.postgres_calendar import PostgresCalendarReposito
 
 APP_DATABASE_URL_ENV = "COMPETENCE_HUB_TEST_APP_DATABASE_URL"
 MIGRATOR_DATABASE_URL_ENV = "COMPETENCE_HUB_TEST_MIGRATOR_DATABASE_URL"
-NOW = datetime(2026, 9, 17, 14, 0, tzinfo=UTC)
 
 pytestmark = [pytest.mark.anyio, pytest.mark.staging_integration]
 
@@ -65,10 +64,14 @@ async def test_staging_calendar_concurrency_revisions_audit_and_zero_residue() -
     coach_id = uuid4()
     topic_id = uuid4()
     offer_ids: list[UUID] = []
+    operation_time: datetime | None = None
 
     try:
         async with admin_engine.begin() as connection:
             await connection.execute(text("SET LOCAL ROLE competence_hub_owner"))
+            database_time = await connection.scalar(text("SELECT clock_timestamp()"))
+            assert isinstance(database_time, datetime)
+            operation_time = database_time.astimezone(UTC) - timedelta(minutes=5)
             for user_id, label in (
                 (coach_user_id, "Coach"),
                 (reviewer_user_id, "Reviewer"),
@@ -117,14 +120,15 @@ async def test_staging_calendar_concurrency_revisions_audit_and_zero_residue() -
                 {"coach_id": coach_id, "topic_id": topic_id},
             )
 
-        start = NOW + timedelta(days=20)
+        assert operation_time is not None
+        start = operation_time + timedelta(days=20)
         first = await repository.create_offer(
             actor_user_id=coach_user_id,
             allow_any_coach=False,
             requested_coach_id=None,
             client_request_id=uuid4(),
             draft=_draft(topic_id, start=start, title="Synthetic A"),
-            now=NOW,
+            now=operation_time,
         )
         offer_ids.append(first.offer.id)
         second = await repository.create_offer(
@@ -137,7 +141,7 @@ async def test_staging_calendar_concurrency_revisions_audit_and_zero_residue() -
                 start=start + timedelta(minutes=30),
                 title="Synthetic B",
             ),
-            now=NOW,
+            now=operation_time,
         )
         offer_ids.append(second.offer.id)
 
@@ -147,21 +151,29 @@ async def test_staging_calendar_concurrency_revisions_audit_and_zero_residue() -
                 allow_any_coach=False,
                 offer_id=first.offer.id,
                 expected_version=1,
-                now=NOW,
+                now=operation_time,
             ),
             repository.submit_offer(
                 actor_user_id=coach_user_id,
                 allow_any_coach=False,
                 offer_id=second.offer.id,
                 expected_version=1,
-                now=NOW,
+                now=operation_time,
             ),
             return_exceptions=True,
         )
         successes = [item for item in results if not isinstance(item, Exception)]
         conflicts = [item for item in results if isinstance(item, CalendarTimeConflictError)]
-        assert len(successes) == 1
-        assert len(conflicts) == 1
+        if len(successes) != 1 or len(conflicts) != 1:
+            outcomes = " | ".join(
+                (
+                    type(item).__name__
+                    if not isinstance(item, Exception)
+                    else f"{type(item).__name__}: {item}"
+                )
+                for item in results
+            )
+            pytest.fail(f"unexpected concurrent submit outcomes: {outcomes}")
 
         submitted = successes[0]
         assert submitted.current_revision.workflow_status == "in_review"
@@ -171,7 +183,7 @@ async def test_staging_calendar_concurrency_revisions_audit_and_zero_residue() -
             expected_version=2,
             outcome="published",
             note=None,
-            now=NOW + timedelta(minutes=1),
+            now=operation_time + timedelta(minutes=1),
         )
         assert published.current_revision.workflow_status == "published"
         assert published.published_revision is not None
@@ -182,7 +194,7 @@ async def test_staging_calendar_concurrency_revisions_audit_and_zero_residue() -
             offer_id=published.offer.id,
             expected_version=3,
             draft=_draft(topic_id, start=start, title="Synthetic A revised"),
-            now=NOW + timedelta(minutes=2),
+            now=operation_time + timedelta(minutes=2),
         )
         assert revised.current_revision.revision_number == 2
         assert revised.current_revision.workflow_status == "draft"

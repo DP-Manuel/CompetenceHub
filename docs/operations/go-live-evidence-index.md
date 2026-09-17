@@ -1,6 +1,6 @@
 # Go-Live Evidence Index
 
-Stand: 2026-09-11
+Stand: 2026-09-17
 
 Dieser Index enthaelt nur freigabefaehige Metadaten und Verweise. Secrets,
 Private Keys, Recovery Keys und produktive personenbezogene Daten gehoeren
@@ -35,6 +35,7 @@ nicht hierher.
 | OPS-NOTIFY-20260911 | 2026-09-11 | Manuel / Codex | local operations contract | anbieterneutraler Backup-Erfolgs-/Stoerungsmelder | PASS LOCAL / DELIVERY NOT ACTIVATED | commit `58299ae`; `docs/architecture/postgresql-backup-restore-runbook.md` | keine | 21 fokussierte Tests; 315 Passes/14 Skips gesamt; kein Netzwerkmodul, Empfaenger, Versand, Timer oder VPS-Aenderung |
 | CAL-1-DESIGN-20260911 | 2026-09-11 | Manuel / Codex | local architecture | CAL-1 Architektur, Datenmodell, API und RBAC | PASS DESIGN / DECISIONS ACCEPTED | `docs/architecture/calendar-cal1-technical-design-v0.1.md`; `docs/architecture/calendar-cal1-api-contract-v0.1.md`; `docs/requirements/calendar-cal1-rbac-matrix-v0.1.md` | keine | Revisionen halten freigegebene Fassung stabil; CAL-T01..T06 akzeptiert; Staging bleibt separat |
 | CAL-1-MIGRATION-20260917 | 2026-09-17 | Manuel / Codex | isolated Staging / source `85cb6af` | Migration `0005` und rollback-only Smoke | PASS STAGING / ZERO RESIDUE / TMP CLEAN | `apps/webapp/database/migrations/0005_calendar_availability_and_review.sql`; `apps/webapp/database/verification/0005_calendar_availability_and_review_smoke.sql`; `PROJECT_LOG.md` | ausschliesslich synthetisch | 27 Owner-Tabellen, drei leere Calendar-Tabellen, Rolle einmalig, denied DDL/delete, lesbare 86/108-KiB Dumps, localhost PostgreSQL, temporaere SQL-Dateien entfernt, vier Dienste active |
+| CAL-1-REPOSITORY-20260917 | 2026-09-17 | Manuel / Codex | local plus isolated Staging | Domain/Repository, Nebenlaeufigkeit, Revision, RBAC, Audit und Cleanup | PASS LOCAL / STAGING / ZERO RESIDUE | `apps/webapp/tests/test_staging_calendar_integration.py`; `PROJECT_LOG.md` | ausschliesslich synthetisch | 339 lokale Passes/15 Skips; Calendar-only 1/1 in 18,57 s; Gesamtlauf 15/15 in 199,11 s; null Zeilen in 19 dynamischen Bereichen; vier Dienste active |
 | EXT-01 | offen | EDV | production infrastructure | DNS/TLS/SMTP-Vertrag | WAITING | strukturierter EDV-Input | keine | keine Live-Mail/Produktivaktivierung |
 | EXT-03 | offen | Manuel / Janay / Thomas | controlled pilot | Named-user-Abnahme und Go/No-Go | WAITING DATES PROPOSED | Onboarding-Protokoll | freigegebener Pilotmodus | 17.09. bevorzugt, 24.09. Fallback; Bestaetigung offen |
 | EXT-04 | offen | Lars / Legal | public website | Betreiber, Rechtstexte und Freigabe | WAITING | Legal-Freigabe | keine | kein beworbener Livegang |

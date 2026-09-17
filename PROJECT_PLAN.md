@@ -13,12 +13,13 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   stabilization plus isolated authenticated-portal foundation
 - Current status: yellow for production and green for the completed technical-
   readiness scope. Migration `0005` is proven on isolated Staging, and the
-  approved CAL-1 domain/repository slice is implemented locally with
+  approved CAL-1 domain/repository slice is implemented locally and proven on
+  isolated Staging with
   role, revision, idempotency, concurrency and audit tests. It builds
   on the pushed Website/content/calendar checkpoint `df62a06` and
   contains the verified public website, accepted same-origin pilot portal and
   completed encrypted external backup/restore rehearsal. The current full local
-  suite passes 338 tests with 15 expected opt-in Staging skips, all prior 14
+  suite passes 339 tests with 15 expected opt-in Staging skips, all 15/15
   isolated PostgreSQL paths passed, and BA-01 through BA-17 are accepted in a
   real browser. The local runner is stopped and its ephemeral context removed.
   No persistent Competence-Hub backend/worker service, real account, real data
@@ -31,11 +32,10 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   approval, named-user onboarding and production Go/No-Go remain open. The
   software and external-restore rehearsals are proven; operational activation
   and organizational approval are the critical path.
-- Next verification block: run the new synthetic CAL-1 repository integration
-  test against the verified empty Staging schema. Migration `0005` passed its
-  protected pre/post backup, rollback smoke, zero-residue, ownership, privilege
-  and service-health gates on 2026-09-17; the local implementation now passes
-  the complete local suite. In
+- Next implementation block: define the canonical Coach-ID-to-public-profile
+  mapping boundary and implement the bounded protected/public CAL-1 API slice.
+  Migration `0005`, the repository, 15/15 native Staging paths, zero residue
+  across 19 dynamic areas and four active services are proven. In
   parallel, EDV follow-up is already in progress; once received, close app
   hostname, SMTP/sender and Webroot evidence. Production timer/alert ownership,
   Legal, onboarding and Go/No-Go remain separate gates. Productive data stays
@@ -167,17 +167,15 @@ for Git, release, backup and restore responsibilities.
 
 ### Next Blocks
 
-1. **Calendar repository Staging gate:** run the prepared synthetic
-   concurrency/revision/rights test against isolated Staging and prove zero
-   residue; no account assignment or real availability.
-2. **Content decision gate:** close, assign or explicitly defer the residual
+1. **Calendar mapping decision:** define the approved source from Coach UUID to
+   canonical public Website profile path; never derive it from display names.
+2. **Calendar API layer:** implement protected Coach/reviewer and minimized
+   public contracts without reservations, UI, role assignment or mail.
+3. **Content decision gate:** close, assign or explicitly defer the residual
    CP-02/04/07/08 items without inventing claims or producing guide pages.
-3. **EDV gate:** follow-up is already in progress; when the response arrives,
+4. **EDV gate:** follow-up is already in progress; when the response arrives,
    repeat the read-only SFTP Webroot inventory and finalize App-DNS/SMTP
    contracts without uploading anything prematurely.
-4. **Calendar API layer:** after the domain/repository slice, implement the
-   protected Coach/reviewer and minimized public contracts without reservations
-   or mail.
 5. **Production readiness:** confirm the legal operator, Impressum, mailbox
    absence cover, named onboarding dates and Thomas Ross's Go/No-Go before
    activating Website or Webapp production paths.
@@ -547,10 +545,11 @@ phase model.
 
 ## Quality Gates
 
-- **Tests:** 338 local Webapp tests pass with 15 expected opt-in Staging skips;
-  the prior 14/14 isolated PostgreSQL paths and migration `0005` smoke passed.
-  The new CAL-1 repository path still needs its controlled Staging run. Re-run
-  local suite before packaging and Staging suite after backend/runtime changes.
+- **Tests:** 339 local Webapp tests pass with 15 expected opt-in Staging skips;
+  all 15/15 isolated PostgreSQL paths and migration `0005` smoke passed.
+  Postflight shows zero rows in 19 dynamic areas and four active services.
+  Re-run local suite before packaging and Staging suite after backend/runtime
+  changes.
 - **Website build:** Astro must report zero diagnostics and build all expected
   routes. Current evidence: 36 checked files, 28 generated pages.
 - **Browser/accessibility:** BA-01 through BA-17 are accepted, including
@@ -606,12 +605,12 @@ independent ready slice instead of silently waiting.
 ### Current Execution Backlog
 
 Current sprint goal: prepare and prove the bounded CAL-1 availability/review
-foundation without widening the real-data or production boundary. API,
-database, browser acceptance and external-copy restore evidence remain
-complete. SB-32 through SB-46 are accepted, complete or waiting on a named
-external gate; no productive backend slice is active. Migration `0005` and
-local domain/repository behavior are green, while the repository Staging run,
-APIs, seat reservations and delivery remain separately gated. EXT-01 and the
+foundation without widening the real-data or production boundary. Database,
+browser acceptance and external-copy restore evidence remain complete. SB-32
+through SB-46 are accepted, complete or waiting on a named external gate; no
+productive backend slice is active. Migration `0005` and domain/repository
+behavior are green locally and on isolated Staging, while APIs, seat
+reservations and delivery remain separately gated. EXT-01 and the
 remaining Content owner decisions continue in parallel.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
@@ -661,9 +660,9 @@ remaining Content owner decisions continue in parallel.
 | SB-43 | Done locally | Prepare a provider-neutral backup success/incident notification contract | accepted notification requirement; live channel remains behind EXT-01; no network, recipient, timer or VPS activation | bounded JSON renderer accepts only defined event/code combinations and emits fixed German action text plus stable UTC-day deduplication; 21 focused operations tests, 315 full local passes with 14 expected Staging skips, compileall and dependency checks are green; commit `58299ae`; no message was sent |
 | SB-44 | Done design-only | Accept ADR 0007 and complete CAL-1 architecture, data, API and RBAC boundaries | Manuel's explicit ADR approval; no migration or implementation | revision-safe publication, separate public/private APIs, additive `calendar_reviewer`, optimistic concurrency, public projection and verification matrix documented; CAL-T01..T06 collect remaining migration decisions; no SQL, account, data, message or deployment |
 | SB-45 | Done on isolated Staging | Prepare and prove additive CAL-1 migration `0005` plus rollback-only smoke | ADR 0007, CAL-T01..T06 and separate Staging approval; synthetic data only | three Calendar tables and unassigned `calendar_reviewer` applied; smoke rolled back to zero Calendar rows; 27 owner tables, migrations 0001-0005, denied runtime DDL/delete rights, protected readable 86/108-KiB pre/post dumps, localhost-only PostgreSQL and four active services verified |
-| SB-46 | Done locally; corrected Staging rerun pending | Implement the bounded CAL-1 domain and PostgreSQL repository | CAL-1 Domain/Repository approval; migration `0005`; no API/UI/reservation/mail/real data | normalized three-month drafts, own-Coach/Admin/reviewer scopes, idempotent create, immutable submitted revisions, optimistic locking, Coach-row serialization, half-open overlap checks, payload-free atomic audit and revision-safe publication implemented; first Staging run passed 14/15 and exposed a UUID/text driver boundary before data insertion; corrected with regression protection; 338 local passes, 15 expected Staging skips and focused security checks green |
+| SB-46 | Done locally and on isolated Staging | Implement and prove the bounded CAL-1 domain and PostgreSQL repository | CAL-1 Domain/Repository approval; migration `0005`; no API/UI/reservation/mail/real data | normalized three-month drafts, own-Coach/Admin/reviewer scopes, idempotent create, immutable submitted revisions, optimistic locking, Coach-row serialization, half-open overlap checks, payload-free atomic audit and revision-safe publication implemented; UUID binding, authoritative DB-clock fixture and Calendar-only runner are regression-protected; 339 local passes, 15/15 native Staging paths, zero rows in 19 dynamic areas and four active services |
 
-The technical-readiness baseline remains complete: 338 Webapp tests pass with
+The technical-readiness baseline remains complete: 339 Webapp tests pass with
 15 expected Staging skips, the release ZIP includes the restore tool and no
 `.env`/`.tmp`, and the current Website passes a 43-file Astro check, 30-page
 build and 1,137-reference verification. SB-25 is waiting on a corrected IONOS
@@ -671,11 +670,11 @@ SFTP start directory.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: prove the new CAL-1 repository against isolated
-Staging with synthetic concurrent submissions, revision publication, foreign-
-Coach denial, audit evidence and zero residue. No migration, role assignment,
-mail, real account or real availability is part of that run. In parallel,
-close or explicitly defer CP-02/04/07/08. EDV
+Recommended next block: decide the canonical Coach-ID-to-public-profile mapping
+and implement the bounded protected/public CAL-1 API slice against the proven
+repository. No UI, reservation, role assignment, mail, real account or real
+availability is part of that block. In parallel, close or explicitly defer
+CP-02/04/07/08. EDV
 follow-up is already in progress; its response is processed when available. The
 provider-neutral backup-notification contract is complete locally; only its
 live adapter, recipient routing and timer activation remain gated.
@@ -687,14 +686,14 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Ready for separate Staging run | High | Prove CAL-1 domain/repository on isolated Staging | local implementation green; tunnel and controlled synthetic execution | concurrent same-Coach submit, revision publication, foreign-scope denial, audit and zero residue |
-| 2 | Ready content decision | High | Close residual CP-02/04/07/08 | no invented claims or new guide pages | cadence, owners/review dates and profile evidence accepted, assigned or deferred |
-| 3 | Waiting external; follow-up active | High | Resolve Webroot, App-DNS/SMTP and notifier adapter | EDV response outstanding; no duplicate chase, upload or live mail | read-only inventory, DNS/TLS proof, SMTP contract and synthetic receipts |
-| 4 | Pending | Medium-high | Implement protected/public CAL-1 APIs | successful step 1; existing Auth/CSRF/Origin/RBAC patterns; approved Coach-ID-to-profile-path source | API tests for ownership, reviewer permission, public minimization and generic errors |
-| 5 | Pending | Medium | Add Coach/reviewer Portal UI and browser acceptance | step 4; synthetic role assignments only | keyboard, focus, 390 px, 200% zoom, stale-edit recovery and role walkthrough |
-| 6 | Pending | Medium-low | Connect the accepted static calendar projection | steps 1, 4-5 and explicit integration decision | published-only contract test plus no private-field/network regressions |
-| 7 | Pending | Low | Design CAL-2 reservation increment | CAL-1 accepted; privacy/retention and abuse decisions | concurrency, capacity, idempotency and data-minimization test plan |
-| 8 | Pending | Low | Prepare controlled Pilot release candidate | EDV, Legal, mailbox, onboarding, active backup/alerts and Go/No-Go | evidence index, rollback rehearsal, named acceptance and no high/critical finding |
+| 1 | Decision ready | High | Define canonical Coach-ID-to-public-profile mapping | approved Website profile source; no slug guessing | explicit field/source decision and negative unknown-profile behavior |
+| 2 | Ready after step 1 | High | Implement protected/public CAL-1 APIs | proven repository; existing Auth/CSRF/Origin/RBAC patterns | ownership, reviewer permission, public minimization and generic-error API tests |
+| 3 | Pending | Medium-high | Add Coach/reviewer Portal UI and browser acceptance | step 2; synthetic role assignments only | keyboard, focus, 390 px, 200% zoom, stale-edit recovery and role walkthrough |
+| 4 | Pending | Medium | Connect the accepted static calendar projection | steps 2-3 and explicit integration decision | published-only contract test plus no private-field/network regressions |
+| 5 | Pending | Medium-low | Design CAL-2 reservation increment | CAL-1 accepted; privacy/retention and abuse decisions | concurrency, capacity, idempotency and data-minimization test plan |
+| 6 | Pending | Medium-low | Rebuild release and evidence package | steps 2-4; no open high/critical finding | reproducible package, full local/Staging suite and rollback evidence |
+| 7 | Pending/gated | Low | Rehearse named synthetic Pilot accounts | EDV mail/DNS, role owners and onboarding dates | invitation/MFA/least-privilege walkthrough without real business data |
+| 8 | Pending/gated | Low | Prepare controlled Pilot release candidate | EDV, Legal, mailbox, active backup/alerts and Go/No-Go | evidence index, rollback rehearsal, named acceptance and no high/critical finding |
 
 ### Cross-Cutting Gates
 
@@ -782,11 +781,12 @@ Prepared on: 2026-09-17
 - Base checkpoint for this slice: `01f64f7`; accepted
   CAL-1 architecture, migration `0005` Staging proof, same-origin portal,
   release evidence and external restore evidence are versioned.
-- Evidence: 338 local tests pass with 15 expected opt-in Staging skips; the
-  prior 14 PostgreSQL paths, migration `0005` proof and BA-01 through BA-17
-  passed. The new CAL-1 repository Staging test is prepared but not run. The
-  local browser runner and temporary VPS export are stopped/removed; the exact
-  encrypted `D:` copy is retained.
+- Evidence: 339 local tests pass with 15 expected opt-in Staging skips; all
+  15/15 PostgreSQL paths, migration `0005` proof and BA-01 through BA-17
+  passed. The Calendar-only path passed in 18.57 seconds; postflight found zero
+  rows in 19 dynamic areas and four active services. The local browser runner
+  and temporary VPS export are stopped/removed; the exact encrypted `D:` copy
+  is retained.
 - No new persistent service, account, IONOS production deployment or real data
   exists. SB-24 is available on the crawler-blocked GitHub-Pages review. The
   IONOS ED25519 host key is independently verified; continue with the
@@ -805,9 +805,9 @@ Resume here:
 3. Check `git status --short`; `.tmp/` must remain untracked and untouched.
 4. Review accepted ADR 0007, the CAL-1 technical design/API/RBAC package and
    migration `0005` evidence.
-5. Run the prepared synthetic CAL-1 repository Staging test only after the
-   separate controlled-execution decision; prove zero residue and service
-   health before starting APIs.
+5. Decide the canonical Coach-ID-to-public-profile mapping, then implement the
+   bounded protected/public CAL-1 API slice with existing Auth/CSRF/Origin/RBAC
+   patterns and repeat local plus Staging evidence afterward.
 6. PostgreSQL Staging contains migrations 0001-0005 but no business or
    personal data. Do not assign `calendar_reviewer`, add real availability or
    deploy a backend without the separately documented production gates. A push

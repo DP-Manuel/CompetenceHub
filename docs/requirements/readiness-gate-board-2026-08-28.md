@@ -7,7 +7,7 @@ Stand: 2026-09-17
 | Ziel | Status | Einordnung | Naechster Beweis |
 | --- | --- | --- | --- |
 | Technisches Readiness-Paket | GRUEN TECHNISCH | Website-/Webapp-Pakete, Staging und externer Backup-/Restore-Beweis sind gruen; die aktuelle Website hat zusaetzlich ein festes internes Link-Gate | Nach relevanten Codeaenderungen reproduzierbar neu bauen |
-| Kalender-Discovery und Architektur | GRUEN FACHLICH / DESIGN / MIGRATION; APP-STAGING RERUN | CAL-0/CAL-0.1, Entscheidungen, Architektur und Migration `0005` sind akzeptiert; erster App-Lauf 14/15, UUID-Bindfehler lokal korrigiert, 338 Tests gruen | korrigierten synthetischen Repository-Test mit Nullrueckstand erneut ausfuehren |
+| Kalender-Discovery und Architektur | GRUEN FACHLICH / DESIGN / MIGRATION / REPOSITORY | CAL-0/CAL-0.1, Entscheidungen, Architektur, Migration `0005` und Repository sind akzeptiert beziehungsweise bewiesen; 339 lokale und 15/15 native Tests gruen | Coach-Profilpfad-Quelle entscheiden, danach API-Slice |
 | Erste freigegebene Firmen | GELB | Datenmodell, geschuetzter Firmen-/Kontakt-Slice und synthetischer Restore sind bewiesen; Echtdaten bleiben gegated | Vertrag, benannte Konten, Backup-Timer/Alarm und Betriebsfreigabe |
 | Kontrollierter Produktionsstart | GELB / NACH URLAUB | 17.09. ist verstrichen; 24.09. ist kein Releaseversprechen; naechster Korridor fruehestens zweite Oktoberhaelfte | EDV/Legal klaeren und Onboarding-/Go-No-Go neu terminieren |
 | Budget | UNBEKANNT | Kein belastbarer Budgetrahmen dokumentiert | Nur bei kostenpflichtigem Mail-, Hosting- oder Backupbedarf entscheiden |
@@ -19,7 +19,7 @@ Gates abhaengig. Es ist keine Produktionsfreigabe.
 
 | DONE | READY / NEXT | WAITING EXTERNAL | BLOCKED UNTIL GATES CLOSE |
 | --- | --- | --- | --- |
-| ADR 0007, CAL-T01 bis CAL-T06, Migration und lokales CAL-1-Domain/Repository abgeschlossen | CAL-1-Repository synthetisch auf Staging pruefen | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Echtdaten und erster realer Firmenrecord |
+| ADR 0007, CAL-T01 bis CAL-T06, Migration sowie CAL-1-Domain/Repository lokal und auf Staging abgeschlossen | Coach-Profilpfad-Quelle entscheiden, danach CAL-1-API-Slice | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Echtdaten und erster realer Firmenrecord |
 | Migration `0005`, Rollback-Smoke, Nullrueckstand und Pre/Post-Dumps bewiesen | Geschuetzte/oeffentliche APIs nach Repository-Gate umsetzen | EXT-03: Onboarding-/Go-No-Go-Terminbestaetigung | Produktive Einladungs-E-Mails und reale Konten |
 | Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go fuer den Oktoberkorridor neu terminieren | Oeffentliche Bewerbung und Produktions-Go-Live |
 | Lokaler Backup-Meldungsvertrag mit 21 fokussierten Tests abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-01: SMTP-/Sendervertrag und Benachrichtigungskanal | Produktive Backup-Timer ohne getestete Zustellung |
@@ -34,13 +34,13 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | Gate | Status | Owner | Ziel / Frist | Evidence / Abnahme | Wirkung bei offenem Gate |
 | --- | --- | --- | --- | --- | --- |
 | G-CODE: gepruefter Source-Checkpoint | DONE / PUSHED | Manuel | aktualisiert 11.09. | Backup-Notifier-Commit `58299ae` und Website-Checkpoint `5d126cb` gepusht | Kein Release aus ungeprueftem Source |
-| G-TEST: lokale und Staging-Qualitaet | LOCAL FIX DONE / REPOSITORY-STAGING RERUN | Manuel | aktualisiert 17.09. | 338 lokale Passes/15 Skips; erster Lauf 14/15, UUID-vor-Text-Advisory-Lock korrigiert; Migration-Smoke und Dienstbasis gruen | Vor API-Slice korrigierten Repository-Lauf und Nullrueckstand beweisen |
+| G-TEST: lokale und Staging-Qualitaet | PASS LOCAL / STAGING | Manuel | aktualisiert 17.09. | 339 lokale Passes/15 Skips; 15/15 native Staging-Pfade; null Zeilen in 19 dynamischen Bereichen; vier Dienste aktiv | Nach API-/Runtime-Aenderungen erneut ausfuehren |
 | G-WEBSITE: statisches Produktionsartefakt | DONE LOKAL / REVIEW GREEN | Manuel | aktualisiert 11.09. | Clean `5d126cbaec0e`; 51 Eintraege; SHA-256 `8056d431...5269d4`; `index.html`, `404.html`, `.htaccess`; Workflow `34582211406`; Deploymentflag false | Noch kein SFTP-Upload |
 | G-WEBAPP: reproduzierbares Runtime-Paket | DONE LOKAL | Manuel | vor Backenddeployment neu bauen | Clean Paket mit Restore-Tool, isolierter Installation und Fail-closed Runtime | Noch keine VPS-Aktivierung |
 | G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL / DELIVERY OPEN | Manuel / Wuerzburg | quartalsweise nach Echtdatenstart | Guarded Pull und digest-gepinnter netzloser Restore mit 24 Tabellen; Zeitplan/Retention entschieden; lokaler Meldungsvertrag mit 21 Tests gruen | Timer bleiben aus, bis der EDV-abhaengige Adapter Erfolg und synthetische Stoerung zugestellt hat |
 | G-CALENDAR: CAL-0/CAL-0.1 | DONE REVIEW | Janay / Manuel | akzeptiert 11.09. | Review, Browser-/Netzwerk-Smokes und Janays ausdrueckliche Zustimmung | Produktive CAL-1-Umsetzung bleibt hinter Fachentscheidungen |
 | G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | DONE / ACCEPTED | Janay / Manuel | abgeschlossen 11.09. | Janay akzeptierte alle Regeln/Pilotablauf; Manuel akzeptierte ADR 0007 | Erlaubt Design, aber keine Migration, Konten, Daten oder Aktivierung |
-| G-CALENDAR-DESIGN: CAL-1 Daten/API/RBAC | LOCAL APP DONE / MIGRATION STAGING PROVEN | Manuel | aktualisiert 17.09. | `calendar_reviewer`, drei leere Tabellen und Migration bewiesen; Domain/Repository mit Rollen, Revisionen, Locks, Ueberschneidung und Audit lokal gruen | Repository-Staging-Test, APIs und Rollenvergabe bleiben getrennt |
+| G-CALENDAR-DESIGN: CAL-1 Daten/API/RBAC | REPOSITORY STAGING PROVEN | Manuel | aktualisiert 17.09. | `calendar_reviewer`, Migration und Domain/Repository mit Rollen, Revisionen, Locks, Ueberschneidung und Audit lokal sowie nativ gruen | Profilpfad-Quelle, APIs und Rollenvergabe bleiben getrennt |
 | G-EDV: App-DNS/TLS/SMTP | WAITING / FOLLOW-UP ACTIVE | EDV | Antwort ausstehend seit 14.09. | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
 | G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING EXTERNAL | Manuel / Thomas Ross / EDV | vor Website-Go-Live | Host-Key bestaetigt; Anmeldung bewiesen; zugewiesener Webroot fehlt noch | Kein Website-Replace |
 | G-CONTRACT: finaler Vertragsweg | WAITING | Lars Donner / Fachseite | im September klaeren | Freigegebener Vertragsstand und Prozess | Kein freigegebener erster Firmenprozess |
@@ -53,8 +53,9 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 
 1. ADR 0007, CAL-D01 bis CAL-D08 und CAL-T01 bis CAL-T06 sind akzeptiert;
    Migration `0005` ist auf isoliertem Staging bewiesen und CAL-1-
-   Domain/Repository lokal gruen. Als naechstes folgt nur der synthetische
-   Repository-Staging-Beweis ohne Konten, Echtdaten, Reservierungen oder Mail.
+   Domain/Repository lokal und auf Staging gruen. Als naechstes wird die
+   Profilpfad-Quelle entschieden; danach folgt der begrenzte API-Slice ohne
+   Konten, Echtdaten, Reservierungen oder Mail.
 2. Das EDV-Follow-up laeuft bereits. Erst nach korrigiertem SFTP-Startverzeichnis
    folgt eine read-only Webroot-Inventur; bis dahin kein Upload.
 3. Das CP-01-bis-CP-08-Inhaltspaket kann unabhaengig versendet werden; neue

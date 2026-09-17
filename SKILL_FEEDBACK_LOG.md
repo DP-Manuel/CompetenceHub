@@ -653,6 +653,25 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Implemented Feedback
 
+### 2026-09-17 | authoritative-clock-integration-tests | Eine Zeitquelle ueber Systemgrenzen
+
+- Triggering project situation: Der native Kalender-Staging-Test verwendete
+  eine feste Clientzeit, waehrend PostgreSQL `updated_at` per Trigger aus der
+  Datenbankuhr setzte; dadurch verletzten synthetische Zeilen die reale
+  Zeitreihenfolge, obwohl Domain- und Repository-Tests gruen waren.
+- Observed friction: Erst zwei kontrollierte Staging-Laeufe trennten den
+  eigentlichen Clock-Source-Fehler vom zuvor behobenen Bindtypfehler.
+- Implemented improvement: `write-tests` verlangt bei App-/Datenbankgrenzen
+  nun eine autoritative oder explizit gemeinsam injizierte Uhr und
+  Clock-Skew-Abdeckung bei getrennten Hosts; `debug-failures` fuehrt
+  abweichende Test-, App- und Datenbankuhren als eigene Fehlerursache.
+- Project response: Der Kalender-Staging-Test leitet seine synthetische
+  Operationszeit aus `clock_timestamp()` der Staging-Datenbank ab und haelt
+  einen kontrollierten Sicherheitsabstand fuer nachfolgende Zustandswechsel.
+- Reuse potential: high for migrations, audit trails, scheduling and remote
+  integration tests.
+- Status: implemented in canonical CodexSkills and active runtime on 2026-09-17.
+
 ### 2026-07-17 | design-system-derivation | Translate visual evidence into reusable digital rules
 
 - Triggering project situation: Several rounds of website feedback required repeated comparison of a corporate design manual, seven design references, stakeholder screenshots, print-specific patterns, responsive UI behavior, and accessibility constraints. A second AI supplied an additional analysis and a D+P-specific skill proposal.
