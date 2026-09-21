@@ -34,6 +34,7 @@ const navigation = [
   { label: "Start", href: "" },
   { label: "Für Unternehmen", href: "unternehmen" },
   { label: "Coaches", href: "coaches" },
+  { label: "Kalender-Vorschau", href: "kalender" },
 ];
 
 const serviceNavigation = [
@@ -60,11 +61,13 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="Competence Hub" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {canonical && <meta property="og:url" content={canonicalUrl} />}
     {canonical && <link rel="canonical" href={canonicalUrl} />}
+    <link rel="icon" href={url("favicon.svg")} type="image/svg+xml" />
     {(reviewMode || noindex) && (
       <meta name="robots" content="noindex, nofollow, noarchive" />
     )}
@@ -126,14 +129,9 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
             </a>
           ))}
           <a href={url("kontakt")}>Kontakt</a>
-          <a href={url("login")}><Icon name="log-in" size={18} /> Login</a>
         </nav>
       </details>
       <div class="header-actions">
-        <a class="header-login" href={url("login")}>
-          <Icon name="log-in" size={18} />
-          <span>Login</span>
-        </a>
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
       </div>
     </header>
@@ -151,6 +149,7 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
         <a href={url("mindforge")}>Mindforge</a>
         <a href={url("unternehmen")}>Für Unternehmen</a>
         <a href={url("coaches")}>Coaches</a>
+        <a href={url("kalender")}>Kalender-Vorschau</a>
         <a href={url("ueber-uns")}>Über uns</a>
         <a href={url("kontakt")}>Kontakt</a>
         <a href="https://donner-partner.de/dp/impressum/">Impressum</a>

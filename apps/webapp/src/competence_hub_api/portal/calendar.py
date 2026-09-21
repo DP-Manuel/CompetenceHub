@@ -66,6 +66,7 @@ class CalendarOfferRecord:
     withdrawn_at: datetime | None
     created_at: datetime
     updated_at: datetime
+    coach_display_name: str | None = None
 
 
 @dataclass(frozen=True)
@@ -80,6 +81,7 @@ class CalendarRevisionRecord:
     published_at: datetime | None
     created_at: datetime
     updated_at: datetime
+    topic_name: str | None = None
 
 
 @dataclass(frozen=True)
@@ -89,7 +91,53 @@ class CalendarOfferDetail:
     published_revision: CalendarRevisionRecord | None
 
 
+@dataclass(frozen=True)
+class CalendarReviewDecision:
+    outcome: str
+    note: str | None
+    decided_at: datetime
+
+
+@dataclass(frozen=True)
+class CalendarTopic:
+    id: UUID
+    name: str
+
+
+@dataclass(frozen=True)
+class PublicCalendarOffer:
+    id: UUID
+    coach_display_name: str
+    coach_profile_path: str | None
+    topic_id: UUID
+    topic_name: str
+    title: str
+    summary: str | None
+    starts_at: datetime
+    ends_at: datetime
+    time_zone: str
+    format_code: str
+    public_location: str | None
+    capacity: int
+    decision_deadline: datetime
+    price_display_text: str
+    updated_at: datetime
+
+
+@dataclass(frozen=True)
+class PublicCalendarPage:
+    items: tuple[PublicCalendarOffer, ...]
+    next_position: tuple[datetime, UUID] | None
+
+
 class CalendarRepository(Protocol):
+    async def list_topics(
+        self,
+        *,
+        actor_user_id: UUID,
+        allow_any_coach: bool,
+    ) -> tuple[CalendarTopic, ...]: ...
+
     async def create_offer(
         self,
         *,
@@ -108,6 +156,46 @@ class CalendarRepository(Protocol):
         allow_any_coach: bool,
         offer_id: UUID,
     ) -> CalendarOfferDetail | None: ...
+
+    async def list_offers(
+        self,
+        *,
+        actor_user_id: UUID,
+        allow_any_coach: bool,
+        requested_coach_id: UUID | None,
+        limit: int,
+    ) -> tuple[CalendarOfferDetail, ...]: ...
+
+    async def list_review_queue(
+        self,
+        *,
+        limit: int,
+    ) -> tuple[CalendarOfferDetail, ...]: ...
+
+    async def get_review_decision(
+        self,
+        *,
+        actor_user_id: UUID,
+        allow_any_coach: bool,
+        offer_id: UUID,
+    ) -> CalendarReviewDecision | None: ...
+
+    async def list_public_offers(
+        self,
+        *,
+        from_at: datetime,
+        to_at: datetime,
+        topic_id: UUID | None,
+        after_starts_at: datetime | None,
+        after_offer_id: UUID | None,
+        limit: int,
+    ) -> tuple[PublicCalendarOffer, ...]: ...
+
+    async def get_public_offer(
+        self,
+        *,
+        offer_id: UUID,
+    ) -> PublicCalendarOffer | None: ...
 
     async def update_draft(
         self,
@@ -156,6 +244,28 @@ class CalendarService:
     def __init__(self, repository: CalendarRepository) -> None:
         self._repository = repository
 
+    @staticmethod
+    def capabilities(actor: SessionPrincipal) -> dict[str, bool]:
+        roles = set(actor.roles)
+        can_manage = bool(roles.intersection(CALENDAR_OWNER_ROLES))
+        can_review = bool(roles.intersection(CALENDAR_REVIEW_ROLES))
+        if not can_manage and not can_review:
+            raise CalendarAccessDeniedError("calendar role required")
+        return {
+            "can_manage_own_offers": "coach" in roles,
+            "can_review_offers": can_review,
+            "can_administer_offers": "admin" in roles,
+        }
+
+    async def list_topics(
+        self, *, actor: SessionPrincipal
+    ) -> tuple[CalendarTopic, ...]:
+        capabilities = self.capabilities(actor)
+        return await self._repository.list_topics(
+            actor_user_id=actor.user_id,
+            allow_any_coach=capabilities["can_administer_offers"],
+        )
+
     async def create_offer(
         self,
         *,
@@ -192,6 +302,90 @@ class CalendarService:
             allow_any_coach=allow_any,
             offer_id=offer_id,
         )
+
+    async def list_offers(
+        self,
+        *,
+        actor: SessionPrincipal,
+        coach_id: UUID | None,
+        limit: int,
+    ) -> tuple[CalendarOfferDetail, ...]:
+        is_admin = _require_owner(actor)
+        if coach_id is not None and not is_admin:
+            raise CalendarAccessDeniedError("only admin may filter by coach")
+        _validate_limit(limit)
+        return await self._repository.list_offers(
+            actor_user_id=actor.user_id,
+            allow_any_coach=is_admin,
+            requested_coach_id=coach_id,
+            limit=limit,
+        )
+
+    async def list_review_queue(
+        self,
+        *,
+        actor: SessionPrincipal,
+        limit: int,
+    ) -> tuple[CalendarOfferDetail, ...]:
+        _require_reviewer(actor)
+        _validate_limit(limit)
+        return await self._repository.list_review_queue(limit=limit)
+
+    async def get_visible_review_decision(
+        self,
+        *,
+        actor: SessionPrincipal,
+        detail: CalendarOfferDetail,
+    ) -> CalendarReviewDecision | None:
+        roles = set(actor.roles)
+        can_review = bool(roles.intersection(CALENDAR_REVIEW_ROLES))
+        if not can_review and "coach" not in roles:
+            raise CalendarAccessDeniedError("calendar role required")
+        decision = await self._repository.get_review_decision(
+            actor_user_id=actor.user_id,
+            allow_any_coach=can_review,
+            offer_id=detail.offer.id
+        )
+        if decision is None:
+            return None
+        if can_review or decision.outcome == "changes_requested":
+            return decision
+        return None
+
+    async def list_public_offers(
+        self,
+        *,
+        from_at: datetime,
+        to_at: datetime,
+        topic_id: UUID | None,
+        after_starts_at: datetime | None,
+        after_offer_id: UUID | None,
+        limit: int,
+        now: datetime,
+    ) -> PublicCalendarPage:
+        validate_public_calendar_window(from_at=from_at, to_at=to_at, now=now)
+        _validate_limit(limit)
+        if (after_starts_at is None) != (after_offer_id is None):
+            raise ValueError("incomplete calendar cursor")
+        if after_starts_at is not None:
+            _validate_aware(after_starts_at, "cursor")
+        rows = await self._repository.list_public_offers(
+            from_at=from_at,
+            to_at=to_at,
+            topic_id=topic_id,
+            after_starts_at=after_starts_at,
+            after_offer_id=after_offer_id,
+            limit=limit + 1,
+        )
+        items = rows[:limit]
+        next_position = None
+        if len(rows) > limit and items:
+            last = items[-1]
+            next_position = (last.starts_at, last.id)
+        return PublicCalendarPage(items=items, next_position=next_position)
+
+    async def get_public_offer(self, *, offer_id: UUID) -> PublicCalendarOffer | None:
+        return await self._repository.get_public_offer(offer_id=offer_id)
 
     async def update_draft(
         self,
@@ -330,6 +524,16 @@ def normalize_calendar_draft(draft: CalendarDraft, *, now: datetime) -> Calendar
     )
 
 
+def validate_public_calendar_window(
+    *, from_at: datetime, to_at: datetime, now: datetime
+) -> None:
+    _validate_now(now)
+    _validate_aware(from_at, "from")
+    _validate_aware(to_at, "to")
+    if from_at < now or to_at <= from_at or to_at > _add_months(now, 3):
+        raise ValueError("invalid public calendar window")
+
+
 def _require_owner(actor: SessionPrincipal) -> bool:
     roles = set(actor.roles)
     if not roles.intersection(CALENDAR_OWNER_ROLES):
@@ -375,6 +579,16 @@ def _validate_now(now: datetime) -> None:
 def _validate_version(version: int) -> None:
     if version < 1:
         raise ValueError("expected_version must be positive")
+
+
+def _validate_limit(limit: int) -> None:
+    if not 1 <= limit <= 100:
+        raise ValueError("limit must be between 1 and 100")
+
+
+def _validate_aware(value: datetime, name: str) -> None:
+    if value.tzinfo is None or value.utcoffset() is None:
+        raise ValueError(f"{name} must be timezone-aware")
 
 
 def _add_months(value: datetime, months: int) -> datetime:

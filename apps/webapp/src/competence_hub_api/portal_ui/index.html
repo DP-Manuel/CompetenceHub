@@ -213,13 +213,13 @@
       <section class="portal-view" id="portal-view" aria-labelledby="portal-title" hidden>
         <header class="page-heading">
           <div>
-            <p class="eyebrow">Firmen und Kontakte</p>
-            <h1 id="portal-title">Firmenbetreuung</h1>
+            <p class="eyebrow">Geschützter Arbeitsbereich</p>
+            <h1 id="portal-title">Competence Hub Portal</h1>
           </div>
-          <button class="button button-primary" id="open-company-dialog" type="button">
-            Firma anlegen
-          </button>
         </header>
+
+        <nav class="portal-navigation" id="portal-navigation" aria-label="Portalbereiche"></nav>
+        <p class="empty-state" id="portal-empty" hidden>Für dieses Konto ist aktuell kein Arbeitsbereich freigegeben.</p>
 
         <div class="notice" id="reauth-notice" role="status" hidden>
           <p>Lesender Zugriff ist aktiv. Für Änderungen ist eine erneute Anmeldung erforderlich.</p>
@@ -228,7 +228,18 @@
           </button>
         </div>
 
-        <section class="admin-panel" id="admin-invitation-panel" aria-labelledby="admin-invitation-title" hidden>
+        <section id="company-workspace" aria-labelledby="company-workspace-title" hidden>
+          <header class="workspace-heading">
+            <div>
+              <p class="eyebrow">Firmen und Kontakte</p>
+              <h2 id="company-workspace-title">Firmenbetreuung</h2>
+            </div>
+            <button class="button button-primary mutation-control" id="open-company-dialog" type="button">
+              Firma anlegen
+            </button>
+          </header>
+
+          <section class="admin-panel" id="admin-invitation-panel" aria-labelledby="admin-invitation-title" hidden>
           <div>
             <p class="eyebrow">Interner Zugang</p>
             <h2 id="admin-invitation-title">Kollegin oder Kollegen einladen</h2>
@@ -248,17 +259,17 @@
             <p class="form-error" id="admin-invitation-error" role="alert" hidden></p>
             <button class="button button-secondary mutation-control" type="submit">Einladung senden</button>
           </form>
-        </section>
+          </section>
 
-        <form class="search-bar" id="company-search-form" role="search">
+          <form class="search-bar" id="company-search-form" role="search">
           <div class="field">
             <label for="company-search">Firma suchen</label>
             <input id="company-search" name="query" type="search" maxlength="200">
           </div>
           <button class="button button-secondary" type="submit">Suchen</button>
-        </form>
+          </form>
 
-        <div class="workspace">
+          <div class="workspace">
           <section class="company-index" aria-labelledby="company-list-title">
             <div class="section-heading">
               <h2 id="company-list-title">Unternehmen</h2>
@@ -318,7 +329,46 @@
               <ul class="contact-list" id="contact-list"></ul>
             </div>
           </section>
-        </div>
+          </div>
+        </section>
+
+        <section class="calendar-workspace" id="coach-calendar-workspace" aria-labelledby="coach-calendar-title" hidden>
+          <header class="workspace-heading">
+            <div>
+              <p class="eyebrow">Mein Kalender</p>
+              <h2 id="coach-calendar-title">Eigene Angebote</h2>
+              <p>Entwürfe vorbereiten, zur Prüfung einreichen und den aktuellen Status verfolgen.</p>
+            </div>
+            <button class="button button-primary calendar-mutation-control" id="open-calendar-offer-dialog" type="button">
+              Neuer Entwurf
+            </button>
+          </header>
+          <p class="loading-state" id="coach-calendar-loading" role="status" hidden>Angebote werden geladen.</p>
+          <p class="form-error" id="coach-calendar-error" role="alert" tabindex="-1" hidden></p>
+          <div class="empty-state calendar-empty" id="coach-calendar-empty" hidden>
+            <h3>Noch keine Angebote</h3>
+            <p>Mit einem Entwurf legen Sie die Eckdaten fest. Veröffentlicht wird erst nach der Prüfung.</p>
+          </div>
+          <ul class="calendar-list" id="coach-calendar-list"></ul>
+        </section>
+
+        <section class="calendar-workspace" id="review-calendar-workspace" aria-labelledby="review-calendar-title" hidden>
+          <header class="workspace-heading">
+            <div>
+              <p class="eyebrow">Kalenderprüfung</p>
+              <h2 id="review-calendar-title">Eingereichte Angebote</h2>
+              <p>Prüfen Sie die öffentliche Fassung. Stammdaten und Inhalte bleiben beim Coach.</p>
+            </div>
+            <button class="button button-secondary" id="refresh-review-queue" type="button">Liste aktualisieren</button>
+          </header>
+          <p class="loading-state" id="review-calendar-loading" role="status" hidden>Prüfliste wird geladen.</p>
+          <p class="form-error" id="review-calendar-error" role="alert" tabindex="-1" hidden></p>
+          <div class="empty-state calendar-empty" id="review-calendar-empty" hidden>
+            <h3>Aktuell nichts zu prüfen</h3>
+            <p>Neue Einreichungen erscheinen automatisch beim nächsten Aufruf der Prüfliste.</p>
+          </div>
+          <ul class="calendar-list review-list" id="review-calendar-list"></ul>
+        </section>
       </section>
     </main>
 
@@ -415,6 +465,117 @@
         <div class="button-row dialog-actions">
           <button class="button button-primary mutation-control" type="submit">Kontakt speichern</button>
           <button class="button button-secondary" data-dialog-close="contact-dialog" type="button">Abbrechen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="calendar-offer-dialog" aria-labelledby="calendar-offer-dialog-title">
+      <form class="dialog-form" id="calendar-offer-form" method="dialog" novalidate>
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Kalenderangebot</p>
+            <h2 id="calendar-offer-dialog-title">Entwurf anlegen</h2>
+          </div>
+          <button class="icon-button" data-dialog-close="calendar-offer-dialog" type="button" aria-label="Dialog schließen">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <p class="field-hint"><span aria-hidden="true">*</span> Pflichtfelder</p>
+        <div class="notice calendar-feedback" id="calendar-review-feedback" role="status" hidden>
+          <p id="calendar-review-feedback-text"></p>
+        </div>
+        <div class="form-grid calendar-form-grid">
+          <div class="field field-wide">
+            <label for="calendar-title">Titel <span aria-hidden="true">*</span></label>
+            <input id="calendar-title" name="title" maxlength="160" required>
+          </div>
+          <div class="field field-wide">
+            <label for="calendar-topic">Thema <span aria-hidden="true">*</span></label>
+            <select id="calendar-topic" name="topic_id" required></select>
+          </div>
+          <div class="field field-wide">
+            <label for="calendar-summary">Öffentliche Kurzbeschreibung</label>
+            <textarea id="calendar-summary" name="summary" maxlength="1200" rows="4"></textarea>
+          </div>
+          <div class="field">
+            <label for="calendar-starts-at">Beginn <span aria-hidden="true">*</span></label>
+            <input id="calendar-starts-at" name="starts_at" type="datetime-local" required>
+          </div>
+          <div class="field">
+            <label for="calendar-ends-at">Ende <span aria-hidden="true">*</span></label>
+            <input id="calendar-ends-at" name="ends_at" type="datetime-local" required>
+          </div>
+          <div class="field">
+            <label for="calendar-time-zone">Zeitzone <span aria-hidden="true">*</span></label>
+            <select id="calendar-time-zone" name="time_zone" required>
+              <option value="Europe/Berlin">Europe/Berlin</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="calendar-format">Format <span aria-hidden="true">*</span></label>
+            <select id="calendar-format" name="format" required>
+              <option value="online">Online</option>
+              <option value="praesenz">Präsenz</option>
+              <option value="hybrid">Hybrid</option>
+            </select>
+          </div>
+          <div class="field field-wide">
+            <label for="calendar-location">Öffentlicher Ort oder Zugangshinweis</label>
+            <input id="calendar-location" name="public_location" maxlength="200">
+          </div>
+          <div class="field">
+            <label for="calendar-capacity">Kapazität <span aria-hidden="true">*</span></label>
+            <input id="calendar-capacity" name="capacity" type="number" min="1" max="500" value="10" required>
+          </div>
+          <div class="field">
+            <label for="calendar-review-threshold">Prüfschwelle <span aria-hidden="true">*</span></label>
+            <input id="calendar-review-threshold" name="review_threshold" type="number" min="1" max="500" value="5" required>
+          </div>
+          <div class="field">
+            <label for="calendar-decision-deadline">Entscheidungsfrist <span aria-hidden="true">*</span></label>
+            <input id="calendar-decision-deadline" name="decision_deadline" type="datetime-local" required>
+          </div>
+          <div class="field">
+            <label for="calendar-price">Preishinweis <span aria-hidden="true">*</span></label>
+            <input id="calendar-price" name="price_display_text" maxlength="200" required>
+          </div>
+        </div>
+        <p class="form-error" id="calendar-offer-error" role="alert" tabindex="-1" hidden></p>
+        <button class="button button-secondary" id="reload-calendar-offer" type="button" hidden>Aktuellen Stand laden</button>
+        <div class="button-row dialog-actions">
+          <button class="button button-primary calendar-mutation-control" id="save-calendar-offer" type="submit">Entwurf speichern</button>
+          <button class="button button-secondary" data-dialog-close="calendar-offer-dialog" type="button">Abbrechen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="calendar-review-dialog" aria-labelledby="calendar-review-dialog-title">
+      <form class="dialog-form" id="calendar-review-form" method="dialog" novalidate>
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Prüfentscheidung</p>
+            <h2 id="calendar-review-dialog-title">Angebot prüfen</h2>
+          </div>
+          <button class="icon-button" data-dialog-close="calendar-review-dialog" type="button" aria-label="Dialog schließen">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <dl class="calendar-review-summary" id="calendar-review-summary"></dl>
+        <fieldset class="review-choice">
+          <legend>Entscheidung</legend>
+          <label><input type="radio" name="outcome" value="published" required> Veröffentlichen</label>
+          <label><input type="radio" name="outcome" value="changes_requested" required> Änderungen anfordern</label>
+        </fieldset>
+        <div class="field">
+          <label for="calendar-review-note">Hinweis an den Coach</label>
+          <textarea id="calendar-review-note" name="note" maxlength="1000" rows="4"></textarea>
+          <p class="field-hint">Bei einer Änderungsanforderung ist ein Hinweis erforderlich.</p>
+        </div>
+        <p class="form-error" id="calendar-review-error" role="alert" tabindex="-1" hidden></p>
+        <button class="button button-secondary" id="reload-calendar-review" type="button" hidden>Aktuellen Stand laden</button>
+        <div class="button-row dialog-actions">
+          <button class="button button-primary calendar-mutation-control" type="submit">Entscheidung speichern</button>
+          <button class="button button-secondary" data-dialog-close="calendar-review-dialog" type="button">Abbrechen</button>
         </div>
       </form>
     </dialog>

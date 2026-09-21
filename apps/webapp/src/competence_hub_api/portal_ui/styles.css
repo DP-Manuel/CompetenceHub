@@ -36,13 +36,15 @@ body {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
 button,
 input,
 textarea,
+select,
 dialog {
   border-radius: 4px;
 }
@@ -219,7 +221,8 @@ main {
 }
 
 .field input,
-.field textarea {
+.field textarea,
+.field select {
   width: 100%;
   min-height: 46px;
   padding: 10px 12px;
@@ -233,12 +236,14 @@ main {
 }
 
 .field input:hover,
-.field textarea:hover {
+.field textarea:hover,
+.field select:hover {
   border-color: var(--color-brand);
 }
 
 .field input:focus,
-.field textarea:focus {
+.field textarea:focus,
+.field select:focus {
   border-color: var(--color-brand-strong);
   outline: none;
   box-shadow: var(--shadow-focus);
@@ -487,6 +492,49 @@ main {
   margin-bottom: 32px;
 }
 
+.portal-navigation {
+  margin-bottom: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.portal-navigation button {
+  min-height: 44px;
+  padding: 10px 16px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-bottom: 4px solid transparent;
+  font-weight: 800;
+}
+
+.portal-navigation button:hover,
+.portal-navigation button:focus-visible,
+.portal-navigation button[aria-current="page"] {
+  border-bottom-color: var(--color-brand);
+  background: var(--color-brand-soft);
+}
+
+.workspace-heading {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.workspace-heading h2 {
+  margin-bottom: 8px;
+}
+
+.workspace-heading p:last-child {
+  max-width: 70ch;
+  margin-bottom: 0;
+  color: var(--color-text-soft);
+}
+
 .page-heading h1 {
   margin-bottom: 0;
 }
@@ -594,6 +642,135 @@ main {
 .detail-placeholder {
   padding: 32px 0;
   color: var(--color-text-soft);
+}
+
+.calendar-workspace {
+  min-width: 0;
+}
+
+.loading-state,
+.calendar-empty {
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-left: 6px solid var(--color-brand);
+}
+
+.calendar-empty h3,
+.calendar-empty p {
+  margin-bottom: 8px;
+}
+
+.calendar-list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  list-style: none;
+}
+
+.calendar-card {
+  min-width: 0;
+  padding: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-top: 6px solid var(--color-brand);
+}
+
+.calendar-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.calendar-card h3 {
+  margin-bottom: 8px;
+  overflow-wrap: anywhere;
+}
+
+.calendar-card p {
+  overflow-wrap: anywhere;
+}
+
+.calendar-card-meta {
+  margin: 12px 0 16px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 5px 12px;
+}
+
+.calendar-card-meta dt {
+  font-weight: 800;
+}
+
+.calendar-card-meta dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.calendar-status {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  color: var(--color-text);
+  background: var(--color-warning);
+  border: 1px solid #c78b18;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.calendar-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.calendar-card-actions .button {
+  flex: 1 1 150px;
+}
+
+.calendar-review-summary {
+  margin: 0 0 20px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px 14px;
+}
+
+.calendar-review-summary dt {
+  font-weight: 800;
+}
+
+.calendar-review-summary dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.review-choice {
+  margin: 0 0 20px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--color-line);
+}
+
+.review-choice legend {
+  padding: 0 6px;
+  font-weight: 800;
+}
+
+.review-choice label {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-choice input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-brand-strong);
 }
 
 .detail-heading {
@@ -764,6 +941,10 @@ dialog::backdrop {
     grid-template-columns: 1fr;
   }
 
+  .calendar-list {
+    grid-template-columns: 1fr;
+  }
+
   .admin-panel {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -810,6 +991,7 @@ dialog::backdrop {
   }
 
   .page-heading,
+  .workspace-heading,
   .section-heading,
   .contacts-heading,
   .notice {
@@ -818,6 +1000,7 @@ dialog::backdrop {
   }
 
   .page-heading .button,
+  .workspace-heading .button,
   .notice .button,
   .contacts-heading .button {
     width: 100%;
@@ -826,6 +1009,16 @@ dialog::backdrop {
   .search-bar,
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .portal-navigation {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .portal-navigation button {
+    width: 100%;
+    text-align: left;
   }
 
   .field-wide {

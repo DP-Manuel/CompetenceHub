@@ -1,15 +1,16 @@
 # Competence Hub Readiness Gate Board
 
-Stand: 2026-09-17
+Stand: 2026-09-21
 
 ## Ampel
 
 | Ziel | Status | Einordnung | Naechster Beweis |
 | --- | --- | --- | --- |
 | Technisches Readiness-Paket | GRUEN TECHNISCH | Website-/Webapp-Pakete, Staging und externer Backup-/Restore-Beweis sind gruen; die aktuelle Website hat zusaetzlich ein festes internes Link-Gate | Nach relevanten Codeaenderungen reproduzierbar neu bauen |
-| Kalender-Discovery und Architektur | GRUEN FACHLICH / DESIGN / MIGRATION / REPOSITORY | CAL-0/CAL-0.1, Entscheidungen, Architektur, Migration `0005` und Repository sind akzeptiert beziehungsweise bewiesen; 339 lokale und 15/15 native Tests gruen | Coach-Profilpfad-Quelle entscheiden, danach API-Slice |
+| Messe-Readiness oeffentliches Frontend | GELB / HOECHSTE PRIORITAET | lokale Routen-, Browser-, Build-, Handover- und SFTP-Inhaltsnachweise sind gruen; `phpinfo()`-Entfernung, Redirects, Clean-Artefakt und Freigaben offen | externen P0 schliessen; kontrollierter Live-Test Ziel 24.09. |
+| Kalender-Discovery und Architektur | GRUEN FACHLICH / DESIGN / API STAGING / UI LOCAL / EINGEFROREN | CAL-0/CAL-0.1, Entscheidungen, Migrationen `0005`/`0006`, Repository, API und synthetische Coach-/Reviewer-UI sind bewiesen; 384 lokale, 17/17 native und 57/57 Edge-Checks gruen | nativen Staging-UI-Lauf erst nach Messe-Readiness und separater Freigabe fortsetzen |
 | Erste freigegebene Firmen | GELB | Datenmodell, geschuetzter Firmen-/Kontakt-Slice und synthetischer Restore sind bewiesen; Echtdaten bleiben gegated | Vertrag, benannte Konten, Backup-Timer/Alarm und Betriebsfreigabe |
-| Kontrollierter Produktionsstart | GELB / NACH URLAUB | 17.09. ist verstrichen; 24.09. ist kein Releaseversprechen; naechster Korridor fruehestens zweite Oktoberhaelfte | EDV/Legal klaeren und Onboarding-/Go-No-Go neu terminieren |
+| Kontrollierter Website-Produktionsstart | GELB / CONDITIONAL | Live-Test am 24.09. moeglich, wenn Webroot, `phpinfo()`/Redirects, Rollback, Clean-Artefakt, Thomas-Go/No-Go und separate Uploadfreigabe schliessen | statische Website-Gates getrennt vom Backend schliessen |
 | Budget | UNBEKANNT | Kein belastbarer Budgetrahmen dokumentiert | Nur bei kostenpflichtigem Mail-, Hosting- oder Backupbedarf entscheiden |
 
 `GELB` bedeutet: mit den vorhandenen Nachweisen erreichbar, aber von offenen
@@ -19,12 +20,12 @@ Gates abhaengig. Es ist keine Produktionsfreigabe.
 
 | DONE | READY / NEXT | WAITING EXTERNAL | BLOCKED UNTIL GATES CLOSE |
 | --- | --- | --- | --- |
-| ADR 0007, CAL-T01 bis CAL-T06, Migration sowie CAL-1-Domain/Repository lokal und auf Staging abgeschlossen | Coach-Profilpfad-Quelle entscheiden, danach CAL-1-API-Slice | EXT-02: Vertragsstand, finaler Betreiber, Impressum und Rechtspruefung | Echtdaten und erster realer Firmenrecord |
-| Migration `0005`, Rollback-Smoke, Nullrueckstand und Pre/Post-Dumps bewiesen | Geschuetzte/oeffentliche APIs nach Repository-Gate umsetzen | EXT-03: Onboarding-/Go-No-Go-Terminbestaetigung | Produktive Einladungs-E-Mails und reale Konten |
+| ADR 0007, CAL-T01 bis CAL-T06, Migrationen `0005`/`0006`, CAL-1-Domain/Repository, APIs und synthetische Portal-UI inklusive 26-Punkte-Browserabnahme abgeschlossen | IONOS-Webroot-Inhalt read-only beweisen und EDV-P0 schliessen | Thomas: Website-Go/No-Go und separate Remote-Change-Freigabe | Echtdaten und erster realer Firmenrecord |
+| Migration `0006`, Rollback-Smoke, Nullrueckstand, Pre/Post-Dumps, 17/17 native, 384 lokale Tests und 57/57 Edge-Checks bewiesen | danach Clean-Artefakt und kontrollierten 24.09.-Live-Test vorbereiten | EDV: `phpinfo()` entfernen und Redirects bestaetigen | Produktive Einladungs-E-Mails und reale Konten |
 | Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go fuer den Oktoberkorridor neu terminieren | Oeffentliche Bewerbung und Produktions-Go-Live |
 | Lokaler Backup-Meldungsvertrag mit 21 fokussierten Tests abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-01: SMTP-/Sendervertrag und Benachrichtigungskanal | Produktive Backup-Timer ohne getestete Zustellung |
 | Pilot-Owner entschieden: Manuel Admin, Thomas technischer Break-glass, Janay Mailbox ohne Vertretung | EDV-Follow-up laeuft; Antwort nach Eingang verarbeiten | EXT-06: spaetere Mailboxvertretung bleibt unbesetzt; kein Service-Level versprechen | Automatisierter Website-Replace oder Remote-Loeschung |
-| Sauberes Website-Artefakt `5d126cbaec0e` mit 1.137 geprueften internen Referenzen | Nach EDV-Korrektur: SFTP-Webroot nur lesend inventarisieren | Korrigiertes IONOS-SFTP-Startverzeichnis | Unternehmens-/personenbezogene Daten ohne aktiven Backup-/Alarmbetrieb |
+| Lokaler Messe-Kandidat mit 722 Edge-Checks, 1.233 Referenzen und Techniker-Handover | EDV-P0/Redirects schliessen; danach Clean-Artefakt | Webroot-Inventur bestanden; `phpinfo()`-/Redirect-Korrektur und Freigaben offen | Unternehmens-/personenbezogene Daten ohne aktiven Backup-/Alarmbetrieb |
 
 WIP-Regel: maximal ein technischer Ausfuehrungsblock gleichzeitig. Externe
 Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
@@ -34,30 +35,30 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 | Gate | Status | Owner | Ziel / Frist | Evidence / Abnahme | Wirkung bei offenem Gate |
 | --- | --- | --- | --- | --- | --- |
 | G-CODE: gepruefter Source-Checkpoint | DONE / PUSHED | Manuel | aktualisiert 11.09. | Backup-Notifier-Commit `58299ae` und Website-Checkpoint `5d126cb` gepusht | Kein Release aus ungeprueftem Source |
-| G-TEST: lokale und Staging-Qualitaet | PASS LOCAL / STAGING | Manuel | aktualisiert 17.09. | 339 lokale Passes/15 Skips; 15/15 native Staging-Pfade; null Zeilen in 19 dynamischen Bereichen; vier Dienste aktiv | Nach API-/Runtime-Aenderungen erneut ausfuehren |
+| G-TEST: lokale und Staging-Qualitaet | PASS LOCAL / API STAGING | Manuel | aktualisiert 18.09. | 384 lokale Passes/17 Skips; 57/57 Edge-Checks und 26/26 Browserpunkte; fokussiert 3/3 und vollstaendig 17/17 native Staging-Pfade; null Zeilen in 19 dynamischen Bereichen; vier Dienste aktiv | Native Staging-UI-Abnahme nach separater Freigabe |
 | G-WEBSITE: statisches Produktionsartefakt | DONE LOKAL / REVIEW GREEN | Manuel | aktualisiert 11.09. | Clean `5d126cbaec0e`; 51 Eintraege; SHA-256 `8056d431...5269d4`; `index.html`, `404.html`, `.htaccess`; Workflow `34582211406`; Deploymentflag false | Noch kein SFTP-Upload |
 | G-WEBAPP: reproduzierbares Runtime-Paket | DONE LOKAL | Manuel | vor Backenddeployment neu bauen | Clean Paket mit Restore-Tool, isolierter Installation und Fail-closed Runtime | Noch keine VPS-Aktivierung |
 | G-BACKUP: verschluesselte externe Kopie plus Restore | DONE REHEARSAL / DELIVERY OPEN | Manuel / Wuerzburg | quartalsweise nach Echtdatenstart | Guarded Pull und digest-gepinnter netzloser Restore mit 24 Tabellen; Zeitplan/Retention entschieden; lokaler Meldungsvertrag mit 21 Tests gruen | Timer bleiben aus, bis der EDV-abhaengige Adapter Erfolg und synthetische Stoerung zugestellt hat |
 | G-CALENDAR: CAL-0/CAL-0.1 | DONE REVIEW | Janay / Manuel | akzeptiert 11.09. | Review, Browser-/Netzwerk-Smokes und Janays ausdrueckliche Zustimmung | Produktive CAL-1-Umsetzung bleibt hinter Fachentscheidungen |
 | G-CALENDAR-RULES: CAL-D01..D08 / ADR 0007 | DONE / ACCEPTED | Janay / Manuel | abgeschlossen 11.09. | Janay akzeptierte alle Regeln/Pilotablauf; Manuel akzeptierte ADR 0007 | Erlaubt Design, aber keine Migration, Konten, Daten oder Aktivierung |
-| G-CALENDAR-DESIGN: CAL-1 Daten/API/RBAC | REPOSITORY STAGING PROVEN | Manuel | aktualisiert 17.09. | `calendar_reviewer`, Migration und Domain/Repository mit Rollen, Revisionen, Locks, Ueberschneidung und Audit lokal sowie nativ gruen | Profilpfad-Quelle, APIs und Rollenvergabe bleiben getrennt |
+| G-CALENDAR-DESIGN: CAL-1 Daten/API/RBAC/UI | UI LOCAL ACCEPTED / API STAGING PROVEN | Manuel | aktualisiert 18.09. | `calendar_reviewer`, Migrationen `0005`/`0006`, Domain/Repository, getrennte Session-Rollen, geschuetzte/oeffentliche API sowie 26/26 lokale Browserpunkte gruen | Native Staging-UI, Rollenvergabe, Echtdaten und Aktivierung bleiben getrennt |
 | G-EDV: App-DNS/TLS/SMTP | WAITING / FOLLOW-UP ACTIVE | EDV | Antwort ausstehend seit 14.09. | DNS-/TLS-Preflight, Nginx-Check, autorisierter Einzelabsender und Testzustellung | Keine Live-Einladung, keine Webapp-Produktion |
-| G-SFTP: bestaetigter Webroot und Rollbackkopie | WAITING EXTERNAL | Manuel / Thomas Ross / EDV | vor Website-Go-Live | Host-Key bestaetigt; Anmeldung bewiesen; zugewiesener Webroot fehlt noch | Kein Website-Replace |
+| G-SFTP: bestaetigter Webroot und Rollbackkopie | PASS READ-ONLY / BACKUP OPEN | Manuel / Thomas Ross / EDV | Inhaltsnachweis 21.09. bestanden; Backup vor jedem Replace | Host-Key und Auth bestanden; `/` ist der bestaetigte Chroot; nur 64-Byte-`index.php` vorhanden; kein Remote-Write | Kein Website-Replace ohne datierte Rollbackkopie und separate Freigabe |
 | G-CONTRACT: finaler Vertragsweg | WAITING | Lars Donner / Fachseite | im September klaeren | Freigegebener Vertragsstand und Prozess | Kein freigegebener erster Firmenprozess |
-| G-LEGAL: Betreiber und Rechtstexte | WAITING | Lars Donner / Rechtspruefung | Reviewpfad bis 24.09.; Abschluss vor Go/No-Go | Finaler Betreiber, Impressum und anwendbare Datenschutz-/AGB-Fassung | Kein beworbener Livegang |
-| G-ACCOUNT: benannte Konten und MFA | WAITING ACTIVATION | Manuel / Janay / Thomas Ross | fuer Oktoberkorridor neu terminieren | E-Mail-Einladung, MFA, Least-Privilege-Matrix, getrennt getesteter technischer Break-glass-Zugang | Kein realer Fachbetrieb |
-| G-ACCEPT: Fachabnahme und Go/No-Go | WAITING | Janay / Thomas Ross | fuer Oktoberkorridor neu terminieren | Janay-Walkthrough und dokumentiertes Go/No-Go | Keine Produktion |
+| G-LEGAL: Betreiber und Rechtstexte | PASS DECISION | Lars Donner / Manuel | bestaetigt 21.09. | Donner + Partner als Betreiber, Lars Donner verantwortlich und zentrale D+P-Seiten fuer Impressum, AGB und Datenschutz bestaetigt | Bei neuer Datenerhebung oder neuen externen Diensten erneut pruefen |
+| G-ACCOUNT: benannte Konten und MFA | DEFERRED FOR BACKEND | Manuel / Janay / Thomas Ross | nach Website Messe-Readiness | E-Mail-Einladung, MFA, Least-Privilege-Matrix, getrennt getesteter technischer Break-glass-Zugang | Kein realer Fachbetrieb; blockiert statisches Messepaket nicht |
+| G-ACCEPT: Website Fachabnahme und Go/No-Go | WAITING / WEBSITE CRITICAL | Janay / Thomas Ross | Ziel: kontrollierter Live-Test am 24.09. | aktueller Website-Walkthrough und dokumentiertes Go/No-Go | Kein produktiver Upload |
 | G-MAILBOX: Reaktion und Vertretung | KNOWN GAP | Janay | Routing vor Pilot testen; Vertretung spaeter benennen | Janay ist Owner; aktuell keine Abwesenheitsvertretung; Thomas deckt nur technische Notfaelle | Kein versprochenes Service-Level |
 
 ## Pull-Regel
 
-1. ADR 0007, CAL-D01 bis CAL-D08 und CAL-T01 bis CAL-T06 sind akzeptiert;
-   Migration `0005` ist auf isoliertem Staging bewiesen und CAL-1-
-   Domain/Repository lokal und auf Staging gruen. Als naechstes wird die
-   Profilpfad-Quelle entschieden; danach folgt der begrenzte API-Slice ohne
-   Konten, Echtdaten, Reservierungen oder Mail.
-2. Das EDV-Follow-up laeuft bereits. Erst nach korrigiertem SFTP-Startverzeichnis
-   folgt eine read-only Webroot-Inventur; bis dahin kein Upload.
+1. Bis zur operativen Cutline am 25.09. wird ausschliesslich Website
+   Messe-Readiness als technischer WIP gezogen. Zuerst folgen read-only Webroot-
+   Beweis und P0/P1/P2-Gap-Analyse, dann Korrektur, Browsergate, Artefakt und
+   Handover. Kein Upload ohne separate Freigabe.
+2. CAL-1 bleibt mit 26/26 Browserpunkten, 57/57 Edge-Checks, 384 lokalen Tests
+   und 17/17 nativen Staging-Pfaden erhalten, aber eingefroren. Native
+   Staging-UI und CAL-2 folgen erst nach Messe-Readiness und eigener Freigabe.
 3. Das CP-01-bis-CP-08-Inhaltspaket kann unabhaengig versendet werden; neue
    Ratgeberseiten oder unbelegte Aussagen bleiben gesperrt.
 4. Wenn kein Gate schliesst, werden Release-, Sicherheits-, Barrierefreiheits-
@@ -67,8 +68,9 @@ Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.
 ## Meilenstein und Produktionsgrenze
 
 Der 28.08. war ein technischer Readiness-Meilenstein, kein Produktionsstart.
-Der aktuelle Stand bestaetigt diese Basis und ergaenzt die akzeptierte
-Kalender-Discovery sowie das aktualisierte Website-Paket. IONOS-Upload,
+Neue verbindliche Steuerung: Manuel-Cutline 25.09., Abwesenheit ab 26.09. und
+Messe am 17.10. Bis 25.09. muss mindestens ein stabiles, voll geprueftes und
+uebergabefaehiges statisches Website-Paket vorliegen. IONOS-Upload,
 Webapp-Aktivierung, reale Konten, Echtdaten, Mailversand und Bewerbung brauchen
 weiterhin ihre jeweiligen Freigaben.
 

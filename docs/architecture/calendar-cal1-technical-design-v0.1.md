@@ -1,10 +1,12 @@
 # CAL-1 Technical Design v0.1
 
-Stand: 11.09.2026
+Stand: 18.09.2026
 
-Status: accepted design baseline. CAL-T01 through CAL-T06 are accepted and
-migration `0005` is proven on isolated Staging. No application code, account,
-real availability, notification or deployment is activated.
+Status: accepted design baseline. CAL-T01 through CAL-T06, migrations `0005`
+and `0006`, repository and protected/public API are proven locally and on
+isolated Staging. The synthetic Same-Origin Portal UI is implemented locally;
+manual browser acceptance is open. No account, role assignment, real data or
+production rollout is authorized.
 
 ## Purpose And Sources
 
@@ -21,6 +23,8 @@ FastAPI, session, CSRF/Origin, RBAC and audit conventions.
 ## Current-State Facts
 
 - `coaches` links at most one Coach profile to a `portal_user`.
+- `coaches.public_profile_path` is an optional explicit administrative mapping
+  to `/coaches/<slug>/`; it is never inferred and is not calendar-editable.
 - `topics` and `coach_topics` provide controlled Coach topics.
 - `portal_users`, `roles` and `user_roles` provide multiple roles per account.
 - `audit_events` is append-oriented and contains no raw payload.
@@ -67,6 +71,10 @@ No new service, queue or external integration is needed for CAL-1.
 
 Migration `0005` was separately approved, applied and rollback-smoke-tested on
 isolated Staging on 2026-09-17 with zero Calendar residue.
+
+Additive migration `0006` prepares the optional profile mapping with a database
+check and a partial unique index. It changed no existing Coach row and passed
+its separately approved Staging apply and rollback smoke on 2026-09-18.
 
 ### `calendar_offers`
 
@@ -205,9 +213,9 @@ or audit rows.
 CAL-T01 through CAL-T06 closed the overlap, format, bounds, withdrawal,
 retention-boundary and reviewer-role decisions on 11.09.2026. The prepared
 migration is additive, transactional and empty-data safe. Its smoke test runs
-inside a rollback transaction and proves ownership, constraints, runtime DML
-and denied DDL/update/delete privileges. Native execution remains pending the
-separate Staging gate.
+inside a rollback transaction and proves ownership, constraints and safe NULL
+semantics. Native migration/API execution passed on isolated Staging with
+protected pre/post dumps, zero residue and unchanged service health.
 
 Before data use, rollback may reverse the Staging migration. After any real
 availability exists, rollback preserves tables and uses application rollback;
@@ -230,5 +238,5 @@ destructive down-migration is forbidden.
 - architecture, ownership, projections and transitions are explicit;
 - API and RBAC contracts are versioned;
 - CAL-T01 through CAL-T06 resolve the migration values without guesses;
-- the local migration package exists, while Staging, application code,
-  accounts, real data, messages and deployment remain unmodified.
+- the migration/API package is proven locally and on isolated Staging, while
+  Portal UI, accounts, real data, messages and deployment remain unmodified.

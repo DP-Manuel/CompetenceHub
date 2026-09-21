@@ -1,9 +1,12 @@
+from collections.abc import Collection
 from datetime import datetime, timedelta
 
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from competence_hub_api.auth.session_repository import SessionPrincipal
+
+INTERNAL_SESSION_ROLES = frozenset({"admin", "internal"})
 
 _GET_ACTIVE_SESSION = text(
     """
@@ -32,7 +35,7 @@ _GET_ACTIVE_SESSION = text(
                 ON role.id = user_role.role_id
               WHERE user_role.user_id = portal_user.id
                 AND role.active
-                AND role.code IN ('admin', 'internal')
+                AND role.code = ANY(CAST(:accepted_roles AS text[]))
           )
         RETURNING
             session.id,
@@ -59,7 +62,7 @@ _GET_ACTIVE_SESSION = text(
     JOIN competence_hub.roles AS role
       ON role.id = user_role.role_id
      AND role.active
-     AND role.code IN ('admin', 'internal')
+     AND role.code = ANY(CAST(:accepted_roles AS text[]))
     GROUP BY
         refreshed_session.id,
         refreshed_session.portal_user_id,
@@ -91,7 +94,7 @@ _FIND_ACTIVE_SESSION = text(
     JOIN competence_hub.roles AS role
       ON role.id = user_role.role_id
      AND role.active
-     AND role.code IN ('admin', 'internal')
+     AND role.code = ANY(CAST(:accepted_roles AS text[]))
     WHERE session.token_hash = :token_hash
       AND session.authentication_level = 'mfa'
       AND session.revoked_at IS NULL
@@ -136,7 +139,7 @@ _ROTATE_ACTIVE_SESSION_CSRF = text(
                 ON role.id = user_role.role_id
               WHERE user_role.user_id = portal_user.id
                 AND role.active
-                AND role.code IN ('admin', 'internal')
+                AND role.code = ANY(CAST(:accepted_roles AS text[]))
           )
         RETURNING
             session.id,
@@ -163,7 +166,7 @@ _ROTATE_ACTIVE_SESSION_CSRF = text(
     JOIN competence_hub.roles AS role
       ON role.id = user_role.role_id
      AND role.active
-     AND role.code IN ('admin', 'internal')
+     AND role.code = ANY(CAST(:accepted_roles AS text[]))
     GROUP BY
         rotated_session.id,
         rotated_session.portal_user_id,
@@ -205,8 +208,21 @@ _REVOKE_SESSION = text(
 
 
 class PostgresSessionRepository:
-    def __init__(self, engine: AsyncEngine) -> None:
+    def __init__(
+        self,
+        engine: AsyncEngine,
+        *,
+        accepted_roles: Collection[str] = INTERNAL_SESSION_ROLES,
+    ) -> None:
+        normalized_roles = tuple(sorted({role.strip() for role in accepted_roles}))
+        if not normalized_roles or any(not role for role in normalized_roles):
+            raise ValueError("accepted roles must contain non-empty role codes")
         self._engine = engine
+        self._accepted_roles = normalized_roles
+
+    @property
+    def accepted_roles(self) -> tuple[str, ...]:
+        return self._accepted_roles
 
     async def refresh_active_session(
         self,
@@ -226,6 +242,7 @@ class PostgresSessionRepository:
                     "token_hash": token_hash,
                     "now": now,
                     "idle_timeout_seconds": idle_timeout_seconds,
+                    "accepted_roles": list(self._accepted_roles),
                 },
             )
             row = result.mappings().one_or_none()
@@ -253,7 +270,11 @@ class PostgresSessionRepository:
         async with self._engine.connect() as connection:
             result = await connection.execute(
                 _FIND_ACTIVE_SESSION,
-                {"token_hash": token_hash, "now": now},
+                {
+                    "token_hash": token_hash,
+                    "now": now,
+                    "accepted_roles": list(self._accepted_roles),
+                },
             )
             row = result.mappings().one_or_none()
 
@@ -291,6 +312,7 @@ class PostgresSessionRepository:
                     "csrf_token_hash": csrf_token_hash,
                     "now": now,
                     "idle_timeout_seconds": idle_timeout_seconds,
+                    "accepted_roles": list(self._accepted_roles),
                 },
             )
             row = result.mappings().one_or_none()

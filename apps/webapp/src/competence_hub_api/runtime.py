@@ -1,6 +1,8 @@
 import asyncio
 from collections.abc import Callable, Mapping
 from contextlib import asynccontextmanager
+import hashlib
+import hmac
 import secrets
 
 from fastapi import FastAPI
@@ -22,11 +24,16 @@ from competence_hub_api.auth.postgres_session_repository import (
 from competence_hub_api.config import RuntimeSettings
 from competence_hub_api.main import create_app
 from competence_hub_api.portal.companies import CompanyService
+from competence_hub_api.portal.calendar import CalendarService
+from competence_hub_api.portal.postgres_calendar import PostgresCalendarRepository
 from competence_hub_api.portal.postgres_companies import PostgresCompanyRepository
 from competence_hub_api.security.passwords import PasswordPolicy, PasswordService
 from competence_hub_api.security.secret_encryption import SecretCipher
 
 EngineFactory = Callable[[str], AsyncEngine]
+CALENDAR_SESSION_ROLES = frozenset(
+    {"admin", "calendar_reviewer", "coach", "company_contact", "internal"}
+)
 
 
 def create_database_engine(database_url: str) -> AsyncEngine:
@@ -58,6 +65,10 @@ def create_runtime_app(
 ) -> FastAPI:
     engine = engine_factory(settings.database_url)
     session_repository = PostgresSessionRepository(engine)
+    calendar_session_repository = PostgresSessionRepository(
+        engine,
+        accepted_roles=CALENDAR_SESSION_ROLES,
+    )
     login_repository = PostgresLoginRepository(engine)
     password_service = PasswordService(
         PasswordPolicy(settings.compromised_password_fingerprints)
@@ -82,6 +93,12 @@ def create_runtime_app(
         session_idle_timeout=settings.session_idle_timeout,
     )
     company_service = CompanyService(PostgresCompanyRepository(engine))
+    calendar_service = CalendarService(PostgresCalendarRepository(engine))
+    calendar_cursor_hmac_key = hmac.new(
+        settings.idempotency_hmac_key,
+        b"competence-hub:calendar-public-cursor:v1",
+        hashlib.sha256,
+    ).digest()
     outbox_cipher = SecretCipher(
         settings.outbox_encryption_keys,
         settings.outbox_active_key_version,
@@ -111,10 +128,13 @@ def create_runtime_app(
     app = create_app(
         readiness_probe=readiness_probe,
         session_repository=session_repository,
+        calendar_session_repository=calendar_session_repository,
         login_service=login_service,
         mfa_service=mfa_service,
         account_lifecycle_service=account_lifecycle_service,
         company_service=company_service,
+        calendar_service=calendar_service,
+        calendar_cursor_hmac_key=calendar_cursor_hmac_key,
         allowed_origin=settings.allowed_origin,
         session_idle_timeout=settings.session_idle_timeout,
         lifespan=lifespan,

@@ -90,6 +90,7 @@ async def test_refresh_maps_database_row_and_uses_digest_only() -> None:
         "token_hash": token_hash,
         "now": NOW,
         "idle_timeout_seconds": 1800,
+        "accepted_roles": ["admin", "internal"],
     }
 
 
@@ -124,7 +125,21 @@ async def test_csrf_rotation_is_atomic_and_uses_only_digests() -> None:
         "csrf_token_hash": b"n" * 32,
         "now": NOW,
         "idle_timeout_seconds": 1800,
+        "accepted_roles": ["admin", "internal"],
     }
+
+
+def test_repository_accepts_a_separate_role_boundary() -> None:
+    repository = PostgresSessionRepository(
+        FakeEngine(), accepted_roles={"coach", "calendar_reviewer"}
+    )
+
+    assert repository.accepted_roles == ("calendar_reviewer", "coach")
+
+
+def test_repository_rejects_an_empty_role_boundary() -> None:
+    with pytest.raises(ValueError):
+        PostgresSessionRepository(FakeEngine(), accepted_roles=set())
 
 
 @pytest.mark.anyio

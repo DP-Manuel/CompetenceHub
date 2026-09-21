@@ -11,6 +11,10 @@ const API = {
   invitationAccept: "/api/v1/auth/invitations/accept",
   adminInvitations: "/api/v1/admin/users/invitations",
   companies: "/api/v1/portal/companies",
+  calendarCapabilities: "/api/v1/portal/calendar/capabilities",
+  calendarTopics: "/api/v1/portal/calendar/topics",
+  calendarOffers: "/api/v1/portal/calendar/offers",
+  calendarReviewQueue: "/api/v1/portal/calendar/review-queue",
 };
 
 const state = {
@@ -19,6 +23,13 @@ const state = {
   session: null,
   companies: [],
   selectedCompany: null,
+  calendarCapabilities: null,
+  calendarTopics: [],
+  coachOffers: [],
+  reviewOffers: [],
+  selectedCalendarOffer: null,
+  selectedReviewOffer: null,
+  activePortalArea: null,
   accountAction: null,
   pendingInvitation: null,
   submitting: new Set(),
@@ -32,6 +43,13 @@ const views = {
   enrollment: document.querySelector("#enrollment-view"),
   recovery: document.querySelector("#recovery-view"),
   portal: document.querySelector("#portal-view"),
+};
+
+const restrictedCalendarNodes = {
+  coachWorkspace: document.querySelector("#coach-calendar-workspace"),
+  reviewWorkspace: document.querySelector("#review-calendar-workspace"),
+  offerDialog: document.querySelector("#calendar-offer-dialog"),
+  reviewDialog: document.querySelector("#calendar-review-dialog"),
 };
 
 function byId(id) {
@@ -49,8 +67,10 @@ function showView(name) {
   }
 }
 
-function setError(id, message = "") {
-  const element = byId(id);
+function setErrorElement(element, message = "") {
+  if (!element) {
+    return;
+  }
   element.textContent = message;
   element.hidden = !message;
   if (message) {
@@ -58,9 +78,26 @@ function setError(id, message = "") {
   }
 }
 
+function setError(id, message = "") {
+  setErrorElement(byId(id), message);
+}
+
 function clearPortalWorkflowErrors() {
-  ["create-company-error", "edit-company-error", "add-contact-error"].forEach((id) => {
+  [
+    "create-company-error",
+    "edit-company-error",
+    "add-contact-error",
+    "coach-calendar-error",
+    "review-calendar-error",
+    "calendar-offer-error",
+    "calendar-review-error",
+  ].forEach((id) => {
     setError(id);
+  });
+  Object.values(restrictedCalendarNodes).forEach((node) => {
+    node.querySelectorAll(".form-error").forEach((error) => {
+      setErrorElement(error);
+    });
   });
   document.querySelectorAll(".contact-edit-form .form-error").forEach((error) => {
     error.textContent = "";
@@ -126,6 +163,11 @@ async function problemMessage(response, fallback) {
       account_conflict: "Für diese E-Mail kann derzeit keine Einladung erstellt werden.",
       company_record_not_found: "Der Datensatz wurde nicht gefunden.",
       portal_unavailable: "Das Portal ist derzeit nicht verfügbar.",
+      calendar_offer_not_found: "Das Angebot wurde nicht gefunden.",
+      calendar_version_conflict: "Der Datenstand wurde zwischenzeitlich geändert.",
+      calendar_time_conflict: "Der Zeitraum überschneidet sich mit einem anderen Angebot.",
+      calendar_transition_conflict: "Diese Aktion passt nicht mehr zum aktuellen Status.",
+      calendar_idempotency_conflict: "Dieser Entwurf steht im Konflikt mit einer früheren Anfrage.",
     };
     return messages[body.code] || body.title || fallback;
   } catch {
@@ -154,12 +196,41 @@ async function request(path, options = {}) {
 }
 
 function showLogin(message = "") {
+  clearPortalClientState();
+  state.session = null;
+  state.sessionCsrf = null;
   state.challengeCsrf = null;
   state.accountAction = null;
   byId("session-summary").hidden = true;
   setError("login-error", message);
   showView("login");
   byId("login-email").focus();
+}
+
+function clearPortalClientState() {
+  state.companies = [];
+  state.selectedCompany = null;
+  state.calendarCapabilities = null;
+  state.calendarTopics = [];
+  state.coachOffers = [];
+  state.reviewOffers = [];
+  state.selectedCalendarOffer = null;
+  state.selectedReviewOffer = null;
+  state.activePortalArea = null;
+  byId("company-list")?.replaceChildren();
+  restrictedCalendarNodes.coachWorkspace
+    .querySelector("#coach-calendar-list")
+    ?.replaceChildren();
+  restrictedCalendarNodes.reviewWorkspace
+    .querySelector("#review-calendar-list")
+    ?.replaceChildren();
+  [restrictedCalendarNodes.offerDialog, restrictedCalendarNodes.reviewDialog]
+    .forEach((dialog) => {
+      if (dialog.open) {
+        dialog.close();
+      }
+    });
+  configureRestrictedCalendarNodes(false, false);
 }
 
 function showPasswordResetRequest() {
@@ -330,11 +401,662 @@ async function enterPortal() {
   }
   byId("session-user").textContent = state.session.user.display_name;
   byId("session-summary").hidden = false;
-  byId("admin-invitation-panel").hidden = !state.session.user.roles.includes("admin");
   clearPortalWorkflowErrors();
   applyMutationAvailability();
   showView("portal");
-  await loadCompanies();
+  await configurePortalAreas();
+}
+
+const CALENDAR_STATUS_LABELS = {
+  draft: "Entwurf",
+  in_review: "Zur Prüfung eingereicht",
+  published: "Veröffentlicht",
+  changes_requested: "Änderung angefordert",
+  superseded: "Durch neuere Fassung ersetzt",
+};
+
+const CALENDAR_FORMAT_LABELS = {
+  online: "Online",
+  praesenz: "Präsenz",
+  hybrid: "Hybrid",
+};
+
+function calendarStatusLabel(status) {
+  return CALENDAR_STATUS_LABELS[status] || "Status nicht verfügbar";
+}
+
+function calendarOfferStatusLabel(offer) {
+  return offer.lifecycle_status === "withdrawn"
+    ? "Zurückgezogen"
+    : calendarStatusLabel(offer.workflow_status);
+}
+
+function calendarFormatLabel(format) {
+  return CALENDAR_FORMAT_LABELS[format] || "Format nicht verfügbar";
+}
+
+function formatCalendarDate(value) {
+  if (!value) {
+    return "Nicht angegeben";
+  }
+  return new Intl.DateTimeFormat("de-DE", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Europe/Berlin",
+  }).format(new Date(value));
+}
+
+function toBerlinInputValue(value) {
+  if (!value) {
+    return "";
+  }
+  const parts = new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+    timeZone: "Europe/Berlin",
+  }).formatToParts(new Date(value));
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}`;
+}
+
+function berlinLocalToIso(value) {
+  const guess = new Date(`${value}:00Z`);
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+    timeZone: "Europe/Berlin",
+  }).formatToParts(guess);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  const represented = Date.UTC(
+    Number(values.year),
+    Number(values.month) - 1,
+    Number(values.day),
+    Number(values.hour),
+    Number(values.minute),
+    Number(values.second),
+  );
+  return new Date(guess.getTime() - (represented - guess.getTime())).toISOString();
+}
+
+async function loadCalendarCapabilities() {
+  try {
+    const response = await request(API.calendarCapabilities);
+    if (response.status === 401) {
+      showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.");
+      return null;
+    }
+    if (response.status === 403 || response.status === 503) {
+      return null;
+    }
+    if (!response.ok) {
+      return null;
+    }
+    return response.json();
+  } catch {
+    return null;
+  }
+}
+
+async function configurePortalAreas() {
+  const roles = new Set(state.session.user.roles || []);
+  const canUseCompanies = roles.has("admin") || roles.has("internal");
+  state.calendarCapabilities = await loadCalendarCapabilities();
+  const canManageCalendar = Boolean(
+    state.calendarCapabilities?.can_manage_own_offers
+    || state.calendarCapabilities?.can_administer_offers,
+  );
+  const canReviewCalendar = Boolean(state.calendarCapabilities?.can_review_offers);
+  configureRestrictedCalendarNodes(canManageCalendar, canReviewCalendar);
+  applyMutationAvailability();
+  const areas = [];
+  if (canUseCompanies) {
+    areas.push({ id: "companies", label: "Firmen" });
+  }
+  if (canManageCalendar) {
+    areas.push({ id: "coach-calendar", label: "Kalenderangebote" });
+  }
+  if (canReviewCalendar) {
+    areas.push({ id: "review-calendar", label: "Prüfliste" });
+  }
+  renderPortalNavigation(areas);
+  byId("portal-empty").hidden = areas.length !== 0;
+  if (areas.length === 0) {
+    state.activePortalArea = null;
+    switchPortalWorkspace(null);
+    return;
+  }
+  const selected = areas.some((area) => area.id === state.activePortalArea)
+    ? state.activePortalArea
+    : areas[0].id;
+  await selectPortalArea(selected);
+}
+
+function configureRestrictedCalendarNodes(canManage, canReview) {
+  const portal = views.portal;
+  if (canManage) {
+    if (!restrictedCalendarNodes.coachWorkspace.isConnected) {
+      portal.append(restrictedCalendarNodes.coachWorkspace);
+    }
+    if (!restrictedCalendarNodes.offerDialog.isConnected) {
+      document.body.append(restrictedCalendarNodes.offerDialog);
+    }
+  } else {
+    restrictedCalendarNodes.coachWorkspace.remove();
+    restrictedCalendarNodes.offerDialog.remove();
+  }
+  if (canReview) {
+    if (!restrictedCalendarNodes.reviewWorkspace.isConnected) {
+      portal.append(restrictedCalendarNodes.reviewWorkspace);
+    }
+    if (!restrictedCalendarNodes.reviewDialog.isConnected) {
+      document.body.append(restrictedCalendarNodes.reviewDialog);
+    }
+  } else {
+    restrictedCalendarNodes.reviewWorkspace.remove();
+    restrictedCalendarNodes.reviewDialog.remove();
+  }
+}
+
+function renderPortalNavigation(areas) {
+  const navigation = byId("portal-navigation");
+  navigation.replaceChildren();
+  navigation.hidden = areas.length < 2;
+  areas.forEach((area) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = area.label;
+    button.setAttribute("aria-current", area.id === state.activePortalArea ? "page" : "false");
+    button.addEventListener("click", () => selectPortalArea(area.id));
+    navigation.append(button);
+  });
+}
+
+function switchPortalWorkspace(area) {
+  byId("company-workspace").hidden = area !== "companies";
+  restrictedCalendarNodes.coachWorkspace.hidden = area !== "coach-calendar";
+  restrictedCalendarNodes.reviewWorkspace.hidden = area !== "review-calendar";
+}
+
+async function selectPortalArea(area) {
+  state.activePortalArea = area;
+  switchPortalWorkspace(area);
+  const selectedLabel = area === "companies"
+    ? "Firmen"
+    : area === "coach-calendar"
+      ? "Kalenderangebote"
+      : "Prüfliste";
+  [...byId("portal-navigation").querySelectorAll("button")].forEach((button) => {
+    button.setAttribute("aria-current", button.textContent === selectedLabel ? "page" : "false");
+  });
+  byId("admin-invitation-panel").hidden = !(
+    area === "companies" && state.session.user.roles.includes("admin")
+  );
+  if (area === "companies") {
+    await loadCompanies();
+  } else if (area === "coach-calendar") {
+    await loadCalendarTopics();
+    await loadCoachOffers();
+  } else if (area === "review-calendar") {
+    await loadReviewQueue();
+  }
+}
+
+async function loadCalendarTopics() {
+  try {
+    const response = await request(API.calendarTopics);
+    if (!response.ok) {
+      state.calendarTopics = [];
+      renderCalendarTopicOptions();
+      return;
+    }
+    state.calendarTopics = (await response.json()).items || [];
+    renderCalendarTopicOptions();
+  } catch {
+    state.calendarTopics = [];
+    renderCalendarTopicOptions();
+  }
+}
+
+function renderCalendarTopicOptions(selected = "") {
+  const select = byId("calendar-topic");
+  select.replaceChildren();
+  const prompt = document.createElement("option");
+  prompt.value = "";
+  prompt.textContent = state.calendarTopics.length
+    ? "Thema auswählen"
+    : "Kein freigegebenes Thema vorhanden";
+  select.append(prompt);
+  state.calendarTopics.forEach((topic) => {
+    const option = document.createElement("option");
+    option.value = topic.id;
+    option.textContent = topic.name;
+    select.append(option);
+  });
+  select.value = String(selected || "");
+  const canCreate = Boolean(
+    state.calendarCapabilities?.can_manage_own_offers && state.calendarTopics.length,
+  );
+  byId("open-calendar-offer-dialog").hidden = !state.calendarCapabilities?.can_manage_own_offers;
+  byId("open-calendar-offer-dialog").disabled = !canCreate || !state.sessionCsrf;
+}
+
+async function loadCoachOffers() {
+  byId("coach-calendar-loading").hidden = false;
+  byId("coach-calendar-empty").hidden = true;
+  setError("coach-calendar-error");
+  try {
+    const response = await request(API.calendarOffers);
+    if (response.status === 401) {
+      showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.");
+      return;
+    }
+    if (!response.ok) {
+      setError("coach-calendar-error", await problemMessage(response, "Angebote konnten nicht geladen werden."));
+      return;
+    }
+    state.coachOffers = (await response.json()).items || [];
+    renderCoachOffers();
+  } catch {
+    setError("coach-calendar-error", "Angebote konnten nicht geladen werden.");
+  } finally {
+    byId("coach-calendar-loading").hidden = true;
+  }
+}
+
+function appendDefinition(list, label, value) {
+  const term = document.createElement("dt");
+  term.textContent = label;
+  const description = document.createElement("dd");
+  description.textContent = value;
+  list.append(term, description);
+}
+
+function calendarCard(offer, review = false) {
+  const item = document.createElement("li");
+  item.className = "calendar-card";
+  const heading = document.createElement("div");
+  heading.className = "calendar-card-heading";
+  const title = document.createElement("h3");
+  title.textContent = offer.title;
+  const status = document.createElement("span");
+  status.className = "calendar-status";
+  status.textContent = calendarOfferStatusLabel(offer);
+  heading.append(title, status);
+  const meta = document.createElement("dl");
+  meta.className = "calendar-card-meta";
+  if (review) {
+    appendDefinition(meta, "Coach", offer.coach_display_name || "Nicht verfügbar");
+  }
+  appendDefinition(meta, "Thema", offer.topic_name || "Nicht verfügbar");
+  appendDefinition(meta, "Beginn", formatCalendarDate(offer.starts_at));
+  appendDefinition(meta, "Ende", formatCalendarDate(offer.ends_at));
+  const revision = document.createElement("p");
+  revision.textContent = `Aktuelle Revision: ${offer.revision_number || 1}`;
+  const actions = document.createElement("div");
+  actions.className = "calendar-card-actions";
+  item.append(heading, meta, revision, actions);
+  return { item, actions };
+}
+
+function actionButton(label, style, handler) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = `button ${style} calendar-mutation-control`;
+  button.textContent = label;
+  button.disabled = !state.sessionCsrf;
+  button.addEventListener("click", handler);
+  return button;
+}
+
+function renderCoachOffers() {
+  const list = byId("coach-calendar-list");
+  list.replaceChildren();
+  byId("coach-calendar-empty").hidden = state.coachOffers.length !== 0;
+  state.coachOffers.forEach((offer, index) => {
+    const card = calendarCard(offer);
+    const editable = ["draft", "changes_requested", "published"].includes(offer.workflow_status)
+      && offer.lifecycle_status === "active";
+    if (editable) {
+      const label = offer.workflow_status === "draft" ? "Entwurf bearbeiten" : "Neue Revision bearbeiten";
+      card.actions.append(actionButton(label, "button-secondary", () => openCalendarOffer(index)));
+    }
+    if (offer.workflow_status === "draft" && offer.lifecycle_status === "active") {
+      card.actions.append(actionButton("Zur Prüfung einreichen", "button-primary", () => submitCalendarOffer(index)));
+    }
+    if (offer.lifecycle_status === "active") {
+      card.actions.append(actionButton("Angebot zurückziehen", "button-quiet", () => withdrawCalendarOffer(index)));
+    }
+    list.append(card.item);
+  });
+}
+
+async function fetchCalendarDetail(offer, target) {
+  const response = await request(`${API.calendarOffers}/${offer.id}`);
+  if (!response.ok) {
+    setError(target, await problemMessage(response, "Angebot konnte nicht geladen werden."));
+    return null;
+  }
+  return { detail: await response.json(), etag: response.headers.get("ETag") };
+}
+
+function fillCalendarOfferForm(detail = null) {
+  const form = byId("calendar-offer-form");
+  form.reset();
+  setError("calendar-offer-error");
+  byId("reload-calendar-offer").hidden = true;
+  byId("calendar-review-feedback").hidden = true;
+  const draft = detail?.current_revision;
+  byId("calendar-offer-dialog-title").textContent = draft ? "Entwurf bearbeiten" : "Entwurf anlegen";
+  byId("save-calendar-offer").textContent = draft ? "Entwurf speichern" : "Entwurf anlegen";
+  renderCalendarTopicOptions(draft?.topic_id || "");
+  if (!draft) {
+    return;
+  }
+  if (detail.review_decision?.outcome === "changes_requested") {
+    byId("calendar-review-feedback-text").textContent = detail.review_decision.note
+      || "Für dieses Angebot wurden Änderungen angefordert.";
+    byId("calendar-review-feedback").hidden = false;
+  }
+  byId("calendar-title").value = draft.title;
+  byId("calendar-summary").value = draft.summary || "";
+  byId("calendar-starts-at").value = toBerlinInputValue(draft.starts_at);
+  byId("calendar-ends-at").value = toBerlinInputValue(draft.ends_at);
+  byId("calendar-time-zone").value = draft.time_zone;
+  byId("calendar-format").value = draft.format;
+  byId("calendar-location").value = draft.public_location || "";
+  byId("calendar-capacity").value = draft.capacity;
+  byId("calendar-review-threshold").value = draft.review_threshold;
+  byId("calendar-decision-deadline").value = toBerlinInputValue(draft.decision_deadline);
+  byId("calendar-price").value = draft.price_display_text;
+}
+
+function openNewCalendarOffer() {
+  state.selectedCalendarOffer = null;
+  fillCalendarOfferForm();
+  byId("calendar-offer-dialog").showModal();
+  byId("calendar-title").focus();
+}
+
+async function openCalendarOffer(index) {
+  setError("coach-calendar-error");
+  const selected = await fetchCalendarDetail(state.coachOffers[index], "coach-calendar-error");
+  if (!selected) {
+    return;
+  }
+  state.selectedCalendarOffer = selected;
+  fillCalendarOfferForm(selected.detail);
+  byId("calendar-offer-dialog").showModal();
+  byId("calendar-title").focus();
+}
+
+function calendarDraftPayload(data) {
+  return {
+    topic_id: data.get("topic_id"),
+    title: data.get("title"),
+    summary: normalizeOptional(data.get("summary")),
+    starts_at: berlinLocalToIso(data.get("starts_at")),
+    ends_at: berlinLocalToIso(data.get("ends_at")),
+    time_zone: data.get("time_zone"),
+    format: data.get("format"),
+    public_location: normalizeOptional(data.get("public_location")),
+    capacity: Number(data.get("capacity")),
+    review_threshold: Number(data.get("review_threshold")),
+    decision_deadline: berlinLocalToIso(data.get("decision_deadline")),
+    price_display_text: data.get("price_display_text"),
+  };
+}
+
+function showCalendarConflict(errorId, reloadId) {
+  setError(errorId, "Der Datenstand wurde inzwischen geändert. Laden Sie den aktuellen Stand, bevor Sie fortfahren.");
+  byId(reloadId).hidden = false;
+}
+
+async function handleCalendarOfferSave(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  setError("calendar-offer-error");
+  byId("reload-calendar-offer").hidden = true;
+  if (!state.sessionCsrf) {
+    setError("calendar-offer-error", "Bitte melden Sie sich für Änderungen erneut an.");
+    return;
+  }
+  const data = beginFormSubmission(form);
+  if (data === null) {
+    return;
+  }
+  const editing = state.selectedCalendarOffer;
+  const path = editing
+    ? `${API.calendarOffers}/${editing.detail.id}/draft`
+    : API.calendarOffers;
+  const body = editing
+    ? calendarDraftPayload(data)
+    : { client_request_id: window.crypto.randomUUID(), draft: calendarDraftPayload(data) };
+  const headers = editing?.etag ? { "If-Match": editing.etag } : {};
+  try {
+    const response = await request(path, {
+      method: editing ? "PATCH" : "POST",
+      csrf: "session",
+      headers,
+      body,
+    });
+    if (response.status === 409) {
+      showCalendarConflict("calendar-offer-error", "reload-calendar-offer");
+      return;
+    }
+    if (!response.ok) {
+      setError("calendar-offer-error", await problemMessage(response, "Entwurf konnte nicht gespeichert werden."));
+      return;
+    }
+    byId("calendar-offer-dialog").close();
+    state.selectedCalendarOffer = null;
+    await loadCoachOffers();
+    announce("Der Entwurf wurde gespeichert.");
+  } catch {
+    setError("calendar-offer-error", "Entwurf konnte nicht gespeichert werden.");
+  } finally {
+    setBusy(form, false);
+  }
+}
+
+async function versionedCalendarAction(index, action, successMessage) {
+  const actionKey = `calendar-${action}-${index}`;
+  if (state.submitting.has(actionKey)) {
+    return;
+  }
+  state.submitting.add(actionKey);
+  const selected = await fetchCalendarDetail(state.coachOffers[index], "coach-calendar-error");
+  if (!selected || !state.sessionCsrf) {
+    state.submitting.delete(actionKey);
+    return;
+  }
+  try {
+    const response = await request(`${API.calendarOffers}/${selected.detail.id}/${action}`, {
+      method: "POST",
+      csrf: "session",
+      headers: { "If-Match": selected.etag },
+    });
+    if (response.status === 409) {
+      setError("coach-calendar-error", "Der Datenstand wurde inzwischen geändert. Die Liste wurde aktualisiert; bitte prüfen Sie den Status.");
+      await loadCoachOffers();
+      return;
+    }
+    if (!response.ok) {
+      setError("coach-calendar-error", await problemMessage(response, "Aktion konnte nicht ausgeführt werden."));
+      return;
+    }
+    await loadCoachOffers();
+    announce(successMessage);
+  } catch {
+    setError("coach-calendar-error", "Aktion konnte nicht ausgeführt werden.");
+  } finally {
+    state.submitting.delete(actionKey);
+  }
+}
+
+async function submitCalendarOffer(index) {
+  await versionedCalendarAction(index, "submit", "Das Angebot wurde zur Prüfung eingereicht.");
+}
+
+async function withdrawCalendarOffer(index) {
+  await versionedCalendarAction(index, "withdraw", "Das Angebot wurde zurückgezogen.");
+}
+
+async function loadReviewQueue() {
+  byId("review-calendar-loading").hidden = false;
+  byId("review-calendar-empty").hidden = true;
+  setError("review-calendar-error");
+  try {
+    const response = await request(API.calendarReviewQueue);
+    if (response.status === 401) {
+      showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.");
+      return;
+    }
+    if (!response.ok) {
+      setError("review-calendar-error", await problemMessage(response, "Prüfliste konnte nicht geladen werden."));
+      return;
+    }
+    state.reviewOffers = (await response.json()).items || [];
+    renderReviewQueue();
+  } catch {
+    setError("review-calendar-error", "Prüfliste konnte nicht geladen werden.");
+  } finally {
+    byId("review-calendar-loading").hidden = true;
+  }
+}
+
+function renderReviewQueue() {
+  const list = byId("review-calendar-list");
+  list.replaceChildren();
+  byId("review-calendar-empty").hidden = state.reviewOffers.length !== 0;
+  state.reviewOffers.forEach((offer, index) => {
+    const card = calendarCard(offer, true);
+    card.actions.append(actionButton("Angebot prüfen", "button-primary", () => openCalendarReview(index)));
+    list.append(card.item);
+  });
+}
+
+function renderReviewSummary(detail) {
+  const summary = byId("calendar-review-summary");
+  summary.replaceChildren();
+  const revision = detail.current_revision;
+  appendDefinition(summary, "Coach", detail.coach_display_name || "Nicht verfügbar");
+  appendDefinition(summary, "Thema", revision.topic_name || "Nicht verfügbar");
+  appendDefinition(summary, "Titel", revision.title);
+  appendDefinition(summary, "Zeitraum", `${formatCalendarDate(revision.starts_at)} bis ${formatCalendarDate(revision.ends_at)}`);
+  appendDefinition(summary, "Format", calendarFormatLabel(revision.format));
+  appendDefinition(summary, "Ort", revision.public_location || "Nicht angegeben");
+  appendDefinition(summary, "Kapazität", String(revision.capacity));
+  appendDefinition(summary, "Entscheidungsfrist", formatCalendarDate(revision.decision_deadline));
+  appendDefinition(summary, "Preishinweis", revision.price_display_text);
+  appendDefinition(summary, "Revision", String(revision.revision_number));
+}
+
+async function openCalendarReview(index) {
+  setError("review-calendar-error");
+  const selected = await fetchCalendarDetail(state.reviewOffers[index], "review-calendar-error");
+  if (!selected) {
+    return;
+  }
+  state.selectedReviewOffer = selected;
+  byId("calendar-review-form").reset();
+  setError("calendar-review-error");
+  byId("reload-calendar-review").hidden = true;
+  renderReviewSummary(selected.detail);
+  byId("calendar-review-dialog").showModal();
+  byId("calendar-review-form").querySelector("input[name='outcome']").focus();
+}
+
+async function handleCalendarReview(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  setError("calendar-review-error");
+  byId("reload-calendar-review").hidden = true;
+  if (!state.selectedReviewOffer || !state.sessionCsrf) {
+    setError("calendar-review-error", "Bitte laden Sie das Angebot erneut.");
+    return;
+  }
+  const data = beginFormSubmission(form);
+  if (data === null) {
+    return;
+  }
+  const outcome = data.get("outcome");
+  const note = normalizeOptional(data.get("note"));
+  if (outcome === "changes_requested" && !note) {
+    setBusy(form, false);
+    setError("calendar-review-error", "Bitte beschreiben Sie die gewünschte Änderung.");
+    byId("calendar-review-note").focus();
+    return;
+  }
+  try {
+    const selected = state.selectedReviewOffer;
+    const response = await request(
+      `${API.calendarOffers}/${selected.detail.id}/review-decisions`,
+      {
+        method: "POST",
+        csrf: "session",
+        headers: { "If-Match": selected.etag },
+        body: { outcome, note },
+      },
+    );
+    if (response.status === 409) {
+      showCalendarConflict("calendar-review-error", "reload-calendar-review");
+      return;
+    }
+    if (!response.ok) {
+      setError("calendar-review-error", await problemMessage(response, "Entscheidung konnte nicht gespeichert werden."));
+      return;
+    }
+    byId("calendar-review-dialog").close();
+    state.selectedReviewOffer = null;
+    await loadReviewQueue();
+    announce(outcome === "published" ? "Das Angebot wurde veröffentlicht." : "Die Änderung wurde angefordert.");
+  } catch {
+    setError("calendar-review-error", "Entscheidung konnte nicht gespeichert werden.");
+  } finally {
+    setBusy(form, false);
+  }
+}
+
+async function reloadSelectedCalendarOffer() {
+  if (!state.selectedCalendarOffer) {
+    return;
+  }
+  const selected = await fetchCalendarDetail(
+    state.selectedCalendarOffer.detail,
+    "calendar-offer-error",
+  );
+  if (selected) {
+    state.selectedCalendarOffer = selected;
+    fillCalendarOfferForm(selected.detail);
+    announce("Der aktuelle Stand wurde geladen.");
+  }
+}
+
+async function reloadSelectedCalendarReview() {
+  if (!state.selectedReviewOffer) {
+    return;
+  }
+  const selected = await fetchCalendarDetail(
+    state.selectedReviewOffer.detail,
+    "calendar-review-error",
+  );
+  if (selected) {
+    state.selectedReviewOffer = selected;
+    byId("calendar-review-form").reset();
+    byId("reload-calendar-review").hidden = true;
+    setError("calendar-review-error");
+    renderReviewSummary(selected.detail);
+    announce("Der aktuelle Stand wurde geladen.");
+  }
 }
 
 async function handleAdminInvitation(event) {
@@ -386,6 +1108,9 @@ function applyMutationAvailability() {
   const canMutate = Boolean(state.sessionCsrf);
   byId("reauth-notice").hidden = canMutate;
   document.querySelectorAll(".mutation-control").forEach((control) => {
+    control.disabled = !canMutate;
+  });
+  document.querySelectorAll(".calendar-mutation-control").forEach((control) => {
     control.disabled = !canMutate;
   });
   byId("logout-button").textContent = canMutate ? "Abmelden" : "Erneut anmelden";
@@ -905,8 +1630,6 @@ async function handleLogout() {
   }
   state.session = null;
   state.sessionCsrf = null;
-  state.companies = [];
-  state.selectedCompany = null;
   showLogin("Sie wurden abgemeldet.");
 }
 
@@ -919,6 +1642,8 @@ function bindEvents() {
   byId("create-company-form").addEventListener("submit", handleCreateCompany);
   byId("edit-company-form").addEventListener("submit", handleCompanyUpdate);
   byId("add-contact-form").addEventListener("submit", handleAddContact);
+  byId("calendar-offer-form").addEventListener("submit", handleCalendarOfferSave);
+  byId("calendar-review-form").addEventListener("submit", handleCalendarReview);
   byId("admin-invitation-form").addEventListener("submit", handleAdminInvitation);
   byId("logout-button").addEventListener("click", handleLogout);
   byId("reauth-button").addEventListener("click", () => showLogin());
@@ -955,6 +1680,10 @@ function bindEvents() {
     byId("enter-portal").disabled = !event.currentTarget.checked;
   });
   byId("enter-portal").addEventListener("click", enterPortal);
+  byId("open-calendar-offer-dialog").addEventListener("click", openNewCalendarOffer);
+  byId("refresh-review-queue").addEventListener("click", loadReviewQueue);
+  byId("reload-calendar-offer").addEventListener("click", reloadSelectedCalendarOffer);
+  byId("reload-calendar-review").addEventListener("click", reloadSelectedCalendarReview);
 
   byId("company-search-form").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -1005,6 +1734,7 @@ function bindEvents() {
 }
 
 bindEvents();
+configureRestrictedCalendarNodes(false, false);
 if (!consumeAccountActionFromFragment()) {
   restoreSession();
 }

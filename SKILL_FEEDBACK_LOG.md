@@ -6,6 +6,150 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-21 | public-placeholder-and-clean-artifact-gates | Domaininhalt und Sourcezustand vor Livegang pruefen
+
+- Triggering project situation: DNS und TLS waren laut EDV eingerichtet, doch
+  der aktuelle oeffentliche Abruf beider Subdomains lieferte eine frei
+  erreichbare `phpinfo()`-Seite. Parallel war ein technisch korrektes
+  Website-Archiv wegen bewusster, noch nicht freigegebener Arbeitsaenderungen
+  als `dirty` markiert.
+- Observed friction: Ein reiner Status-/Zertifikatscheck haette den riskanten
+  Platzhalter uebersehen; ein gruener Build haette faelschlich wie ein finales
+  Produktionsartefakt wirken koennen.
+- Reusable improvement candidate: `prepare-release`, `create-deployment-plan`
+  und `audit-security` sollen vor Web-Releases nicht nur DNS/TLS/HTTP-Status,
+  sondern Seitentitel, charakteristische Inhalte, Redirects und bekannte
+  Diagnose-/Defaultseiten pruefen. Release-Nachweise muessen Clean/Dirty,
+  Source-Checkpoint und Deploymentautorisierung getrennt ausweisen.
+- Project response: `phpinfo()` ist P0 und EDV-Stopper; der lokale Kandidat ist
+  mit Hash dokumentiert, aber nicht deployautorisiert. Ein sauberes Artefakt
+  wird erst nach freigegebenem Source-Checkpoint gebaut.
+- Reuse potential: very high for hosted websites and pre-production handoffs.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | stateful-browser-fixture-evidence | Frischer Zustand und objektspezifische Browser-Waits
+
+- Triggering project situation: Eine langlebige synthetische Fixture behielt
+  Withdraw-/Review-Mutationen zwischen manuellen Rundgaengen. Gleichzeitig
+  werteten erste Automationsschritte bereits vorhandenen Seitentext aus, bevor
+  der gerade angestossene asynchrone Detailabruf abgeschlossen war.
+- Observed friction: Korrekte Lifecycle-Regeln wirkten wie fehlende
+  Revisionsaktionen, und zu breite Wartebedingungen erzeugten falsche
+  Negativbefunde bei Topic-Auswahl, Submit, stale reload, Review und MFA.
+- Reusable improvement candidate: `write-tests`, `debug-failures` und
+  `integrate-frontend` sollen Browser-Gates aus einem frischen deterministischen
+  Fixturezustand starten, konkurrierende Tabs als getrennte Sitzungen abbilden,
+  auf das konkret mutierte Objekt/Element warten und API-, Client-State- und
+  DOM-Evidenz getrennt erfassen. Fixture-Mutationen muessen in sichtbaren
+  Lifecycle-Labels erkennbar sein.
+- Project response: Der CAL-1-Runner startet pro Lauf einen freien HTTPS-
+  Loopbackserver, verwendet mehrere unabhaengige Sessions, wartet karten- und
+  dialogbezogen und entfernt Server, Browserkontexte und Temporaerdaten im
+  `finally`-Pfad. 57/57 Edge-Pruefungen bestehen.
+- Reuse potential: very high for stateful portals and end-to-end test fixtures.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | browser-runtime-after-dom-hardening | Sicherheits-DOM auch im echten Browserpfad pruefen
+
+- Triggering project situation: Rollenabhaengige Kalenderbereiche wurden aus
+  dem aktiven DOM entfernt. Ein spaeterer allgemeiner Fehler-Cleanup griff vor
+  der erneuten Capability-Aufloesung trotzdem ueber `getElementById` darauf zu
+  und blockierte erst im echten Browser den Portal-Einstieg.
+- Observed friction: API-, Fixture- und statische UI-Tests waren gruen, obwohl
+  der reale Login-MFA-Portal-Uebergang im Browser scheiterte. Ein weiterer
+  Rollenpfad zeigte Admin-Angebote, lud aber die zum Speichern erforderlichen
+  Themen nicht.
+- Reusable improvement candidate: `integrate-frontend`, `write-tests` und
+  `audit-security` sollen nach DOM-Hardening mindestens einen echten Runtime-
+  Pfad Login -> MFA -> Capability-Aufloesung -> rollenabhaengige Ansicht sowie
+  das Bearbeiten eines vollstaendigen Pflichtformulars je berechtigter Rolle
+  verlangen. Statische Quelltests allein reichen fuer diesen Gate-Typ nicht.
+- Project response: Cleanup arbeitet nulltolerant und leert gehaltene Knoten
+  direkt; Admin laedt Topics fuer bestehende Angebote. Regressionstest und
+  manuelle Checkliste wurden aktualisiert, volle Suite 384/17 gruen.
+- Reuse potential: very high for role-sensitive framework-free portals.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | detached-privileged-dom-cleanup | Rollenwechsel leert auch entfernte UI-Knoten
+
+- Triggering project situation: Nicht berechtigte Kalenderbereiche wurden
+  richtigerweise aus dem aktiven DOM entfernt, behielten als wiederverwendete
+  JavaScript-Knoten aber ihren zuvor geladenen Coach-/Reviewer-Inhalt.
+- Observed friction: Bei Logout und anschliessendem Rollenwechsel koennte ein
+  Ladefehler sonst alten privilegierten Inhalt im Tab-Speicher beziehungsweise
+  nach spaeterem Wiederanheften sichtbar lassen, obwohl die API weiterhin
+  korrekt sperrt.
+- Reusable improvement candidate: `integrate-frontend`, `audit-security` und
+  `check-accessibility` sollen bei rollenabhaengig entfernten oder gecachten
+  DOM-Teilbaeumen einen Session-transition-Test verlangen: Dialoge schliessen,
+  Listen/Details leeren, Referenzen verwerfen und erst nach erneuter
+  serverseitiger Berechtigungsauflosung wieder anheften.
+- Project response: Eine zentrale Client-State-Bereinigung leert Firmen- und
+  Kalenderlisten, Details, Dialoge und Capability-State bei Logout,
+  Sitzungsablauf und Re-Login. Ein statischer Regressionstest schuetzt den Pfad.
+- Reuse potential: very high for multi-role single-page portals.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | behavior-over-occurrence-count | UI-Regressionen nicht an Aufrufszahlen koppeln
+
+- Triggering project situation: Zwei neue sichere Formulare liessen einen
+  bestehenden Test fehlschlagen, weil er exakt zehn Aufrufe des gemeinsamen
+  FormData-vor-Disable-Helfers erwartete.
+- Observed friction: Der Sicherheitsmechanismus blieb korrekt und wurde sogar
+  erweitert; nur die Implementierungsanzahl hatte sich legitim veraendert.
+- Reusable improvement candidate: `write-tests` soll bei querschnittlichen
+  Frontend-Sicherheitsmustern die Reihenfolge und verpflichtende Nutzung pro
+  relevantem Handler pruefen, nicht eine globale exakte Textvorkommenszahl.
+- Project response: Reihenfolge bleibt explizit geschuetzt; der Test akzeptiert
+  Erweiterungen und die neuen Kalenderformulare werden separat vertraglich
+  geprueft.
+- Reuse potential: high for frameworkfreie Clients und statische Quelltests.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | endpoint-session-role-boundary | RBAC mit echter Sessionkette pruefen
+
+- Triggering project situation: Die CAL-1-API war mit Fake-Principals lokal
+  gruen, aber der native Staging-Lauf lieferte fuer Coach und Reviewer bereits
+  vor dem Kalender-RBAC ein `401`, weil das bestehende persistierte Session-
+  Repository gemaess internem Auth-Vertrag nur `admin/internal` akzeptierte.
+- Observed friction: Unit- und API-Tests prueften die nachgelagerte
+  Rollenentscheidung, bildeten aber die vorgelagerte Datenbankabfrage zur
+  Session-Eignung nicht ab. Dadurch blieb die Differenz zwischen fehlender
+  Authentifizierung (`401`) und vorhandener Identitaet ohne Berechtigung (`403`)
+  bis zum nativen Gate unsichtbar.
+- Reusable improvement candidate: `write-tests`, `integrate-backend` und
+  `audit-security` sollten fuer neue geschuetzte Endpunktfamilien die gesamte
+  Kette Sessionpersistenz -> erlaubte Auth-Rollen -> Endpunkt-RBAC nativ testen.
+  Wenn bestehende ADRs engere Loginrollen festlegen, ist eine explizit getrennte
+  Session-Sicht einer stillen globalen Aufweitung vorzuziehen. Negative Tests
+  muessen `401` und `403` vertraglich unterscheiden.
+- Project response: CAL-1 verwendet eine eigene konfigurierte Session-Sicht
+  fuer die fuenf Kalenderrollen; interner Login, Admin- und Firmenendpunkte
+  behalten ihre bisherige `admin/internal`-Grenze. Der fokussierte Lauf besteht
+  3/3 und die vollstaendige Staging-Suite 17/17 ohne Datenrueckstand.
+- Reuse potential: very high for multi-role portals and shared authentication.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-17 | explicit-public-route-mapping | Keine URLs aus Namen ableiten
+
+- Triggering project situation: Die Kalender-API musste interne Coach-UUIDs
+  mit bereits freigegebenen Websiteprofilen verbinden, waehrend die oeffentliche
+  Quelle keine stabilen internen UUIDs enthaelt.
+- Observed friction: Ein bequemes Name-zu-Slug-Fallback haette reale Personen
+  falsch zuordnen, nicht freigegebene Profile verlinken und spaetere
+  Umbenennungen zu stillen API-Aenderungen machen koennen.
+- Reusable improvement candidate: `design-api-contracts`, `plan-data-model`,
+  `integrate-backend` und `audit-security` sollten Identitaets-ID-zu-
+  oeffentlicher-Route-Verbindungen als explizite nullable Stammdaten-Grenze
+  behandeln: kanonischer Namespace, kein Normalisieren/Erraten, Eindeutigkeit,
+  sichere NULL-Semantik und getrennte interne/oeffentliche DTOs.
+- Project response: `coaches.public_profile_path` ist lokal additiv vorbereitet,
+  streng validiert und Kalender-Mutationen koennen es nicht veraendern. Ohne
+  freigegebene UUID-Zuordnung bleibt der Wert NULL.
+- Reuse potential: high for profiles, CMS links, public catalogs and account-
+  to-marketing-page integrations.
+- Status: project pattern applied; canonical skill proposal captured only.
+
 ### 2026-09-17 | postgres-bind-type-boundary | Treibertypen nativ pruefen
 
 - Triggering project situation: Ein PostgreSQL Advisory Lock castete UUID-

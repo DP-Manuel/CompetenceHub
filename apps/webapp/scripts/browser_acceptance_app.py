@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import secrets
 from collections.abc import Mapping
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
@@ -31,12 +32,30 @@ from competence_hub_api.portal.companies import (
     CompanySummary,
     NewCompanyContact,
 )
+from competence_hub_api.portal.calendar import (
+    CalendarDraft,
+    CalendarOfferDetail,
+    CalendarOfferNotFoundError,
+    CalendarOfferRecord,
+    CalendarReviewDecision,
+    CalendarRevisionRecord,
+    CalendarService,
+    CalendarTopic,
+    CalendarTransitionConflictError,
+    CalendarVersionConflictError,
+    PublicCalendarOffer,
+)
 from competence_hub_api.security.tokens import digest_token
 
 HOST = "127.0.0.1"
 DEFAULT_PORT = 8443
 INTERNAL_EMAIL = "synthetic.internal@example.invalid"
 ENROLLMENT_EMAIL = "synthetic.enrollment@example.invalid"
+COACH_EMAIL = "synthetic.coach@example.invalid"
+EMPTY_COACH_EMAIL = "synthetic.coach-empty@example.invalid"
+REVIEWER_EMAIL = "synthetic.reviewer@example.invalid"
+ADMIN_EMAIL = "synthetic.admin@example.invalid"
+COMPANY_CONTACT_EMAIL = "synthetic.company-contact@example.invalid"
 SYNTHETIC_PASSWORD = "Synthetic-Portal-2026!"
 TOTP_CODE = "123456"
 RECOVERY_CODE = "AAAA-BBBB-CCCC-DDDD"
@@ -52,9 +71,37 @@ RECOVERY_CODES = (
     "ABCD-EFGH-IJKL-MNOP",
     "QRST-UVWX-YZ23-4567",
 )
-SESSION_TOKEN = "synthetic-browser-session-token"
-SESSION_CSRF = "synthetic-browser-session-csrf"
 USER_ID = UUID("00000000-0000-4000-8000-000000000901")
+
+SYNTHETIC_IDENTITIES = {
+    INTERNAL_EMAIL: (USER_ID, "Internal A", ("internal",)),
+    ENROLLMENT_EMAIL: (USER_ID, "Enrollment A", ("internal",)),
+    COACH_EMAIL: (
+        UUID("00000000-0000-4000-8000-000000000911"),
+        "Coach A",
+        ("coach",),
+    ),
+    EMPTY_COACH_EMAIL: (
+        UUID("00000000-0000-4000-8000-000000000912"),
+        "Coach ohne Angebote",
+        ("coach",),
+    ),
+    REVIEWER_EMAIL: (
+        UUID("00000000-0000-4000-8000-000000000913"),
+        "Reviewer A",
+        ("calendar_reviewer",),
+    ),
+    ADMIN_EMAIL: (
+        UUID("00000000-0000-4000-8000-000000000914"),
+        "Admin A",
+        ("admin",),
+    ),
+    COMPANY_CONTACT_EMAIL: (
+        UUID("00000000-0000-4000-8000-000000000915"),
+        "Firmenkontakt A",
+        ("company_contact",),
+    ),
+}
 
 
 def utc_now() -> datetime:
@@ -63,25 +110,35 @@ def utc_now() -> datetime:
 
 class SyntheticSessionRepository:
     def __init__(self) -> None:
-        self._active = False
-        self._csrf_token_hash = digest_token(SESSION_CSRF)
+        self._sessions: dict[bytes, tuple[str, bytes, UUID]] = {}
 
-    def activate(self) -> None:
-        self._active = True
-        self._csrf_token_hash = digest_token(SESSION_CSRF)
+    def activate(self, identity_email: str) -> tuple[str, str]:
+        session_token = secrets.token_urlsafe(32)
+        csrf_token = secrets.token_urlsafe(32)
+        self._sessions[digest_token(session_token)] = (
+            identity_email,
+            digest_token(csrf_token),
+            uuid4(),
+        )
+        return session_token, csrf_token
 
-    def _principal(self, now: datetime) -> SessionPrincipal | None:
-        if not self._active:
+    def _principal(
+        self, token_hash: bytes, now: datetime
+    ) -> SessionPrincipal | None:
+        session = self._sessions.get(token_hash)
+        if session is None:
             return None
+        identity_email, csrf_token_hash, session_id = session
+        user_id, display_name, roles = SYNTHETIC_IDENTITIES[identity_email]
         return SessionPrincipal(
-            session_id=UUID("00000000-0000-4000-8000-000000000902"),
-            user_id=USER_ID,
-            display_name="Synthetic Internal User",
-            roles=("internal",),
+            session_id=session_id,
+            user_id=user_id,
+            display_name=display_name,
+            roles=roles,
             authenticated_at=now - timedelta(minutes=2),
             idle_expires_at=now + timedelta(minutes=30),
             absolute_expires_at=now + timedelta(hours=8),
-            csrf_token_hash=self._csrf_token_hash,
+            csrf_token_hash=csrf_token_hash,
         )
 
     async def refresh_active_session(
@@ -92,9 +149,7 @@ class SyntheticSessionRepository:
         idle_timeout: timedelta,
     ) -> SessionPrincipal | None:
         del idle_timeout
-        if token_hash != digest_token(SESSION_TOKEN):
-            return None
-        return self._principal(now)
+        return self._principal(token_hash, now)
 
     async def find_active_session(
         self,
@@ -102,9 +157,7 @@ class SyntheticSessionRepository:
         *,
         now: datetime,
     ) -> SessionPrincipal | None:
-        if token_hash != digest_token(SESSION_TOKEN):
-            return None
-        return self._principal(now)
+        return self._principal(token_hash, now)
 
     async def rotate_active_session_csrf(
         self,
@@ -115,10 +168,12 @@ class SyntheticSessionRepository:
         idle_timeout: timedelta,
     ) -> SessionPrincipal | None:
         del idle_timeout
-        if token_hash != digest_token(SESSION_TOKEN) or not self._active:
+        session = self._sessions.get(token_hash)
+        if session is None:
             return None
-        self._csrf_token_hash = csrf_token_hash
-        return self._principal(now)
+        identity_email, _, session_id = session
+        self._sessions[token_hash] = (identity_email, csrf_token_hash, session_id)
+        return self._principal(token_hash, now)
 
     async def revoke_session(
         self,
@@ -128,11 +183,19 @@ class SyntheticSessionRepository:
         reason: str,
     ) -> None:
         del now, reason
-        if token_hash == digest_token(SESSION_TOKEN):
-            self._active = False
+        self._sessions.pop(token_hash, None)
 
 
 class SyntheticLoginService:
+    def __init__(self) -> None:
+        self._challenges: dict[str, tuple[str, str]] = {}
+
+    def resolve_challenge(self, login_token: str, csrf_token: str) -> str | None:
+        expected = self._challenges.get(login_token)
+        if expected is None or expected[0] != csrf_token:
+            return None
+        return expected[1]
+
     async def authenticate(
         self,
         *,
@@ -144,38 +207,37 @@ class SyntheticLoginService:
         del client_ip, now
         if password != SYNTHETIC_PASSWORD:
             return LoginRejected()
-        states = {
-            INTERNAL_EMAIL: "mfa_required",
-            ENROLLMENT_EMAIL: "mfa_enrollment_required",
-        }
-        state = states.get(normalized_email)
-        if state is None:
+        if normalized_email not in SYNTHETIC_IDENTITIES:
             return LoginRejected()
-        suffix = "enrollment" if normalized_email == ENROLLMENT_EMAIL else "internal"
+        state = "mfa_enrollment_required" if normalized_email == ENROLLMENT_EMAIL else "mfa_required"
+        suffix = normalized_email.split("@", 1)[0].replace(".", "-")
+        login_token = f"synthetic-browser-login-{suffix}"
+        csrf_token = f"synthetic-browser-login-csrf-{suffix}"
+        self._challenges[login_token] = (csrf_token, normalized_email)
         return LoginAccepted(
             state=state,
-            login_token=f"synthetic-browser-login-{suffix}",
-            csrf_token=f"synthetic-browser-login-csrf-{suffix}",
+            login_token=login_token,
+            csrf_token=csrf_token,
         )
 
 
 class SyntheticMfaService:
-    def __init__(self, sessions: SyntheticSessionRepository) -> None:
+    def __init__(
+        self,
+        sessions: SyntheticSessionRepository,
+        login_service: SyntheticLoginService,
+    ) -> None:
         self._sessions = sessions
+        self._login_service = login_service
 
-    @staticmethod
-    def _valid_challenge(login_token: str, csrf_token: str) -> bool:
-        suffix = "enrollment" if login_token.endswith("enrollment") else "internal"
-        return (
-            login_token == f"synthetic-browser-login-{suffix}"
-            and csrf_token == f"synthetic-browser-login-csrf-{suffix}"
-        )
+    def _identity(self, login_token: str, csrf_token: str) -> str | None:
+        return self._login_service.resolve_challenge(login_token, csrf_token)
 
-    def _session(self) -> MfaSessionCreated:
-        self._sessions.activate()
+    def _session(self, identity_email: str) -> MfaSessionCreated:
+        session_token, csrf_token = self._sessions.activate(identity_email)
         return MfaSessionCreated(
-            session_token=SESSION_TOKEN,
-            csrf_token=SESSION_CSRF,
+            session_token=session_token,
+            csrf_token=csrf_token,
         )
 
     async def start_totp_enrollment(
@@ -186,9 +248,7 @@ class SyntheticMfaService:
         now: datetime,
     ):
         del now
-        if not login_token.endswith("enrollment") or not self._valid_challenge(
-            login_token, csrf_token
-        ):
+        if self._identity(login_token, csrf_token) != ENROLLMENT_EMAIL:
             return MfaRejected()
         return TotpEnrollmentCreated(
             "otpauth://totp/CompetenceHub:synthetic.enrollment@example.invalid"
@@ -198,31 +258,27 @@ class SyntheticMfaService:
     async def confirm_totp_enrollment(self, **values):
         if (
             values["code"] != TOTP_CODE
-            or not values["login_token"].endswith("enrollment")
-            or not self._valid_challenge(
-                values["login_token"], values["csrf_token"]
-            )
+            or self._identity(values["login_token"], values["csrf_token"])
+            != ENROLLMENT_EMAIL
         ):
             return MfaRejected()
-        outcome = self._session()
+        outcome = self._session(ENROLLMENT_EMAIL)
         return replace(
             outcome,
             recovery_codes=RECOVERY_CODES,
         )
 
     async def verify_totp(self, **values):
-        if values["code"] != TOTP_CODE or not self._valid_challenge(
-            values["login_token"], values["csrf_token"]
-        ):
+        identity = self._identity(values["login_token"], values["csrf_token"])
+        if values["code"] != TOTP_CODE or identity is None:
             return MfaRejected()
-        return self._session()
+        return self._session(identity)
 
     async def verify_recovery_code(self, **values):
-        if values["code"] != RECOVERY_CODE or not self._valid_challenge(
-            values["login_token"], values["csrf_token"]
-        ):
+        identity = self._identity(values["login_token"], values["csrf_token"])
+        if values["code"] != RECOVERY_CODE or identity is None:
             return MfaRejected()
-        return self._session()
+        return self._session(identity)
 
 
 class InMemoryCompanyRepository(CompanyRepository):
@@ -354,14 +410,340 @@ class InMemoryCompanyRepository(CompanyRepository):
         )
 
 
+class InMemoryCalendarRepository:
+    TOPIC = CalendarTopic(
+        UUID("00000000-0000-4000-8000-000000000920"),
+        "Führung und Zusammenarbeit",
+    )
+    COACHES = {
+        SYNTHETIC_IDENTITIES[COACH_EMAIL][0]: UUID(
+            "00000000-0000-4000-8000-000000000921"
+        ),
+        SYNTHETIC_IDENTITIES[EMPTY_COACH_EMAIL][0]: UUID(
+            "00000000-0000-4000-8000-000000000922"
+        ),
+    }
+
+    def __init__(self) -> None:
+        self._offers: dict[UUID, CalendarOfferDetail] = {}
+        self._request_ids: dict[tuple[UUID, UUID], UUID] = {}
+        self._decisions: dict[UUID, CalendarReviewDecision] = {}
+        self._seed()
+
+    def _seed(self) -> None:
+        now = utc_now()
+        states = ("draft", "in_review", "published", "changes_requested")
+        for index, status in enumerate(states, start=1):
+            offer_id = UUID(f"00000000-0000-4000-8000-{930 + index:012d}")
+            revision_id = UUID(f"00000000-0000-4000-8000-{940 + index:012d}")
+            starts_at = now + timedelta(days=7 + index * 4)
+            draft = CalendarDraft(
+                topic_id=self.TOPIC.id,
+                title=f"Synthetisches Angebot {index}",
+                summary="Ausschließlich für die lokale Browserabnahme.",
+                starts_at=starts_at,
+                ends_at=starts_at + timedelta(hours=2),
+                time_zone="Europe/Berlin",
+                format_code="online" if index % 2 else "praesenz",
+                public_location=None if index % 2 else "Würzburg",
+                capacity=12,
+                review_threshold=6,
+                decision_deadline=starts_at - timedelta(days=3),
+                price_display_text="Preis nach Abstimmung",
+            )
+            revision = CalendarRevisionRecord(
+                id=revision_id,
+                offer_id=offer_id,
+                revision_number=1,
+                workflow_status=status,
+                draft=draft,
+                created_by_user_id=SYNTHETIC_IDENTITIES[COACH_EMAIL][0],
+                submitted_at=now if status != "draft" else None,
+                published_at=now if status == "published" else None,
+                created_at=now,
+                updated_at=now,
+                topic_name=self.TOPIC.name,
+            )
+            self._offers[offer_id] = CalendarOfferDetail(
+                offer=CalendarOfferRecord(
+                    id=offer_id,
+                    coach_id=self.COACHES[SYNTHETIC_IDENTITIES[COACH_EMAIL][0]],
+                    created_by_user_id=SYNTHETIC_IDENTITIES[COACH_EMAIL][0],
+                    client_request_id=UUID(
+                        f"00000000-0000-4000-8000-{950 + index:012d}"
+                    ),
+                    lifecycle_status="active",
+                    lock_version=1,
+                    withdrawn_at=None,
+                    created_at=now,
+                    updated_at=now,
+                    coach_display_name="Coach A",
+                ),
+                current_revision=revision,
+                published_revision=revision if status == "published" else None,
+            )
+            if status == "changes_requested":
+                self._decisions[offer_id] = CalendarReviewDecision(
+                    "changes_requested",
+                    "Bitte den öffentlichen Ort genauer beschreiben.",
+                    now,
+                )
+
+    async def list_topics(
+        self, *, actor_user_id: UUID, allow_any_coach: bool
+    ) -> tuple[CalendarTopic, ...]:
+        if allow_any_coach or actor_user_id in self.COACHES:
+            return (self.TOPIC,)
+        return ()
+
+    def _visible(
+        self, actor_user_id: UUID, allow_any_coach: bool, offer_id: UUID
+    ) -> CalendarOfferDetail | None:
+        detail = self._offers.get(offer_id)
+        if detail is None:
+            return None
+        own_coach = self.COACHES.get(actor_user_id)
+        if allow_any_coach or detail.offer.coach_id == own_coach:
+            return detail
+        return None
+
+    async def create_offer(self, **values) -> CalendarOfferDetail:
+        actor_user_id = values["actor_user_id"]
+        request_id = values["client_request_id"]
+        prior = self._request_ids.get((actor_user_id, request_id))
+        if prior is not None:
+            return self._offers[prior]
+        coach_id = values["requested_coach_id"] or self.COACHES.get(actor_user_id)
+        if coach_id is None:
+            raise CalendarOfferNotFoundError("coach is unavailable")
+        now = values["now"]
+        offer_id = uuid4()
+        revision = CalendarRevisionRecord(
+            id=uuid4(),
+            offer_id=offer_id,
+            revision_number=1,
+            workflow_status="draft",
+            draft=values["draft"],
+            created_by_user_id=actor_user_id,
+            submitted_at=None,
+            published_at=None,
+            created_at=now,
+            updated_at=now,
+            topic_name=self.TOPIC.name,
+        )
+        detail = CalendarOfferDetail(
+            offer=CalendarOfferRecord(
+                id=offer_id,
+                coach_id=coach_id,
+                created_by_user_id=actor_user_id,
+                client_request_id=request_id,
+                lifecycle_status="active",
+                lock_version=1,
+                withdrawn_at=None,
+                created_at=now,
+                updated_at=now,
+                coach_display_name="Coach A",
+            ),
+            current_revision=revision,
+            published_revision=None,
+        )
+        self._offers[offer_id] = detail
+        self._request_ids[(actor_user_id, request_id)] = offer_id
+        return detail
+
+    async def get_offer(self, **values) -> CalendarOfferDetail | None:
+        return self._visible(
+            values["actor_user_id"], values["allow_any_coach"], values["offer_id"]
+        )
+
+    async def list_offers(self, **values) -> tuple[CalendarOfferDetail, ...]:
+        actor_user_id = values["actor_user_id"]
+        allow_any = values["allow_any_coach"]
+        requested = values["requested_coach_id"]
+        visible = [
+            detail
+            for detail in self._offers.values()
+            if self._visible(actor_user_id, allow_any, detail.offer.id) is not None
+            and (requested is None or detail.offer.coach_id == requested)
+        ]
+        return tuple(
+            sorted(visible, key=lambda item: item.offer.updated_at, reverse=True)[
+                : values["limit"]
+            ]
+        )
+
+    async def list_review_queue(self, **values) -> tuple[CalendarOfferDetail, ...]:
+        return tuple(
+            detail
+            for detail in self._offers.values()
+            if detail.offer.lifecycle_status == "active"
+            and detail.current_revision.workflow_status == "in_review"
+        )[: values["limit"]]
+
+    async def get_review_decision(self, **values) -> CalendarReviewDecision | None:
+        visible = self._visible(
+            values["actor_user_id"], values["allow_any_coach"], values["offer_id"]
+        )
+        return self._decisions.get(values["offer_id"]) if visible else None
+
+    async def list_public_offers(self, **values) -> tuple[PublicCalendarOffer, ...]:
+        items = [
+            self._public(detail)
+            for detail in self._offers.values()
+            if detail.offer.lifecycle_status == "active"
+            and detail.current_revision.workflow_status == "published"
+            and values["from_at"] <= detail.current_revision.draft.starts_at < values["to_at"]
+        ]
+        return tuple(item for item in items if item is not None)[: values["limit"]]
+
+    async def get_public_offer(self, **values) -> PublicCalendarOffer | None:
+        detail = self._offers.get(values["offer_id"])
+        if (
+            detail is None
+            or detail.offer.lifecycle_status != "active"
+            or detail.current_revision.workflow_status != "published"
+        ):
+            return None
+        return self._public(detail)
+
+    def _require_version(self, detail: CalendarOfferDetail, expected: int) -> None:
+        if detail.offer.lock_version != expected:
+            raise CalendarVersionConflictError("stale calendar offer version")
+
+    def _store(
+        self,
+        detail: CalendarOfferDetail,
+        revision: CalendarRevisionRecord,
+        now: datetime,
+        *,
+        lifecycle_status: str | None = None,
+    ) -> CalendarOfferDetail:
+        offer = replace(
+            detail.offer,
+            lifecycle_status=lifecycle_status or detail.offer.lifecycle_status,
+            lock_version=detail.offer.lock_version + 1,
+            withdrawn_at=now if lifecycle_status == "withdrawn" else detail.offer.withdrawn_at,
+            updated_at=now,
+        )
+        stored = CalendarOfferDetail(
+            offer=offer,
+            current_revision=revision,
+            published_revision=(
+                revision
+                if revision.workflow_status == "published"
+                else detail.published_revision
+            ),
+        )
+        self._offers[offer.id] = stored
+        return stored
+
+    async def update_draft(self, **values) -> CalendarOfferDetail:
+        detail = self._visible(
+            values["actor_user_id"], values["allow_any_coach"], values["offer_id"]
+        )
+        if detail is None:
+            raise CalendarOfferNotFoundError("calendar offer was not found")
+        self._require_version(detail, values["expected_version"])
+        current = detail.current_revision
+        if current.workflow_status not in {"draft", "changes_requested", "published"}:
+            raise CalendarTransitionConflictError("offer cannot be edited")
+        new_revision = current.revision_number + (current.workflow_status != "draft")
+        revision = replace(
+            current,
+            id=current.id if current.workflow_status == "draft" else uuid4(),
+            revision_number=new_revision,
+            workflow_status="draft",
+            draft=values["draft"],
+            submitted_at=None,
+            published_at=None,
+            updated_at=values["now"],
+            topic_name=self.TOPIC.name,
+        )
+        return self._store(detail, revision, values["now"])
+
+    async def submit_offer(self, **values) -> CalendarOfferDetail:
+        detail = self._visible(
+            values["actor_user_id"], values["allow_any_coach"], values["offer_id"]
+        )
+        if detail is None:
+            raise CalendarOfferNotFoundError("calendar offer was not found")
+        self._require_version(detail, values["expected_version"])
+        if detail.current_revision.workflow_status != "draft":
+            raise CalendarTransitionConflictError("only a draft may be submitted")
+        revision = replace(
+            detail.current_revision,
+            workflow_status="in_review",
+            submitted_at=values["now"],
+            updated_at=values["now"],
+        )
+        return self._store(detail, revision, values["now"])
+
+    async def review_offer(self, **values) -> CalendarOfferDetail:
+        detail = self._offers.get(values["offer_id"])
+        if detail is None:
+            raise CalendarOfferNotFoundError("calendar offer was not found")
+        self._require_version(detail, values["expected_version"])
+        if detail.current_revision.workflow_status != "in_review":
+            raise CalendarTransitionConflictError("offer is not in review")
+        revision = replace(
+            detail.current_revision,
+            workflow_status=values["outcome"],
+            published_at=values["now"] if values["outcome"] == "published" else None,
+            updated_at=values["now"],
+        )
+        self._decisions[detail.offer.id] = CalendarReviewDecision(
+            values["outcome"], values["note"], values["now"]
+        )
+        return self._store(detail, revision, values["now"])
+
+    async def withdraw_offer(self, **values) -> CalendarOfferDetail:
+        detail = self._visible(
+            values["actor_user_id"], values["allow_any_coach"], values["offer_id"]
+        )
+        if detail is None:
+            raise CalendarOfferNotFoundError("calendar offer was not found")
+        self._require_version(detail, values["expected_version"])
+        return self._store(
+            detail,
+            detail.current_revision,
+            values["now"],
+            lifecycle_status="withdrawn",
+        )
+
+    def _public(self, detail: CalendarOfferDetail) -> PublicCalendarOffer:
+        draft = detail.current_revision.draft
+        return PublicCalendarOffer(
+            id=detail.offer.id,
+            coach_display_name=detail.offer.coach_display_name or "Coach A",
+            coach_profile_path=None,
+            topic_id=draft.topic_id,
+            topic_name=self.TOPIC.name,
+            title=draft.title,
+            summary=draft.summary,
+            starts_at=draft.starts_at,
+            ends_at=draft.ends_at,
+            time_zone=draft.time_zone,
+            format_code=draft.format_code,
+            public_location=draft.public_location,
+            capacity=draft.capacity,
+            decision_deadline=draft.decision_deadline,
+            price_display_text=draft.price_display_text,
+            updated_at=detail.offer.updated_at,
+        )
+
+
 def create_acceptance_app(port: int = DEFAULT_PORT):
     sessions = SyntheticSessionRepository()
+    login_service = SyntheticLoginService()
     return create_app(
         readiness_probe=_ready,
         session_repository=sessions,
-        login_service=SyntheticLoginService(),
-        mfa_service=SyntheticMfaService(sessions),
+        calendar_session_repository=sessions,
+        login_service=login_service,
+        mfa_service=SyntheticMfaService(sessions, login_service),
         company_service=CompanyService(InMemoryCompanyRepository()),
+        calendar_service=CalendarService(InMemoryCalendarRepository()),
+        calendar_cursor_hmac_key=b"synthetic-browser-calendar-cursor-key",
         allowed_origin=f"https://{HOST}:{port}",
         clock=utc_now,
     )

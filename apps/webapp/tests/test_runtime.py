@@ -141,6 +141,17 @@ async def test_runtime_app_wires_repository_origin_and_readiness() -> None:
     )
 
     assert isinstance(app.state.session_repository, PostgresSessionRepository)
+    assert isinstance(
+        app.state.calendar_session_repository, PostgresSessionRepository
+    )
+    assert app.state.session_repository.accepted_roles == ("admin", "internal")
+    assert app.state.calendar_session_repository.accepted_roles == (
+        "admin",
+        "calendar_reviewer",
+        "coach",
+        "company_contact",
+        "internal",
+    )
     assert isinstance(app.state.login_service, LoginService)
     assert isinstance(app.state.account_lifecycle_service, AccountLifecycleService)
     assert isinstance(app.state.company_service, CompanyService)

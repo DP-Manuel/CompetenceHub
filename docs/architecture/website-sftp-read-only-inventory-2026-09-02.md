@@ -1,6 +1,6 @@
 # Website SFTP Read-only Inventory
 
-Stand: 2026-09-02
+Stand: 2026-09-21
 
 ## Zweck und Grenze
 
@@ -82,6 +82,17 @@ bereitstellen. Unterverzeichnisse werden anschliessend mit weiteren
 
 ## Noch Auszufuellende Evidenz
 
+- Thomas Ross bestaetigte per E-Mail, dass beide Subdomains auf
+  `/kunden/homepages/16/d101506010/htdocs/competencehub` zeigen und der
+  SFTP-Benutzer auf diesen Pfad zugreifen kann. Die serverseitige Zuordnung ist
+  damit bestaetigt.
+- Der authentifizierte read-only Gegencheck am 21.09. war erfolgreich. SFTP
+  zeigt den bestaetigten Webroot als abgeschottetes Startverzeichnis `/`.
+- `ls -la` zeigte neben `.` und `..` ausschliesslich `index.php` mit 64 Byte;
+  keine weitere sichtbare oder versteckte Providerdatei war vorhanden.
+- Der oeffentliche Seitentitel `PHP 8.4.24 - phpinfo()` ordnet diese Datei der
+  Diagnoseausgabe zu. Der Inhalt wurde nicht heruntergeladen oder veraendert.
+
 - Authentifizierung mit dem echten SFTP-Konto: erfolgreich am 2026-09-03;
   OpenSSH meldete `Authenticated ... using "password"`.
 - SFTP-Subsystem: vom Server angenommen, danach sofortiges EOF und
@@ -92,17 +103,19 @@ bereitstellen. Unterverzeichnisse werden anschliessend mit weiteren
   Konto ist erwartungsgemaess per `rssh` auf SFTP beschraenkt.
 - Root Cause: serverseitig fehlendes oder falsch zugewiesenes
   SFTP-Startverzeichnis. Die Restriktion auf SFTP soll nicht aufgehoben werden.
-- `pwd`-Ausgabe: durch den serverseitigen Pfadfehler blockiert
-- Vollstaendige Verzeichnisinventur inklusive versteckter Eintraege: offen
-- Tatsaechlicher Document Root fuer beide Subdomains: offen
-- Klassifikation vorhandener Provider-/Konfigurationsdateien: offen
-- Abgleich mit dem privaten SFTP-Zielvertrag: offen
+- `pwd`-Ausgabe: `/` als SFTP-Chroot des bestaetigten physischen Webroots
+- Vollstaendige Verzeichnisinventur inklusive versteckter Eintraege: bestanden
+- Tatsaechlicher Document Root fuer beide Subdomains: durch Thomas bestaetigt
+- Klassifikation vorhandener Provider-/Konfigurationsdateien: nur die
+  64-Byte-`index.php`-Diagnosedatei vorhanden
+- Abgleich mit dem privaten SFTP-Zielvertrag: bestanden
 - Upload, Remote-Backup, Deployment und Real-Daten-Nutzung: nicht erfolgt
 
-Naechster Gate-Schritt: EDV korrigiert oder bestaetigt das Startverzeichnis und
-die Document-Root-Zuordnung beider Domains. Danach wird nur `pwd` und `ls -la`
-erneut ausgefuehrt. Die vorbereitete Nachricht steht in
-`edv-sftp-webroot-fix-request-2026-09-03.md`.
+Naechster Gate-Schritt: EDV entfernt oder sperrt `index.php` beziehungsweise
+gibt ihre kontrollierte Entfernung im Releasefenster frei und bestaetigt den
+Redirectweg. Vor einem Replace wird der vorhandene 64-Byte-Stand als datierte
+Rollbackkopie gesichert. Bis zur separaten Remote-Change-Freigabe erfolgt
+keine Aenderung.
 
 ## Oeffentlicher Gegencheck 2026-09-03
 
@@ -118,3 +131,15 @@ erneut ausgefuehrt. Die vorbereitete Nachricht steht in
 Das bestaetigt DNS und TLS nur teilweise. Es beweist keinen nutzbaren Webroot
 und keine releasefaehige Domain-Zuordnung. Bis zur EDV-Korrektur erfolgt kein
 Upload in ein erratenes Alternativverzeichnis.
+
+## Oeffentlicher Gegencheck 2026-09-21
+
+- HTTP und HTTPS antworten auf beiden Subdomains mit Status 200.
+- Beide Subdomains liefern als Seitentitel `PHP 8.4.24 - phpinfo()` aus. Diese
+  oeffentliche Konfigurationsausgabe ist ein P0-Stopper und muss vor einem
+  Website-Upload entfernt oder gesperrt werden.
+- HTTP leitet weiterhin nicht auf HTTPS um.
+- Die Bindestrich-Variante leitet weiterhin nicht auf die kanonische Domain
+  `competencehub.donner-partner.de` um.
+- Der Gegencheck veraenderte keine Remote-Datei und beweist weiterhin nicht den
+  gemeldeten Webroot.

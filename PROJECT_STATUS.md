@@ -1,17 +1,30 @@
 # Project Status
 
-Last updated: 2026-09-17
+Last updated: 2026-09-21
 
 ## Snapshot
 
-- Overall status: yellow for production, green for the 2026-08-28 technical-
-  readiness checkpoint. The website and complete synthetic portal slice,
-  clean release package and external restore rehearsal are verified. The former
-  2026-09-25 production deadline is retired. The 17.09. candidate elapsed
-  without the required EDV inputs, and 24.09. is no longer a release promise.
-  The next controlled start is provisional from the second half of October.
-  Production runtime scheduling/alerting,
-  App-DNS, SMTP, named accounts, legal approval and Go/No-Go are still open.
+- Overall status: yellow for production and time-critical for the public
+  Website. Manuel's operative cutline is 2026-09-25, his absence starts
+  2026-09-26 and the public Messe-Demostand is due 2026-10-17. Public frontend
+  Messe-Readiness now has priority over further CAL-1 expansion. The Website,
+  synthetic portal slice and external restore rehearsal have strong existing
+  evidence. Current route/browser acceptance and the holiday handover are now
+  complete locally. The authenticated SFTP inventory also passed and found
+  only the 64-byte `index.php` diagnostic file. EDV removal of the public
+  `phpinfo()` output, redirects, a clean release artifact and release approvals remain. No
+  production upload has occurred. Manuel confirmed that a controlled public
+  live test should take place by Thursday, 2026-09-24, if the visual result and
+  release gates pass; later corrections may follow during the week. Thomas's
+  Go/No-Go and the separate remote-change approval still gate the upload.
+  Thomas Ross confirmed that both public subdomains map to
+  `/kunden/homepages/16/d101506010/htdocs/competencehub` and that the SFTP user
+  has access; the read-only content inventory remains open.
+  Donner + Partner is the operator, Lars Donner the responsible person, and
+  the existing central D+P Impressum, AGB and Datenschutz pages are the binding
+  legal targets. App-DNS, SMTP, accounts, roles and backend activation remain
+  separate
+  and do not block a local static Website handover package.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling eight-step horizon.
 - External-dependency steering: a dated lead-time radar now tracks EDV, legal,
@@ -50,7 +63,8 @@ Last updated: 2026-09-17
   The approved domain/repository slice is implemented locally with own-Coach,
   Admin and reviewer scopes, idempotent creation, immutable revisions,
   optimistic locking, Coach-scoped overlap serialization and payload-free
-  audit. The complete suite passes 339 tests with 15 expected Staging skips.
+  audit. At the repository gate, the complete suite passed 339 tests with 15
+  expected Staging skips.
   The first guarded Staging run passed 14/15 and exposed an asyncpg UUID/text
   bind mismatch in the advisory lock before the first Calendar insert. After
   that fix, the focused rerun exposed a second test-only issue: a hard-coded
@@ -59,7 +73,34 @@ Last updated: 2026-09-17
   Calendar-only path passed in 18.57 seconds and the complete native suite
   passed 15/15 in 199.11 seconds. The VPS postflight found zero rows in all 19
   checked dynamic data areas and all four co-hosted services remained active.
-  APIs, UI, accounts, real data and activation remain separate gates.
+  The next bounded API slice is also complete locally and on isolated Staging:
+  migration `0006` adds an
+  optional explicit and unique `/coaches/<slug>/` mapping without changing any
+  Coach row; protected APIs enforce MFA/RBAC/Origin/CSRF/ETag, while the public
+  API exposes only active published projections through signed cursors. The
+  API checkpoint passed 375 tests with 17 expected Staging skips and the
+  focused security review has no open high or critical finding. The first
+  focused API run exposed that the existing persisted-session repository was
+  intentionally limited to `admin/internal`; CAL-1 now uses a separate
+  accepted-role view while the internal login contract remains unchanged.
+  Migration smoke, focused 3/3 and full 17/17 native tests, zero residue,
+  protected pre/post dumps, localhost-only PostgreSQL and four active services
+  close the API Staging gate. The synthetic Same-Origin Coach-/Reviewer-UI is
+  now complete locally: server-derived capabilities keep the internal login
+  contract separate, Coach ownership and Reviewer scope fail closed, Draft/
+  Submit/Withdraw/Revision plus ETag recovery are operable, and unauthorized
+  Calendar controls are removed from the active DOM. The first browser pass
+  found and locally fixed detached-node cleanup during portal entry and missing
+  Admin topic loading during offer editing. The fresh-fixture investigation
+  proved the missing revision actions were caused by already withdrawn fixture
+  records whose cards still displayed their former workflow status. Withdrawn
+  cards now say so explicitly; Admin topic selection is deterministic. All 26
+  browser-checklist points and 57/57 repeatable Edge checks pass, including
+  revisions, stale edit, keyboard/focus, 390 px, 200-percent layout, reduced
+  motion, role changes, company/contact, MFA and recovery. The full suite passes
+  384 tests with 17 expected Staging skips; the fixture is stopped and its
+  temporary context removed. Native Staging UI, accounts, real data and
+  activation remain separate gates.
 - E-Mail workflow input: twelve supplied templates are inventoried as future
   process ideas. Fixed response times, guarantees, refunds, automatic
   rescheduling, discounts, newsletters and E-Mail acceptance are not approved
@@ -213,9 +254,9 @@ Last updated: 2026-09-17
   legal-provider decision, approval of Janay's remaining workflow gates,
   direct-contact delivery inputs and stakeholder acceptance of SB-24. The
   encrypted Wuerzburg off-server rehearsal itself is complete.
-- Blocked for live launch: responsible legal entity, final Datenschutz/AGB
-  applicability, mailbox response/absence process, content approval and an
-  explicitly scheduled production deployment.
+- Blocked for live launch: verified IONOS Webroot, removal of the public
+  `phpinfo()` placeholder, redirect decision, Thomas's Go/No-Go, separate
+  remote-change approval and an explicitly scheduled production deployment.
 - Public contact decision: `competencehub@donner-partner.de`.
 - Direct-contact status: the desired same-origin form delivery is specified in
   `docs/requirements/public-contact-request-delivery.md` but remains gated by
@@ -231,8 +272,9 @@ Last updated: 2026-09-17
   to Manuel, subject to EDV mail/DNS confirmation; it is not an authentication
   identity. E-Mail is the approved invitation channel. The App-DNS/SMTP/TLS/
   sender/routing request was sent to EDV on 2026-08-21; its answer remains open.
-- Legal contact: Lars Donner; the concrete operating company, contract/invoice
-  details and final Impressum are still pending.
+- Legal status: Donner + Partner is the operator and Lars Donner the
+  responsible person; the central D+P Impressum, AGB and Datenschutz pages are
+  the binding legal targets for the static Website.
 - Deployment status: SB-24 feature commit `82c192b` was pushed and manually
   published successfully through Actions run `33502638029`; the review is available at
   `https://dp-manuel.github.io/CompetenceHub/`. Homepage and `/ueber-uns/`
@@ -248,10 +290,13 @@ Last updated: 2026-09-17
   for the Website start directory. Credentials remain outside Git and project
   documentation. On 2026-09-02 the server's observed ED25519 fingerprint
   exactly matched the official IONOS fingerprint list. On 2026-09-03 password
-  authentication succeeded, but the server closed SFTP because the assigned
-  `/htdocs/projektwue` target does not exist.
-  The account remains correctly SFTP-only; EDV must repair the path. No Webroot
-  inventory or SFTP upload has been performed. Both public subdomains resolve
+  authentication succeeded, but the server closed SFTP because the former
+  assigned `/htdocs/projektwue` target did not exist. EDV now reports that the
+  Document Root was corrected to
+  `/kunden/homepages/16/d101506010/htdocs/competencehub`. The account remains
+  correctly SFTP-only; this reported path still requires an authenticated
+  read-only `pwd`/`ls -la` proof. No Webroot inventory or SFTP upload has been
+  performed. Both public subdomains resolve
   to the same IONOS IPv4/IPv6 target and serve the valid wildcard TLS
   certificate, but HTTP and HTTPS currently return a 403 IONOS parking page;
   HTTP-to-HTTPS and alias-to-canonical redirects are not active.
@@ -274,7 +319,7 @@ Last updated: 2026-09-17
   only 22/80/443; Fail2ban protects SSH. PostgreSQL uses peer authentication on
   local sockets and SCRAM-SHA-256 on loopback TCP. The encrypted exact-copy
   external restore rehearsal succeeded. Productive company or personal data
-  remains blocked until production timers/alerts and all Legal, account,
+  remains blocked until production timers/alerts and all account,
   runtime and Go/No-Go gates close.
 - Maintenance timing: the originally planned Saturday window was superseded
   by the approved Friday change on 2026-08-07 before the scheduled crawl. The
@@ -335,10 +380,12 @@ Last updated: 2026-09-17
 - First company offers planned: August 2026.
 - Technical-readiness milestone: 2026-08-28, aligned with expected contract
   completion. Janay onboarding and production Go/No-Go remain separate gates.
-- Former production target: 2026-09-25, now retired. The preferred candidate
-  for Onboarding/Go-No-Go is 2026-09-17, with 2026-09-24 as fallback; either
-  date moves if EDV, Legal, operations or acceptance evidence is incomplete.
-- Schedule health: yellow. Database, migrations, Auth/Outbox,
+- Static Website live-test target: 2026-09-24, followed by handover on
+  2026-09-25 and the Messe-Demostand on 2026-10-17. Portal onboarding remains
+  separate and later.
+- Schedule health: yellow. The static Website is locally green; Webroot
+  content proof, EDV P0 closure, clean artifact and release approvals remain.
+  Database, migrations, Auth/Outbox,
   company/contact API and the local portal UI are implemented; the expanded
   portal harness has 14/14 Staging evidence and all 17 manual browser checks
   passed and runner cleanup is complete. Productive runtime, account
@@ -432,21 +479,24 @@ Last updated: 2026-09-17
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: define the canonical Coach-ID-to-public-profile
-  mapping boundary and then implement the bounded protected/public CAL-1 API
-  slice against the now-proven repository. No UI, reservation, mail, account,
-  real-data or production action is included. In parallel, close or explicitly
-  defer CP-02/04/07/08. The
-  provider-neutral backup-notification contract is complete locally; its live
-  adapter remains behind EXT-01, and neither real messages nor VPS timers are
-  activated. EDV follow-up is already in progress; once the response arrives,
-  repeat the read-only Webroot inventory and close DNS/SMTP evidence. The next
-  controlled start is provisional from the second half of October.
-  Real data and
-  production activation remain blocked by operational, Legal, account and
-  Go/No-Go gates.
-- Lead-time radar: the EDV response is overdue, and organizational follow-up is
-  already active. Contract and Legal remain open. Janay's mailbox currently
+- Recommended next work block: close the remaining external P0 by obtaining
+  removal or approved controlled replacement of the public 64-byte
+  `index.php` diagnostic file plus the redirect decision. Inputs are the green
+  SFTP inventory and Thomas's Webroot confirmation; deliverable is an EDV
+  closure message and a documented rollback owner. Definition of Done:
+  `phpinfo()` is no longer public and no external P0 remains before the
+  Thursday release decision. Commit, push and deployment remain separately
+  gated.
+- Rolling horizon: (1) EDV P0 closure and redirect decision; (2) final
+  visual walkthrough plus Thomas Go/No-Go; (3) separately approved source
+  checkpoint and clean artifact; (4) controlled 24.09. upload with pre-backup;
+  (5) HTTPS/redirect/core-route/mobile smoke and rollback evidence; (6) final
+  handover/freeze; (7) limited monitoring/content fixes during absence;
+  (8) native CAL-1 Staging UI after Messe readiness. Confidence decreases after
+  step 6.
+- Lead-time radar: EDV has confirmed the Webroot and SFTP access; its response
+  on `phpinfo()` and redirects is now urgent. Contract remains open while the
+  Website legal target decision is closed. Janay's mailbox currently
   has no absence cover; Thomas Ross covers only technical emergencies.
 - SB-19 evidence: the existing isolated Outbox Staging test now continues
   through single-use invitation acceptance, password hashing, TOTP enrollment,
@@ -497,12 +547,14 @@ Last updated: 2026-09-17
   No external SMTP connection or message occurred.
 - Lead-time update: no EDV response is available on 17.09.; follow-up is being
   handled. No host-specific or live-mail claim is made before evidence arrives.
-- Rolling delivery horizon: (1) decide the canonical Coach-profile mapping,
-  (2) add protected/public CAL-1 APIs, (3) add Coach/reviewer Portal UI,
-  (4) connect the accepted static projection, (5) design CAL-2 reservations,
-  (6) rebuild the release/evidence package, (7) rehearse named synthetic Pilot
-  accounts and (8) prepare the controlled Pilot candidate. Confidence decreases
-  from step 3 onward. Content decisions and EDV/Legal gates run in parallel.
+- Rolling delivery horizon: (1) complete native Staging UI acceptance after
+  separate approval, (2) connect the accepted static projection after a
+  separate integration decision, (3) design CAL-2
+  reservations, (4) rebuild the release/evidence package and (5) rehearse
+  named Pilot accounts plus the controlled candidate. The completed migration/
+  API Staging gate and complete local Browser gate precede this horizon.
+  Confidence decreases from step 2 onward. Content decisions and EDV/Legal gates run in
+  parallel.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.
@@ -512,8 +564,6 @@ Last updated: 2026-09-17
 
 ## Decisions Needed
 
-- Which approved source maps a Coach UUID to the canonical public Website
-  profile path? The public calendar API must not derive URLs from display names.
 - Which Donner + Partner group company is the legal Competence Hub provider?
 - Who may later cover Janay Rappelt's public mailbox during her absence? Until
   then, no public response-time promise applies.

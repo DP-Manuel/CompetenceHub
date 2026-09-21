@@ -2,6 +2,201 @@
 
 Newest entries first.
 
+## 2026-09-21 | website/release | Messe-Readiness lokal geprueft und Live-Test vorbereitet
+
+- Der oeffentliche Websitepfad hat bis zu Manuels Cutline am 25.09. Vorrang;
+  CAL-1 bleibt mit seinen abgeschlossenen lokalen und Staging-Nachweisen
+  eingefroren. Ziel ist ein kontrollierter Live-Test am Donnerstag, 24.09.,
+  sofern die visuellen und technischen Gates schliessen.
+- Oeffentliche Loginlinks wurden entfernt, die akzeptierte Kalenderansicht als
+  ehrliche und crawler-blockierte `/kalender/`-Vorschau eingebunden, ein
+  Favicon ergaenzt und Rechtstexte auf die bestaetigten zentralen D+P-Ziele
+  ausgerichtet. Betreiber ist Donner + Partner, verantwortlich ist Lars
+  Donner; zentrale D+P-Seiten gelten fuer Impressum, AGB und Datenschutz.
+- Das lokale Edge-Gate bestand 722 Checks ueber 18 Routen sowie Desktop,
+  Tablet, 390 CSS-Pixel und 200-Prozent-Aequivalent. Build erzeugte 31 Seiten;
+  das Link-Gate pruefte 1.233 interne Referenzen.
+- Das nach der finalen Rechtsentscheidung neu gebaute lokale Release-Archiv
+  enthaelt 53 sichere Eintraege und hat SHA-256
+  `00adad7544bfe4a4cb48036cbfeeeee4f9a31bbce7634276d1a02bf0ac3fe782`.
+  Wegen des bewusst uncommitteten Gesamtstands ist es als `dirty` und nicht
+  deployautorisiert markiert; nach einem freigegebenen Source-Checkpoint wird
+  es sauber neu gebaut.
+- Der oeffentliche Preflight fand einen P0-Stopper: Beide IONOS-Subdomains
+  liefern derzeit eine frei erreichbare `phpinfo()`-Seite. Zudem fehlen
+  HTTP-zu-HTTPS- und Alias-zu-Kanonisch-Redirect. EDV-Korrektur,
+  Thomas-Go/No-Go und separate Uploadfreigabe bleiben vor Produktion
+  erforderlich.
+- Die anschliessende authentifizierte SFTP-Inventur bestand: `/` ist der von
+  Thomas bestaetigte Webroot-Chroot; `ls -la` zeigte ausschliesslich die
+  64-Byte-Datei `index.php`. Es wurde nichts heruntergeladen, geschrieben,
+  umbenannt oder geloescht. Damit ist der Webroot-Inhaltsbeweis geschlossen
+  und die Diagnose-Datei eindeutig eingegrenzt.
+- Messe-Readiness-Akte und secret-freies Techniker-Handover sind erstellt. Es
+  erfolgte kein SFTP-Upload, Deployment, Commit, Push, Backendzugriff oder
+  Echtdatengebrauch.
+- Skill-Learning-Check: Oeffentliche Domain-Preflights muessen Platzhalter wie
+  `phpinfo()` ausdruecklich als Sicherheitsstopper erkennen; ein dirty
+  Releasekandidat darf nie als finales Produktionsartefakt bezeichnet werden.
+  Der wiederverwendbare Befund ist im Skill-Feedback erfasst.
+
+## 2026-09-18 | communication | Wochenupdate für Kolleginnen und Kollegen erstellt
+
+- Das standardisierte Teams-Update für den Zeitraum 12.09. bis 18.09.2026
+  fasst Kalender-/Portalfortschritt, Qualitätsnachweise, Produktionsstatus und
+  die nächsten vier Schritte in kurzen Einzeilern zusammen.
+- Produktionsgrenzen, ausstehende EDV-/Rechtsinputs und der Verzicht auf
+  Echtdaten sind ausdrücklich genannt; es erfolgte kein Versand.
+- Skill-Learning-Check: Das bestehende Wochenformat war ausreichend; keine neue
+  wiederverwendbare Skill-Anpassung ist aus diesem Kommunikationsblock nötig.
+
+## 2026-09-18 | browser/calendar | CAL-1 Browserabnahme vollständig abgeschlossen
+
+- Eine frische Fixture bestaetigte fuer Draft, Published und Changes Requested
+  aktive Lifecycle-Zustaende und Revision 1; die erwarteten Admin-Aktionen
+  waren im echten Edge-Runtimepfad vorhanden.
+- Ursache des frueheren fehlenden Revisionsbuttons war ein mutierter,
+  langlebiger Fixturezustand: bereits zurueckgezogene Karten zeigten noch den
+  alten Workflowstatus. Karten priorisieren nun den Lifecycle und zeigen
+  `Zurueckgezogen`; Admin-Themen werden vor Angeboten geladen und nach dem
+  Rendern explizit ausgewaehlt.
+- Published und Changes Requested erzeugen im Browser Revision 2 als Draft;
+  die publizierte Revision 1 bleibt unveraendert. Draft, Submit, Withdraw,
+  Reviewnotiz, Publish, stale ETag und kontrolliertes Neuladen sind bewiesen.
+- Der wiederholbare Microsoft-Edge-Lauf `153.0.4234.32` bestand 57/57 Checks.
+  Alle 26 Checklistenpunkte sind mit manueller und/oder automatisierter
+  Browser-Evidenz geschlossen, einschliesslich Tastatur, sichtbarem Fokus,
+  Escape, 390 px, 200-Prozent-Layout, Reduced Motion, Rollenwechsel,
+  generischem Fehler, Firma/Kontakt, MFA und Recovery.
+- 18 fokussierte Fixture/UI-Tests sowie die vollstaendige Suite mit 384
+  bestandenen und 17 erwarteten Staging-Skips sind gruen; `compileall` bestand.
+  Fixture, Edge-Kontexte und temporaere Zertifikate wurden entfernt.
+- Keine reale Rolle, kein Konto, Coach-Mapping, Datum, Deployment, Commit oder
+  Push wurde erzeugt. Genau naechstes Gate ist eine separat freizugebende
+  native Staging-UI-Abnahme mit synthetischen Daten, Cleanup, Nullrueckstand und
+  unveraenderter Dienstgesundheit.
+- Skill-Learning-Check: stateful Browserfixtures brauchen pro Gate einen
+  frischen Ausgangszustand, unabhaengige Mehrfachsitzungen und objektspezifische
+  asynchrone Wartebedingungen. Der Befund ist im Skill-Feedback erfasst.
+
+## 2026-09-18 | frontend/calendar | Synthetisches CAL-1 Coach-/Reviewer-Portal lokal abgeschlossen
+
+- Das bestehende frameworkfreie Same-Origin-Portal besitzt nun getrennte
+  Arbeitsbereiche fuer eigene Coach-Angebote und die Review Queue. Rechte
+  werden ueber eine serverseitige CAL-1-Capability-Projektion ermittelt; der
+  bestehende interne `admin/internal`-Loginvertrag blieb unveraendert.
+- Coach A kann ausschliesslich eigene Drafts, Einreichungen,
+  Veroeffentlichungen und Aenderungsfaelle sehen. Create, Edit, Submit,
+  Withdraw, Revision, sichtbarer Textstatus, Reviewhinweis und bewusste
+  ETag-Konfliktwiederherstellung sind implementiert. Eingereichte Fassungen
+  werden nicht editierbar angeboten.
+- Reviewer A erhaelt eine getrennte Queue mit Coach-Anzeigename, Thema,
+  oeffentlichen Angebotsdaten, Revision und Status. Die UI bietet nur
+  Veroeffentlichen oder Aenderungen anfordern; ein Aenderungshinweis ist dabei
+  Pflicht. Internal und Firmenkontakt bleiben fail-closed, Admin erhaelt nur
+  die dokumentierten CAL-1-Erweiterungen.
+- Nicht berechtigte Kalenderbereiche und Dialoge werden aus dem aktiven DOM
+  entfernt. Fluechtige Listen, Details und Dialoginhalte werden bei Logout,
+  Ablauf und Rollenwechsel geloescht. Dynamische Inhalte verwenden DOM-APIs
+  und `textContent`; Tokens werden nicht gespeichert und technische IDs nicht
+  sichtbar ausgegeben.
+- Die bestehende Browserfixture reproduziert Coach leer, Draft, in Review,
+  published, Change Request, stale ETag, Reviewer leer/nicht leer und alle
+  Rollen mit `example.invalid`-Identitaeten. Eine 26-Punkte-Checkliste ist
+  vorbereitet und bewusst noch nicht als bestanden markiert.
+- 384 lokale Tests bestanden; 17 native Staging-Tests wurden erwartungsgemaess
+  uebersprungen. `compileall`, `pip check`, JavaScript-Syntax,
+  PowerShell-Parser und `git diff --check` sind gruen. Der fokussierte Security
+  Review hat kein offenes High/Critical-Finding.
+- Die erste echte Browserrunde deckte einen Portal-Einstiegsfehler auf: aus
+  Sicherheitsgruenden entfernte Kalenderknoten wurden bei der allgemeinen
+  Fehlerbereinigung noch ueber das aktive Dokument gesucht. Die Bereinigung
+  arbeitet nun nulltolerant und leert auch die gehaltenen Knoten direkt.
+- Ein zweiter Browserbefund ist ebenfalls lokal behoben: Admin konnte ein
+  bestehendes Angebot sehen und bearbeiten, lud aber keine freigegebenen
+  Themen. Themen werden nun fuer den dokumentierten Admin-Scope geladen,
+  waehrend die Neuanlage weiterhin Coach-spezifisch bleibt.
+- Manuel bestaetigte Start/Loopback, Coach mit und ohne Angebote, Draft-
+  Bearbeitung, Reviewer-Sicht, Internal-/Firmenkontakt-Negativgrenzen sowie
+  MFA-Einrichtung/Recovery-Hinweis. Nicht ausgefuehrte Workflow-, Responsive-
+  und Accessibility-Punkte bleiben in der Checkliste offen.
+- Keine realen Konten, Rollen, Coach-Mappings, Termine, Reservierungen,
+  Nachrichten, Website-Kalenderanbindung, Commits, Pushes oder Deployments
+  wurden erzeugt. Die damals naechste lokale CAL-1-Browserabnahme wurde im
+  nachfolgenden Block vollstaendig abgeschlossen.
+- Skill-Learning-Check: rollenbedingt entfernte DOM-Knoten muessen beim
+  Sitzungswechsel ausdruecklich geleert werden; Tests sollen Sicherheits-
+  eigenschaften statt zaehlerbasierter Implementierungsdetails pruefen. Beide
+  Befunde sind im Skill-Feedback erfasst.
+
+## 2026-09-18 | staging/calendar | Migration 0006 und CAL-1 APIs bewiesen
+
+- Die per SHA-256 gegen den lokalen Source geprueften Dateien fuer Migration
+  `0006` und ihren Rollback-Smoke wurden auf isoliertem Staging ausgefuehrt.
+  Die Migration lief transaktional bis `COMMIT`; der Smoke pruefte nullable
+  Profilpfade, kanonische `/coaches/<slug>/`-Form, Eindeutigkeit und zehn
+  unzulaessige Pfadformen und endete ohne Rueckstand mit `ROLLBACK`.
+- Der erste fokussierte API-Lauf bestand den Repository-Test, fand aber bei
+  beiden API-Tests eine reale Integrationsluecke: das bestehende persistierte
+  Session-Repository akzeptierte gemaess ADR 0003 nur `admin/internal`, waehrend
+  CAL-1 auch Coach-, Reviewer- und negative Firmenkontakt-Sitzungen auswerten
+  muss. Fake-Repositories hatten diese Grenze lokal nicht abgebildet.
+- Eine getrennt konfigurierte Kalender-Session-Sicht akzeptiert nun genau
+  `admin`, `internal`, `coach`, `company_contact` und `calendar_reviewer`;
+  Kalender-Service und Endpunkte entscheiden danach RBAC mit `403`. Der
+  bestehende interne Login und seine `admin/internal`-Grenze bleiben
+  unveraendert.
+- Nach der Korrektur bestanden 375 lokale Tests mit 17 erwarteten opt-in
+  Staging-Skips, `compileall`, `pip check` und `git diff --check`. Der fokussierte
+  native Lauf bestand 3/3 in 130,78 Sekunden; die vollstaendige native Suite
+  bestand 17/17 in 332,16 Sekunden.
+- Der Postflight bestaetigte Migrationen `0001` bis `0006`, 27 Tabellen unter
+  `competence_hub_owner`, die Profilpfad-Constraint und den partiellen Unique-
+  Index sowie null Zeilen in allen 19 dynamischen Bereichen. PostgreSQL blieb
+  localhost-only; Chatbot, Nginx, Fail2ban und PostgreSQL blieben aktiv.
+- Geschuetzte Pre-/Post-Dumps mit 109866 beziehungsweise 110885 Bytes gehoeren
+  `postgres`, haben Modus `0600` und sind kataloglesbar. Beide temporaeren SQL-
+  Dateien wurden entfernt.
+- Es wurden keine realen Coach-Mappings, Konten, Rollen, Termine, Nachrichten,
+  Reservierungen, Deployments, Commits oder Pushes erzeugt. Naechster
+  empfohlener Block ist die synthetische Coach-/Reviewer-Portaloberflaeche.
+- Skill-Learning-Check: Endpunkt-RBAC muss gegen die vollstaendige persistierte
+  Authentifizierungskette getestet werden; Fake-Principals allein koennen eine
+  vorgelagerte Rollenfilterung verdecken. Der Befund ist im Skill-Feedback
+  erfasst.
+
+## 2026-09-17 | backend/calendar | Geschuetzte und oeffentliche CAL-1-API lokal abgeschlossen
+
+- Das optionale Feld `coaches.public_profile_path` bildet die einzige
+  kanonische Grenze von interner Coach-UUID zu einem freigegebenen
+  Websiteprofil. Migration `0006` erlaubt nur `/coaches/<slug>/`, erzwingt
+  Eindeutigkeit bei gesetzten Werten und veraendert keine bestehende Zeile.
+- Die sechs vorhandenen Websitepfade sind als moegliche Mapping-Ziele
+  dokumentiert. Mangels stabiler interner UUID-Zuordnung wurde keine reale
+  Person gemappt, keine UUID erzeugt und kein Pfad aus einem Namen abgeleitet.
+- Die geschuetzte API umfasst Coach/Admin-Listen, Create, Detail, Draft-Update,
+  Submit, Withdraw sowie Reviewer-Queue und Reviewentscheidung. Aktive
+  MFA-Sitzung, serverseitiges RBAC/Ownership, exakte Origin, CSRF, 32-KiB-Body,
+  striktes JSON, ETag/optimistische Version und generische Fehler bleiben
+  durchgaengige Grenzen.
+- Die getrennte oeffentliche Read-only-Projektion liefert ausschliesslich
+  aktive publizierte Revisionen in stabiler Reihenfolge. Signierte Cursor sind
+  manipulationsgeschuetzt; interne Coach-/Portal-/Reviewer-/Audit-/Draft-/
+  Schwellen-/Idempotenz-/Lock-Felder fehlen vollstaendig. Ein NULL-Profilpfad
+  bleibt NULL und erzeugt keinen Ersatzlink.
+- Die Gesamtsuite besteht 373 Tests mit 15 erwarteten opt-in Staging-Skips;
+  `compileall`, `pip check` und `git diff --check` sind gruen. Der fokussierte
+  Security-Review fand keinen offenen hohen oder kritischen Befund.
+- Migration `0005` blieb unveraendert. Migration `0006` wurde nicht auf
+  Staging angewandt; es gab keine Rolle, Echtdaten, UI, Nachricht, Reservierung,
+  Bereitstellung, Commit oder Push.
+- Naechstes empfohlenes Paket ist ein separat freizugebender Staging-Gate fuer
+  Migration `0006` plus native API-/RBAC-/Projektionspruefung mit Backup,
+  Rollback-Smoke, Nullrueckstand und Dienstgesundheit.
+- Skill-Learning-Check: Explizite interne-ID-zu-oeffentlicher-Route-Mappings
+  sollten als eigene, nullable und validierte Stammdaten-Grenze geplant werden;
+  der wiederverwendbare Befund ist im Skill-Feedback erfasst.
+
 ## 2026-09-17 | staging/calendar | CAL-1 Repository-Gate abgeschlossen
 
 - Der korrigierte Calendar-only-Lauf bestand den nativen PostgreSQL-Test in

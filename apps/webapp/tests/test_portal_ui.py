@@ -115,7 +115,56 @@ def test_portal_captures_form_values_before_disabling_controls() -> None:
     disable = javascript.index("return setBusy(form, true) ? data : null;")
 
     assert capture < disable
-    assert javascript.count("const data = beginFormSubmission(form);") == 10
+    assert javascript.count("const data = beginFormSubmission(form);") >= 12
+
+
+def test_calendar_portal_uses_authoritative_capabilities_and_safe_dom_rendering() -> None:
+    package = files("competence_hub_api").joinpath("portal_ui")
+    javascript = package.joinpath("app.js").read_text(encoding="utf-8")
+    markup = package.joinpath("index.html").read_text(encoding="utf-8")
+
+    assert 'calendarCapabilities: "/api/v1/portal/calendar/capabilities"' in javascript
+    assert 'calendarReviewQueue: "/api/v1/portal/calendar/review-queue"' in javascript
+    assert "can_manage_own_offers" in javascript
+    assert "can_review_offers" in javascript
+    assert 'offer.lifecycle_status === "withdrawn"' in javascript
+    assert '? "Zurückgezogen"' in javascript
+    assert "coach_display_name" in javascript
+    assert "topic_name" in javascript
+    assert 'select.value = String(selected || "")' in javascript
+    assert "innerHTML" not in javascript
+    assert "localStorage" not in javascript
+    assert "sessionStorage" not in javascript
+    assert "data-offer-id" not in javascript
+    assert 'headers: { "If-Match": selected.etag }' in javascript
+    assert "function clearPortalClientState()" in javascript
+    topics = javascript.index("await loadCalendarTopics();")
+    offers = javascript.index("await loadCoachOffers();", topics)
+    assert topics < offers
+    assert 'querySelector("#coach-calendar-list")' in javascript
+    assert 'querySelector("#review-calendar-list")' in javascript
+    assert 'id="coach-calendar-workspace"' in markup
+    assert 'id="review-calendar-workspace"' in markup
+    assert 'id="calendar-offer-form"' in markup
+    assert 'id="calendar-review-form"' in markup
+
+
+def test_portal_error_cleanup_tolerates_security_detached_calendar_nodes() -> None:
+    javascript = (
+        files("competence_hub_api")
+        .joinpath("portal_ui", "app.js")
+        .read_text(encoding="utf-8")
+    )
+
+    helper = javascript.index("function setErrorElement(element, message = \"\")")
+    null_guard = javascript.index("if (!element) {", helper)
+    restricted_cleanup = javascript.index(
+        "Object.values(restrictedCalendarNodes).forEach((node) => {"
+    )
+    portal_entry = javascript.index("async function enterPortal()")
+
+    assert helper < null_guard < restricted_cleanup < portal_entry
+    assert 'node.querySelectorAll(".form-error")' in javascript
 
 
 def test_portal_consumes_account_tokens_from_fragment_without_persisting_them() -> None:

@@ -1,9 +1,11 @@
 # CAL-1 API Contract v0.1
 
-Stand: 11.09.2026
+Stand: 18.09.2026
 
-Status: proposed implementation contract under accepted ADR 0007. No endpoint
-is implemented or deployed by this document.
+Status: API and migrations are proven locally and on isolated Staging under
+accepted ADR 0007. The synthetic Portal UI is implemented and automatically
+verified locally on 18.09.2026; manual browser acceptance remains open. The
+routers and UI are not deployed.
 
 ## Boundary And Common Rules
 
@@ -72,6 +74,18 @@ one generic `404` response.
 
 ## Coach Operations
 
+### `GET /api/v1/portal/calendar/capabilities`
+
+Returns server-derived booleans for own-offer management, review and the
+documented Admin Calendar scope. It does not expose identity heuristics or
+replace endpoint authorization. Non-Calendar roles receive `403`.
+
+### `GET /api/v1/portal/calendar/topics`
+
+Returns active topic IDs and names visible to the linked Coach scope. Admin
+may read the documented cross-Coach topic projection. Topic IDs are submitted
+as controlled references but are not shown as technical UI content.
+
 ### `GET /api/v1/portal/calendar/offers`
 
 A Coach receives only offers linked through their own portal user. Admin may
@@ -82,6 +96,12 @@ filter by `coach_id`; other roles cannot use a query to widen scope.
 Creates a stable offer and draft revision. Required fields match the technical
 design. A caller-generated `client_request_id` UUID is unique per actor so a
 network retry returns the existing result instead of creating a duplicate.
+
+The JSON body contains `client_request_id`, optional Admin-only `coach_id` and
+a `draft` object. Draft fields are `topic_id`, `title`, optional `summary`,
+`starts_at`, `ends_at`, `time_zone`, `format`, optional `public_location`,
+`capacity`, internal `review_threshold`, `decision_deadline` and
+`price_display_text`. Unknown fields fail closed.
 
 Returns `201`, protected detail and `ETag: "v1"`.
 
@@ -97,6 +117,9 @@ Edits an existing `draft`. If the latest submitted revision received a change
 request, or the offer has only a published revision, the first edit creates
 the next draft transactionally. Reviewed and published revisions remain
 immutable.
+
+The body is the draft object described by the create operation. Calendar
+requests do not accept or mutate `public_profile_path`.
 
 ### `POST /api/v1/portal/calendar/offers/{offer_id}/submit`
 
@@ -147,6 +170,7 @@ record values.
 | 409 | `calendar_version_conflict` | missing/stale `If-Match`; reload required |
 | 409 | `calendar_transition_conflict` | command invalid in current state |
 | 409 | `calendar_time_conflict` | overlapping submitted/published interval for the same Coach |
+| 409 | `calendar_idempotency_conflict` | request UUID reused with different content |
 | 503 | `portal_unavailable` | configured service unavailable |
 
 Rate-limit responses remain generic and include `Retry-After`; exact Pilot
@@ -155,13 +179,21 @@ limits are a security/operations decision before implementation.
 ## Compatibility And Implementation Gate
 
 - API v1 is additive; existing Auth/company endpoints do not change.
-- The current `coaches` table has no canonical public profile path. Before the
-  public endpoint is implemented, an approved mapping or additive schema field
-  must provide `coach.profile_path`; it must never be guessed from a display
-  name.
+- Migration `0006` adds nullable, explicitly managed and unique
+  `coaches.public_profile_path`. It accepts only canonical
+  `/coaches/<slug>/` values and never derives a path from a display name. No
+  real Coach row is mapped by the migration.
 - Public DTOs are explicit and never mirror database rows.
 - Cursor contents are opaque and protected against tampering.
-- Migration `0005` is proven on isolated Staging; routers and UI remain
-  separate implementation and acceptance steps.
-- Staging application, real Coach accounts and production remain separate
-  gates.
+- Public fields are exactly: offer ID, Coach display name and nullable profile
+  path, topic ID/name, title/summary, start/end/time zone, format, public
+  location, capacity, decision deadline, price display text and update time.
+- Public responses intentionally exclude Coach UUID, Portal user ID, actor and
+  reviewer IDs, review threshold, review decisions/notes, drafts, unpublished
+  revisions, audit/idempotency data and lock version.
+- Migration `0005` remains unchanged and proven on isolated Staging. Migration
+  `0006`, its rollback smoke and the protected/public routers passed focused
+  3/3 and complete 17/17 native Staging tests with zero residue.
+- Synthetic Portal UI and local automated checks are complete. Manual browser
+  acceptance, native Staging UI, real Coach accounts, real mappings/data and
+  production remain separate gates.

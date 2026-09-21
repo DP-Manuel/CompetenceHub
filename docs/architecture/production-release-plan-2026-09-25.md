@@ -1,22 +1,27 @@
 # Competence Hub Production Release Plan - Rebaselined
 
-Stand: 25.08.2026
+Stand: 21.09.2026
 
 Status: Vorbereitung. Dieser Plan autorisiert weder Upload noch DNS-Aenderung,
 Serverinstallation, Kontoerstellung oder Echtdaten. Zugangsdaten und Secrets
 bleiben ausserhalb des Repositories.
 
-Der Dateiname bleibt als historischer Verweis auf den frueheren Zieltermin
-erhalten. Der 25.09.2026 ist nicht mehr die Produktionsdeadline. Aktueller
-Planungskorridor fuer einen ersten kleinen kontrollierten Start ist fruehestens
-die zweite Oktoberhaelfte nach Manuels Rueckkehr; ein exaktes Datum ist offen.
+Der Dateiname bleibt als Verweis auf die operative Manuel-Cutline erhalten.
+Der 25.09.2026 ist keine automatische Produktionsfreigabe, aber die
+verbindliche Frist fuer eine messefertige, reproduzierbar gebaute und an einen
+autorisierten Techniker uebergabefaehige statische Website. Manuel ist ab
+26.09. fuer drei Wochen abwesend; der stabile Messe-Demostand wird am
+17.10.2026 benoetigt.
 
 ## Ziel und Releasegrenze
 
-Das technische Readiness-Paket fuer den 28.08. ist gruen. Nach EDV-Antwort,
-Vertragsabschluss und Legal folgen Infrastrukturabnahme, persoenliches
-Onboarding und kontrollierter Produktivstart. Der fruehere 25.09.-Termin ist
-aufgehoben; der neue Pilottermin wird erst mit den Stakeholdern bestaetigt.
+Das technische Readiness-Paket fuer den 28.08. ist gruen. Messe-Readiness des
+oeffentlichen Frontends hat bis 25.09. Vorrang vor CAL-1-Ausbau. Thomas Ross
+bestaetigte den IONOS-Document-Root
+`/kunden/homepages/16/d101506010/htdocs/competencehub` fuer beide Domains und
+den SFTP-Zugriff auf diesen Pfad; der aktuelle Inhalt wird vor jeder Aenderung
+read-only verifiziert. Ohne finale Produktionsfreigabe entsteht nur das
+vollstaendig deploybare Handover-Paket, kein Upload.
 
 Der Release besteht aus zwei getrennten Artefakten:
 
@@ -32,13 +37,16 @@ bereitstellen.
 | Bereich | Ziel | Status |
 | --- | --- | --- |
 | Website kanonisch | `https://competencehub.donner-partner.de` | DNS/Webspace/TLS laut EDV vorhanden |
-| Website Redirect | `https://competence-hub.donner-partner.de` auf kanonische Domain | Ziel bestaetigt; Redirect noch zu pruefen |
+| Website Redirect | `https://competence-hub.donner-partner.de` auf kanonische Domain | Ziel bestaetigt; Redirect noch nicht aktiv |
 | Portal/API | vorgeschlagen `https://competencehub-app.donner-partner.de` | DNS auf VPS, TLS und Freigabe offen |
 | PostgreSQL | VPS, nur `127.0.0.1:5432` | Staging vorhanden und verifiziert |
 | Kontaktmail | `competencehub@donner-partner.de` an Janay | fachlich bestaetigt; Routing-Smoke offen |
 | Technikalias | `admin@competencehub.donner-partner.de` an Manuel | EDV-Bestaetigung offen; kein Login |
 | Portallogins | persoenliche D+P-Adressen von Manuel und Janay | Adressen/Rollen bestaetigt; Konten nicht erstellt |
 | Einladungen | E-Mail | SMTP-Vertrag und Absender offen |
+| Betreiber | Donner + Partner; verantwortlich Lars Donner | bestaetigt 21.09. |
+| Impressum / AGB | bestehende zentrale D+P-Seiten | bestaetigt 21.09. |
+| Datenschutz | bestehende zentrale D+P-Seite | bestaetigt 21.09.; bei neuer Datenerhebung erneut pruefen |
 
 ## Releasephasen
 
@@ -51,33 +59,48 @@ bereitstellen.
 - SMTP-Adapter mit lokaler Testzustellung und minimierten Fehlercodes pruefen.
 - Keine DNS-Aenderung, kein SFTP-Upload, kein reales Konto und kein Echtdatum.
 
-### Phase 2 - September: Infrastruktur- und Betriebsabschluss
+### Phase 2 - bis 22.09.: Webroot und Messe-Gap-Analyse
 
-- App-DNS auf den VPS vorbereiten und TLS ausstellen, noch ohne Fachfreigabe.
-- Getrennte Backend-/Worker-Dienste installieren und mit synthetischen Daten
-  gegen Staging pruefen.
-- Website-Webstand vor einem Testupload extern sichern; Upload und Ruecknahme
-  mit freigegebenem Artefakt proben.
-- Den bereits bestandenen externen Restore als Produktionsverfahren einplanen;
-  Backup-/Monitor-Timer und Alarmweg erst nach expliziter Freigabe aktivieren.
-- Chatbot vor/nach jedem VPS-Schritt pruefen; kein gemeinsamer Restart.
+- Korrigierten IONOS-Webroot nur lesend mit `pwd` und `ls -la` beweisen.
+- Alle oeffentlichen Kernrouten, Links, CTAs, Metadaten, Legal-Flaechen und den
+  synthetischen Kalender als P0/P1/P2 bewerten.
+- Keine Remote-Datei veraendern und keine Backend-/CAL-1-Arbeit beginnen.
 
-### Phase 3 - bis zur Rueckkehr: Legal und Terminierung
+### Phase 3 - 23.09. bis 24.09.: Frontend Freeze und Live-Test-Kandidat
 
-- Finalen Betreiber, Impressum, Datenschutz-/AGB-Anwendbarkeit und
-  Kontaktprozess freigeben.
-- Finalen Pilottermin, Janay-Onboarding und Thomas-Ross-Go/No-Go fuer die Zeit
-  nach Manuels Rueckkehr terminieren.
+- Alle P0 und wesentlichen P1 Website-Befunde lokal korrigieren.
+- Desktop, Tablet, 390 CSS px, 200 Prozent, Tastatur, Fokus, Reduced Motion und
+  horizontale Ueberbreite im echten Browser pruefen.
+- Astro Check/Build, interne Referenzen, 404, robots/Sitemap, Canonical/OG und
+  Release-Archive-Sicherheitspruefungen ausfuehren.
+- Finales Artefakt mit Manifest und SHA-256 erzeugen; Freigabeflag bleibt
+  `false`.
+- Bei bestandenem visuellen und technischen Gate ist der kontrollierte
+  Website-Live-Test fuer Donnerstag, 24.09., vorgesehen. Kleinere Korrekturen
+  duerfen danach noch innerhalb der Woche nachgereicht werden.
 
-### Phase 4 - fruehestens zweite Oktoberhaelfte: Kontrollierter Pilot
+### Phase 4 - 24.09. bis 25.09.: Live-Test, Nachbesserung und Handover
 
-- Freigegebene Website und Portalversionen mit Commit/Artefakthash festhalten.
-- Website mit vorherigem Webspace-Backup per SFTP veroeffentlichen.
-- Backend/Worker aktivieren, Health/Readiness, TLS, Header, Rollen, Audit und
-  Mailzustellung pruefen.
-- Erst nach geschlossenem Daten-Gate den ersten freigegebenen Firmenrecord
-  erfassen.
-- Bei einem Stop-Kriterium Rollback oder dokumentiertes No-Go ohne Echtdaten.
+- Website-Feature-Freeze, geprueften Source-/Artefaktstand und ein
+  secret-freies Techniker-Handover festhalten.
+- Ohne Thomas-Go/No-Go und separate Remote-Change-Freigabe kein Upload.
+- Falls beide Freigaben und alle technischen Stopper rechtzeitig schliessen:
+  vor jedem Replace den
+  bestehenden Webroot sichern und den kontrollierten statischen Release mit
+  unmittelbarem Smoke/Rollback durchfuehren.
+
+### Phase 5 - 26.09. bis 16.10.: Kontrollierte Vertretungsphase
+
+- Kein geplanter Feature-Ausbau durch Manuel.
+- Autorisierte Vertretung darf nur freigegebene Contentkorrekturen oder
+  kontrollierte Fehlerbehebung anhand des Handover-Runbooks ausfuehren.
+- App-DNS/SMTP, Backend, reale Konten/Rollen und Echtdaten bleiben eigene Gates.
+
+### Phase 6 - 17.10.: Messe
+
+- Stabilen oeffentlichen Website-Demostand verwenden.
+- CAL-0.1 bleibt eine klar gekennzeichnete Vorschau und zeigt keine
+  synthetischen Beispiele als echte buchbare Termine.
 
 ## Website-Release und Rollback
 

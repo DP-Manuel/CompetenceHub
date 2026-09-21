@@ -11,13 +11,17 @@ from competence_hub_api.portal.calendar import (
     CalendarOfferDetail,
     CalendarOfferNotFoundError,
     CalendarOfferRecord,
+    CalendarReviewDecision,
     CalendarRevisionRecord,
+    CalendarTopic,
     CalendarTimeConflictError,
     CalendarTopicUnavailableError,
     CalendarTransitionConflictError,
     CalendarVersionConflictError,
+    PublicCalendarOffer,
     normalize_calendar_draft,
 )
+from competence_hub_api.portal.coach_profiles import validate_public_profile_path
 
 _CREATE_REQUEST_LOCK = text(
     """
@@ -89,7 +93,8 @@ _VISIBLE_OFFER = text(
     SELECT
         offer.id, offer.coach_id, offer.created_by_user_id,
         offer.client_request_id, offer.lifecycle_status, offer.lock_version,
-        offer.withdrawn_at, offer.created_at, offer.updated_at
+        offer.withdrawn_at, offer.created_at, offer.updated_at,
+        coach.display_name AS coach_display_name
     FROM competence_hub.calendar_offers AS offer
     JOIN competence_hub.coaches AS coach ON coach.id = offer.coach_id
     WHERE offer.id = :offer_id
@@ -99,33 +104,88 @@ _VISIBLE_OFFER = text(
 
 _LOCK_VISIBLE_OFFER = text(str(_VISIBLE_OFFER) + " FOR UPDATE OF offer")
 
+_VISIBLE_OFFERS = text(
+    """
+    SELECT
+        offer.id, offer.coach_id, offer.created_by_user_id,
+        offer.client_request_id, offer.lifecycle_status, offer.lock_version,
+        offer.withdrawn_at, offer.created_at, offer.updated_at,
+        coach.display_name AS coach_display_name
+    FROM competence_hub.calendar_offers AS offer
+    JOIN competence_hub.coaches AS coach ON coach.id = offer.coach_id
+    WHERE (:allow_any_coach OR coach.portal_user_id = :actor_user_id)
+      AND (
+          CAST(:requested_coach_id AS uuid) IS NULL
+          OR (:allow_any_coach AND offer.coach_id = CAST(:requested_coach_id AS uuid))
+      )
+    ORDER BY offer.updated_at DESC, offer.id
+    LIMIT :limit
+    """
+)
+
+_REVIEW_QUEUE = text(
+    """
+    SELECT
+        offer.id, offer.coach_id, offer.created_by_user_id,
+        offer.client_request_id, offer.lifecycle_status, offer.lock_version,
+        offer.withdrawn_at, offer.created_at, offer.updated_at,
+        coach.display_name AS coach_display_name
+    FROM competence_hub.calendar_offers AS offer
+    JOIN competence_hub.coaches AS coach ON coach.id = offer.coach_id
+    JOIN competence_hub.calendar_offer_revisions AS revision
+      ON revision.offer_id = offer.id
+    WHERE offer.lifecycle_status = 'active'
+      AND revision.workflow_status = 'in_review'
+    ORDER BY revision.submitted_at, offer.id
+    LIMIT :limit
+    """
+)
+
 _OFFER_BY_ID = text(
     """
     SELECT
-        id, coach_id, created_by_user_id, client_request_id, lifecycle_status,
-        lock_version, withdrawn_at, created_at, updated_at
-    FROM competence_hub.calendar_offers
-    WHERE id = :offer_id
+        offer.id, offer.coach_id, offer.created_by_user_id,
+        offer.client_request_id, offer.lifecycle_status, offer.lock_version,
+        offer.withdrawn_at, offer.created_at, offer.updated_at,
+        coach.display_name AS coach_display_name
+    FROM competence_hub.calendar_offers AS offer
+    JOIN competence_hub.coaches AS coach ON coach.id = offer.coach_id
+    WHERE offer.id = :offer_id
     """
 )
 
 _LATEST_REVISION = text(
     """
-    SELECT *
-    FROM competence_hub.calendar_offer_revisions
-    WHERE offer_id = :offer_id
-    ORDER BY revision_number DESC
+    SELECT revision.*, topic.name AS topic_name
+    FROM competence_hub.calendar_offer_revisions AS revision
+    JOIN competence_hub.topics AS topic ON topic.id = revision.topic_id
+    WHERE revision.offer_id = :offer_id
+    ORDER BY revision.revision_number DESC
     LIMIT 1
     """
 )
 
 _PUBLISHED_REVISION = text(
     """
-    SELECT *
-    FROM competence_hub.calendar_offer_revisions
-    WHERE offer_id = :offer_id
-      AND workflow_status = 'published'
+    SELECT revision.*, topic.name AS topic_name
+    FROM competence_hub.calendar_offer_revisions AS revision
+    JOIN competence_hub.topics AS topic ON topic.id = revision.topic_id
+    WHERE revision.offer_id = :offer_id
+      AND revision.workflow_status = 'published'
     LIMIT 1
+    """
+)
+
+_VISIBLE_TOPICS = text(
+    """
+    SELECT DISTINCT topic.id, topic.name
+    FROM competence_hub.topics AS topic
+    JOIN competence_hub.coach_topics AS coach_topic
+      ON coach_topic.topic_id = topic.id
+    JOIN competence_hub.coaches AS coach ON coach.id = coach_topic.coach_id
+    WHERE topic.active
+      AND (:allow_any_coach OR coach.portal_user_id = :actor_user_id)
+    ORDER BY topic.name, topic.id
     """
 )
 
@@ -237,6 +297,81 @@ _DECISION_OUTCOME = text(
     """
 )
 
+_LATEST_REVIEW_DECISION = text(
+    """
+    SELECT decision.outcome, decision.note, decision.decided_at
+    FROM competence_hub.calendar_review_decisions AS decision
+    JOIN competence_hub.calendar_offer_revisions AS revision
+      ON revision.id = decision.revision_id
+    JOIN competence_hub.calendar_offers AS offer ON offer.id = revision.offer_id
+    JOIN competence_hub.coaches AS coach ON coach.id = offer.coach_id
+    WHERE revision.offer_id = :offer_id
+      AND (:allow_any_coach OR coach.portal_user_id = :actor_user_id)
+    ORDER BY decision.decided_at DESC, decision.id DESC
+    LIMIT 1
+    """
+)
+
+_PUBLIC_COLUMNS = """
+    offer.id,
+    coach.display_name AS coach_display_name,
+    coach.public_profile_path AS coach_profile_path,
+    topic.id AS topic_id,
+    topic.name AS topic_name,
+    revision.title,
+    revision.summary,
+    revision.starts_at,
+    revision.ends_at,
+    revision.time_zone,
+    revision.format_code,
+    revision.public_location,
+    revision.capacity,
+    revision.decision_deadline,
+    revision.price_display_text,
+    revision.updated_at
+"""
+
+_PUBLIC_FROM = """
+    FROM competence_hub.calendar_offers AS offer
+    JOIN competence_hub.calendar_offer_revisions AS revision
+      ON revision.offer_id = offer.id
+    JOIN competence_hub.coaches AS coach ON coach.id = offer.coach_id
+    JOIN competence_hub.topics AS topic ON topic.id = revision.topic_id
+"""
+
+_PUBLIC_OFFERS = text(
+    f"""
+    SELECT {_PUBLIC_COLUMNS}
+    {_PUBLIC_FROM}
+    WHERE offer.lifecycle_status = 'active'
+      AND revision.workflow_status = 'published'
+      AND topic.active
+      AND revision.starts_at >= :from_at
+      AND revision.starts_at < :to_at
+      AND (CAST(:topic_id AS uuid) IS NULL OR topic.id = CAST(:topic_id AS uuid))
+      AND (
+          CAST(:after_starts_at AS timestamptz) IS NULL
+          OR (revision.starts_at, offer.id) > (
+              CAST(:after_starts_at AS timestamptz),
+              CAST(:after_offer_id AS uuid)
+          )
+      )
+    ORDER BY revision.starts_at, offer.id
+    LIMIT :limit
+    """
+)
+
+_PUBLIC_OFFER = text(
+    f"""
+    SELECT {_PUBLIC_COLUMNS}
+    {_PUBLIC_FROM}
+    WHERE offer.id = :offer_id
+      AND offer.lifecycle_status = 'active'
+      AND revision.workflow_status = 'published'
+      AND topic.active
+    """
+)
+
 _BUMP_VERSION = text(
     """
     UPDATE competence_hub.calendar_offers
@@ -268,6 +403,24 @@ _AUDIT = text(
 class PostgresCalendarRepository:
     def __init__(self, engine: AsyncEngine) -> None:
         self._engine = engine
+
+    async def list_topics(
+        self,
+        *,
+        actor_user_id: UUID,
+        allow_any_coach: bool,
+    ) -> tuple[CalendarTopic, ...]:
+        async with self._engine.connect() as connection:
+            rows = (
+                await connection.execute(
+                    _VISIBLE_TOPICS,
+                    {
+                        "actor_user_id": actor_user_id,
+                        "allow_any_coach": allow_any_coach,
+                    },
+                )
+            ).mappings().all()
+        return tuple(CalendarTopic(id=row["id"], name=row["name"]) for row in rows)
 
     async def create_offer(
         self,
@@ -367,6 +520,112 @@ class PostgresCalendarRepository:
             if row is None:
                 return None
             return await _load_detail(connection, offer_id, offer_row=row)
+
+    async def list_offers(
+        self,
+        *,
+        actor_user_id: UUID,
+        allow_any_coach: bool,
+        requested_coach_id: UUID | None,
+        limit: int,
+    ) -> tuple[CalendarOfferDetail, ...]:
+        async with self._engine.connect() as connection:
+            rows = (
+                await connection.execute(
+                    _VISIBLE_OFFERS,
+                    {
+                        "actor_user_id": actor_user_id,
+                        "allow_any_coach": allow_any_coach,
+                        "requested_coach_id": requested_coach_id,
+                        "limit": limit,
+                    },
+                )
+            ).mappings().all()
+            return tuple(
+                [
+                    await _load_detail(connection, row["id"], offer_row=row)
+                    for row in rows
+                ]
+            )
+
+    async def list_review_queue(
+        self,
+        *,
+        limit: int,
+    ) -> tuple[CalendarOfferDetail, ...]:
+        async with self._engine.connect() as connection:
+            rows = (
+                await connection.execute(_REVIEW_QUEUE, {"limit": limit})
+            ).mappings().all()
+            return tuple(
+                [
+                    await _load_detail(connection, row["id"], offer_row=row)
+                    for row in rows
+                ]
+            )
+
+    async def get_review_decision(
+        self,
+        *,
+        actor_user_id: UUID,
+        allow_any_coach: bool,
+        offer_id: UUID,
+    ) -> CalendarReviewDecision | None:
+        async with self._engine.connect() as connection:
+            row = (
+                await connection.execute(
+                    _LATEST_REVIEW_DECISION,
+                    {
+                        "actor_user_id": actor_user_id,
+                        "allow_any_coach": allow_any_coach,
+                        "offer_id": offer_id,
+                    },
+                )
+            ).mappings().one_or_none()
+        if row is None:
+            return None
+        return CalendarReviewDecision(
+            outcome=row["outcome"],
+            note=row["note"],
+            decided_at=row["decided_at"],
+        )
+
+    async def list_public_offers(
+        self,
+        *,
+        from_at: datetime,
+        to_at: datetime,
+        topic_id: UUID | None,
+        after_starts_at: datetime | None,
+        after_offer_id: UUID | None,
+        limit: int,
+    ) -> tuple[PublicCalendarOffer, ...]:
+        async with self._engine.connect() as connection:
+            rows = (
+                await connection.execute(
+                    _PUBLIC_OFFERS,
+                    {
+                        "from_at": from_at,
+                        "to_at": to_at,
+                        "topic_id": topic_id,
+                        "after_starts_at": after_starts_at,
+                        "after_offer_id": after_offer_id,
+                        "limit": limit,
+                    },
+                )
+            ).mappings().all()
+        return tuple(_public_offer(row) for row in rows)
+
+    async def get_public_offer(
+        self,
+        *,
+        offer_id: UUID,
+    ) -> PublicCalendarOffer | None:
+        async with self._engine.connect() as connection:
+            row = (
+                await connection.execute(_PUBLIC_OFFER, {"offer_id": offer_id})
+            ).mappings().one_or_none()
+        return _public_offer(row) if row is not None else None
 
     async def update_draft(
         self,
@@ -756,6 +1015,7 @@ def _offer(row: Mapping[str, object]) -> CalendarOfferRecord:
         withdrawn_at=row["withdrawn_at"],
         created_at=row["created_at"],
         updated_at=row["updated_at"],
+        coach_display_name=row.get("coach_display_name"),
     )
 
 
@@ -783,6 +1043,28 @@ def _revision(row: Mapping[str, object]) -> CalendarRevisionRecord:
         submitted_at=row["submitted_at"],
         published_at=row["published_at"],
         created_at=row["created_at"],
+        updated_at=row["updated_at"],
+        topic_name=row.get("topic_name"),
+    )
+
+
+def _public_offer(row: Mapping[str, object]) -> PublicCalendarOffer:
+    return PublicCalendarOffer(
+        id=row["id"],
+        coach_display_name=row["coach_display_name"],
+        coach_profile_path=validate_public_profile_path(row["coach_profile_path"]),
+        topic_id=row["topic_id"],
+        topic_name=row["topic_name"],
+        title=row["title"],
+        summary=row["summary"],
+        starts_at=row["starts_at"],
+        ends_at=row["ends_at"],
+        time_zone=row["time_zone"],
+        format_code=row["format_code"],
+        public_location=row["public_location"],
+        capacity=row["capacity"],
+        decision_deadline=row["decision_deadline"],
+        price_display_text=row["price_display_text"],
         updated_at=row["updated_at"],
     )
 

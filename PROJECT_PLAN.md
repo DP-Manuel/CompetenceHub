@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-09-17
+Last updated: 2026-09-21
 
 ## Vision
 
@@ -9,37 +9,46 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
 ## Current State
 
 - Workflow model: hybrid Scrum/Kanban for multi-day delivery
-- Current phase, sprint, milestone, board status, or release: public website
-  stabilization plus isolated authenticated-portal foundation
+- Current phase, sprint, milestone, board status, or release: time-boxed public
+  Website Messe-Readiness sprint through Manuel's operative cutline on
+  2026-09-25. The public frontend for the 2026-10-17 trade-fair presentation
+  has priority over any further CAL-1 feature work.
 - Current status: yellow for production and green for the completed technical-
-  readiness scope. Migration `0005` is proven on isolated Staging, and the
-  approved CAL-1 domain/repository slice is implemented locally and proven on
-  isolated Staging with
-  role, revision, idempotency, concurrency and audit tests. It builds
+  readiness scope. Migrations `0005` and `0006`, the CAL-1 domain/repository
+  and the protected/public API are proven on isolated Staging with synthetic
+  data. The explicit nullable Coach-profile mapping, endpoint-specific session
+  role boundary, revisions, idempotency, concurrency, public projection and
+  payload-free audit are verified. It builds
   on the pushed Website/content/calendar checkpoint `df62a06` and
   contains the verified public website, accepted same-origin pilot portal and
   completed encrypted external backup/restore rehearsal. The current full local
-  suite passes 339 tests with 15 expected opt-in Staging skips, all 15/15
-  isolated PostgreSQL paths passed, and BA-01 through BA-17 are accepted in a
-  real browser. The local runner is stopped and its ephemeral context removed.
+  suite passes 384 tests with 17 expected opt-in Staging skips, all 17/17
+  isolated PostgreSQL paths passed, BA-01 through BA-17 are accepted and all
+  26 CAL-1 browser-checklist points pass with 57/57 repeatable Edge checks. The
+  local runner is stopped and its ephemeral context removed.
   No persistent Competence-Hub backend/worker service, real account, real data
   or production deployment exists yet.
-- Main blocker: the former 2026-09-17 candidate has elapsed without the EDV
-  inputs and 2026-09-24 is no longer treated as a release promise. The next
-  controlled start is planned only after Manuel's return, provisionally from
-  the second half of October and still subject to all gates. Runtime services,
-  App-DNS, SMTP delivery, production backup scheduling/alerting, legal website
-  approval, named-user onboarding and production Go/No-Go remain open. The
-  software and external-restore rehearsals are proven; operational activation
-  and organizational approval are the critical path.
-- Next implementation block: define the canonical Coach-ID-to-public-profile
-  mapping boundary and implement the bounded protected/public CAL-1 API slice.
-  Migration `0005`, the repository, 15/15 native Staging paths, zero residue
-  across 19 dynamic areas and four active services are proven. In
-  parallel, EDV follow-up is already in progress; once received, close app
-  hostname, SMTP/sender and Webroot evidence. Production timer/alert ownership,
-  Legal, onboarding and Go/No-Go remain separate gates. Productive data stays
-  blocked until all production gates close.
+- Primary deadline: Manuel is unavailable from 2026-09-26. By 2026-09-25 the
+  Website must be locally messe-ready, reproducibly packaged, rollback-ready
+  and documented so an authorized technician can operate it without Manuel.
+  The stable Messe-Demostand is required on 2026-10-17. A controlled public
+  live test is targeted for Thursday, 2026-09-24, if the visual and technical
+  release gates pass; corrections may still follow during the week. The upload
+  requires separate Go/No-Go and change approval. Donner + Partner is the
+  confirmed operator, Lars Donner the responsible person, and the central D+P
+  Impressum, AGB and Datenschutz pages are the binding legal targets.
+- Current critical path: have the public 64-byte `index.php` diagnostic file
+  removed or approve its rollback-safe replacement, settle redirects, record
+  the visual/Thomas Go-No-Go, then create a clean artifact for the controlled
+  24.09. live test. Route analysis, local corrections, browser acceptance,
+  read-only Webroot inventory and holiday handover are complete. App-DNS,
+  SMTP, sender approval, backend
+  activation, real accounts/roles/data and productive calendar offers remain
+  separate gates and do not block a local handover-ready static Website.
+- CAL-1 freeze: retain the uncommitted migration/API/UI/browser work and its
+  384-pass/17-skip, 17/17 Staging and 57/57 Edge evidence. Do not widen CAL-1 or
+  start CAL-2 before Website Messe-Readiness closes. Native Staging UI remains a
+  later separately approved gate.
 
 ## Scope
 
@@ -135,8 +144,9 @@ deployment gates remain.
 - Thomas Roß, EDV-Leiter, is the production approval owner.
 - `competencehub.donner-partner.de` is the confirmed canonical domain; the
   hyphenated variant should redirect permanently.
-- Lars Donner is the confirmed legal contact. The concrete operating company,
-  contract/invoice details and final Impressum are still pending.
+- Donner + Partner is the confirmed operator and Lars Donner the responsible
+  person. The central D+P Impressum, AGB and Datenschutz pages are the binding
+  legal targets for the static Website.
 - Janay Rappelt owns `competencehub@donner-partner.de`; the response-time and
   absence-cover process still need a small operating rule.
 - The inventory showed sufficient pilot capacity. System updates/reboot and
@@ -167,18 +177,23 @@ for Git, release, backup and restore responsibilities.
 
 ### Next Blocks
 
-1. **Calendar mapping decision:** define the approved source from Coach UUID to
-   canonical public Website profile path; never derive it from display names.
-2. **Calendar API layer:** implement protected Coach/reviewer and minimized
-   public contracts without reservations, UI, role assignment or mail.
-3. **Content decision gate:** close, assign or explicitly defer the residual
-   CP-02/04/07/08 items without inventing claims or producing guide pages.
-4. **EDV gate:** follow-up is already in progress; when the response arrives,
-   repeat the read-only SFTP Webroot inventory and finalize App-DNS/SMTP
-   contracts without uploading anything prematurely.
-5. **Production readiness:** confirm the legal operator, Impressum, mailbox
-   absence cover, named onboarding dates and Thomas Ross's Go/No-Go before
-   activating Website or Webapp production paths.
+1. **External P0 closure by 22.09.:** have EDV remove the public 64-byte
+   `index.php` file or approve its rollback-safe replacement and decide the
+   redirects. The authenticated read-only inventory is already complete.
+2. **Visual Go/No-Go by 23.09.:** run the final stakeholder walkthrough against
+   the locally green 722-check Website and record Thomas's production decision.
+3. **Clean source and artifact by 23.09.:** only after separate commit/push
+   approval create a clean checkpoint, rebuild the ZIP and verify its hash.
+4. **Controlled live test on 24.09.:** only after separate upload approval,
+   back up the Webroot and deploy the exact clean static artifact.
+5. **Production smoke on 24.09.:** verify HTTPS, redirects, core routes,
+   mobile layout, legal links, contact path and absence of `phpinfo()`.
+6. **Holiday handover and feature freeze by 25.09.:** record exact production
+   source/artifact, rollback evidence, owners and stop rules.
+7. **During absence:** allow only approved content fixes or incident recovery
+   through the handover; no Portal-/Backend-Aktivierung.
+8. **After Messe / lower confidence:** resume native CAL-1 Staging UI and later
+   CAL-2 only after the static Website release state is stable.
 
 ## Workstream: Authenticated Portal Core
 
@@ -507,35 +522,37 @@ phase model.
 ## Timeline And Budget Signals
 
 - Target dates: website MVP completed by 2026-07-23; technical readiness is
-  green for the 2026-08-28 scope. The former controlled-production target of
-  2026-09-25 is retired. The preferred gate-dependent Onboarding/Go-No-Go date
-  is 2026-09-17, with 2026-09-24 as fallback; otherwise a later date is set.
+  green for the 2026-08-28 scope. The current static Website live-test target
+  is 2026-09-24, followed by handover on 2026-09-25 and the Messe on
+  2026-10-17. Portal onboarding remains a separate later gate.
 - Budget or effort assumption: unknown
-- Confidence: medium-high for the 2026-08-28 technical-readiness checkpoint.
-  Production confidence is medium-low for 2026-09-17 and medium for 2026-09-24
-  because EDV and Legal inputs remain open. The database, Auth, company/contact API,
-  browser UI and external restore are proven; production operations and
-  organizational gates are not.
-- Risks to time or budget: App-DNS, SMTP details/sender authorization,
-  runtime/worker packaging, legal operator/Impressum, production approval,
-  encrypted external restore and correct-domain rollout are on the critical
-  path. Janay and Thomas acceptance dates are proposed but not confirmed.
+- Confidence: medium-high for a 2026-09-24 static Website live test because
+  local build/browser/handover and the legal target decision are green. It
+  remains conditional on the SFTP content inventory, EDV P0 closure, clean
+  artifact, Thomas-Go/No-Go and separate upload approval. Portal production
+  confidence remains lower because its operational gates are separate.
+- Risks to time or budget: public `phpinfo()`, redirects, Webroot inventory,
+  production approval and correct-domain rollout are on the Website critical
+  path. App-DNS, SMTP, runtime/worker packaging and account gates remain on the
+  later Portal path.
 
 ## Risks And Blockers
 
-- **Schedule / activation:** technical readiness is green, but 17.09. elapsed
-  without the external inputs and 24.09. is no longer a release commitment.
-  The next controlled start is provisionally in the second half of October.
+- **Schedule / activation:** technical readiness is green and the controlled
+  Website live test is targeted for 24.09. The target remains conditional on
+  Webroot content proof, removal of `phpinfo()`, redirects, clean artifact,
+  Thomas-Go/No-Go and separate upload approval.
   Runtime, DNS, SMTP, production backup scheduling/alerting, account handoff
   and production approval remain open. Owner: Manuel, with Thomas Ross for
   production approval. Mitigation: keep WIP small and close gates in order.
 - **Real-data recovery:** the encrypted external-copy restore rehearsal passed.
   Before real data, enable an approved production schedule and alert route and
   retain the exact-copy restore discipline. Owner: Manuel.
-- **Legal website release:** the concrete operating company, final Impressum,
-  Datenschutz/AGB applicability and mailbox absence process remain open.
-  Owners: Lars Donner/final company, Janay Rappelt and Thomas Ross. Mitigation:
-  obtain explicit release evidence or issue a documented No-Go for production.
+- **Website release approval:** the legal target decision is complete. The
+  verified Webroot, removal of the public `phpinfo()` placeholder, redirect
+  behavior, Thomas Ross's Go/No-Go and separate remote-change approval remain
+  open. Owners: EDV, Thomas Ross and Manuel. Mitigation: close the stop criteria
+  before the targeted 24.09. live test or issue a documented No-Go.
 - **Single-operator risk:** Manuel currently owns VPS operations. Thomas Ross
   is confirmed as technical break-glass successor, but his separate identity,
   MFA and controlled handoff still require implementation and testing.
@@ -545,24 +562,27 @@ phase model.
 
 ## Quality Gates
 
-- **Tests:** 339 local Webapp tests pass with 15 expected opt-in Staging skips;
-  all 15/15 isolated PostgreSQL paths and migration `0005` smoke passed.
-  Postflight shows zero rows in 19 dynamic areas and four active services.
+- **Tests:** 384 local Webapp tests pass with 17 expected opt-in Staging skips;
+  all 17/17 isolated PostgreSQL paths and migration `0005`/`0006` smoke passed.
+  The focused CAL-1 API run passed 3/3. Postflight shows zero rows in all 19
+  dynamic areas and four active services.
   Re-run local suite before packaging and Staging suite after backend/runtime
   changes.
 - **Website build:** Astro must report zero diagnostics and build all expected
   routes. Current evidence: 36 checked files, 28 generated pages.
-- **Browser/accessibility:** BA-01 through BA-17 are accepted, including
-  desktop, 390 CSS pixels, keyboard, focus, zoom and reduced motion. Repeat the
-  critical login/company path on the deployed origin.
+- **Browser/accessibility:** BA-01 through BA-17 and all 26 CAL-1 checklist
+  points are accepted. The repeatable Edge gate passes 57/57 across desktop,
+  390 CSS pixels, 200-percent layout, keyboard, visible focus, Escape, reduced
+  motion, stale edit, role transitions, company/contact, MFA and recovery.
+  Repeat the critical paths on the later deployed origin.
 - **Security/privacy:** no secrets or `.env*` in Git; least privilege, exact
   Origin/CSRF, MFA, no-store, minimized lists/audit and negative role tests are
   mandatory. No open high/critical finding may cross deployment.
 - **Data/operations:** no real data before encrypted off-server copy, restore
   from that exact copy, retention/error ownership, monitoring and rollback are
   proven.
-- **Legal/content:** final operator/Impressum, Datenschutz/AGB applicability,
-  contact process and rights approvals are required for production. Archive,
+- **Legal/content:** the operator and central Impressum/AGB/Datenschutz targets
+  are decided; contact process and rights approvals remain required. Archive,
   prototype and public login-preview routes must remain `noindex` or be
   removed/redirected.
 - **Release:** static website and backend use separate reproducible artifacts,
@@ -604,14 +624,13 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: prepare and prove the bounded CAL-1 availability/review
-foundation without widening the real-data or production boundary. Database,
-browser acceptance and external-copy restore evidence remain complete. SB-32
-through SB-46 are accepted, complete or waiting on a named external gate; no
-productive backend slice is active. Migration `0005` and domain/repository
-behavior are green locally and on isolated Staging, while APIs, seat
-reservations and delivery remain separately gated. EXT-01 and the
-remaining Content owner decisions continue in parallel.
+Current sprint goal: prepare the separately approved native Staging-UI gate
+without widening the real-data or production boundary. Database, migrations
+`0005`/`0006`, domain/repository, API and the complete local 26-point CAL-1
+browser acceptance are green. SB-32 through SB-48 are accepted,
+complete or waiting on a named gate; no productive backend service is active.
+Native Staging UI, seat reservations and calendar delivery remain separately
+gated. EXT-01 and the remaining Content owner decisions continue in parallel.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -661,23 +680,23 @@ remaining Content owner decisions continue in parallel.
 | SB-44 | Done design-only | Accept ADR 0007 and complete CAL-1 architecture, data, API and RBAC boundaries | Manuel's explicit ADR approval; no migration or implementation | revision-safe publication, separate public/private APIs, additive `calendar_reviewer`, optimistic concurrency, public projection and verification matrix documented; CAL-T01..T06 collect remaining migration decisions; no SQL, account, data, message or deployment |
 | SB-45 | Done on isolated Staging | Prepare and prove additive CAL-1 migration `0005` plus rollback-only smoke | ADR 0007, CAL-T01..T06 and separate Staging approval; synthetic data only | three Calendar tables and unassigned `calendar_reviewer` applied; smoke rolled back to zero Calendar rows; 27 owner tables, migrations 0001-0005, denied runtime DDL/delete rights, protected readable 86/108-KiB pre/post dumps, localhost-only PostgreSQL and four active services verified |
 | SB-46 | Done locally and on isolated Staging | Implement and prove the bounded CAL-1 domain and PostgreSQL repository | CAL-1 Domain/Repository approval; migration `0005`; no API/UI/reservation/mail/real data | normalized three-month drafts, own-Coach/Admin/reviewer scopes, idempotent create, immutable submitted revisions, optimistic locking, Coach-row serialization, half-open overlap checks, payload-free atomic audit and revision-safe publication implemented; UUID binding, authoritative DB-clock fixture and Calendar-only runner are regression-protected; 339 local passes, 15/15 native Staging paths, zero rows in 19 dynamic areas and four active services |
+| SB-47 | Done locally and on isolated Staging | Add and prove explicit Coach-profile mapping plus protected/public CAL-1 APIs | proven SB-46 repository; separate migration approval; no UI/reservation/mail/roles/real data | migration `0006` plus rollback smoke, nullable canonical `/coaches/<slug>/` mapping without slug inference, unique partial index, endpoint-specific MFA session boundary, RBAC/Origin/CSRF/ETag protected API, published-only minimized public API and signed cursor; focused 3/3 and full 17/17 native Staging passes, 375 local passes/17 skips, zero residue, protected 0600 pre/post dumps, localhost-only PostgreSQL and four active services |
+| SB-48 | Done locally and browser-accepted | Implement the synthetic CAL-1 Coach-/Reviewer-Portaloberflaeche | SB-47; same-origin portal; synthetic identities only; no deployment | server-derived capabilities/topics, own-Coach Draft/Edit/Submit/Withdraw/Revision, separate reviewer queue/decisions, ETag recovery, role-gated DOM cleanup, loading/error/empty states and responsive/accessibility CSS; all 26 checklist points plus 57/57 Edge checks pass; Admin fixture-state/status and topic-selection findings fixed; 384 local passes/17 skips; fixture stopped and temporary context removed |
 
-The technical-readiness baseline remains complete: 339 Webapp tests pass with
-15 expected Staging skips, the release ZIP includes the restore tool and no
+The technical-readiness baseline remains complete: 384 Webapp tests pass with
+17 expected Staging skips, the release ZIP includes the restore tool and no
 `.env`/`.tmp`, and the current Website passes a 43-file Astro check, 30-page
 build and 1,137-reference verification. SB-25 is waiting on a corrected IONOS
 SFTP start directory.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: decide the canonical Coach-ID-to-public-profile mapping
-and implement the bounded protected/public CAL-1 API slice against the proven
-repository. No UI, reservation, role assignment, mail, real account or real
-availability is part of that block. In parallel, close or explicitly defer
-CP-02/04/07/08. EDV
-follow-up is already in progress; its response is processed when available. The
-provider-neutral backup-notification contract is complete locally; only its
-live adapter, recipient routing and timer activation remain gated.
+Recommended next block: close the remaining external P0 by obtaining EDV
+removal or written approval for rollback-safe replacement of the public
+64-byte `index.php` file and settle redirects. The read-only Webroot inventory,
+route-by-route P0/P1/P2 analysis, local corrections, 722-check browser gate and
+handover are complete. No remote change, upload, CAL-1 expansion, account,
+role, mail or real-data operation belongs to this block.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -686,14 +705,14 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Decision ready | High | Define canonical Coach-ID-to-public-profile mapping | approved Website profile source; no slug guessing | explicit field/source decision and negative unknown-profile behavior |
-| 2 | Ready after step 1 | High | Implement protected/public CAL-1 APIs | proven repository; existing Auth/CSRF/Origin/RBAC patterns | ownership, reviewer permission, public minimization and generic-error API tests |
-| 3 | Pending | Medium-high | Add Coach/reviewer Portal UI and browser acceptance | step 2; synthetic role assignments only | keyboard, focus, 390 px, 200% zoom, stale-edit recovery and role walkthrough |
-| 4 | Pending | Medium | Connect the accepted static calendar projection | steps 2-3 and explicit integration decision | published-only contract test plus no private-field/network regressions |
-| 5 | Pending | Medium-low | Design CAL-2 reservation increment | CAL-1 accepted; privacy/retention and abuse decisions | concurrency, capacity, idempotency and data-minimization test plan |
-| 6 | Pending | Medium-low | Rebuild release and evidence package | steps 2-4; no open high/critical finding | reproducible package, full local/Staging suite and rollback evidence |
-| 7 | Pending/gated | Low | Rehearse named synthetic Pilot accounts | EDV mail/DNS, role owners and onboarding dates | invitation/MFA/least-privilege walkthrough without real business data |
-| 8 | Pending/gated | Low | Prepare controlled Pilot release candidate | EDV, Legal, mailbox, active backup/alerts and Go/No-Go | evidence index, rollback rehearsal, named acceptance and no high/critical finding |
+| 1 | Doing | High | Close public-domain P0 preflight | read-only inventory passed; EDV removes or authorizes rollback-safe replacement of `index.php` | no public diagnostic page and redirect decision by 22.09. |
+| 2 | Ready | High | Record final visual and production Go/No-Go | 722 local browser checks green; step 1 closed | stakeholder walkthrough and Thomas decision by 23.09. |
+| 3 | Gated | High | Create clean source checkpoint and static artifact | separate commit/push approval; no P0 | `dirty: false`, Astro/link/archive guards, manifest and SHA-256 by 23.09. |
+| 4 | Gated | High | Perform controlled IONOS live test | step 3; separate upload approval; rollback owner available | pre-upload backup and exact-artifact upload on 24.09. |
+| 5 | Gated | High | Prove production behavior or roll back | step 4 | HTTPS/redirect/core-route/mobile/legal/contact/console smoke and rollback evidence on 24.09. |
+| 6 | Ready | Medium-high | Freeze and hand over the Website | production outcome known | exact source/artifact, owner, smoke, rollback and stop criteria by 25.09. |
+| 7 | Deferred | Medium | Limit absence-period work to approved fixes and incidents | step 6 handover; authorized operator | logged change, focused retest and no backend activation |
+| 8 | Deferred | Low | Resume native CAL-1 Staging UI acceptance after Messe readiness | Website stable; separate approval; synthetic only | workflow, role negatives, cleanup, zero residue and service health |
 
 ### Cross-Cutting Gates
 
@@ -734,14 +753,13 @@ progress in parallel but do not silently expand the execution backlog.
   controls still require technical and privacy review.
 - **G-READY-28:** the 2026-08-28 readiness checkpoint requires versioned,
   tested and rollback-ready Website/Portal packages plus an explicit matrix of
-  remaining DNS, SMTP, backup, Legal, account and Go/No-Go gates. Deployment,
+  remaining DNS, SMTP, backup, account and Go/No-Go gates. Deployment,
   real accounts and real data follow only after their separate gates.
-- **G-PROD:** the former September targets are retired. The next controlled
-  start is provisional from the second half of October and remains conditional
-  on all required gates. Production still requires the canonical
-  Website, separately deployed Portal, Janay's MFA-protected least-privilege
-  account, a verified external restore and successful first approved company
-  plus contact. A database-only or UI-only state is not sufficient.
+- **G-PROD:** 2026-09-25 is the operative Manuel cutline and 2026-10-17 the
+  Website Messe deadline. A static Website release may proceed independently
+  of CAL-1 only after Webroot/rollback proof and Thomas's explicit
+  Go/No-Go plus remote-change approval. Portal/backend production still
+  requires the full account, mail, runtime, backup/alert and data gates.
 
 ### Project Backlog Beyond The Horizon
 
@@ -766,31 +784,32 @@ progress in parallel but do not silently expand the execution backlog.
 - SEO/GEO content inventory and evidence matrix remain a connected but separate
   public-website workstream.
 
-Parallel organizational work: await the already escalated EDV response,
-confirm contract status, complete the final legal operator/
-Impressum and mailbox absence cover, schedule Janay's onboarding and secure
-Thomas Ross's static/backend production Go/No-Go path. The encrypted Wuerzburg
-restore rehearsal is complete; production timers and alert routing remain
-disabled until their separate approval. Deployment and real-data use remain
-separate gated actions.
+Parallel organizational work: obtain Thomas Ross's Website production
+Go/No-Go and separate remote-change approval for the targeted Thursday,
+24.09., live test. Operator, responsible person and central Impressum, AGB and
+Datenschutz targets are decided. App-DNS, SMTP, sender/routing, mailbox cover, onboarding,
+backend activation and production timers remain separate and may be completed
+by authorized owners during Manuel's absence. Deployment and real-data use
+remain separately gated actions.
 
 ## Restart Note
 
-Prepared on: 2026-09-17
+Prepared on: 2026-09-21
 
-- Base checkpoint for this slice: `01f64f7`; accepted
-  CAL-1 architecture, migration `0005` Staging proof, same-origin portal,
-  release evidence and external restore evidence are versioned.
-- Evidence: 339 local tests pass with 15 expected opt-in Staging skips; all
-  15/15 PostgreSQL paths, migration `0005` proof and BA-01 through BA-17
-  passed. The Calendar-only path passed in 18.57 seconds; postflight found zero
-  rows in 19 dynamic areas and four active services. The local browser runner
-  and temporary VPS export are stopped/removed; the exact encrypted `D:` copy
-  is retained.
+- Base checkpoint for this slice: `4797f79`; CAL-1 migration/API/UI and browser
+  work remains in the current uncommitted local worktree.
+- Evidence: 384 local tests pass with 17 expected opt-in Staging skips; all
+  17/17 PostgreSQL paths, migrations `0005`/`0006`, BA-01 through BA-17 and all
+  26 CAL-1 browser-checklist points passed. The repeatable Edge gate passes
+  57/57 checks; postflight found zero rows in 19 dynamic areas and four active
+  services. The local browser fixture, browser contexts and temporary
+  certificates are stopped/removed; the exact encrypted `D:` copy is retained.
 - No new persistent service, account, IONOS production deployment or real data
-  exists. SB-24 is available on the crawler-blocked GitHub-Pages review. The
-  IONOS ED25519 host key is independently verified; continue with the
-  interactive read-only SFTP inventory and do not upload or download yet.
+  exists. SB-24 is available on the crawler-blocked GitHub-Pages review. EDV
+  reports the corrected target as
+  `/kunden/homepages/16/d101506010/htdocs/competencehub`; the pinned IONOS
+  ED25519 host key is independently verified, but the path still requires an
+  authenticated read-only `pwd`/`ls -la` proof. Do not upload yet.
 
 Resume here:
 
@@ -803,15 +822,16 @@ Resume here:
    `docs/requirements/requirements-engineering-update-2026-08-04.md` and
    `docs/assets/designstyle.md`.
 3. Check `git status --short`; `.tmp/` must remain untracked and untouched.
-4. Review accepted ADR 0007, the CAL-1 technical design/API/RBAC package and
-   migration `0005` evidence.
-5. Decide the canonical Coach-ID-to-public-profile mapping, then implement the
-   bounded protected/public CAL-1 API slice with existing Auth/CSRF/Origin/RBAC
-   patterns and repeat local plus Staging evidence afterward.
-6. PostgreSQL Staging contains migrations 0001-0005 but no business or
-   personal data. Do not assign `calendar_reviewer`, add real availability or
-   deploy a backend without the separately documented production gates. A push
-   does not imply GitHub-Pages or production deployment.
+4. Treat public Website Messe-Readiness as the only implementation WIP until
+   the 25.09. feature freeze; preserve the accepted CAL-1 working tree.
+5. Verify the corrected IONOS Webroot read-only, complete the public route gap
+   analysis, repair P0/P1, run browser gates and build the handover artifact.
+6. Request separate approval for any SFTP upload, commit, push, production
+   deployment or later native CAL-1 Staging-UI run.
+7. PostgreSQL Staging contains migrations 0001-0006 but no business or
+   personal data. Do not assign real `calendar_reviewer` roles, add real
+   availability, connect the Website calendar or deploy a backend without the
+   separately documented gates. A push does not imply deployment.
 ## Open Questions
 
 - How should the sub-brand be named and endorsed under Donner + Partner?

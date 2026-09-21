@@ -1,9 +1,10 @@
 # CAL-1 RBAC Matrix v0.1
 
-Stand: 11.09.2026
+Stand: 18.09.2026
 
-Status: accepted authorization baseline. Migration `0005` seeds the
-`calendar_reviewer` role on isolated Staging but assigns it to no account.
+Status: accepted authorization baseline and locally verified synthetic Portal
+behavior. Migration `0005` seeds the `calendar_reviewer` role on isolated
+Staging but assigns it to no account.
 
 ## Roles And Scope
 

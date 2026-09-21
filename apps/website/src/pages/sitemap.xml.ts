@@ -15,8 +15,6 @@ const routes = [
   ...coaches.map((coach) => coach.profilePath),
   "ueber-uns",
   "kontakt",
-  "impressum",
-  "datenschutz",
 ];
 
 export const GET: APIRoute = () => {
