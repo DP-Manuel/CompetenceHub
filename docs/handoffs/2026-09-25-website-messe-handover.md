@@ -63,6 +63,17 @@ Erwartung: Build und Referenzpruefung gruen; Manifest meldet `dirty: false`,
 - Es darf weder `phpinfo()` noch ein Review-Banner oder oeffentlicher Loginlink
   sichtbar sein.
 
+## Aktueller Clean-Kandidat
+
+- Source: `a8d034c`
+- Artefakt:
+  `competence-hub-website-a8d034cef825-20260921T182550Z.zip`
+- SHA-256: `15a1ae6b330f358afa97ae23205904fd83f097d2cb93af16cbf27d1466996300`
+- Manifest: `dirty: false`, `deployment_authorized: false`
+
+Vor einem spaeteren Website-Codewechsel wird dieser Kandidat verworfen und aus
+dem neuen sauberen Source-Checkpoint erneut gebaut.
+
 ## Rollback und Stop-Regeln
 
 - Bei falschem Webroot, unbekannter Providerkonfiguration, fehlenden Assets,

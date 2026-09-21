@@ -182,8 +182,8 @@ for Git, release, backup and restore responsibilities.
    redirects. The authenticated read-only inventory is already complete.
 2. **Visual Go/No-Go by 23.09.:** run the final stakeholder walkthrough against
    the locally green 722-check Website and record Thomas's production decision.
-3. **Clean source and artifact by 23.09.:** only after separate commit/push
-   approval create a clean checkpoint, rebuild the ZIP and verify its hash.
+3. **Clean source and artifact:** completed from `a8d034c`; ZIP and manifest
+   match SHA-256 `15a1ae6b...96300` and remain non-deployautorized.
 4. **Controlled live test on 24.09.:** only after separate upload approval,
    back up the Webroot and deploy the exact clean static artifact.
 5. **Production smoke on 24.09.:** verify HTTPS, redirects, core routes,
@@ -707,7 +707,7 @@ progress in parallel but do not silently expand the execution backlog.
 | --- | --- | --- | --- | --- | --- |
 | 1 | Doing | High | Close public-domain P0 preflight | read-only inventory passed; EDV removes or authorizes rollback-safe replacement of `index.php` | no public diagnostic page and redirect decision by 22.09. |
 | 2 | Ready | High | Record final visual and production Go/No-Go | 722 local browser checks green; step 1 closed | stakeholder walkthrough and Thomas decision by 23.09. |
-| 3 | Gated | High | Create clean source checkpoint and static artifact | separate commit/push approval; no P0 | `dirty: false`, Astro/link/archive guards, manifest and SHA-256 by 23.09. |
+| 3 | Done | High | Create clean source checkpoint and static artifact | commit/push approved; external P0 does not alter local build | `a8d034c`; `dirty: false`; Astro/link/archive guards; SHA-256 `15a1ae6b...96300` |
 | 4 | Gated | High | Perform controlled IONOS live test | step 3; separate upload approval; rollback owner available | pre-upload backup and exact-artifact upload on 24.09. |
 | 5 | Gated | High | Prove production behavior or roll back | step 4 | HTTPS/redirect/core-route/mobile/legal/contact/console smoke and rollback evidence on 24.09. |
 | 6 | Ready | Medium-high | Freeze and hand over the Website | production outcome known | exact source/artifact, owner, smoke, rollback and stop criteria by 25.09. |

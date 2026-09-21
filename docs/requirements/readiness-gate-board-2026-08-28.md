@@ -7,7 +7,7 @@ Stand: 2026-09-21
 | Ziel | Status | Einordnung | Naechster Beweis |
 | --- | --- | --- | --- |
 | Technisches Readiness-Paket | GRUEN TECHNISCH | Website-/Webapp-Pakete, Staging und externer Backup-/Restore-Beweis sind gruen; die aktuelle Website hat zusaetzlich ein festes internes Link-Gate | Nach relevanten Codeaenderungen reproduzierbar neu bauen |
-| Messe-Readiness oeffentliches Frontend | GELB / HOECHSTE PRIORITAET | lokale Routen-, Browser-, Build-, Handover- und SFTP-Inhaltsnachweise sind gruen; `phpinfo()`-Entfernung, Redirects, Clean-Artefakt und Freigaben offen | externen P0 schliessen; kontrollierter Live-Test Ziel 24.09. |
+| Messe-Readiness oeffentliches Frontend | GELB / HOECHSTE PRIORITAET | lokale Routen-, Browser-, Clean-Artefakt-, Handover- und SFTP-Inhaltsnachweise sind gruen; `phpinfo()`-Entfernung, Redirects und Freigaben offen | externen P0 schliessen; kontrollierter Live-Test Ziel 24.09. |
 | Kalender-Discovery und Architektur | GRUEN FACHLICH / DESIGN / API STAGING / UI LOCAL / EINGEFROREN | CAL-0/CAL-0.1, Entscheidungen, Migrationen `0005`/`0006`, Repository, API und synthetische Coach-/Reviewer-UI sind bewiesen; 384 lokale, 17/17 native und 57/57 Edge-Checks gruen | nativen Staging-UI-Lauf erst nach Messe-Readiness und separater Freigabe fortsetzen |
 | Erste freigegebene Firmen | GELB | Datenmodell, geschuetzter Firmen-/Kontakt-Slice und synthetischer Restore sind bewiesen; Echtdaten bleiben gegated | Vertrag, benannte Konten, Backup-Timer/Alarm und Betriebsfreigabe |
 | Kontrollierter Website-Produktionsstart | GELB / CONDITIONAL | Live-Test am 24.09. moeglich, wenn Webroot, `phpinfo()`/Redirects, Rollback, Clean-Artefakt, Thomas-Go/No-Go und separate Uploadfreigabe schliessen | statische Website-Gates getrennt vom Backend schliessen |
@@ -25,7 +25,7 @@ Gates abhaengig. Es ist keine Produktionsfreigabe.
 | Verschluesselter externer Backup-/Restore-Nachweis mit 24 Tabellen abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-03: Janay-Onboarding und Thomas-Ross-Go/No-Go fuer den Oktoberkorridor neu terminieren | Oeffentliche Bewerbung und Produktions-Go-Live |
 | Lokaler Backup-Meldungsvertrag mit 21 fokussierten Tests abgeschlossen | Restentscheidungen CP-02/04/07/08 schliessen | EXT-01: SMTP-/Sendervertrag und Benachrichtigungskanal | Produktive Backup-Timer ohne getestete Zustellung |
 | Pilot-Owner entschieden: Manuel Admin, Thomas technischer Break-glass, Janay Mailbox ohne Vertretung | EDV-Follow-up laeuft; Antwort nach Eingang verarbeiten | EXT-06: spaetere Mailboxvertretung bleibt unbesetzt; kein Service-Level versprechen | Automatisierter Website-Replace oder Remote-Loeschung |
-| Lokaler Messe-Kandidat mit 722 Edge-Checks, 1.233 Referenzen und Techniker-Handover | EDV-P0/Redirects schliessen; danach Clean-Artefakt | Webroot-Inventur bestanden; `phpinfo()`-/Redirect-Korrektur und Freigaben offen | Unternehmens-/personenbezogene Daten ohne aktiven Backup-/Alarmbetrieb |
+| Clean-Messe-Kandidat `a8d034c` mit 722 Edge-Checks, 1.233 Referenzen und Techniker-Handover | EDV-P0/Redirects und Freigaben schliessen | Webroot-Inventur bestanden; `phpinfo()`-/Redirect-Korrektur und Freigaben offen | Unternehmens-/personenbezogene Daten ohne aktiven Backup-/Alarmbetrieb |
 
 WIP-Regel: maximal ein technischer Ausfuehrungsblock gleichzeitig. Externe
 Anfragen laufen parallel, erweitern aber nicht stillschweigend den Scope.

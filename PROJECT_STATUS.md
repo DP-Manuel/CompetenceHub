@@ -11,8 +11,9 @@ Last updated: 2026-09-21
   synthetic portal slice and external restore rehearsal have strong existing
   evidence. Current route/browser acceptance and the holiday handover are now
   complete locally. The authenticated SFTP inventory also passed and found
-  only the 64-byte `index.php` diagnostic file. EDV removal of the public
-  `phpinfo()` output, redirects, a clean release artifact and release approvals remain. No
+  only the 64-byte `index.php` diagnostic file. The clean Website artifact from
+  `a8d034c` is verified. EDV removal of the public `phpinfo()` output,
+  redirects and release approvals remain. No
   production upload has occurred. Manuel confirmed that a controlled public
   live test should take place by Thursday, 2026-09-24, if the visual result and
   release gates pass; later corrections may follow during the week. Thomas's
@@ -487,13 +488,12 @@ Last updated: 2026-09-21
   `phpinfo()` is no longer public and no external P0 remains before the
   Thursday release decision. Commit, push and deployment remain separately
   gated.
-- Rolling horizon: (1) EDV P0 closure and redirect decision; (2) final
-  visual walkthrough plus Thomas Go/No-Go; (3) separately approved source
-  checkpoint and clean artifact; (4) controlled 24.09. upload with pre-backup;
-  (5) HTTPS/redirect/core-route/mobile smoke and rollback evidence; (6) final
-  handover/freeze; (7) limited monitoring/content fixes during absence;
-  (8) native CAL-1 Staging UI after Messe readiness. Confidence decreases after
-  step 6.
+- Rolling horizon: (1) EDV P0 closure and redirect decision; (2) final visual
+  walkthrough plus Thomas Go/No-Go; (3) separate upload approval; (4)
+  controlled 24.09. upload with pre-backup; (5) HTTPS/redirect/core-route/
+  mobile smoke and rollback evidence; (6) final handover/freeze; (7) limited
+  monitoring/content fixes during absence; (8) native CAL-1 Staging UI after
+  Messe readiness. Confidence decreases after step 6.
 - Lead-time radar: EDV has confirmed the Webroot and SFTP access; its response
   on `phpinfo()` and redirects is now urgent. Contract remains open while the
   Website legal target decision is closed. Janay's mailbox currently

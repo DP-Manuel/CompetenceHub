@@ -2,7 +2,8 @@
 
 Stand: 21.09.2026
 
-Status: lokal technisch gruen, Produktion durch externe P0-Gates gesperrt.
+Status: lokal technisch und als Clean-Artefakt gruen, Produktion durch externe
+P0- und Freigabe-Gates gesperrt.
 Ziel ist ein kontrollierter Live-Test am Donnerstag, 24.09.2026. Dieses
 Dokument autorisiert keinen Upload.
 
@@ -46,15 +47,17 @@ Dokument autorisiert keinen Upload.
 
 ## Releasekandidat
 
-- Source-Basis: `4797f79` plus bewusster lokaler CAL-1- und Website-Arbeitsstand
-- ZIP: `release-artifacts/website/competence-hub-website-4797f79d7d56-20260921T180539Z-dirty.zip`
-- SHA-256: `00adad7544bfe4a4cb48036cbfeeeee4f9a31bbce7634276d1a02bf0ac3fe782`
+- Source-Basis: `a8d034c`
+- ZIP: `release-artifacts/website/competence-hub-website-a8d034cef825-20260921T182550Z.zip`
+- SHA-256: `15a1ae6b330f358afa97ae23205904fd83f097d2cb93af16cbf27d1466996300`
 - Manifest: gleichnamige JSON-Datei
-- Kennzeichnung: `dirty: true`, `deployment_authorized: false`
+- Kennzeichnung: `dirty: false`, `deployment_authorized: false`
+- Archivpruefung: 53 Eintraege, keine unsicheren Pfade; `index.html`,
+  `404.html`, `.htaccess` und `favicon.svg` vorhanden
 
-Der Kandidat ist ein reproduzierbarer technischer Nachweis, aber noch kein
-finales Produktionsartefakt. Nach freigegebenem Source-Checkpoint wird das
-saubere Archiv neu gebaut und erneut geprueft.
+Der Kandidat ist reproduzierbar und aus einem sauberen Source-Checkpoint
+gebaut. Er bleibt bis zum Schliessen der externen P0- und Freigabe-Gates nicht
+deployautorisiert.
 
 ## Go-Live-Stopper
 
@@ -62,9 +65,8 @@ saubere Archiv neu gebaut und erneut geprueft.
 2. Vorhandene 64-Byte-`index.php` als Rollbackkopie sichern und erst mit
    separater Freigabe entfernen oder ersetzen.
 3. Redirects oder einen dokumentierten Zwischenzustand bestaetigen.
-4. Sauberen Source-Checkpoint und sauberes Release-Artefakt erzeugen.
-5. Thomas-Go/No-Go und separate Uploadfreigabe dokumentieren.
-6. Vor Replace datierte Remote-Sicherung erstellen; danach sofortige Smokes.
+4. Thomas-Go/No-Go und separate Uploadfreigabe dokumentieren.
+5. Vor Replace datierte Remote-Sicherung erstellen; danach sofortige Smokes.
 
 Kleinere optische oder textliche Korrekturen duerfen nach einem erfolgreichen
 Live-Test nachgereicht werden. P0-Sicherheits-, Webroot- oder Rollbackbefunde

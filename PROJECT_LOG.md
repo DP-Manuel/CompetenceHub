@@ -16,12 +16,12 @@ Newest entries first.
 - Das lokale Edge-Gate bestand 722 Checks ueber 18 Routen sowie Desktop,
   Tablet, 390 CSS-Pixel und 200-Prozent-Aequivalent. Build erzeugte 31 Seiten;
   das Link-Gate pruefte 1.233 interne Referenzen.
-- Das nach der finalen Rechtsentscheidung neu gebaute lokale Release-Archiv
-  enthaelt 53 sichere Eintraege und hat SHA-256
-  `00adad7544bfe4a4cb48036cbfeeeee4f9a31bbce7634276d1a02bf0ac3fe782`.
-  Wegen des bewusst uncommitteten Gesamtstands ist es als `dirty` und nicht
-  deployautorisiert markiert; nach einem freigegebenen Source-Checkpoint wird
-  es sauber neu gebaut.
+- Der freigegebene Projektcheckpoint `a8d034c` ermoeglichte den sauberen
+  Website-Releasebuild. Das Archiv enthaelt 53 sichere Eintraege und hat
+  SHA-256
+  `15a1ae6b330f358afa97ae23205904fd83f097d2cb93af16cbf27d1466996300`.
+  Manifest und Datei stimmen ueberein; `dirty: false` und
+  `deployment_authorized: false` trennen Buildnachweis und Uploadfreigabe.
 - Der oeffentliche Preflight fand einen P0-Stopper: Beide IONOS-Subdomains
   liefern derzeit eine frei erreichbare `phpinfo()`-Seite. Zudem fehlen
   HTTP-zu-HTTPS- und Alias-zu-Kanonisch-Redirect. EDV-Korrektur,
