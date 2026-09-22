@@ -1,9 +1,9 @@
 # Website Messe-Readiness
 
-Stand: 21.09.2026
+Stand: 22.09.2026
 
-Status: lokal technisch und als Clean-Artefakt gruen, Produktion durch externe
-P0- und Freigabe-Gates gesperrt.
+Status: lokal technisch und als Clean-Artefakt gruen; der externe Diagnose-P0
+ist geschlossen. Produktion bleibt durch Inhalts- und Freigabe-Gates gesperrt.
 Ziel ist ein kontrollierter Live-Test am Donnerstag, 24.09.2026. Dieses
 Dokument autorisiert keinen Upload.
 
@@ -22,15 +22,16 @@ Dokument autorisiert keinen Upload.
 
 | Prioritaet | Befund | Massnahme / Status |
 | --- | --- | --- |
-| P0 | Beide Produktionsdomains zeigen oeffentlich `phpinfo()` | EDV muss die Ausgabe vor Upload entfernen oder sperren; offen |
+| P0 | Beide Produktionsdomains zeigten oeffentlich `phpinfo()` | geschlossen 22.09.: Thomas Ross entfernte die temporaere `index.php`; alle vier HTTP/HTTPS-Varianten liefern `403` ohne Diagnoseausgabe |
 | P0 | Gemeldeter Webroot musste authentifiziert lesend bewiesen werden | bestanden: `/` als bestaetigter Chroot; nur 64-Byte-`index.php` vorhanden |
 | P0 | Kein dokumentiertes Thomas-Go/No-Go und keine separate Remote-Change-Freigabe | vor Upload erforderlich |
-| P1 | HTTP leitet nicht auf HTTPS um; Alias leitet nicht auf kanonische Domain um | bei EDV angefragt; offen |
+| P1 | HTTP leitet nicht auf HTTPS um; Alias leitet nicht auf kanonische Domain um | EDV erlaubt Umsetzung per `.htaccess`; Regeln sind im Artefakt enthalten, Produktionsnachweis folgt unmittelbar nach Upload |
 | P1 | Sichtbarer Login fuehrte auf eine noch nicht produktive Vorschau | aus oeffentlicher Navigation entfernt |
 | P1 | Kalender war nur ueber interne Prototyprouten erreichbar | ehrliche `/kalender/`-Vorschau ergaenzt und crawler-blockiert |
 | P1 | Lokale Rechtsseiten behaupteten noch offene Betreiber-/Rechtsentscheidungen | auf bestaetigte zentrale D+P-Ziele umgestellt |
 | P1 | Fehlendes Favicon erzeugte einen Browser-404 | lokales Marken-Favicon ergaenzt |
 | P2 | Kein eigenes `og:image` | nach Live-Test mit freigegebenem Motiv nachziehen |
+| Content | Siebtes Coach-Profil Guelcan Elmas-Brandes neu geliefert | Manuel gab Name, Text, Portraet, belegte berufliche Daten und Aufnahme in den Release am 22.09. frei; Metadaten-minimiertes Bild und Profil lokal gruen |
 
 ## Lokale Nachweise
 
@@ -56,17 +57,18 @@ Dokument autorisiert keinen Upload.
   `404.html`, `.htaccess` und `favicon.svg` vorhanden
 
 Der Kandidat ist reproduzierbar und aus einem sauberen Source-Checkpoint
-gebaut. Er bleibt bis zum Schliessen der externen P0- und Freigabe-Gates nicht
-deployautorisiert.
+gebaut und bleibt als Rueckfalloption erhalten. Die freigegebene neue
+Coach-Seite ist lokal separat geprueft; fuer den Upload wird nach Commit ein
+neuer sauberer Kandidat gebaut.
 
 ## Go-Live-Stopper
 
-1. Oeffentliche `phpinfo()`-Ausgabe entfernen oder sperren.
-2. Vorhandene 64-Byte-`index.php` als Rollbackkopie sichern und erst mit
-   separater Freigabe entfernen oder ersetzen.
-3. Redirects oder einen dokumentierten Zwischenzustand bestaetigen.
-4. Thomas-Go/No-Go und separate Uploadfreigabe dokumentieren.
-5. Vor Replace datierte Remote-Sicherung erstellen; danach sofortige Smokes.
+1. Neuen sauberen Source-Checkpoint und exakten Releasekandidaten inklusive
+   des freigegebenen Coach-Profils erstellen.
+2. Unmittelbar vor dem Upload eine aktuelle Remote-Inventur und datierte
+   Rollbacksicherung erstellen.
+3. Nach Replace sofort HTTPS-, Alias-/Kanonisch-, Kernrouten-, Mobile-, Legal-
+   und Kontakt-Smokes ausfuehren; bei Fehlern zurueckrollen.
 
 Kleinere optische oder textliche Korrekturen duerfen nach einem erfolgreichen
 Live-Test nachgereicht werden. P0-Sicherheits-, Webroot- oder Rollbackbefunde

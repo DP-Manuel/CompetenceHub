@@ -1,6 +1,6 @@
 # Coach Public Profile Path Mapping v0.1
 
-Stand: 17.09.2026
+Stand: 22.09.2026
 
 Status: local contract; no real Coach UUID has been mapped.
 
@@ -21,6 +21,7 @@ The public website currently contains these routes:
 - `/coaches/carolin-hupp/`
 - `/coaches/wegner-ney/`
 - `/coaches/goran-celic/`
+- `/coaches/guelcan-elmas-brandes/`
 - `/coaches/stefanie-becker/`
 
 The website source does not contain stable internal Coach UUIDs. Therefore this

@@ -1,6 +1,6 @@
 # Competence Hub Production Release Plan - Rebaselined
 
-Stand: 21.09.2026
+Stand: 22.09.2026
 
 Status: Vorbereitung. Dieser Plan autorisiert weder Upload noch DNS-Aenderung,
 Serverinstallation, Kontoerstellung oder Echtdaten. Zugangsdaten und Secrets
@@ -20,7 +20,10 @@ oeffentlichen Frontends hat bis 25.09. Vorrang vor CAL-1-Ausbau. Thomas Ross
 bestaetigte den IONOS-Document-Root
 `/kunden/homepages/16/d101506010/htdocs/competencehub` fuer beide Domains und
 den SFTP-Zugriff auf diesen Pfad; der aktuelle Inhalt wird vor jeder Aenderung
-read-only verifiziert. Ohne finale Produktionsfreigabe entsteht nur das
+read-only verifiziert. Am 22.09. entfernte er die temporaere `index.php` und
+gab die Umsetzung der Domain- und HTTPS-Weiterleitungen per `.htaccess` frei.
+Der anschliessende oeffentliche Gegencheck zeigt keine Diagnoseausgabe mehr.
+Ohne finale Produktionsfreigabe entsteht nur das
 vollstaendig deploybare Handover-Paket, kein Upload.
 
 Der Release besteht aus zwei getrennten Artefakten:
@@ -37,7 +40,7 @@ bereitstellen.
 | Bereich | Ziel | Status |
 | --- | --- | --- |
 | Website kanonisch | `https://competencehub.donner-partner.de` | DNS/Webspace/TLS laut EDV vorhanden |
-| Website Redirect | `https://competence-hub.donner-partner.de` auf kanonische Domain | Ziel bestaetigt; Redirect noch nicht aktiv |
+| Website Redirect | `https://competence-hub.donner-partner.de` auf kanonische Domain | EDV erlaubt `.htaccess`; Regeln im Artefakt, Produktions-Smoke nach Upload offen |
 | Portal/API | vorgeschlagen `https://competencehub-app.donner-partner.de` | DNS auf VPS, TLS und Freigabe offen |
 | PostgreSQL | VPS, nur `127.0.0.1:5432` | Staging vorhanden und verifiziert |
 | Kontaktmail | `competencehub@donner-partner.de` an Janay | fachlich bestaetigt; Routing-Smoke offen |
@@ -66,6 +69,11 @@ bereitstellen.
   synthetischen Kalender als P0/P1/P2 bewerten.
 - Keine Remote-Datei veraendern und keine Backend-/CAL-1-Arbeit beginnen.
 
+Status 22.09.: abgeschlossen. Webroot und Inhalt wurden read-only bewiesen,
+die EDV entfernte die temporaere Diagnose-Datei, und vier oeffentliche
+HTTP/HTTPS-Pruefungen zeigen nur den erwarteten leeren Webspace (`403`) ohne
+`phpinfo()`.
+
 ### Phase 3 - 23.09. bis 24.09.: Frontend Freeze und Live-Test-Kandidat
 
 - Alle P0 und wesentlichen P1 Website-Befunde lokal korrigieren.
@@ -75,6 +83,9 @@ bereitstellen.
   Release-Archive-Sicherheitspruefungen ausfuehren.
 - Finales Artefakt mit Manifest und SHA-256 erzeugen; Freigabeflag bleibt
   `false`.
+- Das Profil von Guelcan Elmas-Brandes ist fuer den Erst-Release vorgesehen;
+  Manuel gab Name, Text, Portraet, belegte berufliche Profildaten und
+  Veroeffentlichung am 22.09. frei. Private Kontaktdaten bleiben ausgeschlossen.
 - Bei bestandenem visuellen und technischen Gate ist der kontrollierte
   Website-Live-Test fuer Donnerstag, 24.09., vorgesehen. Kleinere Korrekturen
   duerfen danach noch innerhalb der Woche nachgereicht werden.

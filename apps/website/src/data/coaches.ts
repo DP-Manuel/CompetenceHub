@@ -135,6 +135,27 @@ export const coaches: Coach[] = [
     initials: "CH",
   },
   {
+    name: "Frau Gülcan Elmas-Brandes",
+    role: "Coach, Trainerin und Diplom-Betriebswirtin (VWA)",
+    previewRole: "Karriere, Gesundheit & Qualität",
+    focus: [
+      "Karriere- und Bewerbungscoaching",
+      "Ernährungs- und Gesundheitsorientierung",
+      "Projekt- und Qualitätsmanagement",
+    ],
+    topics: [
+      "recruiting-potenziale",
+      "gesundheit-praevention",
+      "teams-konflikte",
+    ],
+    text: "Frau Gülcan Elmas-Brandes verbindet Coaching und Training mit langjähriger Erfahrung in Projekt-, Qualitäts- und Finanzmanagement sowie interkultureller Zusammenarbeit.",
+    profilePath: "coaches/guelcan-elmas-brandes",
+    image: "images/coaches/guelcan-elmas-brandes.png",
+    imageWidth: 203,
+    imageHeight: 260,
+    initials: "GE",
+  },
+  {
     name: "Herr T. Wegner-Ney",
     role: "Unternehmensberater, Speaker, Workshop-Leiter und Coach",
     previewRole: "Veränderung, Prozesse & Führung",

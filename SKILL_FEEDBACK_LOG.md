@@ -6,6 +6,31 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-22 | private-profile-onboarding | Private Coach-Unterlagen in einen freigabefaehigen oeffentlichen Entwurf ueberfuehren
+
+- Triggering project situation: Neue Coach-Unterlagen mischten Lebenslauf,
+  Zeugnisse, private Kontaktdaten, Zertifikatskennungen und ein eingebettetes
+  Portrait. Ein technisch nutzbares Bild war dadurch noch nicht automatisch
+  zur Website-Veroeffentlichung freigegeben.
+- Observed friction: Ohne festen Ablauf koennten private Angaben oder
+  ungepruefte Bildrechte versehentlich in Source, Reviewpaket oder Release
+  gelangen; zugleich darf ein bereits sauberer Releasekandidat nicht durch
+  ungeprueften neuen Content entwertet werden.
+- Reusable improvement candidate: Website-/Content-Skills sollen bei
+  Personenprofilen standardmaessig Belegpruefung, Datenminimierung,
+  Namensfreigabe, fachliche Textfreigabe, Bildrechte und Releasezeitpunkt
+  getrennt pruefen. Bis zur Bildrechtefreigabe ist ein neutrales vorhandenes
+  Fallback zu verwenden.
+- Project response: Nur belegte oeffentliche Kompetenzen wurden uebernommen,
+  private Daten ausgeschlossen und eine separate Freigabeuebersicht erstellt.
+  Nach Manuels ausdruecklicher Rechtefreigabe wurde das eingebettete Portraet
+  Metadaten-minimiert veroeffentlichungsfertig eingebunden; der bestehende
+  Clean-Release bleibt bis zum neuen erfolgreichen Build als Rueckfalloption.
+- Candidate home: `integrate-frontend`, `prepare-release` und
+  `manage-project-state`.
+- Status: project-local evidence; fuer kanonisches CodexSkills-Feedback
+  vorgemerkt, noch nicht global synchronisiert.
+
 ### 2026-09-21 | public-placeholder-and-clean-artifact-gates | Domaininhalt und Sourcezustand vor Livegang pruefen
 
 - Triggering project situation: DNS und TLS waren laut EDV eingerichtet, doch

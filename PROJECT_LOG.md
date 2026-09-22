@@ -2,6 +2,31 @@
 
 Newest entries first.
 
+## 2026-09-22 | website/content/release | EDV-P0 geschlossen und siebtes Coach-Profil vorbereitet
+
+- Thomas Ross bestaetigte, dass die 64-Byte-`index.php` nur einem kurzen Test
+  diente, entfernte sie und erlaubte HTTP-zu-HTTPS sowie Alias-zu-Kanonisch per
+  `.htaccess`. Der anschliessende Gegencheck aller vier HTTP/HTTPS-Varianten
+  liefert den erwarteten leeren Webspace mit `403` und keine `phpinfo()`-
+  Ausgabe. Es erfolgte kein SFTP-Write oder Upload.
+- Fuer Guelcan Elmas-Brandes wurde aus den ausdruecklich freigegebenen
+  Quelldokumenten ein datensparsames siebtes Coach-Profil vorbereitet. Private
+  Kontakt-, Adress-, Geburts-, Zertifikats- und Arbeitgeberdaten wurden nicht
+  uebernommen. Manuel gab am 22.09. Portraet, belegte berufliche Profildaten und
+  die Aufnahme in den Website-Release ausdruecklich frei. Das aus dem Dokument
+  extrahierte Portraet wurde in ein Metadaten-minimiertes PNG ueberfuehrt.
+- Die neue Route `/coaches/guelcan-elmas-brandes/`, Coach-Uebersicht und
+  Profilpfad-Dokumentation sind lokal umgesetzt. Eine sendefaehige
+  Freigabeuebersicht trennt Name, Text, Portraitrechte und Releasezeitpunkt.
+- Verifikation: Astro pruefte 45 Dateien ohne Diagnose und erzeugte 32 Seiten;
+  das Link-Gate bestand 1.274 interne Referenzen; Edge bestand 762 Checks ueber
+  Desktop, Tablet, 390 CSS-Pixel und 200-Prozent-Aequivalent. Desktop- und
+  Mobil-Sichtpruefung zeigen keinen Ueberlauf oder Layoutfehler.
+- Der bestehende Clean-Messe-Kandidat `a8d034c` bleibt bis zum erfolgreichen
+  neuen Clean-Build als Rueckfalloption erhalten. Manuel autorisierte Commit,
+  Push und die kontrollierte Website-Veroeffentlichung; Pre-Upload-Backup und
+  Produktion-Smokes bleiben zwingend.
+
 ## 2026-09-21 | website/release | Messe-Readiness lokal geprueft und Live-Test vorbereitet
 
 - Der oeffentliche Websitepfad hat bis zu Manuels Cutline am 25.09. Vorrang;

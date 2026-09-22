@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-09-21
+Last updated: 2026-09-22
 
 ## Snapshot
 
@@ -10,17 +10,23 @@ Last updated: 2026-09-21
   Messe-Readiness now has priority over further CAL-1 expansion. The Website,
   synthetic portal slice and external restore rehearsal have strong existing
   evidence. Current route/browser acceptance and the holiday handover are now
-  complete locally. The authenticated SFTP inventory also passed and found
-  only the 64-byte `index.php` diagnostic file. The clean Website artifact from
-  `a8d034c` is verified. EDV removal of the public `phpinfo()` output,
-  redirects and release approvals remain. No
-  production upload has occurred. Manuel confirmed that a controlled public
+  complete locally. The authenticated SFTP inventory passed. Thomas Ross
+  removed the temporary 64-byte `index.php` diagnostic file on 2026-09-22 and
+  explicitly allowed the HTTP/HTTPS and alias redirects to be implemented in
+  `.htaccess`. A public four-URL preflight now returns only the expected empty
+  Webspace response (`403`) and no `phpinfo()` output. The clean Website
+  artifact from `a8d034c` is verified and already contains the redirect rules.
+  Manuel approved the new Guelcan Elmas-Brandes profile, portrait, supported
+  professional data and publication on 2026-09-22. The updated local Website
+  passes 762 Edge checks, a 32-page build and 1,274 internal references.
+  No production upload has occurred. Manuel confirmed that a controlled public
   live test should take place by Thursday, 2026-09-24, if the visual result and
   release gates pass; later corrections may follow during the week. Thomas's
   Go/No-Go and the separate remote-change approval still gate the upload.
   Thomas Ross confirmed that both public subdomains map to
   `/kunden/homepages/16/d101506010/htdocs/competencehub` and that the SFTP user
-  has access; the read-only content inventory remains open.
+  has access; the read-only content inventory is closed. Redirect behavior can
+  only be proven after the static artifact is uploaded.
   Donner + Partner is the operator, Lars Donner the responsible person, and
   the existing central D+P Impressum, AGB and Datenschutz pages are the binding
   legal targets. App-DNS, SMTP, accounts, roles and backend activation remain
@@ -255,9 +261,10 @@ Last updated: 2026-09-21
   legal-provider decision, approval of Janay's remaining workflow gates,
   direct-contact delivery inputs and stakeholder acceptance of SB-24. The
   encrypted Wuerzburg off-server rehearsal itself is complete.
-- Blocked for live launch: verified IONOS Webroot, removal of the public
-  `phpinfo()` placeholder, redirect decision, Thomas's Go/No-Go, separate
-  remote-change approval and an explicitly scheduled production deployment.
+- Blocked for live launch: exact content decision, contact-mail routing smoke,
+  Thomas's Go/No-Go, separate remote-change approval, pre-upload backup and an
+  explicitly scheduled production deployment. Webroot, public `phpinfo()`
+  removal and redirect implementation path are closed.
 - Public contact decision: `competencehub@donner-partner.de`.
 - Direct-contact status: the desired same-origin form delivery is specified in
   `docs/requirements/public-contact-request-delivery.md` but remains gated by
@@ -291,16 +298,16 @@ Last updated: 2026-09-21
   for the Website start directory. Credentials remain outside Git and project
   documentation. On 2026-09-02 the server's observed ED25519 fingerprint
   exactly matched the official IONOS fingerprint list. On 2026-09-03 password
-  authentication succeeded, but the server closed SFTP because the former
-  assigned `/htdocs/projektwue` target did not exist. EDV now reports that the
-  Document Root was corrected to
+  authentication succeeded, but the server initially closed SFTP because the
+  former assigned `/htdocs/projektwue` target did not exist. EDV corrected the
+  Document Root to
   `/kunden/homepages/16/d101506010/htdocs/competencehub`. The account remains
-  correctly SFTP-only; this reported path still requires an authenticated
-  read-only `pwd`/`ls -la` proof. No Webroot inventory or SFTP upload has been
-  performed. Both public subdomains resolve
-  to the same IONOS IPv4/IPv6 target and serve the valid wildcard TLS
-  certificate, but HTTP and HTTPS currently return a 403 IONOS parking page;
-  HTTP-to-HTTPS and alias-to-canonical redirects are not active.
+  correctly SFTP-only. The authenticated `pwd`/`ls -la` proof passed on 21.09.;
+  `/` is the confirmed Webroot-Chroot and contained only the temporary
+  64-byte `index.php`. Thomas removed that file on 22.09. and allowed redirects
+  via `.htaccess`. Both public subdomains now return the expected empty
+  Webspace `403` without `phpinfo()`; redirects become active and testable only
+  with the separately approved upload.
 - Independent local Website delivery readiness: the production artifact now
   includes a conservative Apache `.htaccess`, an accessible noindex 404 page
   and fail-closed ZIP checks for `.htaccess`, `404.html` and `index.html`.
@@ -308,8 +315,9 @@ Last updated: 2026-09-21
   builds 29 pages. The clean `f7afd3247c10` ZIP is marked `dirty: false`,
   contains all required root files and has SHA-256
   `8378655a120441cf5cd6c6e95709688e6ec3c000e93e2813761f07ed44f7e0a9`.
-  Apache behavior remains unclaimed until the corrected IONOS Webroot is
-  available for a separately approved rehearsal.
+  Apache redirect behavior remains unclaimed until the separately approved
+  upload, while the Webroot identity and EDV implementation permission are
+  proven.
 - Database/server status: IONOS MySQL is accessible only from its own webspace
   and is not used by the VPS backend. On 2026-08-07 the VPS was patched and
   rebooted into kernel `6.8.0-137-generic`; Chatbot, Nginx and Fail2ban remained
@@ -384,8 +392,9 @@ Last updated: 2026-09-21
 - Static Website live-test target: 2026-09-24, followed by handover on
   2026-09-25 and the Messe-Demostand on 2026-10-17. Portal onboarding remains
   separate and later.
-- Schedule health: yellow. The static Website is locally green; Webroot
-  content proof, EDV P0 closure, clean artifact and release approvals remain.
+- Schedule health: yellow. The static Website, Webroot proof, EDV P0 closure
+  and clean artifact are green; exact content, contact-mail smoke and release
+  approvals remain.
   Database, migrations, Auth/Outbox,
   company/contact API and the local portal UI are implemented; the expanded
   portal harness has 14/14 Staging evidence and all 17 manual browser checks
@@ -480,23 +489,25 @@ Last updated: 2026-09-21
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: close the remaining external P0 by obtaining
-  removal or approved controlled replacement of the public 64-byte
-  `index.php` diagnostic file plus the redirect decision. Inputs are the green
-  SFTP inventory and Thomas's Webroot confirmation; deliverable is an EDV
-  closure message and a documented rollback owner. Definition of Done:
-  `phpinfo()` is no longer public and no external P0 remains before the
-  Thursday release decision. Commit, push and deployment remain separately
-  gated.
-- Rolling horizon: (1) EDV P0 closure and redirect decision; (2) final visual
-  walkthrough plus Thomas Go/No-Go; (3) separate upload approval; (4)
-  controlled 24.09. upload with pre-backup; (5) HTTPS/redirect/core-route/
-  mobile smoke and rollback evidence; (6) final handover/freeze; (7) limited
-  monitoring/content fixes during absence; (8) native CAL-1 Staging UI after
-  Messe readiness. Confidence decreases after step 6.
-- Lead-time radar: EDV has confirmed the Webroot and SFTP access; its response
-  on `phpinfo()` and redirects is now urgent. Contract remains open while the
-  Website legal target decision is closed. Janay's mailbox currently
+- Recommended next work block: create the new clean source checkpoint and exact
+  release artifact, then perform the authorized controlled SFTP release.
+  Inputs are the approved Coach content/portrait, green local acceptance,
+  closed EDV/Webroot P0 and legal decision; deliverables are commit/hash,
+  pre-upload inventory/backup, uploaded artifact and production smoke evidence.
+  Definition of Done: both domains serve the exact Website, redirects and core
+  routes pass, and rollback evidence is retained.
+- Rolling horizon: (1) commit/push the approved Guelcan profile; (2) build and
+  hash the clean release artifact; (3) capture pre-upload inventory/backup; (4)
+  perform the authorized controlled upload; (5)
+  HTTPS/redirect/core-route/mobile smoke and rollback evidence; (6) final
+  handover/freeze; (7) limited monitoring/content fixes during absence; (8)
+  native CAL-1 Staging UI after Messe readiness. Confidence decreases after
+  step 6.
+- Lead-time radar: EDV has confirmed the Webroot/SFTP mapping, removed the
+  diagnostic file and accepted `.htaccess` redirects. The Website legal target
+  decision plus content/release approval are closed; controlled deployment and
+  contact-mail smoke are now critical.
+  Janay's mailbox currently
   has no absence cover; Thomas Ross covers only technical emergencies.
 - SB-19 evidence: the existing isolated Outbox Staging test now continues
   through single-use invitation acceptance, password hashing, TOTP enrollment,

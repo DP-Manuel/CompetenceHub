@@ -111,10 +111,14 @@ bereitstellen. Unterverzeichnisse werden anschliessend mit weiteren
 - Abgleich mit dem privaten SFTP-Zielvertrag: bestanden
 - Upload, Remote-Backup, Deployment und Real-Daten-Nutzung: nicht erfolgt
 
-Naechster Gate-Schritt: EDV entfernt oder sperrt `index.php` beziehungsweise
-gibt ihre kontrollierte Entfernung im Releasefenster frei und bestaetigt den
-Redirectweg. Vor einem Replace wird der vorhandene 64-Byte-Stand als datierte
-Rollbackkopie gesichert. Bis zur separaten Remote-Change-Freigabe erfolgt
+Die EDV schloss diesen Befund am 22.09.2026: Thomas Ross bestaetigte, dass die
+`index.php` nur einem kurzen Test diente, und entfernte sie. HTTP-zu-HTTPS und
+Alias-zu-Kanonisch duerfen per `.htaccess` umgesetzt werden. Das gepruefte
+statische Artefakt enthaelt diese Regeln bereits.
+
+Naechster Gate-Schritt: Unmittelbar vor einem freigegebenen Upload die nun
+leere Remote-Ausgangslage erneut read-only inventarisieren und als datierten
+Rollbacknachweis sichern. Bis zur separaten Remote-Change-Freigabe erfolgt
 keine Aenderung.
 
 ## Oeffentlicher Gegencheck 2026-09-03
@@ -143,3 +147,15 @@ Upload in ein erratenes Alternativverzeichnis.
   `competencehub.donner-partner.de` um.
 - Der Gegencheck veraenderte keine Remote-Datei und beweist weiterhin nicht den
   gemeldeten Webroot.
+
+## Oeffentlicher Gegencheck 2026-09-22
+
+- Nach der EDV-Entfernung antworten HTTP und HTTPS auf der kanonischen und der
+  Bindestrich-Domain mit Status `403` und ohne `phpinfo()`-Titel oder
+  Konfigurationsausgabe.
+- Damit ist der Sicherheitsbefund der temporaeren Diagnose-Datei geschlossen;
+  die `403`-Antwort ist vor dem Erst-Upload die erwartete leere Webspace-Lage.
+- Redirects sind noch nicht aktiv, weil die freigegebenen `.htaccess`-Regeln
+  erst mit dem statischen Website-Artefakt ausgeliefert werden.
+- Der Gegencheck fuehrte keinen SFTP-Write, Upload oder sonstigen Remote-Change
+  aus.

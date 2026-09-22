@@ -27,6 +27,7 @@ CORE_ROUTES = (
     "/coaches/christian-galvano/",
     "/coaches/elisabeth-schwabauer/",
     "/coaches/goran-celic/",
+    "/coaches/guelcan-elmas-brandes/",
     "/coaches/stefanie-becker/",
     "/coaches/wegner-ney/",
     "/kalender/",

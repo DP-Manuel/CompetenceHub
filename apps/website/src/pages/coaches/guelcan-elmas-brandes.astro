@@ -1,0 +1,141 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const topics = [
+  {
+    title: "Berufliche Orientierung",
+    text: "Berufliche Ziele, vorhandene Kompetenzen und nächste Schritte strukturiert einordnen und für Bewerbung oder Neuorientierung greifbar machen.",
+  },
+  {
+    title: "Gesundheit und Ernährung",
+    text: "Gesundheitsbewusste Entscheidungen und ganzheitliche Ernährungsorientierung verständlich auf den persönlichen Alltag beziehen.",
+  },
+  {
+    title: "Projekt und Qualität",
+    text: "Erfahrung aus Projektleitung, Training und Qualitätsmanagement nutzen, um Abläufe, Verantwortung und Zusammenarbeit klarer zu gestalten.",
+  },
+];
+---
+
+<BaseLayout
+  title="Frau Gülcan Elmas-Brandes | Coaches | Competence Hub"
+  description="Frau Gülcan Elmas-Brandes verbindet Karriere- und Gesundheitscoaching mit Training sowie Erfahrung in Projekt- und Qualitätsmanagement."
+>
+  <main class="subpage">
+    <section class="coach-profile-hero">
+      <div>
+        <p class="eyebrow">Karriere · Gesundheit · Qualität</p>
+        <h1>Frau Gülcan Elmas-Brandes</h1>
+        <p class="coach-profile-lead">
+          Coach, Trainerin und Diplom-Betriebswirtin (VWA) mit Schwerpunkten in
+          beruflicher Orientierung, Gesundheit sowie Projekt- und
+          Qualitätsmanagement.
+        </p>
+        <p>
+          Frau Gülcan Elmas-Brandes verbindet individuelle Begleitung mit
+          langjähriger internationaler Unternehmens- und Projekterfahrung. Ihr
+          Ansatz ist strukturiert, lösungsorientiert und auf konkrete nächste
+          Schritte ausgerichtet.
+        </p>
+        <div class="coach-profile-actions">
+          <a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a>
+          <a class="button button--ghost" href={url("coaches")}>Alle Coaches</a>
+        </div>
+      </div>
+      <figure class="coach-profile-portrait">
+        <img
+          src={url("images/coaches/guelcan-elmas-brandes.png")}
+          alt="Porträt von Frau Gülcan Elmas-Brandes"
+          width="203"
+          height="260"
+        />
+        <figcaption>
+          <strong>Frau Gülcan Elmas-Brandes</strong>
+          <span>Karriere · Gesundheit · Qualität</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="coach-profile-section">
+      <div class="section-heading coach-section-heading">
+        <div>
+          <p class="eyebrow">Themenschwerpunkte</p>
+          <h2>Erfahrung in klare nächste Schritte übersetzen</h2>
+        </div>
+        <p>
+          Die Begleitung richtet sich an Menschen und Organisationen, die
+          berufliche, gesundheitliche oder organisatorische Themen fundiert
+          einordnen und praktisch weiterentwickeln möchten.
+        </p>
+      </div>
+
+      <div class="coach-topic-grid">
+        {topics.map((topic) => (
+          <article>
+            <h3>{topic.title}</h3>
+            <p>{topic.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="coach-credentials">
+      <div>
+        <p class="eyebrow">Profil</p>
+        <h2>Coaching, Training und Management verbunden</h2>
+        <p>
+          Die fachliche Grundlage verbindet Coaching- und Beratungsmethoden mit
+          betriebswirtschaftlicher Praxis, Training, internationalem Projekt-
+          und Finanzmanagement sowie Qualitätsmanagement.
+        </p>
+      </div>
+      <ul>
+        <li>Diplom-Betriebswirtin (VWA)</li>
+        <li>Ganzheitliche Ernährungsberaterin (IHK)</li>
+        <li>NLP-Practitioner nach DVNLP und INLPTA</li>
+        <li>Systemisches Denken und Beraten</li>
+        <li>Zertifizierte MIKA-Trainerin</li>
+        <li>Kursleiterin Nordic Walking</li>
+        <li>Qualitätsmanagerin, Qualitätsbeauftragte und interne Auditorin</li>
+        <li>Internationales und agiles Projektmanagement</li>
+        <li>Financial Controlling und Prozessoptimierung</li>
+        <li>Deutsch, Englisch und Türkisch</li>
+      </ul>
+    </section>
+
+    <section class="coach-format-band" aria-labelledby="elmas-formats-title">
+      <div>
+        <p class="eyebrow">Mögliche Formate</p>
+        <h2 id="elmas-formats-title">Individuelle Begleitung und Training</h2>
+      </div>
+      <p>
+        Denkbar sind Einzelcoachings zur beruflichen Orientierung, Impulse zu
+        Ernährung und Gesundheit sowie Trainings zu Kommunikation, digitalen
+        Kompetenzen, Projektarbeit, Qualität oder Zusammenarbeit. Hinzu kommen
+        Erfahrungen aus Konfliktlösung, Beziehungsmanagement und
+        interkultureller Zusammenarbeit. Zielgruppe und Rahmen werden vorab
+        gemeinsam geklärt.
+      </p>
+    </section>
+
+    <section class="showcase-strip coach-profile-cta">
+      <div>
+        <p class="eyebrow">Persönlich verbunden</p>
+        <h2>Passt diese Erfahrung zu Ihrem Anliegen?</h2>
+      </div>
+      <div>
+        <p>
+          Frau Janay Rappelt unterstützt bei der Einordnung und stellt den
+          Kontakt zwischen Unternehmen, Privatperson und Coach her.
+        </p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
