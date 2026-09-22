@@ -6,6 +6,23 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-22 | generated-handoff-placeholder-gate | Erzeugte Releaseunterlagen auf Literal-Platzhalter pruefen
+
+- Triggering project situation: Das Releasearchiv war korrekt, aber die
+  generierte SFTP-Operatorcheckliste enthielt wegen maskierter PowerShell-
+  Variablen wortwoertliche Platzhalter statt Artifact, Hash, Commit und Ziel.
+- Observed friction: Ein erfolgreicher Generatorlauf und eine valide JSON-
+  Releaseplanung reichten nicht aus, um die fuer Menschen bestimmte
+  Ausfuehrungsunterlage als belastbar nachzuweisen.
+- Reusable improvement candidate: `prepare-release`, `write-tests` und
+  `create-deployment-plan` sollen erzeugte Operatorunterlagen auf konkrete
+  erwartete Werte sowie verbotene Template-Syntax oder bekannte
+  Variablennamen pruefen.
+- Project response: Der Generator nutzt ein formatbasiertes Template; der
+  fokussierte Regressionstest prueft Inhalt und Platzhalterfreiheit.
+- Reuse potential: high for generated runbooks, checklists and handoffs.
+- Status: project pattern implemented; canonical skill proposal captured only.
+
 ### 2026-09-22 | private-profile-onboarding | Private Coach-Unterlagen in einen freigabefaehigen oeffentlichen Entwurf ueberfuehren
 
 - Triggering project situation: Neue Coach-Unterlagen mischten Lebenslauf,

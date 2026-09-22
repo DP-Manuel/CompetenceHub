@@ -2,6 +2,22 @@
 
 Newest entries first.
 
+## 2026-09-22 | release/tooling | SFTP-Operatorcheckliste gegen Literal-Platzhalter gehaertet
+
+- Die lokale Releaseprobe zeigte vor dem Upload, dass Markdown-Backticks in
+  einer expandierenden PowerShell-Zeichenkette die Variableninterpolation
+  maskierten. Dadurch standen Variablennamen statt Artifact, Hash, Commit und
+  Zielwerten in der Operatorcheckliste; das Website-Archiv selbst war korrekt.
+- Der Generator verwendet nun ein formatbasiertes, nicht expandierendes
+  Template. Der Regressionstest verlangt die konkreten Release- und Zielwerte
+  und verbietet verbliebene PowerShell-Platzhalter; 7/7 fokussierte Tests sind
+  gruen.
+- Die Korrektur erfolgt vor einem neuen Clean-Build. Es wurde in diesem Block
+  noch kein SFTP-Upload und keine Produktionaenderung ausgefuehrt.
+- Skill-Learning-Check: Release-Handoffs muessen erzeugte Operatorartefakte auf
+  aufgeloeste Werte und verbotene Template-Platzhalter pruefen; der Befund ist
+  im Skill-Feedback erfasst.
+
 ## 2026-09-22 | website/content/release | EDV-P0 geschlossen und siebtes Coach-Profil vorbereitet
 
 - Thomas Ross bestaetigte, dass die 64-Byte-`index.php` nur einem kurzen Test

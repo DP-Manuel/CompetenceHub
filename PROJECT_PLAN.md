@@ -19,7 +19,7 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   data. The explicit nullable Coach-profile mapping, endpoint-specific session
   role boundary, revisions, idempotency, concurrency, public projection and
   payload-free audit are verified. It builds
-  on the pushed clean Website/content/calendar checkpoint `a8d034c` and
+  on the pushed clean Website/content/calendar checkpoint `4c3cb2f` and
   contains the verified public website, accepted same-origin pilot portal and
   completed encrypted external backup/restore rehearsal. The current full local
   suite passes 384 tests with 17 expected opt-in Staging skips, all 17/17
@@ -33,18 +33,21 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   and documented so an authorized technician can operate it without Manuel.
   The stable Messe-Demostand is required on 2026-10-17. A controlled public
   live test is targeted for Thursday, 2026-09-24, if the visual and technical
-  release gates pass; corrections may still follow during the week. The upload
-  requires separate Go/No-Go and change approval. Donner + Partner is the
+  release gates pass; corrections may still follow during the week. Thomas
+  closed the EDV prerequisite and Manuel authorized the controlled upload.
+  Donner + Partner is the
   confirmed operator, Lars Donner the responsible person, and the central D+P
   Impressum, AGB and Datenschutz pages are the binding legal targets.
-- Current critical path: commit/push the approved Gülcan Elmas-Brandes profile,
-  build the exact clean artifact, capture a pre-upload inventory/backup and
-  execute the authorized controlled live test. Manuel approved the portrait,
+- Current critical path: build the final clean artifact after the release-
+  checklist regression fix, capture a pre-upload inventory/backup and execute
+  the authorized controlled live test. Manuel approved the portrait,
   supported professional profile data and publication on 22.09. EDV removed
   the temporary `index.php` diagnostic
   file and accepted `.htaccess` redirects; the public four-URL preflight now
   exposes no `phpinfo()`. Route analysis, local corrections, browser
   acceptance, read-only Webroot inventory and holiday handover are complete.
+  The SFTP operator-checklist generator now has a focused regression check for
+  resolved artifact, hash, commit, host and Webroot values.
   App-DNS,
   SMTP, sender approval, backend
   activation, real accounts/roles/data and productive calendar offers remain
@@ -186,11 +189,11 @@ for Git, release, backup and restore responsibilities.
 2. **Content decision and visual Go/No-Go:** completed 22.09.; Guelcan profile,
    portrait, professional data and publication are approved. Contact-mail
    delivery remains an immediate production smoke.
-3. **Clean source and artifact:** the release without the new profile is ready
-   from `a8d034c`; ZIP and manifest
-   match SHA-256 `15a1ae6b...96300` and remain non-deployautorized.
-4. **Controlled live test on 24.09.:** only after separate upload approval,
-   back up the Webroot and deploy the exact clean static artifact.
+3. **Clean source and artifact:** profile/content commit `4c3cb2f` is pushed;
+   the release-checklist regression is fixed and its final clean artifact is
+   the active build task.
+4. **Controlled live test:** Manuel authorized the upload; inventory the empty
+   Webroot, preserve rollback evidence and deploy the exact clean artifact.
 5. **Production smoke on 24.09.:** verify HTTPS, redirects, core routes,
    mobile layout, legal links, contact path and absence of `phpinfo()`.
 6. **Holiday handover and feature freeze by 25.09.:** record exact production
@@ -634,9 +637,9 @@ independent ready slice instead of silently waiting.
 
 Current sprint goal: freeze and release the public Website for the controlled
 24.09. live test without widening the real-data or backend-production boundary.
-Webroot and EDV P0 are closed; the existing clean `a8d034c` artifact is ready.
-SB-49 is the only active content slice and requires a named approval or deferral
-before the exact release candidate is selected. Native Staging UI, seat
+Webroot, EDV P0 and SB-49 approval are closed; commit `4c3cb2f` is pushed.
+The release-tooling fix and subsequent exact clean release are the only active
+slice. Native Staging UI, seat
 reservations and calendar delivery remain separately gated. EXT-01 and the
 remaining Content owner decisions continue in parallel.
 
@@ -690,7 +693,8 @@ remaining Content owner decisions continue in parallel.
 | SB-46 | Done locally and on isolated Staging | Implement and prove the bounded CAL-1 domain and PostgreSQL repository | CAL-1 Domain/Repository approval; migration `0005`; no API/UI/reservation/mail/real data | normalized three-month drafts, own-Coach/Admin/reviewer scopes, idempotent create, immutable submitted revisions, optimistic locking, Coach-row serialization, half-open overlap checks, payload-free atomic audit and revision-safe publication implemented; UUID binding, authoritative DB-clock fixture and Calendar-only runner are regression-protected; 339 local passes, 15/15 native Staging paths, zero rows in 19 dynamic areas and four active services |
 | SB-47 | Done locally and on isolated Staging | Add and prove explicit Coach-profile mapping plus protected/public CAL-1 APIs | proven SB-46 repository; separate migration approval; no UI/reservation/mail/roles/real data | migration `0006` plus rollback smoke, nullable canonical `/coaches/<slug>/` mapping without slug inference, unique partial index, endpoint-specific MFA session boundary, RBAC/Origin/CSRF/ETag protected API, published-only minimized public API and signed cursor; focused 3/3 and full 17/17 native Staging passes, 375 local passes/17 skips, zero residue, protected 0600 pre/post dumps, localhost-only PostgreSQL and four active services |
 | SB-48 | Done locally and browser-accepted | Implement the synthetic CAL-1 Coach-/Reviewer-Portaloberflaeche | SB-47; same-origin portal; synthetic identities only; no deployment | server-derived capabilities/topics, own-Coach Draft/Edit/Submit/Withdraw/Revision, separate reviewer queue/decisions, ETag recovery, role-gated DOM cleanup, loading/error/empty states and responsive/accessibility CSS; all 26 checklist points plus 57/57 Edge checks pass; Admin fixture-state/status and topic-selection findings fixed; 384 local passes/17 skips; fixture stopped and temporary context removed |
-| SB-49 | Approved / local green | Add a privacy-minimized public profile for Guelcan Elmas-Brandes | explicitly authorized source folder; Manuel approved portrait, supported professional data and publication on 22.09. | overview entry and profile route use the metadata-minimized portrait; expanded evidence-backed qualifications; 45-file Astro check, 32-page build, 1,274-reference link gate and 762 Edge checks pass; commit/release pending |
+| SB-49 | Done and pushed | Add a privacy-minimized public profile for Guelcan Elmas-Brandes | explicitly authorized source folder; Manuel approved portrait, supported professional data and publication on 22.09. | overview entry and profile route use the metadata-minimized portrait; expanded evidence-backed qualifications; 45-file Astro check, 32-page build, 1,274-reference link gate and 762 Edge checks pass; commit `4c3cb2f` pushed |
+| SB-50 | In progress | Harden the SFTP release handoff and produce the exact deployable artifact | SB-49 pushed; Manuel authorized release; no credentials in files or logs | generated checklist must contain resolved artifact/hash/commit/target values; 7/7 focused regression tests pass; clean artifact, upload and public smoke remain |
 
 The technical-readiness baseline remains complete: 384 Webapp tests pass with
 17 expected Staging skips, the release ZIP includes the restore tool and no
@@ -701,10 +705,10 @@ SB-25 and its EDV diagnostic P0 are closed; pre-upload backup remains gated.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: commit/push the approved Gülcan Elmas-Brandes profile,
-build the exact clean release artifact and carry out the authorized controlled
-SFTP release with pre-upload backup and immediate smoke/rollback decision. The
-previous `a8d034c` artifact remains a fallback until the new artifact passes.
+Recommended next block: commit/push the release-tooling correction, build the
+exact clean release artifact and carry out the authorized controlled SFTP
+release with pre-upload backup and immediate smoke/rollback decision. The
+previous `4c3cb2f` artifact remains a fallback until the final artifact passes.
 No CAL-1 expansion, account, role, mail automation or real-data operation
 belongs to this block.
 
@@ -794,13 +798,13 @@ progress in parallel but do not silently expand the execution backlog.
 - SEO/GEO content inventory and evidence matrix remain a connected but separate
   public-website workstream.
 
-Parallel organizational work: obtain Thomas Ross's Website production
-Go/No-Go and separate remote-change approval for the targeted Thursday,
-24.09., live test. Operator, responsible person and central Impressum, AGB and
-Datenschutz targets are decided. App-DNS, SMTP, sender/routing, mailbox cover, onboarding,
+Parallel organizational work: Thomas Ross removed the test file and approved
+the redirect implementation; Manuel authorized the controlled public release.
+Operator, responsible person and central Impressum, AGB and Datenschutz
+targets are decided. App-DNS, SMTP, sender/routing, mailbox cover, onboarding,
 backend activation and production timers remain separate and may be completed
-by authorized owners during Manuel's absence. Deployment and real-data use
-remain separately gated actions.
+by authorized owners during Manuel's absence. Portal/backend deployment and
+real-data use remain separately gated actions.
 
 ## Restart Note
 

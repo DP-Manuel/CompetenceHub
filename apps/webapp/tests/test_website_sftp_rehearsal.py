@@ -149,6 +149,17 @@ def test_sftp_rehearsal_prepares_verified_local_package(tmp_path: Path) -> None:
     assert plan["remote_web_root"] == "/approved-webroot"
     assert plan["remote_web_root_verified"] is True
 
+    checklist = (package / "OPERATOR-CHECKLIST.md").read_text(encoding="utf-8-sig")
+    assert f"`{plan['artifact']}`" in checklist
+    assert f"`{plan['artifact_sha256']}`" in checklist
+    assert f"`{plan['commit']}`" in checklist
+    assert "`https://competencehub.donner-partner.de`" in checklist
+    assert "`sftp.example.invalid:22` and `/approved-webroot`" in checklist
+    assert "$artifactName" not in checklist
+    assert "$actualHash" not in checklist
+    assert "$(" not in checklist
+    assert "$expectedCanonicalUrl" not in checklist
+
 
 @pytest.mark.skipif(os.name != "nt", reason="PowerShell 5.1 behavior is tested on Windows")
 def test_sftp_rehearsal_rejects_dirty_artifact(tmp_path: Path) -> None:

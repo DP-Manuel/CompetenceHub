@@ -15,14 +15,16 @@ Last updated: 2026-09-22
   explicitly allowed the HTTP/HTTPS and alias redirects to be implemented in
   `.htaccess`. A public four-URL preflight now returns only the expected empty
   Webspace response (`403`) and no `phpinfo()` output. The clean Website
-  artifact from `a8d034c` is verified and already contains the redirect rules.
+  artifact from `4c3cb2f` is verified and already contains the redirect rules
+  plus the approved Guelcan Elmas-Brandes profile and portrait.
   Manuel approved the new Guelcan Elmas-Brandes profile, portrait, supported
   professional data and publication on 2026-09-22. The updated local Website
   passes 762 Edge checks, a 32-page build and 1,274 internal references.
-  No production upload has occurred. Manuel confirmed that a controlled public
-  live test should take place by Thursday, 2026-09-24, if the visual result and
-  release gates pass; later corrections may follow during the week. Thomas's
-  Go/No-Go and the separate remote-change approval still gate the upload.
+  No production upload has occurred. Manuel authorized the controlled public
+  release on 2026-09-22. A release-tooling regression that left literal
+  PowerShell placeholders in the operator checklist is fixed and covered by
+  7/7 focused tests. The remaining deployment gate is the verified upload plus
+  public smoke and rollback evidence.
   Thomas Ross confirmed that both public subdomains map to
   `/kunden/homepages/16/d101506010/htdocs/competencehub` and that the SFTP user
   has access; the read-only content inventory is closed. Redirect behavior can
@@ -261,10 +263,10 @@ Last updated: 2026-09-22
   legal-provider decision, approval of Janay's remaining workflow gates,
   direct-contact delivery inputs and stakeholder acceptance of SB-24. The
   encrypted Wuerzburg off-server rehearsal itself is complete.
-- Blocked for live launch: exact content decision, contact-mail routing smoke,
-  Thomas's Go/No-Go, separate remote-change approval, pre-upload backup and an
-  explicitly scheduled production deployment. Webroot, public `phpinfo()`
-  removal and redirect implementation path are closed.
+- Remaining for live launch: final clean artifact, contact-mail routing smoke,
+  pre-upload inventory/rollback evidence, production upload and public smoke.
+  Content, Webroot, public `phpinfo()` removal, redirect implementation and
+  remote-change authorization are closed.
 - Public contact decision: `competencehub@donner-partner.de`.
 - Direct-contact status: the desired same-origin form delivery is specified in
   `docs/requirements/public-contact-request-delivery.md` but remains gated by

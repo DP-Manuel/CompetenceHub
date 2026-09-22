@@ -307,7 +307,7 @@ $plan = [ordered]@{
 }
 $plan | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $packageRoot "release-plan.json") -Encoding utf8
 
-$checklist = @"
+$checklist = @'
 # Website SFTP Rehearsal Checklist
 
 This package is local preparation only. It does not authorize or perform an
@@ -315,12 +315,12 @@ SFTP connection, upload, deletion, rename, DNS change, or deployment.
 
 ## Verified locally
 
-- [x] Artifact filename: `$artifactName`
-- [x] Artifact SHA-256: `$actualHash`
-- [x] Source commit: `$($manifest.commit)`
-- [x] Canonical URL: `$expectedCanonicalUrl`
+- [x] Artifact filename: `{0}`
+- [x] Artifact SHA-256: `{1}`
+- [x] Source commit: `{2}`
+- [x] Canonical URL: `{3}`
 - [x] Expected entrypoint: `index.html`
-- [x] Remote target pinned to `$($target.sftp_host):$($target.sftp_port)` and `$($target.remote_web_root)`
+- [x] Remote target pinned to `{4}:{5}` and `{6}`
 
 ## Required before any remote change
 
@@ -350,7 +350,15 @@ SFTP connection, upload, deletion, rename, DNS change, or deployment.
 - [ ] The pre-release Webspace copy can be restored without guessing paths.
 - [ ] Core routes and both hostnames are rechecked after restoration.
 - [ ] Cause, restored artifact and timestamps are recorded.
-"@
+'@ -f @(
+    $artifactName,
+    $actualHash,
+    [string]$manifest.commit,
+    $expectedCanonicalUrl,
+    [string]$target.sftp_host,
+    [int]$target.sftp_port,
+    [string]$target.remote_web_root
+)
 $checklist | Set-Content -LiteralPath (Join-Path $packageRoot "OPERATOR-CHECKLIST.md") -Encoding utf8
 
 Write-Output "Rehearsal package: $packageRoot"
