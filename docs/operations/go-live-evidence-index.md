@@ -1,6 +1,6 @@
 # Go-Live Evidence Index
 
-Stand: 2026-09-21
+Stand: 2026-09-22
 
 Dieser Index enthaelt nur freigabefaehige Metadaten und Verweise. Secrets,
 Private Keys, Recovery Keys und produktive personenbezogene Daten gehoeren
@@ -41,6 +41,7 @@ nicht hierher.
 | WEBSITE-PUBLIC-PREFLIGHT-20260922 | 2026-09-22 | Thomas Ross / Codex | public IONOS domains | Entfernung der Testdatei und Vier-URL-Gegencheck | PASS REMEDIATED / RELEASE EMPTY | `docs/architecture/website-sftp-read-only-inventory-2026-09-02.md`; EDV-Rueckmeldung | keine | Thomas entfernte die temporaere `index.php`; HTTP und HTTPS liefern auf beiden Domains `403` ohne `phpinfo()`; `.htaccess`-Redirects sind freigegeben und werden nach Upload geprueft |
 | WEBSITE-SFTP-INVENTORY-20260921 | 2026-09-21 | Manuel | IONOS Webspace read-only | Host-Key, Authentifizierung, Chroot und versteckte Eintraege | PASS READ-ONLY / NO WRITE | `docs/architecture/website-sftp-read-only-inventory-2026-09-02.md`; Operatorausgabe | keine | `/` entspricht bestaetigtem Webroot; nur `index.php` mit 64 Byte; Rollbackkopie und Remote-Change bleiben offen |
 | COACH-GUELCAN-LOCAL-20260922 | 2026-09-22 | Manuel / Codex | local Website | datensparsame Coach-Seite, Portraet, Responsive- und Routenregression | PASS LOCAL / CONTENT AND RIGHTS APPROVED | `docs/content/coach-profile-guelcan-elmas-brandes-review-2026-09-22.md` | freigegebenes Portraet und belegte berufliche Profildaten; private Kontaktdaten ausgeschlossen | 32 Seiten; 1.274 interne Referenzen; 762 Edge-Checks inklusive Desktop, Tablet, 390 px und 200-Prozent-Aequivalent; Manuel gab Inhalt, Bild und Release frei |
+| WEBSITE-PRODUCTION-20260922 | 2026-09-22 | Manuel / Codex | IONOS production | exaktes Clean-Artefakt, SFTP-Aktivierung, HTTP-/Redirect-/Route-/Asset-/Security- und Edge-Smoke | PASS PRODUCTION | `PROJECT_LOG.md`; `docs/architecture/production-release-plan-2026-09-25.md`; Releasemanifest | nur freigegebene oeffentliche Inhalte | Source `e6081580b0d7`; 55 Eintraege; SHA-256 `cc7b75c8...43da32e`; leerer Vorzustand; korrigierter IONOS-Verzeichnisupload; 762/762 Edge; Kontakt-Mailzustellung separat offen |
 | LEGAL-20260921 | 2026-09-21 | Manuel / Lars Donner | decision record | Betreiber, Verantwortlicher und zentrale Rechtspfade | PASS DECISION | `PROJECT_PLAN.md`; `PROJECT_STATUS.md`; Website-Rechtspfade | keine | Donner + Partner; Lars Donner; zentrale D+P-Seiten fuer Impressum, AGB und Datenschutz; bei neuer Datenerhebung erneut pruefen |
 | EXT-01 | offen | EDV | production infrastructure | DNS/TLS/SMTP-Vertrag | WAITING | strukturierter EDV-Input | keine | keine Live-Mail/Produktivaktivierung |
 | EXT-03 | offen | Manuel / Janay / Thomas | controlled pilot | Named-user-Abnahme und Go/No-Go | WAITING DATES PROPOSED | Onboarding-Protokoll | freigegebener Pilotmodus | 17.09. bevorzugt, 24.09. Fallback; Bestaetigung offen |

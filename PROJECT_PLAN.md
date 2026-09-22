@@ -13,13 +13,13 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   Website Messe-Readiness sprint through Manuel's operative cutline on
   2026-09-25. The public frontend for the 2026-10-17 trade-fair presentation
   has priority over any further CAL-1 feature work.
-- Current status: yellow for production and green for the completed technical-
-  readiness scope. Migrations `0005` and `0006`, the CAL-1 domain/repository
+- Current status: green for the public static Website and yellow for the
+  separate Portal/backend production path. Migrations `0005` and `0006`, the CAL-1 domain/repository
   and the protected/public API are proven on isolated Staging with synthetic
   data. The explicit nullable Coach-profile mapping, endpoint-specific session
   role boundary, revisions, idempotency, concurrency, public projection and
   payload-free audit are verified. It builds
-  on the pushed clean Website/content/calendar checkpoint `4c3cb2f` and
+  on the deployed clean Website checkpoint `e6081580b0d7` and
   contains the verified public website, accepted same-origin pilot portal and
   completed encrypted external backup/restore rehearsal. The current full local
   suite passes 384 tests with 17 expected opt-in Staging skips, all 17/17
@@ -27,27 +27,28 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   26 CAL-1 browser-checklist points pass with 57/57 repeatable Edge checks. The
   local runner is stopped and its ephemeral context removed.
   No persistent Competence-Hub backend/worker service, real account, real data
-  or production deployment exists yet.
+  or Portal/backend production deployment exists yet.
 - Primary deadline: Manuel is unavailable from 2026-09-26. By 2026-09-25 the
   Website must be locally messe-ready, reproducibly packaged, rollback-ready
   and documented so an authorized technician can operate it without Manuel.
   The stable Messe-Demostand is required on 2026-10-17. A controlled public
-  live test is targeted for Thursday, 2026-09-24, if the visual and technical
-  release gates pass; corrections may still follow during the week. Thomas
-  closed the EDV prerequisite and Manuel authorized the controlled upload.
+  live test completed early on 2026-09-22; corrections may still follow during
+  the week. Thomas closed the EDV prerequisite and Manuel operated the
+  controlled upload.
   Donner + Partner is the
   confirmed operator, Lars Donner the responsible person, and the central D+P
   Impressum, AGB and Datenschutz pages are the binding legal targets.
-- Current critical path: build the final clean artifact after the release-
-  checklist regression fix, capture a pre-upload inventory/backup and execute
-  the authorized controlled live test. Manuel approved the portrait,
+- Current critical path: freeze and hand over the now-live Website, test actual
+  mailbox delivery to Janay and preserve exact source/artifact/rollback
+  evidence. Manuel approved the portrait,
   supported professional profile data and publication on 22.09. EDV removed
   the temporary `index.php` diagnostic
   file and accepted `.htaccess` redirects; the public four-URL preflight now
   exposes no `phpinfo()`. Route analysis, local corrections, browser
   acceptance, read-only Webroot inventory and holiday handover are complete.
-  The SFTP operator-checklist generator now has a focused regression check for
-  resolved artifact, hash, commit, host and Webroot values.
+  The production gate passes 762/762 Edge checks. The SFTP tooling now protects
+  resolved checklist values plus IONOS directory creation, permissions and
+  entrypoint-last activation.
   App-DNS,
   SMTP, sender approval, backend
   activation, real accounts/roles/data and productive calendar offers remain
@@ -189,13 +190,12 @@ for Git, release, backup and restore responsibilities.
 2. **Content decision and visual Go/No-Go:** completed 22.09.; Guelcan profile,
    portrait, professional data and publication are approved. Contact-mail
    delivery remains an immediate production smoke.
-3. **Clean source and artifact:** profile/content commit `4c3cb2f` is pushed;
-   the release-checklist regression is fixed and its final clean artifact is
-   the active build task.
-4. **Controlled live test:** Manuel authorized the upload; inventory the empty
-   Webroot, preserve rollback evidence and deploy the exact clean artifact.
-5. **Production smoke on 24.09.:** verify HTTPS, redirects, core routes,
-   mobile layout, legal links, contact path and absence of `phpinfo()`.
+3. **Clean source and artifact:** completed; source `e6081580b0d7`, 55 entries,
+   SHA-256 `cc7b75c8...43da32e`.
+4. **Controlled live test:** completed 22.09.; empty pre-state inventoried,
+   exact artifact deployed and provider-specific directory issue corrected.
+5. **Production smoke:** completed; redirects/core routes/assets/security and
+   762/762 Edge checks pass. Actual mailbox delivery remains open.
 6. **Holiday handover and feature freeze by 25.09.:** record exact production
    source/artifact, rollback evidence, owners and stop rules.
 7. **During absence:** allow only approved content fixes or incident recovery
@@ -534,36 +534,29 @@ phase model.
   is 2026-09-24, followed by handover on 2026-09-25 and the Messe on
   2026-10-17. Portal onboarding remains a separate later gate.
 - Budget or effort assumption: unknown
-- Confidence: medium-high for a 2026-09-24 static Website live test because
-  local build/browser/handover, Webroot/EDV P0 and legal target decision are
-  green. It remains conditional on the exact content decision, contact-mail
-  smoke, Thomas-Go/No-Go, separate upload approval and pre-upload backup.
+- Confidence: high for the static Website because its production release and
+  browser acceptance completed on 22.09. Actual mailbox delivery remains an
+  operational follow-up.
   Portal production confidence remains lower because its operational gates are
   separate.
-- Risks to time or budget: delayed content/release approval, unproven contact
-  mailbox routing and first-production redirect behavior are on the Website
-  critical path. App-DNS, SMTP, runtime/worker packaging and account gates
+- Risks to time or budget: unproven contact mailbox routing is the remaining
+  Website operational gap. App-DNS, SMTP, runtime/worker packaging and account gates
   remain on the later Portal path.
 
 ## Risks And Blockers
 
-- **Schedule / activation:** technical readiness is green and the controlled
-  Website live test is targeted for 24.09. The target remains conditional on
-  exact release content, contact-mail smoke, clean artifact, Thomas-Go/No-Go,
-  separate upload approval and pre-upload backup. Webroot, `phpinfo()` removal
-  and the `.htaccess` redirect path are closed.
+- **Schedule / activation:** the controlled Website live test completed on
+  22.09. Exact release content, artifact, upload, redirects and production
+  browser smoke are closed; contact-mail delivery remains open.
   Runtime, DNS, SMTP, production backup scheduling/alerting, account handoff
   and production approval remain open. Owner: Manuel, with Thomas Ross for
   production approval. Mitigation: keep WIP small and close gates in order.
 - **Real-data recovery:** the encrypted external-copy restore rehearsal passed.
   Before real data, enable an approved production schedule and alert route and
   retain the exact-copy restore discipline. Owner: Manuel.
-- **Website release approval:** the legal target decision is complete. The
-  verified Webroot, removal of the public `phpinfo()` placeholder and redirect
-  implementation decision are complete. Exact content, contact-mail smoke,
-  Thomas Ross's Go/No-Go and separate remote-change approval remain open.
-  Owners: Janay/Coach, Thomas Ross and Manuel. Mitigation: close the stop
-  criteria before the targeted 24.09. live test or issue a documented No-Go.
+- **Website release approval:** complete for the static site. Legal targets,
+  Webroot, content/rights, upload authorization, redirects and production
+  acceptance are evidenced. Actual mailbox delivery remains with Manuel/Janay.
 - **Single-operator risk:** Manuel currently owns VPS operations. Thomas Ross
   is confirmed as technical break-glass successor, but his separate identity,
   MFA and controlled handoff still require implementation and testing.
@@ -635,11 +628,10 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: freeze and release the public Website for the controlled
-24.09. live test without widening the real-data or backend-production boundary.
-Webroot, EDV P0 and SB-49 approval are closed; commit `4c3cb2f` is pushed.
-The release-tooling fix and subsequent exact clean release are the only active
-slice. Native Staging UI, seat
+Current sprint goal: freeze and hand over the public Website after the
+successful 22.09. production release without widening the real-data or
+backend-production boundary. The mailbox delivery smoke and release handover
+are the only active Website items. Native Staging UI, seat
 reservations and calendar delivery remain separately gated. EXT-01 and the
 remaining Content owner decisions continue in parallel.
 
@@ -694,21 +686,20 @@ remaining Content owner decisions continue in parallel.
 | SB-47 | Done locally and on isolated Staging | Add and prove explicit Coach-profile mapping plus protected/public CAL-1 APIs | proven SB-46 repository; separate migration approval; no UI/reservation/mail/roles/real data | migration `0006` plus rollback smoke, nullable canonical `/coaches/<slug>/` mapping without slug inference, unique partial index, endpoint-specific MFA session boundary, RBAC/Origin/CSRF/ETag protected API, published-only minimized public API and signed cursor; focused 3/3 and full 17/17 native Staging passes, 375 local passes/17 skips, zero residue, protected 0600 pre/post dumps, localhost-only PostgreSQL and four active services |
 | SB-48 | Done locally and browser-accepted | Implement the synthetic CAL-1 Coach-/Reviewer-Portaloberflaeche | SB-47; same-origin portal; synthetic identities only; no deployment | server-derived capabilities/topics, own-Coach Draft/Edit/Submit/Withdraw/Revision, separate reviewer queue/decisions, ETag recovery, role-gated DOM cleanup, loading/error/empty states and responsive/accessibility CSS; all 26 checklist points plus 57/57 Edge checks pass; Admin fixture-state/status and topic-selection findings fixed; 384 local passes/17 skips; fixture stopped and temporary context removed |
 | SB-49 | Done and pushed | Add a privacy-minimized public profile for Guelcan Elmas-Brandes | explicitly authorized source folder; Manuel approved portrait, supported professional data and publication on 22.09. | overview entry and profile route use the metadata-minimized portrait; expanded evidence-backed qualifications; 45-file Astro check, 32-page build, 1,274-reference link gate and 762 Edge checks pass; commit `4c3cb2f` pushed |
-| SB-50 | In progress | Harden the SFTP release handoff and produce the exact deployable artifact | SB-49 pushed; Manuel authorized release; no credentials in files or logs | generated checklist must contain resolved artifact/hash/commit/target values; 7/7 focused regression tests pass; clean artifact, upload and public smoke remain |
+| SB-50 | Done in production | Harden the SFTP release handoff and deploy the exact static artifact | SB-49 pushed; Manuel authorized/operated release; no credentials in files or logs | source `e6081580b0d7`, SHA-256 `cc7b75c8...43da32e`, 55 entries; IONOS directory/permission recovery; HTTP/security smoke and 762/762 production Edge checks pass; reusable first-deploy/update command lists added |
 
 The technical-readiness baseline remains complete: 384 Webapp tests pass with
 17 expected Staging skips, the release ZIP includes the restore tool and no
 `.env`/`.tmp`. The existing clean Website candidate passes 722 Edge checks,
 31 pages and 1,233 internal references; the approved SB-49 update passes a
 45-file Astro check, 32-page build, 1,274-reference verification and 762 Edge checks.
-SB-25 and its EDV diagnostic P0 are closed; pre-upload backup remains gated.
+SB-25, its EDV diagnostic P0 and the static production release are closed.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: commit/push the release-tooling correction, build the
-exact clean release artifact and carry out the authorized controlled SFTP
-release with pre-upload backup and immediate smoke/rollback decision. The
-previous `4c3cb2f` artifact remains a fallback until the final artifact passes.
+Recommended next block: complete the short Website handover and verify that a
+real test message to `competencehub@donner-partner.de` reaches Janay. Preserve
+the exact production source/artifact, smoke evidence and rollback stop rules.
 No CAL-1 expansion, account, role, mail automation or real-data operation
 belongs to this block.
 
@@ -721,10 +712,10 @@ progress in parallel but do not silently expand the execution backlog.
 | --- | --- | --- | --- | --- | --- |
 | 1 | Done | High | Close public-domain P0 preflight | read-only inventory and EDV action | Thomas removed `index.php`; four URLs return `403` without `phpinfo()`; `.htaccess` redirects accepted |
 | 2 | Done | High | Approve the new Coach profile | Manuel confirmed public name, copy, portrait rights and release timing on 22.09. | decision record plus desktop/390-px review; local build/link/762 Edge checks green |
-| 3 | Doing | High | Create exact clean source and release artifact | step 2 complete; commit/push and release authorized | clean commit, archive manifest/hash, no secrets/private source files |
-| 4 | Ready | High | Perform controlled IONOS live test | step 3; upload authorized; rollback owner available | pre-upload inventory/backup and exact-artifact upload |
-| 5 | Gated | High | Prove production behavior or roll back | step 4 | HTTPS/alias redirects, core routes, mobile, legal/contact and console smoke on 24.09. |
-| 6 | Ready | Medium-high | Freeze and hand over the Website | production outcome known | exact source/artifact, owner, smoke, rollback and stop criteria by 25.09. |
+| 3 | Done | High | Create exact clean source and release artifact | step 2 complete; commit/push and release authorized | source `e6081580b0d7`, 55-entry archive and matching SHA-256 |
+| 4 | Done | High | Perform controlled IONOS live test | step 3; upload authorized; empty pre-state | exact-artifact upload, IONOS recovery and entrypoint-last activation |
+| 5 | Done | High | Prove production behavior or roll back | step 4 | HTTPS/alias redirects, core routes/assets/security and 762/762 Edge checks |
+| 6 | Doing | High | Freeze and hand over the Website | production outcome known | exact source/artifact, owner, smoke, rollback and stop criteria by 25.09.; mailbox delivery smoke |
 | 7 | Deferred | Medium | Limit absence-period work to approved fixes and incidents | step 6 handover; authorized operator | logged change, focused retest and no backend activation |
 | 8 | Deferred | Low | Resume native CAL-1 Staging UI acceptance after Messe readiness | Website stable; separate approval; synthetic only | workflow, role negatives, cleanup, zero residue and service health |
 
@@ -818,16 +809,15 @@ Prepared on: 2026-09-22
   57/57 checks; postflight found zero rows in 19 dynamic areas and four active
   services. The local browser fixture, browser contexts and temporary
   certificates are stopped/removed; the exact encrypted `D:` copy is retained.
-- No new persistent service, account, IONOS production deployment or real data
-  exists. SB-24 is available on the crawler-blocked GitHub-Pages review. The
+- No new persistent Portal service, account or real data exists. The static
+  IONOS Website is live from source `e6081580b0d7`; SB-24 also remains on the
+  crawler-blocked GitHub-Pages review. The
   IONOS ED25519 host key, corrected Webroot and authenticated read-only
   inventory are proven. Thomas removed the temporary `index.php` on 22.09. and
-  allowed redirects via `.htaccess`; the four-URL preflight now returns `403`
-  without `phpinfo()`. Do not upload without the remaining approvals.
-- A seventh Coach profile for Guelcan Elmas-Brandes is approved locally with a
-  metadata-minimized portrait and evidence-backed professional data. It passes
-  build, 1,274 links and 762 Edge checks but still requires the new clean
-  commit/artifact before upload.
+  allowed redirects via `.htaccess`. The controlled upload, redirect/route/
+  security smokes and 762/762 production Edge checks are complete.
+- The seventh Coach profile for Guelcan Elmas-Brandes is live with its approved
+  metadata-minimized portrait and evidence-backed professional data.
 
 Resume here:
 
@@ -842,8 +832,8 @@ Resume here:
 3. Check `git status --short`; `.tmp/` must remain untracked and untouched.
 4. Treat public Website Messe-Readiness as the only implementation WIP until
    the 25.09. feature freeze; preserve the accepted CAL-1 working tree.
-5. Build the new clean Website artifact, capture pre-upload inventory/backup,
-   upload it and verify redirects, routes, portrait and contact-mail path.
+5. Preserve production source/artifact/smoke evidence, test one real message to
+   Janay and complete the Website freeze/handover by 25.09.
 6. Keep separate approval for any later CAL-1, account, mail automation,
    real-data deployment or native CAL-1 Staging-UI run.
 7. PostgreSQL Staging contains migrations 0001-0006 but no business or

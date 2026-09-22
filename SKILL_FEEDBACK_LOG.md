@@ -6,6 +6,24 @@ Do not implement every idea immediately. First collect evidence, then decide whe
 
 ## Open Feedback
 
+### 2026-09-22 | provider-aware-sftp-activation | Verzeichnisse, Rechte und Einstieg vor Liveannahme pruefen
+
+- Triggering project situation: IONOS uebertrug bei `put -r *` nur Root-Dateien
+  und verweigerte fehlende Top-Level-Zielverzeichnisse. Nach explizitem Upload
+  lieferten restriktive neue Verzeichnisrechte zunaechst weiterhin `403`.
+- Observed friction: Mehrere manuelle Neuverbindungen waren noetig, obwohl das
+  lokale Paket vollstaendig und der Root-Einstieg bereits online war.
+- Reusable improvement candidate: `prepare-release` und
+  `create-deployment-plan` sollen fuer SFTP-Deployments Providerverhalten
+  explizit erfassen, Zielverzeichnisse vor `put -r` anlegen, Verzeichnis-/
+  Dateirechte setzen, `index.html` zuletzt aktivieren und die Verbindung erst
+  nach externem Route-/Asset-Smoke schliessen.
+- Project response: Erstaufbau- und Update-Befehlslisten sowie ein
+  host-key-pruefender, passwortfreier Verbindungshelfer wurden ergaenzt und mit
+  fokussierten Tests abgesichert.
+- Reuse potential: very high for constrained shared-hosting/SFTP releases.
+- Status: project pattern implemented; canonical skill proposal captured only.
+
 ### 2026-09-22 | generated-handoff-placeholder-gate | Erzeugte Releaseunterlagen auf Literal-Platzhalter pruefen
 
 - Triggering project situation: Das Releasearchiv war korrekt, aber die

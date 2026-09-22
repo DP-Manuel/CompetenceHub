@@ -18,6 +18,12 @@ SCRIPT = (
     / "scripts"
     / "prepare-competence-hub-website-sftp-rehearsal.ps1"
 )
+CONNECT_SCRIPT = (
+    REPO_ROOT
+    / "deploy"
+    / "scripts"
+    / "connect-competence-hub-website-sftp.ps1"
+)
 TARGET_EXAMPLE = REPO_ROOT / "deploy" / "website" / "sftp-target.example.json"
 RUNBOOK = REPO_ROOT / "docs" / "architecture" / "website-sftp-release-rehearsal-runbook.md"
 APACHE_CONFIG = REPO_ROOT / "apps" / "website" / "public" / ".htaccess"
@@ -159,6 +165,35 @@ def test_sftp_rehearsal_prepares_verified_local_package(tmp_path: Path) -> None:
     assert "$actualHash" not in checklist
     assert "$(" not in checklist
     assert "$expectedCanonicalUrl" not in checklist
+
+    first_deploy = (package / "SFTP-FIRST-DEPLOY-COMMANDS.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    update = (package / "SFTP-UPDATE-COMMANDS.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    assert str(package / "release").replace("\\", "/") in first_deploy
+    assert "mkdir assets" in first_deploy
+    assert "put -r assets" in first_deploy
+    assert "chmod 755 assets" in first_deploy
+    assert "chmod 644 assets/site.css" in first_deploy
+    assert "mkdir assets" not in update
+    assert "put -r assets" in update
+    assert first_deploy.index("put -r assets") < first_deploy.index("put index.html")
+    assert update.index("put -r assets") < update.index("put index.html")
+    assert "bye" not in first_deploy.lower()
+    assert "bye" not in update.lower()
+
+
+def test_sftp_connection_helper_pins_host_key_and_never_stores_password() -> None:
+    helper = CONNECT_SCRIPT.read_text(encoding="utf-8")
+
+    assert "SHA256:1gx2w8Rtv3wCgi7Jh8myf/KVd72cRQbow03UP8P095Q" in helper
+    assert "StrictHostKeyChecking=yes" in helper
+    assert "PreferredAuthentications=password" in helper
+    assert "COMPETENCE_HUB_SFTP_USER" in helper
+    assert "acc286854255" not in helper
+    assert "Password =" not in helper
 
 
 @pytest.mark.skipif(os.name != "nt", reason="PowerShell 5.1 behavior is tested on Windows")

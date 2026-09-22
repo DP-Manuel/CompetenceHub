@@ -4,8 +4,9 @@ Last updated: 2026-09-22
 
 ## Snapshot
 
-- Overall status: yellow for production and time-critical for the public
-  Website. Manuel's operative cutline is 2026-09-25, his absence starts
+- Overall status: green for the public static Website and yellow for the
+  separate Portal/backend production path. Manuel's operative cutline is
+  2026-09-25, his absence starts
   2026-09-26 and the public Messe-Demostand is due 2026-10-17. Public frontend
   Messe-Readiness now has priority over further CAL-1 expansion. The Website,
   synthetic portal slice and external restore rehearsal have strong existing
@@ -14,26 +15,31 @@ Last updated: 2026-09-22
   removed the temporary 64-byte `index.php` diagnostic file on 2026-09-22 and
   explicitly allowed the HTTP/HTTPS and alias redirects to be implemented in
   `.htaccess`. A public four-URL preflight now returns only the expected empty
-  Webspace response (`403`) and no `phpinfo()` output. The clean Website
-  artifact from `4c3cb2f` is verified and already contains the redirect rules
-  plus the approved Guelcan Elmas-Brandes profile and portrait.
+  Webspace response (`403`) and no `phpinfo()` output. The Website was deployed
+  from clean source `e6081580b0d7` on 2026-09-22. Its exact artifact contains
+  55 entries and has SHA-256
+  `cc7b75c85a684960d6cda8014682c6bdea18ad81cc7e4071abded712843da32e`.
   Manuel approved the new Guelcan Elmas-Brandes profile, portrait, supported
   professional data and publication on 2026-09-22. The updated local Website
   passes 762 Edge checks, a 32-page build and 1,274 internal references.
-  No production upload has occurred. Manuel authorized the controlled public
-  release on 2026-09-22. A release-tooling regression that left literal
+  Manuel authorized and operated the controlled public release on 2026-09-22.
+  A release-tooling regression that left literal
   PowerShell placeholders in the operator checklist is fixed and covered by
-  7/7 focused tests. The remaining deployment gate is the verified upload plus
-  public smoke and rollback evidence.
+  7/7 focused tests. The first SFTP wildcard attempt uploaded only Root files;
+  public checks detected `403` on all directories before acceptance. The
+  entrypoint was removed, all directories were explicitly created/uploaded,
+  directory traversal rights were corrected and `index.html` was activated
+  last. The corrected public gate passes HTTP/redirect/content/security checks
+  and 762/762 Edge checks across Desktop, Tablet, 390 px and 200-percent reflow.
   Thomas Ross confirmed that both public subdomains map to
   `/kunden/homepages/16/d101506010/htdocs/competencehub` and that the SFTP user
-  has access; the read-only content inventory is closed. Redirect behavior can
-  only be proven after the static artifact is uploaded.
+  has access; the read-only content inventory and redirect behavior are closed.
   Donner + Partner is the operator, Lars Donner the responsible person, and
   the existing central D+P Impressum, AGB and Datenschutz pages are the binding
   legal targets. App-DNS, SMTP, accounts, roles and backend activation remain
   separate
-  and do not block a local static Website handover package.
+  and do not block the released static Website. Actual mailbox delivery to
+  Janay remains an operational smoke outside the static artifact.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling eight-step horizon.
 - External-dependency steering: a dated lead-time radar now tracks EDV, legal,
@@ -263,10 +269,10 @@ Last updated: 2026-09-22
   legal-provider decision, approval of Janay's remaining workflow gates,
   direct-contact delivery inputs and stakeholder acceptance of SB-24. The
   encrypted Wuerzburg off-server rehearsal itself is complete.
-- Remaining for live launch: final clean artifact, contact-mail routing smoke,
-  pre-upload inventory/rollback evidence, production upload and public smoke.
-  Content, Webroot, public `phpinfo()` removal, redirect implementation and
-  remote-change authorization are closed.
+- Public Website live launch: complete. Exact artifact, empty pre-upload
+  inventory, production upload, redirect/core-route/security smoke and
+  762/762 production Edge checks are recorded. Actual mailbox delivery to
+  Janay remains an operational follow-up; it does not change the static site.
 - Public contact decision: `competencehub@donner-partner.de`.
 - Direct-contact status: the desired same-origin form delivery is specified in
   `docs/requirements/public-contact-request-delivery.md` but remains gated by
@@ -491,24 +497,21 @@ Last updated: 2026-09-22
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: create the new clean source checkpoint and exact
-  release artifact, then perform the authorized controlled SFTP release.
-  Inputs are the approved Coach content/portrait, green local acceptance,
-  closed EDV/Webroot P0 and legal decision; deliverables are commit/hash,
-  pre-upload inventory/backup, uploaded artifact and production smoke evidence.
-  Definition of Done: both domains serve the exact Website, redirects and core
-  routes pass, and rollback evidence is retained.
-- Rolling horizon: (1) commit/push the approved Guelcan profile; (2) build and
-  hash the clean release artifact; (3) capture pre-upload inventory/backup; (4)
-  perform the authorized controlled upload; (5)
-  HTTPS/redirect/core-route/mobile smoke and rollback evidence; (6) final
-  handover/freeze; (7) limited monitoring/content fixes during absence; (8)
-  native CAL-1 Staging UI after Messe readiness. Confidence decreases after
-  step 6.
+- Recommended next work block: finish the Website handover and perform one real
+  mailbox-delivery smoke with Janay. Inputs are the deployed source/artifact,
+  green production evidence and mailbox ownership; deliverables are the
+  delivery result, final freeze note and incident/contact owners. Definition
+  of Done: Janay confirms receipt or the routing gap is escalated explicitly.
+- Rolling horizon: (1) record production evidence and tooling fix; (2) test
+  mailbox delivery; (3) freeze and hand over by 25.09.; (4) monitor the public
+  site through the absence window; (5) allow only approved content fixes or
+  incident recovery; (6) confirm Messe readiness before 17.10.; (7) resume
+  native CAL-1 Staging UI; (8) plan later calendar reservations/delivery.
+  Confidence decreases after step 6.
 - Lead-time radar: EDV has confirmed the Webroot/SFTP mapping, removed the
   diagnostic file and accepted `.htaccess` redirects. The Website legal target
-  decision plus content/release approval are closed; controlled deployment and
-  contact-mail smoke are now critical.
+  decision, content/release approval and controlled deployment are closed;
+  contact-mail delivery smoke is now the Website follow-up.
   Janay's mailbox currently
   has no absence cover; Thomas Ross covers only technical emergencies.
 - SB-19 evidence: the existing isolated Outbox Staging test now continues

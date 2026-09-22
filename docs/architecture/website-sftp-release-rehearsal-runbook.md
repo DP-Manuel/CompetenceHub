@@ -1,6 +1,6 @@
 # Website SFTP Release Rehearsal
 
-Stand: 2026-08-21
+Stand: 2026-09-22
 
 ## Zweck
 
@@ -39,8 +39,9 @@ Veroeffentlichung aus. Ein Git-Push ist ebenfalls kein Produktions-Release.
    `true` setzen. Keine Zugangsdaten ergaenzen.
 3. Das lokale Rehearsal-Paket mit
    `deploy/scripts/prepare-competence-hub-website-sftp-rehearsal.ps1` erzeugen.
-4. `release-plan.json`, `release-files.sha256` und
-   `OPERATOR-CHECKLIST.md` gemeinsam pruefen.
+4. `release-plan.json`, `release-files.sha256`,
+   `OPERATOR-CHECKLIST.md`, `SFTP-FIRST-DEPLOY-COMMANDS.txt` und
+   `SFTP-UPDATE-COMMANDS.txt` gemeinsam pruefen.
 
 Ein erfolgreiches lokales Paket behaelt absichtlich folgende Werte:
 
@@ -105,6 +106,21 @@ Fuer die Freigabe muessen feststehen:
 - Uploadreihenfolge mit `index.html` zuletzt;
 - Liste bewusst entfernter Altdateien;
 - unmittelbarer HTTPS-Smoke und verfuegbarer Rollback-Owner.
+
+IONOS erstellt beim rekursiven OpenSSH-SFTP-Upload das oberste Zielverzeichnis
+nicht selbst. Ein Erstaufbau muss deshalb die Top-Level-Verzeichnisse vor dem
+jeweiligen `put -r` explizit anlegen. Neu angelegte Verzeichnisse werden mit
+`755`, Dateien mit `644` freigegeben; andernfalls kann Apache trotz vorhandenem
+Inhalt `403` liefern. Die erzeugte Erstaufbau-Befehlsliste bildet genau diese
+Reihenfolge ab. Spaetere Updates verwenden die getrennte Update-Liste ohne
+`mkdir`; beide aktivieren `index.html` zuletzt und enthalten bewusst kein
+`bye`, damit der Produktions-Smoke vor dem Verbindungsabbau erfolgen kann.
+
+Die interaktive Verbindung kann mit
+`deploy/scripts/connect-competence-hub-website-sftp.ps1` gestartet werden. Der
+Helfer prueft den gepinnten Host-Key und speichert kein Passwort. Benutzername
+kommt per Parameter oder `COMPETENCE_HUB_SFTP_USER`; das Passwort wird weiterhin
+ausschliesslich verdeckt im SFTP-Client eingegeben.
 
 ## Phase E: Smoke und Rollback
 

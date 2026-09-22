@@ -2,8 +2,9 @@
 
 Stand: 22.09.2026
 
-Status: Vorbereitung. Dieser Plan autorisiert weder Upload noch DNS-Aenderung,
-Serverinstallation, Kontoerstellung oder Echtdaten. Zugangsdaten und Secrets
+Status: Die statische Website wurde am 22.09.2026 kontrolliert veroeffentlicht
+und technisch abgenommen. Portal/API, DNS-Aenderung, Serverinstallation,
+Kontoerstellung und Echtdaten bleiben davon getrennt. Zugangsdaten und Secrets
 bleiben ausserhalb des Repositories.
 
 Der Dateiname bleibt als Verweis auf die operative Manuel-Cutline erhalten.
@@ -39,8 +40,8 @@ bereitstellen.
 
 | Bereich | Ziel | Status |
 | --- | --- | --- |
-| Website kanonisch | `https://competencehub.donner-partner.de` | DNS/Webspace/TLS laut EDV vorhanden |
-| Website Redirect | `https://competence-hub.donner-partner.de` auf kanonische Domain | EDV erlaubt `.htaccess`; Regeln im Artefakt, Produktions-Smoke nach Upload offen |
+| Website kanonisch | `https://competencehub.donner-partner.de` | LIVE; HTTPS und Kernrouten geprueft |
+| Website Redirect | `https://competence-hub.donner-partner.de` auf kanonische Domain | LIVE; HTTP/HTTPS liefern `301` auf kanonisches HTTPS |
 | Portal/API | vorgeschlagen `https://competencehub-app.donner-partner.de` | DNS auf VPS, TLS und Freigabe offen |
 | PostgreSQL | VPS, nur `127.0.0.1:5432` | Staging vorhanden und verifiziert |
 | Kontaktmail | `competencehub@donner-partner.de` an Janay | fachlich bestaetigt; Routing-Smoke offen |
@@ -90,11 +91,12 @@ HTTP/HTTPS-Pruefungen zeigen nur den erwarteten leeren Webspace (`403`) ohne
   Website-Live-Test fuer Donnerstag, 24.09., vorgesehen. Kleinere Korrekturen
   duerfen danach noch innerhalb der Woche nachgereicht werden.
 
-### Phase 4 - 24.09. bis 25.09.: Live-Test, Nachbesserung und Handover
+### Phase 4 - 22.09. bis 25.09.: Live-Test, Nachbesserung und Handover
 
 - Website-Feature-Freeze, geprueften Source-/Artefaktstand und ein
   secret-freies Techniker-Handover festhalten.
-- Ohne Thomas-Go/No-Go und separate Remote-Change-Freigabe kein Upload.
+- Thomas schloss die EDV-Voraussetzung; Manuel autorisierte und bediente den
+  kontrollierten Upload am 22.09.
 - Falls beide Freigaben und alle technischen Stopper rechtzeitig schliessen:
   vor jedem Replace den
   bestehenden Webroot sichern und den kontrollierten statischen Release mit

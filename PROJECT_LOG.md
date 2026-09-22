@@ -2,6 +2,34 @@
 
 Newest entries first.
 
+## 2026-09-22 | website/production | Statische Website auf IONOS veroeffentlicht und abgenommen
+
+- Manuel fuehrte den freigegebenen SFTP-Upload des exakten Clean-Artefakts aus
+  Source `e6081580b0d7` aus. Das ZIP umfasst 55 Eintraege; SHA-256 ist
+  `cc7b75c85a684960d6cda8014682c6bdea18ad81cc7e4071abded712843da32e`.
+  Der Vorzustand war nach EDV-Bereinigung leer, daher gab es keine alte Datei
+  fuer eine Rollbackkopie.
+- Der erste `put -r *`-Versuch uebertrug auf dem IONOS-SFTP nur Root-Dateien;
+  der unmittelbare Smoke fand `403` fuer Unterseiten und Assets. `index.html`
+  wurde entfernt, alle Top-Level-Verzeichnisse explizit angelegt und rekursiv
+  uebertragen, alle Verzeichnisse auf `755` gesetzt und der Einstieg zuletzt
+  wieder aktiviert. Es gingen keine Bestandsdaten verloren.
+- Produktion liefert kanonisch HTTPS `200`, HTTP und Alias jeweils `301` auf
+  die kanonische Domain, Kernseiten/Assets/Guelcan-Profil `200` und unbekannte
+  Routen `404`. Diagnose-/Reviewreste fehlen; Kontakt-/Rechtsziele,
+  Sicherheitsheader, Robots und Sitemap sind wirksam.
+- Microsoft Edge 153 bestand 762/762 Produktionschecks inklusive Desktop,
+  Tablet, 390 px, 200-Prozent-Reflow, Tastatur/Fokus, Reduced Motion und den
+  wesentlichen Interaktionen. Die echte Zustellung der Kontaktmail an Janay
+  bleibt als organisatorischer Smoke offen.
+- Der SFTP-Preparer erzeugt kuenftig getrennte Erstaufbau-/Update-Befehlslisten
+  mit explizitem `mkdir`, `755`/`644` und `index.html` zuletzt. Ein
+  Host-Key-pruefender Verbindungshelfer reduziert den Start auf einen Befehl,
+  ohne das Passwort zu speichern.
+- Skill-Learning-Check: Providerverhalten fuer rekursive Uploads und
+  Verzeichnisrechte muss vor Aktivierung mit Route/Asset-Smokes bewiesen sein;
+  der Befund ist im Skill-Feedback erfasst.
+
 ## 2026-09-22 | release/tooling | SFTP-Operatorcheckliste gegen Literal-Platzhalter gehaertet
 
 - Die lokale Releaseprobe zeigte vor dem Upload, dass Markdown-Backticks in

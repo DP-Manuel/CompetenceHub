@@ -99,6 +99,7 @@ function Assert-SafeArchiveEntry {
         $name.StartsWith("/") -or
         $name -match '^[A-Za-z]:' -or
         $name -match '(^|/)\.\.?(?:/|$)' -or
+        $name -notmatch '^[A-Za-z0-9._/-]+$' -or
         $name -match '[\x00-\x1f\x7f]') {
         throw "Archive contains an unsafe entry path: $($Entry.FullName)"
     }
@@ -281,6 +282,55 @@ $inventory = Get-ChildItem -LiteralPath $releaseRoot -File -Recurse | Sort-Objec
 }
 $inventoryPath = Join-Path $packageRoot "release-files.sha256"
 $inventory | Set-Content -LiteralPath $inventoryPath -Encoding ascii
+
+$localReleasePath = $releaseRootFull.Replace("\", "/")
+$topLevelDirectories = @(Get-ChildItem -LiteralPath $releaseRoot -Directory | Sort-Object Name)
+$allDirectories = @(Get-ChildItem -LiteralPath $releaseRoot -Directory -Recurse | Sort-Object FullName)
+$rootFiles = @(Get-ChildItem -LiteralPath $releaseRoot -File | Where-Object Name -cne "index.html" | Sort-Object Name)
+$allFilesBeforeIndex = @(Get-ChildItem -LiteralPath $releaseRoot -File -Recurse |
+    Where-Object FullName -cne $entrypoint |
+    Sort-Object FullName)
+
+$permissionAndActivationCommands = [System.Collections.Generic.List[string]]::new()
+foreach ($directory in $allDirectories) {
+    $relative = $directory.FullName.Substring($releasePrefix.Length).Replace("\", "/")
+    $permissionAndActivationCommands.Add("chmod 755 $relative")
+}
+foreach ($file in $allFilesBeforeIndex) {
+    $relative = $file.FullName.Substring($releasePrefix.Length).Replace("\", "/")
+    $permissionAndActivationCommands.Add("chmod 644 $relative")
+}
+$permissionAndActivationCommands.Add("put index.html")
+$permissionAndActivationCommands.Add("chmod 644 index.html")
+$permissionAndActivationCommands.Add("ls -la")
+
+$commonUploadCommands = [System.Collections.Generic.List[string]]::new()
+$commonUploadCommands.Add("lcd `"$localReleasePath`"")
+foreach ($file in $rootFiles) {
+    $commonUploadCommands.Add("put $($file.Name)")
+}
+foreach ($directory in $topLevelDirectories) {
+    $commonUploadCommands.Add("put -r $($directory.Name)")
+}
+foreach ($command in $permissionAndActivationCommands) {
+    $commonUploadCommands.Add($command)
+}
+
+$firstDeployCommands = [System.Collections.Generic.List[string]]::new()
+$firstDeployCommands.Add("lcd `"$localReleasePath`"")
+foreach ($file in $rootFiles) {
+    $firstDeployCommands.Add("put $($file.Name)")
+}
+foreach ($directory in $topLevelDirectories) {
+    $firstDeployCommands.Add("mkdir $($directory.Name)")
+    $firstDeployCommands.Add("put -r $($directory.Name)")
+}
+foreach ($command in $permissionAndActivationCommands) {
+    $firstDeployCommands.Add($command)
+}
+
+$firstDeployCommands | Set-Content -LiteralPath (Join-Path $packageRoot "SFTP-FIRST-DEPLOY-COMMANDS.txt") -Encoding utf8
+$commonUploadCommands | Set-Content -LiteralPath (Join-Path $packageRoot "SFTP-UPDATE-COMMANDS.txt") -Encoding utf8
 
 $plan = [ordered]@{
     schema_version = 1
