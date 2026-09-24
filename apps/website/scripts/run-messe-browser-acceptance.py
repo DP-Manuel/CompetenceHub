@@ -23,13 +23,14 @@ CORE_ROUTES = (
     "/mindforge/",
     "/businesscoaching/",
     "/coaches/",
-    "/coaches/carolin-hupp/",
     "/coaches/christian-galvano/",
-    "/coaches/elisabeth-schwabauer/",
-    "/coaches/goran-celic/",
-    "/coaches/guelcan-elmas-brandes/",
-    "/coaches/stefanie-becker/",
-    "/coaches/wegner-ney/",
+    "/coaches/manuela-rodriguez/",
+    "/coaches/demoprofil-01/",
+    "/coaches/demoprofil-02/",
+    "/coaches/demoprofil-03/",
+    "/coaches/demoprofil-04/",
+    "/coaches/demoprofil-05/",
+    "/coaches/demoprofil-06/",
     "/kalender/",
     "/ueber-uns/",
     "/kontakt/",
@@ -38,7 +39,22 @@ CORE_ROUTES = (
     "/404.html",
 )
 
-NOINDEX_ROUTES = {"/kalender/", "/impressum/", "/datenschutz/", "/404.html"}
+NOINDEX_ROUTES = {
+    "/kalender/",
+    "/impressum/",
+    "/datenschutz/",
+    "/404.html",
+    *(f"/coaches/demoprofil-{number:02d}/" for number in range(1, 7)),
+}
+
+REMOVED_COACH_ROUTES = (
+    "/coaches/carolin-hupp/",
+    "/coaches/elisabeth-schwabauer/",
+    "/coaches/goran-celic/",
+    "/coaches/guelcan-elmas-brandes/",
+    "/coaches/stefanie-becker/",
+    "/coaches/wegner-ney/",
+)
 
 
 class Acceptance:
@@ -210,6 +226,22 @@ def interaction_checks(browser: Browser, base_url: str, acceptance: Acceptance) 
         after = page.locator("[data-coach-viewport]").evaluate("element => element.scrollLeft")
         acceptance.check("Coach rail next control moves the viewport", after != before)
 
+        page.goto(f"{base_url}/coaches/", wait_until="networkidle")
+        acceptance.check("Coach directory exposes exactly six demo profiles", page.locator('[data-demo-profile="true"]').count() == 6)
+        acceptance.check("Coach directory labels demo status", page.get_by_text("Keine reale Coachperson.", exact=True).count() == 6)
+        acceptance.check("Christian Galvano remains an approved real profile", page.get_by_role("heading", name="Herr Christian Galvano", exact=True).count() == 1)
+        acceptance.check("Manuela Rodriguez is present as the second real profile", page.get_by_role("heading", name="Frau Manuela Rodriguez", exact=True).count() == 1)
+        page.get_by_role("button", name="KI & Transformation").click()
+        acceptance.check("KI filter shows only Manuela Rodriguez", page.locator("[data-coach-card]:visible").count() == 1 and page.get_by_role("heading", name="Frau Manuela Rodriguez", exact=True).is_visible())
+
+        page.goto(f"{base_url}/coaches/manuela-rodriguez/", wait_until="networkidle")
+        acceptance.check("Manuela profile exposes approved KI focus", page.get_by_text("Zertifizierte KI-Managerin mit Fokus auf Human Intelligence", exact=True).count() == 1)
+        portrait = page.locator('.coach-profile-portrait img[alt="Porträt von Frau Manuela Rodriguez"]')
+        acceptance.check("Manuela profile uses the approved portrait", portrait.count() == 1 and portrait.evaluate("image => image.complete && image.naturalWidth === 1200 && image.naturalHeight === 1200"))
+
+        page.goto(f"{base_url}/coaches/demoprofil-01/", wait_until="networkidle")
+        acceptance.check("Demo detail identifies itself as fictional", page.get_by_text("Fiktives Demoprofil zur Veranschaulichung der Plattform. Keine reale Coachperson.", exact=True).count() == 1)
+
         page.goto(f"{base_url}/unternehmen/", wait_until="networkidle")
         acceptance.check("approved Concept Clean feedback is visible", page.get_by_text("Concept Clean", exact=True).count() >= 1)
         trigger = page.locator("[data-case-story-trigger]").first
@@ -225,8 +257,14 @@ def interaction_checks(browser: Browser, base_url: str, acceptance: Acceptance) 
             page.get_by_text("Ausschließlich Beispieldaten:", exact=True).count() == 1,
         )
         first_event = page.locator(".calendar-event").first
+        for _ in range(2):
+            if first_event.count() > 0:
+                break
+            page.locator("[data-next-month]").click()
+        acceptance.check("calendar exposes an example event within its bounded window", first_event.count() > 0)
         first_event.click()
         acceptance.check("calendar detail opens", page.locator("[data-detail-content]").is_visible())
+        acceptance.check("calendar uses an approved or fictional Coach identity", page.locator("[data-detail-coach]").inner_text() in {"Herr Christian Galvano", "Demoprofil 05", "Demoprofil 06"})
         page.locator("[data-reservation-submit]").click()
         acceptance.check(
             "calendar simulation remains explicitly local",
@@ -239,6 +277,24 @@ def interaction_checks(browser: Browser, base_url: str, acceptance: Acceptance) 
         acceptance.check("contact route explains mail-client handoff", page.get_by_text("Ihr E-Mail-Programm", exact=False).count() >= 1)
         acceptance.check("footer exposes central Impressum", page.locator('footer a[href="https://donner-partner.de/dp/impressum/"]').count() == 1)
         acceptance.check("footer exposes central Datenschutz", page.locator('footer a[href="https://donner-partner.de/dp/datenschutz/"]').count() == 1)
+    finally:
+        context.close()
+
+
+def removed_profile_checks(browser: Browser, base_url: str, acceptance: Acceptance) -> None:
+    context = browser.new_context(viewport={"width": 1280, "height": 800})
+    try:
+        page = context.new_page()
+        for route in REMOVED_COACH_ROUTES:
+            response = page.goto(f"{base_url}{route}", wait_until="networkidle")
+            acceptance.check(
+                f"removed personal route {route} returns controlled 404",
+                response is not None and response.status == 404,
+            )
+            acceptance.check(
+                f"removed personal route {route} exposes no former identity",
+                page.locator("body").inner_text().find(route.split("/")[-2]) == -1,
+            )
     finally:
         context.close()
 
@@ -290,6 +346,7 @@ def main() -> None:
             )
             interaction_checks(browser, base_url, acceptance)
             accessibility_checks(browser, base_url, acceptance)
+            removed_profile_checks(browser, base_url, acceptance)
         finally:
             browser.close()
     print(f"Messe browser acceptance complete: {acceptance.count} checks passed")

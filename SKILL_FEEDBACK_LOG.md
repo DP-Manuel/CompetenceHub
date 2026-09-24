@@ -1,5 +1,22 @@
 # Skill Feedback Log
 
+### 2026-09-24 | browser-acceptance | Datumsrelative UI-Fixtures kalenderstabil prüfen
+
+- Triggering project situation: Die Website-Browserabnahme suchte am 24.09.
+  starr im aktuellen Kalendermonat nach einem relativ erzeugten Beispieltermin.
+  Dieselbe Abnahme war am 22.09. grün, scheiterte aber zwei Tage später, weil
+  alle Beispiele inzwischen im Folgemonat lagen.
+- Friction: Ein korrekt dargestellter leerer Zustand wurde fälschlich als
+  Produktregression gewertet und verursachte einen 30-Sekunden-Timeout.
+- Improvement: Browserabnahmen für relative Kalenderdaten müssen den
+  dokumentierten leeren Zustand akzeptieren und innerhalb des begrenzten
+  Anzeigezeitraums zum nächsten belegten Monat navigieren. Zeitabhängige
+  Annahmen gehören ausdrücklich in Regressionstests.
+- Reuse potential: high for calendars, deadlines, rolling windows and
+  expiration-driven UI.
+- Proposed destination: `write-tests` and frontend browser-acceptance guidance.
+- Status: project-local regression fixed; reusable skill update proposed.
+
 Use this file to collect possible CodexSkills improvements discovered during this project.
 
 Do not implement every idea immediately. First collect evidence, then decide whether the change belongs in CodexSkills, ManuWiki, this project, or nowhere yet.

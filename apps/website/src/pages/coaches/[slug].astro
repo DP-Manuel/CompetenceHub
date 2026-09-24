@@ -1,0 +1,108 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { coaches, coachTopics, type Coach } from "../../data/coaches";
+import "../../styles/global.css";
+
+export function getStaticPaths() {
+  return coaches
+    .filter((coach) => coach.kind === "demo")
+    .map((coach) => ({
+      params: { slug: coach.profilePath.split("/").at(-1) },
+      props: { coach },
+    }));
+}
+
+interface Props {
+  coach: Coach;
+}
+
+const { coach } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+const topicLabels = new Map(coachTopics.map((topic) => [topic.id, topic.label]));
+---
+
+<BaseLayout
+  title={`${coach.name} | Coaches | Competence Hub`}
+  description="Fiktives Demoprofil zur Veranschaulichung von Coach-Suche, Themenfiltern und Profildarstellung im Competence Hub."
+  noindex={true}
+>
+  <main class="subpage">
+    <section class="coach-profile-hero">
+      <div>
+        <p class="eyebrow">Fiktives Demoprofil</p>
+        <h1>{coach.name}</h1>
+        <p class="demo-profile-notice">
+          Fiktives Demoprofil zur Veranschaulichung der Plattform. Keine reale Coachperson.
+        </p>
+        <p class="coach-profile-lead">{coach.role.replace("Fiktives Profil · ", "")}</p>
+        <p>{coach.text}</p>
+        <div class="coach-profile-actions">
+          <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+          <a class="button button--ghost" href={url("coaches")}>Alle Profile</a>
+        </div>
+      </div>
+      <div class="coach-profile-placeholder coach-profile-placeholder--demo" role="img" aria-label={`Neutraler Platzhalter für ${coach.name}`}>
+        <span aria-hidden="true">{coach.initials}</span>
+        <div>
+          <strong>{coach.name}</strong>
+          <small>Keine reale Coachperson</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="coach-profile-section">
+      <div class="section-heading coach-section-heading">
+        <div>
+          <p class="eyebrow">Beispielhafte Themen</p>
+          <h2>So kann fachliche Passung sichtbar werden</h2>
+        </div>
+        <p>
+          Die Angaben dienen ausschließlich der Demonstration von Suche,
+          Filtern und Profildarstellung. Sie sind keiner realen Person
+          zugeordnet.
+        </p>
+      </div>
+      <div class="coach-topic-grid">
+        {coach.focus.map((focus, index) => (
+          <article>
+            <h3>{focus}</h3>
+            <p>
+              Beispielhafte Einordnung für den Themenbereich
+              {index < coach.topics.length ? ` ${topicLabels.get(coach.topics[index]) ?? "Coaching"}` : " Coaching"}.
+              Konkrete Qualifikationen werden erst für freigegebene reale Profile veröffentlicht.
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="notice-panel">
+      <div>
+        <p class="eyebrow">Transparenz</p>
+        <h2>Demodaten statt erfundener Person</h2>
+      </div>
+      <p>
+        Dieses Profil enthält weder ein reales Portrait noch eine persönliche
+        Biografie, Referenz oder Kontaktangabe. Es zeigt nur, wie ein später
+        freigegebenes Coachprofil aufgebaut sein kann.
+      </p>
+    </section>
+
+    <section class="showcase-strip coach-profile-cta">
+      <div>
+        <p class="eyebrow">Passung klären</p>
+        <h2>Welcher fachliche Schwerpunkt passt zu Ihrem Anliegen?</h2>
+      </div>
+      <div>
+        <p>
+          Frau Janay Rappelt unterstützt bei der Einordnung und vermittelt
+          ausschließlich zu tatsächlich verfügbaren und freigegebenen Coaches.
+        </p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

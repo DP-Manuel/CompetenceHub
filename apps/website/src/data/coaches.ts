@@ -2,6 +2,7 @@ export type CoachTopicId =
   | "fuehrung"
   | "teams-konflikte"
   | "gesundheit-praevention"
+  | "ki-transformation"
   | "mediation"
   | "recruiting-potenziale"
   | "rhetorik-vertrieb"
@@ -23,6 +24,7 @@ export interface CoachTopic {
 }
 
 export interface Coach {
+  kind: "approved" | "demo";
   name: string;
   role: string;
   previewRole: string;
@@ -56,6 +58,12 @@ export const coachTopics: CoachTopic[] = [
     icon: "heart-pulse",
   },
   {
+    id: "ki-transformation",
+    label: "KI & Transformation",
+    detail: "KI-Kompetenz und verantwortungsvolle Einführung",
+    icon: "sparkles",
+  },
+  {
     id: "mediation",
     label: "Mediation",
     detail: "Strukturierte Konfliktklärung",
@@ -83,6 +91,7 @@ export const coachTopics: CoachTopic[] = [
 
 export const coaches: Coach[] = [
   {
+    kind: "approved",
     name: "Herr Christian Galvano",
     role: "Dozent, Fachtrainer und Coach",
     previewRole: "Führung, Konflikte & Prävention",
@@ -100,8 +109,31 @@ export const coaches: Coach[] = [
     initials: "CG",
   },
   {
-    name: "Frau Elisabeth Schwabauer",
-    role: "Psychologin (M.Sc.)",
+    kind: "approved",
+    name: "Frau Manuela Rodriguez",
+    role: "KI-Managerin, Leitung Digitalstrategie, Dozentin und Coach",
+    previewRole: "KI-Kompetenz, Didaktik & Transformation",
+    focus: [
+      "KI-Literacy und ethische Standards",
+      "Didaktik und Psychoedukation",
+      "NLP- und Bildercoaching",
+    ],
+    topics: [
+      "ki-transformation",
+      "fuehrung",
+      "psychologische-beratung",
+    ],
+    text: "Frau Manuela Rodriguez verbindet KI-Kompetenz, Didaktik und menschenzentrierte Transformation und begleitet Unternehmen beim verantwortungsvollen Einsatz künstlicher Intelligenz.",
+    profilePath: "coaches/manuela-rodriguez",
+    image: "images/coaches/manuela-rodriguez.webp",
+    imageWidth: 1200,
+    imageHeight: 1200,
+    initials: "MR",
+  },
+  {
+    kind: "demo",
+    name: "Demoprofil 01",
+    role: "Fiktives Profil · Psychologie und Teamklärung",
     previewRole: "Psychologie, Belastung & Teams",
     focus: [
       "Psychologische Beratung",
@@ -113,16 +145,14 @@ export const coaches: Coach[] = [
       "gesundheit-praevention",
       "teams-konflikte",
     ],
-    text: "Frau Elisabeth Schwabauer verbindet psychologische Fachkenntnis mit Erfahrung in beruflicher Beratung, Teamprozessen und der Einordnung psychischer Belastungen.",
-    profilePath: "coaches/elisabeth-schwabauer",
-    image: "images/coaches/elisabeth-schwabauer.webp",
-    imageWidth: 1200,
-    imageHeight: 1800,
-    initials: "ES",
+    text: "Dieses fiktive Demoprofil zeigt, wie psychologische Beratung, Belastungsprävention und Teamklärung im Coach-Netzwerk auffindbar werden können.",
+    profilePath: "coaches/demoprofil-01",
+    initials: "01",
   },
   {
-    name: "Frau Carolin Hupp",
-    role: "Diplom-Sportwissenschaftlerin",
+    kind: "demo",
+    name: "Demoprofil 02",
+    role: "Fiktives Profil · Gesundheit und Prävention",
     previewRole: "Gesundheit, Bewegung & Prävention",
     focus: [
       "Betriebliche Gesundheit",
@@ -130,13 +160,14 @@ export const coaches: Coach[] = [
       "Entspannung und Balance",
     ],
     topics: ["gesundheit-praevention"],
-    text: "Frau Carolin Hupp bringt Gesundheits- und Trainingsmanagement, Bewegungsförderung und alltagstaugliche Prävention in Unternehmen und Gruppen zusammen.",
-    profilePath: "coaches/carolin-hupp",
-    initials: "CH",
+    text: "Dieses fiktive Demoprofil veranschaulicht Angebote rund um betriebliche Gesundheit, Bewegung und alltagstaugliche Prävention.",
+    profilePath: "coaches/demoprofil-02",
+    initials: "02",
   },
   {
-    name: "Frau Gülcan Elmas-Brandes",
-    role: "Coach, Trainerin und Diplom-Betriebswirtin (VWA)",
+    kind: "demo",
+    name: "Demoprofil 03",
+    role: "Fiktives Profil · Karriere, Gesundheit und Qualität",
     previewRole: "Karriere, Gesundheit & Qualität",
     focus: [
       "Karriere- und Bewerbungscoaching",
@@ -148,16 +179,14 @@ export const coaches: Coach[] = [
       "gesundheit-praevention",
       "teams-konflikte",
     ],
-    text: "Frau Gülcan Elmas-Brandes verbindet Coaching und Training mit langjähriger Erfahrung in Projekt-, Qualitäts- und Finanzmanagement sowie interkultureller Zusammenarbeit.",
-    profilePath: "coaches/guelcan-elmas-brandes",
-    image: "images/coaches/guelcan-elmas-brandes.png",
-    imageWidth: 203,
-    imageHeight: 260,
-    initials: "GE",
+    text: "Dieses fiktive Demoprofil zeigt die kombinierte Suche nach beruflicher Orientierung, Gesundheitsimpulsen und organisatorischer Qualität.",
+    profilePath: "coaches/demoprofil-03",
+    initials: "03",
   },
   {
-    name: "Herr T. Wegner-Ney",
-    role: "Unternehmensberater, Speaker, Workshop-Leiter und Coach",
+    kind: "demo",
+    name: "Demoprofil 04",
+    role: "Fiktives Profil · Veränderung, Prozesse und Führung",
     previewRole: "Veränderung, Prozesse & Führung",
     focus: [
       "Technologie- und Prozessveränderung",
@@ -165,16 +194,14 @@ export const coaches: Coach[] = [
       "Qualitätsmanagement im Mittelstand",
     ],
     topics: ["fuehrung", "teams-konflikte", "recruiting-potenziale"],
-    text: "Herr T. Wegner-Ney begleitet mittelständische Unternehmen dabei, neue Technologien, Prozesse und Qualitätsanforderungen wirtschaftlich einzuordnen und gemeinsam mit ihren Mitarbeitenden wirksam umzusetzen.",
-    profilePath: "coaches/wegner-ney",
-    image: "images/coaches/wegner-ney.jpg",
-    imageWidth: 830,
-    imageHeight: 830,
-    initials: "WN",
+    text: "Dieses fiktive Demoprofil veranschaulicht die Suche nach Begleitung für Technologie- und Prozessveränderung, Führung und Beteiligung.",
+    profilePath: "coaches/demoprofil-04",
+    initials: "04",
   },
   {
-    name: "Herr Goran Celic",
-    role: "Coach für Rhetorik und Vertrieb",
+    kind: "demo",
+    name: "Demoprofil 05",
+    role: "Fiktives Profil · Rhetorik und Vertrieb",
     previewRole: "Rhetorik, Vertrieb & Storytelling",
     focus: [
       "Rhetorik und überzeugender Auftritt",
@@ -182,16 +209,14 @@ export const coaches: Coach[] = [
       "Storytelling und Gesprächsführung",
     ],
     topics: ["rhetorik-vertrieb"],
-    text: "Herr Goran Celic verbindet langjährige Vertriebserfahrung mit Rhetorik, Gesprächsführung und praxisnaher Begleitung für Vertriebsteams und Experten.",
-    profilePath: "coaches/goran-celic",
-    image: "images/coaches/goran-celic.png",
-    imageWidth: 768,
-    imageHeight: 929,
-    initials: "GC",
+    text: "Dieses fiktive Demoprofil zeigt mögliche Schwerpunkte für Auftritt, Gesprächsführung, Vertrieb und Storytelling.",
+    profilePath: "coaches/demoprofil-05",
+    initials: "05",
   },
   {
-    name: "Frau Dr. Stefanie Becker",
-    role: "Executive Coach und Team- und Organisationsentwicklerin",
+    kind: "demo",
+    name: "Demoprofil 06",
+    role: "Fiktives Profil · Change, Führung und Organisation",
     previewRole: "Change, Führung & Organisation",
     focus: [
       "Change und Organisationsentwicklung",
@@ -199,11 +224,8 @@ export const coaches: Coach[] = [
       "Female Leadership und Neurodiversität",
     ],
     topics: ["fuehrung", "teams-konflikte"],
-    text: "Frau Dr. Stefanie Becker begleitet Leitungsteams, Führungskräfte und Mitarbeitende in organisationalen und persönlichen Transformationsprozessen mit einem hypnosystemischen und beteiligungsorientierten Ansatz.",
-    profilePath: "coaches/stefanie-becker",
-    image: "images/coaches/stefanie-becker.webp",
-    imageWidth: 642,
-    imageHeight: 594,
-    initials: "SB",
+    text: "Dieses fiktive Demoprofil veranschaulicht Begleitung für Change, Führung, Strategie, Kultur und Organisationsentwicklung.",
+    profilePath: "coaches/demoprofil-06",
+    initials: "06",
   },
 ];

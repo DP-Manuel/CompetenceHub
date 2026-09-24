@@ -1,11 +1,12 @@
 # Project Status
 
-Last updated: 2026-09-22
+Last updated: 2026-09-24
 
 ## Snapshot
 
-- Overall status: green for the public static Website and yellow for the
-  separate Portal/backend production path. Manuel's operative cutline is
+- Overall status: yellow for the public static Website until the approved
+  Coach-P0 correction is deployed and publicly verified, and yellow for the separate
+  Portal/backend production path. Manuel's operative cutline is
   2026-09-25, his absence starts
   2026-09-26 and the public Messe-Demostand is due 2026-10-17. Public frontend
   Messe-Readiness now has priority over further CAL-1 expansion. The Website,
@@ -19,9 +20,9 @@ Last updated: 2026-09-22
   from clean source `e6081580b0d7` on 2026-09-22. Its exact artifact contains
   55 entries and has SHA-256
   `cc7b75c85a684960d6cda8014682c6bdea18ad81cc7e4071abded712843da32e`.
-  Manuel approved the new Guelcan Elmas-Brandes profile, portrait, supported
-  professional data and publication on 2026-09-22. The updated local Website
-  passes 762 Edge checks, a 32-page build and 1,274 internal references.
+  The then-approved seven-profile Website passed 762 Edge checks, a 32-page
+  build and 1,274 internal references before release. Manuels newer 24.09
+  publication boundary supersedes that Coach-content approval.
   Manuel authorized and operated the controlled public release on 2026-09-22.
   A release-tooling regression that left literal
   PowerShell placeholders in the operator checklist is fixed and covered by
@@ -40,6 +41,16 @@ Last updated: 2026-09-22
   separate
   and do not block the released static Website. Actual mailbox delivery to
   Janay remains an operational smoke outside the static artifact.
+- Time-critical content status: Manuel changed the Messe publication boundary
+  on 24.09. The live Website still exposes six identities that must no longer
+  remain personal. The local P0 correction is complete: only Christian
+  Galvano and Manuela Rodriguez remain real; six profiles are explicit demos,
+  former routes return 404 and former portraits are absent. Manuel approved
+  the official D+P portrait for Manuela plus Commit, Push and deployment on
+  24.09. The metadata-minimized 1.200-pixel WebP, build/privacy/link gates,
+  800/800 Edge checks and 8/8 SFTP rehearsal tests pass. The live Website is
+  therefore yellow only until the approved SB-51 correction is uploaded and
+  publicly verified.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling eight-step horizon.
 - External-dependency steering: a dated lead-time radar now tracks EDV, legal,
@@ -123,6 +134,21 @@ Last updated: 2026-09-22
   separated.
 - Current phase: Competence Hub public website stabilization plus isolated
   portal/backend foundation.
+- Future backlog: FIN-01 captures outgoing company invoices and incoming Coach
+  invoices as a separate discovery epic. No finance implementation or data
+  model is approved.
+
+## Steering Classification
+
+- **P0:** Deploy the locally complete Coach privacy correction after explicit
+  approval; production currently still exposes the superseded identities.
+- **P1:** Build the clean artifact, run production browser/privacy smokes and
+  freeze the corrected Messe handover. Thomas Ross remains the documented
+  technical break-glass successor; no new permission is granted here.
+- **Paused:** Further CAL-1 browser, native Staging UI and activation work stays
+  paused independently of this static Website correction.
+- **Future:** FIN-01 remains requirements discovery after bookkeeping input;
+  no migration, API, UI, sending, payment integration or finance data.
 - Current goal: professional, mobile-first B2B and B2C website for offers from
   August 2026.
 - Done: Living-Hub website, centered homepage hierarchy, `/ueber-uns` with the
@@ -130,8 +156,7 @@ Last updated: 2026-09-22
   contact block, internal Hub-Journey navigation,
   Mindforge umbrella for Life Coaching and
   Businesscoaching, eight-node homepage Hub, topic-based Coach discovery,
-  six Coach profiles, updated Herr T. Wegner-Ney profile, approved Frau
-  Dr. Stefanie Becker profile with portrait and without customer references,
+  two approved real Coach profiles plus six clearly marked fictional demos,
   qualification-gated
   Mediation topic, honest mail-client inquiry path, legal links, role-oriented login
   preview, PostgreSQL 16 staging installation, separated database roles and a
@@ -435,10 +460,10 @@ Last updated: 2026-09-22
 - Production-indexing safeguard: archived `/system`, `/seminare`,
   `/qualifizierung`, public `/login` previews and prototype routes emit
   `noindex`; the homepage remains indexable.
-- Smoke evidence: local HTTP 200 for homepage, Mindforge, Coach overview,
-  Frau Dr. Stefanie Becker, Herr T. Wegner-Ney and contact; eight Hub nodes,
-  no separate Businesscoaching node, Mindforge-to-Businesscoaching link,
-  Mediation filter and empty state confirmed in generated HTML.
+- Current Website smoke evidence: local HTTP 200 for homepage, Mindforge,
+  Coach overview, Christian Galvano, Manuela Rodriguez, six demo profiles and
+  contact; former personal routes return controlled 404. Eight Hub nodes,
+  Mindforge-to-Businesscoaching link, topic filters and empty state remain.
 - Accessibility direction: native filter buttons, `aria-pressed`, controlled
   profile grid, visible live status, honest empty state, visible focus and
   reduced-motion-aware automatic scrolling.
@@ -628,8 +653,9 @@ Last updated: 2026-09-22
   `docs/assets/designstyle.md`.
 - Key implementation files: `apps/website/src/data/coaches.ts`,
   `apps/website/src/pages/coaches.astro`,
-  `apps/website/src/pages/coaches/stefanie-becker.astro`,
-  `apps/website/src/pages/coaches/wegner-ney.astro`,
+  `apps/website/src/pages/coaches/christian-galvano.astro`,
+  `apps/website/src/pages/coaches/manuela-rodriguez.astro`,
+  `apps/website/src/pages/coaches/[slug].astro`,
   `apps/website/src/components/CompetenceHubMap.astro`,
   `apps/website/src/components/LivingHubPrototype.astro`,
   `apps/website/src/components/HubJourney.astro`,

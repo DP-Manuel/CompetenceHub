@@ -4,12 +4,34 @@ import { extname, join, relative, resolve, sep } from "node:path";
 const dist = resolve("dist");
 const canonicalHost = "competencehub.donner-partner.de";
 const htmlFiles = [];
+const allFiles = [];
+
+const forbiddenPublicIdentityFragments = [
+  "Carolin Hupp",
+  "Elisabeth Schwabauer",
+  "Goran Celic",
+  "Gülcan Elmas",
+  "Guelcan Elmas",
+  "Stefanie Becker",
+  "Wegner-Ney",
+  "carolin-hupp",
+  "elisabeth-schwabauer",
+  "goran-celic",
+  "guelcan-elmas-brandes",
+  "stefanie-becker",
+  "wegner-ney",
+];
+
+const textExtensions = new Set([".css", ".html", ".js", ".json", ".txt", ".xml"]);
 
 function walk(directory) {
   for (const entry of readdirSync(directory)) {
     const fullPath = join(directory, entry);
     if (statSync(fullPath).isDirectory()) walk(fullPath);
-    else if (entry.endsWith(".html")) htmlFiles.push(fullPath);
+    else {
+      allFiles.push(fullPath);
+      if (entry.endsWith(".html")) htmlFiles.push(fullPath);
+    }
   }
 }
 
@@ -66,6 +88,24 @@ for (const sourceFile of htmlFiles) {
     }
     if (!hasFragment(file, url.hash.slice(1))) {
       failures.push({ source: sourcePublicPath, target: raw, reason: "missing fragment" });
+    }
+  }
+}
+
+for (const file of allFiles) {
+  const publicPath = relative(dist, file).split(sep).join("/");
+  const pathLower = publicPath.toLocaleLowerCase("de-DE");
+  for (const fragment of forbiddenPublicIdentityFragments) {
+    if (pathLower.includes(fragment.toLocaleLowerCase("de-DE"))) {
+      failures.push({ source: publicPath, target: fragment, reason: "removed identity in artifact path" });
+    }
+  }
+
+  if (!textExtensions.has(extname(file).toLowerCase())) continue;
+  const content = readFileSync(file, "utf8").toLocaleLowerCase("de-DE");
+  for (const fragment of forbiddenPublicIdentityFragments) {
+    if (content.includes(fragment.toLocaleLowerCase("de-DE"))) {
+      failures.push({ source: publicPath, target: fragment, reason: "removed identity in generated content" });
     }
   }
 }

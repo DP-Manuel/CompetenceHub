@@ -1,10 +1,11 @@
 # Website Messe-Handover
 
-Stand: 21.09.2026
+Stand: 24.09.2026
 
 Zweck: secret-freie Uebergabe der statischen Competence-Hub-Website fuer den
 kontrollierten Live-Test am 24.09. und einen stabilen Messestand am 17.10.
-Dieses Handover autorisiert keinen Upload.
+Dieses Handover autorisiert keinen Upload. Die Coach-P0-Korrektur vom 24.09.
+hat Vorrang vor dem bisherigen Produktionsstand.
 
 ## Ziel und Grenzen
 
@@ -74,11 +75,20 @@ Erwartung: Build und Referenzpruefung gruen; Manifest meldet `dirty: false`,
 Vor einem spaeteren Website-Codewechsel wird dieser Kandidat verworfen und aus
 dem neuen sauberen Source-Checkpoint erneut gebaut.
 
+Der Kandidat und das am 22.09. deployte Archiv enthalten nach der neuen
+Freigabeentscheidung nicht mehr zulässige Coachidentitäten. Beide dürfen weder
+erneut ausgerollt noch als Coach-Rollback verwendet werden. Der lokal geprüfte
+SB-51-Stand benötigt vor Upload einen Commit, Push, `dirty: false`-Build und
+eine separate Releasefreigabe.
+
 ## Rollback und Stop-Regeln
 
 - Bei falschem Webroot, unbekannter Providerkonfiguration, fehlenden Assets,
   5xx/403, Sicherheitsbefund oder unklarer Redirectschleife sofort stoppen.
-- Das datierte Remote-Backup wiederherstellen, Kernrouten erneut pruefen und
+- Für die Coach-P0-Korrektur das exakte korrigierte Artefakt erneut hochladen;
+  wenn das nicht gelingt, die personenbezogene Coachdarstellung fail-closed
+  deaktivieren. Das alte Remote-Backup nicht wieder öffentlich aktivieren,
+  weil es die abgelösten Identitäten enthält. Kernrouten erneut prüfen und
   Befund sowie Uhrzeit protokollieren.
 - Waehrend Manuels Abwesenheit keine Portal-, Datenbank-, Konto-, SMTP- oder
   Kalenderaktivierung mit diesem Runbook verbinden.

@@ -2,6 +2,40 @@
 
 Newest entries first.
 
+## 2026-09-24 | website/privacy/content | Coach-P0 korrigiert und für Release freigegeben
+
+- Der Produktionsgegencheck bestätigte, dass die seit 22.09. öffentliche
+  Coachübersicht und alte personenbezogene Detailrouten noch HTTP 200 liefern.
+  Manuels neue Messe-Regel erlaubt nur Christian Galvano und Manuela Rodriguez
+  als echte Profile; der übrige Bestand muss fiktiv sein.
+- Lokal stehen nun zwei echte Profile und sechs sichtbar gekennzeichnete
+  Demoprofile bereit. Ehemalige persönliche Routen, Texte und fünf
+  Portraitdateien wurden entfernt; der Kalender verwendet nur Christian oder
+  klar benannte Demoprofile. Manuel gab das offizielle D+P-Advisory-Portrait
+  von Manuela am 24.09. frei. Es wurde lokal auf 1.200 x 1.200 Pixel reduziert,
+  ohne Quellmetadaten als WebP neu kodiert und sichtbar geprüft.
+- `verify:dist` verbietet die entfernten Namen, Slugs und Portraitpfade im
+  erzeugten Artefakt. Astro prüfte 41 Dateien ohne Diagnose und baute 33 Seiten;
+  1.302 interne Referenzen und der Privacy-Scan bestanden. Edge bestand 800/800
+  Desktop-, Tablet-, 390-Pixel-, 200-Prozent-, Tastatur-, Reduced-Motion-,
+  Filter-, Portrait-, Kalender- und 404-Prüfungen. Desktop und 390-Pixel-
+  Mobilansicht haben `0 px` horizontalen Überlauf; 8/8 fokussierte SFTP-
+  Rehearsal-Tests sind grün.
+- FIN-01 erfasst Ausgangsrechnungen an Unternehmen und Eingangsrechnungen von
+  Coaches ausschließlich als späteres Discovery-Epic. Keine Rechnungsfunktion
+  oder Finanzdaten wurden implementiert.
+- Manuel gab Commit, Push und Korrektur-Deployment am 24.09. frei. Der
+  öffentliche P0 bleibt bis zur ausgeführten und verifizierten
+  Korrekturveröffentlichung bestehen; das bisherige
+  Produktionsarchiv ist kein zulässiges Coach-Rollbackziel.
+- Das reproduzierbare lokale Prüfarchiv enthält 51 Einträge, sechs Demoseiten
+  und keine alten Profilpfade. SHA-256 ist
+  `cb928eaa61d38f3ebffec590c26427decf3900bdcdd6249254b0859bdcc8784d`;
+  Manifestzustand bleibt `dirty: true` und `deployment_authorized: false`.
+- Skill-Learning-Check: datumsrelative Kalenderfixtures dürfen in Browsertests
+  nicht voraussetzen, dass im Startmonat immer ein Ereignis liegt. Die
+  Abnahme navigiert nun begrenzt zum nächsten belegten Monat.
+
 ## 2026-09-22 | website/production | Statische Website auf IONOS veroeffentlicht und abgenommen
 
 - Manuel fuehrte den freigegebenen SFTP-Upload des exakten Clean-Artefakts aus

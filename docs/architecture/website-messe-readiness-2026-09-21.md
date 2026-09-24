@@ -2,6 +2,11 @@
 
 Stand: 22.09.2026
 
+Historischer Stand: Die Coach-Inhaltsfreigabe dieses Dokuments wurde durch
+Manuels Entscheidung vom 24.09.2026 ersetzt. Maßgeblich ist
+`website-coach-privacy-correction-2026-09-24.md`; das damalige Artefakt ist
+kein zulässiges Coach-Rollbackziel.
+
 Status: lokal technisch und als Clean-Artefakt gruen; der externe Diagnose-P0
 ist geschlossen. Produktion bleibt durch Inhalts- und Freigabe-Gates gesperrt.
 Ziel ist ein kontrollierter Live-Test am Donnerstag, 24.09.2026. Dieses

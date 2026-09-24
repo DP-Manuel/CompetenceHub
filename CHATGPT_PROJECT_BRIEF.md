@@ -133,11 +133,10 @@ nicht als produktive Funktion beschrieben werden.
 | `/livecoaching` | Kompatibilitätsseite; erklärt, dass Life Coaching jetzt unter Mindforge geführt wird |
 | `/businesscoaching` | Führung, Teams, Kommunikation, Rollenklärung und Veränderung |
 | `/unternehmen` | B2B-Einstieg, Anlässe, Assessment Center, Auswahl/Entwicklung, Prozess und FAQ |
-| `/coaches` | kuratiertes Coach-Netzwerk mit vier vorhandenen Profilen |
+| `/coaches` | Coach-Netzwerk mit zwei freigegebenen echten Profilen und sechs klar gekennzeichneten fiktiven Demoprofilen |
 | `/coaches/christian-galvano` | Coach-Profil für Leadership, Konflikt, Stress- und Burnoutprävention |
-| `/coaches/carolin-hupp` | Coach-Profil für Gesundheitsförderung, Bewegung, Prävention und Entspannung |
-| `/coaches/elisabeth-schwabauer` | Psychologin; Beratung, psychische Belastung, Team- und Konfliktklärung; kein Therapieangebot |
-| `/coaches/wegner-ney` | Workshops und Vorträge zu Führung, Teamstärkung, Recruiting und Personalentwicklung; KI-Angebote wurden bewusst nicht übernommen |
+| `/coaches/manuela-rodriguez` | Freigegebenes Profil für KI-Kompetenz, Didaktik, Digitalstrategie und Coaching; neutraler Monogramm-Platzhalter bis zur Bildfreigabe |
+| `/coaches/demoprofil-01` bis `-06` | fiktive, `noindex` gesetzte Demonstrationsprofile ohne reale Person, Biografie, Referenz oder Kontaktangabe |
 | `/kontakt` | statische Anfragevorschau für Unternehmen und Privatpersonen; keine Übertragung |
 | `/login` | Vorschau geplanter Bereiche für internes Team, Coaches und Unternehmen |
 | `/login/intern` | statische Vorschau für den späteren internen Bereich |
@@ -401,9 +400,7 @@ apps/website/public/images/
 ├─ partnerschaft.png
 ├─ digitale-lernplattform.png
 └─ coaches/
-   ├─ christian-galvano.webp
-   ├─ elisabeth-schwabauer.webp
-   └─ wegner-ney.jpg
+   └─ christian-galvano.webp
 ```
 
 Nicht jedes ältere Bild wird im aktuellen Frontend prominent verwendet.

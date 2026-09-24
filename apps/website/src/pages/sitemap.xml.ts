@@ -12,7 +12,9 @@ const routes = [
   "mindforge",
   "unternehmen",
   "coaches",
-  ...coaches.map((coach) => coach.profilePath),
+  ...coaches
+    .filter((coach) => coach.kind === "approved")
+    .map((coach) => coach.profilePath),
   "ueber-uns",
   "kontakt",
 ];

@@ -1,0 +1,137 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/global.css";
+
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const topics = [
+  {
+    title: "KI-Kompetenz und Verantwortung",
+    text: "KI-Literacy, ethische Standards und praktische Anwendung so vermitteln, dass Menschen Künstliche Intelligenz sicher und sinnvoll einsetzen können.",
+  },
+  {
+    title: "Didaktik und Psychoedukation",
+    text: "Komplexe Inhalte verständlich strukturieren und Lernen mit einem klaren Blick auf menschliche Wahrnehmung, Entwicklung und Transfer gestalten.",
+  },
+  {
+    title: "Coaching und Kommunikation",
+    text: "NLP, Hypnotherapie und assoziatives Bildercoaching als methodische Zugänge für Reflexion, Veränderung und klare Kommunikation nutzen.",
+  },
+];
+---
+
+<BaseLayout
+  title="Frau Manuela Rodriguez | Coaches | Competence Hub"
+  description="Frau Manuela Rodriguez verbindet KI-Kompetenz, Digitalstrategie, Didaktik, Psychoedukation und Coaching für eine menschenzentrierte Arbeitswelt."
+>
+  <main class="subpage">
+    <section class="coach-profile-hero">
+      <div>
+        <p class="eyebrow">KI · Didaktik · Coaching</p>
+        <h1>Frau Manuela Rodriguez</h1>
+        <p class="coach-profile-lead">
+          Zertifizierte KI-Managerin mit Fokus auf Human Intelligence,
+          Leitung Digitalstrategie, Dozentin, Moderatorin, Speakerin und Coach.
+        </p>
+        <p>
+          Frau Manuela Rodriguez verbindet verantwortungsvolle
+          KI-Transformation mit Lehre und persönlicher Entwicklung. Im
+          Mittelpunkt steht eine Arbeitswelt, in der Technologie Menschen
+          stärkt, statt sie zu ersetzen.
+        </p>
+        <div class="coach-profile-actions">
+          <a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a>
+          <a
+            class="button button--ghost"
+            href="https://donner-partner.de/dp/fuer-unternehmen/firmenseminare/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            D+P AI Advisory ansehen
+          </a>
+        </div>
+      </div>
+      <figure class="coach-profile-portrait">
+        <img
+          src={url("images/coaches/manuela-rodriguez.webp")}
+          alt="Porträt von Frau Manuela Rodriguez"
+          width="1200"
+          height="1200"
+        />
+        <figcaption>
+          <strong>Frau Manuela Rodriguez</strong>
+          <span>KI-Kompetenz · Didaktik · Transformation</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="coach-profile-section">
+      <div class="section-heading coach-section-heading">
+        <div>
+          <p class="eyebrow">Themenschwerpunkte</p>
+          <h2>Technologie menschlich und zukunftsfähig gestalten</h2>
+        </div>
+        <p>
+          Die Angebote richten sich an Unternehmen und Menschen, die
+          KI-Kompetenz aufbauen, Veränderung verantwortungsvoll gestalten und
+          Wissen wirksam in die Praxis übertragen möchten.
+        </p>
+      </div>
+      <div class="coach-topic-grid">
+        {topics.map((topic) => (
+          <article>
+            <h3>{topic.title}</h3>
+            <p>{topic.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="coach-credentials">
+      <div>
+        <p class="eyebrow">Profil</p>
+        <h2>KI-Management, Lehre und Coaching verbunden</h2>
+        <p>
+          Ihr Profil verbindet geisteswissenschaftliche Perspektiven,
+          Erwachsenenbildung, Digitalstrategie und methodische Coachingansätze.
+        </p>
+      </div>
+      <ul>
+        <li>Studium der Psychoanalyse und Mediävistik an der Goethe-Universität Frankfurt</li>
+        <li>Zertifizierte KI-Managerin mit Fokus auf Human Intelligence</li>
+        <li>Leitung Digitalstrategie</li>
+        <li>Dozentin für Psychoedukation, Didaktik und Spanisch</li>
+        <li>Lehraufträge an der Friedrich-Alexander-Universität Erlangen-Nürnberg und am KIT</li>
+        <li>Zertifizierte Gutachterin für Erwachsenenbildung (GRETA)</li>
+        <li>Coach für NLP, Hypnotherapie und assoziatives Bildercoaching</li>
+        <li>Moderatorin und Speakerin</li>
+      </ul>
+    </section>
+
+    <blockquote class="coach-quote">
+      <p>
+        „Mein Ziel: Eine Arbeitswelt, die menschlich bleibt und zugleich
+        zukunftsfähig ist. KI ist nicht dein Feind, auch nicht dein Freund –
+        aber KI kann dein Verbündeter sein!“
+      </p>
+      <cite>Frau Manuela Rodriguez</cite>
+    </blockquote>
+
+    <section class="showcase-strip coach-profile-cta">
+      <div>
+        <p class="eyebrow">Persönlich verbunden</p>
+        <h2>Passt diese Expertise zu Ihrem Veränderungsvorhaben?</h2>
+      </div>
+      <div>
+        <p>
+          Frau Janay Rappelt unterstützt bei der Einordnung und stellt den
+          Kontakt zwischen Unternehmen und Coach her.
+        </p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

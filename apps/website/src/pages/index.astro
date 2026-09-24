@@ -30,8 +30,12 @@ const trustPoints = [
 ];
 
 const coachPreview = coaches.map((coach) => ({
+  kind: coach.kind,
   name: coach.name,
-  role: coach.previewRole,
+  role:
+    coach.kind === "demo"
+      ? `Fiktives Demoprofil · ${coach.previewRole}`
+      : coach.previewRole,
   href: coach.profilePath,
   image: coach.image,
   imageWidth: coach.imageWidth,
@@ -114,6 +118,7 @@ const coachPreview = coaches.map((coach) => ({
           <a
             class="coach-preview__card"
             href={url(coach.href)}
+            data-demo-profile={coach.kind === "demo" ? "true" : undefined}
           >
             <span class:list={["coach-preview__visual", { "coach-preview__visual--image": coach.image }]}>
               {coach.image ? (

@@ -2025,6 +2025,32 @@ p {
   margin-bottom: 12px;
 }
 
+.demo-directory-notice,
+.demo-profile-notice,
+.demo-profile-card-note {
+  border-left: 7px solid var(--color-yellow);
+  background: var(--color-ice);
+  color: var(--color-dark);
+}
+
+.demo-directory-notice {
+  margin: -34px 0 54px;
+  padding: 20px 24px;
+}
+
+.demo-profile-notice {
+  max-width: 720px;
+  padding: 16px 18px;
+  font-weight: 850;
+}
+
+.demo-profile-card-note {
+  margin: 0 0 18px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
 .tag-list {
   display: flex;
   flex-wrap: wrap;
@@ -2239,6 +2265,33 @@ p {
   display: grid;
   gap: 18px;
   justify-items: start;
+}
+
+.coach-profile-placeholder--demo {
+  background: var(--color-pantone-deep);
+}
+
+.coach-quote {
+  display: grid;
+  gap: 18px;
+  margin: 0 0 70px;
+  padding: clamp(30px, 5vw, 54px);
+  border-left: 9px solid var(--color-red);
+  background: var(--color-ice);
+}
+
+.coach-quote p {
+  max-width: 1000px;
+  margin: 0;
+  font-size: clamp(1.35rem, 2.7vw, 2rem);
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.coach-quote cite {
+  color: var(--color-pantone-deep);
+  font-style: normal;
+  font-weight: 900;
 }
 
 .coach-profile-cta > div {
@@ -4522,19 +4575,6 @@ p {
   border-color: var(--color-pantone-deep);
   background: var(--color-yellow);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.68);
-}
-
-.coach-profile-portrait--elisabeth img {
-  object-position: center 24%;
-}
-
-.coach-profile-portrait--goran {
-  background: var(--color-soft);
-}
-
-.coach-profile-portrait--goran img {
-  object-fit: contain;
-  object-position: center bottom;
 }
 
 .coach-profile-section--pending {

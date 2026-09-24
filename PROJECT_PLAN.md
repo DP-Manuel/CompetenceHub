@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-09-22
+Last updated: 2026-09-24
 
 ## Vision
 
@@ -13,8 +13,9 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   Website Messe-Readiness sprint through Manuel's operative cutline on
   2026-09-25. The public frontend for the 2026-10-17 trade-fair presentation
   has priority over any further CAL-1 feature work.
-- Current status: green for the public static Website and yellow for the
-  separate Portal/backend production path. Migrations `0005` and `0006`, the CAL-1 domain/repository
+- Current status: yellow for the public static Website until the locally
+  complete and approved Coach-P0 correction is deployed and publicly verified, and yellow
+  for the separate Portal/backend production path. Migrations `0005` and `0006`, the CAL-1 domain/repository
   and the protected/public API are proven on isolated Staging with synthetic
   data. The explicit nullable Coach-profile mapping, endpoint-specific session
   role boundary, revisions, idempotency, concurrency, public projection and
@@ -38,15 +39,17 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   Donner + Partner is the
   confirmed operator, Lars Donner the responsible person, and the central D+P
   Impressum, AGB and Datenschutz pages are the binding legal targets.
-- Current critical path: freeze and hand over the now-live Website, test actual
-  mailbox delivery to Janay and preserve exact source/artifact/rollback
-  evidence. Manuel approved the portrait,
-  supported professional profile data and publication on 22.09. EDV removed
+- Current critical path: commit and deploy the approved, locally complete Coach
+  privacy correction, then freeze and hand over the Website with exact
+  source/artifact/rollback evidence. The 24.09 decision supersedes prior
+  individual Coach approvals except Christian Galvano and Manuela Rodriguez.
+  EDV removed
   the temporary `index.php` diagnostic
   file and accepted `.htaccess` redirects; the public four-URL preflight now
   exposes no `phpinfo()`. Route analysis, local corrections, browser
-  acceptance, read-only Webroot inventory and holiday handover are complete.
-  The production gate passes 762/762 Edge checks. The SFTP tooling now protects
+  acceptance, read-only Webroot inventory and the initial holiday handover are
+  complete. The current production gate passed 762/762 Edge checks before the
+  new content decision; the corrected local candidate passes 800/800. The SFTP tooling now protects
   resolved checklist values plus IONOS directory creation, permissions and
   entrypoint-last activation.
   App-DNS,
@@ -185,19 +188,18 @@ for Git, release, backup and restore responsibilities.
 
 ### Next Blocks
 
-1. **External P0 closure:** completed 22.09.; EDV removed `index.php`, accepted
-   `.htaccess` redirects and the four-URL preflight exposes no `phpinfo()`.
-2. **Content decision and visual Go/No-Go:** completed 22.09.; Guelcan profile,
-   portrait, professional data and publication are approved. Contact-mail
-   delivery remains an immediate production smoke.
-3. **Clean source and artifact:** completed; source `e6081580b0d7`, 55 entries,
-   SHA-256 `cc7b75c8...43da32e`.
-4. **Controlled live test:** completed 22.09.; empty pre-state inventoried,
-   exact artifact deployed and provider-specific directory issue corrected.
-5. **Production smoke:** completed; redirects/core routes/assets/security and
-   762/762 Edge checks pass. Actual mailbox delivery remains open.
-6. **Holiday handover and feature freeze by 25.09.:** record exact production
-   source/artifact, rollback evidence, owners and stop rules.
+1. **Coach-P0 correction:** locally complete 24.09.; two real profiles, six
+   explicit demos, old routes 404, 800/800 Edge checks.
+2. **Correction approval:** Manuel reviews the bounded content change and
+   separately authorizes commit, push and production replacement.
+3. **Clean source and artifact:** after approval, create a clean commit and a
+   `dirty: false` archive with manifest and SHA-256.
+4. **Controlled SFTP update:** inventory and back up the current remote state,
+   upload explicit directories and activate `index.html` last.
+5. **Production privacy smoke:** confirm two real/six demo profiles, old routes
+   404, updated sitemap, redirects, assets and browser behavior.
+6. **Holiday handover and feature freeze by 25.09.:** record exact corrected
+   source/artifact, rollback exclusions, owners and stop rules.
 7. **During absence:** allow only approved content fixes or incident recovery
    through the handover; no Portal-/Backend-Aktivierung.
 8. **After Messe / lower confidence:** resume native CAL-1 Staging UI and later
@@ -628,10 +630,10 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: freeze and hand over the public Website after the
-successful 22.09. production release without widening the real-data or
-backend-production boundary. The mailbox delivery smoke and release handover
-are the only active Website items. Native Staging UI, seat
+Current sprint goal: remove newly unapproved Coach identities from the public
+Website before Manuels 25.09. cutline, add the newly approved Manuela Rodriguez
+profile and prepare a separately authorized correction release without
+widening the real-data or backend-production boundary. Native Staging UI, seat
 reservations and calendar delivery remain separately gated. EXT-01 and the
 remaining Content owner decisions continue in parallel.
 
@@ -687,6 +689,7 @@ remaining Content owner decisions continue in parallel.
 | SB-48 | Done locally and browser-accepted | Implement the synthetic CAL-1 Coach-/Reviewer-Portaloberflaeche | SB-47; same-origin portal; synthetic identities only; no deployment | server-derived capabilities/topics, own-Coach Draft/Edit/Submit/Withdraw/Revision, separate reviewer queue/decisions, ETag recovery, role-gated DOM cleanup, loading/error/empty states and responsive/accessibility CSS; all 26 checklist points plus 57/57 Edge checks pass; Admin fixture-state/status and topic-selection findings fixed; 384 local passes/17 skips; fixture stopped and temporary context removed |
 | SB-49 | Done and pushed | Add a privacy-minimized public profile for Guelcan Elmas-Brandes | explicitly authorized source folder; Manuel approved portrait, supported professional data and publication on 22.09. | overview entry and profile route use the metadata-minimized portrait; expanded evidence-backed qualifications; 45-file Astro check, 32-page build, 1,274-reference link gate and 762 Edge checks pass; commit `4c3cb2f` pushed |
 | SB-50 | Done in production | Harden the SFTP release handoff and deploy the exact static artifact | SB-49 pushed; Manuel authorized/operated release; no credentials in files or logs | source `e6081580b0d7`, SHA-256 `cc7b75c8...43da32e`, 55 entries; IONOS directory/permission recovery; HTTP/security smoke and 762/762 production Edge checks pass; reusable first-deploy/update command lists added |
+| SB-51 | Done locally; release approved | Replace no-longer-approved personal Coach profiles with six explicit demos and add Manuela Rodriguez as the second real profile | Manuels 24.09. decision; Christian and Manuela are the only real profiles; Manuel approved the official D+P portrait plus Commit, Push and deployment | 41-file Astro check, 33-page build, 1,302-link/privacy gate, 800/800 Edge checks and 8/8 SFTP rehearsal tests; old routes return 404; old portraits absent; two real and six demo profiles verified |
 
 The technical-readiness baseline remains complete: 384 Webapp tests pass with
 17 expected Staging skips, the release ZIP includes the restore tool and no
@@ -697,11 +700,11 @@ SB-25, its EDV diagnostic P0 and the static production release are closed.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: complete the short Website handover and verify that a
-real test message to `competencehub@donner-partner.de` reaches Janay. Preserve
-the exact production source/artifact, smoke evidence and rollback stop rules.
-No CAL-1 expansion, account, role, mail automation or real-data operation
-belongs to this block.
+Recommended next block: review and explicitly authorize the SB-51 correction,
+then commit/push, build a clean artifact and replace the public Website using
+the established SFTP gate. Verify all old personal routes return 404 and the
+two real plus six demo profiles are public. No CAL-1 expansion, account, role,
+mail automation or real-data operation belongs to this block.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -710,14 +713,14 @@ progress in parallel but do not silently expand the execution backlog.
 
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Done | High | Close public-domain P0 preflight | read-only inventory and EDV action | Thomas removed `index.php`; four URLs return `403` without `phpinfo()`; `.htaccess` redirects accepted |
-| 2 | Done | High | Approve the new Coach profile | Manuel confirmed public name, copy, portrait rights and release timing on 22.09. | decision record plus desktop/390-px review; local build/link/762 Edge checks green |
-| 3 | Done | High | Create exact clean source and release artifact | step 2 complete; commit/push and release authorized | source `e6081580b0d7`, 55-entry archive and matching SHA-256 |
-| 4 | Done | High | Perform controlled IONOS live test | step 3; upload authorized; empty pre-state | exact-artifact upload, IONOS recovery and entrypoint-last activation |
-| 5 | Done | High | Prove production behavior or roll back | step 4 | HTTPS/alias redirects, core routes/assets/security and 762/762 Edge checks |
-| 6 | Doing | High | Freeze and hand over the Website | production outcome known | exact source/artifact, owner, smoke, rollback and stop criteria by 25.09.; mailbox delivery smoke |
-| 7 | Deferred | Medium | Limit absence-period work to approved fixes and incidents | step 6 handover; authorized operator | logged change, focused retest and no backend activation |
-| 8 | Deferred | Low | Resume native CAL-1 Staging UI acceptance after Messe readiness | Website stable; separate approval; synthetic only | workflow, role negatives, cleanup, zero residue and service health |
+| 1 | Done locally | High | Correct the Coach publication P0 | Manuel decision and current public inventory | two real plus six demo profiles; removed names, portraits and routes absent from the build |
+| 2 | Waiting approval | High | Review and authorize the correction release | Manuel content/release approval | local screenshots, publication matrix, 800/800 Edge checks and privacy gate |
+| 3 | Planned | High | Commit/push and create an exact clean artifact | step 2 | clean Git state, `dirty: false`, manifest, SHA-256 and archive inventory |
+| 4 | Planned | High | Perform controlled SFTP replacement | step 3; separate upload authorization | remote inventory, current-state backup, explicit directories and entrypoint last |
+| 5 | Planned | High | Prove production privacy correction | step 4 | two real/six demos, old routes 404, sitemap/privacy scan, redirects and 800 browser checks |
+| 6 | Planned | Medium | Freeze the corrected Messe handover | step 5 | exact source/artifact/hash, rollback exclusion for old Coach release and operator notes |
+| 7 | Deferred | Medium | Verify real mailbox delivery to Janay | Janay availability and mailbox routing | test message receipt without unsupported response promise |
+| 8 | Deferred | Low | Resume native CAL-1 Staging UI acceptance | Website stable; separate approval; synthetic only | workflow, role negatives, cleanup, zero residue and service health |
 
 ### Cross-Cutting Gates
 
@@ -739,6 +742,9 @@ progress in parallel but do not silently expand the execution backlog.
   Mediation remains qualification-gated. Concept Clean company-name and quote
   use are approved as of 2026-09-04; later that day Manuel explicitly requested
   the supplied logo for the bounded customer-feedback presentation.
+  For the 17.10. Messe stand, only Christian Galvano and Manuela Rodriguez are
+  real Coach profiles; all other Coach examples must remain explicit demos.
+  Manuela currently has no approved portrait in this repository.
 - **G-CONTACT:** replace the current local-mail-client handoff only after the
   receiving mailbox, sender/SMTP or API path, privacy text, retention, abuse
   protection, error behavior, monitoring and synthetic end-to-end delivery are
@@ -773,8 +779,11 @@ progress in parallel but do not silently expand the execution backlog.
   approved transition workflow.
 - Company/Coach feedback, customer voices and evidence-governed statistics.
 - Role-scoped dashboards and reporting formulas after Product-Owner approval.
-- Contract, invoice, document and mobile/PWA slices as independent epics with
-  their own privacy, security and operational gates.
+- FIN-01 Rechnungsmanagement as an independent later epic for outgoing
+  company invoices and incoming Coach invoices; bookkeeping discovery,
+  privacy, security, integration and operations gates remain open.
+- Contract, document and mobile/PWA slices as independent epics with their own
+  privacy, security and operational gates.
 - Provider-neutral Coach calendar as a later portal epic: Coaches publish a
   rolling three-month availability window with topic, format, capacity and
   status; companies may place non-binding seat reservations; staff are notified
@@ -799,7 +808,7 @@ real-data use remain separately gated actions.
 
 ## Restart Note
 
-Prepared on: 2026-09-22
+Prepared on: 2026-09-24
 
 - Base checkpoint for this slice: `4797f79`; CAL-1 migration/API/UI and browser
   work remains in the current uncommitted local worktree.
@@ -816,8 +825,11 @@ Prepared on: 2026-09-22
   inventory are proven. Thomas removed the temporary `index.php` on 22.09. and
   allowed redirects via `.htaccess`. The controlled upload, redirect/route/
   security smokes and 762/762 production Edge checks are complete.
-- The seventh Coach profile for Guelcan Elmas-Brandes is live with its approved
-  metadata-minimized portrait and evidence-backed professional data.
+- The current production release still contains six Coach identities that the
+  24.09 Messe rule supersedes. SB-51 is locally complete but not committed,
+  pushed or deployed. It retains Christian Galvano, adds Manuela Rodriguez
+  with a neutral monogram and replaces every other real identity with six
+  explicit demos. The old production artifact is not a valid Coach rollback.
 
 Resume here:
 

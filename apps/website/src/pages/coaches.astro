@@ -13,7 +13,7 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
 <BaseLayout
   title="Coach-Netzwerk | Competence Hub"
-  description="Competence Hub vermittelt ausgewählte Coaches für Unternehmen und Privatpersonen in den Bereichen Führung, Vertrieb, Life Coaching, Recruiting, Psychologie, Gesundheit und Entwicklung."
+  description="Competence Hub zeigt freigegebene Coachprofile und klar gekennzeichnete fiktive Demoprofile für Führung, KI, Vertrieb, Gesundheit und Entwicklung."
 >
   <main class="subpage">
     <section class="page-hero page-hero--accent coach-list-hero">
@@ -21,10 +21,9 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
         <p class="eyebrow">Coach-Netzwerk</p>
         <h1>Ausgewählte Coaches statt endlosem Katalog</h1>
         <p>
-          Bei Competence Hub stehen die Coaches und ihre Leistungen im
-          Mittelpunkt. Wir verbinden Unternehmen und Privatpersonen mit
-          Menschen, deren Erfahrung, Schwerpunkt und Arbeitsweise zum konkreten
-          Anliegen passen.
+          Freigegebene echte Coachprofile und klar gekennzeichnete
+          Demoprofile zeigen, wie fachliche Schwerpunkte gefunden und passend
+          zu einem konkreten Anliegen eingeordnet werden können.
         </p>
         <div class="actions">
           <a class="button" href={url("kontakt")}>Coaching-Bedarf besprechen</a>
@@ -36,6 +35,12 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
         <strong>Passend.<br />Erfahren.<br />Verlässlich.</strong>
       </aside>
     </section>
+
+    <p class="demo-directory-notice">
+      <strong>Transparenter Messestand:</strong> Demoprofile sind fiktiv und
+      dienen ausschließlich der Veranschaulichung der Plattform. Sie stellen
+      keine realen Coachpersonen dar.
+    </p>
 
     <section
       class="coach-topic-explorer"
@@ -101,6 +106,7 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
         <article
           class="coach-card coach-card--featured"
           data-coach-card
+          data-demo-profile={coach.kind === "demo" ? "true" : undefined}
           data-coach-topics={coach.topics.join(" ")}
         >
           <div class="coach-card__media">
@@ -117,9 +123,16 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
             )}
           </div>
           <div>
-            <p class="eyebrow">Coach-Profil</p>
+            <p class="eyebrow">
+              {coach.kind === "demo" ? "Fiktives Demoprofil" : "Coach-Profil"}
+            </p>
             <h2>{coach.name}</h2>
             <strong>{coach.role}</strong>
+            {coach.kind === "demo" && (
+              <p class="demo-profile-card-note">
+                Keine reale Coachperson.
+              </p>
+            )}
             <ul class="tag-list" aria-label="Themenschwerpunkte">
               {coach.focus.map((topic) => <li>{topic}</li>)}
             </ul>
@@ -141,9 +154,9 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
       <p class="eyebrow">Netzwerk im Aufbau</p>
       <h2 id="network-growth-title">Das Netzwerk wächst bewusst</h2>
       <p>
-        Die veröffentlichten Profile zeigen unterschiedliche fachliche
-        Zugänge. Weitere Coaches ergänzen wir erst, wenn Schwerpunkte,
-        Qualifikationen, Texte und Bildfreigaben abgestimmt sind.
+        Echte Profile veröffentlichen wir erst, wenn Name, Schwerpunkte,
+        Qualifikationen, Texte und Bildrechte abgestimmt sind. Bis dahin
+        bleiben technische Beispiele ausdrücklich als Demoprofile erkennbar.
       </p>
     </section>
 
