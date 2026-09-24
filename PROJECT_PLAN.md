@@ -685,7 +685,7 @@ content-owner decisions continue in parallel.
 | SB-49 | Done and pushed | Add a privacy-minimized public profile for Guelcan Elmas-Brandes | explicitly authorized source folder; Manuel approved portrait, supported professional data and publication on 22.09. | overview entry and profile route use the metadata-minimized portrait; expanded evidence-backed qualifications; 45-file Astro check, 32-page build, 1,274-reference link gate and 762 Edge checks pass; commit `4c3cb2f` pushed |
 | SB-50 | Done in production | Harden the SFTP release handoff and deploy the exact static artifact | SB-49 pushed; Manuel authorized/operated release; no credentials in files or logs | source `e6081580b0d7`, SHA-256 `cc7b75c8...43da32e`, 55 entries; IONOS directory/permission recovery; HTTP/security smoke and 762/762 production Edge checks pass; reusable first-deploy/update command lists added |
 | SB-51 | Done in production | Replace no-longer-approved personal Coach profiles with six explicit demos and add Manuela Rodriguez as the second real profile | Manuels 24.09. decision; Christian and Manuela are the only real profiles; portrait, Commit, Push and deployment approved | source `9955e038fdbc`; 52-entry artifact SHA-256 `68f5cf95...d1f8b0c`; local 800/800 Edge and 1,302-reference gates; public routes/assets/redirects/security headers green; six former routes return 404; desktop/390 px focused Edge smoke green |
-| SB-52 | Release approved; deployment doing | Apply the bounded 24.09 ad-hoc Website feedback | Janay portrait and supplied mobile number explicitly approved for public use; Commit, Push and deployment approved 24.09. | homepage action spacing, `Kalender` nav label, Janay portrait and `tel:` link implemented; 41-file Astro check, 33-page build, 1,303-reference gate and 803/803 Edge checks green |
+| SB-52 | Done in production | Apply the bounded 24.09 ad-hoc Website feedback | Janay portrait and supplied mobile number explicitly approved for public use; Commit, Push and deployment approved 24.09. | source `d493e195f80a`; 52-file artifact SHA-256 `6084fb45...177a91`; verified 54-file pre-update backup; 41-file Astro check, 33-page build, 1,303-reference gate, 803/803 local Edge and 22/22 production Edge checks green |
 
 The technical-readiness baseline remains complete: 384 Webapp tests pass with
 17 expected Staging skips, the release ZIP includes the restore tool and no
@@ -696,10 +696,11 @@ SB-25, its EDV diagnostic P0 and the static production release are closed.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: commit, push and deploy only the approved SB-52, then
-verify the four feedback points on the
-canonical Website and freeze the handover by 25.09. No CAL-1 expansion,
-account, role, mail automation or real-data operation belongs to this block.
+Recommended next block: perform one real mailbox-delivery smoke with Janay and
+record receipt or an explicit routing gap. The exact SB-52 Messe handover is
+frozen with source, artifact, backup and public evidence. No CAL-1 expansion,
+account, role, mail automation or other real-data operation belongs to this
+block.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -709,8 +710,8 @@ progress in parallel but do not silently expand the execution backlog.
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Done | High | Correct and publish the Coach publication P0 | Manuel content/release approval | two real/six demos live; old routes 404; public HTTP and Edge smoke green |
-| 2 | Doing | High | Publish and verify the bounded 24.09 feedback | public mobile number and release explicitly approved 24.09. | clean commit/artifact, canonical visual/content smoke and no regression |
-| 3 | Planned | High | Freeze the corrected Messe handover | SB-52 production evidence and hardened SFTP procedure | exact source/artifact/hash, recovery exclusions, owner and stop rules |
+| 2 | Done | High | Publish and verify the bounded 24.09 feedback | public mobile number and release explicitly approved 24.09. | clean source/artifact, verified backup, canonical routes and 22/22 Edge smoke green |
+| 3 | Done | High | Freeze the corrected Messe handover | SB-52 production evidence and hardened SFTP procedure | exact source/artifact/hash, recovery exclusions, owner and stop rules documented |
 | 4 | Planned | High | Verify real mailbox delivery to Janay | Janay availability and mailbox routing | receipt confirmed or routing gap explicitly escalated |
 | 5 | Planned | Medium | Monitor the frozen Website through Manuel's absence | handover complete | canonical/core-route/asset smoke and named incident owner |
 | 6 | Planned | Medium | Confirm Messe readiness before 17.10 | stable public Website | stakeholder visual check and core-route smoke |
@@ -726,8 +727,10 @@ progress in parallel but do not silently expand the execution backlog.
   tests.
 - **G-OPS:** no backend deployment before dedicated runtime identity, external
   secrets, monitoring/logging, backup, rollback and Chatbot isolation evidence.
-- **G-PROD:** production still requires Thomas Ross's explicit approval, final
-  legal operator/Impressum, controlled domains/origins and an approved rollout.
+- **G-PROD:** the static Website gate is closed with Thomas's Webroot and
+  redirect approval, confirmed legal targets, controlled domains, verified
+  rollback and the executed SB-52 rollout. Portal/backend production remains
+  separately gated.
 - **G-REQ:** Janay's workflow feedback is captured. Approved status vocabulary,
   transition/actor rules, customer-identity disclosure, legal acceptance and
   finance/closure evidence still gate workflow constraints and automation, but
@@ -761,11 +764,10 @@ progress in parallel but do not silently expand the execution backlog.
   tested and rollback-ready Website/Portal packages plus an explicit matrix of
   remaining DNS, SMTP, backup, account and Go/No-Go gates. Deployment,
   real accounts and real data follow only after their separate gates.
-- **G-PROD:** 2026-09-25 is the operative Manuel cutline and 2026-10-17 the
-  Website Messe deadline. A static Website release may proceed independently
-  of CAL-1 only after Webroot/rollback proof and Thomas's explicit
-  Go/No-Go plus remote-change approval. Portal/backend production still
-  requires the full account, mail, runtime, backup/alert and data gates.
+- **G-PROD:** the 2026-09-25 static Website cutline is met; its SB-52 release,
+  rollback proof and handover are complete. Recheck the frozen presentation
+  before the 2026-10-17 Messe. Portal/backend production still requires the
+  full account, mail, runtime, backup/alert and data gates.
 
 ### Project Backlog Beyond The Horizon
 

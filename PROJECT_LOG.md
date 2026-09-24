@@ -2,6 +2,27 @@
 
 Newest entries first.
 
+## 2026-09-24 | website/production | Ad-hoc-Feedback auf IONOS veröffentlicht und verifiziert
+
+- Manuel spielte das freigegebene SB-52-Artefakt aus Source `d493e195f80a`
+  kontrolliert per SFTP ein. Das ZIP enthält 52 Dateien und hat SHA-256
+  `6084fb45396a54ec067487c2c4707b2cfcbe8a8c2eb9d3583fb89ce357177a91`;
+  `index.html` wurde zuletzt aktiviert.
+- Die Vorabkopie umfasst 54 Remote-Dateien. 52 stimmen bytegenau mit dem
+  zuvor öffentlich verifizierten Release `9955e03` überein; zwei zusätzlich
+  gesicherte alte Astro-Assets sind unreferenziert. Die SHA-256-Inventardatei
+  hat Hash `a497f9e51fe5d33c4cd70ff5b367d79acc45a49f6d8b32b4688c748e93e2a3f5`.
+- Produktion liefert kanonisches HTTPS und alle Kern-, Rechts-, Robots- und
+  Sitemap-Routen korrekt; HTTP und Alias leiten dauerhaft um, unbekannte
+  Routen liefern 404 und die Sicherheitsheader sind aktiv.
+- Der fokussierte Edge-Smoke bestand 22/22 Prüfungen auf Desktop und 390 px:
+  neuer Abstand, kurze `Kalender`-Navigation, geladenes Janay-Portrait,
+  sichtbarer Telefonlink, kein horizontaler Überlauf und keine
+  JavaScript-Seitenfehler.
+- Skill-Learning-Check: der wiederverwendbare Clipboard-Passwort-Befund wurde
+  bereits im unmittelbar vorherigen Toolingblock dokumentiert und behoben;
+  kein weiteres neues Muster.
+
 ## 2026-09-24 | release/tooling | SFTP-Ablauf an Passwort-Zwischenablage angepasst
 
 - Der reale Operatorablauf widerlegte die Annahme, SFTP-Befehle koennten vor

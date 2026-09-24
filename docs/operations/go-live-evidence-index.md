@@ -1,6 +1,6 @@
 # Go-Live Evidence Index
 
-Stand: 2026-09-22
+Stand: 2026-09-24
 
 Dieser Index enthaelt nur freigabefaehige Metadaten und Verweise. Secrets,
 Private Keys, Recovery Keys und produktive personenbezogene Daten gehoeren
@@ -42,11 +42,12 @@ nicht hierher.
 | WEBSITE-SFTP-INVENTORY-20260921 | 2026-09-21 | Manuel | IONOS Webspace read-only | Host-Key, Authentifizierung, Chroot und versteckte Eintraege | PASS READ-ONLY / NO WRITE | `docs/architecture/website-sftp-read-only-inventory-2026-09-02.md`; Operatorausgabe | keine | `/` entspricht bestaetigtem Webroot; nur `index.php` mit 64 Byte; Rollbackkopie und Remote-Change bleiben offen |
 | COACH-GUELCAN-LOCAL-20260922 | 2026-09-22 | Manuel / Codex | local Website | datensparsame Coach-Seite, Portraet, Responsive- und Routenregression | PASS LOCAL / CONTENT AND RIGHTS APPROVED | `docs/content/coach-profile-guelcan-elmas-brandes-review-2026-09-22.md` | freigegebenes Portraet und belegte berufliche Profildaten; private Kontaktdaten ausgeschlossen | 32 Seiten; 1.274 interne Referenzen; 762 Edge-Checks inklusive Desktop, Tablet, 390 px und 200-Prozent-Aequivalent; Manuel gab Inhalt, Bild und Release frei |
 | WEBSITE-PRODUCTION-20260922 | 2026-09-22 | Manuel / Codex | IONOS production | exaktes Clean-Artefakt, SFTP-Aktivierung, HTTP-/Redirect-/Route-/Asset-/Security- und Edge-Smoke | PASS PRODUCTION | `PROJECT_LOG.md`; `docs/architecture/production-release-plan-2026-09-25.md`; Releasemanifest | nur freigegebene oeffentliche Inhalte | Source `e6081580b0d7`; 55 Eintraege; SHA-256 `cc7b75c8...43da32e`; leerer Vorzustand; korrigierter IONOS-Verzeichnisupload; 762/762 Edge; Kontakt-Mailzustellung separat offen |
+| WEBSITE-SB52-PRODUCTION-20260924 | 2026-09-24 | Manuel / Codex | IONOS production | freigegebenes Ad-hoc-Feedback, kontrollierter SFTP-Update, Backup sowie HTTP-/Redirect-/Route-/Security-/Edge-Smoke | PASS PRODUCTION / ROLLBACK VERIFIED | `PROJECT_LOG.md`; Releasemanifest; lokale Backup-Inventardatei | freigegebenes Janay-Portrait und oeffentliche Telefonnummer | Source `d493e195f80a`; 52 Eintraege; SHA-256 `6084fb45...177a91`; 54 Dateien gesichert, davon 52 bytegenau zum vorherigen Release und zwei unreferenzierte Altassets; 22/22 Produktions-Edgechecks; Kernrouten und Header gruen |
 | LEGAL-20260921 | 2026-09-21 | Manuel / Lars Donner | decision record | Betreiber, Verantwortlicher und zentrale Rechtspfade | PASS DECISION | `PROJECT_PLAN.md`; `PROJECT_STATUS.md`; Website-Rechtspfade | keine | Donner + Partner; Lars Donner; zentrale D+P-Seiten fuer Impressum, AGB und Datenschutz; bei neuer Datenerhebung erneut pruefen |
 | EXT-01 | offen | EDV | production infrastructure | DNS/TLS/SMTP-Vertrag | WAITING | strukturierter EDV-Input | keine | keine Live-Mail/Produktivaktivierung |
 | EXT-03 | offen | Manuel / Janay / Thomas | controlled pilot | Named-user-Abnahme und Go/No-Go | WAITING DATES PROPOSED | Onboarding-Protokoll | freigegebener Pilotmodus | 17.09. bevorzugt, 24.09. Fallback; Bestaetigung offen |
 | EXT-04 | 2026-09-21 | Lars / Manuel | public website | Betreiber, Rechtstexte und Freigabeziele | PASS DECISION | `LEGAL-20260921`; Gate Board | keine | bei neuen Diensten oder neuer Datenerhebung erneut pruefen |
-| G-PROD | 2026-09-22 | Thomas / Manuel | production | dokumentiertes Go/No-Go und separate Uploadfreigabe | AUTHORIZED / EXECUTION OPEN | Gate Board | keine | Diagnose-P0 und Inhalt/Rechte geschlossen; Manuel beauftragte Fertigstellung; Clean-Artefakt, Pre-Upload-Backup, Upload und Smokes ausstehend |
+| G-PROD | 2026-09-24 | Thomas / Manuel | production | dokumentiertes Go/No-Go und separate Uploadfreigabe | PASS EXECUTED | Gate Board; `WEBSITE-SB52-PRODUCTION-20260924` | nur freigegebene oeffentliche Inhalte | Diagnose-P0, Inhalt/Rechte, Clean-Artefakt, Backup, Upload und Produktionssmokes geschlossen; Kontakt-Mailzustellung separat offen |
 
 ## Evidence-Regel
 
