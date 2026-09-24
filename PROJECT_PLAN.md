@@ -190,7 +190,7 @@ for Git, release, backup and restore responsibilities.
 1. **Coach-P0 correction:** completed in production on 24.09.; two real
    profiles, six explicit demos, old routes 404 and public smoke green.
 2. **Release/tooling evidence:** record the successful recovery upload and the
-   ASCII-safe one-terminal SFTP hardening with focused tests.
+   ASCII-safe two-terminal SFTP handoff for clipboard-based password entry.
 3. **Holiday handover and feature freeze by 25.09.:** record exact corrected
    source/artifact/hash, recovery exclusions, owners and stop rules.
 4. **Mailbox smoke:** test one real contact-mail handoff with Janay when she is

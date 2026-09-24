@@ -41,13 +41,13 @@ if ($CommandFile) {
         throw "SFTP command file contains non-ASCII or unsupported interactive commands."
     }
     foreach ($line in $commandLines) {
-        if ($line -notmatch '^\s*(?:lcd|lpwd|mkdir|put|chmod|ls|rm|rmdir)\b') {
+        if ($line -notmatch '^\s*(?:lcd|lpwd|get|mkdir|put|chmod|ls|rm|rmdir)\b') {
             throw "SFTP command file contains an unsupported command: $line"
         }
     }
-    Set-Clipboard -Value $commands
-    Write-Host "Verified SFTP commands copied to the clipboard before login."
-    Write-Host "Enter the password manually. At the sftp> prompt, paste once with Ctrl+V."
+    Write-Host "Verified SFTP command file: $resolvedCommandFile"
+    Write-Host "The clipboard is intentionally unchanged so a copied password remains available."
+    Write-Host "After sftp> appears, load the verified command file from a second PowerShell terminal."
 }
 
 $sshKeygen = Get-Command ssh-keygen -ErrorAction Stop

@@ -120,11 +120,22 @@ Die interaktive Verbindung kann mit
 `deploy/scripts/connect-competence-hub-website-sftp.ps1` gestartet werden. Der
 Helfer prueft den gepinnten Host-Key und speichert kein Passwort. Benutzername
 kommt per Parameter oder `COMPETENCE_HUB_SFTP_USER`; das Passwort wird weiterhin
-ausschliesslich verdeckt im SFTP-Client eingegeben. Mit `-CommandFile` prueft
-der Helfer die SFTP-Befehlsliste und legt sie bereits vor der Anmeldung in die
-Zwischenablage. Dadurch reicht ein Terminal: Passwort manuell eingeben und am
-ersten `sftp>`-Prompt genau einmal `Strg+V` druecken. Das Passwort darf nicht
-in der Zwischenablage liegen.
+ausschliesslich im SFTP-Client eingegeben. Manuel kopiert das Passwort fuer die
+verdeckte Eingabe in die Zwischenablage. Deshalb veraendert `-CommandFile` die
+Zwischenablage vor der Anmeldung ausdruecklich nicht.
+
+Der verbindliche Ablauf verwendet zwei klar benannte PowerShell-Terminals:
+
+1. Terminal A startet den Verbindungshelfer und fuegt das Passwort ein.
+2. Erst nachdem in Terminal A `sftp>` sichtbar ist, laedt Terminal B die zuvor
+   gepruefte Datei mit
+   `deploy/scripts/copy-competence-hub-sftp-commands.ps1` in die
+   Zwischenablage.
+3. Terminal A erhaelt den Befehlsblock mit genau einem `Strg+V`.
+
+Damit kann weder das Passwort als SFTP-Befehl noch ein Befehlsblock als
+Passwort eingefuegt werden. Ein Ein-Terminal-Ablauf darf nur angeboten werden,
+wenn das Passwort nachweislich nicht aus der Zwischenablage kommt.
 
 Generierte `lcd`-Befehle verwenden unter Windows bei Bedarf den ASCII-sicheren
 Kurznamen des lokalen Releasepfads. Kann ein nicht-ASCII-Pfad nicht sicher

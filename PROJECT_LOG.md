@@ -2,6 +2,19 @@
 
 Newest entries first.
 
+## 2026-09-24 | release/tooling | SFTP-Ablauf an Passwort-Zwischenablage angepasst
+
+- Der reale Operatorablauf widerlegte die Annahme, SFTP-Befehle koennten vor
+  der Anmeldung in der Zwischenablage liegen: Manuel kopiert das Passwort und
+  wuerde es danach am `sftp>`-Prompt als ungueltigen Befehl einfuegen.
+- Der Verbindungshelfer prueft die Befehlsdatei weiterhin, veraendert die
+  Zwischenablage aber nicht mehr. Ein separater Kopierhelfer laedt validierte
+  Befehle erst nach sichtbarer Anmeldung aus einem ausdruecklich benannten
+  zweiten Terminal.
+- Runbook, Projektanweisung, Regressionstest und Skill-Feedback halten diesen
+  Zwei-Terminal-Standard dauerhaft fest. Das Passwort wird weder gespeichert
+  noch in Kommandozeilen oder Logs uebernommen.
+
 ## 2026-09-24 | website/feedback | Ad-hoc-Korrekturen lokal umgesetzt und geprüft
 
 - Das freigegebene Feedback aus `Quellen/24.09.2026` wurde in vier begrenzte
@@ -37,12 +50,12 @@ Newest entries first.
   bleibt 800/800 grün; die veraltete personenbezogene Produktion ist kein
   zulässiges Rollbackziel.
 - Der SFTP-Generator erzeugt für nicht-ASCII-Windows-Pfade nun einen
-  ASCII-sicheren Kurznamen. Der Verbindungshelfer kann eine geprüfte
-  Befehlsdatei vor der Anmeldung in die Zwischenablage laden, sodass Passwort
-  und Upload in einem Terminal bleiben. Die fokussierte Suite besteht 8/8.
+  ASCII-sicheren Kurznamen. Die damalige Ein-Terminal-Annahme wurde nach dem
+  realen Clipboard-Passwort-Befund noch am selben Tag durch den dokumentierten
+  Zwei-Terminal-Ablauf ersetzt. Die fokussierte Suite besteht 8/8.
 - Skill-Learning-Check: `lcd` muss vor jeder Remote-Löschung nachweislich
-  funktionieren; ein Ein-Terminal-Ablauf und ASCII-sichere Operatorpfade sind
-  im Skill-Feedback festgehalten.
+  funktionieren; ASCII-sichere Operatorpfade und der spätere Zwei-Terminal-
+  Korrekturbefund sind im Skill-Feedback festgehalten.
 
 ## 2026-09-24 | website/privacy/content | Coach-P0 korrigiert und für Release freigegeben
 

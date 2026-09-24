@@ -24,6 +24,12 @@ CONNECT_SCRIPT = (
     / "scripts"
     / "connect-competence-hub-website-sftp.ps1"
 )
+COPY_COMMANDS_SCRIPT = (
+    REPO_ROOT
+    / "deploy"
+    / "scripts"
+    / "copy-competence-hub-sftp-commands.ps1"
+)
 TARGET_EXAMPLE = REPO_ROOT / "deploy" / "website" / "sftp-target.example.json"
 RUNBOOK = REPO_ROOT / "docs" / "architecture" / "website-sftp-release-rehearsal-runbook.md"
 APACHE_CONFIG = REPO_ROOT / "apps" / "website" / "public" / ".htaccess"
@@ -191,16 +197,23 @@ def test_sftp_rehearsal_prepares_verified_local_package(tmp_path: Path) -> None:
 
 def test_sftp_connection_helper_pins_host_key_and_never_stores_password() -> None:
     helper = CONNECT_SCRIPT.read_text(encoding="utf-8")
+    copy_helper = COPY_COMMANDS_SCRIPT.read_text(encoding="utf-8")
 
     assert "SHA256:1gx2w8Rtv3wCgi7Jh8myf/KVd72cRQbow03UP8P095Q" in helper
     assert "StrictHostKeyChecking=yes" in helper
     assert "PreferredAuthentications=password" in helper
     assert "COMPETENCE_HUB_SFTP_USER" in helper
     assert "CommandFile" in helper
-    assert "Set-Clipboard" in helper
+    assert "Set-Clipboard" not in helper
+    assert "clipboard is intentionally unchanged" in helper
     assert "must begin with an ASCII-only lcd preflight" in helper
     assert "acc286854255" not in helper
     assert "Password =" not in helper
+    assert "Set-Clipboard" in copy_helper
+    assert "copied after authentication" in copy_helper
+    assert "(?:lcd|lpwd|get|mkdir|put|chmod|ls|rm|rmdir)" in copy_helper
+    assert "acc286854255" not in copy_helper
+    assert "Password =" not in copy_helper
 
 
 @pytest.mark.skipif(os.name != "nt", reason="PowerShell 5.1 behavior is tested on Windows")

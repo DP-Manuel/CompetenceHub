@@ -10,12 +10,18 @@
 - Friction: Mehrere Terminals, wechselnder Clipboard-Inhalt und ein erst spaet
   erklaerter Ablauf machten einen an sich deterministischen Release unnoetig
   fehleranfaellig.
-- Improvement: Interaktive SFTP-Handoffs muessen einen Ein-Terminal-Ablauf
-  anbieten, Befehle vor der Passwortabfrage laden, lokale Pfade ASCII-sicher
-  erzeugen und ein erfolgreiches `lcd` vor jeder Remote-Loeschung verlangen.
-- Project response: Rehearsal-Befehle verwenden bei Bedarf den Windows-
-  Kurznamen; der Verbindungshelfer kann eine gepruefte Befehlsdatei vor Login
-  in die Zwischenablage laden. Regressionstests sichern beide Regeln.
+- Correction from real operator use: Manuel kopiert das SFTP-Passwort. Jeder
+  vor der Anmeldung geladene Befehlsblock wird dadurch ueberschrieben und das
+  Passwort wuerde am `sftp>`-Prompt als `Invalid command` eingefuegt.
+- Improvement: Interaktive SFTP-Handoffs muessen die tatsaechliche
+  Passwortarbeitsweise vorab erfassen. Bei Clipboard-Passwoertern sind zwei
+  ausdruecklich benannte Terminals Pflicht: Login in Terminal A, Befehlsdatei
+  erst nach sichtbarem `sftp>` ueber Terminal B laden. Lokale Pfade bleiben
+  ASCII-sicher und `lcd` muss vor Remote-Aenderungen erfolgreich sein.
+- Project response: Der Verbindungshelfer veraendert die Zwischenablage nicht
+  mehr. Ein separater validierender Kopierhelfer laedt Befehle erst nach der
+  Authentifizierung; Runbook und Projektanweisung schreiben den
+  Zwei-Terminal-Ablauf fest.
 - Reuse potential: very high for password-based SFTP releases on Windows.
 - Proposed destination: `prepare-release` and `create-deployment-plan`.
 - Status: project pattern implemented; canonical skill proposal captured only.

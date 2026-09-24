@@ -108,3 +108,12 @@ Read this file before editing.
 - Document skipped checks with the reason, residual risk, and next verification action.
 - For non-code artifacts, use artifact-specific verification in addition to normal tests.
 - Binding project constraints, such as corporate identity, legal requirements, privacy expectations, API contracts, and deployment rules, override discretionary improvements.
+
+## SFTP Operator Interaction
+
+- Manuel copies the SFTP password and pastes it into the hidden OpenSSH prompt.
+  Never preload SFTP commands into the clipboard before authentication.
+- Use two explicitly named terminals: Terminal A for login and SFTP, Terminal B
+  to copy the verified command file only after Terminal A shows `sftp>`.
+- Do not describe this as a one-terminal workflow unless password entry is
+  demonstrably independent of the clipboard.

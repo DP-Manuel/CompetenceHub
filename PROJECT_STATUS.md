@@ -34,8 +34,11 @@ Last updated: 2026-09-24
   last. The corrected public gate passes HTTP/redirect/content/security checks
   and 762/762 Edge checks across Desktop, Tablet, 390 px and 200-percent reflow.
   The 24.09 correction additionally proved an ASCII-path failure mode; generated
-  SFTP commands now use a safe Windows short path when needed and the helper can
-  preload a verified command file before login. The focused suite passes 8/8.
+  SFTP commands now use a safe Windows short path when needed. The real
+  clipboard-password workflow requires two explicit terminals: login in A,
+  then verified command loading in B after `sftp>` appears. The connection
+  helper no longer overwrites the password clipboard; the focused suite passes
+  8/8.
   Thomas Ross confirmed that both public subdomains map to
   `/kunden/homepages/16/d101506010/htdocs/competencehub` and that the SFTP user
   has access; the read-only content inventory and redirect behavior are closed.
