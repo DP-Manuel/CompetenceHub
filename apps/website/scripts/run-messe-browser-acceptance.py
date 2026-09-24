@@ -309,7 +309,18 @@ def accessibility_checks(browser: Browser, base_url: str, acceptance: Acceptance
         acceptance.check("mobile menu receives visible keyboard focus", page.evaluate("document.activeElement?.matches(':focus-visible')"))
         page.keyboard.press("Enter")
         acceptance.check("mobile navigation opens from keyboard", page.locator(".nav-menu").get_attribute("open") is not None)
-        acceptance.check("mobile navigation includes calendar preview", page.get_by_role("link", name="Kalender-Vorschau").count() >= 1)
+        acceptance.check("mobile navigation includes calendar", page.get_by_role("link", name="Kalender", exact=True).count() >= 1)
+        page.goto(f"{base_url}/kontakt/", wait_until="networkidle")
+        contact_portrait = page.locator('.contact-person img[src*="janay-rappelt.jpg"]')
+        acceptance.check("contact page shows Janay portrait", contact_portrait.count() == 1)
+        acceptance.check(
+            "contact page Janay portrait loads",
+            contact_portrait.evaluate("image => image.complete && image.naturalWidth > 0"),
+        )
+        acceptance.check(
+            "contact page exposes Janay phone link",
+            page.locator('a[href="tel:+491726799972"]').count() == 1,
+        )
     finally:
         mobile.close()
 

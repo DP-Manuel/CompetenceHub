@@ -2,6 +2,22 @@
 
 Newest entries first.
 
+## 2026-09-24 | website/feedback | Ad-hoc-Korrekturen lokal umgesetzt und geprüft
+
+- Das freigegebene Feedback aus `Quellen/24.09.2026` wurde in vier begrenzte
+  Punkte überführt: mehr Abstand zwischen Startseitenaktionen und Direktrouten,
+  die kurze Navigationsbezeichnung `Kalender`, Janays freigegebenes Portrait im
+  Kontaktblock sowie die angegebene Mobilnummer als anklickbarer Telefonlink.
+- Astro prüfte 41 Dateien ohne Diagnose und baute 33 Seiten; das Dist-Gate
+  bestand 1.303 interne Referenzen. Die vollständige Edge-Abnahme bestand
+  803/803 Prüfungen einschließlich Desktop, Tablet, 390 px, 200 Prozent,
+  Tastatur/Fokus, Reduced Motion, Bildladeprüfung und Telefonlink.
+- Manuel gab die öffentliche Verwendung der angegebenen Mobilnummer sowie
+  Commit, Push und Produktionsupdate am 24.09. ausdrücklich frei. Das Paket
+  enthält keine Datenbank-, Backend- oder sonstigen Echtdatenänderungen.
+- Skill-Learning-Check: kein neues wiederverwendbares Muster; der bestehende
+  Content-/Rechte- und Release-Gate-Prozess deckt den Fall bereits ab.
+
 ## 2026-09-24 | website/production | Coach-P0 auf IONOS korrigiert und öffentlich verifiziert
 
 - Manuel spielte das freigegebene Clean-Artefakt aus Source `9955e038fdbc`

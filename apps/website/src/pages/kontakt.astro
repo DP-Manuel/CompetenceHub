@@ -3,7 +3,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import "../styles/global.css";
 
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 const primaryEmail = "competencehub@donner-partner.de";
+const primaryPhone = "0172 6799972";
+const primaryPhoneHref = "tel:+491726799972";
 const fallbackSubject = encodeURIComponent("Anfrage über Competence Hub");
 const fallbackMailto = `mailto:${primaryEmail}?subject=${fallbackSubject}`;
 
@@ -41,7 +47,15 @@ const topics = [
           <span><Icon name="calendar" size={22} /> Rahmen abstimmen</span>
         </div>
         <aside class="contact-person" aria-label="Persönliche Ansprechpartnerin">
-          <span aria-hidden="true"><Icon name="user-round" size={30} /></span>
+          <span class="contact-person__portrait">
+            <img
+              src={url("images/team/janay-rappelt.jpg")}
+              alt="Porträt von Frau Janay Rappelt"
+              width="1066"
+              height="1600"
+              loading="lazy"
+            />
+          </span>
           <div>
             <small>Ihre Ansprechpartnerin</small>
             <strong>Frau Janay Rappelt</strong>
@@ -51,7 +65,10 @@ const topics = [
             </p>
           </div>
         </aside>
-        <a class="contact-email" href={fallbackMailto}>{primaryEmail}</a>
+        <div class="contact-direct-links" aria-label="Direkte Kontaktwege">
+          <a class="contact-email" href={fallbackMailto}>{primaryEmail}</a>
+          <a class="contact-phone" href={primaryPhoneHref}>{primaryPhone}</a>
+        </div>
       </div>
 
       <form

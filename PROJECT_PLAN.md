@@ -626,11 +626,11 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: freeze and hand over the publicly verified Coach
-correction before Manuels 25.09. cutline without widening the real-data or
-backend-production boundary. Native Staging UI, seat reservations and calendar
-delivery remain separately gated. EXT-01 and the remaining content-owner
-decisions continue in parallel.
+Current sprint goal: close the bounded 24.09 Website feedback and freeze the
+publicly verified Website before Manuels 25.09. cutline without widening the
+real-data or backend-production boundary. Native Staging UI, seat reservations
+and calendar delivery remain separately gated. EXT-01 and the remaining
+content-owner decisions continue in parallel.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -685,6 +685,7 @@ decisions continue in parallel.
 | SB-49 | Done and pushed | Add a privacy-minimized public profile for Guelcan Elmas-Brandes | explicitly authorized source folder; Manuel approved portrait, supported professional data and publication on 22.09. | overview entry and profile route use the metadata-minimized portrait; expanded evidence-backed qualifications; 45-file Astro check, 32-page build, 1,274-reference link gate and 762 Edge checks pass; commit `4c3cb2f` pushed |
 | SB-50 | Done in production | Harden the SFTP release handoff and deploy the exact static artifact | SB-49 pushed; Manuel authorized/operated release; no credentials in files or logs | source `e6081580b0d7`, SHA-256 `cc7b75c8...43da32e`, 55 entries; IONOS directory/permission recovery; HTTP/security smoke and 762/762 production Edge checks pass; reusable first-deploy/update command lists added |
 | SB-51 | Done in production | Replace no-longer-approved personal Coach profiles with six explicit demos and add Manuela Rodriguez as the second real profile | Manuels 24.09. decision; Christian and Manuela are the only real profiles; portrait, Commit, Push and deployment approved | source `9955e038fdbc`; 52-entry artifact SHA-256 `68f5cf95...d1f8b0c`; local 800/800 Edge and 1,302-reference gates; public routes/assets/redirects/security headers green; six former routes return 404; desktop/390 px focused Edge smoke green |
+| SB-52 | Release approved; deployment doing | Apply the bounded 24.09 ad-hoc Website feedback | Janay portrait and supplied mobile number explicitly approved for public use; Commit, Push and deployment approved 24.09. | homepage action spacing, `Kalender` nav label, Janay portrait and `tel:` link implemented; 41-file Astro check, 33-page build, 1,303-reference gate and 803/803 Edge checks green |
 
 The technical-readiness baseline remains complete: 384 Webapp tests pass with
 17 expected Staging skips, the release ZIP includes the restore tool and no
@@ -695,9 +696,9 @@ SB-25, its EDV diagnostic P0 and the static production release are closed.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: freeze the corrected Website handover by 25.09. Record
-the exact source, artifact, public verification, recovery-only status of the
-superseded release and the one-terminal SFTP procedure. No CAL-1 expansion,
+Recommended next block: commit, push and deploy only the approved SB-52, then
+verify the four feedback points on the
+canonical Website and freeze the handover by 25.09. No CAL-1 expansion,
 account, role, mail automation or real-data operation belongs to this block.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
@@ -708,10 +709,10 @@ progress in parallel but do not silently expand the execution backlog.
 | # | Status | Confidence | Intended outcome | Gate / dependency | Planned test or evidence |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Done | High | Correct and publish the Coach publication P0 | Manuel content/release approval | two real/six demos live; old routes 404; public HTTP and Edge smoke green |
-| 2 | Doing | High | Freeze the corrected Messe handover | production evidence and hardened SFTP procedure | exact source/artifact/hash, recovery exclusions, owner and stop rules |
-| 3 | Planned | High | Verify real mailbox delivery to Janay | Janay availability and mailbox routing | receipt confirmed or routing gap explicitly escalated |
-| 4 | Planned | High | Monitor the frozen Website through Manuel's absence | handover complete | canonical/core-route/asset smoke and named incident owner |
-| 5 | Planned | Medium | Allow only approved content fixes or incident recovery | explicit change approval | bounded diff, local gates and production smoke |
+| 2 | Doing | High | Publish and verify the bounded 24.09 feedback | public mobile number and release explicitly approved 24.09. | clean commit/artifact, canonical visual/content smoke and no regression |
+| 3 | Planned | High | Freeze the corrected Messe handover | SB-52 production evidence and hardened SFTP procedure | exact source/artifact/hash, recovery exclusions, owner and stop rules |
+| 4 | Planned | High | Verify real mailbox delivery to Janay | Janay availability and mailbox routing | receipt confirmed or routing gap explicitly escalated |
+| 5 | Planned | Medium | Monitor the frozen Website through Manuel's absence | handover complete | canonical/core-route/asset smoke and named incident owner |
 | 6 | Planned | Medium | Confirm Messe readiness before 17.10 | stable public Website | stakeholder visual check and core-route smoke |
 | 7 | Deferred | Low | Resume native CAL-1 Staging UI acceptance | Website stable; separate approval; synthetic only | workflow, role negatives, cleanup, zero residue and service health |
 | 8 | Deferred | Low | Plan later CAL-2 reservations and calendar delivery | CAL-1 acceptance and separate requirements gate | approved contracts, privacy/RBAC and client compatibility plan |

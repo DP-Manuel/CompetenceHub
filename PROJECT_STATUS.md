@@ -18,6 +18,12 @@ Last updated: 2026-09-24
   `9955e038fdbc` on 2026-09-24. Its exact artifact contains 52 entries and has
   SHA-256
   `68f5cf95001d8b6d4954b03c473cde8bc60576e85ee5d05be45e1dd02d1f8b0c`.
+  A bounded 24.09 feedback package is complete locally: homepage action
+  spacing, the short `Kalender` navigation label, Janay's portrait and the
+  supplied mobile number as a telephone link. Its 41-file Astro check,
+  33-page build, 1,303-reference gate and 803/803 Edge checks pass. Manuel
+  explicitly approved the number's public use plus Commit, Push and production
+  publication on 2026-09-24; deployment is now the active bounded block.
   Manuel authorized and operated the controlled public release on 2026-09-22.
   A release-tooling regression that left literal
   PowerShell placeholders in the operator checklist is fixed and covered by
@@ -39,7 +45,8 @@ Last updated: 2026-09-24
   separate
   and do not block the released static Website. Actual mailbox delivery to
   Janay remains an operational smoke outside the static artifact.
-- Time-critical content status: SB-51 is live and publicly verified. Only
+- Time-critical content status: SB-51 is live and publicly verified; SB-52 is
+  locally complete and approved for the active production update. Only
   Christian Galvano and Manuela Rodriguez remain real; six profiles are
   explicit demos, all six former personal routes return 404 and the approved
   Manuela portrait loads. Canonical HTTPS, both domain redirects, sitemap,
@@ -135,8 +142,8 @@ Last updated: 2026-09-24
 ## Steering Classification
 
 - **Closed P0:** The Coach privacy correction is deployed and publicly proven.
-- **P1:** Freeze the corrected Messe handover with exact release and recovery
-  evidence. Thomas Ross remains the documented
+- **P1:** Publish and verify the approved SB-52; then freeze the corrected
+  Messe handover with exact release and recovery evidence. Thomas Ross remains the documented
   technical break-glass successor; no new permission is granted here.
 - **Paused:** Further CAL-1 browser, native Staging UI and activation work stays
   paused independently of this static Website correction.
@@ -515,16 +522,16 @@ Last updated: 2026-09-24
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: finish the Website handover and perform one real
-  mailbox-delivery smoke with Janay. Inputs are the deployed source/artifact,
-  green production evidence and mailbox ownership; deliverables are the
-  delivery result, final freeze note and incident/contact owners. Definition
-  of Done: Janay confirms receipt or the routing gap is escalated explicitly.
-- Rolling horizon: (1) record production evidence and tooling fix; (2) test
-  mailbox delivery; (3) freeze and hand over by 25.09.; (4) monitor the public
-  site through the absence window; (5) allow only approved content fixes or
-  incident recovery; (6) confirm Messe readiness before 17.10.; (7) resume
-  native CAL-1 Staging UI; (8) plan later calendar reservations/delivery.
+- Recommended next work block: release the approved SB-52. Inputs are the
+  recorded public-number/release approval and the green local gates;
+  deliverables are a clean commit/artifact, controlled SFTP update and public
+  visual/content smoke. Definition of Done: spacing, `Kalender`, Janay's
+  portrait and telephone link are public and verified without regression.
+- Rolling horizon: (1) approve and release SB-52; (2) freeze and hand over by
+  25.09.; (3) test mailbox delivery; (4) monitor the public site through the
+  absence window; (5) allow only approved content fixes or incident recovery;
+  (6) confirm Messe readiness before 17.10.; (7) resume native CAL-1 Staging
+  UI; (8) plan later calendar reservations/delivery.
   Confidence decreases after step 6.
 - Lead-time radar: EDV has confirmed the Webroot/SFTP mapping, removed the
   diagnostic file and accepted `.htaccess` redirects. The Website legal target

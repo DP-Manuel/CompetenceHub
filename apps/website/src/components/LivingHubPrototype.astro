@@ -707,7 +707,7 @@ const variants = [
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 22px;
+    margin-top: clamp(36px, 4vw, 52px);
   }
 
   .living-hero + :global(.hub-journey) {
@@ -985,6 +985,7 @@ const variants = [
     .living-hero__routes--centered {
       align-items: flex-start;
       flex-direction: column;
+      margin-top: 30px;
     }
 
   }
