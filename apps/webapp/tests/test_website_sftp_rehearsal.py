@@ -172,7 +172,11 @@ def test_sftp_rehearsal_prepares_verified_local_package(tmp_path: Path) -> None:
     update = (package / "SFTP-UPDATE-COMMANDS.txt").read_text(
         encoding="utf-8-sig"
     )
-    assert str(package / "release").replace("\\", "/") in first_deploy
+    first_lcd = first_deploy.splitlines()[0]
+    update_lcd = update.splitlines()[0]
+    assert first_lcd.startswith('lcd "')
+    assert update_lcd == first_lcd
+    assert first_lcd.isascii()
     assert "mkdir assets" in first_deploy
     assert "put -r assets" in first_deploy
     assert "chmod 755 assets" in first_deploy
@@ -192,6 +196,9 @@ def test_sftp_connection_helper_pins_host_key_and_never_stores_password() -> Non
     assert "StrictHostKeyChecking=yes" in helper
     assert "PreferredAuthentications=password" in helper
     assert "COMPETENCE_HUB_SFTP_USER" in helper
+    assert "CommandFile" in helper
+    assert "Set-Clipboard" in helper
+    assert "must begin with an ASCII-only lcd preflight" in helper
     assert "acc286854255" not in helper
     assert "Password =" not in helper
 

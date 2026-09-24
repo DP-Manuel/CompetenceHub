@@ -119,6 +119,33 @@ function Assert-SafeArchiveEntry {
     return $name
 }
 
+function ConvertTo-SftpLocalPath {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    $candidate = [System.IO.Path]::GetFullPath($Path)
+    if ($candidate -match '[^\x20-\x7e]') {
+        if ($env:OS -ne "Windows_NT") {
+            throw "The local release path contains non-ASCII characters and cannot be made SFTP-safe on this platform."
+        }
+
+        try {
+            $fileSystem = New-Object -ComObject Scripting.FileSystemObject
+            $candidate = $fileSystem.GetFolder($candidate).ShortPath
+        }
+        catch {
+            throw "The local release path contains non-ASCII characters and no Windows short path is available. Use an ASCII-only output directory."
+        }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($candidate) -or
+        $candidate -match '[^\x20-\x7e]' -or
+        $candidate.Contains('"')) {
+        throw "The local release path is not safe for an interactive SFTP lcd command."
+    }
+
+    return $candidate.Replace("\", "/")
+}
+
 $artifact = Resolve-ExistingFile -Path $ArtifactPath -Label "Artifact"
 $manifestFile = Resolve-ExistingFile -Path $ManifestPath -Label "Manifest"
 $targetFile = Resolve-ExistingFile -Path $TargetContractPath -Label "Target contract"
@@ -283,7 +310,7 @@ $inventory = Get-ChildItem -LiteralPath $releaseRoot -File -Recurse | Sort-Objec
 $inventoryPath = Join-Path $packageRoot "release-files.sha256"
 $inventory | Set-Content -LiteralPath $inventoryPath -Encoding ascii
 
-$localReleasePath = $releaseRootFull.Replace("\", "/")
+$localReleasePath = ConvertTo-SftpLocalPath -Path $releaseRootFull
 $topLevelDirectories = @(Get-ChildItem -LiteralPath $releaseRoot -Directory | Sort-Object Name)
 $allDirectories = @(Get-ChildItem -LiteralPath $releaseRoot -Directory -Recurse | Sort-Object FullName)
 $rootFiles = @(Get-ChildItem -LiteralPath $releaseRoot -File | Where-Object Name -cne "index.html" | Sort-Object Name)

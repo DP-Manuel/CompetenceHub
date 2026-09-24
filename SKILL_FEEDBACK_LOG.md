@@ -1,5 +1,25 @@
 # Skill Feedback Log
 
+### 2026-09-24 | sftp-one-terminal-ascii-path | Operatorpfad vor Remote-Aenderungen sicher vorladen
+
+- Triggering project situation: Der erzeugte SFTP-Updateblock begann mit
+  freigegebenen Remote-Loeschungen, bevor ein Windows-`lcd` mit dem Umlaut im
+  Benutzerpfad beim Einfuegen als funktionsfaehig bewiesen war. Der Pfad wurde
+  verstuemmelt; der Einstieg war dadurch kurzzeitig entfernt, waehrend der
+  Ersatz noch nicht hochgeladen werden konnte.
+- Friction: Mehrere Terminals, wechselnder Clipboard-Inhalt und ein erst spaet
+  erklaerter Ablauf machten einen an sich deterministischen Release unnoetig
+  fehleranfaellig.
+- Improvement: Interaktive SFTP-Handoffs muessen einen Ein-Terminal-Ablauf
+  anbieten, Befehle vor der Passwortabfrage laden, lokale Pfade ASCII-sicher
+  erzeugen und ein erfolgreiches `lcd` vor jeder Remote-Loeschung verlangen.
+- Project response: Rehearsal-Befehle verwenden bei Bedarf den Windows-
+  Kurznamen; der Verbindungshelfer kann eine gepruefte Befehlsdatei vor Login
+  in die Zwischenablage laden. Regressionstests sichern beide Regeln.
+- Reuse potential: very high for password-based SFTP releases on Windows.
+- Proposed destination: `prepare-release` and `create-deployment-plan`.
+- Status: project pattern implemented; canonical skill proposal captured only.
+
 ### 2026-09-24 | browser-acceptance | Datumsrelative UI-Fixtures kalenderstabil prüfen
 
 - Triggering project situation: Die Website-Browserabnahme suchte am 24.09.

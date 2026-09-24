@@ -4,8 +4,7 @@ Last updated: 2026-09-24
 
 ## Snapshot
 
-- Overall status: yellow for the public static Website until the approved
-  Coach-P0 correction is deployed and publicly verified, and yellow for the separate
+- Overall status: green for the public static Website and yellow for the separate
   Portal/backend production path. Manuel's operative cutline is
   2026-09-25, his absence starts
   2026-09-26 and the public Messe-Demostand is due 2026-10-17. Public frontend
@@ -15,14 +14,10 @@ Last updated: 2026-09-24
   complete locally. The authenticated SFTP inventory passed. Thomas Ross
   removed the temporary 64-byte `index.php` diagnostic file on 2026-09-22 and
   explicitly allowed the HTTP/HTTPS and alias redirects to be implemented in
-  `.htaccess`. A public four-URL preflight now returns only the expected empty
-  Webspace response (`403`) and no `phpinfo()` output. The Website was deployed
-  from clean source `e6081580b0d7` on 2026-09-22. Its exact artifact contains
-  55 entries and has SHA-256
-  `cc7b75c85a684960d6cda8014682c6bdea18ad81cc7e4071abded712843da32e`.
-  The then-approved seven-profile Website passed 762 Edge checks, a 32-page
-  build and 1,274 internal references before release. Manuels newer 24.09
-  publication boundary supersedes that Coach-content approval.
+  `.htaccess`. The corrected Website was deployed from clean source
+  `9955e038fdbc` on 2026-09-24. Its exact artifact contains 52 entries and has
+  SHA-256
+  `68f5cf95001d8b6d4954b03c473cde8bc60576e85ee5d05be45e1dd02d1f8b0c`.
   Manuel authorized and operated the controlled public release on 2026-09-22.
   A release-tooling regression that left literal
   PowerShell placeholders in the operator checklist is fixed and covered by
@@ -32,6 +27,9 @@ Last updated: 2026-09-24
   directory traversal rights were corrected and `index.html` was activated
   last. The corrected public gate passes HTTP/redirect/content/security checks
   and 762/762 Edge checks across Desktop, Tablet, 390 px and 200-percent reflow.
+  The 24.09 correction additionally proved an ASCII-path failure mode; generated
+  SFTP commands now use a safe Windows short path when needed and the helper can
+  preload a verified command file before login. The focused suite passes 8/8.
   Thomas Ross confirmed that both public subdomains map to
   `/kunden/homepages/16/d101506010/htdocs/competencehub` and that the SFTP user
   has access; the read-only content inventory and redirect behavior are closed.
@@ -41,16 +39,12 @@ Last updated: 2026-09-24
   separate
   and do not block the released static Website. Actual mailbox delivery to
   Janay remains an operational smoke outside the static artifact.
-- Time-critical content status: Manuel changed the Messe publication boundary
-  on 24.09. The live Website still exposes six identities that must no longer
-  remain personal. The local P0 correction is complete: only Christian
-  Galvano and Manuela Rodriguez remain real; six profiles are explicit demos,
-  former routes return 404 and former portraits are absent. Manuel approved
-  the official D+P portrait for Manuela plus Commit, Push and deployment on
-  24.09. The metadata-minimized 1.200-pixel WebP, build/privacy/link gates,
-  800/800 Edge checks and 8/8 SFTP rehearsal tests pass. The live Website is
-  therefore yellow only until the approved SB-51 correction is uploaded and
-  publicly verified.
+- Time-critical content status: SB-51 is live and publicly verified. Only
+  Christian Galvano and Manuela Rodriguez remain real; six profiles are
+  explicit demos, all six former personal routes return 404 and the approved
+  Manuela portrait loads. Canonical HTTPS, both domain redirects, sitemap,
+  security headers, core routes and focused Edge checks at desktop and 390 px
+  pass without horizontal overflow or JavaScript page errors.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling eight-step horizon.
 - External-dependency steering: a dated lead-time radar now tracks EDV, legal,
@@ -140,10 +134,9 @@ Last updated: 2026-09-24
 
 ## Steering Classification
 
-- **P0:** Deploy the locally complete Coach privacy correction after explicit
-  approval; production currently still exposes the superseded identities.
-- **P1:** Build the clean artifact, run production browser/privacy smokes and
-  freeze the corrected Messe handover. Thomas Ross remains the documented
+- **Closed P0:** The Coach privacy correction is deployed and publicly proven.
+- **P1:** Freeze the corrected Messe handover with exact release and recovery
+  evidence. Thomas Ross remains the documented
   technical break-glass successor; no new permission is granted here.
 - **Paused:** Further CAL-1 browser, native Staging UI and activation work stays
   paused independently of this static Website correction.
@@ -605,11 +598,10 @@ Last updated: 2026-09-24
 
 ## Decisions Needed
 
-- Which Donner + Partner group company is the legal Competence Hub provider?
 - Who may later cover Janay Rappelt's public mailbox during her absence? Until
   then, no public response-time promise applies.
-- Who performs the static IONOS deployment and rollback after Thomas Roß's
-  production approval?
+- Who besides Manuel may perform a later static IONOS deployment or incident
+  recovery under the documented handover?
 - How and when is Thomas Ross's confirmed technical break-glass access created
   and tested without sharing an account?
 - Which EDV-approved channel delivers Manuel's automatic backup success and

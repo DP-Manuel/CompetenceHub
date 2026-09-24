@@ -120,7 +120,17 @@ Die interaktive Verbindung kann mit
 `deploy/scripts/connect-competence-hub-website-sftp.ps1` gestartet werden. Der
 Helfer prueft den gepinnten Host-Key und speichert kein Passwort. Benutzername
 kommt per Parameter oder `COMPETENCE_HUB_SFTP_USER`; das Passwort wird weiterhin
-ausschliesslich verdeckt im SFTP-Client eingegeben.
+ausschliesslich verdeckt im SFTP-Client eingegeben. Mit `-CommandFile` prueft
+der Helfer die SFTP-Befehlsliste und legt sie bereits vor der Anmeldung in die
+Zwischenablage. Dadurch reicht ein Terminal: Passwort manuell eingeben und am
+ersten `sftp>`-Prompt genau einmal `Strg+V` druecken. Das Passwort darf nicht
+in der Zwischenablage liegen.
+
+Generierte `lcd`-Befehle verwenden unter Windows bei Bedarf den ASCII-sicheren
+Kurznamen des lokalen Releasepfads. Kann ein nicht-ASCII-Pfad nicht sicher
+umgewandelt werden, stoppt der Generator. Vor einem Update muss `lcd` immer
+erfolgreich ausgefuehrt sein; bewusst freigegebene Remote-Loeschbefehle duerfen
+erst danach folgen.
 
 ## Phase E: Smoke und Rollback
 

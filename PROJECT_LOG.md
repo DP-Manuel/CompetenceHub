@@ -2,6 +2,32 @@
 
 Newest entries first.
 
+## 2026-09-24 | website/production | Coach-P0 auf IONOS korrigiert und öffentlich verifiziert
+
+- Manuel spielte das freigegebene Clean-Artefakt aus Source `9955e038fdbc`
+  kontrolliert per SFTP ein. Das ZIP enthält 52 Einträge und hat SHA-256
+  `68f5cf95001d8b6d4954b03c473cde8bc60576e85ee5d05be45e1dd02d1f8b0c`.
+- Nach einem durch den Umlaut im lokalen Windows-Pfad beschädigten `lcd` wurde
+  eine byteidentische ASCII-Stagingkopie mit vollständigem SHA-256-Abgleich
+  verwendet. Alle Dateien und Rechte wurden übertragen; `index.html` wurde
+  zuletzt aktiviert.
+- Produktion liefert die kanonische Startseite und alle geprüften Kern-, Coach-
+  und Assetpfade mit HTTP 200. HTTP und Alias leiten dauerhaft auf kanonisches
+  HTTPS um; Sicherheitsheader sind aktiv. Christian Galvano und Manuela
+  Rodriguez sowie sechs Demoprofile sind sichtbar; alle sechs entfernten
+  Personenrouten liefern 404 und die Sitemap enthält keine Demo-/Altprofile.
+- Der fokussierte Edge-Smoke bestand auf Desktop und 390 px ohne horizontalen
+  Überlauf, Bildladefehler oder JavaScript-Seitenfehler. Die lokale Vorabnahme
+  bleibt 800/800 grün; die veraltete personenbezogene Produktion ist kein
+  zulässiges Rollbackziel.
+- Der SFTP-Generator erzeugt für nicht-ASCII-Windows-Pfade nun einen
+  ASCII-sicheren Kurznamen. Der Verbindungshelfer kann eine geprüfte
+  Befehlsdatei vor der Anmeldung in die Zwischenablage laden, sodass Passwort
+  und Upload in einem Terminal bleiben. Die fokussierte Suite besteht 8/8.
+- Skill-Learning-Check: `lcd` muss vor jeder Remote-Löschung nachweislich
+  funktionieren; ein Ein-Terminal-Ablauf und ASCII-sichere Operatorpfade sind
+  im Skill-Feedback festgehalten.
+
 ## 2026-09-24 | website/privacy/content | Coach-P0 korrigiert und für Release freigegeben
 
 - Der Produktionsgegencheck bestätigte, dass die seit 22.09. öffentliche
