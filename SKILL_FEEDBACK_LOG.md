@@ -1,5 +1,25 @@
 # Skill Feedback Log
 
+### 2026-09-25 | browser-visual-geometry | Echte Textzeilen statt Container pruefen
+
+- Triggering project situation: 72/72 Produktions-Smokes meldeten die
+  Mindforge-Seite als gruen, obwohl eine per `white-space: nowrap` verbreiterte
+  Ueberschriftenzeile sichtbar in den Erklaerungstext hineinragte.
+- Friction: Horizontaler Dokumentueberlauf, Container-Bounding-Boxes und
+  JavaScriptfehler blieben alle unauffaellig, weil der Text sichtbar aus seinem
+  Grid-Kind herausmalte, ohne die Dokumentbreite zu vergroessern.
+- Improvement: Fuer grosse Texte in Grid/Flex-Layouts muessen Browserchecks die
+  echten `Range.getClientRects()` aller Textknoten erfassen, horizontale
+  Spaltenbegrenzung, paarweise Textkollision und Abschneiden gegen den Abschnitt
+  pruefen. Desktop-Breiten, Breakpoint-Rand, Mobil und 200-Prozent-Reflow sind
+  getrennte Pflichtfaelle.
+- Project response: Die Messe-Abnahme enthaelt jetzt 42 gezielte Pruefungen bei
+  2048, 1440, 1280, 960, 390 CSS-Pixeln und 1280 bei 200 Prozent.
+- Reuse potential: very high for responsive editorial and marketing layouts.
+- Proposed destination: `write-tests`, `check-accessibility` and
+  `integrate-frontend`.
+- Status: project-local regression implemented; canonical skill proposal open.
+
 ### 2026-09-24 | sftp-one-terminal-ascii-path | Operatorpfad vor Remote-Aenderungen sicher vorladen
 
 - Triggering project situation: Der erzeugte SFTP-Updateblock begann mit

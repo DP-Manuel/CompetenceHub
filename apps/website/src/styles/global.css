@@ -1423,6 +1423,10 @@ p {
   color: var(--color-white);
 }
 
+.notice-panel > * {
+  min-width: 0;
+}
+
 .cta-panel h2,
 .notice-panel h2 {
   margin-bottom: 0;
@@ -1529,7 +1533,7 @@ p {
 
 .notice-panel__line {
   display: block;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .about-contact-person {
@@ -5567,10 +5571,6 @@ p {
 @media (max-width: 420px) {
   .hub-graph__nodes {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .notice-panel__line {
-    white-space: normal;
   }
 }
 

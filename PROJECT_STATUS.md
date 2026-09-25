@@ -46,34 +46,41 @@ Last updated: 2026-09-25
   has access; the read-only content inventory and redirect behavior are closed.
   Donner + Partner is the operator, Lars Donner the responsible person, and
   the existing central D+P Impressum, AGB and Datenschutz pages are the binding
-  legal targets. App-DNS, SMTP, accounts, roles and backend activation remain
-  separate
+  legal targets. SMTP, accounts, roles and backend activation remain separate
   and do not block the released static Website. Actual mailbox delivery to
   Janay remains an operational smoke outside the static artifact.
-- Time-critical content status: SB-51 and SB-52 are live and publicly verified.
-  SB-53 applies the expanded 25.09 feedback locally: Manuela's name, degree and
+- Time-critical content status: SB-51, SB-52 and SB-53 are live and publicly
+  verified. SB-53 applies the expanded 25.09 feedback: Manuela's name, degree and
   overview emphasis are corrected; Recruiting and Personalentwicklung are
   separate entries; Assessment Center, Supervision and Mediation are grouped
   under Personalentwicklung; the general FAQ is no longer Mindforge-led and
   the duplicate Assessment-Center block was removed from Mindforge. The second
   KI review is reconciled: Demo, Sitemap, calendar and contact boundaries were
   already correct; only the existing company/private links were moved into the
-  first homepage viewport. Build, 1,237-reference verification, 823/823 Edge
-  checks and 82/82 final-focus checks pass. Manuel approved Commit, Push and
-  the correction deployment on 25.09.; packaging and production evidence are
-  the remaining release steps.
+  first homepage viewport. Source `d051a2e27f22`, the 52-file artifact with
+  SHA-256 `d58a38d2...0ba2f95`, 1,237-reference verification, 823/823 Edge,
+  82/82 final-focus and 72/72 production checks pass. Five stale remote assets
+  were removed and the exact four-file `_astro` state was confirmed over SFTP.
+  Feature Freeze is active until after the Messe.
   Only
   Christian Galvano and Manuela Rodríguez remain real; six profiles are
   explicit demos, all six former personal routes return 404 and the approved
   Manuela portrait loads. Canonical HTTPS, both domain redirects, sitemap,
   security headers, core routes and focused Edge checks at desktop and 390 px
   pass without horizontal overflow or JavaScript page errors.
+- Confirmed Website P0: the production Mindforge boundary heading overlaps its
+  explanation at wide desktop widths. Production still serves source
+  `d051a2e27f22`; cache-bypassed HTML/CSS hashes prove this is the published
+  CSS, not a stale browser cache. SB-54 fixes only wrapping/min-width locally.
+  Astro, links and 865/865 Edge checks including actual text-line geometry at
+  all required widths pass. Commit, push and upload are deliberately pending.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling eight-step horizon.
 - External-dependency steering: a dated lead-time radar now tracks EDV, legal,
   contract, onboarding, mailbox and off-server-backup inputs before they block
-  current WIP. EXT-01 is waiting; SB-21 and the native EXT-05 rehearsal are
-  complete. A USB
+  current WIP. Website DNS/TLS/Webroot are closed; only the SMTP portion of
+  EXT-01 remains waiting. SB-21 and the native EXT-05 rehearsal are complete.
+  A USB
   target is now present in Wuerzburg and BitLocker To Go is fully enabled.
   The restore workstation system drive is also BitLocker-encrypted, the USB
   will be kept in the safe and Janay is the named recovery owner. The
@@ -158,8 +165,8 @@ Last updated: 2026-09-25
 ## Steering Classification
 
 - **Closed P0:** The Coach privacy correction is deployed and publicly proven.
-- **P1:** Package, back up, publish and smoke-test approved SB-53, then freeze
-  its exact source, artifact, hash and permissible rollback for the absence.
+- **P0 waiting release approval:** Publish only the locally verified SB-54
+  Mindforge text-overlap correction, then restore feature freeze.
   The corrected SB-52 Messe
   handover remains frozen with exact release and recovery evidence.
   Thomas Ross remains the documented
@@ -444,9 +451,9 @@ Last updated: 2026-09-25
 - Static Website live-test target: 2026-09-24, followed by handover on
   2026-09-25 and the Messe-Demostand on 2026-10-17. Portal onboarding remains
   separate and later.
-- Schedule health: yellow. The static Website, Webroot proof, EDV P0 closure
-  and clean artifact are green; exact content, contact-mail smoke and release
-  approvals remain.
+- Schedule health: green for the frozen Messe Website, yellow for the later
+  Portal. Static Website, Webroot, EDV P0, content, release approval and public
+  production evidence are green; real mailbox delivery remains a follow-up.
   Database, migrations, Auth/Outbox,
   company/contact API and the local portal UI are implemented; the expanded
   portal harness has 14/14 Staging evidence and all 17 manual browser checks
@@ -542,18 +549,16 @@ Last updated: 2026-09-25
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: package, back up, deploy and publicly smoke-test
-  the approved SB-53 correction. Inputs are the clean source and confirmed
-  SFTP target; deliverables are an exact artifact/SHA, a fresh remote backup,
-  public route/contact/privacy checks and a frozen handover. Definition of
-  Done: the deployed bytes are attributable to the approved source, production
-  checks pass and only the new safe backup remains an allowed rollback.
-- Rolling horizon: (1) release and smoke-test SB-53; (2) test mailbox delivery;
-  (3) monitor the public site through the absence window; (4) allow only
-  incident recovery during feature freeze; (5) confirm Messe readiness before
-  17.10.; (6) resume CAL-1, CAL-2 and FIN-01 only after the Messe and separate
-  approval.
-  Confidence decreases after step 6.
+- Recommended next work block: after explicit approval, commit and push only
+  SB-54, build a clean artifact, back up current production, deploy and run
+  targeted/core production smokes. Inputs are the verified two-file diff and
+  current release; deliverables are clean source/artifact/hash, exact backup
+  and production screenshots. Definition of Done: no collision or clipping at
+  required widths/200 percent and production maps to the clean commit.
+- Rolling horizon: (1) release SB-54 after approval; (2) restore and monitor
+  feature freeze; (3) test mailbox delivery when Janay is available; (4) run
+  the Messe preflight; (5) resume CAL-1; (6) plan CAL-2 and FIN-01 only after
+  the Messe and separate approval. Confidence decreases after step 4.
 - Lead-time radar: EDV has confirmed the Webroot/SFTP mapping, removed the
   diagnostic file and accepted `.htaccess` redirects. The Website legal target
   decision, content/release approval and controlled deployment are closed;
@@ -570,8 +575,8 @@ Last updated: 2026-09-25
   proposes Manuel=`admin`, Frau Janay Rappelt=`internal`, the existing minimal
   company/contact fields, explicit non-goals, ten acceptance checks, owners and
   a daily backward plan. Personal account addresses and the E-Mail channel are
-  decided; SMTP details, final app DNS, Wuerzburg backup evidence and
-  acceptance dates remain open.
+  decided; SMTP details and named-user acceptance dates remain open. Website
+  DNS/TLS/Webroot and the synthetic Wuerzburg backup rehearsal are closed.
 - UI architecture: ADR 0006 is accepted. The modular static client is packaged
   with FastAPI on one app origin, adds no frontend framework or Node production
   runtime and keeps the public Astro website independent. Local implementation
@@ -607,16 +612,13 @@ Last updated: 2026-09-25
   Staging skips; compileall, `pip check` and JavaScript syntax pass. The final
   review also enforces same-origin action links and single-recipient delivery.
   No external SMTP connection or message occurred.
-- Lead-time update: no EDV response is available on 17.09.; follow-up is being
-  handled. No host-specific or live-mail claim is made before evidence arrives.
-- Rolling delivery horizon: (1) complete native Staging UI acceptance after
-  separate approval, (2) connect the accepted static projection after a
-  separate integration decision, (3) design CAL-2
-  reservations, (4) rebuild the release/evidence package and (5) rehearse
-  named Pilot accounts plus the controlled candidate. The completed migration/
-  API Staging gate and complete local Browser gate precede this horizon.
-  Confidence decreases from step 2 onward. Content decisions and EDV/Legal gates run in
-  parallel.
+- Lead-time update: EDV closed DNS, TLS, Webroot, SFTP and redirect prerequisites;
+  SMTP and real mailbox delivery remain unproven. No live-mail claim is made.
+- Rolling delivery horizon: preserve the feature freeze, verify real mailbox
+  delivery when Janay is available, run the Messe preflight before 17.10. and
+  resume native CAL-1, CAL-2 and FIN-01 only after the Messe with separate
+  approval. Confidence decreases after the preflight; SMTP and named-user
+  onboarding remain parallel organizational gates.
 - Closed, review deployed and accepted: the Concept Clean quotation marks are inline with the actual
   quote text, and the 04.09 request for side-by-side, independently collapsible
   Use Cases is implemented. Janay confirmed the result on 2026-09-10.

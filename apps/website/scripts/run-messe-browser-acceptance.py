@@ -123,6 +123,115 @@ def no_horizontal_overflow(page: Page) -> bool:
     )
 
 
+def notice_panel_layout(page: Page) -> dict[str, bool]:
+    return page.evaluate(
+        """
+        () => {
+          const panel = document.querySelector('.notice-panel');
+          const left = panel?.firstElementChild;
+          const heading = panel?.querySelector('h2');
+          const explanation = panel?.querySelector(':scope > p');
+          if (!panel || !left || !heading || !explanation) return {present: false};
+
+          const textRects = (root) => {
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+            const rects = [];
+            let node;
+            while ((node = walker.nextNode())) {
+              if (!node.textContent.trim()) continue;
+              const range = document.createRange();
+              range.selectNodeContents(node);
+              for (const rect of range.getClientRects()) {
+                if (rect.width > 0 && rect.height > 0) {
+                  rects.push({
+                    left: rect.left,
+                    right: rect.right,
+                    top: rect.top,
+                    bottom: rect.bottom,
+                  });
+                }
+              }
+            }
+            return rects;
+          };
+          const overlaps = (a, b) =>
+            a.left < b.right - 0.5 && a.right > b.left + 0.5
+            && a.top < b.bottom - 0.5 && a.bottom > b.top + 0.5;
+          const within = (rect, parent) =>
+            rect.left >= parent.left - 1 && rect.right <= parent.right + 1
+            && rect.top >= parent.top - 1 && rect.bottom <= parent.bottom + 1;
+          const withinHorizontally = (rect, parent) =>
+            rect.left >= parent.left - 1 && rect.right <= parent.right + 1;
+
+          const panelRect = panel.getBoundingClientRect();
+          const leftRect = left.getBoundingClientRect();
+          const explanationRect = explanation.getBoundingClientRect();
+          const headingRects = textRects(heading);
+          const explanationRects = textRects(explanation);
+          const allRects = [...headingRects, ...explanationRects];
+          const stacked = explanationRect.top >= heading.getBoundingClientRect().bottom - 1;
+
+          return {
+            present: true,
+            headingInsideColumn: headingRects.every(
+              (rect) => withinHorizontally(rect, leftRect)
+            ),
+            explanationInsideColumn: explanationRects.every(
+              (rect) => withinHorizontally(rect, explanationRect)
+            ),
+            noTextCollision: headingRects.every(
+              (headingRect) => explanationRects.every(
+                (explanationTextRect) => !overlaps(headingRect, explanationTextRect)
+              )
+            ),
+            noTextClipping: allRects.every((rect) => within(rect, panelRect)),
+            dynamicHeight: Math.max(...allRects.map((rect) => rect.bottom)) <= panelRect.bottom + 1,
+            expectedFlow: innerWidth <= 980 ? stacked : !stacked,
+          };
+        }
+        """
+    )
+
+
+def mindforge_notice_layout_checks(
+    browser: Browser,
+    base_url: str,
+    acceptance: Acceptance,
+) -> None:
+    viewports = (
+        ("2048", 2048, 1200, 1),
+        ("1440", 1440, 1000, 1),
+        ("1280", 1280, 900, 1),
+        ("960", 960, 900, 1),
+        ("390", 390, 844, 1),
+        ("1280 at 200 percent", 640, 720, 2),
+    )
+    for name, width, height, device_scale_factor in viewports:
+        context = browser.new_context(
+            viewport={"width": width, "height": height},
+            device_scale_factor=device_scale_factor,
+        )
+        try:
+            page = context.new_page()
+            page.goto(f"{base_url}/mindforge/", wait_until="networkidle")
+            result = notice_panel_layout(page)
+            for check in (
+                "present",
+                "headingInsideColumn",
+                "explanationInsideColumn",
+                "noTextCollision",
+                "noTextClipping",
+                "dynamicHeight",
+                "expectedFlow",
+            ):
+                acceptance.check(
+                    f"Mindforge notice {name} {check}",
+                    result.get(check, False),
+                )
+        finally:
+            context.close()
+
+
 def route_checks(
     browser: Browser,
     base_url: str,
@@ -401,6 +510,7 @@ def main() -> None:
             interaction_checks(browser, base_url, acceptance)
             accessibility_checks(browser, base_url, acceptance)
             removed_profile_checks(browser, base_url, acceptance)
+            mindforge_notice_layout_checks(browser, base_url, acceptance)
         finally:
             browser.close()
     print(f"Messe browser acceptance complete: {acceptance.count} checks passed")

@@ -38,8 +38,10 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   Donner + Partner is the
   confirmed operator, Lars Donner the responsible person, and the central D+P
   Impressum, AGB and Datenschutz pages are the binding legal targets.
-- Current critical path: freeze and hand over the corrected Website with exact
-  source/artifact/recovery evidence. The 24.09 decision supersedes prior
+- Current critical path: close the narrowly scoped SB-54 Mindforge layout P0
+  before returning to the Messe feature freeze. Production remains on
+  `d051a2e27f22`; the local fix is verified but not committed, pushed or
+  deployed. The 24.09 decision supersedes prior
   individual Coach approvals except Christian Galvano and Manuela Rodríguez;
   that correction is now live and publicly verified.
   EDV removed
@@ -51,9 +53,8 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   focused production Edge/HTTP/privacy smoke is green. The SFTP tooling now protects
   resolved checklist values plus IONOS directory creation, permissions and
   entrypoint-last activation.
-  App-DNS,
-  SMTP, sender approval, backend
-  activation, real accounts/roles/data and productive calendar offers remain
+  SMTP, sender approval, backend activation, real accounts/roles/data and
+  productive calendar offers remain
   separate gates and do not block a local handover-ready static Website.
 - CAL-1 freeze: retain the committed migration/API/UI/browser work and its
   384-pass/17-skip, 17/17 Staging and 57/57 Edge evidence. Do not widen CAL-1 or
@@ -612,10 +613,10 @@ latest useful date, affected work and a safe fallback.
 
 | ID | External input / owner | Requested or schedule by | Planning target / latest useful | Early warning / escalation | Affected work and fallback | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| EXT-01 | App-DNS, TLS path, SMTP contract and sender routing / EDV | Requested 2026-08-21; response expected no earlier than 2026-09-14 | Earliest planning input 2026-09-14; production latest useful date follows rebaseline | Review receipt 2026-09-14; chase from 2026-09-15 and expose replacement-launch impact immediately | Blocks host-specific config and live invitations; continue full secret-free release/readiness checks and synthetic work | Waiting until 2026-09-14 |
+| EXT-01 | SMTP contract, sender approval and live routing / EDV | DNS, TLS, Webroot and SFTP closed by 2026-09-22; SMTP remains open | Obtain before real invitations, automatic notices or backend activation | Recheck after the Messe and expose any Pilot impact before named-user onboarding | Blocks only live mail and automatic notices; the static Website is already live | Partial: Website infrastructure done; SMTP waiting |
 | EXT-02 | Final contracts / Lars Donner and responsible business stakeholders | Confirm status after 2026-08-28 | Complete before named-user acceptance | Escalate if contract workflow is still unclear by 2026-09-18 | Blocks approved first-company workflow; keep pilot data synthetic | Waiting for final status |
-| EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Request the preferred 2026-09-17 slot now; hold 2026-09-24 as fallback | Use 2026-09-17 if all preceding gates close, otherwise 2026-09-24 or a documented later date | Escalate on 2026-09-21 if neither slot is acknowledged; expose the affected pilot date | Blocks named-user acceptance and production release; retain reviewed release candidate | Dates proposed; confirmation open |
-| EXT-04 | Final legal operator, Impressum and legal review | Name owner and request review path by 2026-09-18 | Confirm owner, required inputs and target date by 2026-09-24; complete before post-vacation Go/No-Go | Escalate on 2026-09-21 if no review path exists | Blocks promoted live launch; keep current legal placeholders and no promotion | Waiting; request due before vacation |
+| EXT-03 | Janay onboarding and Thomas Ross Go/No-Go appointments | Rebaseline after the Messe on 2026-10-17 | Complete before named-user acceptance and productive Portal activation | Request the concrete appointment after the Messe; expose Pilot impact if no date follows | Blocks named-user acceptance, not the live static Website; retain synthetic-only Portal evidence | Deferred until after Messe; date open |
+| EXT-04 | Final legal operator, Impressum and legal review | Closed 2026-09-21 | Reopen only for new services, data collection or changed legal content | Recheck before any material scope change | Static Website links to the binding central D+P legal pages | Done for current static Website |
 | EXT-05 | Controlled Wuerzburg off-server backup target and access window / Manuel | Completed 2026-08-25 | Quarterly after real-data activation and before relying on changed backup/encryption behavior | Reopen on failed backup, monitor, transfer or restore | Synthetic rehearsal complete: encrypted set, monitor, guarded external copy and exact-copy restore passed; production scheduling/alerting remains G-OPS work | Done for rehearsal |
 | EXT-06 | Mailbox response and absence procedure / Janay | Owner confirmed 2026-09-11; no substitute currently exists | Test routing before pilot and keep the uncovered absence period explicit | Reopen when a substitute is named or before any response-time promise | Blocks only an advertised service level, not the technical pilot; publish no unsupported response promise | Known operational gap |
 
@@ -626,11 +627,10 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: close the bounded 24.09 Website feedback and freeze the
-publicly verified Website before Manuels 25.09. cutline without widening the
-real-data or backend-production boundary. Native Staging UI, seat reservations
-and calendar delivery remain separately gated. EXT-01 and the remaining
-content-owner decisions continue in parallel.
+Current sprint goal: preserve the publicly verified SB-53 Website under
+feature freeze through the Messe while closing only the confirmed SB-54
+Mindforge text-overlap P0. Native Staging UI, seat reservations, calendar
+delivery and live SMTP remain separately gated.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -672,7 +672,7 @@ content-owner decisions continue in parallel.
 | SB-36 | Done and review deployed | Keep long Coach CTA headings and punctuation inside their layout column | shared Coach CTA; no copy or navigation change | shared columns can shrink; long German compounds hyphenate only when required; 42-file/30-page Astro build and 18 browser geometry checks across all six profiles at 1440, 960 and 390 pixels are green with zero overlap or horizontal overflow; workflow `34515246498` and public page/CSS/noindex smoke green |
 | SB-37 | Done stakeholder handoff | Batch the remaining calendar decisions and define the future quality gates | CAL-0.1 accepted; no productive implementation before CAL-D01 through CAL-D08 and ADR 0007 | non-technical eight-decision handout delivered; Janay accepted every rule and the Pilot flow on 11.09.; quality plan reconciled in SB-41; Manuel accepted ADR 0007 on 11.09. |
 | SB-38 | Done and review deployed | Add fail-closed internal-reference verification and correct 404 metadata before refreshing the clean Website artifact | current static source; no IONOS connection or production deployment | initial scan found the invalid `/404/` canonical; 404 now emits no canonical/OG URL; durable release gate verifies 1,137 internal references across 30 HTML files; clean `db96b9573d2a` artifact has 51 entries, required root files, no sensitive entries and SHA-256 `d322276b...c0481c17`; workflow `34577486065` and public 404/noindex/home/calendar smoke green; deployment flag false |
-| SB-39 | Done decision-only | Close the currently decidable Pilot account and operations ownership | Manuel's decisions; no account creation, timer activation, secret handling or real data | Manuel remains operational Admin; Thomas Ross is the technical break-glass successor; Janay owns the mailbox without a current substitute; daily backup and monitor schedules plus 30/12 retention are accepted; concise success/incident notification is required but its delivery channel remains behind EXT-01; preferred acceptance date is 17.09. with 24.09. fallback |
+| SB-39 | Done decision-only | Close the currently decidable Pilot account and operations ownership | Manuel's decisions; no account creation, timer activation, secret handling or real data | Manuel remains operational Admin; Thomas Ross is the technical break-glass successor; Janay owns the mailbox without a current substitute; daily backup and monitor schedules plus 30/12 retention are accepted; concise success/incident notification is required but its delivery channel remains behind EXT-01; named-user acceptance was rebaselined until after the Messe |
 | SB-40 | Done and review deployed | Reconcile the first Priority-A content return and implement only approved audience wording | edited stakeholder DOCX; no invented approval for partial or empty answers | CP-01/03/05/06 accepted; CP-02/04/07 partial and CP-08 open; Mindforge now distinguishes consultation conversations for private persons from Businesscoaching for companies across the relevant public routes; 43-file Astro check, 30-page build, 1,137-reference verification and true 390-pixel overflow checks across four affected routes are green; commit `5d126cb` pushed; workflow `34582211406` and public HTTP/content/noindex smoke green |
 | SB-41 | Done decision-only | Process Janay's complete Coach-calendar decision return | authorized `Quellen/11.09.2026` calendar return; no raw private file copied | CAL-D01 through CAL-D08 and the Pilot flow are accepted; public reading, authenticated company reservations, per-offer threshold/capacity, deadlines, minimal fields, governed topics, Janay task plus E-Mail, publication checks and provider-neutral calendar delivery are documented; ADR 0007 accepted 11.09. |
 | SB-42 | Done planning-only | Convert the supplied E-Mail templates into a safe automation inventory | authorized `Quellen/11.09.2026` mail-template draft; no automatic send or public claim | twelve workflow ideas are classified by event and gate; response-time, guarantee, refund, automatic reschedule, discount, newsletter and legal-acceptance claims remain blocked; transactional, marketing and legally relevant messages are explicitly separated |
@@ -686,7 +686,8 @@ content-owner decisions continue in parallel.
 | SB-50 | Done in production | Harden the SFTP release handoff and deploy the exact static artifact | SB-49 pushed; Manuel authorized/operated release; no credentials in files or logs | source `e6081580b0d7`, SHA-256 `cc7b75c8...43da32e`, 55 entries; IONOS directory/permission recovery; HTTP/security smoke and 762/762 production Edge checks pass; reusable first-deploy/update command lists added |
 | SB-51 | Done in production | Replace no-longer-approved personal Coach profiles with six explicit demos and add Manuela Rodríguez as the second real profile | Manuels 24.09. decision; Christian and Manuela are the only real profiles; portrait, Commit, Push and deployment approved | source `9955e038fdbc`; 52-entry artifact SHA-256 `68f5cf95...d1f8b0c`; local 800/800 Edge and 1,302-reference gates; public routes/assets/redirects/security headers green; six former routes return 404; desktop/390 px focused Edge smoke green |
 | SB-52 | Done in production | Apply the bounded 24.09 ad-hoc Website feedback | Janay portrait and supplied mobile number explicitly approved for public use; Commit, Push and deployment approved 24.09. | source `d493e195f80a`; 52-file artifact SHA-256 `6084fb45...177a91`; verified 54-file pre-update backup; 41-file Astro check, 33-page build, 1,303-reference gate, 803/803 local Edge and 22/22 production Edge checks green |
-| SB-53 | Release approved; packaging in progress | Apply the expanded 25.09 Website feedback as one bounded batch | direct feedback plus completed second-AI review; Manuel approved Commit, Push and deployment on 25.09. | `Manuela Rodríguez, M.A.` and `Erwachsenenbildung` corrected; Recruiting and Personalentwicklung separated; Assessment Center, Supervision and qualification-gated Mediation grouped under Personalentwicklung; general FAQ rewritten; duplicate Assessment-Center block removed from Mindforge; existing audience links moved into the first homepage viewport; 41-file Astro check, 33-page build, 1,237-reference gate, 823/823 Edge and 82/82 final-focus checks green |
+| SB-53 | Done in production; feature freeze | Apply the expanded 25.09 Website feedback as one bounded batch | direct feedback plus completed second-AI review; Manuel approved Commit, Push and deployment on 25.09. | source `d051a2e27f22`; 52-file artifact SHA-256 `d58a38d2...0ba2f95`; content and first-viewport correction; 41-file Astro check, 33-page build, 1,237-reference gate, 823/823 Edge, 82/82 final-focus and 72/72 production checks green; five stale assets removed; safe rollback frozen |
+| SB-54 | Done locally; release approval required | Prevent the Mindforge boundary heading from overlapping its explanation | confirmed production P0; only the affected CSS and regression harness; no other Website/CAL/backend work | normal wrapping plus `min-width: 0`; actual text-line geometry at 2048/1440/1280/960/390 and 1280@200%; before/after screenshots; Astro 41/0/0/0, 33 pages, 1,237 links and 865/865 Edge green; dirty candidate only, no commit/push/upload |
 
 The technical-readiness baseline remains complete: 384 Webapp tests pass with
 17 expected Staging skips, the release ZIP includes the restore tool and no
@@ -697,12 +698,12 @@ SB-25, its EDV diagnostic P0 and the static production release are closed.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: package, back up, deploy and publicly smoke-test the
-approved SB-53 correction release, then freeze its exact source, artifact,
-SHA-256 and permissible rollback state for Manuel's absence. The mailbox-
-delivery smoke remains the next independent operations gate. No CAL-1, CAL-2,
-FIN-01, account, role, mail automation or other real-data operation belongs to
-this block before the Messe.
+Recommended next block: after explicit approval, commit and push only SB-54,
+build a clean release, take a fresh exact backup of current production, deploy
+the correction and run the targeted plus core production smokes. Definition of
+Done: production shows no collision at desktop/mobile/200 percent, maps to the
+new clean commit and artifact, and has a verified emergency rollback. Mailbox
+delivery remains independent; CAL-1, CAL-2 and FIN-01 stay paused.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -714,11 +715,11 @@ progress in parallel but do not silently expand the execution backlog.
 | 1 | Done | High | Correct and publish the Coach publication P0 | Manuel content/release approval | two real/six demos live; old routes 404; public HTTP and Edge smoke green |
 | 2 | Done | High | Publish and verify the bounded 24.09 feedback | public mobile number and release explicitly approved 24.09. | clean source/artifact, verified backup, canonical routes and 22/22 Edge smoke green |
 | 3 | Done | High | Freeze the corrected Messe handover | SB-52 production evidence and hardened SFTP procedure | exact source/artifact/hash, recovery exclusions, owner and stop rules documented |
-| 4 | Doing | High | Package and publish the reconciled 25.09 correction release | second-AI review and combined release approval complete | clean source/artifact/SHA, fresh remote backup and public production smoke |
-| 5 | Planned | High | Verify real mailbox delivery to Janay | Janay availability and mailbox routing | receipt confirmed or routing gap explicitly escalated |
-| 6 | Planned | Medium | Monitor the frozen Website through Manuel's absence | handover complete | canonical/core-route/asset smoke and named incident owner |
-| 7 | Planned | Medium | Confirm Messe readiness before 17.10 | stable public Website | stakeholder visual check and core-route smoke |
-| 8 | Deferred until after Messe | Low | Resume native CAL-1 Staging UI, then plan CAL-2 and FIN-01 | Website stable after 17.10.; separate approval; synthetic only | workflow, role negatives, cleanup, zero residue and later approved delivery contracts |
+| 4 | Done | High | Package and publish the reconciled 25.09 correction release | second-AI review and combined release approval complete | source/artifact/SHA, fresh backup, stale-asset cleanup and 72/72 public smoke green |
+| 5 | Waiting approval | High | Publish only the verified SB-54 layout correction | explicit Commit/Push/upload approval; fresh production backup | clean source/artifact/hash, exact backup, targeted and core production smoke |
+| 6 | Active operations | High | Monitor the corrected frozen Website through Manuel's absence | SB-54 production gate closed; Thomas is technical break-glass | incident-led canonical/core-route/asset checks; no feature work |
+| 7 | Planned | Medium | Verify real mailbox delivery to Janay | Janay availability and mailbox routing | receipt confirmed or routing gap explicitly escalated |
+| 8 | Planned | Medium | Confirm Messe readiness before 17.10 | stable corrected public Website | stakeholder visual check and core-route smoke; CAL-1/CAL-2/FIN-01 remain post-Messe |
 
 ### Cross-Cutting Gates
 

@@ -2,6 +2,58 @@
 
 Newest entries first.
 
+## 2026-09-25 | website/P0 | Mindforge-Textueberlagerung lokal behoben, Release gestoppt
+
+- Der aktuelle Produktionsstand `d051a2e27f22` wurde lokal und mit
+  cache-deaktiviertem Abruf reproduziert. Produktions-HTML und -CSS waren
+  bytegleich zum veroeffentlichten Release; kein Browsercache- oder
+  Uploadproblem lag vor.
+- Ursache war `white-space: nowrap` auf der zweiten Zeile der grossen
+  Mindforge-Grenzueberschrift. Bei 2048, 1440 und 1280 CSS-Pixeln ragte der
+  Text 81 bis 113 Pixel aus der linken Grid-Spalte und kollidierte mit zwei
+  Zeilen des Erklaerungstextes.
+- Der begrenzte Fix erlaubt normalen Umbruch und setzt fuer die beiden
+  Grid-Kinder `min-width: 0`; Wortlaut, Design, Spaltenverhaeltnis und
+  Breakpoint bleiben unveraendert. Textzeilen liegen bei 2048, 1440, 1280,
+  960 und 390 CSS-Pixeln sowie 1280 bei 200 Prozent innerhalb ihrer Spalten,
+  kollidieren nicht und werden nicht abgeschnitten.
+- Astro 41/0/0/0, 33 Seiten, 1.237 interne Referenzen und 865/865 Edge-Checks
+  sind gruen. Ein 52-Dateien-Dirt-Artefakt mit SHA-256
+  `9f2325ec0a6cf73c206fc904fb4fe444ce851c20ba81813e29da2bd90364f5a9`
+  dient nur als lokaler Kandidat und ist nicht SFTP-faehig.
+- Kein Commit, Push oder Upload erfolgte. Vor einer Veroeffentlichung sind
+  separate Freigabe, sauberer Commit/Push, Clean-Artefakt, frische
+  Remote-Sicherung und Produktionssmoke erforderlich.
+
+## 2026-09-25 | website/production | Korrekturrelease veröffentlicht und Feature Freeze aktiviert
+
+- Manuel spielte das freigegebene Clean-Artefakt aus Source `d051a2e27f22`
+  kontrolliert per SFTP ein. Das ZIP enthält 52 Dateien und hat SHA-256
+  `d58a38d2af3b72d3fb8d62cbd859f35c7119396332a5252ae77d6faff0ba2f95`;
+  `index.html` wurde zuletzt aktiviert.
+- Die frische Vorabkopie umfasst 56 Dateien. Alle 52 erwarteten Dateien sind
+  bytegenau zum vorherigen Produktionsrelease `d493e195f80a`; vier zusätzliche
+  unreferenzierte Astro-Assets wurden erkannt. Eine alte JavaScript-Datei
+  enthielt abgelöste Demoidentitäten. Fünf nach dem neuen Release veraltete
+  Assets wurden gezielt entfernt; der Remote-Ordner `_astro` enthält danach
+  exakt die vier Artefaktdateien.
+- Die vollständige Rohsicherung bleibt mit Inventar-SHA-256
+  `25fd6153067a9571d69403a624879b39dff7f773a0e7fdc2dad017585c6813ce`
+  als Beweis erhalten, ist aber kein öffentliches Rollbackziel. Das zulässige
+  bereinigte Rollback `d493e195f80a` enthält 52 Dateien, keine Altidentitäten
+  und hat Inventar-SHA-256
+  `a815bb6022ec9d444195749e6b3d669037015561838d12b1da6b009c2f3d17fb`.
+- Produktion besteht kanonisches HTTPS, drei permanente Redirects, 404 und
+  Sicherheitsheader. 72/72 Edge-Smokes belegen Desktop/390 px, Erstviewport,
+  Kernrouten, Leistungsstruktur, direkte Kontaktwege, sechs Demo-/Noindex-
+  Profile, nicht buchbaren Kalender, entfernte Altprofile/-assets und saubere
+  Sitemap. Keine API, Datenbank, Rolle oder Echtdaten wurden aktiviert.
+- Nach diesem Korrekturrelease gilt Feature Freeze bis nach der Messe am
+  17.10.; während Manuels Abwesenheit sind nur Incident-Recovery und bereits
+  freigegebene Inhaltskorrekturen zulässig. Skill-Learning-Check: Der bekannte
+  Grundsatz, Remote-Reste gegen das neue Artefakt zu vergleichen, hat erneut
+  ein reales Privacy-Problem verhindert; kein neuer Skill-Eintrag nötig.
+
 ## 2026-09-25 | website/feedback | Erweitertes Feedback und zweites KI-Review abgeschlossen
 
 - Das erweiterte Feedback aus `Quellen/25.09.2026/Feedback.docx` bestätigt die
