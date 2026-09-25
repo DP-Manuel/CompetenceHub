@@ -9,7 +9,7 @@ vorsahen.
 | Öffentliche Darstellung | Status | Zulässiger Umfang | Bildstatus |
 | --- | --- | --- | --- |
 | Herr Christian Galvano | echtes Profil freigegeben | bestehender, bereits dokumentiert freigegebener Profilumfang | bestehendes freigegebenes Portrait |
-| Frau Manuela Rodriguez | echtes Profil durch Manuel am 24.09.2026 freigegeben | Name, Rolle, die von Manuel gelieferten Qualifikationen, Positionierungstext und Verweis auf D+P AI Advisory | offizielles D+P-Advisory-Portrait am 24.09.2026 durch Manuel freigegeben; lokal auf 1.200 x 1.200 Pixel verkleinert und ohne Quellmetadaten neu kodiert |
+| Manuela Rodríguez, M.A. | echtes Profil durch Manuel am 24.09.2026 freigegeben; Schreibweise und Abschluss am 25.09.2026 durch Manuela bestätigt | Name, Rolle, die von Manuel gelieferten Qualifikationen, Positionierungstext und Verweis auf D+P AI Advisory | offizielles D+P-Advisory-Portrait am 24.09.2026 durch Manuel freigegeben; lokal auf 1.200 x 1.200 Pixel verkleinert und ohne Quellmetadaten neu kodiert |
 | Demoprofil 01 bis 06 | fiktive Demonstrationsdaten | generische Themen, Filter und Plattformdarstellung ohne reale Biografie, Referenz oder Kontaktangabe | einheitliche abstrakte Monogramme |
 
 Bildquelle für Frau Rodriguez: offizieller D+P-Advisory-Medienbestand,

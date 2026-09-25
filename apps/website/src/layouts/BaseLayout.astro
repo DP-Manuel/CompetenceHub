@@ -40,10 +40,9 @@ const navigation = [
 const serviceNavigation = [
   { label: "Alle Leistungen", href: "leistungen", icon: "compass" as const },
   { label: "Mindforge · Coaching & Beratung", href: "mindforge", icon: "sparkles" as const },
-  { label: "Recruiting & Personalentwicklung", href: "leistungen#recruiting", icon: "users" as const },
-  { label: "Assessment Center", href: "unternehmen#assessment-center", icon: "user-round" as const },
+  { label: "Recruiting", href: "leistungen#recruiting", icon: "user-round" as const },
+  { label: "Personalentwicklung", href: "leistungen#personalentwicklung", icon: "users" as const },
   { label: "Workshops & Vorträge", href: "leistungen#gruppenformate", icon: "users" as const },
-  { label: "Supervision & Mediation", href: "leistungen#supervision-mediation", icon: "message-circle" as const },
 ];
 
 const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";

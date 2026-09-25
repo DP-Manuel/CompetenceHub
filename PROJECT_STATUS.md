@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 ## Snapshot
 
@@ -51,8 +51,19 @@ Last updated: 2026-09-24
   and do not block the released static Website. Actual mailbox delivery to
   Janay remains an operational smoke outside the static artifact.
 - Time-critical content status: SB-51 and SB-52 are live and publicly verified.
+  SB-53 applies the expanded 25.09 feedback locally: Manuela's name, degree and
+  overview emphasis are corrected; Recruiting and Personalentwicklung are
+  separate entries; Assessment Center, Supervision and Mediation are grouped
+  under Personalentwicklung; the general FAQ is no longer Mindforge-led and
+  the duplicate Assessment-Center block was removed from Mindforge. The second
+  KI review is reconciled: Demo, Sitemap, calendar and contact boundaries were
+  already correct; only the existing company/private links were moved into the
+  first homepage viewport. Build, 1,237-reference verification, 823/823 Edge
+  checks and 82/82 final-focus checks pass. Manuel approved Commit, Push and
+  the correction deployment on 25.09.; packaging and production evidence are
+  the remaining release steps.
   Only
-  Christian Galvano and Manuela Rodriguez remain real; six profiles are
+  Christian Galvano and Manuela Rodríguez remain real; six profiles are
   explicit demos, all six former personal routes return 404 and the approved
   Manuela portrait loads. Canonical HTTPS, both domain redirects, sitemap,
   security headers, core routes and focused Edge checks at desktop and 390 px
@@ -147,8 +158,10 @@ Last updated: 2026-09-24
 ## Steering Classification
 
 - **Closed P0:** The Coach privacy correction is deployed and publicly proven.
-- **P1:** Perform one real contact-mail delivery smoke with Janay. The corrected
-  Messe handover is frozen with exact SB-52 release and recovery evidence.
+- **P1:** Package, back up, publish and smoke-test approved SB-53, then freeze
+  its exact source, artifact, hash and permissible rollback for the absence.
+  The corrected SB-52 Messe
+  handover remains frozen with exact release and recovery evidence.
   Thomas Ross remains the documented
   technical break-glass successor; no new permission is granted here.
 - **Paused:** Further CAL-1 browser, native Staging UI and activation work stays
@@ -467,7 +480,7 @@ Last updated: 2026-09-24
   `/qualifizierung`, public `/login` previews and prototype routes emit
   `noindex`; the homepage remains indexable.
 - Current Website smoke evidence: local HTTP 200 for homepage, Mindforge,
-  Coach overview, Christian Galvano, Manuela Rodriguez, six demo profiles and
+  Coach overview, Christian Galvano, Manuela Rodríguez, six demo profiles and
   contact; former personal routes return controlled 404. Eight Hub nodes,
   Mindforge-to-Businesscoaching link, topic filters and empty state remain.
 - Accessibility direction: native filter buttons, `aria-pressed`, controlled
@@ -492,7 +505,8 @@ Last updated: 2026-09-24
   standalone section. Manuel then requested a smaller, scalable customer rail
   with customer logos, collaboration topic and short quotations. The supplied
   Concept Clean logo is now explicitly approved for this bounded use; the
-  refreshed review deployment is pending.
+  refreshed production deployment is complete; the 25.09 correction does not
+  change this approved customer-feedback boundary.
 - Independent content work: the SEO/GEO Content Inventory, Content-Evidence
   Matrix and Core Page Content Plan for `/`, `/unternehmen`, `/leistungen`,
   `/businesscoaching` and `/mindforge` are complete in `docs/content/`. The next
@@ -528,15 +542,17 @@ Last updated: 2026-09-24
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: perform one real contact-mail delivery smoke
-  with Janay. Inputs are her mailbox availability and the live contact route;
-  deliverables are receipt confirmation or an explicitly escalated routing
-  gap. Definition of Done: one test inquiry is demonstrably received by Janay
-  or the exact failed routing step has an owner.
-- Rolling horizon: (1) test mailbox delivery; (2) monitor the public site
-  through the absence window; (3) allow only approved content fixes or incident
-  recovery; (4) confirm Messe readiness before 17.10.; (5) resume native CAL-1
-  Staging UI; (6) plan later calendar reservations/delivery.
+- Recommended next work block: package, back up, deploy and publicly smoke-test
+  the approved SB-53 correction. Inputs are the clean source and confirmed
+  SFTP target; deliverables are an exact artifact/SHA, a fresh remote backup,
+  public route/contact/privacy checks and a frozen handover. Definition of
+  Done: the deployed bytes are attributable to the approved source, production
+  checks pass and only the new safe backup remains an allowed rollback.
+- Rolling horizon: (1) release and smoke-test SB-53; (2) test mailbox delivery;
+  (3) monitor the public site through the absence window; (4) allow only
+  incident recovery during feature freeze; (5) confirm Messe readiness before
+  17.10.; (6) resume CAL-1, CAL-2 and FIN-01 only after the Messe and separate
+  approval.
   Confidence decreases after step 6.
 - Lead-time radar: EDV has confirmed the Webroot/SFTP mapping, removed the
   diagnostic file and accepted `.htaccess` redirects. The Website legal target

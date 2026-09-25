@@ -3,7 +3,7 @@
 ## Zweck und Grenze
 
 Dieser Abgleich hält fest, welche freigegebenen Hinweise aus den Update-Paketen
-vom 13.08., 14.08., 24.08., 27.08. und 04.09.2026 bereits umgesetzt, geplant
+vom 13.08., 14.08., 24.08., 27.08., 04.09. und 25.09.2026 bereits umgesetzt, geplant
 oder weiterhin durch ein Gate gesperrt sind. Die privaten Quelldateien bleiben
 außerhalb von Git; hier stehen nur die für Planung und Abnahme notwendigen
 Ergebnisse.
@@ -18,6 +18,7 @@ Ergebnisse.
 | 27.08.2026 | Leistungsstruktur, Hub-Navigation, Coaches, Formulare, Assessment Center und Kalenderideen | Freigegebene Frontend-Korrekturen sind auf der Review-Seite umgesetzt; CAL-0 wurde review-deployed und am 10.09. akzeptiert | EDV-Daten sperren die echte Formularzustellung; fachliche Entscheidungen und ADR 0007 sperren produktive Kalender-/Reservierungsschritte |
 | 04.09.2026 | Use Cases nebeneinander und aufklappbar; weniger Scrollen bei 150 Prozent | Beide Use Cases sind kompakt, unabhängig aufklappbar, review-deployed und von Janay am 10.09. als soweit gut bestätigt | Kein offener Punkt aus diesem Paket |
 | 10.09.2026 | Coachprofil-Verlinkung, öffentliche Vorträge, persönlicher Coachkalender, Wochenendüberschneidungen und interne Freigabe | CAL-0.1 ist review-deployed und von Janay am 11.09.2026 als sehr gut akzeptiert; CAL-1-Rollenanforderungen sind dokumentiert und Janay ist als initiale fachliche Freigabeownerin bestätigt | Persönlicher Kalender bleibt bis RBAC/Webapp-Umsetzung gesperrt; Vertretung, Benachrichtigungskanal und Terminveröffentlichungsregeln offen |
+| 25.09.2026 | Manuela-Profil, Leistungsstruktur, allgemeine FAQ und abschließender zweiter KI-Abgleich | Name/Grad und Erwachsenenbildungsfokus korrigiert; Recruiting und Personalentwicklung getrennt; Assessment Center, Supervision und qualifikationsgebundene Mediation unter Personalentwicklung; Mindforge-Dopplung entfernt; vorhandene Unternehmens-/Privat-Einstiege minimal in den ersten Startseitenviewport verschoben; Demo-, Kalender-, Sitemap- und Kontaktgrenzen lokal nachgewiesen | Clean-Artefakt, Remote-Sicherung und Produktions-Smokes schließen das freigegebene Korrekturrelease; danach Feature Freeze bis nach der Messe |
 
 ## Kalender-Lieferweg
 

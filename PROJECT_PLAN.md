@@ -1,6 +1,6 @@
 # Project Plan
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 ## Vision
 
@@ -40,7 +40,7 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   Impressum, AGB and Datenschutz pages are the binding legal targets.
 - Current critical path: freeze and hand over the corrected Website with exact
   source/artifact/recovery evidence. The 24.09 decision supersedes prior
-  individual Coach approvals except Christian Galvano and Manuela Rodriguez;
+  individual Coach approvals except Christian Galvano and Manuela Rodríguez;
   that correction is now live and publicly verified.
   EDV removed
   the temporary `index.php` diagnostic
@@ -684,8 +684,9 @@ content-owner decisions continue in parallel.
 | SB-48 | Done locally and browser-accepted | Implement the synthetic CAL-1 Coach-/Reviewer-Portaloberflaeche | SB-47; same-origin portal; synthetic identities only; no deployment | server-derived capabilities/topics, own-Coach Draft/Edit/Submit/Withdraw/Revision, separate reviewer queue/decisions, ETag recovery, role-gated DOM cleanup, loading/error/empty states and responsive/accessibility CSS; all 26 checklist points plus 57/57 Edge checks pass; Admin fixture-state/status and topic-selection findings fixed; 384 local passes/17 skips; fixture stopped and temporary context removed |
 | SB-49 | Done and pushed | Add a privacy-minimized public profile for Guelcan Elmas-Brandes | explicitly authorized source folder; Manuel approved portrait, supported professional data and publication on 22.09. | overview entry and profile route use the metadata-minimized portrait; expanded evidence-backed qualifications; 45-file Astro check, 32-page build, 1,274-reference link gate and 762 Edge checks pass; commit `4c3cb2f` pushed |
 | SB-50 | Done in production | Harden the SFTP release handoff and deploy the exact static artifact | SB-49 pushed; Manuel authorized/operated release; no credentials in files or logs | source `e6081580b0d7`, SHA-256 `cc7b75c8...43da32e`, 55 entries; IONOS directory/permission recovery; HTTP/security smoke and 762/762 production Edge checks pass; reusable first-deploy/update command lists added |
-| SB-51 | Done in production | Replace no-longer-approved personal Coach profiles with six explicit demos and add Manuela Rodriguez as the second real profile | Manuels 24.09. decision; Christian and Manuela are the only real profiles; portrait, Commit, Push and deployment approved | source `9955e038fdbc`; 52-entry artifact SHA-256 `68f5cf95...d1f8b0c`; local 800/800 Edge and 1,302-reference gates; public routes/assets/redirects/security headers green; six former routes return 404; desktop/390 px focused Edge smoke green |
+| SB-51 | Done in production | Replace no-longer-approved personal Coach profiles with six explicit demos and add Manuela Rodríguez as the second real profile | Manuels 24.09. decision; Christian and Manuela are the only real profiles; portrait, Commit, Push and deployment approved | source `9955e038fdbc`; 52-entry artifact SHA-256 `68f5cf95...d1f8b0c`; local 800/800 Edge and 1,302-reference gates; public routes/assets/redirects/security headers green; six former routes return 404; desktop/390 px focused Edge smoke green |
 | SB-52 | Done in production | Apply the bounded 24.09 ad-hoc Website feedback | Janay portrait and supplied mobile number explicitly approved for public use; Commit, Push and deployment approved 24.09. | source `d493e195f80a`; 52-file artifact SHA-256 `6084fb45...177a91`; verified 54-file pre-update backup; 41-file Astro check, 33-page build, 1,303-reference gate, 803/803 local Edge and 22/22 production Edge checks green |
+| SB-53 | Release approved; packaging in progress | Apply the expanded 25.09 Website feedback as one bounded batch | direct feedback plus completed second-AI review; Manuel approved Commit, Push and deployment on 25.09. | `Manuela Rodríguez, M.A.` and `Erwachsenenbildung` corrected; Recruiting and Personalentwicklung separated; Assessment Center, Supervision and qualification-gated Mediation grouped under Personalentwicklung; general FAQ rewritten; duplicate Assessment-Center block removed from Mindforge; existing audience links moved into the first homepage viewport; 41-file Astro check, 33-page build, 1,237-reference gate, 823/823 Edge and 82/82 final-focus checks green |
 
 The technical-readiness baseline remains complete: 384 Webapp tests pass with
 17 expected Staging skips, the release ZIP includes the restore tool and no
@@ -696,11 +697,12 @@ SB-25, its EDV diagnostic P0 and the static production release are closed.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: perform one real mailbox-delivery smoke with Janay and
-record receipt or an explicit routing gap. The exact SB-52 Messe handover is
-frozen with source, artifact, backup and public evidence. No CAL-1 expansion,
-account, role, mail automation or other real-data operation belongs to this
-block.
+Recommended next block: package, back up, deploy and publicly smoke-test the
+approved SB-53 correction release, then freeze its exact source, artifact,
+SHA-256 and permissible rollback state for Manuel's absence. The mailbox-
+delivery smoke remains the next independent operations gate. No CAL-1, CAL-2,
+FIN-01, account, role, mail automation or other real-data operation belongs to
+this block before the Messe.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -712,11 +714,11 @@ progress in parallel but do not silently expand the execution backlog.
 | 1 | Done | High | Correct and publish the Coach publication P0 | Manuel content/release approval | two real/six demos live; old routes 404; public HTTP and Edge smoke green |
 | 2 | Done | High | Publish and verify the bounded 24.09 feedback | public mobile number and release explicitly approved 24.09. | clean source/artifact, verified backup, canonical routes and 22/22 Edge smoke green |
 | 3 | Done | High | Freeze the corrected Messe handover | SB-52 production evidence and hardened SFTP procedure | exact source/artifact/hash, recovery exclusions, owner and stop rules documented |
-| 4 | Planned | High | Verify real mailbox delivery to Janay | Janay availability and mailbox routing | receipt confirmed or routing gap explicitly escalated |
-| 5 | Planned | Medium | Monitor the frozen Website through Manuel's absence | handover complete | canonical/core-route/asset smoke and named incident owner |
-| 6 | Planned | Medium | Confirm Messe readiness before 17.10 | stable public Website | stakeholder visual check and core-route smoke |
-| 7 | Deferred | Low | Resume native CAL-1 Staging UI acceptance | Website stable; separate approval; synthetic only | workflow, role negatives, cleanup, zero residue and service health |
-| 8 | Deferred | Low | Plan later CAL-2 reservations and calendar delivery | CAL-1 acceptance and separate requirements gate | approved contracts, privacy/RBAC and client compatibility plan |
+| 4 | Doing | High | Package and publish the reconciled 25.09 correction release | second-AI review and combined release approval complete | clean source/artifact/SHA, fresh remote backup and public production smoke |
+| 5 | Planned | High | Verify real mailbox delivery to Janay | Janay availability and mailbox routing | receipt confirmed or routing gap explicitly escalated |
+| 6 | Planned | Medium | Monitor the frozen Website through Manuel's absence | handover complete | canonical/core-route/asset smoke and named incident owner |
+| 7 | Planned | Medium | Confirm Messe readiness before 17.10 | stable public Website | stakeholder visual check and core-route smoke |
+| 8 | Deferred until after Messe | Low | Resume native CAL-1 Staging UI, then plan CAL-2 and FIN-01 | Website stable after 17.10.; separate approval; synthetic only | workflow, role negatives, cleanup, zero residue and later approved delivery contracts |
 
 ### Cross-Cutting Gates
 
@@ -740,7 +742,7 @@ progress in parallel but do not silently expand the execution backlog.
   Mediation remains qualification-gated. Concept Clean company-name and quote
   use are approved as of 2026-09-04; later that day Manuel explicitly requested
   the supplied logo for the bounded customer-feedback presentation.
-  For the 17.10. Messe stand, only Christian Galvano and Manuela Rodriguez are
+  For the 17.10. Messe stand, only Christian Galvano and Manuela Rodríguez are
   real Coach profiles; all other Coach examples must remain explicit demos.
   Manuela's approved, metadata-minimized portrait is published.
 - **G-CONTACT:** replace the current local-mail-client handoff only after the

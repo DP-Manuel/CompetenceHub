@@ -110,20 +110,20 @@ export const coaches: Coach[] = [
   },
   {
     kind: "approved",
-    name: "Frau Manuela Rodriguez",
+    name: "Manuela Rodríguez, M.A.",
     role: "KI-Managerin, Leitung Digitalstrategie, Dozentin und Coach",
     previewRole: "KI-Kompetenz, Didaktik & Transformation",
     focus: [
       "KI-Literacy und ethische Standards",
       "Didaktik und Psychoedukation",
-      "NLP- und Bildercoaching",
+      "Erwachsenenbildung",
     ],
     topics: [
       "ki-transformation",
       "fuehrung",
       "psychologische-beratung",
     ],
-    text: "Frau Manuela Rodriguez verbindet KI-Kompetenz, Didaktik und menschenzentrierte Transformation und begleitet Unternehmen beim verantwortungsvollen Einsatz künstlicher Intelligenz.",
+    text: "Manuela Rodríguez verbindet KI-Kompetenz, Didaktik und menschenzentrierte Transformation und begleitet Unternehmen beim verantwortungsvollen Einsatz künstlicher Intelligenz.",
     profilePath: "coaches/manuela-rodriguez",
     image: "images/coaches/manuela-rodriguez.webp",
     imageWidth: 1200,

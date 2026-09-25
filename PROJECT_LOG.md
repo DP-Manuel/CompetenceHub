@@ -2,6 +2,36 @@
 
 Newest entries first.
 
+## 2026-09-25 | website/feedback | Erweitertes Feedback und zweites KI-Review abgeschlossen
+
+- Das erweiterte Feedback aus `Quellen/25.09.2026/Feedback.docx` bestätigt die
+  aktuelle Website insgesamt, korrigiert Manuela zu `Manuela Rodríguez, M.A.`
+  und ersetzt den zu speziellen Übersichts-Tag durch `Erwachsenenbildung`.
+- Name, Seitentitel, Beschreibung, sichtbare Profilstellen, Alternativtext,
+  Publikationsmatrix und Browserregression wurden konsistent angepasst. Der
+  ASCII-sichere Profilpfad `/coaches/manuela-rodriguez/` und die belegte
+  Bildercoaching-Qualifikation auf der Detailseite bleiben unverändert.
+- Recruiting und Personalentwicklung besitzen nun getrennte Einstiege und
+  Kontaktoptionen. Assessment Center, Supervision und die weiterhin
+  qualifikationsgebundene Mediation sind unter Personalentwicklung eingeordnet;
+  die Gesamt-FAQ ist allgemein ausgerichtet und die Assessment-Center-Dopplung
+  auf Mindforge entfällt. Ein gezielter Umbruch verhindert die unsaubere
+  Trennung des langen Begriffs in den runden Hero-Knoten.
+- Der abschließende zweite KI-Abgleich bestätigte Demo-, Sitemap-, Kalender-
+  und Kontaktgrenzen. Einziger berechtigter Nachtrag: Die bereits vorhandenen
+  Einstiege für Unternehmen und Privatpersonen wurden ohne Text-, Ziel- oder
+  Designänderung in den ersten sichtbaren Startseitenbereich verschoben.
+- Astro prüfte 41 Dateien ohne Diagnose und baute 33 Seiten; 1.237 interne
+  Referenzen, 823/823 vollständige Edge-Prüfungen und 82/82 zusätzliche
+  Abschlussprüfungen bestanden. Letztere belegen die beiden Einstiege im
+  Desktop-/390-Pixel-Erstviewport, direkte E-Mail-/Telefonwege, ehrlichen
+  Mailclient-Handoff, sechs klar markierte und crawler-gesperrte Demoprofile,
+  nicht buchbare Demotermine sowie das Fehlen alter Identitäten in Dist und
+  Sitemap.
+- Manuel gab Commit, Push und Korrektur-Deployment am 25.09. ausdrücklich
+  frei. Skill-Learning-Check: kein neues wiederverwendbares Muster; der
+  bestehende Feedback-Batching-, Privacy- und Releaseprozess deckt den Fall ab.
+
 ## 2026-09-24 | website/production | Ad-hoc-Feedback auf IONOS veröffentlicht und verifiziert
 
 - Manuel spielte das freigegebene SB-52-Artefakt aus Source `d493e195f80a`

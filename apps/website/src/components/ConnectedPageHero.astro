@@ -14,6 +14,7 @@ type IconName =
 
 interface RelatedNode {
   label: string;
+  labelSuffix?: string;
   detail: string;
   href: string;
   icon: IconName;
@@ -117,10 +118,12 @@ const paths = related.length === 4
           class={`connected-page-hero__node connected-page-hero__node--${index + 1}`}
           href={url(node.href)}
           data-connected-page-node={index + 1}
-          aria-label={`${node.label}: ${node.detail}`}
+          aria-label={`${node.label}${node.labelSuffix ?? ""}: ${node.detail}`}
         >
           <Icon name={node.icon} size={23} />
-          <strong>{node.label}</strong>
+          <strong>
+            {node.label}{node.labelSuffix && <><wbr />{node.labelSuffix}</>}
+          </strong>
           <small>{node.detail}</small>
         </a>
       ))}

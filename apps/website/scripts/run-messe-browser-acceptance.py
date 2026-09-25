@@ -220,6 +220,15 @@ def interaction_checks(browser: Browser, base_url: str, acceptance: Acceptance) 
         page.goto(base_url, wait_until="networkidle")
         acceptance.check("public header has no unfinished Login link", page.get_by_role("link", name="Login").count() == 0)
         acceptance.check("Living Hub is present", page.locator("[data-living-hero]").count() == 1)
+        audience_routes = page.locator('.living-hero__routes[aria-label="Direkte Einstiege"]')
+        acceptance.check("desktop audience routes are visible", audience_routes.is_visible())
+        acceptance.check(
+            "desktop company and private entries are in the first viewport",
+            all(
+                (audience_routes.get_by_role("link", name=name, exact=True).bounding_box() or {}).get("y", 1001) < 1000
+                for name in ("Für Unternehmen", "Mindforge · Life Coaching")
+            ),
+        )
         before = page.locator("[data-coach-viewport]").evaluate("element => element.scrollLeft")
         page.locator("[data-coach-next]").click()
         page.wait_for_timeout(700)
@@ -230,13 +239,16 @@ def interaction_checks(browser: Browser, base_url: str, acceptance: Acceptance) 
         acceptance.check("Coach directory exposes exactly six demo profiles", page.locator('[data-demo-profile="true"]').count() == 6)
         acceptance.check("Coach directory labels demo status", page.get_by_text("Keine reale Coachperson.", exact=True).count() == 6)
         acceptance.check("Christian Galvano remains an approved real profile", page.get_by_role("heading", name="Herr Christian Galvano", exact=True).count() == 1)
-        acceptance.check("Manuela Rodriguez is present as the second real profile", page.get_by_role("heading", name="Frau Manuela Rodriguez", exact=True).count() == 1)
+        acceptance.check("Manuela Rodríguez, M.A. is present as the second real profile", page.get_by_role("heading", name="Manuela Rodríguez, M.A.", exact=True).count() == 1)
+        manuela_card = page.get_by_role("heading", name="Manuela Rodríguez, M.A.", exact=True).locator("xpath=ancestor::article")
+        acceptance.check("Manuela overview uses Erwachsenenbildung", manuela_card.get_by_text("Erwachsenenbildung", exact=True).count() == 1)
+        acceptance.check("Manuela overview omits the specialized Bildercoaching tag", manuela_card.get_by_text("NLP- und Bildercoaching", exact=True).count() == 0)
         page.get_by_role("button", name="KI & Transformation").click()
-        acceptance.check("KI filter shows only Manuela Rodriguez", page.locator("[data-coach-card]:visible").count() == 1 and page.get_by_role("heading", name="Frau Manuela Rodriguez", exact=True).is_visible())
+        acceptance.check("KI filter shows only Manuela Rodríguez", page.locator("[data-coach-card]:visible").count() == 1 and page.get_by_role("heading", name="Manuela Rodríguez, M.A.", exact=True).is_visible())
 
         page.goto(f"{base_url}/coaches/manuela-rodriguez/", wait_until="networkidle")
         acceptance.check("Manuela profile exposes approved KI focus", page.get_by_text("Zertifizierte KI-Managerin mit Fokus auf Human Intelligence", exact=True).count() == 1)
-        portrait = page.locator('.coach-profile-portrait img[alt="Porträt von Frau Manuela Rodriguez"]')
+        portrait = page.locator('.coach-profile-portrait img[alt="Porträt von Manuela Rodríguez"]')
         acceptance.check("Manuela profile uses the approved portrait", portrait.count() == 1 and portrait.evaluate("image => image.complete && image.naturalWidth === 1200 && image.naturalHeight === 1200"))
 
         page.goto(f"{base_url}/coaches/demoprofil-01/", wait_until="networkidle")
@@ -244,12 +256,31 @@ def interaction_checks(browser: Browser, base_url: str, acceptance: Acceptance) 
 
         page.goto(f"{base_url}/unternehmen/", wait_until="networkidle")
         acceptance.check("approved Concept Clean feedback is visible", page.get_by_text("Concept Clean", exact=True).count() >= 1)
+        acceptance.check("company hero routes Assessment Center through Personalentwicklung", page.get_by_text("Personalentwicklung · Assessment Center", exact=True).count() == 1)
+        acceptance.check("company hero gives Personalentwicklung an intentional wrap point", page.locator('.connected-page-hero__node[aria-label^="Personalentwicklung:"] wbr').count() == 1)
         trigger = page.locator("[data-case-story-trigger]").first
         trigger.click()
         acceptance.check("Use Case opens independently", trigger.get_attribute("aria-expanded") == "true")
         faq = page.locator(".faq-grid details").first
         faq.locator("summary").click()
         acceptance.check("company FAQ opens", faq.get_attribute("open") is not None)
+
+        page.goto(f"{base_url}/leistungen/", wait_until="networkidle")
+        acceptance.check("service overview separates Recruiting", page.get_by_role("heading", name="Menschen und Aufgaben passend verbinden", exact=True).count() == 1)
+        acceptance.check("service overview explains Personalentwicklung", page.get_by_role("heading", name="Potenziale erkennen und Entwicklung begleiten", exact=True).count() == 1)
+        acceptance.check("service hero gives Personalentwicklung an intentional wrap point", page.locator('.connected-page-hero__node[aria-label^="Personalentwicklung:"] wbr').count() == 1)
+        personalentwicklung = page.locator("#personalentwicklung")
+        acceptance.check("Personalentwicklung groups Assessment Center", personalentwicklung.get_by_text("Development Assessment Center", exact=False).count() == 1)
+        acceptance.check("Personalentwicklung groups Supervision", personalentwicklung.get_by_text("Supervision", exact=False).count() == 1)
+        acceptance.check("Personalentwicklung keeps Mediation qualification-gated", personalentwicklung.get_by_text("Mediation wird nur bei bestätigter Qualifikation", exact=False).count() == 1)
+        service_menu = page.locator(".services-menu__panel")
+        acceptance.check("service menu no longer exposes Assessment Center as its own item", service_menu.get_by_role("link", name="Assessment Center", exact=True).count() == 0)
+        acceptance.check("service menu no longer exposes Supervision and Mediation as its own item", service_menu.get_by_role("link", name="Supervision & Mediation", exact=True).count() == 0)
+        faq_copy = page.locator(".faq-section").inner_text()
+        acceptance.check("general service FAQ is not led by Mindforge", "Welche Angebote bündelt Mindforge?" not in faq_copy and "Wie finde ich die passende Leistung?" in faq_copy)
+
+        page.goto(f"{base_url}/mindforge/", wait_until="networkidle")
+        acceptance.check("Mindforge no longer duplicates Assessment Center", page.get_by_text("Assessment Center", exact=False).count() == 0)
 
         page.goto(f"{base_url}/kalender/", wait_until="networkidle")
         acceptance.check(
@@ -275,6 +306,9 @@ def interaction_checks(browser: Browser, base_url: str, acceptance: Acceptance) 
         page.goto(f"{base_url}/kontakt/", wait_until="networkidle")
         acceptance.check("contact route exposes approved mailbox", page.get_by_text("competencehub@donner-partner.de", exact=True).count() >= 1)
         acceptance.check("contact route explains mail-client handoff", page.get_by_text("Ihr E-Mail-Programm", exact=False).count() >= 1)
+        topic_options = page.locator('select[name="topic"] option')
+        acceptance.check("contact route offers Recruiting separately", topic_options.filter(has_text="Recruiting").count() == 1)
+        acceptance.check("contact route offers Personalentwicklung separately", topic_options.filter(has_text="Personalentwicklung").count() == 1)
         acceptance.check("footer exposes central Impressum", page.locator('footer a[href="https://donner-partner.de/dp/impressum/"]').count() == 1)
         acceptance.check("footer exposes central Datenschutz", page.locator('footer a[href="https://donner-partner.de/dp/datenschutz/"]').count() == 1)
     finally:
@@ -310,6 +344,15 @@ def accessibility_checks(browser: Browser, base_url: str, acceptance: Acceptance
         page.keyboard.press("Enter")
         acceptance.check("mobile navigation opens from keyboard", page.locator(".nav-menu").get_attribute("open") is not None)
         acceptance.check("mobile navigation includes calendar", page.get_by_role("link", name="Kalender", exact=True).count() >= 1)
+        audience_routes = page.locator('.living-hero__routes[aria-label="Direkte Einstiege"]')
+        acceptance.check("mobile audience routes are visible", audience_routes.is_visible())
+        acceptance.check(
+            "mobile company and private entries are in the first viewport",
+            all(
+                (audience_routes.get_by_role("link", name=name, exact=True).bounding_box() or {}).get("y", 845) < 844
+                for name in ("Für Unternehmen", "Mindforge · Life Coaching")
+            ),
+        )
         page.goto(f"{base_url}/kontakt/", wait_until="networkidle")
         contact_portrait = page.locator('.contact-person img[src*="janay-rappelt.jpg"]')
         acceptance.check("contact page shows Janay portrait", contact_portrait.count() == 1)

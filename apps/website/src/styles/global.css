@@ -3105,6 +3105,8 @@ p {
   color: var(--color-red-text);
   font-size: 0.78rem;
   line-height: 1.08;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .connected-page-hero__node small {

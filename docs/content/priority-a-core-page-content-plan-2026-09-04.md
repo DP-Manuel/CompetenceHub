@@ -32,7 +32,7 @@ new commercial promises.
 | --- | --- |
 | Primary intent | Orientation for visitors who know their concern but not the correct service, Coach or format. |
 | Direct-answer direction | Explain in a compact first screen that Competence Hub classifies the concern and connects it with suitable expertise and format. This is a positioning direction, not final copy. |
-| Supporting sequence | Living Hub orientation; separate company and private paths; selected expertise; next conversation. |
+| Supporting sequence | Living Hub orientation with separate company and private paths in the first viewport; selected expertise; next conversation. |
 | Evidence to use | EV-HUB-001 and EV-TAX-001 after named editorial review. Do not add a statistic or testimonial merely to fill the page. |
 | Limits to state | No guaranteed match or outcome; specialist and crisis boundaries remain on the relevant destination pages. |
 | Internal links | `/unternehmen`, `/leistungen`, `/mindforge`, `/coaches`, `/kontakt`. |
@@ -58,7 +58,7 @@ new commercial promises.
 | --- | --- |
 | Primary intent | Help a visitor compare service categories and choose the next specialist route. |
 | Direct-answer direction | Present the available categories by need and decision question, not only by product name. |
-| Supporting sequence | Short orientation; clearly grouped service categories; who/when fit; destination links; fallback classification CTA. |
+| Supporting sequence | Short orientation; separate Recruiting and Personalentwicklung groups; Assessment Center, supervision and qualification-gated mediation under Personalentwicklung; who/when fit; destination links; fallback classification CTA. |
 | Evidence to use | EV-TAX-001 and approved service descriptions after taxonomy and qualification review. |
 | Limits to state | Listing a service does not prove availability, qualification, suitability or outcome. Keep incomplete offers visibly bounded or unpublished. |
 | Internal links | Each category points to one authoritative route; company-oriented categories also link to `/unternehmen`; uncertain visitors go to `/kontakt`. |
@@ -84,7 +84,7 @@ new commercial promises.
 | --- | --- |
 | Primary intent | Explain the Mindforge offer and let private and company visitors choose a clearly separated path. |
 | Direct-answer direction | Describe what Mindforge offers, how the first conversation and process work, what price direction currently applies and what the offer does not replace. |
-| Supporting sequence | Audience selector; approach; private path; company path; formats/process; reviewed prices; Assessment Center bridge; clear health/crisis boundary; contact. |
+| Supporting sequence | Audience selector; approach; private path; company path; formats/process; reviewed prices; clear health/crisis boundary; contact. Assessment Center remains on the personnel-development and company paths instead of being duplicated here. |
 | Evidence to use | EV-OFFER-001 and EV-BOUNDARY-001 only after commercial and subject-matter review. Add no effectiveness claim without suitable evidence. |
 | Limits to state | Coaching does not replace psychotherapy, medical advice or acute crisis care. Avoid guaranteed resilience, sustainable transfer or reliable outcome language without substantiation. |
 | Internal links | `/unternehmen` for full company context, `/businesscoaching` for method fit, `/leistungen` for alternatives, `/kontakt` for classification. |

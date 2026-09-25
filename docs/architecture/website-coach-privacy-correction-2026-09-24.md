@@ -14,7 +14,7 @@ die Coachübersicht und beispielhafte alte Detailrouten.
 
 ## Korrekturgrenze
 
-- Echte Profile: Herr Christian Galvano und Frau Manuela Rodriguez.
+- Echte Profile: Herr Christian Galvano und Manuela Rodríguez, M.A.
 - Fiktive Profile: Demoprofil 01 bis 06 mit sichtbarem Transparenzhinweis.
 - Keine Änderung an Portal, API, Datenbank, Accounts, SMTP oder produktiven
   Kalenderangeboten.

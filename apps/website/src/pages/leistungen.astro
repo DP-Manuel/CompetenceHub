@@ -19,11 +19,19 @@ const services = [
     icon: "sparkles" as const,
   },
   {
-    eyebrow: "Recruiting & Personalentwicklung",
-    title: "Potenziale passend verbinden",
-    text: "Für Mitarbeitergewinnung, Führung und Entwicklung mit Blick auf praktische Fähigkeiten und Unternehmensbedarf.",
-    href: "unternehmen#assessment-center",
+    eyebrow: "Recruiting",
+    title: "Menschen und Aufgaben passend verbinden",
+    text: "Wir klären Anforderungsprofil, Unternehmenskontext und Auswahlweg. So können passende Fachkräfte, Potenziale und praktische Fähigkeiten gezielt zusammengebracht werden.",
+    href: "kontakt",
     id: "recruiting",
+    icon: "user-round" as const,
+  },
+  {
+    eyebrow: "Personalentwicklung",
+    title: "Potenziale erkennen und Entwicklung begleiten",
+    text: "Je nach Anliegen können Coaching, Development Assessment Center oder Supervision die nächsten Schritte unterstützen. Mediation wird nur bei bestätigter Qualifikation und Verfügbarkeit im Netzwerk vermittelt.",
+    href: "unternehmen#assessment-center",
+    id: "personalentwicklung",
     icon: "building" as const,
   },
   {
@@ -34,24 +42,24 @@ const services = [
     id: "gruppenformate",
     icon: "users" as const,
   },
-  {
-    eyebrow: "Supervision & Mediation",
-    title: "Zusammenarbeit professionell reflektieren",
-    text: "Supervision wird passend zum Bedarf vermittelt. Mediation folgt nur nach bestätigter Qualifikation und Verfügbarkeit im Netzwerk.",
-    href: "kontakt",
-    id: "supervision-mediation",
-    icon: "message-circle" as const,
-  },
 ];
 
 const faqs = [
   {
-    question: "Welche Angebote bündelt Mindforge?",
-    answer: "Mindforge verbindet Beratungsgespräche für Privatpersonen mit Businesscoaching und abgestimmter Beratung für Unternehmen. Das konkrete Angebot wird nach Zielgruppe und Anliegen eingeordnet.",
+    question: "Wie finde ich die passende Leistung?",
+    answer: "Am Anfang stehen Anlass, Zielgruppe und gewünschte Veränderung. Competence Hub ordnet das Anliegen ein und empfiehlt anschließend eine passende Expertise und ein geeignetes Format.",
   },
   {
-    question: "Können auch Privatpersonen Mindforge nutzen?",
-    answer: "Ja. Mindforge bietet Beratungsgespräche für Privatpersonen sowie Businesscoaching für Mitarbeitende und Führungskräfte in Unternehmen.",
+    question: "Welche Angebote richten sich an Unternehmen?",
+    answer: "Unternehmen können unter anderem Recruiting, Personalentwicklung, Businesscoaching, Workshops und Vorträge anfragen. Der konkrete Umfang wird gemeinsam aus dem betrieblichen Bedarf abgeleitet.",
+  },
+  {
+    question: "Was gehört zur Personalentwicklung?",
+    answer: "Zur Personalentwicklung können je nach Ziel Coaching, Development Assessment Center oder Supervision gehören. Mediation wird nur bei bestätigter Qualifikation und Verfügbarkeit im Netzwerk vermittelt.",
+  },
+  {
+    question: "Gibt es auch Angebote für Privatpersonen?",
+    answer: "Ja. Mindforge bietet Beratungsgespräche für persönliche und berufliche Entwicklung. Auf der Mindforge-Seite finden Privatpersonen einen eigenen Einstieg.",
   },
   {
     question: "Wie startet eine Anfrage?",
@@ -60,10 +68,6 @@ const faqs = [
   {
     question: "Erbringt Competence Hub die Leistungen selbst?",
     answer: "Competence Hub klärt den Bedarf und vermittelt passende Coaches oder Expertinnen und Experten aus dem Netzwerk. Durchführung, Umfang und Rahmen werden anschließend transparent abgestimmt.",
-  },
-  {
-    question: "Gehört Recruiting bereits zum Angebot?",
-    answer: "Ja. Assessment Center können bei Personalauswahl und interner Personalentwicklung eingesetzt werden. Planung, Konzeption und Full-Service-Durchführung werden passend zum Unternehmensbedarf abgestimmt.",
   },
 ];
 ---
@@ -89,10 +93,17 @@ const faqs = [
           icon: "sparkles",
         },
         {
-          label: "Assessment Center",
-          detail: "Auswahl & Entwicklung",
-          href: "unternehmen#assessment-center",
+          label: "Recruiting",
+          detail: "Bedarf & Auswahl",
+          href: "#recruiting",
           icon: "user-round",
+        },
+        {
+          label: "Personal",
+          labelSuffix: "entwicklung",
+          detail: "Potenziale & Entwicklung",
+          href: "#personalentwicklung",
+          icon: "building",
         },
         {
           label: "Workshops & Vorträge",

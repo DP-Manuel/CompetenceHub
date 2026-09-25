@@ -59,14 +59,14 @@ descriptions, semantic HTML, internal links, performance or accessibility.
 
 | Field | Current finding |
 | --- | --- |
-| Target audience | Prospective company and private customers comparing coaching, consulting, recruiting, Assessment Center, supervision, mediation and group formats. |
+| Target audience | Prospective company and private customers comparing coaching, consulting, recruiting, personnel development and group formats. Assessment Center, supervision and qualification-gated mediation are grouped under personnel development. |
 | Concrete use case | A visitor recognizes a topic but needs help choosing the correct service or format. |
 | Central user question | "Which offer fits my situation, and where can I get an initial classification?" |
 | Relevant expertise | The approved service taxonomy, public Coach-topic relations and the specialist pages linked from the overview. |
 | Existing primary information | Current service descriptions, distinctions between service areas, internal links and FAQ answers; canonical Coach-topic assignments from the public data layer. |
 | Current CTA | `Anfrage stellen`, `Mindforge entdecken`, `Für Unternehmen` and `Bedarf klären`. |
 | Gaps and risks | The page serves two audiences and many intents. Service names alone are not evidence of availability, qualification or outcome. Overlap among Mindforge, Businesscoaching, coaching and consulting needs a governed distinction. No approved quote, case or verified statistic is inventoried for this route. |
-| Owner and review | Current taxonomy accepted on 2026-09-11; Manuel and Janay are jointly named. Recurring review cadence remains open. |
+| Owner and review | Current taxonomy accepted on 2026-09-11 and refined through the approved 2026-09-25 feedback; Manuel and Janay are jointly named. Recurring review cadence remains open. |
 
 ## `/businesscoaching` - Leadership And Work Context
 
@@ -88,8 +88,8 @@ descriptions, semantic HTML, internal links, performance or accessibility.
 | Target audience | Private customers seeking consultation conversations and company personnel-development buyers seeking Businesscoaching, separated through page anchors but combined on one route. |
 | Concrete use case | A private person seeks a consultation conversation or a company seeks Businesscoaching and wants to understand process, price direction and boundaries. |
 | Central user question | "Which Mindforge path fits this concern, what happens next, and where are its limits?" |
-| Relevant expertise | Mindforge consultation for private persons, Businesscoaching for companies, bounded advice and Assessment Center links where qualifications and offer rights are approved. |
-| Existing primary information | Current Mindforge positioning, approach, process, format descriptions, self-pay and company price statements, Assessment Center bridge and explicit therapy/medical/crisis boundary. |
+| Relevant expertise | Mindforge consultation for private persons, Businesscoaching for companies and bounded advice where qualifications and offer rights are approved. |
+| Existing primary information | Current Mindforge positioning, approach, process, format descriptions, self-pay and company price statements plus the explicit therapy/medical/crisis boundary. Assessment Center is intentionally owned by the personnel-development path instead of duplicated here. |
 | Current CTA | Audience anchors `Für Privatpersonen` and `Für Unternehmen`; `Erstgespräch anfragen`; `Beratungsbedarf einordnen`. |
 | Gaps and risks | No approved customer case, expert quotation or verified statistic is inventoried. Claims such as `nachhaltiger Transfer`, `fundierter Entwicklungsauftakt` and `verlässlich begleiten` require a named factual/editorial review. Price and duration statements need commercial confirmation. The two-audience structure should be tested before a route split is considered. |
 | Owner and review | Manuel and Janay are jointly named as of 2026-09-11. Current commercial statements and one-route structure are accepted; recurring cadence, commercial owner/validity and concrete QM/legal boundary review remain open. |
