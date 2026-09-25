@@ -57,29 +57,35 @@ Abschnittshoehe ausreicht und kleine Breiten stapeln.
 - Pflichtbreiten: 2048, 1440, 1280, 960 und 390 CSS-Pixel.
 - 200 Prozent: 1280 physische Pixel als 640 CSS-Pixel bei DPR 2.
 
-## Releasezustand und Rollbackvertrag
+## Release und Rollbackvertrag
 
-Der vorbereitete Kandidat ist absichtlich nicht deploybar:
+Der Dirt-Kandidat blieb nicht deploybar. Veroeffentlicht wurde ausschliesslich
+das Clean-Artefakt:
 
 - Artefakt:
-  `competence-hub-website-d051a2e27f22-20260925T120603Z-dirty.zip`
+  `competence-hub-website-1b4e33efa5e1-20260925T121142Z.zip`
 - Umfang: 52 Dateien.
 - SHA-256:
-  `9f2325ec0a6cf73c206fc904fb4fe444ce851c20ba81813e29da2bd90364f5a9`.
-- Manifest: `dirty: true`, `deployment_authorized: false`.
+  `d80bd25977dfabf5d3ecf9892ed1747ff18b69a485d6b631ea0a0a459226dd5f`.
+- Source-Commit: `1b4e33efa5e1`, auf `origin/main` gepusht.
 
-Nach Freigabe sind erforderlich: nur die zwei SB-54-Dateien committen und
-pushen, ein Clean-Artefakt mit neuem Commit erzeugen, die aktuelle Produktion
-`d051a2e27f22` frisch und vollstaendig sichern und inventarisieren, das
-bereinigte SFTP-Paket erzeugen, gezielt aktualisieren und danach den
-Textgeometrie-, Kernrouten-, Redirect-, Asset- und Sicherheitsheader-Smoke auf
-Produktion ausfuehren. Die frische Sicherung von `d051a2e27f22` ist der
-Notfall-Rollback; sie bringt im Rueckrollfall den bekannten visuellen P0 zurueck
-und darf daher nur bei einem schwereren Releasefehler verwendet werden.
+Die frische Sicherung `20260925-pre-1b4e33e` enthaelt 52/52 bytegenaue Dateien
+des vorherigen Release `d051a2e27f22`. Inventar-SHA-256:
+`128fbf5c10e485f954a04563a69101b9763b70fc9ba8e079f7d411c6b77bb29a`.
+Sie ist nur Notfall-Rollback, weil sie den bekannten visuellen P0 zurueckbringt.
 
-## Stop und erforderliche Freigabe
+## Produktionsnachweis
 
-Es erfolgte kein Commit, Push oder Produktionsupload. Das naechste Gate braucht
-Manuels ausdrueckliche Freigabe fuer Commit, Push und den kontrollierten
-Produktionsupload dieses P0-Fixes. CAL-1, Backend, Coachprofile und alle anderen
-Websitebereiche bleiben unveraendert und pausiert.
+Der kontrollierte SFTP-Upload aktivierte `index.html` zuletzt, entfernte das
+alte CSS-Asset `businesscoaching.I_PSnNSb.css` und hinterliess exakt vier
+aktuelle Astro-Assets. Das neue CSS `businesscoaching.CikGKrV7.css` wird
+oeffentlich referenziert und enthaelt `white-space: normal`.
+
+72/72 Produktionschecks bestehen die sechs Zielansichten, Textspalten,
+Kollision, Clipping, dynamische Hoehe, Stapelverhalten, Kernrouten und
+horizontalen Ueberlauf. HTTP/Alias-Redirects und Sicherheitsheader sind gruen.
+Der Produktionsscreenshot liegt unter
+`.tmp/mindforge-layout-p0/production-after-2048.png`.
+
+Feature Freeze ist wieder aktiv. CAL-1, Backend, Coachprofile und alle anderen
+Websitebereiche blieben unveraendert und pausiert.

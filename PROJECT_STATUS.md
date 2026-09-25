@@ -68,12 +68,12 @@ Last updated: 2026-09-25
   Manuela portrait loads. Canonical HTTPS, both domain redirects, sitemap,
   security headers, core routes and focused Edge checks at desktop and 390 px
   pass without horizontal overflow or JavaScript page errors.
-- Confirmed Website P0: the production Mindforge boundary heading overlaps its
-  explanation at wide desktop widths. Production still serves source
-  `d051a2e27f22`; cache-bypassed HTML/CSS hashes prove this is the published
-  CSS, not a stale browser cache. SB-54 fixes only wrapping/min-width locally.
-  Astro, links and 865/865 Edge checks including actual text-line geometry at
-  all required widths pass. Commit, push and upload are deliberately pending.
+- Closed Website P0: SB-54 corrects only wrapping/min-width in the Mindforge
+  boundary panel. Source `1b4e33efa5e1`, the clean artifact SHA-256
+  `d80bd259...226dd5f`, an exact 52-file pre-release backup and 72/72
+  cache-frische production checks prove the release. Actual text-line geometry
+  passes at 2048/1440/1280/960/390 and 1280 at 200 percent. Feature Freeze is
+  restored.
 - Workflow model: hybrid Scrum/Kanban with a bounded execution backlog and
   rolling eight-step horizon.
 - External-dependency steering: a dated lead-time radar now tracks EDV, legal,
@@ -165,8 +165,8 @@ Last updated: 2026-09-25
 ## Steering Classification
 
 - **Closed P0:** The Coach privacy correction is deployed and publicly proven.
-- **P0 waiting release approval:** Publish only the locally verified SB-54
-  Mindforge text-overlap correction, then restore feature freeze.
+- **Closed P0:** The SB-54 Mindforge text-overlap correction is deployed and
+  publicly verified; feature freeze is restored.
   The corrected SB-52 Messe
   handover remains frozen with exact release and recovery evidence.
   Thomas Ross remains the documented
@@ -549,16 +549,16 @@ Last updated: 2026-09-25
   Dependency/Wheel/install checks and no `.env`/`.tmp` archive entry. The Dirty,
   non-deployable verification artifact was removed and `.tmp/` is now ignored
   by Git. No connection or deployment occurred.
-- Recommended next work block: after explicit approval, commit and push only
-  SB-54, build a clean artifact, back up current production, deploy and run
-  targeted/core production smokes. Inputs are the verified two-file diff and
-  current release; deliverables are clean source/artifact/hash, exact backup
-  and production screenshots. Definition of Done: no collision or clipping at
-  required widths/200 percent and production maps to the clean commit.
-- Rolling horizon: (1) release SB-54 after approval; (2) restore and monitor
-  feature freeze; (3) test mailbox delivery when Janay is available; (4) run
-  the Messe preflight; (5) resume CAL-1; (6) plan CAL-2 and FIN-01 only after
-  the Messe and separate approval. Confidence decreases after step 4.
+- Recommended next work block: preserve the feature freeze and perform one
+  bounded Messe preflight immediately before 17.10. Inputs are the frozen URL,
+  handover and Thomas as technical break-glass contact; deliverables are
+  route/redirect/TLS/contact/mobile checks and a visual stakeholder decision.
+  Definition of Done: production still matches source `1b4e33efa5e1`, all
+  checks pass and no corrective release is required.
+- Rolling horizon: (1) monitor only incidents through the absence window;
+  (2) test mailbox delivery when Janay is available; (3) run the Messe
+  preflight; (4) resume CAL-1; (5) plan CAL-2 and FIN-01 only after the Messe
+  and separate approval. Confidence decreases after step 3.
 - Lead-time radar: EDV has confirmed the Webroot/SFTP mapping, removed the
   diagnostic file and accepted `.htaccess` redirects. The Website legal target
   decision, content/release approval and controlled deployment are closed;

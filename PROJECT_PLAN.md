@@ -38,10 +38,10 @@ Build a professional digital presence for Firmendingsbums, starting with a publi
   Donner + Partner is the
   confirmed operator, Lars Donner the responsible person, and the central D+P
   Impressum, AGB and Datenschutz pages are the binding legal targets.
-- Current critical path: close the narrowly scoped SB-54 Mindforge layout P0
-  before returning to the Messe feature freeze. Production remains on
-  `d051a2e27f22`; the local fix is verified but not committed, pushed or
-  deployed. The 24.09 decision supersedes prior
+- Current critical path: preserve the corrected Website under Messe feature
+  freeze and perform one bounded preflight before 2026-10-17. SB-54 is live
+  from source `1b4e33efa5e1` with clean artifact, exact backup and production
+  browser evidence. The 24.09 decision supersedes prior
   individual Coach approvals except Christian Galvano and Manuela Rodríguez;
   that correction is now live and publicly verified.
   EDV removed
@@ -627,10 +627,9 @@ independent ready slice instead of silently waiting.
 
 ### Current Execution Backlog
 
-Current sprint goal: preserve the publicly verified SB-53 Website under
-feature freeze through the Messe while closing only the confirmed SB-54
-Mindforge text-overlap P0. Native Staging UI, seat reservations, calendar
-delivery and live SMTP remain separately gated.
+Current sprint goal: preserve the publicly verified SB-54 Website under
+feature freeze through the Messe. Native Staging UI, seat reservations,
+calendar delivery and live SMTP remain separately gated.
 
 | ID | Status | Slice | Gate / dependency | Completion evidence |
 | --- | --- | --- | --- | --- |
@@ -687,7 +686,7 @@ delivery and live SMTP remain separately gated.
 | SB-51 | Done in production | Replace no-longer-approved personal Coach profiles with six explicit demos and add Manuela Rodríguez as the second real profile | Manuels 24.09. decision; Christian and Manuela are the only real profiles; portrait, Commit, Push and deployment approved | source `9955e038fdbc`; 52-entry artifact SHA-256 `68f5cf95...d1f8b0c`; local 800/800 Edge and 1,302-reference gates; public routes/assets/redirects/security headers green; six former routes return 404; desktop/390 px focused Edge smoke green |
 | SB-52 | Done in production | Apply the bounded 24.09 ad-hoc Website feedback | Janay portrait and supplied mobile number explicitly approved for public use; Commit, Push and deployment approved 24.09. | source `d493e195f80a`; 52-file artifact SHA-256 `6084fb45...177a91`; verified 54-file pre-update backup; 41-file Astro check, 33-page build, 1,303-reference gate, 803/803 local Edge and 22/22 production Edge checks green |
 | SB-53 | Done in production; feature freeze | Apply the expanded 25.09 Website feedback as one bounded batch | direct feedback plus completed second-AI review; Manuel approved Commit, Push and deployment on 25.09. | source `d051a2e27f22`; 52-file artifact SHA-256 `d58a38d2...0ba2f95`; content and first-viewport correction; 41-file Astro check, 33-page build, 1,237-reference gate, 823/823 Edge, 82/82 final-focus and 72/72 production checks green; five stale assets removed; safe rollback frozen |
-| SB-54 | Done locally; release approval required | Prevent the Mindforge boundary heading from overlapping its explanation | confirmed production P0; only the affected CSS and regression harness; no other Website/CAL/backend work | normal wrapping plus `min-width: 0`; actual text-line geometry at 2048/1440/1280/960/390 and 1280@200%; before/after screenshots; Astro 41/0/0/0, 33 pages, 1,237 links and 865/865 Edge green; dirty candidate only, no commit/push/upload |
+| SB-54 | Done in production; feature freeze restored | Prevent the Mindforge boundary heading from overlapping its explanation | confirmed production P0; only the affected CSS and regression harness; no other Website/CAL/backend work | source `1b4e33efa5e1`; clean artifact SHA-256 `d80bd259...226dd5f`; exact 52-file backup inventory SHA-256 `128fbf5c...77bb29a`; actual text-line geometry at 2048/1440/1280/960/390 and 1280@200%; Astro 41/0/0/0, 1,237 links, 865/865 local and 72/72 production checks green |
 
 The technical-readiness baseline remains complete: 384 Webapp tests pass with
 17 expected Staging skips, the release ZIP includes the restore tool and no
@@ -698,12 +697,13 @@ SB-25, its EDV diagnostic P0 and the static production release are closed.
 Concept Clean's bounded publication approval is confirmed, SB-28 completed the
 five-page inventory/evidence baseline and SB-29 completed the non-public Core
 Page Content Plan. Janay accepted SB-32/SB-33 and CAL-0 on 2026-09-10.
-Recommended next block: after explicit approval, commit and push only SB-54,
-build a clean release, take a fresh exact backup of current production, deploy
-the correction and run the targeted plus core production smokes. Definition of
-Done: production shows no collision at desktop/mobile/200 percent, maps to the
-new clean commit and artifact, and has a verified emergency rollback. Mailbox
-delivery remains independent; CAL-1, CAL-2 and FIN-01 stay paused.
+Recommended next block: preserve the feature freeze and perform one bounded
+Messe preflight immediately before 17.10. Inputs are the frozen URL, handover
+and incident contact; deliverables are route/redirect/TLS/contact/mobile checks
+plus a visual stakeholder confirmation. Definition of Done: the public demo
+matches source `1b4e33efa5e1`, all smoke checks pass and no release change is
+needed. Mailbox delivery remains independent; CAL-1, CAL-2 and FIN-01 stay
+paused until after the Messe.
 
 WIP rule: only one implementation slice is `doing`. Organizational gates may
 progress in parallel but do not silently expand the execution backlog.
@@ -716,7 +716,7 @@ progress in parallel but do not silently expand the execution backlog.
 | 2 | Done | High | Publish and verify the bounded 24.09 feedback | public mobile number and release explicitly approved 24.09. | clean source/artifact, verified backup, canonical routes and 22/22 Edge smoke green |
 | 3 | Done | High | Freeze the corrected Messe handover | SB-52 production evidence and hardened SFTP procedure | exact source/artifact/hash, recovery exclusions, owner and stop rules documented |
 | 4 | Done | High | Package and publish the reconciled 25.09 correction release | second-AI review and combined release approval complete | source/artifact/SHA, fresh backup, stale-asset cleanup and 72/72 public smoke green |
-| 5 | Waiting approval | High | Publish only the verified SB-54 layout correction | explicit Commit/Push/upload approval; fresh production backup | clean source/artifact/hash, exact backup, targeted and core production smoke |
+| 5 | Done | High | Publish only the verified SB-54 layout correction | explicit Commit/Push/upload approval; fresh production backup | clean source/artifact/hash, exact 52-file backup and 72/72 production smoke |
 | 6 | Active operations | High | Monitor the corrected frozen Website through Manuel's absence | SB-54 production gate closed; Thomas is technical break-glass | incident-led canonical/core-route/asset checks; no feature work |
 | 7 | Planned | Medium | Verify real mailbox delivery to Janay | Janay availability and mailbox routing | receipt confirmed or routing gap explicitly escalated |
 | 8 | Planned | Medium | Confirm Messe readiness before 17.10 | stable corrected public Website | stakeholder visual check and core-route smoke; CAL-1/CAL-2/FIN-01 remain post-Messe |

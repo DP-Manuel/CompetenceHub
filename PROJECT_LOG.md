@@ -2,7 +2,7 @@
 
 Newest entries first.
 
-## 2026-09-25 | website/P0 | Mindforge-Textueberlagerung lokal behoben, Release gestoppt
+## 2026-09-25 | website/P0 | Mindforge-Textueberlagerung in Produktion behoben
 
 - Der aktuelle Produktionsstand `d051a2e27f22` wurde lokal und mit
   cache-deaktiviertem Abruf reproduziert. Produktions-HTML und -CSS waren
@@ -18,12 +18,17 @@ Newest entries first.
   960 und 390 CSS-Pixeln sowie 1280 bei 200 Prozent innerhalb ihrer Spalten,
   kollidieren nicht und werden nicht abgeschnitten.
 - Astro 41/0/0/0, 33 Seiten, 1.237 interne Referenzen und 865/865 Edge-Checks
-  sind gruen. Ein 52-Dateien-Dirt-Artefakt mit SHA-256
-  `9f2325ec0a6cf73c206fc904fb4fe444ce851c20ba81813e29da2bd90364f5a9`
-  dient nur als lokaler Kandidat und ist nicht SFTP-faehig.
-- Kein Commit, Push oder Upload erfolgte. Vor einer Veroeffentlichung sind
-  separate Freigabe, sauberer Commit/Push, Clean-Artefakt, frische
-  Remote-Sicherung und Produktionssmoke erforderlich.
+  sind gruen. Commit `1b4e33e` wurde gepusht; das 52-Dateien-Clean-Artefakt
+  hat SHA-256
+  `d80bd25977dfabf5d3ecf9892ed1747ff18b69a485d6b631ea0a0a459226dd5f`.
+- Vor dem Upload wurden 52/52 Produktionsdateien bytegenau zu `d051a2e27f22`
+  gesichert. Das Inventar hat SHA-256
+  `128fbf5c10e485f954a04563a69101b9763b70fc9ba8e079f7d411c6b77bb29a`.
+  Der kontrollierte Upload aktivierte `index.html` zuletzt und entfernte nur
+  das abgeloeste CSS-Asset.
+- 72/72 cache-frische Produktionschecks bestaetigen Textgeometrie bei allen
+  sechs Zielansichten, Kernrouten, Redirects, Sicherheitsheader und fehlenden
+  horizontalen Ueberlauf. Feature Freeze ist wieder aktiv.
 
 ## 2026-09-25 | website/production | Korrekturrelease veröffentlicht und Feature Freeze aktiviert
 

@@ -23,27 +23,31 @@ Datenbank-, Konto-, SMTP- oder Kalenderaktivierung.
 
 ## Aktueller Produktionsstand
 
-- Website-Source: `d051a2e27f22`
+- Website-Source: `1b4e33efa5e1`
 - Artefakt:
-  `competence-hub-website-d051a2e27f22-20260925T113559Z.zip`
+  `competence-hub-website-1b4e33efa5e1-20260925T121142Z.zip`
 - Artefakt-SHA-256:
-  `d58a38d2af3b72d3fb8d62cbd859f35c7119396332a5252ae77d6faff0ba2f95`
+  `d80bd25977dfabf5d3ecf9892ed1747ff18b69a485d6b631ea0a0a459226dd5f`
 - Umfang: 52 Dateien; `index.html` wurde zuletzt aktiviert.
 - Inhalt: zwei reale Coachprofile, sechs ausdrueckliche Demoprofile,
   freigegebenes Janay-Portrait und freigegebener Telefonlink.
-- Lokal: 41 Astro-Dateien ohne Diagnose, 33 Seiten, 1.237 interne Referenzen,
-  823/823 Edge-Pruefungen und 82/82 Abschlusschecks.
+- Lokal: 41 Astro-Dateien ohne Diagnose, 33 Seiten, 1.237 interne Referenzen
+  und 865/865 Edge-Pruefungen einschliesslich Textgeometrie.
 - Produktion: Kern-, Rechts-, Robots-, Sitemap- und 404-Routen gruen;
   HTTP/Alias-Redirects und Sicherheitsheader gruen; 72/72 Desktop-/390-Pixel-
   Edgechecks ohne Ueberlauf oder JavaScriptfehler. Demo-, Kalender-, Kontakt-,
   Altprofil- und Sitemap-Grenzen sind enthalten.
-- Offener P0: Im Mindforge-Abschnitt `Klare Grenze` ueberlagert die grosse
-  Ueberschrift bei breiten Desktopansichten den rechten Text. Der eng begrenzte
-  SB-54-Fix ist lokal mit 865/865 Edge-Checks abgenommen, aber noch nicht
-  committed, gepusht oder veroeffentlicht. Bis dahin ist `d051a2e27f22`
-  weiterhin der tatsaechliche Produktionsstand.
+- SB-54 ist geschlossen: Der Mindforge-Abschnitt `Klare Grenze` bleibt bei
+  2048/1440/1280/960/390 und 1280@200% innerhalb seiner Spalten, stapelt an
+  kleinen Breiten und besteht 72/72 cache-frische Produktionschecks.
 
 ## Rollbackstand
+
+- Aktuelle Pre-SB-54-Sicherung:
+  `release-artifacts/website-sftp-rollback/20260925-pre-1b4e33e` mit exakt 52
+  zu `d051a2e27f22` bytegleichen Dateien; Inventar-SHA-256
+  `128fbf5c10e485f954a04563a69101b9763b70fc9ba8e079f7d411c6b77bb29a`.
+  Sie ist nur Notfall-Rollback, weil sie den bekannten visuellen P0 zurueckbringt.
 
 - Vollstaendige Beweissicherung:
   `release-artifacts/website-sftp-rollback/20260925-pre-d051a2e` mit 56 Dateien;
