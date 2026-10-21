@@ -5,8 +5,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages-review
@@ -15,21 +13,43 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+      WEBSITE_ENV: preview
+    defaults:
+      run:
+        working-directory: apps/website
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Build and upload Astro website
-        uses: withastro/action@v6
+      - name: Set up verified Node runtime
+        uses: actions/setup-node@v7
         with:
-          path: ./apps/website
+          node-version: 22.16.0
+          cache: npm
+          cache-dependency-path: apps/website/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Check preview contracts
+        run: npm run test:preview
+      - name: Build stable production regression artifact
+        run: npm run build && npm run verify:dist
         env:
-          GITHUB_PAGES_REVIEW: "true"
-          PUBLIC_REVIEW_MODE: "true"
+          WEBSITE_ENV: production
+      - name: Build and verify preview artifact
+        run: npm run build && npm run verify:dist
+      - name: Upload verified preview only
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: apps/website/dist-preview
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

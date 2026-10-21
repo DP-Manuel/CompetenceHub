@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro check && astro build",
+    "check": "astro check",
+    "test:preview": "node --test scripts/test-preview-model.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "verify:dist": "node scripts/verify-dist-links.mjs"
   },

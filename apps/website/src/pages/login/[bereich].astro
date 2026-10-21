@@ -108,4 +108,9 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
       </div>
     </section>
   </main>
+  {import.meta.env.PUBLIC_REVIEW_MODE === "true" && <style is:inline>
+    .portal-hero > div { min-width: 0; }
+    .portal-hero h1 { overflow-wrap: anywhere; }
+    @media (max-width: 760px) { .portal-hero h1 { font-size: 1.75rem; } }
+  </style>}
 </BaseLayout>

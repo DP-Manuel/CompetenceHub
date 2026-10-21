@@ -20,7 +20,7 @@ const routes = [
 ];
 
 export const GET: APIRoute = () => {
-  const urls = routes
+  const urls = (import.meta.env.PUBLIC_REVIEW_MODE === "true" ? [] : routes)
     .map((route) => `  <url><loc>${new URL(route, site).toString()}</loc></url>`)
     .join("\n");
   const body = [

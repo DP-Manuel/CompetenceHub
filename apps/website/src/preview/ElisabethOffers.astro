@@ -1,0 +1,34 @@
+---
+import { offerGroups } from "./elisabeth-offers";
+---
+<section class="elisabeth-offers" aria-labelledby="elisabeth-offers-title">
+  <p class="eyebrow">Psychische Gesundheit am Arbeitsplatz</p>
+  <h2 id="elisabeth-offers-title">Angebote von Elisabeth Schwabauer</h2>
+  <div class="offer-groups">
+    {offerGroups.map((group) => (
+      <details class="offer-group" open>
+        <summary><h3>{group.label}</h3></summary>
+        <ul>{group.offers.map((offer) => <li>{offer}</li>)}</ul>
+        {group.id === "weitere" && <p>
+          Psychotherapie (HeilprG) ist hier als gesondertes Angebot aus der
+          bereitgestellten Übersicht genannt. Über den Competence Hub wird
+          derzeit keine Psychotherapie angeboten. Coaching und berufliche
+          Beratung ersetzen keine medizinische Beratung oder akute Krisenversorgung.
+        </p>}
+      </details>
+    ))}
+  </div>
+</section>
+<style>
+  .elisabeth-offers { margin-bottom: 70px; padding-block: 32px; border-top: 8px solid var(--color-pantone); }
+  h2 { font-size: 2rem; line-height: 1.15; max-width: 34ch; }
+  .offer-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; }
+  .offer-group { border-top: 2px solid var(--color-line); padding-block: 16px; min-width: 0; }
+  summary { cursor: pointer; padding: 10px 0; }
+  summary h3 { display: inline; font-size: 1.3rem; }
+  summary:focus-visible { outline: 3px solid var(--color-dark); outline-offset: 4px; }
+  ul { padding-left: 22px; }
+  li { margin-block: 12px; overflow-wrap: anywhere; }
+  p { max-width: 64ch; }
+  @media (max-width: 760px) { .offer-groups { grid-template-columns: minmax(0, 1fr); } }
+</style>

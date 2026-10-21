@@ -1,8 +1,8 @@
 # Coach-Veröffentlichungsmatrix
 
-Stand: 24.09.2026
+Stand: 21.10.2026. Production-Regel vom 24.09. bleibt bestehen; Preview-Freigabe siehe unten.
 
-Diese Matrix begrenzt den öffentlichen Messeauftritt. Sie ersetzt frühere
+Die folgende historische Production-Matrix begrenzt den öffentlichen Messeauftritt. Sie ersetzt frühere
 Einzelfreigaben, soweit sie mehr als die beiden unten genannten echten Profile
 vorsahen.
 
@@ -34,3 +34,38 @@ Website-Build entfernt. Aufrufe der alten Routen enden kontrolliert auf der
   erzeugten Artefakt auftauchen.
 - Ein späteres echtes Profil benötigt erneut eine dokumentierte Freigabe für
   Name, Text, Rolle, Qualifikationen, Bild und Veröffentlichungszeitpunkt.
+
+## Preview-Freigabe 21.10.2026
+
+Manuels geliefertes Post-Messe Product Addendum gibt alle derzeit vorgesehenen
+Coaches mit vorhandenen freigegebenen Namen, Kompetenzen, Texten und Bildern
+für die öffentliche GitHub-Pages-Preview frei. Keine Übernahme in IONOS ist
+damit freigegeben. Die obige Production-Matrix und ihr Privacy-Gate bleiben
+unverändert wirksam.
+
+| Preview-Profil | Freigegebene Quelle / Umfang | Portrait |
+| --- | --- | --- |
+| Herr Christian Galvano | aktuelles bestehendes Profil | bestehende WebP |
+| Manuela Rodríguez, M.A. | aktuelles bestehendes Profil; Advisory-Ziel in Preview https://advisory.donner-partner.de/ | bestehende WebP |
+| Frau Elisabeth Schwabauer | Git 53a89a8, Route elisabeth-schwabauer; Angebotsgruppen aus geliefertem Addendum | unveränderte Git-WebP |
+| Frau Carolin Hupp | Git 53a89a8, Route carolin-hupp | kein Portrait vorhanden; vorhandenes Monogramm |
+| Frau Gülcan Elmas-Brandes | Git 53a89a8, Route guelcan-elmas-brandes | unveränderte Git-PNG |
+| Herr T. Wegner-Ney | Git 53a89a8, Route wegner-ney | unveränderte Git-JPG |
+| Herr Goran Celic | Git 53a89a8, Route goran-celic | unveränderte Git-PNG |
+| Frau Dr. Stefanie Becker | Git 53a89a8, Route stefanie-becker | unveränderte Git-WebP |
+
+Neueste explizite Namenskorrektur am 21.10.2026: Manuel bestätigt
+**Elisabeth Schwabauer (bisheriges Profil)**. Diese Bestätigung überschreibt
+die abweichende Schreibweise im gelieferten Addendum. Sichtbarer Name,
+Portraitidentität und bestehender Profilpfad bleiben konsistent. Kein neuer
+Personenrecord, keine UUID-Zuordnung und keine personenbezogene Weiterleitung.
+
+Die vier Angebotsgruppen enthalten ausschließlich die 17 gelieferten Titel.
+Psychotherapie (HeilprG) wird gesondert als Quellenangebot genannt, nicht als
+über Competence Hub buchbare Therapie; bestehende Leistungsgrenzen bleiben.
+Themenkategorien sind redaktionelle Navigation, keine neu behaupteten
+Coachqualifikationen. Insbesondere wird niemand neu Mediation zugeordnet.
+
+Es wurde kein privater Quellenpfad gelesen. Es liegt aktuell kein weiteres
+Messefeedback vor. Technische Trennung und QA:
+[GitHub-Pages-Preview](../architecture/github-pages-preview-2026-10-21.md).

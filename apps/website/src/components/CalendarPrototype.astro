@@ -205,8 +205,11 @@ const topics = [
       detailContent.hidden = false;
       setText("[data-detail-topic]", event.topicLabel);
       setText("[data-detail-title]", event.title);
-      detailCoach.textContent = event.coach;
-      detailCoach.href = `${root.dataset.base || "/"}${event.profilePath}`;
+      detailCoach.textContent = import.meta.env.PUBLIC_REVIEW_MODE === "true"
+        ? "Beispielzuordnung · passende Coaches ansehen" : event.coach;
+      detailCoach.href = `${root.dataset.base || "/"}${import.meta.env.PUBLIC_REVIEW_MODE === "true"
+        ? `coaches#thema-${event.topic === "rhetorik" ? "rhetorik-vertrieb" : event.topic === "kommunikation" ? "teams-konflikte" : "fuehrung"}`
+        : event.profilePath}`;
       setText("[data-detail-date]", `${formatDate.format(event.date)}, ${event.time}`);
       setText("[data-detail-format]", event.format);
       setText("[data-detail-status]", event.status);

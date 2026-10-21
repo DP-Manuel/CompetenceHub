@@ -14,7 +14,7 @@ from playwright.sync_api import Browser, Page, sync_playwright
 SCRIPT = Path(__file__).resolve()
 WEBSITE_ROOT = SCRIPT.parents[1]
 REPO_ROOT = SCRIPT.parents[3]
-NODE = REPO_ROOT / "tools" / "node-v22.16.0-win-x64" / "node.exe"
+NODE = Path(os.environ.get("WEBSITE_NODE", str(REPO_ROOT / "tools" / "node-v22.16.0-win-x64" / "node.exe")))
 
 CORE_ROUTES = (
     "/",

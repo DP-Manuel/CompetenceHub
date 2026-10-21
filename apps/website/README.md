@@ -30,7 +30,7 @@ Use the portable Node.js runtime from the repository root:
 ```powershell
 $env:PATH = "$PWD\tools\node-v22.16.0-win-x64;$env:PATH"
 cd apps\website
-npm install
+  npm ci
 npm run dev
 ```
 
@@ -67,3 +67,35 @@ Before a manual run:
 GitHub Pages is not an access-controlled review environment. `noindex` reduces
 search-engine discovery but does not make the URL private. Production deployment
 to the final domain remains a separate approval and release step.
+
+## Post-Messe Preview
+
+`WEBSITE_ENV` is the only mode selector: `production` (default) or `preview`.
+Do not set `GITHUB_PAGES_REVIEW` or `PUBLIC_REVIEW_MODE` independently; conflicting
+legacy values fail validation. Local environment files are not loaded.
+
+From this workspace, with Node 22.16.0 on PATH:
+
+```powershell
+$env:ASTRO_TELEMETRY_DISABLED = "1"
+npm ci
+npm run test:preview
+$env:WEBSITE_ENV = "production"
+npm run build
+npm run verify:dist
+$env:WEBSITE_ENV = "preview"
+npm run build
+npm run verify:dist
+node scripts/serve-dist.mjs
+```
+
+Preview: http://127.0.0.1:4321/CompetenceHub/
+Production output stays in `dist`; preview output is isolated in `dist-preview`.
+Only the latter is uploaded by the manual Pages workflow.
+
+For Edge browser checks use `scripts/run-preview-browser-acceptance.py` and the
+existing production `scripts/run-messe-browser-acceptance.py`. Both accept
+`WEBSITE_NODE` for the absolute Node executable in a separate worktree.
+The Python environment must provide Playwright and Microsoft Edge.
+Detailed boundaries, provenance and verification:
+[Preview implementation](../../docs/architecture/github-pages-preview-2026-10-21.md).

@@ -1,0 +1,177 @@
+---
+import Icon from "../components/Icon.astro";
+import { coaches } from "./coaches";
+import { categories, topics } from "./topics";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const url = (path: string) => `${base}/${path}`;
+---
+<main class="subpage" data-preview-directory>
+  <section class="page-hero page-hero--accent coach-list-hero">
+    <div>
+      <p class="eyebrow">Coach-Netzwerk</p>
+      <h1>Ausgewählte Coaches statt endlosem Katalog</h1>
+      <p>Perspektiven für Unternehmen, Teams und Ihre persönliche Entwicklung.</p>
+      <div class="actions">
+        <a class="button" href={url("kontakt")}>Coaching-Bedarf besprechen</a>
+        <a class="button button--ghost" href={url("kontakt")}>Als Coach vorstellen</a>
+      </div>
+    </div>
+    <aside class="coach-list-hero__note" aria-label="Netzwerkanspruch">
+      <span>Netzwerkanspruch</span><strong>Passend.<br />Erfahren.<br />Verlässlich.</strong>
+    </aside>
+  </section>
+  <section class="coach-topic-explorer" aria-labelledby="preview-topics-title">
+    <div class="coach-topic-explorer__heading">
+      <div><p class="eyebrow">Themenschwerpunkte</p><h2 id="preview-topics-title">Passende Expertise finden</h2></div>
+    </div>
+    <div class="preview-category-filter" role="group" aria-label="Themenkategorien">
+      <button class="coach-topic-filter__option is-active" type="button" data-category="all"
+        aria-pressed="true" aria-controls="preview-topic-options preview-coach-grid">
+        <Icon name="compass" size={22} /><span>Alle Themen</span>
+      </button>
+      {categories.map((category) => (
+        <button class="coach-topic-filter__option" type="button" data-category={category.id}
+          aria-pressed="false" aria-controls="preview-topic-options preview-coach-grid">
+          <Icon name={category.id === "karrierecoaching" ? "user-round" : "users"} size={22} />
+          <span>{category.label}</span>
+        </button>
+      ))}
+    </div>
+    <div class="preview-topic-filter" id="preview-topic-options" role="group" aria-label="Konkrete Themen">
+      <button class="coach-topic-filter__option is-active" type="button" data-topic="all"
+        aria-pressed="true" aria-controls="preview-coach-grid">
+        <Icon name="compass" size={22} /><span>Alle Schwerpunkte</span>
+      </button>
+      {topics.map((topic) => (
+        <button class="coach-topic-filter__option" type="button" data-topic={topic.id}
+          data-categories={topic.categories.join(" ")} aria-pressed="false"
+          aria-controls="preview-coach-grid" title={topic.detail}>
+          <Icon name={topic.icon} size={22} /><span>{topic.label}</span>
+        </button>
+      ))}
+    </div>
+    <p class="coach-topic-status" role="status" aria-live="polite" aria-atomic="true" data-preview-status>
+      Alle {coaches.length} Coach-Profile werden angezeigt.
+    </p>
+  </section>
+  <section class="coach-grid" id="preview-coach-grid" aria-label="Freigegebene Coach-Profile">
+    {coaches.map((coach) => (
+      <article class="coach-card coach-card--featured" data-preview-coach data-topics={coach.topics.join(" ")}>
+        <div class="coach-card__media">
+          {coach.image ? <img src={url(coach.image)} alt={`Porträt: ${coach.name}`}
+            width={coach.imageWidth} height={coach.imageHeight} loading="lazy" />
+            : <span class="coach-card__monogram" aria-hidden="true">{coach.initials}</span>}
+        </div>
+        <div>
+          <p class="eyebrow">Coach-Profil</p><h2>{coach.name}</h2><strong>{coach.role}</strong>
+          <ul class="tag-list" aria-label="Themenschwerpunkte">{coach.focus.map((focus) => <li>{focus}</li>)}</ul>
+          <p>{coach.text}</p>
+          <a class="button button--ghost" href={url(coach.profilePath)}>Profil ansehen</a>
+        </div>
+      </article>
+    ))}
+  </section>
+  <p class="coach-topic-empty" data-preview-empty hidden>
+    Für diesen Themenbereich ist aktuell noch kein ausdrücklich qualifiziertes und freigegebenes Coach-Profil veröffentlicht.
+  </p>
+  <section class="cta-panel">
+    <div><p class="eyebrow">Kontakt</p><h2>Coach-Profil oder Unternehmensbedarf besprechen</h2></div>
+    <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+  </section>
+</main>
+<style is:inline>
+  [data-preview-directory] .preview-category-filter,
+  [data-preview-directory] .preview-topic-filter { display: none; }
+  [data-preview-directory].is-enhanced .preview-category-filter,
+  [data-preview-directory].is-enhanced .preview-topic-filter {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;
+  }
+  [data-preview-directory] .preview-category-filter { margin-bottom: 24px; }
+  [data-preview-directory] .preview-category-filter .coach-topic-filter__option {
+    font-size: 0.875rem;
+  }
+  [data-preview-directory] .preview-category-filter span { white-space: nowrap; }
+  [data-preview-directory] .coach-topic-filter__option { min-width: 0; min-height: 78px; }
+  [data-preview-directory] .coach-topic-filter__option span { overflow-wrap: anywhere; }
+  [data-preview-directory] [hidden] { display: none !important; }
+  @media (max-width: 1100px) {
+    [data-preview-directory].is-enhanced .preview-category-filter,
+    [data-preview-directory].is-enhanced .preview-topic-filter { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 520px) {
+    [data-preview-directory].is-enhanced .preview-category-filter,
+    [data-preview-directory].is-enhanced .preview-topic-filter { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+<script is:inline>
+  (() => {
+    const root = document.querySelector("[data-preview-directory]");
+    if (!root) return;
+    const categories = [...root.querySelectorAll("[data-category]")];
+    const topics = [...root.querySelectorAll("[data-topic]")];
+    const cards = [...root.querySelectorAll("[data-preview-coach]")];
+    const status = root.querySelector("[data-preview-status]");
+    const empty = root.querySelector("[data-preview-empty]");
+    const words = (value) => (value || "").split(" ").filter(Boolean);
+    let category = "all";
+    let topic = "all";
+    const pressed = (button, active) => {
+      button.setAttribute("aria-pressed", String(active));
+      button.classList.toggle("is-active", active);
+    };
+    function apply(updateUrl = true) {
+      categories.forEach((button) => pressed(button, button.dataset.category === category));
+      const available = new Set();
+      topics.forEach((button) => {
+        const id = button.dataset.topic;
+        const visible = id === "all" || category === "all" || words(button.dataset.categories).includes(category);
+        button.hidden = !visible;
+        if (visible && id !== "all") available.add(id);
+      });
+      if (topic !== "all" && !available.has(topic)) topic = "all";
+      topics.forEach((button) => pressed(button, button.dataset.topic === topic));
+      let count = 0;
+      cards.forEach((card) => {
+        const ids = words(card.dataset.topics);
+        const visible = category === "all" && topic === "all"
+          ? true : topic === "all" ? ids.some((id) => available.has(id)) : ids.includes(topic);
+        card.hidden = !visible;
+        if (visible) count++;
+      });
+      const categoryLabel = categories.find((button) => button.dataset.category === category).textContent.trim();
+      const topicLabel = topics.find((button) => button.dataset.topic === topic).textContent.trim();
+      status.textContent = category === "all" && topic === "all"
+        ? `Alle ${count} Coach-Profile werden angezeigt.`
+        : `${categoryLabel} · ${topicLabel}: ${count} passende Coach-Profile.`;
+      empty.hidden = count > 0;
+      if (updateUrl) {
+        const url = new URL(location.href);
+        const selection = new URLSearchParams();
+        if (category !== "all") selection.set("kategorie", category);
+        if (topic !== "all") selection.set("thema", topic);
+        url.hash = selection.toString();
+        history.replaceState(null, "", url);
+      }
+    }
+    function fromHash() {
+      const params = new URLSearchParams(location.hash.slice(1));
+      const cat = params.get("kategorie");
+      category = categories.some((button) => button.dataset.category === cat) ? cat : "all";
+      const selected = params.get("thema") || (location.hash.startsWith("#thema-") ? location.hash.slice(7) : "all");
+      topic = topics.some((button) => button.dataset.topic === selected) ? selected : "all";
+      apply(false);
+    }
+    categories.forEach((button) => button.addEventListener("click", () => {
+      category = button.dataset.category;
+      topic = "all";
+      apply();
+    }));
+    topics.forEach((button) => button.addEventListener("click", () => {
+      topic = button.dataset.topic;
+      apply();
+    }));
+    root.classList.add("is-enhanced");
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
+  })();
+</script>

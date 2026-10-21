@@ -46,7 +46,9 @@ const topics = [
           <a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a>
           <a
             class="button button--ghost"
-            href="https://donner-partner.de/dp/fuer-unternehmen/firmenseminare/"
+            href={import.meta.env.PUBLIC_REVIEW_MODE === "true"
+              ? "https://advisory.donner-partner.de/"
+              : "https://donner-partner.de/dp/fuer-unternehmen/firmenseminare/"}
             target="_blank"
             rel="noopener noreferrer"
           >

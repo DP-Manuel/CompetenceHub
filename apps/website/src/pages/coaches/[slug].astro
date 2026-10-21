@@ -4,7 +4,7 @@ import { coaches, coachTopics, type Coach } from "../../data/coaches";
 import "../../styles/global.css";
 
 export function getStaticPaths() {
-  return coaches
+  return (import.meta.env.PUBLIC_REVIEW_MODE === "true" ? [] : coaches)
     .filter((coach) => coach.kind === "demo")
     .map((coach) => ({
       params: { slug: coach.profilePath.split("/").at(-1) },
