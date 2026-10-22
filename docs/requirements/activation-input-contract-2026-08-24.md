@@ -68,6 +68,11 @@ im Projektlog dokumentiert.
 
 ## Abschlussregel
 
-Nach einem Gate-Nachweis werden `PROJECT_PLAN.md`, `PROJECT_STATUS.md`,
-`PROJECT_LOG.md`, das Readiness Gate Board und der Go-Live Evidence Index
-synchronisiert. Deployment und Echtdaten bleiben jeweils separate Freigaben.
+Seit der Kontextmigration vom 21.10.2026 gilt die
+[Context Policy](../architecture/PROJECT_CONTEXT_POLICY.md): Gate-Evidenz
+bleibt im Go-Live Evidence Index, der aktuelle Checkpoint in PROJECT_CONTEXT
+und der Ausfuehrungsstand im aktiven ExecPlan. Die Roadmap aendert sich nur bei
+Roadmapentscheidungen; STATUS ist ein Kompatibilitaetsverweis und LOG erfasst
+nur wesentliche Meilensteine. Historische Readiness-Boards werden nicht als
+aktueller Status fortgeschrieben. Deployment und Echtdaten bleiben separate
+Freigaben.

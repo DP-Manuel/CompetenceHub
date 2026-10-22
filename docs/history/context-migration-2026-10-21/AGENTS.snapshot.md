@@ -1,0 +1,119 @@
+# Project Agent Guide
+
+Read this file before editing.
+
+## Project Boundary
+
+- Project name: Firmendingsbums Website
+- Local project path: `C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website`
+- Canonical remote: `https://github.com/DP-Manuel/CompetenceHub.git`
+- Primary runtime or artifact type: website first; webapp and additional digital artifacts later
+- Main entry points: project memory files in the repository root; website workspace in `apps/website`
+- Sensitive areas: credentials, customer or company data, private brand material, analytics data, production deployment settings
+
+## Second Workstation
+
+- On the network-separated second workstation, this repository is mounted at `Z:\IT Development Manuel\Firmendingsbums\Website` and canonical CodexSkills are at `Z:\IT Development Manuel\CodexSkills`.
+- Read `docs/architecture/second-workstation-setup.md` before Git, Node/Astro, local-preview, browser, or filesystem-tooling work on that workstation.
+- Keep `.tmp/`, `.env*`, credentials and unrelated private material excluded from reads, copies and commits.
+
+## CodexSkills Access
+
+- Use active runtime skills from `%USERPROFILE%\.codex\skills` for normal work.
+- Use the local canonical CodexSkills folder when exact skill files, references, scripts, validation, or skill updates are needed: `C:\Users\RödelManuel\Documents\IT\CodexSkills`.
+- If the local folder is unavailable or needs source history, use the canonical repository: `https://github.com/DP-Manuel/CodexSkills.git`.
+- Use ManuWiki when skill catalog context, Manuel-specific knowledge, domain concepts, or portable AI-readable guidance is useful.
+- Do not copy full skill folders into this project unless Manuel explicitly wants a local vendored snapshot.
+- Run `.\scripts\codexskills-update-check.ps1 -Validate -PlanSync` when this project may be using stale skills. Use `-SyncActive -BackupActive` only after reviewing the plan and intentionally approving the canonical changes for global use. Use `-SyncSkill <name>` to limit either operation to selected skills.
+
+## Default Skill Route
+
+- Use `manage-project-state` to maintain `PROJECT_PLAN.md`, `PROJECT_LOG.md`, `PROJECT_STATUS.md`, `MEETINGS.md`, and restart handoffs.
+- Use `coordinate-software-project` for broad planning, decomposition, routing, or end-to-end software delivery.
+- Use `challenge-assumptions` when a critical sparring partner, outside-the-box view, blind-spot check, or optimization prompt is useful.
+- Use `reverse-engineer-codebase` before substantial changes when behavior, architecture, data flow, or project conventions are unclear.
+- Use `discover-product-context`, `write-requirements`, and `shape-user-stories` for product, requirements, backlog, or slice work.
+- Use implementation, verification, delivery, and maintenance skills according to task intent; for website work this commonly includes `integrate-frontend`, `check-accessibility`, `review-performance`, and `write-tests`.
+- Use `improve-skill-system` only for reusable workflow learnings that should improve CodexSkills itself.
+
+## Project Memory
+
+- Keep `PROJECT_PLAN.md` current after meaningful planning, scope, timeline, budget, stakeholder, risk, or decision changes.
+- Keep `PROJECT_LOG.md` newest-first after meaningful work.
+- Keep `PROJECT_STATUS.md` short and current when frequent handoffs, stakeholder updates, or multi-day work are happening.
+- Use `MEETINGS.md` for stakeholder, steering, planning, review, retrospective, or decision meetings.
+- Use `SKILL_FEEDBACK_LOG.md` for proposed CodexSkills improvements discovered during this project.
+- Use `docs/updates/WEEKLY_UPDATE_STANDARD.md` as the binding structure for
+  colleague-facing Teams updates; do not invent a new weekly format.
+- After every meaningful implementation, verification, deployment, operations,
+  planning or stakeholder-feedback block, perform a brief skill-learning check:
+  identify what should be remembered about Manuel's workflow, which avoidable
+  friction recurred and whether a reusable skill improvement is evidenced.
+  Record useful findings proactively in `SKILL_FEEDBACK_LOG.md`; explicitly
+  allow `no reusable learning` instead of manufacturing process notes.
+
+## Completion And Steering Checkpoint
+
+- After any meaningful implementation, migration, deployment, infrastructure,
+  security or stakeholder-decision block, do not stop at the result summary.
+- Update stale `next`, `waiting`, `blocked`, `not applied` and similar claims in
+  `PROJECT_PLAN.md`, `PROJECT_STATUS.md` and `PROJECT_LOG.md` during the same
+  session.
+- End with one clearly recommended next work block including purpose, required
+  inputs, deliverables and Definition of Done. Also keep an ordered rolling
+  horizon of the next four to eight likely steps visible in `PROJECT_PLAN.md`
+  and summarized in `PROJECT_STATUS.md`; mark later steps with lower confidence
+  instead of presenting them as committed work.
+- Separate the current execution/sprint backlog from the broader project or
+  product backlog. Keep WIP small while preserving later product value.
+- For every rolling-horizon step, record the intended outcome, status,
+  dependency or gate, planned test/evidence and confidence. Reconcile the
+  horizon after meaningful completion or changed information instead of only
+  appending another next task.
+- Define decision, requirements, privacy/data, security, content/rights,
+  operations, deployment and stakeholder-acceptance gates where relevant. A
+  gated item cannot be reported as ready or done without its evidence.
+- Keep parallel organizational gates and alternative workstreams separate from
+  the recommended next block and the ordered implementation horizon.
+- State explicitly whether commit, push, deployment and real-data use occurred
+  or still need separate approval.
+- Any command Manuel must execute must be repeated in the final response that
+  requests the action; intermediary commentary is not a durable handoff.
+- Durable handoff gate: before ending a turn that waits for Manuel to execute a
+  command, verify that the same final response contains every current command
+  in execution order, the required working directory or terminal split, the
+  expected safe output and any secret-handling warning. A final response that
+  only refers to commands shown earlier is incomplete and must not be sent.
+
+## Structure
+
+- `apps/website` - first deliverable: public website.
+- `apps/webapp` - reserved for the later web application.
+- `docs/requirements` - product context, requirements, user stories, and acceptance criteria.
+- `docs/architecture` - architecture notes, stack decisions, data/API sketches.
+- `docs/decisions` - ADR-style decisions.
+- `docs/assets` - notes about brand assets, copy, imagery, and source material.
+
+## Data And Privacy
+
+- Do not copy credentials, private documents, production data, personal data, or generated private artifacts into external notes.
+- Sanitize examples before adding them to CodexSkills real cases, evals, release notes, or ManuWiki proposals.
+- Ask Manuel before moving project material into ManuWiki or any shared knowledge base.
+
+## Verification
+
+- Run project-specific tests when available.
+- For `apps/website`, use the project-local Node path before npm commands: `$env:PATH = "..\..\tools\node-v22.16.0-win-x64;$env:PATH"; npm run build`.
+- If Astro build/check fails with `EPERM: operation not permitted, mkdir ...\AppData\Roaming\astro\Config` or `Could not load ... spawn EPERM`, the code may be fine; Astro/Vite is trying to do workspace-external or sandbox-restricted work. Re-run the same build with approved escalation or disable Astro telemetry in a documented way before judging the change.
+- Document skipped checks with the reason, residual risk, and next verification action.
+- For non-code artifacts, use artifact-specific verification in addition to normal tests.
+- Binding project constraints, such as corporate identity, legal requirements, privacy expectations, API contracts, and deployment rules, override discretionary improvements.
+
+## SFTP Operator Interaction
+
+- Manuel copies the SFTP password and pastes it into the hidden OpenSSH prompt.
+  Never preload SFTP commands into the clipboard before authentication.
+- Use two explicitly named terminals: Terminal A for login and SFTP, Terminal B
+  to copy the verified command file only after Terminal A shows `sftp>`.
+- Do not describe this as a one-terminal workflow unless password entry is
+  demonstrably independent of the clipboard.

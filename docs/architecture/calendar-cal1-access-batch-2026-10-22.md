@@ -169,9 +169,9 @@ that actual run and its sanitized result are inspected.
 | 29 | PG localhost | Read-only VPS listener PASS; batch DB SHOW/postflight PENDING |
 | 30 | Additional backend slice | Sanitized DB-error logging hardening implemented/tested; readiness package gated on native PASS |
 | 31 | Deliberately not begun | Production, real accounts/mappings, SMTP, tracking, CAL-2/FIN-01 implementation |
-| 32 | Commits | Preview 1cc481de9210; remaining scoped slices recorded on completion |
-| 33 | Push | Preview source pushed and deployed; no auto production deployment |
-| 34 | Remaining local changes | Access/harness/context slices awaiting scoped commits; unfamiliar .vscode and September weekly file preserved |
+| 32 | Commits | Preview 1cc481de9210; access 40a7574; public QA 3218750; native harness b5c65c7; context reconciliation separate |
+| 33 | Push | Preview source pushed and deployed; follow-up pushes use main without auto production deployment |
+| 34 | Remaining local changes | Context reconciliation and this status update; unfamiliar .vscode and September weekly file preserved |
 | 35 | Exact next gate | One secure operator batch above; no new content decision needed |
 
 ## Recommended Next Block

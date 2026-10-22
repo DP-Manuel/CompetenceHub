@@ -1,21 +1,15 @@
-# Firmendingsbums Website
+# Competence Hub
 
-This repository is the working space for a website-first project that may later include a webapp and additional digital artifacts.
+Public Astro website plus an independent authenticated Portal/backend.
 
-## Current Focus
+Start with [AGENTS.md](AGENTS.md), then [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md), then only the task's canonical domain documents.
+[Context policy](docs/architecture/PROJECT_CONTEXT_POLICY.md) explains the memory layout.
 
-Start with the public website. Keep decisions, requirements, architecture notes, and skill feedback visible so the project remains easy to resume.
+- `apps/website`: Website implementation; stable IONOS production and separately authorized GitHub Pages preview.
+- `apps/webapp`: FastAPI Portal and server-side PostgreSQL foundation.
+- `docs/content`, `docs/requirements`, `docs/architecture`, `docs/operations`: canonical domain memory.
+- `docs/exec-plans/active`: current execution; `docs/history`: preserved history.
+- `PROJECT_PLAN.md`: roadmap; `PROJECT_STATUS.md`: compatibility pointer; `PROJECT_LOG.md`: major milestones.
+- `new-project-starter`: original starter reference, not current operating instructions.
 
-## Project Structure
-
-- `apps/website` - first public website implementation.
-- `apps/webapp` - reserved for a later web application.
-- `docs/requirements` - product context, requirements, user stories, and acceptance criteria.
-- `docs/architecture` - architecture notes, stack decisions, data/API sketches.
-- `docs/decisions` - ADR-style decisions.
-- `docs/assets` - brand, content, media, and source-material notes.
-- `new-project-starter` - original CodexSkills starter package kept as reference.
-
-## Working Rules
-
-Read `AGENTS.md` before editing. Keep `PROJECT_PLAN.md`, `PROJECT_LOG.md`, `PROJECT_STATUS.md`, and `SKILL_FEEDBACK_LOG.md` current after meaningful work.
+Production changes, real Portal data/accounts and external service activation retain their own gates.

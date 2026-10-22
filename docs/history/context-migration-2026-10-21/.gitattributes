@@ -1,0 +1,2 @@
+# Preserve snapshot bytes, including original CRLF and historical whitespace.
+* -text -whitespace

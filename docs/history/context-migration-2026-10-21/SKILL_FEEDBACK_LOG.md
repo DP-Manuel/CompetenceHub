@@ -1,0 +1,960 @@
+# Skill Feedback Log
+
+### 2026-09-25 | browser-visual-geometry | Echte Textzeilen statt Container pruefen
+
+- Triggering project situation: 72/72 Produktions-Smokes meldeten die
+  Mindforge-Seite als gruen, obwohl eine per `white-space: nowrap` verbreiterte
+  Ueberschriftenzeile sichtbar in den Erklaerungstext hineinragte.
+- Friction: Horizontaler Dokumentueberlauf, Container-Bounding-Boxes und
+  JavaScriptfehler blieben alle unauffaellig, weil der Text sichtbar aus seinem
+  Grid-Kind herausmalte, ohne die Dokumentbreite zu vergroessern.
+- Improvement: Fuer grosse Texte in Grid/Flex-Layouts muessen Browserchecks die
+  echten `Range.getClientRects()` aller Textknoten erfassen, horizontale
+  Spaltenbegrenzung, paarweise Textkollision und Abschneiden gegen den Abschnitt
+  pruefen. Desktop-Breiten, Breakpoint-Rand, Mobil und 200-Prozent-Reflow sind
+  getrennte Pflichtfaelle.
+- Project response: Die Messe-Abnahme enthaelt jetzt 42 gezielte Pruefungen bei
+  2048, 1440, 1280, 960, 390 CSS-Pixeln und 1280 bei 200 Prozent.
+- Reuse potential: very high for responsive editorial and marketing layouts.
+- Proposed destination: `write-tests`, `check-accessibility` and
+  `integrate-frontend`.
+- Status: project-local regression implemented; canonical skill proposal open.
+
+### 2026-09-24 | sftp-one-terminal-ascii-path | Operatorpfad vor Remote-Aenderungen sicher vorladen
+
+- Triggering project situation: Der erzeugte SFTP-Updateblock begann mit
+  freigegebenen Remote-Loeschungen, bevor ein Windows-`lcd` mit dem Umlaut im
+  Benutzerpfad beim Einfuegen als funktionsfaehig bewiesen war. Der Pfad wurde
+  verstuemmelt; der Einstieg war dadurch kurzzeitig entfernt, waehrend der
+  Ersatz noch nicht hochgeladen werden konnte.
+- Friction: Mehrere Terminals, wechselnder Clipboard-Inhalt und ein erst spaet
+  erklaerter Ablauf machten einen an sich deterministischen Release unnoetig
+  fehleranfaellig.
+- Correction from real operator use: Manuel kopiert das SFTP-Passwort. Jeder
+  vor der Anmeldung geladene Befehlsblock wird dadurch ueberschrieben und das
+  Passwort wuerde am `sftp>`-Prompt als `Invalid command` eingefuegt.
+- Improvement: Interaktive SFTP-Handoffs muessen die tatsaechliche
+  Passwortarbeitsweise vorab erfassen. Bei Clipboard-Passwoertern sind zwei
+  ausdruecklich benannte Terminals Pflicht: Login in Terminal A, Befehlsdatei
+  erst nach sichtbarem `sftp>` ueber Terminal B laden. Lokale Pfade bleiben
+  ASCII-sicher und `lcd` muss vor Remote-Aenderungen erfolgreich sein.
+- Project response: Der Verbindungshelfer veraendert die Zwischenablage nicht
+  mehr. Ein separater validierender Kopierhelfer laedt Befehle erst nach der
+  Authentifizierung; Runbook und Projektanweisung schreiben den
+  Zwei-Terminal-Ablauf fest.
+- Reuse potential: very high for password-based SFTP releases on Windows.
+- Proposed destination: `prepare-release` and `create-deployment-plan`.
+- Status: project pattern implemented; canonical skill proposal captured only.
+
+### 2026-09-24 | browser-acceptance | Datumsrelative UI-Fixtures kalenderstabil prüfen
+
+- Triggering project situation: Die Website-Browserabnahme suchte am 24.09.
+  starr im aktuellen Kalendermonat nach einem relativ erzeugten Beispieltermin.
+  Dieselbe Abnahme war am 22.09. grün, scheiterte aber zwei Tage später, weil
+  alle Beispiele inzwischen im Folgemonat lagen.
+- Friction: Ein korrekt dargestellter leerer Zustand wurde fälschlich als
+  Produktregression gewertet und verursachte einen 30-Sekunden-Timeout.
+- Improvement: Browserabnahmen für relative Kalenderdaten müssen den
+  dokumentierten leeren Zustand akzeptieren und innerhalb des begrenzten
+  Anzeigezeitraums zum nächsten belegten Monat navigieren. Zeitabhängige
+  Annahmen gehören ausdrücklich in Regressionstests.
+- Reuse potential: high for calendars, deadlines, rolling windows and
+  expiration-driven UI.
+- Proposed destination: `write-tests` and frontend browser-acceptance guidance.
+- Status: project-local regression fixed; reusable skill update proposed.
+
+Use this file to collect possible CodexSkills improvements discovered during this project.
+
+Do not implement every idea immediately. First collect evidence, then decide whether the change belongs in CodexSkills, ManuWiki, this project, or nowhere yet.
+
+## Open Feedback
+
+### 2026-09-22 | provider-aware-sftp-activation | Verzeichnisse, Rechte und Einstieg vor Liveannahme pruefen
+
+- Triggering project situation: IONOS uebertrug bei `put -r *` nur Root-Dateien
+  und verweigerte fehlende Top-Level-Zielverzeichnisse. Nach explizitem Upload
+  lieferten restriktive neue Verzeichnisrechte zunaechst weiterhin `403`.
+- Observed friction: Mehrere manuelle Neuverbindungen waren noetig, obwohl das
+  lokale Paket vollstaendig und der Root-Einstieg bereits online war.
+- Reusable improvement candidate: `prepare-release` und
+  `create-deployment-plan` sollen fuer SFTP-Deployments Providerverhalten
+  explizit erfassen, Zielverzeichnisse vor `put -r` anlegen, Verzeichnis-/
+  Dateirechte setzen, `index.html` zuletzt aktivieren und die Verbindung erst
+  nach externem Route-/Asset-Smoke schliessen.
+- Project response: Erstaufbau- und Update-Befehlslisten sowie ein
+  host-key-pruefender, passwortfreier Verbindungshelfer wurden ergaenzt und mit
+  fokussierten Tests abgesichert.
+- Reuse potential: very high for constrained shared-hosting/SFTP releases.
+- Status: project pattern implemented; canonical skill proposal captured only.
+
+### 2026-09-22 | generated-handoff-placeholder-gate | Erzeugte Releaseunterlagen auf Literal-Platzhalter pruefen
+
+- Triggering project situation: Das Releasearchiv war korrekt, aber die
+  generierte SFTP-Operatorcheckliste enthielt wegen maskierter PowerShell-
+  Variablen wortwoertliche Platzhalter statt Artifact, Hash, Commit und Ziel.
+- Observed friction: Ein erfolgreicher Generatorlauf und eine valide JSON-
+  Releaseplanung reichten nicht aus, um die fuer Menschen bestimmte
+  Ausfuehrungsunterlage als belastbar nachzuweisen.
+- Reusable improvement candidate: `prepare-release`, `write-tests` und
+  `create-deployment-plan` sollen erzeugte Operatorunterlagen auf konkrete
+  erwartete Werte sowie verbotene Template-Syntax oder bekannte
+  Variablennamen pruefen.
+- Project response: Der Generator nutzt ein formatbasiertes Template; der
+  fokussierte Regressionstest prueft Inhalt und Platzhalterfreiheit.
+- Reuse potential: high for generated runbooks, checklists and handoffs.
+- Status: project pattern implemented; canonical skill proposal captured only.
+
+### 2026-09-22 | private-profile-onboarding | Private Coach-Unterlagen in einen freigabefaehigen oeffentlichen Entwurf ueberfuehren
+
+- Triggering project situation: Neue Coach-Unterlagen mischten Lebenslauf,
+  Zeugnisse, private Kontaktdaten, Zertifikatskennungen und ein eingebettetes
+  Portrait. Ein technisch nutzbares Bild war dadurch noch nicht automatisch
+  zur Website-Veroeffentlichung freigegeben.
+- Observed friction: Ohne festen Ablauf koennten private Angaben oder
+  ungepruefte Bildrechte versehentlich in Source, Reviewpaket oder Release
+  gelangen; zugleich darf ein bereits sauberer Releasekandidat nicht durch
+  ungeprueften neuen Content entwertet werden.
+- Reusable improvement candidate: Website-/Content-Skills sollen bei
+  Personenprofilen standardmaessig Belegpruefung, Datenminimierung,
+  Namensfreigabe, fachliche Textfreigabe, Bildrechte und Releasezeitpunkt
+  getrennt pruefen. Bis zur Bildrechtefreigabe ist ein neutrales vorhandenes
+  Fallback zu verwenden.
+- Project response: Nur belegte oeffentliche Kompetenzen wurden uebernommen,
+  private Daten ausgeschlossen und eine separate Freigabeuebersicht erstellt.
+  Nach Manuels ausdruecklicher Rechtefreigabe wurde das eingebettete Portraet
+  Metadaten-minimiert veroeffentlichungsfertig eingebunden; der bestehende
+  Clean-Release bleibt bis zum neuen erfolgreichen Build als Rueckfalloption.
+- Candidate home: `integrate-frontend`, `prepare-release` und
+  `manage-project-state`.
+- Status: project-local evidence; fuer kanonisches CodexSkills-Feedback
+  vorgemerkt, noch nicht global synchronisiert.
+
+### 2026-09-21 | public-placeholder-and-clean-artifact-gates | Domaininhalt und Sourcezustand vor Livegang pruefen
+
+- Triggering project situation: DNS und TLS waren laut EDV eingerichtet, doch
+  der aktuelle oeffentliche Abruf beider Subdomains lieferte eine frei
+  erreichbare `phpinfo()`-Seite. Parallel war ein technisch korrektes
+  Website-Archiv wegen bewusster, noch nicht freigegebener Arbeitsaenderungen
+  als `dirty` markiert.
+- Observed friction: Ein reiner Status-/Zertifikatscheck haette den riskanten
+  Platzhalter uebersehen; ein gruener Build haette faelschlich wie ein finales
+  Produktionsartefakt wirken koennen.
+- Reusable improvement candidate: `prepare-release`, `create-deployment-plan`
+  und `audit-security` sollen vor Web-Releases nicht nur DNS/TLS/HTTP-Status,
+  sondern Seitentitel, charakteristische Inhalte, Redirects und bekannte
+  Diagnose-/Defaultseiten pruefen. Release-Nachweise muessen Clean/Dirty,
+  Source-Checkpoint und Deploymentautorisierung getrennt ausweisen.
+- Project response: `phpinfo()` ist P0 und EDV-Stopper; der lokale Kandidat ist
+  mit Hash dokumentiert, aber nicht deployautorisiert. Ein sauberes Artefakt
+  wird erst nach freigegebenem Source-Checkpoint gebaut.
+- Reuse potential: very high for hosted websites and pre-production handoffs.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | stateful-browser-fixture-evidence | Frischer Zustand und objektspezifische Browser-Waits
+
+- Triggering project situation: Eine langlebige synthetische Fixture behielt
+  Withdraw-/Review-Mutationen zwischen manuellen Rundgaengen. Gleichzeitig
+  werteten erste Automationsschritte bereits vorhandenen Seitentext aus, bevor
+  der gerade angestossene asynchrone Detailabruf abgeschlossen war.
+- Observed friction: Korrekte Lifecycle-Regeln wirkten wie fehlende
+  Revisionsaktionen, und zu breite Wartebedingungen erzeugten falsche
+  Negativbefunde bei Topic-Auswahl, Submit, stale reload, Review und MFA.
+- Reusable improvement candidate: `write-tests`, `debug-failures` und
+  `integrate-frontend` sollen Browser-Gates aus einem frischen deterministischen
+  Fixturezustand starten, konkurrierende Tabs als getrennte Sitzungen abbilden,
+  auf das konkret mutierte Objekt/Element warten und API-, Client-State- und
+  DOM-Evidenz getrennt erfassen. Fixture-Mutationen muessen in sichtbaren
+  Lifecycle-Labels erkennbar sein.
+- Project response: Der CAL-1-Runner startet pro Lauf einen freien HTTPS-
+  Loopbackserver, verwendet mehrere unabhaengige Sessions, wartet karten- und
+  dialogbezogen und entfernt Server, Browserkontexte und Temporaerdaten im
+  `finally`-Pfad. 57/57 Edge-Pruefungen bestehen.
+- Reuse potential: very high for stateful portals and end-to-end test fixtures.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | browser-runtime-after-dom-hardening | Sicherheits-DOM auch im echten Browserpfad pruefen
+
+- Triggering project situation: Rollenabhaengige Kalenderbereiche wurden aus
+  dem aktiven DOM entfernt. Ein spaeterer allgemeiner Fehler-Cleanup griff vor
+  der erneuten Capability-Aufloesung trotzdem ueber `getElementById` darauf zu
+  und blockierte erst im echten Browser den Portal-Einstieg.
+- Observed friction: API-, Fixture- und statische UI-Tests waren gruen, obwohl
+  der reale Login-MFA-Portal-Uebergang im Browser scheiterte. Ein weiterer
+  Rollenpfad zeigte Admin-Angebote, lud aber die zum Speichern erforderlichen
+  Themen nicht.
+- Reusable improvement candidate: `integrate-frontend`, `write-tests` und
+  `audit-security` sollen nach DOM-Hardening mindestens einen echten Runtime-
+  Pfad Login -> MFA -> Capability-Aufloesung -> rollenabhaengige Ansicht sowie
+  das Bearbeiten eines vollstaendigen Pflichtformulars je berechtigter Rolle
+  verlangen. Statische Quelltests allein reichen fuer diesen Gate-Typ nicht.
+- Project response: Cleanup arbeitet nulltolerant und leert gehaltene Knoten
+  direkt; Admin laedt Topics fuer bestehende Angebote. Regressionstest und
+  manuelle Checkliste wurden aktualisiert, volle Suite 384/17 gruen.
+- Reuse potential: very high for role-sensitive framework-free portals.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | detached-privileged-dom-cleanup | Rollenwechsel leert auch entfernte UI-Knoten
+
+- Triggering project situation: Nicht berechtigte Kalenderbereiche wurden
+  richtigerweise aus dem aktiven DOM entfernt, behielten als wiederverwendete
+  JavaScript-Knoten aber ihren zuvor geladenen Coach-/Reviewer-Inhalt.
+- Observed friction: Bei Logout und anschliessendem Rollenwechsel koennte ein
+  Ladefehler sonst alten privilegierten Inhalt im Tab-Speicher beziehungsweise
+  nach spaeterem Wiederanheften sichtbar lassen, obwohl die API weiterhin
+  korrekt sperrt.
+- Reusable improvement candidate: `integrate-frontend`, `audit-security` und
+  `check-accessibility` sollen bei rollenabhaengig entfernten oder gecachten
+  DOM-Teilbaeumen einen Session-transition-Test verlangen: Dialoge schliessen,
+  Listen/Details leeren, Referenzen verwerfen und erst nach erneuter
+  serverseitiger Berechtigungsauflosung wieder anheften.
+- Project response: Eine zentrale Client-State-Bereinigung leert Firmen- und
+  Kalenderlisten, Details, Dialoge und Capability-State bei Logout,
+  Sitzungsablauf und Re-Login. Ein statischer Regressionstest schuetzt den Pfad.
+- Reuse potential: very high for multi-role single-page portals.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | behavior-over-occurrence-count | UI-Regressionen nicht an Aufrufszahlen koppeln
+
+- Triggering project situation: Zwei neue sichere Formulare liessen einen
+  bestehenden Test fehlschlagen, weil er exakt zehn Aufrufe des gemeinsamen
+  FormData-vor-Disable-Helfers erwartete.
+- Observed friction: Der Sicherheitsmechanismus blieb korrekt und wurde sogar
+  erweitert; nur die Implementierungsanzahl hatte sich legitim veraendert.
+- Reusable improvement candidate: `write-tests` soll bei querschnittlichen
+  Frontend-Sicherheitsmustern die Reihenfolge und verpflichtende Nutzung pro
+  relevantem Handler pruefen, nicht eine globale exakte Textvorkommenszahl.
+- Project response: Reihenfolge bleibt explizit geschuetzt; der Test akzeptiert
+  Erweiterungen und die neuen Kalenderformulare werden separat vertraglich
+  geprueft.
+- Reuse potential: high for frameworkfreie Clients und statische Quelltests.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-18 | endpoint-session-role-boundary | RBAC mit echter Sessionkette pruefen
+
+- Triggering project situation: Die CAL-1-API war mit Fake-Principals lokal
+  gruen, aber der native Staging-Lauf lieferte fuer Coach und Reviewer bereits
+  vor dem Kalender-RBAC ein `401`, weil das bestehende persistierte Session-
+  Repository gemaess internem Auth-Vertrag nur `admin/internal` akzeptierte.
+- Observed friction: Unit- und API-Tests prueften die nachgelagerte
+  Rollenentscheidung, bildeten aber die vorgelagerte Datenbankabfrage zur
+  Session-Eignung nicht ab. Dadurch blieb die Differenz zwischen fehlender
+  Authentifizierung (`401`) und vorhandener Identitaet ohne Berechtigung (`403`)
+  bis zum nativen Gate unsichtbar.
+- Reusable improvement candidate: `write-tests`, `integrate-backend` und
+  `audit-security` sollten fuer neue geschuetzte Endpunktfamilien die gesamte
+  Kette Sessionpersistenz -> erlaubte Auth-Rollen -> Endpunkt-RBAC nativ testen.
+  Wenn bestehende ADRs engere Loginrollen festlegen, ist eine explizit getrennte
+  Session-Sicht einer stillen globalen Aufweitung vorzuziehen. Negative Tests
+  muessen `401` und `403` vertraglich unterscheiden.
+- Project response: CAL-1 verwendet eine eigene konfigurierte Session-Sicht
+  fuer die fuenf Kalenderrollen; interner Login, Admin- und Firmenendpunkte
+  behalten ihre bisherige `admin/internal`-Grenze. Der fokussierte Lauf besteht
+  3/3 und die vollstaendige Staging-Suite 17/17 ohne Datenrueckstand.
+- Reuse potential: very high for multi-role portals and shared authentication.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-17 | explicit-public-route-mapping | Keine URLs aus Namen ableiten
+
+- Triggering project situation: Die Kalender-API musste interne Coach-UUIDs
+  mit bereits freigegebenen Websiteprofilen verbinden, waehrend die oeffentliche
+  Quelle keine stabilen internen UUIDs enthaelt.
+- Observed friction: Ein bequemes Name-zu-Slug-Fallback haette reale Personen
+  falsch zuordnen, nicht freigegebene Profile verlinken und spaetere
+  Umbenennungen zu stillen API-Aenderungen machen koennen.
+- Reusable improvement candidate: `design-api-contracts`, `plan-data-model`,
+  `integrate-backend` und `audit-security` sollten Identitaets-ID-zu-
+  oeffentlicher-Route-Verbindungen als explizite nullable Stammdaten-Grenze
+  behandeln: kanonischer Namespace, kein Normalisieren/Erraten, Eindeutigkeit,
+  sichere NULL-Semantik und getrennte interne/oeffentliche DTOs.
+- Project response: `coaches.public_profile_path` ist lokal additiv vorbereitet,
+  streng validiert und Kalender-Mutationen koennen es nicht veraendern. Ohne
+  freigegebene UUID-Zuordnung bleibt der Wert NULL.
+- Reuse potential: high for profiles, CMS links, public catalogs and account-
+  to-marketing-page integrations.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-17 | postgres-bind-type-boundary | Treibertypen nativ pruefen
+
+- Triggering project situation: Ein PostgreSQL Advisory Lock castete UUID-
+  Bindparameter direkt nach Text. Mock-Tests waren gruen, aber `asyncpg`
+  erwartete wegen der SQL-Typableitung Strings und lehnte UUID-Objekte ab.
+- Observed friction: Erst der kontrollierte Staging-Lauf fand die Abweichung,
+  obwohl SQL-Struktur, Transaktionsreihenfolge und lokale Repository-Tests
+  korrekt wirkten.
+- Reusable improvement candidate: `integrate-backend`, `write-tests` und
+  `debug-failures` sollten bei PostgreSQL-spezifischen Funktionen explizite
+  Bindtypen beziehungsweise UUID-vor-Text-Casts und einen nativen Treibertest
+  verlangen; reine Fake-Connection-Tests reichen dafuer nicht.
+- Project response: Advisory-Lock-Parameter werden zuerst als `uuid` gebunden,
+  dann gehasht; ein Regressionstest sichert die SQL-Typgrenze und der native
+  Rerun bleibt ein sichtbares Gate.
+- Reuse potential: high for asyncpg, locks and database-specific SQL.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-17 | iana-timezone-portability | Zeitzonendaten explizit paketieren
+
+- Triggering project situation: Die CAL-1-Domain validiert IANA-Zonen wie
+  `Europe/Berlin`; unter Windows fehlte der System-Zeitzonenkatalog, waehrend
+  Linux ihn normalerweise bereitstellt.
+- Observed friction: Fachlich gueltige Kalenderentwuerfe scheiterten nur auf
+  einer Entwicklungsplattform und verdeckten dadurch nachfolgende
+  Feldvalidierungen.
+- Reusable improvement candidate: `integrate-backend`, `write-tests` und
+  `prepare-release` sollten bei `zoneinfo`-Nutzung eine explizite `tzdata`-
+  Abhaengigkeit oder einen nachgewiesenen Systemkatalog verlangen und mindestens
+  eine bekannte sowie eine ungueltige IANA-Zone plattformuebergreifend testen.
+- Project response: `tzdata` wurde in Laufzeitvertrag und exakten Lock
+  aufgenommen; CAL-1 prueft bekannte/ungueltige Zonen und die Gesamtsuite ist
+  gruen.
+- Reuse potential: high for calendars, scheduling and cross-platform Python.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-11 | mixed-script-test-discovery | Betriebswerkzeuge nach Interpreter prüfen
+
+- Triggering project situation: Ein neuer Python-Renderer kam in einen bisher
+  ausschließlich mit `bash -n` geprüften Skriptordner; zugleich decodierte der
+  Windows-Test seine deutsche Kindprozessausgabe mit einer abweichenden
+  System-Codepage.
+- Observed friction: Der erste Testlauf meldete vier Fehler, obwohl der
+  Meldungsvertrag selbst korrekt war. Die pauschale Dateiauswahl und implizite
+  Encodingannahme hatten den Fehler erzeugt.
+- Reusable improvement candidate: `write-tests`, `create-deployment-plan` und
+  `prepare-release` sollten gemischte Operationsordner anhand Shebang oder
+  explizitem Manifest dem richtigen Syntaxprüfer zuordnen und bei
+  plattformübergreifenden Kindprozessen UTF-8 ausdrücklich setzen.
+- Project response: Bash-Syntaxprüfung filtert nun Bash-Shebangs; Python läuft
+  mit `PYTHONUTF8=1`. Der Gesamtlauf ist grün.
+- Reuse potential: high for Windows/Linux deployment packages.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-11 | template-intent-gating | Vorlagentexte vor Automation nach Wirkung trennen
+
+- Triggering project situation: Ein fachlicher Word-Entwurf enthielt zugleich
+  Eingangs-, Buchungs-, Kalender-, Angebots-, Feedback-, Newsletter-,
+  Erstattungs- und Empfehlungsnachrichten.
+- Observed friction: Eine scheinbar fertige E-Mail-Vorlage kann feste
+  Reaktionszeiten, Vertragswirkung, Garantien, automatische Umbuchung,
+  Erstattung oder Marketingversprechen enthalten, obwohl diese Regeln noch
+  nicht freigegeben sind.
+- Reusable improvement candidate: `write-requirements`,
+  `coordinate-software-project` und `integrate-backend` sollen externe
+  Vorlagen zuerst nach transaktional, operativ, rechtlich relevant und
+  Marketing klassifizieren. Ausloeser, Owner, Einwilligung, Statusbegriff,
+  Idempotenz, Fehlerweg und Freigabe muessen vor Code sichtbar sein.
+- Project response: Zwoelf Vorlagen wurden nur als gegatetes Prozessinventar
+  uebernommen; keine problematische Aussage wurde automatisiert.
+- Reuse potential: very high for CRM, booking and notification systems.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-11 | operational-role-boundary | Fach-, Mailbox- und Technikvertretung getrennt erheben
+
+- Triggering project situation: Die Frage nach Janays Mailboxvertretung wurde
+  unlogisch mit Manuels Urlaub und Thomas Ross als technischem Notfallkontakt
+  vermischt.
+- Observed friction: Eine allgemeine Frage nach "Vertretung" erzeugt falsche
+  Abhaengigkeiten, obwohl Mailboxbearbeitung, fachliche Freigabe und technischer
+  Break-glass-Zugriff verschiedene Dienste, Risiken und Owner haben.
+- Reusable improvement candidate: `manage-project-state`,
+  `discover-product-context` und Operations-Checklisten sollen Vertretung immer
+  pro Dienst und Rolle erheben: fachlich, Mailbox/Kundenkontakt, technische
+  Administration, Go/No-Go und Recovery. Eine nicht besetzte Rolle wird als
+  bekannter Gap dokumentiert, nicht durch eine andere Vertretung ersetzt.
+- Project response: Thomas Ross ist nur technischer Break-glass-Nachfolger;
+  Janay ist Mailbox-Owner ohne aktuelle Abwesenheitsvertretung. Deshalb bleibt
+  ein oeffentliches Reaktionsversprechen gesperrt, der technische Pilot aber
+  nicht automatisch.
+- Reuse potential: high for small teams and vacation/continuity planning.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-11 | release-evidence-freshness | Review und Produktionsartefakt gemeinsam altern lassen
+
+- Triggering project situation: Mehrere aktuelle Frontend-Änderungen waren auf
+  der Review-Seite geprüft, während Gate-Board und letztes ausdrücklich
+  nachgewiesenes IONOS-Artefakt noch den Stand vom 25.08. trugen.
+- Observed friction: Ein grünes Review-Deployment beweist nicht automatisch,
+  dass das getrennte Produktionspaket mit Canonical-, Fehlerseiten- und
+  Webroot-Regeln noch aktuell ist.
+- Reusable improvement candidate: `prepare-release`,
+  `manage-project-state` und `coordinate-software-project` sollten bei jedem
+  relevanten Frontendabschluss die Frische aller getrennten Release-Artefakte
+  und Gate-Boards prüfen. Ein veralteter Nachweis wird sichtbar auf `refresh
+  required` gesetzt und als unabhängiger Ready-Slice angeboten.
+- Project response: Der aktuelle Produktions-Build wurde vorgezogen; eine
+  fehlerhafte 404-Canonical-Adresse fiel auf. Interne Referenzen werden künftig
+  als fester Release-Schritt geprüft und das Gate-Board wird nach dem sauberen
+  Artefakt neu baselined.
+- Reuse potential: very high for multi-target Website deployments.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-10 | stakeholder-wait-batching | Wartezeit für gebündelte Entscheidungen nutzen
+
+- Triggering project situation: CAL-0.1 wartet bis zum Folgetag auf Janays
+  Sichtprüfung, während acht zusammenhängende Geschäftsregeln später ohnehin
+  entschieden werden müssen.
+- Durable preference: In einer Stakeholder-Wartephase nicht nur den nächsten
+  Einzelpunkt nennen, sondern unabhängige Vorbereitung vorziehen und offene
+  Fragen in einem verständlichen Paket sammeln, damit der nächste Rücklauf
+  mehrere Gates gleichzeitig schließen kann.
+- Proposed improvement: `manage-project-state` und
+  `coordinate-software-project` sollten bei wartendem Feedback automatisch
+  unabhängige Ready-Arbeit, einen gebündelten Entscheidungsrücklauf und bereits
+  mögliche Testplanung anbieten, ohne unbestätigte Regeln zu implementieren.
+- Project response: Ein achtteiliges Kalender-Handout samt Word-Export und ein
+  parameterisierter Qualitätsplan wurden vorbereitet; produktive Umsetzung
+  bleibt hinter CAL-D01 bis CAL-D08 und ADR 0007.
+- Reuse potential: high for stakeholder-led work with asynchronous feedback.
+- Status: project pattern applied; canonical skill proposal captured only.
+- Second evidence on 2026-09-11: Nach der visuellen Kalenderabnahme musste das
+  fachliche Paket nicht nur inhaltlich aktualisiert, sondern auch als wirklich
+  sendbares Word-Dokument geprueft werden. Eine reine Textrücklese haette drei
+  getrennte Ueberschriften/Antwortbloecke uebersehen; die Word-Paginierung
+  fuehrte zu einer klaren fuenfseitigen Fassung.
+- Promotion candidate: Stakeholder-Pakete sollten nach Statusaenderungen auf
+  erledigte Fragen bereinigt und sowohl inhaltlich als auch im Zielformat auf
+  Seitenumbrueche und ausfuellbare Antwortbereiche geprueft werden.
+
+### 2026-09-10 | long-heading-boundary-check | Lange deutsche Überschriften als Komponenten-Gate
+
+- Triggering project situation: Das abschließende Fragezeichen einer langen
+  Coach-CTA-Überschrift ragte optisch in die benachbarte Schaltfläche, obwohl
+  der Seiten-Build fehlerfrei war.
+- Reusable improvement candidate: `integrate-frontend` und
+  `check-accessibility` sollten bei gemeinsamen Überschriften-Komponenten das
+  längste reale deutsche Wort samt Satzzeichen über alle Geschwisterseiten bei
+  Desktop, enger beziehungsweise 150-Prozent-Ansicht und Mobil prüfen. Die
+  Messung muss Elementgrenzen und sichtbares Abschneiden einbeziehen, nicht nur
+  die Dokumentbreite.
+- Project response: Die gemeinsame Spalte erhält `min-width: 0`, der Titel
+  kontrollierte Größe und bedarfsabhängige deutsche Trennung; 18
+  Geometrieprüfungen über sechs Profile und drei Breiten sind grün.
+- Reuse potential: high for German responsive websites.
+- Status: project evidence captured; canonical skill proposal pending a second
+  independent occurrence.
+
+### 2026-09-10 | accepted-baseline-follow-up | Abnahme und Folgefeedback getrennt versionieren
+
+- Triggering project situation: Janay akzeptierte CAL-0 und reichte unmittelbar
+  danach konkrete Ergänzungen für Navigation, Rollen und Terminüberschneidungen
+  ein.
+- Observed friction: Würde die ursprüngliche Abnahme wieder auf `offen` gesetzt,
+  gingen der nachgewiesene Basisstand und die genaue Reichweite des neuen
+  Feedbacks in einem einzigen Status verloren.
+- Reusable improvement candidate: `triage-feedback` und
+  `manage-project-state` sollten nach einer Abnahme neue Wünsche standardmäßig
+  als versioniertes Folgeinkrement führen und öffentliche sowie
+  authentifizierte Rollenansichten explizit trennen.
+- Project action: CAL-0 bleibt akzeptiert; CAL-0.1/SB-35 trägt nur das neue
+  Feedback. Der persönliche Coachkalender wurde nicht in die statische Website
+  gezogen.
+- Destination: Kandidat für CodexSkills nach einem zweiten unabhängigen Fall.
+
+### 2026-09-10 | visual-prototype-before-gated-workflow | Sichtbares Modell vor Backendentscheidungen
+
+- Triggering project situation: Janays Kalenderidee ist visuell klar, verbindet
+  aber Verfügbarkeit, personenbezogene Reservierung, Schwellenwertmeldung,
+  interne Freigabe, Vertrag und externe Kalenderzustellung.
+- Durable preference: Manuel und Stakeholder entscheiden komplexe Abläufe
+  leichter anhand einer sichtbaren, klickbaren Oberfläche als nur anhand einer
+  langen Anforderungsliste.
+- Proposed improvement: `discover-product-context`, `write-requirements` und
+  `coordinate-software-project` sollten bei visuell beschreibbaren, aber
+  fachlich gegateten Workflows einen ausdrücklich synthetischen No-Data-
+  Prototyp als frühes Requirements-Gate anbieten und ihn strikt von produktiver
+  Implementierung trennen.
+- Project response: CAL-0 macht drei Monate, Themen, Status, Kapazität und
+  Vormerkung prüfbar; Anforderungen und ADR 0007 halten die acht Entscheidungen
+  sowie getrennte produktive Inkremente fest.
+- Reuse potential: high for Manuel's stakeholder-driven internal applications.
+- Risk if ignored: high; Backend und Schema würden unklare Geschäftsregeln
+  vorwegnehmen oder Stakeholder könnten einen Mock für echte Funktion halten.
+- Status: project pattern applied; canonical skill proposal captured only.
+
+### 2026-09-10 | cross-update-reconciliation | Frühere Stakeholder-Pakete aktiv gegenprüfen
+
+- Triggering project situation: Nach mehreren datierten Feedback-Paketen musste
+  Manuel erneut daran erinnern, auch ältere Updates und den Kalender nicht zu
+  vergessen.
+- Durable preference: Bei jedem neuen Feedback-Paket die bereits freigegebenen
+  Pakete erneut gegen `umgesetzt`, `offen`, `wartend` und `gesperrt` abgleichen,
+  statt nur das neueste Dokument isoliert zu bearbeiten.
+- Proposed improvement: `triage-feedback` und `manage-project-state` sollten
+  für langfristige Projekte ein quellenbezogenes Feedback-Ledger pflegen und
+  bei jedem Update ältere offene oder bewusst verschobene Epics sichtbar
+  bestätigen.
+- Project response: `docs/requirements/stakeholder-feedback-reconciliation-2026-09-10.md`
+  führt die Pakete vom 13.08. bis 04.09. zusammen und hält den Kalender mit
+  Inkrementen, Gates und Abnahmetests ausdrücklich fest.
+- Reuse potential: high for multi-week projects with several stakeholders and
+  mixed frontend, product and operations feedback.
+- Risk if ignored: high; deferred capabilities and external dependencies can
+  disappear from the active mental model although they remain business-relevant.
+- Status: project standard evidenced; canonical skill proposal captured only.
+
+### 2026-09-04 | stable-weekly-update-format | Keep recurring stakeholder updates consistent
+
+- Triggering project situation: successive weekly Teams updates used different
+  structures and lengths, so Manuel had to re-explain the expected presentation.
+- Durable preference: keep one fixed section order and use at most one short
+  sentence per bullet; the 04.09 content selection was good but too long.
+- Proposed improvement: `manage-project-state` should discover and reuse a
+  repository-local recurring-update standard before composing a new report.
+  Where none exists, create one from accepted stakeholder feedback and retain
+  it as the default for later reporting periods.
+- Project response: `docs/updates/WEEKLY_UPDATE_STANDARD.md` now fixes purpose,
+  section order, bullet limits, one-line style, evidence rules and storage; the
+  current update was shortened to that standard and `AGENTS.md` requires reuse.
+- Reuse potential: high for recurring Teams, Daily, sprint and steering updates.
+- Risk if ignored: medium; stakeholder communication becomes inconsistent and
+  Manuel repeatedly spends time correcting format instead of reviewing content.
+- Status: implemented as a project standard; canonical skill proposal captured.
+
+### 2026-09-04 | post-block-skill-learning-check | Make real-work learning routine
+
+- Triggering project situation: Manuel again had to request that an observed
+  frontend defect and a broader collaboration preference be carried into the
+  next session and into CodexSkills. Skill reflection has occurred only when
+  explicitly prompted, so useful context about his visual review process risks
+  remaining in chat.
+- Concrete UI evidence: decorative opening and closing quotation marks in the
+  Concept Clean card are positioned at the outer edges of the quote container.
+  They should be typographically anchored to the actual first and last quoted
+  text, with visible but modest spacing. This repair is deliberately deferred
+  to the next frontend pass.
+- Proposed improvement: `coordinate-software-project`, `manage-project-state`
+  and `improve-skill-system` should end meaningful work blocks with a lightweight
+  learning checkpoint: durable user preference, repeated friction, missing
+  test/evidence and reusable skill change. Write only evidenced findings and
+  permit `no reusable learning`, so the check improves future work without
+  creating mandatory noise.
+- Project response: `AGENTS.md` now makes this checkpoint a local standard; the
+  quotation-placement defect is in the execution backlog and rolling horizon.
+  No frontend change or deployment was performed in this block.
+- Reuse potential: very high for long-running AI-assisted projects and future
+  team collaboration.
+- Risk if ignored: medium-high; corrections and working preferences are
+  rediscovered, and skills improve too late or not at all.
+- Status: local standard and feedback captured; canonical CodexSkills change
+  remains pending because its working tree contains unrelated active changes.
+
+### 2026-08-21 | visual-external-dependency-radar | Surface lead time before work blocks
+
+- Triggering project situation: App-DNS, SMTP, legal approval, contracts,
+  onboarding appointments and an off-server backup target all have external
+  owners and multi-day response times, but several became prominent only when
+  their dependent technical slice reached the front of the backlog.
+- Friction or risk: a technically healthy project can still miss its deadline
+  because requests, acknowledgements, reminders and escalation windows start
+  too late. A long Markdown plan also does not give Manuel, as a visual worker,
+  or a future team a fast shared view of flow and blockers.
+- Proposed improvement: `manage-project-state` and
+  `coordinate-software-project` should create an external-dependency lead-time
+  radar during horizon planning. Track owner, dependent slice, request-by and
+  request date, expected response, latest useful date, next chase, escalation,
+  fallback and age. Calculate request-by from response, rework and escalation
+  buffers; warn before the dependent item enters current WIP.
+- Visual/team extension: offer a compact Kanban-style project view with lanes
+  such as `Ready`, `Doing`, `Waiting externally`, `Review/Gate` and `Done`, plus
+  deadline/traffic-light markers, ownership, blocked-by links and a rolling
+  four-to-eight-step horizon. It should remain derivable from repository
+  project memory so a later team shares one source of truth rather than a
+  separate manually maintained board.
+- Project response: `PROJECT_PLAN.md` now contains a dated external-dependency
+  radar and promotes an independent operations slice while the EDV response is
+  pending. No separate visual tool has been introduced.
+- Reuse potential: very high for deadline-driven and team-based projects.
+- Risk if ignored: high; external latency becomes hidden schedule risk.
+- Status: captured as skill feedback only; no canonical CodexSkills change in
+  this work block.
+- Second evidence on 2026-09-11: the recorded 2026-10-02 scheduling threshold
+  fell inside Manuel's known three-week absence beginning 2026-09-25. The
+  project had a radar but did not automatically validate chase and latest-useful
+  dates against owner availability. Requests are now due 2026-09-18 with
+  confirmation by 2026-09-24 and escalation from 2026-09-21.
+- Promotion candidate: the canonical skill should cross-check dependency dates
+  against known absences and require `request`, `chase`, `confirm by` and
+  `execution` dates to be distinct. This now has repeated project evidence.
+
+### 2026-08-20 | browser-evidence-preflight | Browser tooling before UI completion
+
+- Triggering project situation: the portal passed static, API, package and
+  PostgreSQL gates, but the final browser gate found no existing Playwright,
+  Selenium or WebSocket automation support. Edge Headless also rendered with a
+  500-CSS-pixel minimum while cropping a requested 390-pixel screenshot.
+- Friction or risk: a cropped image can be misdiagnosed as CSS overflow, and a
+  security-correct Secure-cookie flow cannot be honestly exercised through a
+  quick HTTP-only mock at the end of a slice.
+- Proposed improvement: `integrate-frontend`, `check-accessibility`,
+  `write-tests` and `coordinate-software-project` should inventory supported
+  browser tooling, HTTPS/Secure-cookie test needs, viewport emulation and
+  evidence capture at slice start. Distinguish screenshot pixel dimensions
+  from the browser's CSS viewport and require a documented fallback before UI
+  implementation is called complete.
+- Project response: no dependency or cookie downgrade was introduced. The
+  14/14 PostgreSQL gate is closed. A loopback-HTTPS In-Memory-Fixture, isolated
+  temporary Edge runner and durable 17-item checklist now make desktop/390px
+  browser acceptance explicit and reproducible without real data.
+- Reuse potential: high
+- Risk if ignored: medium-high for authenticated responsive interfaces
+- Status: captured; canonical CodexSkills update not yet proposed/applied.
+
+### 2026-08-14 | staging-harness-depth | Preflight fixtures and run real PostgreSQL paths early
+
+- Triggering project situation: the first real Outbox Staging run successively
+  exposed a 31-byte synthetic key, PostgreSQL UUID inference in a multi-row
+  `VALUES` fixture and an unnecessary `FOR SHARE` lock that conflicted with the
+  intended read-only role privilege.
+- Friction or risk: the full local fake-repository suite was green, but fixture
+  constants, PostgreSQL typing and lock/privilege semantics could only fail in
+  the real adapter. Re-running the full two-minute harness for each shallow
+  issue cost time and obscured the one genuine security-relevant finding.
+- Proposed improvement: `write-tests`, `integrate-backend` and `audit-security`
+  should add a deterministic Staging preflight for key lengths, migration
+  presence, fixture SQL preparation and runtime privilege assumptions; provide
+  a focused secure runner target for a newly added Staging file before the
+  complete regression harness; keep final full-suite and zero-residue gates.
+- Project response: fixture constants and UUID casts were corrected; the role
+  lock was removed rather than broadening privileges; a regression assertion
+  now forbids `FOR SHARE` in the role lookup. Final evidence is 13/13 Staging
+  paths and zero residue.
+- Reuse potential: high
+- Risk if ignored: high for security-critical PostgreSQL adapters
+- Status: captured; canonical CodexSkills update not yet proposed/applied.
+
+### 2026-08-14 | terminal-context-guard | Make shell context executable, not only visible
+
+- Triggering project situation: a clearly labelled Linux/VPS command block was
+  pasted into local Windows PowerShell after the tunnel test. PowerShell then
+  interpreted Linux `sudo`, `grep` and backslash continuations as local commands.
+- Friction or risk: headings alone do not prevent terminal-context mistakes;
+  operational output becomes noisy and a less safe command could target the
+  wrong machine.
+- Proposed improvement: operational handoffs should begin with a terminal
+  identity gate (`ssh ...`, then verify the expected prompt) and use separate
+  fenced blocks for local PowerShell and remote Bash. For longer sequences,
+  prefer a reviewed uploaded verification script or a harmless platform guard
+  before state-changing commands.
+- Project response: no remote command had executed; the handoff was resent with
+  an explicit `PS ...>` versus `manuel@ubuntu:~$` checkpoint and then completed.
+- Reuse potential: high
+- Risk if ignored: high for deployment/database operations
+- Status: captured; evaluate for `create-deployment-plan` and operations handoff guidance.
+
+### 2026-08-14 | postgres-adapter-evidence | Fake repositories cannot close SQL gates
+
+- Triggering project situation: MFA repository unit tests validated parameter
+  shape and transaction sequencing, but a temporarily misplaced SQL bind name
+  would only have failed against PostgreSQL and was found during manual review.
+- Friction or risk: mocked SQLAlchemy results can create false confidence for
+  migrations, bind parameters, PostgreSQL syntax, row counts and concurrency.
+- Proposed improvement: `integrate-backend`, `write-tests` and
+  `audit-security` should require an explicit real-database integration gate
+  for security-critical SQL adapters and must label fake-engine evidence as
+  structural unit evidence only.
+- Project response: SB-06 remains local; SB-07 explicitly requires migration
+  0003 plus enrollment/replay/recovery/rate/session tests on isolated
+  PostgreSQL before the slice may be called Staging-complete.
+- Reuse potential: high
+- Risk if ignored: high
+- Status: captured; not yet synchronized to canonical CodexSkills.
+
+### 2026-08-13 | rolling-steering-horizon | Show 4-8 next steps with gates and tests
+
+- Triggering project situation: Manuel repeatedly received one correct next
+  technical step, but could not reliably see whether the larger Auth, portal,
+  operations and product path remained coherent.
+- Current skill behavior: `manage-project-state` covered roadmap, sprint and
+  next actions, but did not require a persistent multi-step steering horizon or
+  distinguish execution backlog from project/product backlog.
+- Friction or risk: local optimization can displace the broader plan; gates and
+  expected verification appear too late; completed items can remain mixed with
+  future work; distant assumptions can look as certain as ready work.
+- Implemented improvement: require an ordered four-to-eight-step horizon with
+  outcome, status, dependency/gate, intended test/evidence and honest
+  confidence; keep Project Backlog and Execution/Sprint Backlog separate; make
+  horizon reconciliation part of every material completion checkpoint.
+- Project evidence: Competence Hub now maps Runtime -> Staging session proof ->
+  Login -> MFA -> Invitation/reset -> Portal UI -> Staging service -> Internal
+  acceptance, with data/security/operations/production/requirements/content
+  gates and test targets.
+- Proposed destination: implemented in canonical CodexSkills
+  `manage-project-state` plus its `project-memory-files.md` reference and in the
+  downstream project harness.
+- Reuse potential: high
+- Risk if ignored: high
+- Status: implemented locally and canonically, validated and after Manuel's
+  explicit approval synchronized to the active runtime on 2026-08-13.
+
+### 2026-08-06 | project-state-cadence | Require a steering checkpoint after material changes
+
+- Triggering project situation: Several rapid frontend, stakeholder and
+  infrastructure-feedback rounds produced visible progress, but Manuel noticed
+  that the explicit project plan, decision list, needed inputs and next-step
+  guidance had become less consistent even though a project-state skill exists.
+- Current skill behavior: `manage-project-state` already asks agents to keep
+  plan, status and log current after meaningful work. In practice it can be
+  skipped when a sequence of small implementation turns grows into a material
+  scope, architecture or deployment change.
+- Friction or missed opportunity: the repository can remain technically
+  current while decision ownership, blockers and the next safe action become
+  scattered across chat history. This is especially risky before server,
+  database or deployment work.
+- Evidence: the IONOS/EDV response changed the viable backend topology, and the
+  existing VPS turned out to be an occupied production-like Chatbot host rather
+  than a blank server. These facts required coordinated updates to architecture,
+  plan, status and restart handoff, not only a technical note.
+- Recurrence evidence 2026-08-13: After the first portal migration, smoke test,
+  permission verification and backup hardening all passed, the handoff still
+  ended without the required prioritized continuation. `PROJECT_STATUS.md`
+  additionally still named the already completed staging migration as the next
+  concrete action. Manuel had to ask explicitly what comes next although the
+  skill already requires this guidance.
+- Suggested improvement: add a project-harness checkpoint after any meaningful
+  stakeholder, scope, architecture, infrastructure, security or deployment
+  change and after a series of related frontend slices. Before ending, record
+  current state, decisions made, decisions needed with owner, blockers, required
+  inputs, next recommended action, verification and whether commit/push/deploy
+  remain separate approvals. Treat repeated missed routing as a coordination
+  compliance issue, not merely a documentation preference. Add a deterministic
+  stale-state check: completed work must not still appear as `next`, `waiting`
+  or `not applied`. Require exactly one recommended next block with purpose,
+  inputs, deliverables and Definition of Done; list parallel gates separately.
+- Reuse potential: high
+- Risk if ignored: high
+- Proposed destination: CodexSkills `manage-project-state`,
+  `coordinate-software-project` and the downstream project starter/AGENTS
+  guidance
+- Status: repeated/high-priority evidence; local project safeguard strengthened
+  on 2026-08-13; canonical CodexSkills change recommended
+
+### 2026-08-13 | required-command-handoff | Repeat required user commands in the durable final response
+
+- Triggering project situation: During the interactive VPS migration, command
+  blocks shown in intermediary updates disappeared from Manuel's visible chat
+  view. Only the final one-line instruction remained, so the required commands
+  had to be requested and sent again.
+- Current skill behavior: operations and deployment guidance can split a
+  command block into a progress update and finish with a short final handoff.
+- Friction or missed opportunity: a correct operational sequence becomes
+  unusable when the UI retains only the final response. This is especially
+  risky for backup, migration, restore and verification commands.
+- Suggested improvement: any command the user must execute must appear in the
+  final response that asks for its execution. Commentary may preview it, but
+  must never be the only copy. For multi-step interactive operations, include
+  the current command block, expected result and secret-handling warning in the
+  same durable response.
+- Reuse potential: high
+- Risk if ignored: high for operations work
+- Proposed destination: CodexSkills `coordinate-software-project`,
+  `create-deployment-plan`, `integrate-backend` and operations handoff guidance
+- Recurrence 2026-08-14: the exact failure repeated during SB-03. Two required
+  SSH/Staging command blocks appeared in commentary, while the final response
+  only said to run the commands "above". Manuel could watch the commands vanish
+  from the durable view. This happened despite the existing project-local rule
+  and active `manage-project-state` synchronization.
+- Root cause refinement: a written instruction is insufficient without a
+  deterministic pre-send gate. Any final response that waits for user command
+  execution must be rejected as incomplete if it refers to an earlier message
+  instead of embedding the complete current command block itself.
+- Implemented project safeguard 2026-08-14: `AGENTS.md` now requires command
+  order, working directory/terminal split, expected output and secret warning
+  in the same durable response. This recurrence should become a canonical skill
+  validation/checklist item, not only prose guidance.
+- Status: repeated/high-priority compliance failure; strengthened locally;
+  canonical CodexSkills checklist/evaluation update required
+
+### 2026-08-05 | multi-workstation-preview-bootstrap | Make Windows network-drive preview setup portable and restart-safe
+
+- Triggering project situation: The same repository is used in parallel from a second, network-separated Windows workstation with a different folder structure. Hard-coded first-workstation paths were stale; Git required safe-directory handling for network-share ownership; PowerShell blocked `npm.ps1`; Astro dev/build processes hung on `Z:`; the embedded browser connection repeatedly timed out; and a reliable preview required a secret-free `C:\tmp` mirror plus a visible default-browser fallback.
+- Current skill behavior: Windows/frontend guidance covers portable Node and some sandbox failures, while browser and project-state skills cover preview verification and durable handoff. No single restart-safe bootstrap route currently discovers sibling CodexSkills paths, verifies Git/GitHub prerequisites, distinguishes network-drive failures from code failures, and selects a safe local-preview fallback.
+- Friction or missed opportunity: agents can repeat slow setup attempts, treat valid code as broken, copy dependencies incompletely, or lose time rediscovering workstation-specific constraints. Broad Robocopy exclusions are especially fragile because excluding `.astro` can also omit `node_modules\astro`.
+- Evidence: system Node v20.17.0 and project Node v22.16.0 were both present; `npm.cmd` avoided the execution-policy problem; Git/GitHub access worked after safe-directory and CLI setup; the current page returned HTTP 200 only after being served from a secret-free local mirror; the in-app browser setup timed out again; and the normal patch-edit path has repeatedly hung on both the network drive and `C:\tmp`.
+- Suggested improvement: add a small Windows multi-workstation bootstrap/reference or deterministic checker that resolves project and CodexSkills paths instead of assuming one user profile, checks Git safe-directory and CLI authentication without exposing secrets, prefers `npm.cmd`, detects network-drive workspaces, creates a reviewed secret-free local verification mirror, copies `node_modules` without name-collision exclusions, verifies HTTP readiness separately from browser QA, and offers a documented visible-browser fallback after browser-connection troubleshooting. Include a narrow precondition-and-diff fallback when the standard patch tool is unavailable.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills Windows/frontend setup reference, `integrate-frontend` local-preview handoff, browser troubleshooting guidance, and new-project starter bootstrap checks
+- Status: proposed; project-specific facts captured in `docs/architecture/second-workstation-setup.md`
+
+### 2026-06-30 | visual-ui-handoff | Require a rendered, viewable UI handoff
+
+- Triggering project situation: The first real coach profile passed Astro check and build, but Manuel could not inspect it until it was pushed. A later screenshot then exposed a visibly unbalanced heading layout: the long title was squeezed into a narrow column while the adjacent column contained only one sentence.
+- Current skill behavior: `integrate-frontend`, `check-accessibility`, and `prepare-release` mention responsive checks, screenshots, manual verification, and handoff notes, but they do not consistently require that UI work end with a rendered artifact Manuel can actually open.
+- Friction or missed opportunity: technically valid frontend work can be handed off before visual hierarchy, box proportions, text wrapping, and real viewport behavior are inspected. A code/build summary alone also leaves Manuel unable to judge the result.
+- Evidence: the coach profile initially passed with 0 errors, 0 warnings, and 0 hints. The layout issue became obvious only in a browser screenshot. Local Headless Edge renders at 1440 px and 500 px then guided the corrected box proportions, and the deployed pages were verified with HTTP 200 smoke tests. Manuel explicitly asked that future visual work be made available either through a local version or a pushed preview.
+- Suggested improvement: for meaningful frontend layout work, require one viewable handoff path before completion: a local preview URL with clear startup instructions, a rendered screenshot/artifact, or an approved deployed preview. Add representative wide and narrow viewport renders when layout, wrapping, cards, or responsive behavior changed. Keep build/type checks as a separate gate, and document browser-emulation limitations when using a fallback such as Headless Edge.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills `integrate-frontend`, `check-accessibility`, and `prepare-release` verification/handoff references
+- Status: proposed
+
+### 2026-06-22 | downstream-starter-drift | Make copied update helpers self-validating and version-aware
+
+- Triggering project situation: After CodexSkills was updated, the project-local `new-project-starter/README.md` and `scripts/codexskills-update-check.ps1` were still older snapshots. Running the documented `-Validate` command from the downstream project reported `No skill folders found under skills`, even though all 29 canonical skills existed and validated successfully when an absolute skills path was supplied.
+- Current skill behavior: the starter is intentionally copied into downstream projects, but it has no version marker or reliable stale-snapshot check. The update helper invokes repository scripts by absolute script path while those Python scripts still resolve their default `skills` directory relative to the caller's current working directory.
+- Friction or missed opportunity: a healthy skill installation can appear invalid, and new safety features such as `-PlanSync`, `-BackupActive`, and `-SyncSkill` remain unavailable in older downstream copies. Agents may diagnose a nonexistent skill problem or overlook that the local helper itself is stale.
+- Evidence: on 2026-06-22 the wrapper at canonical commit `6acdc18` emitted `No skill folders found under skills` when called from this website project; direct validation of `C:\Users\RödelManuel\Documents\IT\CodexSkills\skills` passed for all 29 skills, and the active runtime drift check passed when executed from the canonical repository directory.
+- Suggested improvement: make repository scripts independent of the caller's working directory by resolving defaults from `__file__` or by passing absolute source paths from the PowerShell wrapper. Add a starter/version or manifest check that can report which copied downstream files are stale and offer a reviewed merge/update plan without overwriting project memory.
+- Reuse potential: high
+- Risk if ignored: high
+- Proposed destination: CodexSkills update-check script, validator/install-check path handling, and new-project-starter update guidance
+- Status: partially mitigated locally on 2026-06-22; canonical path handling and version-aware starter refresh remain proposed
+
+### 2026-06-17 | safe-skill-sync | Add non-destructive active skill update mode
+
+- Triggering project situation: The CodexSkills update check showed local canonical changes, but Codex intentionally avoided `-SyncActive` because it would overwrite active runtime skills and might negatively affect ongoing work.
+- Current skill behavior: `codexskills-update-check.ps1 -Validate` reports repository state and drift, while `-SyncActive` can sync approved repository skills into `%USERPROFILE%\.codex\skills` with overwrite behavior. There is no intermediate safe mode for previewing, staging, diffing, backing up, or selectively updating active skills.
+- Friction or missed opportunity: useful skill improvements may remain unapplied because the available sync path feels too blunt for active project work; conversely, using overwrite too casually could remove local runtime changes or introduce unreviewed behavior changes.
+- Evidence: on 2026-06-17 the update check reported canonical changes across starter files, references, and skills; Codex did not run `-SyncActive` and noted that review should happen before active sync.
+- Suggested improvement: add a safer active-skill update workflow, such as `-PlanSync`, `-DryRun`, `-BackupActive`, `-Selective`, or `-NoOverwrite`, that shows diffs, lists affected active skills, backs up current runtime skills, and requires explicit confirmation before replacing files.
+- Reuse potential: high
+- Risk if ignored: high
+- Proposed destination: CodexSkills update-check script, sync script, and new-project-starter README guidance
+- Status: implemented in CodexSkills commit `6acdc18`; integrated into this project on 2026-06-22
+
+### 2026-06-17 | automatic-requirements-capture | Persist user-provided requirements without being asked
+
+- Triggering project situation: Manuel provided important project requirements in chat: future handover to another Informatiker, non-technical colleague editing companies/coaches/job postings, and a planned coach profile subpage. Manuel explicitly noted that these ideas and specifications should be stored somewhere and that this should happen automatically through skills.
+- Current skill behavior: `manage-project-state` and `write-requirements` instruct agents to update memory after meaningful work and stakeholder decisions, but live agents may still treat conversational additions as discussion unless the user explicitly asks to write them down.
+- Friction or missed opportunity: valuable requirements can be lost in chat history instead of becoming restart-safe project memory, especially for multi-day projects with many open decisions.
+- Evidence: this turn required adding `docs/requirements/website-maintenance-handover-and-editor-workflows.md` after Manuel reminded Codex to persist the information.
+- Suggested improvement: strengthen coordination and requirements skills with a rule: when the user adds durable scope, role, workflow, operating, handover, or data requirements during a project, proactively persist them in the most specific project memory or requirements file, then update `PROJECT_LOG.md`/`PROJECT_STATUS.md` as needed.
+- Reuse potential: high
+- Risk if ignored: high
+- Proposed destination: CodexSkills `manage-project-state`, `write-requirements`, and possibly `coordinate-software-project`
+- Status: proposed
+
+### 2026-06-17 | technology-selection | Include handover and aging cost in stack choices
+
+- Triggering project situation: Manuel asked why Astro was selected instead of classic HTML/CSS or WordPress, and explicitly raised future handover, documentation, technical aging, and colleague maintainability as decision criteria.
+- Current skill behavior: `select-technology` covers team fit, operations, maintenance, ecosystem, reversibility, and documentation, but live recommendations can still over-focus on build speed and product fit unless handover ownership is made explicit.
+- Friction or missed opportunity: a technically good prototype stack can become a handover problem if future maintainers need CMS editing, patch routines, upgrade notes, and clear rollback guidance.
+- Evidence: this project currently uses Astro for a static stakeholder prototype, but the future operator/editor model is still unclear and may include non-developer colleagues.
+- Suggested improvement: strengthen `select-technology` guidance for websites and small internal tools: explicitly compare developer-maintained static stack, CMS-backed stack, and no-build static HTML against handover, update frequency, patch responsibility, documentation burden, and end-of-life/upgrade path.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills `select-technology` reference
+- Status: proposed
+
+### 2026-06-17 | sandbox-tooling | Remember Astro telemetry AppData write failure
+
+- Triggering project situation: `npm run build` for `apps/website` failed inside the workspace sandbox with `EPERM: operation not permitted, mkdir '...\AppData\Roaming\astro\Config'`, and later with Astro/Vite `Could not load ... spawn EPERM`; both passed unchanged after approved escalation.
+- Current skill behavior: Windows frontend setup guidance already mentions telemetry/config writes outside the workspace, but project-specific restart notes did not yet preserve the exact failure signature and recovery path.
+- Friction or missed opportunity: future agents may waste time debugging valid Astro code when the failure is only an environment permission issue.
+- Evidence: 2026-06-17 builds passed with Astro check reporting 0 errors, 0 warnings, 0 hints after rerunning with approval; the coach-page build produced 8 static pages after escalation.
+- Suggested improvement: when a build tool writes user-level config outside the workspace, record the exact error signature in project memory and suggest either approved escalation or a documented telemetry-disable path before treating it as a code failure.
+- Reuse potential: medium
+- Risk if ignored: low
+- Proposed destination: project `AGENTS.md` plus possible CodexSkills Windows/frontend reference refinement
+- Status: captured locally
+
+### 2026-06-16 | documentation-language | Stakeholder artifacts should match team language
+
+- Triggering project situation: Manuel clarified that the full team works in German and asked for the colleague questions plus database decision email in German after an earlier briefing still used English structure.
+- Current skill behavior: documentation and requirements skills can inherit English headings or structure from repository conventions even when the stakeholder audience is German.
+- Friction or missed opportunity: stakeholder-facing text needs to be directly copyable into Word, email, and internal communication without translation cleanup.
+- Evidence: `docs/requirements/content-briefing-colleague-prototype.md` was rewritten as a German colleague briefing with German questions and an email draft.
+- Suggested improvement: add guidance to `write-documentation` and `write-requirements`: for stakeholder briefings, questionnaires, meeting notes, email drafts, and decision memos, infer or confirm the working language; for Manuel's German teams, default to German stakeholder copy while keeping code-facing technical artifacts in the repo's established style where useful.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills skill/reference
+- Status: implemented on 2026-06-16 in CodexSkills
+
+### 2026-06-16 | requirements-intake | Ask more proactive discovery questions
+
+- Triggering project situation: Manuel provided a growing set of future-system ideas for an independent web-based administration system and then explicitly said he wants Codex to ask more questions, especially around requirements, to build a better picture.
+- Current skill behavior: `write-requirements` instructs agents to establish goal, users, current state, target state, constraints, open questions, roles, data objects, and workflows, but in live work the agent can still over-index on documenting provided ideas instead of actively interviewing for missing requirements.
+- Friction or missed opportunity: important context such as first app slice, exact roles, old-system pain points, workflow ownership, document types, skill taxonomy, and external user boundaries may remain implicit unless Codex asks targeted follow-up questions.
+- Evidence: future-system backlog now contains many brainstormed ideas, but several open questions remain and Manuel explicitly requested more questioning behavior.
+- Suggested improvement: add a stronger requirement-intake behavior to `write-requirements` and/or coordination guidance: after capturing brainstorm input, ask a small batch of high-leverage questions grouped by scope, actors, data, workflow, and priority; prefer 3-7 questions rather than a long questionnaire, and repeat as new requirements arrive.
+- Reuse potential: high
+- Risk if ignored: high
+- Proposed destination: CodexSkills skill/reference
+- Status: implemented on 2026-06-16 in CodexSkills
+
+### 2026-06-09 | deployment-guidance | GitHub Pages Actions activation check
+
+- Triggering project situation: The first GitHub Pages deployment workflow built the Astro artifact successfully but failed in the deploy step with `Ensure GitHub Pages has been enabled`.
+- Current skill behavior: deployment planning covers environment assumptions and smoke tests, but does not explicitly remind agents that GitHub Pages must be enabled with `Source: GitHub Actions` before `actions/deploy-pages` can create a deployment.
+- Friction or missed opportunity: the workflow looked broken in GitHub UI even though the code and build were correct; the fix was to set Pages source to GitHub Actions and rerun the same workflow.
+- Evidence: workflow run `27227037472` failed before Pages activation, then succeeded after rerun; published site returned HTTP 200.
+- Suggested improvement: add a GitHub Pages deployment checklist item: confirm repo visibility, Pages source, Actions permissions, `site`/`base`, and rerun behavior after first activation.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills reference
+- Status: implemented on 2026-06-16 in CodexSkills
+
+### 2026-06-09 | implementation-tooling | Warn about Windows paths, umlauts, and local toolchains
+
+- Triggering project situation: Astro setup in a Windows path containing `RödelManuel` required extra care; system Node.js was unavailable, MSI installation required admin privileges, and the project needed a portable Node fallback.
+- Current skill behavior: implementation/frontend skills recommend inspecting stack and running verification, but do not explicitly call out Windows path encoding, umlaut paths, portable Node, npm PATH propagation to `cmd.exe`, or sandbox child-process issues as setup risks.
+- Friction or missed opportunity: several install/build attempts were needed before the stable path was found: portable Node in `tools/`, absolute PATH for npm postinstall scripts, Astro telemetry disabled, and escalated build for child process spawning.
+- Evidence: this project needed portable Node.js, Astro 5 pinning, telemetry env var, and elevated build execution before the preview built successfully.
+- Suggested improvement: add a Windows frontend setup note to relevant implementation skills covering non-ASCII paths, adminless Node fallback, npm postinstall PATH propagation, telemetry/config writes outside workspace, and when to use an ASCII fallback path.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills reference
+- Status: implemented on 2026-06-16 in CodexSkills
+
+### 2026-06-09 | delivery-handoff | End with useful next-step options
+
+- Triggering project situation: Manuel found it useful when Codex ended a setup/discovery response by suggesting the next step or several alternative next paths.
+- Current skill behavior: skills usually require summaries, verification, residual risks, and next recommended task, but they do not consistently ask for multiple next-step options with tradeoffs.
+- Friction or missed opportunity: after finishing a task, the user may need to decide how to continue; a single next task can be helpful, but a small option set is often better for project steering.
+- Evidence: Manuel explicitly asked to keep doing this because it has practical value.
+- Suggested improvement: add a lightweight handoff pattern to relevant skills: "Recommended next step" plus "Alternative paths" when more than one sensible continuation exists.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills skill
+- Status: implemented on 2026-06-16 in CodexSkills
+
+### 2026-06-09 | new-project-starter | Clarify initial folder scaffold guidance
+
+- Triggering project situation: Manuel asked to load the starter and create all necessary folders for a website, webapp, and possible additional artifacts.
+- Current skill behavior: the starter says which memory files to copy, but it does not recommend a minimal default structure for multi-artifact website/webapp projects.
+- Friction or missed opportunity: the agent must infer whether to create `apps/website`, `apps/webapp`, `docs/requirements`, `docs/architecture`, and similar folders.
+- Evidence: first setup turn for this project required a conservative structure decision.
+- Suggested improvement: add an optional "multi-artifact web project scaffold" section or reference to the starter.
+- Reuse potential: medium
+- Risk if ignored: low
+- Proposed destination: CodexSkills template
+- Status: implemented on 2026-06-16 in CodexSkills
+
+## Implemented Feedback
+
+### 2026-09-17 | authoritative-clock-integration-tests | Eine Zeitquelle ueber Systemgrenzen
+
+- Triggering project situation: Der native Kalender-Staging-Test verwendete
+  eine feste Clientzeit, waehrend PostgreSQL `updated_at` per Trigger aus der
+  Datenbankuhr setzte; dadurch verletzten synthetische Zeilen die reale
+  Zeitreihenfolge, obwohl Domain- und Repository-Tests gruen waren.
+- Observed friction: Erst zwei kontrollierte Staging-Laeufe trennten den
+  eigentlichen Clock-Source-Fehler vom zuvor behobenen Bindtypfehler.
+- Implemented improvement: `write-tests` verlangt bei App-/Datenbankgrenzen
+  nun eine autoritative oder explizit gemeinsam injizierte Uhr und
+  Clock-Skew-Abdeckung bei getrennten Hosts; `debug-failures` fuehrt
+  abweichende Test-, App- und Datenbankuhren als eigene Fehlerursache.
+- Project response: Der Kalender-Staging-Test leitet seine synthetische
+  Operationszeit aus `clock_timestamp()` der Staging-Datenbank ab und haelt
+  einen kontrollierten Sicherheitsabstand fuer nachfolgende Zustandswechsel.
+- Reuse potential: high for migrations, audit trails, scheduling and remote
+  integration tests.
+- Status: implemented in canonical CodexSkills and active runtime on 2026-09-17.
+
+### 2026-07-17 | design-system-derivation | Translate visual evidence into reusable digital rules
+
+- Triggering project situation: Several rounds of website feedback required repeated comparison of a corporate design manual, seven design references, stakeholder screenshots, print-specific patterns, responsive UI behavior, and accessibility constraints. A second AI supplied an additional analysis and a D+P-specific skill proposal.
+- Current skill gap: `integrate-frontend` and `check-accessibility` cover implementation and verification, but no skill owned the earlier step of analyzing complete visual reference sets, ranking their evidence, separating print from digital patterns, and producing a durable implementation-ready design artifact.
+- Friction or missed opportunity: Individual screenshots could be over-weighted, print density could leak into the interface, brand colors could be assigned inaccessible text roles, and the same visual reasoning had to be reconstructed across feedback rounds.
+- Implemented improvement: Created the generic `derive-design-system` skill with an evidence hierarchy, full-reference analysis workflow, print-to-web and marketing-to-app translation, contrast review, source-rights boundaries, a `designstyle.md` structure, and visual QA gates. Added `references/design-analysis-framework.md` and installed the validated skill in canonical CodexSkills and the active runtime.
+- Project application: Created `docs/assets/designstyle.md` from the approved D+P manual, all seven inspiration images, designer feedback, and the additional KI comparison. Project-specific colors, names, sources, and decisions remain in this repository rather than the reusable skill.
+- Evidence decision: Adopted the additional KI suggestions for brand tone, image formats, authentic imagery, app start-screen priorities, and avoiding generic handshake/AI-robot motifs. Kept the skill generic instead of naming it D+P-specific; did not adopt 12-16 px card radii as a universal rule.
+- Reuse potential: high
+- Risk if ignored: medium
+- Proposed destination: CodexSkills `derive-design-system`, with implementation handoff to `integrate-frontend` and verification through `check-accessibility`
+- Status: implemented and validated on 2026-07-17; forward-test on a different project remains useful
+
+- 2026-06-22: Integrated safe skill sync planning, selective sync, and active-skill backups from CodexSkills commit `6acdc18`; added a local path-resolution fix so downstream validation works independently of the caller's working directory.
+- 2026-06-16: Integrated stakeholder-language, proactive requirements intake, GitHub Pages deployment checks, Windows/frontend toolchain notes, next-step handoff options, and multi-artifact web scaffold guidance into CodexSkills.
+
+## Rejected Or Deferred Feedback
+
+-
