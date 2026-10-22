@@ -1,5 +1,39 @@
 # GitHub Pages Preview: 21.10.2026
 
+## Preview UX Follow-Up: 22.10.2026
+
+Manuel's batched-development addendum authorizes the preview-only topic Hub and
+home Bubble-clearance corrections, their scoped commit/push and publication.
+The directory now starts with one All-topics button, reveals three category
+satellites on interaction, then only the selected category's canonical topics.
+All is still computed; hash restoration and many-to-many membership remain.
+Mobile adapts to a vertical, touch-operable category list instead of shrinking
+the desktop diagram. Buttons expose expansion/selection, keyboard focus and
+live results; a gentle pulse pauses on interaction and stops for Reduced Motion.
+
+The actual home conflict came from the Hub stage's negative flow margins,
+combined with circular nodes extending beyond percentage anchors. A preview-only
+inline component removes that intrusion, rather than changing production CSS or
+blindly repositioning individual nodes. Before geometry is from the unchanged
+local production artifact (same home Hub layout); it is not an old live-preview
+screenshot. Desktop Mindforge clearance was about -22 px, CTA clearance -1 px.
+Afterward the desktop checks measure 31-49 px clearance at 960-2048 CSS px.
+
+QA: 8 model tests, Astro 58 files/zero diagnostics, 33 routes, 1,243 preview and
+1,237 production references, 1,219 broad Edge checks and 134 focused Hub checks.
+The focused run covers 2048/1440/1280/960/390 CSS px, touch, keyboard, actual text
+fit, satellite separation, motion and real 200% browser zoom (observed 703 CSS
+px and DPR 2 at a fixed physical window, not merely a scale-factor simulation).
+The zoom preference is set only in a temporary test profile, following
+[Chromium's zoom preference implementation](https://chromium.googlesource.com/chromium/src/+/lkgr/chrome/browser/ui/zoom/chrome_zoom_level_prefs.cc).
+All contexts/servers/profiles were stopped/removed. No external/write requests,
+JS errors or failed resources in the broad preview test.
+
+The production build's full 52-entry filename/SHA-256 manifest was compared
+before and after: **no changed, added or removed files**. No SFTP or IONOS write.
+Generated JSON/screenshots stay in ignored release-artifacts; live publication
+evidence is recorded after the existing manual Pages workflow completes.
+
 ## Scope And Authority
 
 Manuel's supplied Post-Messe Product Addendum authorizes the existing GitHub

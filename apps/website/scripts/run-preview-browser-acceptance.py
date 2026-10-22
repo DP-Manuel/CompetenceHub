@@ -29,12 +29,12 @@ def check(label, condition):
 
 
 @contextmanager
-def static_server():
+def static_server(mode="preview"):
     with socket.socket() as probe:
         probe.bind(("127.0.0.1", 0))
         port = probe.getsockname()[1]
     env = os.environ.copy()
-    env.update(WEBSITE_ENV="preview", PORT=str(port))
+    env.update(WEBSITE_ENV=mode, PORT=str(port), BASE_PATH="/CompetenceHub" if mode == "preview" else "/")
     process = subprocess.Popen(
         [str(NODE), "scripts/serve-dist.mjs"], cwd=ROOT, env=env,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -46,7 +46,7 @@ def static_server():
             if process.poll() is not None:
                 raise RuntimeError("Preview server stopped")
             try:
-                urllib.request.urlopen(origin + "/CompetenceHub/", timeout=0.3).close()
+                urllib.request.urlopen(origin + ("/CompetenceHub/" if mode == "preview" else "/"), timeout=0.3).close()
                 break
             except OSError:
                 time.sleep(0.1)
@@ -126,11 +126,10 @@ def main():
 
                 page.goto(base + "/coaches/", wait_until="networkidle")
                 check(f"{name} eight coaches", page.locator("[data-preview-coach]").count() == 8)
-                check(f"{name} category labels fit on one line", page.locator(".preview-category-filter span").evaluate_all("""nodes => nodes.every(e => {
-                    const range = document.createRange(); range.selectNodeContents(e);
-                    return range.getClientRects().length === 1
-                        && range.getBoundingClientRect().width <= e.getBoundingClientRect().width + 1;
-                })"""))
+                check(f"{name} progressive disclosure initial", not page.locator("#preview-categories").is_visible()
+                      and not page.locator("#preview-topic-options").is_visible())
+                page.locator("[data-hub-toggle]").click()
+                check(f"{name} three category satellites", page.locator("[data-category]:visible").count() == 3)
                 check(f"{name} no Messe privacy remnants", "Demoprofil" not in page.locator("main").inner_text()
                       and "Transparenter Messestand" not in page.locator("main").inner_text())
                 category = page.locator('[data-category="personalentwicklung"]')
@@ -159,19 +158,22 @@ def main():
                 check(f"{name} hash restored", health.get_attribute("aria-pressed") == "true")
                 page.locator('[data-category="karrierecoaching"]').click()
                 check(f"{name} irrelevant health hidden", not health.is_visible())
-                page.locator('[data-category="all"]').click()
+                page.locator('[data-hub-toggle]').click()
                 check(f"{name} All computed", page.locator("[data-preview-coach]:visible").count() == 8)
                 unassigned = page.locator("[data-preview-coach]").first
                 original_topics = unassigned.get_attribute("data-topics")
                 unassigned.evaluate("e => e.dataset.topics = ''")
-                page.locator('[data-category="all"]').click()
+                page.locator('[data-hub-toggle]').click()
                 check(f"{name} All includes unassigned Coach", page.locator("[data-preview-coach]:visible").count() == 8)
                 unassigned.evaluate("(e, value) => e.dataset.topics = value", original_topics)
+                if not page.locator("#preview-categories").is_visible():
+                    page.locator('[data-hub-toggle]').click()
+                page.locator('[data-category="personalentwicklung"]').click()
                 page.locator('[data-topic="mediation"]').click()
                 check(f"{name} Mediation qualification empty", page.locator("[data-preview-coach]:visible").count() == 0
                       and page.locator("[data-preview-empty]").is_visible())
                 check(f"{name} live status", "0 passende" in page.locator('[role="status"][data-preview-status]').inner_text())
-                page.locator('[data-category="all"]').click()
+                page.locator('[data-hub-toggle]').click()
                 page.locator("#preview-topics-title").scroll_into_view_if_needed()
                 path = EVIDENCE / f"directory-{name}.png"
                 page.screenshot(path=str(path))

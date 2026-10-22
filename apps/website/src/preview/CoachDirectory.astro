@@ -24,20 +24,28 @@ const url = (path: string) => `${base}/${path}`;
     <div class="coach-topic-explorer__heading">
       <div><p class="eyebrow">Themenschwerpunkte</p><h2 id="preview-topics-title">Passende Expertise finden</h2></div>
     </div>
-    <div class="preview-category-filter" role="group" aria-label="Themenkategorien">
-      <button class="coach-topic-filter__option is-active" type="button" data-category="all"
-        aria-pressed="true" aria-controls="preview-topic-options preview-coach-grid">
-        <Icon name="compass" size={22} /><span>Alle Themen</span>
+    <div class="preview-topic-hub" data-topic-hub data-expanded="false">
+      <svg class="preview-topic-hub__links" viewBox="0 0 1000 360" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M500 234 L180 234 M500 234 L500 80 M500 234 L820 234" />
+      </svg>
+      <button class="preview-topic-hub__core" type="button" data-hub-toggle
+        aria-expanded="false" aria-controls="preview-categories preview-topic-options">
+        <Icon name="compass" size={28} /><span>Alle Themen</span>
       </button>
-      {categories.map((category) => (
-        <button class="coach-topic-filter__option" type="button" data-category={category.id}
-          aria-pressed="false" aria-controls="preview-topic-options preview-coach-grid">
-          <Icon name={category.id === "karrierecoaching" ? "user-round" : "users"} size={22} />
-          <span>{category.label}</span>
-        </button>
-      ))}
+      <div class="preview-category-filter" id="preview-categories" role="group" aria-label="Themenkategorien" hidden>
+        {categories.map((category, index) => (
+          <button class="preview-topic-hub__satellite" type="button" data-category={category.id}
+            style={`--sat-x:${[18, 50, 82][index]}%;--sat-y:${[65, 22, 65][index]}%;`}
+            aria-pressed="false" aria-controls="preview-topic-options preview-coach-grid">
+            <Icon name={category.id === "karrierecoaching" ? "user-round" : "users"} size={24} />
+            <span>{category.id === "personalentwicklung" ? <>Personal<wbr />entwicklung</>
+              : category.id === "persoenlichkeitsentwicklung" ? <>Persönlichkeits<wbr />entwicklung</>
+              : <>Karriere<wbr />coaching</>}</span>
+          </button>
+        ))}
+      </div>
     </div>
-    <div class="preview-topic-filter" id="preview-topic-options" role="group" aria-label="Konkrete Themen">
+    <div class="preview-topic-filter" id="preview-topic-options" role="group" aria-label="Konkrete Themen" hidden>
       <button class="coach-topic-filter__option is-active" type="button" data-topic="all"
         aria-pressed="true" aria-controls="preview-coach-grid">
         <Icon name="compass" size={22} /><span>Alle Schwerpunkte</span>
@@ -80,27 +88,66 @@ const url = (path: string) => `${base}/${path}`;
   </section>
 </main>
 <style is:inline>
-  [data-preview-directory] .preview-category-filter,
+  [data-preview-directory] .preview-topic-hub,
   [data-preview-directory] .preview-topic-filter { display: none; }
-  [data-preview-directory].is-enhanced .preview-category-filter,
+  [data-preview-directory].is-enhanced .preview-topic-hub { display: block; }
   [data-preview-directory].is-enhanced .preview-topic-filter {
     display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;
   }
-  [data-preview-directory] .preview-category-filter { margin-bottom: 24px; }
-  [data-preview-directory] .preview-category-filter .coach-topic-filter__option {
-    font-size: 0.875rem;
+  [data-preview-directory] .preview-topic-hub {
+    position: relative; width: 100%; max-width: 980px; height: 180px; margin: 24px auto;
   }
-  [data-preview-directory] .preview-category-filter span { white-space: nowrap; }
+  [data-preview-directory] .preview-topic-hub[data-expanded="true"] { height: 360px; }
+  [data-preview-directory] .preview-topic-hub__links {
+    position: absolute; inset: 0; width: 100%; height: 100%; fill: none;
+    stroke: #a6c9cd; stroke-width: 2; display: none; pointer-events: none;
+  }
+  [data-preview-directory] [data-expanded="true"] .preview-topic-hub__links { display: block; }
+  [data-preview-directory] .preview-category-filter { position: absolute; inset: 0; }
+  [data-preview-directory] .preview-topic-hub__core,
+  [data-preview-directory] .preview-topic-hub__satellite {
+    position: absolute; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 10px; width: 160px; height: 160px; padding: 14px;
+    border: 2px solid #009ba7; border-radius: 50%; background: #fff; color: #333;
+    font: inherit; font-size: 1rem; font-weight: 750; text-align: center;
+    letter-spacing: 0; cursor: pointer; line-height: 1.4;
+  }
+  [data-preview-directory] .preview-topic-hub__core {
+    left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2;
+    width: 144px; height: 144px; background: #007a83; color: #fff;
+    animation: preview-hub-breathe 5s ease-in-out infinite;
+  }
+  [data-preview-directory] [data-expanded="true"] .preview-topic-hub__core { top: 65%; }
+  [data-preview-directory] .preview-topic-hub__satellite {
+    left: var(--sat-x); top: var(--sat-y); transform: translate(-50%, -50%);
+  }
+  [data-preview-directory] .preview-topic-hub__satellite.is-active { background: #e2f2f3; border-color: #007a83; }
+  [data-preview-directory] .preview-topic-hub button:hover { border-color: #be4d2a; }
+  [data-preview-directory] .preview-topic-hub button:focus-visible { outline: 3px solid #be4d2a; outline-offset: 5px; animation: none; }
+  [data-preview-directory] .preview-topic-hub:hover .preview-topic-hub__core { animation-play-state: paused; }
   [data-preview-directory] .coach-topic-filter__option { min-width: 0; min-height: 78px; }
   [data-preview-directory] .coach-topic-filter__option span { overflow-wrap: anywhere; }
   [data-preview-directory] [hidden] { display: none !important; }
+  @keyframes preview-hub-breathe {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 122, 131, 0); }
+    50% { box-shadow: 0 0 0 7px rgba(0, 122, 131, 0.12); }
+  }
   @media (max-width: 1100px) {
-    [data-preview-directory].is-enhanced .preview-category-filter,
     [data-preview-directory].is-enhanced .preview-topic-filter { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
+  @media (max-width: 700px) {
+    [data-preview-directory] .preview-topic-hub,
+    [data-preview-directory] .preview-topic-hub[data-expanded="true"] { height: auto; display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 10px 0; }
+    [data-preview-directory] .preview-topic-hub .preview-topic-hub__core { position: relative; left: auto; top: auto; transform: none; flex-shrink: 0; }
+    [data-preview-directory] .preview-category-filter { position: static; display: grid; gap: 12px; width: 100%; }
+    [data-preview-directory] .preview-topic-hub__satellite { position: static; transform: none; width: 100%; height: auto; min-height: 72px; border-radius: 8px; flex-direction: row; }
+    [data-preview-directory] .preview-topic-hub .preview-topic-hub__links { display: none; }
+  }
   @media (max-width: 520px) {
-    [data-preview-directory].is-enhanced .preview-category-filter,
     [data-preview-directory].is-enhanced .preview-topic-filter { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-preview-directory] .preview-topic-hub__core { animation: none; transition: none; }
   }
 </style>
 <script is:inline>
@@ -108,6 +155,10 @@ const url = (path: string) => `${base}/${path}`;
     const root = document.querySelector("[data-preview-directory]");
     if (!root) return;
     const categories = [...root.querySelectorAll("[data-category]")];
+    const hub = root.querySelector("[data-topic-hub]");
+    const toggle = root.querySelector("[data-hub-toggle]");
+    const categoryGroup = root.querySelector("#preview-categories");
+    const topicGroup = root.querySelector("#preview-topic-options");
     const topics = [...root.querySelectorAll("[data-topic]")];
     const cards = [...root.querySelectorAll("[data-preview-coach]")];
     const status = root.querySelector("[data-preview-status]");
@@ -115,16 +166,21 @@ const url = (path: string) => `${base}/${path}`;
     const words = (value) => (value || "").split(" ").filter(Boolean);
     let category = "all";
     let topic = "all";
+    let expanded = false;
     const pressed = (button, active) => {
       button.setAttribute("aria-pressed", String(active));
       button.classList.toggle("is-active", active);
     };
     function apply(updateUrl = true) {
+      hub.dataset.expanded = String(expanded);
+      toggle.setAttribute("aria-expanded", String(expanded));
+      categoryGroup.hidden = !expanded;
+      topicGroup.hidden = category === "all";
       categories.forEach((button) => pressed(button, button.dataset.category === category));
       const available = new Set();
       topics.forEach((button) => {
         const id = button.dataset.topic;
-        const visible = id === "all" || category === "all" || words(button.dataset.categories).includes(category);
+        const visible = id === "all" || words(button.dataset.categories).includes(category);
         button.hidden = !visible;
         if (visible && id !== "all") available.add(id);
       });
@@ -138,7 +194,7 @@ const url = (path: string) => `${base}/${path}`;
         card.hidden = !visible;
         if (visible) count++;
       });
-      const categoryLabel = categories.find((button) => button.dataset.category === category).textContent.trim();
+      const categoryLabel = categories.find((button) => button.dataset.category === category)?.textContent.trim() || "Alle Themen";
       const topicLabel = topics.find((button) => button.dataset.topic === topic).textContent.trim();
       status.textContent = category === "all" && topic === "all"
         ? `Alle ${count} Coach-Profile werden angezeigt.`
@@ -159,8 +215,18 @@ const url = (path: string) => `${base}/${path}`;
       category = categories.some((button) => button.dataset.category === cat) ? cat : "all";
       const selected = params.get("thema") || (location.hash.startsWith("#thema-") ? location.hash.slice(7) : "all");
       topic = topics.some((button) => button.dataset.topic === selected) ? selected : "all";
+      if (category === "all" && topic !== "all") {
+        category = words(topics.find((button) => button.dataset.topic === topic).dataset.categories)[0];
+      }
+      expanded = category !== "all";
       apply(false);
     }
+    toggle.addEventListener("click", () => {
+      expanded = category !== "all" || !expanded;
+      category = "all";
+      topic = "all";
+      apply();
+    });
     categories.forEach((button) => button.addEventListener("click", () => {
       category = button.dataset.category;
       topic = "all";
