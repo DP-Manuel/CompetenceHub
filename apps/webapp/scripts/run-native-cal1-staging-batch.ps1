@@ -61,45 +61,67 @@ try {
     $migratorEncoded = [Uri]::EscapeDataString([Runtime.InteropServices.Marshal]::PtrToStringBSTR($migratorPointer))
     $env:COMPETENCE_HUB_TEST_APP_DATABASE_URL = "postgresql+asyncpg://competence_hub_app:${appEncoded}@127.0.0.1:${LocalPort}/competence_hub_staging"
     $env:COMPETENCE_HUB_TEST_MIGRATOR_DATABASE_URL = "postgresql+asyncpg://competence_hub_migrator:${migratorEncoded}@127.0.0.1:${LocalPort}/competence_hub_staging"
-    & $python '.\scripts\run-native-cal1-browser-acceptance.py'
-    $browserExit = $LASTEXITCODE
-    $result = Get-Content -Raw -LiteralPath (Join-Path $evidence 'result.json') | ConvertFrom-Json
-    if ($result.cleanup -eq 'PASS') {
-        if ($browserExit -eq 0) {
-            & $python -m pytest -m staging_integration
-            $apiExit = $LASTEXITCODE
-        } else { $apiExit = -1 }
-        & $python '.\scripts\verify-staging-zero-residue.py'
-        $zeroExit = $LASTEXITCODE
-        $postflight = Get-ServiceEvidence
-        $postflight | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $evidence 'service-postflight.json') -Encoding UTF8
-        $cleanupVerified = $zeroExit -eq 0
-        & $python -m pytest -m 'not staging_integration'
-        $localExit = $LASTEXITCODE
-        & $python -m compileall -q src tests scripts
-        $compileExit = $LASTEXITCODE
-        & $python -m pip check
-        $pipExit = $LASTEXITCODE
-        & (Join-Path $webapp '..\..\tools\node-v22.16.0-win-x64\node.exe') --check '.\src\competence_hub_api\portal_ui\app.js'
-        $jsExit = $LASTEXITCODE
-        & git diff --check
-        $diffExit = $LASTEXITCODE
-        [pscustomobject]@{
-            native_browser_exit = $browserExit; native_api_exit = $apiExit
-            zero_residue_exit = $zeroExit; service_health = $postflight.status
-            local_suite_exit = $localExit; compile_exit = $compileExit
-            pip_check_exit = $pipExit; js_syntax_exit = $jsExit; diff_check_exit = $diffExit
-        } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'batch-summary.json') -Encoding UTF8
-        if ($localExit -ne 0 -or $compileExit -ne 0 -or $pipExit -ne 0 -or $jsExit -ne 0 -or $diffExit -ne 0) {
-            throw 'Local post-regression did not pass. Native cleanup/health evidence remains recorded.'
+    do {
+        $cleanupVerified = $false
+        $previous = @('result.json', 'batch-summary.json', 'postflight.json', 'service-postflight.json') |
+            Where-Object { Test-Path -LiteralPath (Join-Path $evidence $_) }
+        if ($previous.Count) {
+            $archive = Join-Path $evidence ('attempt-' + [DateTime]::UtcNow.ToString('yyyyMMddTHHmmssfffffffZ'))
+            New-Item -ItemType Directory -Path $archive | Out-Null
+            foreach ($name in $previous) {
+                Copy-Item -LiteralPath (Join-Path $evidence $name) -Destination (Join-Path $archive $name)
+            }
         }
-        if ($browserExit -ne 0 -or $apiExit -ne 0 -or $zeroExit -ne 0) {
-            throw 'Batch did not pass every gate. Cleanup/health evidence was collected; do not mark acceptance complete.'
+        & $python '.\scripts\run-native-cal1-browser-acceptance.py'
+        $browserExit = $LASTEXITCODE
+        $result = Get-Content -Raw -LiteralPath (Join-Path $evidence 'result.json') | ConvertFrom-Json
+        if ($result.cleanup -eq 'PASS') {
+            if ($browserExit -eq 0) {
+                & $python -m pytest -m staging_integration
+                $apiExit = $LASTEXITCODE
+            } else { $apiExit = -1 }
+            & $python '.\scripts\verify-staging-zero-residue.py'
+            $zeroExit = $LASTEXITCODE
+            $postflight = Get-ServiceEvidence
+            $postflight | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $evidence 'service-postflight.json') -Encoding UTF8
+            $cleanupVerified = $zeroExit -eq 0
+            & $python -m pytest -m 'not staging_integration'
+            $localExit = $LASTEXITCODE
+            & $python -m compileall -q src tests scripts
+            $compileExit = $LASTEXITCODE
+            & $python -m pip check
+            $pipExit = $LASTEXITCODE
+            & $python '.\scripts\run-cal1-latency-regression.py'
+            $latencyExit = $LASTEXITCODE
+            & (Join-Path $webapp '..\..\tools\node-v22.16.0-win-x64\node.exe') --check '.\src\competence_hub_api\portal_ui\app.js'
+            $jsExit = $LASTEXITCODE
+            & git diff --check
+            $diffExit = $LASTEXITCODE
+            [pscustomobject]@{
+                native_browser_exit = $browserExit; native_api_exit = $apiExit
+                zero_residue_exit = $zeroExit; service_health = $postflight.status
+                local_suite_exit = $localExit; compile_exit = $compileExit
+                pip_check_exit = $pipExit; js_syntax_exit = $jsExit; diff_check_exit = $diffExit
+                latency_browser_exit = $latencyExit
+            } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $evidence 'batch-summary.json') -Encoding UTF8
+            if ($localExit -ne 0 -or $compileExit -ne 0 -or $pipExit -ne 0 -or $latencyExit -ne 0 -or $jsExit -ne 0 -or $diffExit -ne 0) {
+                throw 'Local post-regression did not pass. Native cleanup/health evidence remains recorded.'
+            }
+            if ($browserExit -ne 0 -or $apiExit -ne 0 -or $zeroExit -ne 0) {
+                if (-not $cleanupVerified) {
+                    throw 'Zero residue not proven. Stop and investigate; no automatic retry.'
+                }
+                Write-Warning 'Acceptance failed, but cleanup/SQL/health passed. Keep this window open while the local cause is investigated.'
+                $retry = Read-Host 'After local repair: R = repeat prepared batch without new passwords; Q = close safely'
+                if ($retry -eq 'R') { continue }
+                throw 'Acceptance not complete. Operator chose to close the clean window.'
+            }
+            Write-Host 'NATIVE_UI=PASS API=PASS CLEANUP=PASS ZERO_RESIDUE=PASS SERVICES=PASS POSTGRES_LOCALHOST=PASS'
+        } else {
+            throw 'Cleanup was not proven. Dedicated tunnel remains open; inspect sanitized evidence before any further test.'
         }
-        Write-Host 'NATIVE_UI=PASS API=PASS CLEANUP=PASS ZERO_RESIDUE=PASS SERVICES=PASS POSTGRES_LOCALHOST=PASS'
-    } else {
-        throw 'Cleanup was not proven. Dedicated tunnel remains open; inspect sanitized evidence before any further test.'
-    }
+        break
+    } while ($true)
 }
 finally {
     Remove-Item Env:COMPETENCE_HUB_TEST_APP_DATABASE_URL -ErrorAction SilentlyContinue

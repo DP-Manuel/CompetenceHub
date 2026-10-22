@@ -6,7 +6,7 @@ Updated: 2026-10-22.
 
 Post-Messe product consolidation is complete for the authorized scope: Context V2, official frontend preview and Analytics discovery.
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
-The additive Calendar access path is implemented and locally green; the real-runtime/local-PostgreSQL rehearsal passed. Native VPS UI acceptance remains open pending the single prepared operator batch, not another content approval.
+The additive Calendar access path is implemented and locally green; the real-runtime/local-PostgreSQL rehearsal passed. First VPS attempt passed Coach MFA/resume, then failed during offer setup; cleanup/SQL/health PASS. A repaired native retry remains the gate, not another content approval.
 
 ## Production State
 
@@ -23,7 +23,7 @@ The additive Calendar access path is implemented and locally green; the real-run
 - [SB-54 handoff](docs/handoffs/2026-09-25-mindforge-notice-layout-p0-handoff.md) owns production release/rollback evidence.
 - [CAL-1 handoff](docs/handoffs/2026-09-18-cal1-browser-acceptance-handoff.md) owns accepted local UI scope; prior native API/Staging evidence is dated, not rerun in October.
 - [Native UI preflight](docs/architecture/calendar-cal1-native-staging-ui-acceptance-2026-10-21.md) owns the authentication integration finding and actual check matrix; no Staging data was created.
-- [22.10 access/batch report](docs/architecture/calendar-cal1-access-batch-2026-10-22.md): 424 local tests, 17 expected skips, 57 visual browser checks, 142 real-runtime/local-PG browser checks, 17 local-PG integration tests and 20-table zero residue. Native VPS execution remains PENDING.
+- [22.10 access/batch report](docs/architecture/calendar-cal1-access-batch-2026-10-22.md): 424 local tests, 17 expected skips, 57 visual checks, 142 real-runtime/local-PG browser checks and 17 local-PG integration tests. First VPS attempt: six checks then failure; independent 20-table zero residue/owners/migrations/health PASS. Slow-response harness repair locally reverified; native retry needed.
 - [Context audit](docs/architecture/context-migration-audit-2026-10-21.md): hash-preserved history, small read sets and cold-start PASS.
 
 ## Protected / Current Blockers

@@ -17,7 +17,8 @@ No migration, persistent service, secret-file read, real identity or system repl
 - Complete locally: admission policy/real Login-MFA-session wiring, unchanged internal contract, fixture honesty and regression. No migration required; no known High/Critical implementation finding.
 - Complete locally: 424 tests/17 expected skips, 57 fixture browser checks, 142 native-runtime/local-PG browser checks, 17 local-PG API tests and 20 tables zero after cleanup.
 - Complete Preview: topic Hub/progressive disclosure and geometry corrections, live source 1cc481de9210; 134 public checks and all 52 production build files unchanged.
-- Native VPS: read-only service preflight PASS and independent SSH key connections PASS; DB/browser provisioning/cleanup/postflight not yet executed by this batch.
+- Native VPS first attempt: six admission/MFA/resume/privacy/empty-state checks PASS, then initial offer setup AssertionError; complete native gate FAIL. Independent SQL zero residue, owners/migrations, services and loopback postflight PASS. No unsafe residue or service changes.
+- Repair: successful slow submit reproduced the premature assertion locally; semantic list-refresh waits, safe failure frames and same-window R/Q retry added. All 57/142/17/424 local gates green again; execute repaired VPS batch next.
 - Preserve dated September native API evidence and local browser checklist; do not convert them into October native acceptance.
 
 ## Ordered Rolling Horizon

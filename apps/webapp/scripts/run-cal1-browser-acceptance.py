@@ -142,6 +142,18 @@ def review_card(page: Page, title: str):
     return page.locator("#review-calendar-list .calendar-card").filter(has_text=title)
 
 
+@contextmanager
+def calendar_refresh(page: Page, *, reviewing: bool = False):
+    endpoint = "/api/v1/portal/calendar/" + ("review-queue" if reviewing else "offers")
+    # A closed dialog does not mean its asynchronous list reload has completed.
+    with page.expect_response(lambda response: response.request.method == "GET"
+                              and response.url.split("?")[0].endswith(endpoint)) as loaded:
+        yield
+    if loaded.value.status != 200:
+        raise AssertionError("Calendar refresh did not succeed")
+    page.locator("#review-calendar-loading" if reviewing else "#coach-calendar-loading").wait_for(state="hidden")
+
+
 def tab_to_button(page: Page, label: str, card_title: str | None = None) -> None:
     for _ in range(80):
         active = page.evaluate(
@@ -191,13 +203,15 @@ def fill_offer(page: Page, title: str, offset_days: int = 30) -> None:
 def create_offer(page: Page, title: str, offset_days: int = 30) -> None:
     page.locator("#open-calendar-offer-dialog").click()
     fill_offer(page, title, offset_days)
-    page.locator("#save-calendar-offer").dblclick()
-    page.locator("#calendar-offer-dialog").wait_for(state="hidden")
+    with calendar_refresh(page):
+        page.locator("#save-calendar-offer").dblclick()
+        page.locator("#calendar-offer-dialog").wait_for(state="hidden")
     expect(page.get_by_role("heading", name=title, exact=True)).to_be_visible()
 
 
 def submit_offer(page: Page, title: str) -> None:
-    card(page, title).get_by_role("button", name="Zur Prüfung einreichen").click()
+    with calendar_refresh(page):
+        card(page, title).get_by_role("button", name="Zur Prüfung einreichen").click()
     expect(card(page, title)).to_contain_text("Zur Prüfung eingereicht")
 
 
@@ -329,8 +343,9 @@ def admin_contract(page: Page, base_url: str, acceptance: Acceptance, *, include
                 page.locator("#calendar-review-feedback").is_visible(),
             )
         page.locator("#calendar-title").fill(revised_title)
-        page.locator("#save-calendar-offer").click()
-        page.locator("#calendar-offer-dialog").wait_for(state="hidden")
+        with calendar_refresh(page):
+            page.locator("#save-calendar-offer").click()
+            page.locator("#calendar-offer-dialog").wait_for(state="hidden")
         revised = card(page, revised_title)
         acceptance.check(
             f"{original_title} erzeugt Revision 2 als Draft",
@@ -367,8 +382,9 @@ def coach_workflow(page: Page, browser: Browser, base_url: str, acceptance: Acce
     own_card = card(page, title)
     own_card.get_by_role("button", name="Entwurf bearbeiten").click()
     page.locator("#calendar-title").fill(f"{title} bearbeitet")
-    page.locator("#save-calendar-offer").click()
-    page.locator("#calendar-offer-dialog").wait_for(state="hidden")
+    with calendar_refresh(page):
+        page.locator("#save-calendar-offer").click()
+        page.locator("#calendar-offer-dialog").wait_for(state="hidden")
     edited_title = f"{title} bearbeitet"
     expect(page.get_by_role("heading", name=edited_title, exact=True)).to_be_visible()
     acceptance.check("Draft bearbeiten und speichern", page.get_by_role("heading", name=edited_title, exact=True).count() == 1)
@@ -391,8 +407,9 @@ def coach_workflow(page: Page, browser: Browser, base_url: str, acceptance: Acce
         }"""
     )
     acceptance.check("Tastaturfokus ist sichtbar", "none" not in focused_outline and "0px" not in focused_outline)
-    page.keyboard.press("Enter")
-    page.locator("#calendar-offer-dialog").wait_for(state="hidden")
+    with calendar_refresh(page):
+        page.keyboard.press("Enter")
+        page.locator("#calendar-offer-dialog").wait_for(state="hidden")
     expect(page.get_by_role("heading", name=keyboard_title, exact=True)).to_be_visible()
     acceptance.check(
         "Draft vollstaendig per Tastatur bearbeitet",
@@ -409,8 +426,9 @@ def coach_workflow(page: Page, browser: Browser, base_url: str, acceptance: Acce
     card(page, stale_title).get_by_role("button", name="Entwurf bearbeiten").click()
     card(second, stale_title).get_by_role("button", name="Entwurf bearbeiten").click()
     page.locator("#calendar-title").fill("Stale Stand A")
-    page.locator("#save-calendar-offer").click()
-    page.locator("#calendar-offer-dialog").wait_for(state="hidden")
+    with calendar_refresh(page):
+        page.locator("#save-calendar-offer").click()
+        page.locator("#calendar-offer-dialog").wait_for(state="hidden")
     second.locator("#calendar-title").fill("Stale Stand B")
     second.locator("#save-calendar-offer").click()
     second.locator("#calendar-offer-error").wait_for(state="visible")
@@ -423,13 +441,15 @@ def coach_workflow(page: Page, browser: Browser, base_url: str, acceptance: Acce
     second_context.close()
 
     tab_to_button(page, "Zur Prüfung einreichen", edited_title)
-    page.keyboard.press("Enter")
+    with calendar_refresh(page):
+        page.keyboard.press("Enter")
     expect(card(page, edited_title)).to_contain_text("Zur Prüfung eingereicht")
     acceptance.check("Submit aktualisiert Textstatus", "Zur Prüfung eingereicht" in card(page, edited_title).inner_text())
 
     withdraw_title = "Zum Zurückziehen"
     create_offer(page, withdraw_title, 45)
-    card(page, withdraw_title).get_by_role("button", name="Angebot zurückziehen").click()
+    with calendar_refresh(page):
+        card(page, withdraw_title).get_by_role("button", name="Angebot zurückziehen").click()
     expect(card(page, withdraw_title)).to_contain_text("Zurückgezogen")
     withdrawn = card(page, withdraw_title)
     acceptance.check(
@@ -479,8 +499,9 @@ def reviewer_workflow(page: Page, base_url: str, acceptance: Acceptance) -> None
     acceptance.check("Aenderungshinweis ist verpflichtend", page.locator("#calendar-review-note").evaluate("el => el === document.activeElement"))
     page.keyboard.insert_text("Bitte synthetisch präzisieren.")
     tab_to_button(page, "Entscheidung speichern")
-    page.keyboard.press("Enter")
-    page.locator("#calendar-review-dialog").wait_for(state="hidden")
+    with calendar_refresh(page, reviewing=True):
+        page.keyboard.press("Enter")
+        page.locator("#calendar-review-dialog").wait_for(state="hidden")
     expect(review_card(page, "Synthetisches Angebot 2")).to_have_count(0)
     acceptance.check("Aenderungsentscheidung entfernt Angebot aus Queue", review_card(page, "Synthetisches Angebot 2").count() == 0)
 
@@ -490,8 +511,9 @@ def reviewer_workflow(page: Page, base_url: str, acceptance: Acceptance) -> None
     page.locator("#calendar-review-dialog").wait_for(state="visible")
     page.keyboard.press("Space")
     tab_to_button(page, "Entscheidung speichern")
-    page.keyboard.press("Enter")
-    page.locator("#calendar-review-dialog").wait_for(state="hidden")
+    with calendar_refresh(page, reviewing=True):
+        page.keyboard.press("Enter")
+        page.locator("#calendar-review-dialog").wait_for(state="hidden")
     expect(review_card(page, "Zur Veröffentlichung")).to_have_count(0)
     acceptance.check("Veroeffentlichung entfernt Angebot aus Queue", review_card(page, "Zur Veröffentlichung").count() == 0)
     published_detail = api_offer_detail(page, str(publish_item["id"]))

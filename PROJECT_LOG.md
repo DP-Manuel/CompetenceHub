@@ -3,6 +3,13 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-22 | verification / repair | First native attempt, clean failure
+
+- Native VPS Coach password/MFA/resume and first six checks PASS, then initial offer setup AssertionError. Complete native UI gate NOT ACCEPTED; native API suite not run.
+- Exact-ID cleanup and independent SQL prove all 20 dynamic tables zero, migrations 0001-0006 and 27 owner tables; four services active and PostgreSQL localhost-only. Local post-suite 424 passed/17 deselected.
+- Controlled local slow-response reproduction exposed a harness timing defect; successful submit/list refresh now awaited before unchanged assertions. Safe phase/frame diagnostics and clean same-window repair retry added; no application permission changes.
+- Repaired local gates: 57 visual checks, 142 real-PG browser checks, 17 integration tests, 424 local tests and explicit six-second submit regression PASS. Native rerun remains the only next acceptance gate; readiness does not advance yet.
+
 ## 2026-10-22 | implementation / verification | Preview Hub and Calendar access batch
 
 - Preview source 1cc481de9210 pushed/published through manual Pages run 39774218286; 134 actual public Hub checks PASS. Full 52-file production build manifest unchanged; no IONOS write.

@@ -1,6 +1,7 @@
 # CAL-1 Access And Batched Acceptance
 
-Date: 2026-10-22. Local gate **PASS**. Native VPS gate **PENDING**.
+Date: 2026-10-22. Local gate **PASS**. Native VPS gate **NOT ACCEPTED**:
+first attempt stopped after six checks; cleanup/SQL/health PASS, repaired retry ready.
 Authority: Manuel's Calendar Access Contract and subsequent Batched Development
 addendum. The latter replaces the local-only stop and authorizes scoped commits,
 push, Pages preview publication and one synthetic Staging window. Production,
@@ -39,6 +40,7 @@ No raw row, password, challenge, provisioning URI or recovery value is evidence.
 | PostgreSQL API tests in same local rehearsal | 17/17; 424 local tests deselected |
 | Local cleanup | All 20 dynamic table counts zero; 65 audit events observed before exact-ID cleanup |
 | Python compile, pip consistency, JS syntax | PASS |
+| Slow-response harness regression | PASS after correction; successful 6-second submit plus delayed list refresh |
 | Preview UX | 134 local and 134 public focused checks; see [preview QA](github-pages-preview-2026-10-21.md) |
 
 The rehearsal uses the already-available `postgres:16-bookworm` image in a fresh
@@ -58,6 +60,38 @@ Harness repairs discovered during rehearsal, not product findings:
   of network-idle assumptions or fixed sleeps. All original assertions remain.
 - Real 200% zoom uses a temporary browser profile and verifies measured CSS
   viewport/DPR; a separate viewport reflow check is not mislabeled as zoom.
+
+## First VPS Attempt And Repair
+
+The first actual VPS attempt passed unauthenticated denial, real Coach MFA
+enrollment, exact Coach session resume, no Web Storage, no-store and empty state.
+An AssertionError then stopped initial offer preparation. The first report did
+not retain a safe traceback frame, so it does not identify the exact failed
+assertion. No claim of complete native acceptance follows.
+
+Independent postflight proved all 20 dynamic tables zero, migrations 0001-0006,
+27 owner tables, SHOW listen_addresses=localhost, four active services and
+loopback-only listener. Local post-regression: 424 passed, 17 deselected. API
+suite was correctly NOT RUN after browser failure. The owned tunnel closed
+only after those cleanup/health checks.
+
+A controlled local reproduction proved a harness defect: a successful submit
+delayed six seconds exceeded the old five-second status assertion. Mutation
+success/dialog closure also preceded the list reload. The shared helpers now
+await the concrete successful list GET and loading completion before unchanged
+workflow assertions; native initial creation and review use the same boundary.
+This is the best-supported cause, not retrospective proof of the lost VPS stack.
+All 57 visual checks, 142 local-PG browser checks, 17 local-PG API tests and the
+424-test suite passed again after repair. The dedicated latency regression is
+part of the batch. No application permission or workflow logic changed.
+
+Failure evidence now includes per-initial-offer phases and only safe traceback
+file/function/line metadata, never exception contents, source lines or locals.
+On a subsequent failed acceptance with proven zero residue/health, the wrapper
+keeps one authenticated window for local repair and prompts R to retry or Q to
+close safely. It archives preceding sanitized reports before the next attempt.
+Unproven cleanup is never retried automatically. Credential URLs are cleared
+when the operator window finishes, not persisted for later sessions.
 
 ## Browser And Security Matrix
 
@@ -131,8 +165,8 @@ The script closes only its own tunnel after proven cleanup/health. On unproven
 cleanup it retains that tunnel for investigation and must not mark acceptance
 complete. No service restart. Evidence stays in ignored
 `release-artifacts/cal1-native-ui-20261022/`; the UUID manifest contains no
-passwords or MFA secrets. Native results and cleanup are still PENDING until
-that actual run and its sanitized result are inspected.
+passwords or MFA secrets. The first failed run's cleanup is proven; the complete
+native matrix requires the repaired run and inspection of its sanitized result.
 
 ## Batch Close-Out: 35 Requested Items
 
@@ -155,7 +189,7 @@ that actual run and its sanitized result are inspected.
 | 15 | Coach login/MFA | Real local PostgreSQL PASS; VPS PENDING |
 | 16 | Reviewer login/MFA | Real local PostgreSQL PASS; VPS PENDING |
 | 17 | Session resume | Exact live roles PASS locally; VPS PENDING |
-| 18 | Native Staging acceptance | PENDING operator batch, never substituted by Docker |
+| 18 | Native Staging acceptance | First attempt FAIL after six checks; repaired retry ready, never substituted by Docker |
 | 19 | Coach flow | Local PostgreSQL PASS; VPS PENDING |
 | 20 | Reviewer flow | Local PostgreSQL PASS; VPS PENDING |
 | 21 | Admin flow | All workflow/revision projections PASS locally; VPS PENDING |
@@ -163,15 +197,15 @@ that actual run and its sanitized result are inspected.
 | 23 | Stale ETag | Conflict/recovery/no silent retry PASS locally; VPS PENDING |
 | 24 | Public projection | Exact DTO, no private mapping, published only PASS locally |
 | 25 | Accessibility | Browser keyboard/focus/390/zoom/motion PASS; no assistive-device audit claimed |
-| 26 | Synthetic cleanup | Local rehearsal complete; VPS not yet provisioned by this batch |
-| 27 | SQL zero residue | 20 local tables zero; VPS PENDING |
-| 28 | Services | Read-only VPS preflight four active; postflight PENDING |
-| 29 | PG localhost | Read-only VPS listener PASS; batch DB SHOW/postflight PENDING |
+| 26 | Synthetic cleanup | Both local rehearsals and first failed VPS attempt fully cleaned |
+| 27 | SQL zero residue | All 20 tables zero locally and in independent VPS postflight |
+| 28 | Services | VPS preflight and first-attempt postflight four active |
+| 29 | PG localhost | VPS listener and DB SHOW/postflight PASS |
 | 30 | Additional backend slice | Sanitized DB-error logging hardening implemented/tested; readiness package gated on native PASS |
 | 31 | Deliberately not begun | Production, real accounts/mappings, SMTP, tracking, CAL-2/FIN-01 implementation |
-| 32 | Commits | Preview 1cc481de9210; access 40a7574; public QA 3218750; native harness b5c65c7; context reconciliation separate |
-| 33 | Push | Preview source pushed and deployed; follow-up pushes use main without auto production deployment |
-| 34 | Remaining local changes | Context reconciliation and this status update; unfamiliar .vscode and September weekly file preserved |
+| 32 | Commits | Preview 1cc481de9210; access 40a7574; public QA 3218750; native harness b5c65c7; context d064b1a; retry repair separately |
+| 33 | Push | All listed commits pushed to main; Pages remains source 1cc481de9210; no auto production deployment |
+| 34 | Remaining local changes | Bounded retry repair/status until its commit; unfamiliar .vscode and September weekly file preserved |
 | 35 | Exact next gate | One secure operator batch above; no new content decision needed |
 
 ## Recommended Next Block

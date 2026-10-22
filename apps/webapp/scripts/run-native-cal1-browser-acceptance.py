@@ -8,6 +8,7 @@ from pathlib import Path
 import tempfile
 import time
 import re
+import traceback
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 from urllib.parse import urlsplit
@@ -125,8 +126,9 @@ def exercise(fixture, report):
         page.get_by_label("Veröffentlichen" if outcome == "published" else "Änderungen anfordern", exact=True).check()
         if outcome == "changes_requested":
             page.locator("#calendar-review-note").fill("Synthetic private change request")
-        page.get_by_role("button", name="Entscheidung speichern").click()
-        page.locator("#calendar-review-dialog").wait_for(state="hidden")
+        with qa.calendar_refresh(page, reviewing=True):
+            page.get_by_role("button", name="Entscheidung speichern").click()
+            page.locator("#calendar-review-dialog").wait_for(state="hidden")
 
     with qa.synthetic_server(fixture.app) as base, sync_playwright() as p:
         browser = p.chromium.launch(channel="msedge", headless=True)
@@ -138,14 +140,18 @@ def exercise(fixture, report):
             login(page, base, fixture.emails["coach"])
             checks.check("Native own Coach empty state", page.locator("#coach-calendar-empty").is_visible())
             for index in range(1, 5):
+                report["phase"] = f"initial-offer-{index}:create"
                 page.locator("#open-calendar-offer-dialog").click()
                 qa.fill_offer(page, f"Synthetisches Angebot {index}", 7 + index * 4)
                 if index % 2 == 0:
                     page.locator("#calendar-format").select_option("praesenz")
                     page.locator("#calendar-location").fill("Würzburg")
-                page.locator("#save-calendar-offer").dblclick()
-                page.locator("#calendar-offer-dialog").wait_for(state="hidden")
+                with qa.calendar_refresh(page):
+                    page.locator("#save-calendar-offer").dblclick()
+                    page.locator("#calendar-offer-dialog").wait_for(state="hidden")
+                expect(page.get_by_role("heading", name=f"Synthetisches Angebot {index}", exact=True)).to_be_visible()
                 if index > 1:
+                    report["phase"] = f"initial-offer-{index}:submit"
                     qa.submit_offer(page, f"Synthetisches Angebot {index}")
             checks.check("Four UI creations, no duplicate submit", len(qa.api_offers(page)) == 4)
             qa.logout(page)
@@ -317,6 +323,11 @@ def main():
     except Exception as error:
         report["status"] = "FAIL"
         report["failure_type"] = type(error).__name__
+        report["failure_frames"] = [
+            {"file": Path(frame.filename).name, "function": frame.name, "line": frame.lineno}
+            for frame in traceback.extract_tb(error.__traceback__)
+            if Path(frame.filename).name in {Path(__file__).name, "run-cal1-browser-acceptance.py", "native_calendar_fixture.py"}
+        ]
         # Never serialize exception text: driver/browser messages may contain credentials.
         print("Native batch failed; sanitized failure type: " + type(error).__name__)
     finally:
