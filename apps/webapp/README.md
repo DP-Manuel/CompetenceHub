@@ -296,3 +296,9 @@ The bundle includes `requirements-production.lock`, migrations, verification
 SQL, deployment templates and the rehearsal runbook. Runtime dependencies are
 exact-version locked; an approved, hashed Linux wheelhouse or approved package
 index remains a separate production supply-chain gate.
+The builder now exports an explicit tracked-file allowlist from committed Git
+bytes, pins the build backend and includes SOURCE.json provenance. Untracked
+workstation files are not read or bundled; dirty development builds remain
+non-deployable. The current local Linux dependency advisory stop, artifact
+hashes and unrun proxy/systemd gates are recorded in
+[Linux/proxy readiness](../../docs/operations/cal1-linux-proxy-readiness-2026-10-22.md).

@@ -27,6 +27,7 @@ DOC_FILES = frozenset({
     "docs/architecture/postgresql-backup-restore-runbook.md",
     "docs/architecture/calendar-cal1-technical-design-v0.1.md",
     "docs/architecture/calendar-cal1-api-contract-v0.1.md",
+    "docs/architecture/webapp-dependency-assessment-2026-10-22.md",
     "docs/operations/cal1-production-readiness-2026-10-22.md",
     "docs/operations/cal1-linux-proxy-readiness-2026-10-22.md",
 })

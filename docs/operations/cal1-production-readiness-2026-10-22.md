@@ -76,13 +76,13 @@ is selected. Do not stash/delete unfamiliar local files or use AllowDirty to
 label a candidate production-ready. If local unrelated files block cleanliness,
 prepare a separately owned clean export/worktree, not a destructive cleanup.
 
-Before a future bundle, review the builder's deployed-document list: it still
-copies the dated Website production plan alongside the backend runbook and does
-not automatically include this package. Its deploy-directory copy also needs
-an explicit secret-exclusion/file-inventory review. These are packaging gates,
-not reasons to run an unreviewed archive. No release ZIP or Linux wheelhouse was
-created in this documentation slice. Future bundle acceptance must include this
-package, additive access contract, exact source, file hashes and no secrets.
+The subsequent [Linux/proxy preparation](cal1-linux-proxy-readiness-2026-10-22.md)
+closed the broad-copy/document-inclusion gap with an allowlisted Git export and
+current CAL-1 contract/package docs. Two clean-source ZIP samples reproduce
+byte-for-byte. The local Linux preparation then stopped on a runtime dependency
+advisory before installation/startup. Those samples/wheels are NOT approved
+deployment or rollback candidates; see the linked report for exact source/SHA,
+executed versus unexecuted tests and required security-maintenance gate.
 
 CAL-1 access adds no migration. On Staging, never replay 0001-0006. For a future
 production database, inventory first and separately review a production bootstrap
@@ -179,12 +179,9 @@ approved data/exposure, not a newly invented software feature flag.
 
 ## Exactly One Recommended Next Block
 
-**Runtime/operations input closure for a controlled synthetic Linux/proxy rehearsal.**
+**Resolve the reviewed runtime dependency gate before Linux/proxy rehearsal.**
 Purpose: make the next execution window deployable and reversible without
-repeated credential requests. Inputs: non-secret RUNTIME-INPUT/PACKAGE-LINUX
-decisions, deployment owner/window and separately scoped rehearsal approval;
-productive data/roles/SMTP need not be activated to do that rehearsal.
-Deliverables: reviewed clean-source bundle/docs, rendered non-secret host/port
-plan, approved supply-chain source and stop/rollback record. Done means every
-prerequisite for steps 1-6 is explicit and the rehearsal has its own approval;
-missing facts stay OPEN. No SSH/password action is currently required.
+repeated credential requests. Inputs: separate dependency-maintenance approval,
+then non-secret RUNTIME-INPUT/PACKAGE-LINUX decisions and scoped rehearsal
+approval. Deliverables and DoD are in the Linux readiness report; missing facts
+remain OPEN. No real data/roles/mail or SSH/password action is needed now.

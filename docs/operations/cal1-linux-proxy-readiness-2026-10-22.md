@@ -1,7 +1,8 @@
 # CAL-1 Linux / Reverse-Proxy Preparation
 
-Date: 2026-10-22. Scope: local preparation only; Linux/proxy execution on the VPS
-is NOT authorized. This document owns domain/TLS/port/package/service preparation.
+Date: 2026-10-22. Status: **PREPARED WITH OPEN GATES; LINUX RUNTIME DRY-RUN BLOCKED**.
+Scope: local preparation only; Linux/proxy execution on the VPS is NOT authorized.
+This document owns domain/TLS/port/package/service preparation.
 The closed native runtime gate remains in the [acceptance report](../architecture/calendar-cal1-access-batch-2026-10-22.md);
 the broader [production readiness gates](cal1-production-readiness-2026-10-22.md)
 remain separate. No new product behavior, data, frontend or SMTP work.
@@ -257,11 +258,99 @@ One consolidated input request, no password or server action now:
   without a specifically confirmed IPv6 target and full-path test.
 - Thomas/EDV: confirm VPS-managed dedicated certificate via existing Certbot/
   ACME renewal, any CAA/DNS restrictions and who owns issuance/renewal alerts.
-- Manuel/EDV: confirm the existing /opt/competence-hub, /etc/competence-hub,
-  competencehub identity and 127.0.0.1:8001 plan for the synthetic rehearsal;
-  specify a different mandated path/mirror only if organisation policy requires.
+- Existing /opt/competence-hub, /etc/competence-hub, competencehub identity and
+  selected 127.0.0.1:8001 are the prepared convention. Manuel/EDV need only supply
+  a different mandatory path/mirror if organisation policy requires one; no
+  redundant separate confirmation of these technical defaults is requested.
 - Manuel: separate execution approval naming artifact SHA, synthetic environment,
   window and rollback owner. This preparation authorization is not that approval.
+- Manuel: separate dependency-maintenance approval for the reviewed cryptography
+  major update before rebuilding/retrying the Linux runtime gate; see the
+  [dependency assessment](../architecture/webapp-dependency-assessment-2026-10-22.md).
+  No automatic exception or update was applied.
+
+## Actual Local Results And Artifact Identity
+
+Source/tool commit: cb95db017dc452380ce8d5ec81a89dca2eaff94a. The application
+runtime implementation is unchanged from native acceptance; changes are
+packaging/build metadata, infrastructure templates, tests and local tools.
+
+- Full local regression: **450 passed, 17 expected Staging skips**. Targeted
+  package/operations checks passed. Python compilation and PowerShell parsing
+  passed. No additional VPS database/browser run was necessary for this scope.
+- Git export selected 88 reviewed files; Windows wheel build, isolated package
+  install/import/assets/fail-closed configuration smoke passed. No recursive
+  deploy/worktree copy or untracked input was used.
+- Two independent ZIP builds from the same commit/toolchain are byte-identical.
+  Source manifest uses full Git commit; bundle manifest keeps dirty=false and
+  deployment_authorized=false. The app wheel SHA-256 is
+  901ee983550439a80d3e55eb7ded5dc367817e5cd8808f1ac9a6e5c134c13d40.
+- Ubuntu image built locally from the pinned base, with Python 3.12/NGinx 1.24
+  tooling. The preparation verified the exact ZIP inventory, downloaded the
+  24 exact Linux runtime wheels and verified upstream hashes. It then stopped
+  at the cryptography advisory guard BEFORE fresh runtime installation/startup.
+- Therefore **NOT RUN**: Linux runtime venv install/pip check, systemd-analyze
+  verify against installed executable, nginx -t with fixture TLS, actual Linux
+  health/proxy/auth/DB cleanup tests. Templates have static/unit-test review,
+  not a fabricated executed PASS. Their local harness is prepared, not proven
+  end-to-end until the dependency gate is resolved.
+- Container removal PASS, confirmed no remaining owned Linux-dryrun container.
+  No host mount/published port, VPS install, DB seed, DNS/ACME action, Nginx
+  change, Chatbot restart or frontend/preview release. Downloaded wheels are
+  public dependencies only; blocked wheelhouse is not approved for deployment.
+
+The two **blocked, non-deployable rehearsal samples** are:
+
+```text
+release-artifacts/webapp/competence-hub-webapp-0.1.0-cb95db017dc4-20261022T131333Z.zip
+release-artifacts/webapp/competence-hub-webapp-0.1.0-cb95db017dc4-20261022T131425Z.zip
+SHA-256 (both): 61281a880b4d7c10b2b6c4d617a7057825a9298c7e670a6e3cbbb950010fa6d5
+```
+
+Ignored local Linux evidence:
+release-artifacts/webapp-linux/20261022T131402Z-fe909313.
+The Linux hashed lock SHA-256 is
+7a5dfc6829ada6aef639381ebc460695acaf0eec542e16fa0934f5b897dacf59;
+wheelhouse INVENTORY.json SHA-256 is
+e7d953d2b49569967affc2923e26a1b9a1768657a87ad19533df109140576e16.
+These bind the blocked snapshot, not an advisory waiver or a Linux PASS.
+
+## Requested Close-Out Matrix
+
+| # | Question | Actual state |
+| --- | --- | --- |
+| 1 | App domain | Existing proposal found; final EDV approval OPEN |
+| 2 | DNS | Name-not-found observed; A -> 217.160.255.86 required only after approval |
+| 3 | TLS | Existing Certbot timer and safe webroot/renewal plan; no issuance |
+| 4 | Internal port | 127.0.0.1:8001 selected under existing convention |
+| 5 | Port collision | None at read-only check; mandatory recheck before later start |
+| 6 | Package source | Allowlisted committed Git export plus verified exact PyPI Linux wheels; advisory gate BLOCKED |
+| 7 | Python/venv | Linux Python 3.12, own per-release venv, never Chatbot/global Python |
+| 8 | Reproducibility | Pins/build backend fixed; two byte-identical ZIPs; offline hash lock generated, not approved |
+| 9 | systemd | Existing service identity/path retained; start limits/journald/hardening prepared, static tests PASS, native service verification NOT RUN |
+| 10 | Nginx | Dedicated HTTP challenge/TLS templates prepared; canonical forwarded headers; static tests PASS, nginx -t NOT RUN |
+| 11 | Health | Existing minimal /health/live and DB-backed /health/ready; no new runtime route |
+| 12 | Firewall/binding | Public 22/80/443 only, app/PG loopback; actual firewall review remains later |
+| 13 | Chatbot isolation | Different port/path/user/venv/unit/config/logs, no change/restart |
+| 14 | Configuration | Actual API variable names only, external root-controlled config, no values/secret files created |
+| 15 | Migration | No new migration; future backup/inventory/smoke/restore sequence documented |
+| 16 | Release artifact | Two clean-source rehearsal sample ZIPs, explicitly non-deployable due advisory |
+| 17 | SHA/manifest | SOURCE.json + MANIFEST.json + ZIP checksum; exact hashes above |
+| 18 | Rollback | App/site/unit versus DB restore distinguished; inactive first-install baseline |
+| 19 | Dry-runs | Windows package/import and unit tests PASS; Linux hash/advisory phase stopped safely before runtime tests |
+| 20 | External inputs | Consolidated section above; no current credential action |
+| 21 | Needed execution approval | Only after dependency/local gates close: exact rebuilt SHA, final hostname/TLS/port/path, synthetic-only target, owner/window/rollback |
+| 22 | One next block | Separately reviewed cryptography maintenance and its crypto/compatibility/local/affected-Staging regression; EDV input collection can proceed in parallel |
+
+## Recommended Next Block
+
+Resolve the package security gate through a separately scoped cryptography
+maintenance approval, then regenerate/test a clean artifact and retry the
+prepared local Linux/proxy harness. Inputs: reviewed patched version and
+compatibility plan; deliverables: reconciled pins, envelope/MFA/outbox regression,
+fresh hashed wheels and an actually passing local Linux report. Done means the
+advisory gate and those tests are green, not merely that installation succeeds.
+No VPS Linux/proxy execution is authorized by that recommendation.
 
 ## Primary References
 

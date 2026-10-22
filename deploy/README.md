@@ -10,6 +10,10 @@ They do not authorize or perform a deployment.
 - `systemd/competence-hub-postgres-backup.*.example`: daily encrypted backup
   and freshness/integrity monitor units.
 - `nginx/competence-hub-app.conf.example`: same-origin Portal/API reverse proxy.
+- `nginx/competence-hub-acme-http.conf.example`: dedicated challenge-only bootstrap,
+  no Portal exposure; requires its own later execution approval.
+- `rehearsal/`: local disposable Ubuntu test tooling, never a VPS installer and
+  deliberately excluded from the Webapp runtime bundle.
 - `postgresql/backup.conf.example`: secret-free backup policy and public GPG
   recipient fingerprint.
 - `scripts/competence-hub-postgres-*`: backup, monitoring and isolated restore
@@ -27,8 +31,10 @@ configuration source; systemd must expose it to the dedicated service identity,
 not to interactive users. Installing or enabling these examples requires a
 separate reviewed deployment approval.
 
-The executable release and rollback sequence is documented in
-`docs/architecture/production-release-plan-2026-09-25.md`. Exact rehearsal
+The Website release/rollback sequence is documented in
+`docs/architecture/production-release-plan-2026-09-25.md`; it is not a backend
+installation plan. Current backend preparation and gates are in
+`docs/operations/cal1-linux-proxy-readiness-2026-10-22.md`. Exact rehearsal
 commands and stop criteria are in
 `docs/architecture/webapp-release-rehearsal-runbook.md`. PostgreSQL backup,
 restore and off-server transfer are documented in

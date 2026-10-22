@@ -3,6 +3,14 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-22 | operations / security gate | Linux/proxy preparation
+
+- Authorized preparation only: reviewed existing proposed app domain, current name-not-found DNS, free separate loopback port 8001, runtime/cert-timer metadata and isolation; no VPS write or frontend action.
+- Replaced broad release copies with committed-Git allowlist and current backend docs; fixed build backend, proxy/header/bootstrap and service-start-limit templates; local tests and reproducible package/import checks pass. Source/tool commit cb95db0.
+- Local Ubuntu dependency check stopped safely at cryptography 49.0.0 advisory before runtime installation/proxy execution. Current source uses AES-GCM, with no affected PKCS#7 ingress found; no waiver or silent major upgrade. Owned container removed.
+- [Linux readiness report](docs/operations/cal1-linux-proxy-readiness-2026-10-22.md) owns all actual counts/hashes, the requested close-out matrix and one consolidated EDV input section. [Dependency assessment](docs/architecture/webapp-dependency-assessment-2026-10-22.md) owns reachability/next security gate.
+- Next recommended block is separately reviewed dependency maintenance and compatibility regression; later Linux/proxy execution remains unapproved. Skill feedback captured; global skills unchanged.
+
 ## 2026-10-22 | acceptance / readiness | Native CAL-1 gate closed
 
 - Manuel's repaired batch from source 87844d1 ended with all six PASS markers; actual sanitized result, batch summary, SQL postflight and service reports independently inspected and SHA-bound in the [batch report](docs/architecture/calendar-cal1-access-batch-2026-10-22.md).
