@@ -4,6 +4,7 @@ import importlib.util
 import json
 import math
 import tempfile
+from contextlib import nullcontext
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright, expect
@@ -48,6 +49,7 @@ def text_fits(locator):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--baseline", action="store_true")
+    parser.add_argument("--public", action="store_true")
     args = parser.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     checks = []
@@ -56,7 +58,8 @@ def main():
         if not valid:
             raise AssertionError(label)
         checks.append(label)
-    with preview.static_server("production" if args.baseline else "preview") as origin, sync_playwright() as p:
+    server = nullcontext("https://dp-manuel.github.io") if args.public else preview.static_server("production" if args.baseline else "preview")
+    with server as origin, sync_playwright() as p:
         base = origin + ("" if args.baseline else "/CompetenceHub")
         browser = p.chromium.launch(channel="msedge", headless=True)
         try:
@@ -153,7 +156,7 @@ def main():
         finally:
             browser.close()
     result = {"baseline": args.baseline, "baseline_source": "unchanged local production artifact, same Hub layout" if args.baseline else None, "checks": checks, "metrics": metrics}
-    (OUT / ("baseline.json" if args.baseline else "acceptance.json")).write_text(json.dumps(result, indent=2), encoding="utf-8")
+    (OUT / ("public-acceptance.json" if args.public else "baseline.json" if args.baseline else "acceptance.json")).write_text(json.dumps(result, indent=2), encoding="utf-8")
     print(json.dumps({"checks": len(checks), "metrics": metrics}))
 
 

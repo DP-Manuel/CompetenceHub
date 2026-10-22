@@ -31,8 +31,15 @@ JS errors or failed resources in the broad preview test.
 
 The production build's full 52-entry filename/SHA-256 manifest was compared
 before and after: **no changed, added or removed files**. No SFTP or IONOS write.
-Generated JSON/screenshots stay in ignored release-artifacts; live publication
-evidence is recorded after the existing manual Pages workflow completes.
+Generated JSON/screenshots stay in ignored release-artifacts.
+
+Publication completed from commit `1cc481de9210cc43126e574818fdfd5046b96965`
+through the existing manual workflow only:
+[Actions run 39774218286](https://github.com/DP-Manuel/CompetenceHub/actions/runs/39774218286).
+The same 134 focused checks passed against the actual public preview, including
+touch, keyboard, Reduced Motion, all five widths and real 200% zoom. The runner's
+`--public` mode writes separate `public-acceptance.json` evidence; it does not
+publish anything. No production artifact, service or deployment was changed.
 
 ## Scope And Authority
 
