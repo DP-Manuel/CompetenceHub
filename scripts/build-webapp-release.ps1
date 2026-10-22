@@ -30,13 +30,13 @@ if (-not $PythonPath) {
     $PythonPath = Join-Path $webappRoot ".venv\Scripts\python.exe"
 }
 
-$statusLines = @(git -C $repoRoot status --porcelain --untracked-files=normal)
+$statusLines = @(git -C $repoRoot status --porcelain --untracked-files=no)
 if ($LASTEXITCODE -ne 0) {
     throw "Git status could not be determined."
 }
 $dirty = @($statusLines | Where-Object { $_ -ne '?? .tmp/' })
 if ($dirty.Count -gt 0 -and -not $AllowDirty) {
-    throw "Release builds require a clean tracked worktree. Commit or stash changes first."
+    throw "Release builds require committed tracked inputs. Preserve unrelated work; do not stash or delete it for this build."
 }
 if (-not (Test-Path -LiteralPath $PythonPath -PathType Leaf)) {
     throw "Project Python runtime is missing: $PythonPath"
@@ -70,7 +70,8 @@ try {
         $normalizedName = $package.name.ToLowerInvariant().Replace('_', '-').Replace('.', '-')
         $installedVersions[$normalizedName] = $package.version
     }
-    foreach ($line in (Get-Content -LiteralPath (Join-Path $webappRoot "requirements-production.lock"))) {
+    $dependencyLocks = @((Join-Path $webappRoot 'requirements-production.lock'), (Join-Path $webappRoot 'requirements-build.lock'))
+    foreach ($line in (Get-Content -LiteralPath $dependencyLocks)) {
         if ($line -match '^([^#][^=]+)==(.+)$') {
             $normalizedName = $matches[1].Trim().ToLowerInvariant().Replace('_', '-').Replace('.', '-')
             $lockedVersion = $matches[2].Trim()
@@ -105,10 +106,11 @@ $wheelRoot = Join-Path $bundleRoot "packages"
 $smokeRoot = Join-Path $buildRoot "install-smoke"
 $packageSourceRoot = Join-Path $buildRoot "package-source"
 
+$sourceArgs = @('--repo', $repoRoot, '--commit', $commit, '--build-root', $buildRoot)
+if ($dirty.Count -gt 0) { $sourceArgs += '--working-tree' }
+& $PythonPath (Join-Path $PSScriptRoot 'webapp_release_source.py') @sourceArgs
+if ($LASTEXITCODE -ne 0) { throw 'Reviewed release-source export failed.' }
 New-Item -ItemType Directory -Force -Path $wheelRoot | Out-Null
-New-Item -ItemType Directory -Force -Path (Join-Path $packageSourceRoot "src") | Out-Null
-Copy-Item -LiteralPath (Join-Path $webappRoot "pyproject.toml") -Destination $packageSourceRoot
-Copy-Item -LiteralPath (Join-Path $webappRoot "src\competence_hub_api") -Destination (Join-Path $packageSourceRoot "src") -Recurse
 $oldTemp = $env:TEMP
 $oldTmp = $env:TMP
 $oldSourceDateEpoch = $env:SOURCE_DATE_EPOCH
@@ -119,7 +121,9 @@ New-Item -ItemType Directory -Force -Path $env:TEMP | Out-Null
 
 try {
     Write-Output "Building application wheel..."
-    & $PythonPath -m pip wheel --no-deps --no-build-isolation --wheel-dir $wheelRoot $packageSourceRoot
+    $buildVersion = (& $PythonPath -c "import importlib.metadata; print(importlib.metadata.version('setuptools'))").Trim()
+    if ($LASTEXITCODE -ne 0 -or $buildVersion -ne '79.0.1') { throw 'Pinned setuptools 79.0.1 is required.' }
+    & $PythonPath -m pip wheel --no-index --no-deps --no-build-isolation --wheel-dir $wheelRoot $packageSourceRoot
     if ($LASTEXITCODE -ne 0) {
         throw "Application wheel build failed with exit code $LASTEXITCODE."
     }
@@ -127,15 +131,6 @@ try {
     if ($wheel.Count -ne 1) {
         throw "Expected exactly one application wheel, found $($wheel.Count)."
     }
-
-    Copy-Item -LiteralPath (Join-Path $webappRoot "requirements-production.lock") -Destination $bundleRoot
-    Copy-Item -LiteralPath (Join-Path $webappRoot "database") -Destination $bundleRoot -Recurse
-    Copy-Item -LiteralPath (Join-Path $repoRoot "deploy") -Destination $bundleRoot -Recurse
-    $docsRoot = Join-Path $bundleRoot "docs\architecture"
-    New-Item -ItemType Directory -Force -Path $docsRoot | Out-Null
-    Copy-Item -LiteralPath (Join-Path $repoRoot "docs\architecture\production-release-plan-2026-09-25.md") -Destination $docsRoot
-    Copy-Item -LiteralPath (Join-Path $repoRoot "docs\architecture\webapp-release-rehearsal-runbook.md") -Destination $docsRoot
-    Copy-Item -LiteralPath (Join-Path $repoRoot "docs\architecture\postgresql-backup-restore-runbook.md") -Destination $docsRoot
 
     $templateContracts = @{
         "deploy\systemd\competence-hub-api.service.example" = @("__PORT__")
@@ -152,6 +147,7 @@ try {
             "__TLS_FULLCHAIN_PATH__",
             "__TLS_PRIVATE_KEY_PATH__"
         )
+        "deploy\nginx\competence-hub-acme-http.conf.example" = @("__APP_HOSTNAME__")
     }
     foreach ($template in $templateContracts.Keys) {
         $templatePath = Join-Path $bundleRoot $template

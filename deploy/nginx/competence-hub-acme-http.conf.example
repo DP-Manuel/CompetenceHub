@@ -1,0 +1,17 @@
+# Temporary HTTP-only certificate bootstrap, never a Portal endpoint.
+# Install only in a separately approved window after domain/DNS confirmation.
+server {
+    listen 80;
+    listen [::]:80;
+    server_name __APP_HOSTNAME__;
+    server_tokens off;
+    access_log off;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/lib/competence-hub-acme;
+        try_files $uri =404;
+    }
+    location / {
+        return 503;
+    }
+}

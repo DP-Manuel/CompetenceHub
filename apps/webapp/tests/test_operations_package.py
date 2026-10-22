@@ -281,8 +281,10 @@ def test_backup_configuration_contains_no_secret_value() -> None:
 
 def test_release_builder_packages_operations_contract() -> None:
     builder = read(REPO_ROOT / "scripts" / "build-webapp-release.ps1")
+    sources = read(REPO_ROOT / "scripts" / "webapp_release_source.py")
 
-    assert "postgresql-backup-restore-runbook.md" in builder
+    assert "postgresql-backup-restore-runbook.md" in sources
+    assert "webapp_release_source.py" in builder
     assert '"deploy\\postgresql\\backup.conf.example"' in builder
     assert '"__GPG_RECIPIENT_FINGERPRINT__"' in builder
     assert "competence-hub-postgres-backup-monitor.timer.example" in builder

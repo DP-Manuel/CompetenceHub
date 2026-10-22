@@ -2,6 +2,8 @@
 Description=Competence Hub Portal and API
 After=network-online.target postgresql.service
 Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
 
 [Service]
 Type=simple
@@ -10,11 +12,15 @@ Group=competencehub
 WorkingDirectory=/opt/competence-hub/current
 EnvironmentFile=/etc/competence-hub/webapp.env
 Environment=PYTHONDONTWRITEBYTECODE=1
-ExecStart=/opt/competence-hub/current/venv/bin/uvicorn competence_hub_api.runtime:create_runtime_app_from_environment --factory --host 127.0.0.1 --port __PORT__ --proxy-headers --forwarded-allow-ips=127.0.0.1
+ExecStart=/opt/competence-hub/current/venv/bin/uvicorn competence_hub_api.runtime:create_runtime_app_from_environment --factory --host 127.0.0.1 --port __PORT__ --proxy-headers --forwarded-allow-ips=127.0.0.1 --no-access-log
 Restart=on-failure
 RestartSec=5s
 TimeoutStopSec=30s
 UMask=0077
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=competence-hub-api
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 NoNewPrivileges=true
 PrivateTmp=true
 PrivateDevices=true
