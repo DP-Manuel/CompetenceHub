@@ -88,6 +88,9 @@ postflight in one tunnel window. Production, real identities/mappings, SMTP,
 reservations and tracking remain outside this supplement.
 Current local evidence and the prepared operator batch are recorded in the
 [22.10 acceptance report](calendar-cal1-access-batch-2026-10-22.md).
+That native runtime/UI gate is now PASS, including cleanup/SQL/health; the
+[readiness package](../operations/cal1-production-readiness-2026-10-22.md)
+separates this proof from still-open Linux/proxy and activation gates.
 
 ## Purpose And Sources
 

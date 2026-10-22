@@ -13,7 +13,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 | Phase | Outcome | Gate / evidence | Confidence |
 | --- | --- | --- | --- |
 | Post-Messe consolidation: complete | Stable IONOS, published preview, Context V2 and Analytics discovery | Completed scope, build isolation, public smoke | High |
-| Backend continuation | Additive access local PASS; prove CAL-1 UI natively on synthetic Staging in one batch | Execution authorized; hidden local DB credential entry, security, cleanup, service health | Medium |
+| Backend continuation | Additive access/native CAL-1 UI gate PASS; readiness package prepared | Runtime inputs, clean Linux package and separately authorized synthetic proxy/install rehearsal remain | Medium |
 | Portal operation | Named accounts, mail, monitored backups, operational handover | DNS/SMTP/runtime/data/privacy/Go-No-Go evidence | Medium |
 | Future calendar | CAL-2 reservations and provider-neutral .ics delivery | Business/concurrency/privacy/client-compatibility gates | Low |
 | Analytics | Datensparse aggregate statistics in protected Admin cockpit | Architecture choice, privacy/legal and security approval | Medium |

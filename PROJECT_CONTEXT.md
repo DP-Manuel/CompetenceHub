@@ -6,7 +6,7 @@ Updated: 2026-10-22.
 
 Post-Messe product consolidation is complete for the authorized scope: Context V2, official frontend preview and Analytics discovery.
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
-The additive Calendar access path is implemented and locally green; the real-runtime/local-PostgreSQL rehearsal passed. First VPS attempt passed Coach MFA/resume, then failed during offer setup; cleanup/SQL/health PASS. A repaired native retry remains the gate, not another content approval.
+The additive Calendar access path and native VPS-backed runtime/UI acceptance are complete: 142 browser checks, the 17-test API gate and cleanup/SQL/health PASS. The follow-on CAL-1 readiness package is prepared, not a deployment approval. Next gate is non-secret runtime/operations input closure for one controlled Linux/proxy rehearsal.
 
 ## Production State
 
@@ -21,15 +21,16 @@ The additive Calendar access path is implemented and locally green; the real-run
 
 - [Preview contract/QA](docs/architecture/github-pages-preview-2026-10-21.md): build isolation and local acceptance; [restart report](docs/handoffs/2026-10-21-post-messe-restart.md): successful Actions/public smoke and remaining work.
 - [SB-54 handoff](docs/handoffs/2026-09-25-mindforge-notice-layout-p0-handoff.md) owns production release/rollback evidence.
-- [CAL-1 handoff](docs/handoffs/2026-09-18-cal1-browser-acceptance-handoff.md) owns accepted local UI scope; prior native API/Staging evidence is dated, not rerun in October.
+- [CAL-1 handoff](docs/handoffs/2026-09-18-cal1-browser-acceptance-handoff.md) owns the dated September local UI scope; current October native proof is separate below.
 - [Native UI preflight](docs/architecture/calendar-cal1-native-staging-ui-acceptance-2026-10-21.md) owns the authentication integration finding and actual check matrix; no Staging data was created.
-- [22.10 access/batch report](docs/architecture/calendar-cal1-access-batch-2026-10-22.md): 424 local tests, 17 expected skips, 57 visual checks, 142 real-runtime/local-PG browser checks and 17 local-PG integration tests. First VPS attempt: six checks then failure; independent 20-table zero residue/owners/migrations/health PASS. Slow-response harness repair locally reverified; native retry needed.
+- [22.10 access/batch report](docs/architecture/calendar-cal1-access-batch-2026-10-22.md): repaired native run from 87844d1 PASS, 142 browser checks, API gate and 424-test post-regression; 20 tables zero, six migrations/27 owner tables, four services active and PG localhost-only. Hash-bound metadata distinguishes real VPS persistence from untested Linux/proxy deployment.
+- [CAL-1 readiness package](docs/operations/cal1-production-readiness-2026-10-22.md): deployment/migration/rollback/smoke plan and role/mapping/operations gates prepared; no installation, public backend exposure or real-data activation.
 - [Context audit](docs/architecture/context-migration-audit-2026-10-21.md): hash-preserved history, small read sets and cold-start PASS.
 
 ## Protected / Current Blockers
 
 Secrets, private sources, production systems and real Portal identities remain protected by AGENTS.
-Public preview and the later synthetic CAL-1 Staging UI task are authorized; no real-data or production authorization follows.
+Public preview and the completed synthetic CAL-1 Staging UI task are authorized; no real-data or production authorization follows.
 Manuel confirmed no additional Messefeedback is currently available; Elisabeth's spelling is confirmed.
 SMTP/app-origin, mailbox receipt, backup scheduling/notifications, runtime and named-account gates remain unproven.
 The [toolchain assessment](docs/architecture/preview-dependency-assessment-2026-10-21.md) scopes inherited advisories; a separate maintenance upgrade remains backlog.
@@ -37,7 +38,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended next block: execute/inspect the single prepared native Staging batch. Exact operator commands, passwords-only-in-terminal warning and expected result are in the [batch report](docs/architecture/calendar-cal1-access-batch-2026-10-22.md). Purpose/DoD and six-step horizon are in the [active plan](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
+1. Recommended next block: close non-secret runtime/operations inputs for one controlled synthetic Linux/proxy rehearsal. Inputs/DoD are in the [readiness package](docs/operations/cal1-production-readiness-2026-10-22.md); six-step horizon in the [active plan](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md). No further SSH/password action or repeat of the closed UI gate is currently needed.
 2. Resolve parallel operational inputs when available; do not silently expand the UI gate.
 3. Review [Analytics proposal and consent decision](docs/requirements/analytics-01-discovery-2026-10-21.md); architecture/retention remain proposals and consent is OPEN.
 4. Any later IONOS promotion needs its own bundled review and production approval.

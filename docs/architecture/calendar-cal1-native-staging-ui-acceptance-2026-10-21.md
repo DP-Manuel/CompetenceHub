@@ -1,8 +1,8 @@
 # CAL-1 Native Staging UI Acceptance
 
 Date: 2026-10-21. Result: **NOT ACCEPTED - preflight prerequisite missing**.
-Historical finding. The separately authorized 22.10 implementation/local proof
-and pending native rerun are in the [access/batch report](calendar-cal1-access-batch-2026-10-22.md).
+Historical finding. The separately authorized 22.10 implementation and completed
+native runtime/UI PASS are in the [access/batch report](calendar-cal1-access-batch-2026-10-22.md).
 Synthetic Staging execution was explicitly authorized on this date. It was not
 executed: the inspected native authentication path cannot admit Calendar-only
 identities while preserving the existing internal login contract.

@@ -2,6 +2,13 @@
 
 Stand: 21.08.2026
 
+Current CAL-1 supplement (22.10.2026): see the
+[readiness package](../operations/cal1-production-readiness-2026-10-22.md) before
+any new rehearsal. It owns current open gates, six-migration baseline, additive
+access paths and first-install rollback. Commands below are historical templates,
+not current execution approval; no production bootstrap or previous backend
+release is inferred.
+
 This runbook covers a controlled rehearsal for the Competence Hub API and
 token-delivery worker. It does not authorize DNS changes, SMTP delivery,
 production accounts, real data or deployment. Commands use placeholders and

@@ -1,6 +1,7 @@
 # Go-Live Evidence Index
 
-Stand: 2026-09-25
+Stand: 2026-10-22. Aeltere Eintraege bleiben datierte Historie; aktueller
+Checkpoint und aktive Gates stehen in PROJECT_CONTEXT und dem aktiven ExecPlan.
 
 Dieser Index enthaelt nur freigabefaehige Metadaten und Verweise. Secrets,
 Private Keys, Recovery Keys und produktive personenbezogene Daten gehoeren
@@ -8,6 +9,8 @@ nicht hierher.
 
 | Evidence ID | Datum | Owner | Umgebung | Nachweis | Ergebnis | Evidence Location | Datenmodus | Recheck / Notiz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| CAL1-NATIVE-20261022 | 2026-10-22 | Manuel / Codex | local HTTPS runtime with VPS Staging PostgreSQL | 142 native Browserchecks, 17-test API gate, 424 local post-tests, exact cleanup/independent SQL/health | PASS NATIVE RUNTIME, NOT DEPLOYMENT | `docs/architecture/calendar-cal1-access-batch-2026-10-22.md`; hash-bound sanitized evidence | only synthetic, fully removed | Source 87844d1; 20 dynamic tables zero, 0001-0006, 27 owner tables, four active services, PG localhost-only; no Linux/proxy proof implied |
+| CAL1-READINESS-20261022 | 2026-10-22 | Manuel / Codex | local documentation | operating inputs, role/mapping boundary, package/migration/rollout/smoke/rollback plan | PREPARED / EXECUTION GATES OPEN | `docs/operations/cal1-production-readiness-2026-10-22.md` | no data | No installation, release ZIP, real grants, SMTP or production activation; next block is non-secret runtime input closure |
 | SB-19 | 2026-08-21 | Manuel | isolated Staging | synthetisches Onboarding 14/14 | PASS | `PROJECT_LOG.md`; Staging-Testpaket | synthetisch | bei Auth-Aenderung |
 | SB-20 | 2026-08-21 | Manuel | local release build | reproduzierbares Webapp-Paket | PASS LOCAL | Release-Manifest und Webapp-Runbook | synthetisch | bei Release-Code-Aenderung |
 | SB-21 | 2026-08-21 | Manuel | local | Backup-/Restore-Werkzeugpaket | PASS LOCAL | `docs/architecture/postgresql-backup-restore-runbook.md` | synthetisch | nativer SB-23-Nachweis offen |

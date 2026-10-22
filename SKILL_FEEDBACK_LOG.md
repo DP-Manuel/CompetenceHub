@@ -21,6 +21,7 @@ Project-local implementation does not mean a canonical CodexSkills proposal is c
 | Semantic browser readiness | Native latency exposed network-idle/early-state assumptions; await real response and rendered state, not fixed sleeps; project assertions retained, global proposal open | CAL-1 shared browser helpers and native harness |
 | Existing SSH capability before new setup | Two existing-key connections worked although agent disabled; do not create keys/change services unnecessarily; global proposal open | 22.10 access/batch report |
 | Safe failure diagnostics and repair window | Type-only error lost exact assertion location; retain file/function/line without exception/locals. After verified clean failure, allow deliberate same-window R/Q retry rather than new credential round; project implementation, global proposal open | First 22.10 native attempt and repaired batch |
+| Close the actual gate, not a larger deployment claim | 142 browser checks against VPS persistence plus API/cleanup PASS closes native runtime/UI, not Linux/systemd/public proxy/SMTP or real-data readiness. Follow-on readiness package records the difference; global proposal open | Verified 22.10 native reports and CAL-1 readiness package |
 
 ## Implemented / Historical
 

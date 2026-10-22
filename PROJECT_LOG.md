@@ -3,6 +3,14 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-22 | acceptance / readiness | Native CAL-1 gate closed
+
+- Manuel's repaired batch from source 87844d1 ended with all six PASS markers; actual sanitized result, batch summary, SQL postflight and service reports independently inspected and SHA-bound in the [batch report](docs/architecture/calendar-cal1-access-batch-2026-10-22.md).
+- 142 native runtime/browser checks against VPS Staging PostgreSQL, 17-test API gate and 424-test post-regression PASS. 65 audit events before exact cleanup; all 20 dynamic tables zero, migrations 0001-0006, 27 owner tables, four active services and PG localhost-only. No further manual credentials needed for closure.
+- Native runtime/UI did not install a Linux service or prove public proxy/TLS/SMTP/operations. No productive backend, real accounts/mappings, business data, Website deployment or tracking.
+- Executed the authorized next safe slice: [CAL-1 production-readiness package](docs/operations/cal1-production-readiness-2026-10-22.md), with input gates, role/mapping boundaries, packaging/migration plan, rollout/smoke/rollback and operations checks. Planning deliverable, not deployment-ready or activation approval.
+- Active horizon now recommends exactly one block: non-secret runtime/operations input closure for a separately scoped synthetic Linux/proxy rehearsal. Skill feedback updated with proven closure versus deployed readiness distinction; global skills unchanged.
+
 ## 2026-10-22 | verification / repair | First native attempt, clean failure
 
 - Native VPS Coach password/MFA/resume and first six checks PASS, then initial offer setup AssertionError. Complete native UI gate NOT ACCEPTED; native API suite not run.
