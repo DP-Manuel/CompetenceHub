@@ -61,12 +61,12 @@ def wait_until_ready(url: str) -> None:
 
 
 @contextmanager
-def synthetic_server():
+def synthetic_server(app_factory=create_acceptance_app):
     port = free_port()
     with tempfile.TemporaryDirectory(prefix="competence-hub-cal1-browser-") as run_root:
         certificate, key = create_loopback_certificate(Path(run_root) / "certificate")
         config = uvicorn.Config(
-            create_acceptance_app(port),
+            app_factory(port),
             host=HOST,
             port=port,
             ssl_certfile=str(certificate),
@@ -122,7 +122,16 @@ def logout(page: Page) -> None:
 def open_area(page: Page, name: str) -> None:
     button = page.get_by_role("button", name=name, exact=True)
     if button.count():
-        button.click()
+        endpoint = {
+            "Kalenderangebote": "/api/v1/portal/calendar/offers",
+            "Prüfliste": "/api/v1/portal/calendar/review-queue",
+            "Firmen": "/api/v1/portal/companies",
+        }[name]
+        with page.expect_response(lambda response: response.request.method == "GET"
+                                  and response.url.split("?")[0].endswith(endpoint)):
+            button.click()
+        if name in ("Kalenderangebote", "Prüfliste"):
+            page.locator("#coach-calendar-loading" if name == "Kalenderangebote" else "#review-calendar-loading").wait_for(state="hidden")
 
 
 def card(page: Page, title: str):
@@ -184,6 +193,7 @@ def create_offer(page: Page, title: str, offset_days: int = 30) -> None:
     fill_offer(page, title, offset_days)
     page.locator("#save-calendar-offer").dblclick()
     page.locator("#calendar-offer-dialog").wait_for(state="hidden")
+    expect(page.get_by_role("heading", name=title, exact=True)).to_be_visible()
 
 
 def submit_offer(page: Page, title: str) -> None:
@@ -257,7 +267,7 @@ def company_regression(page: Page, acceptance: Acceptance) -> None:
     )
 
 
-def admin_contract(page: Page, base_url: str, acceptance: Acceptance) -> None:
+def admin_contract(page: Page, base_url: str, acceptance: Acceptance, *, include_company_regression=True) -> None:
     login(page, base_url, ADMIN_EMAIL)
     acceptance.check(
         "Admin sieht nur dokumentierte Portalbereiche",
@@ -342,8 +352,9 @@ def admin_contract(page: Page, base_url: str, acceptance: Acceptance) -> None:
                 and revised_detail["published_revision"]["title"] == original_title,
             )
 
-    open_area(page, "Firmen")
-    company_regression(page, acceptance)
+    if include_company_regression:
+        open_area(page, "Firmen")
+        company_regression(page, acceptance)
     logout(page)
 
 
@@ -359,6 +370,7 @@ def coach_workflow(page: Page, browser: Browser, base_url: str, acceptance: Acce
     page.locator("#save-calendar-offer").click()
     page.locator("#calendar-offer-dialog").wait_for(state="hidden")
     edited_title = f"{title} bearbeitet"
+    expect(page.get_by_role("heading", name=edited_title, exact=True)).to_be_visible()
     acceptance.check("Draft bearbeiten und speichern", page.get_by_role("heading", name=edited_title, exact=True).count() == 1)
 
     tab_to_button(page, "Entwurf bearbeiten", edited_title)
@@ -381,6 +393,7 @@ def coach_workflow(page: Page, browser: Browser, base_url: str, acceptance: Acce
     acceptance.check("Tastaturfokus ist sichtbar", "none" not in focused_outline and "0px" not in focused_outline)
     page.keyboard.press("Enter")
     page.locator("#calendar-offer-dialog").wait_for(state="hidden")
+    expect(page.get_by_role("heading", name=keyboard_title, exact=True)).to_be_visible()
     acceptance.check(
         "Draft vollstaendig per Tastatur bearbeitet",
         page.get_by_role("heading", name=keyboard_title, exact=True).count() == 1,
@@ -468,6 +481,7 @@ def reviewer_workflow(page: Page, base_url: str, acceptance: Acceptance) -> None
     tab_to_button(page, "Entscheidung speichern")
     page.keyboard.press("Enter")
     page.locator("#calendar-review-dialog").wait_for(state="hidden")
+    expect(review_card(page, "Synthetisches Angebot 2")).to_have_count(0)
     acceptance.check("Aenderungsentscheidung entfernt Angebot aus Queue", review_card(page, "Synthetisches Angebot 2").count() == 0)
 
     publish_item = next(item for item in api_review_queue(page) if item["title"] == "Zur Veröffentlichung")
@@ -478,6 +492,7 @@ def reviewer_workflow(page: Page, base_url: str, acceptance: Acceptance) -> None
     tab_to_button(page, "Entscheidung speichern")
     page.keyboard.press("Enter")
     page.locator("#calendar-review-dialog").wait_for(state="hidden")
+    expect(review_card(page, "Zur Veröffentlichung")).to_have_count(0)
     acceptance.check("Veroeffentlichung entfernt Angebot aus Queue", review_card(page, "Zur Veröffentlichung").count() == 0)
     published_detail = api_offer_detail(page, str(publish_item["id"]))
     acceptance.check(
@@ -524,9 +539,11 @@ def role_and_accessibility_checks(browser: Browser, base_url: str, acceptance: A
     acceptance.check("Internal sieht keine Pruefliste", page.locator("#review-calendar-workspace").count() == 0)
     logout(page)
 
-    login(page, base_url, COMPANY_CONTACT_EMAIL)
-    acceptance.check("Firmenkontakt bleibt ohne CAL-1-Verwaltung", page.locator("#coach-calendar-workspace").count() == 0 and page.locator("#review-calendar-workspace").count() == 0)
-    logout(page)
+    page.locator("#login-email").fill(COMPANY_CONTACT_EMAIL)
+    page.locator("#login-password").fill(SYNTHETIC_PASSWORD)
+    page.get_by_role("button", name="Anmelden").click()
+    page.locator("#login-error").wait_for(state="visible")
+    acceptance.check("Firmenkontakt erhaelt keinen Portalzugang", page.locator("#portal-view").is_hidden())
     context.close()
 
     context = browser.new_context(
