@@ -8,6 +8,7 @@ from competence_hub_api.auth.mfa_repository import (
     SessionRecord,
 )
 from competence_hub_api.auth.postgres_mfa_repository import PostgresMfaRepository
+from competence_hub_api.auth.admission import PORTAL_ADMISSION
 
 NOW = datetime(2026, 8, 14, 12, 0, tzinfo=UTC)
 USER_ID = UUID("00000000-0000-4000-8000-000000000001")
@@ -103,7 +104,26 @@ async def test_active_challenge_maps_encrypted_fields_without_repr_leak() -> Non
     assert engine.connection.executed[0][1] == {
         "token_hash": b"t" * 32,
         "now": NOW,
+        "accepted_roles": ["admin", "internal"],
     }
+
+
+@pytest.mark.anyio
+async def test_portal_mfa_policy_is_bound_at_lookup_enrollment_and_atomic_consumption():
+    engine = FakeEngine()
+    repository = PostgresMfaRepository(engine, admission_policy=PORTAL_ADMISSION)
+    await repository.find_active_challenge(b"t" * 32, now=NOW)
+    await repository.save_pending_totp(challenge_id=CHALLENGE_ID, user_id=USER_ID,
+                                      encrypted_secret=b"synthetic", key_version="test", now=NOW)
+    await repository.complete_totp(challenge_id=CHALLENGE_ID, user_id=USER_ID,
+                                  accepted_time_step=123, enrollment=True, recovery_codes=(),
+                                  session=session_record(), user_bucket_hash=b"u" * 32, now=NOW)
+    guarded = [(str(statement), values) for statement, values in engine.connection.executed
+               if "accepted_roles" in str(statement)]
+    assert len(guarded) == 3
+    for statement, values in guarded:
+        assert "role.code = ANY(CAST(:accepted_roles AS text[]))" in statement
+        assert values["accepted_roles"] == ["admin", "calendar_reviewer", "coach", "internal"]
 
 
 @pytest.mark.anyio

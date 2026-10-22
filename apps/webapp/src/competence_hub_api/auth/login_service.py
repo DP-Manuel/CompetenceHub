@@ -3,10 +3,11 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Literal, Protocol
 
-from competence_hub_api.auth.login_repository import LoginAccount, LoginRepository
+from competence_hub_api.auth.login_repository import LoginRepository
+from competence_hub_api.auth.admission import AdmissionPolicy, INTERNAL_ADMISSION
 from competence_hub_api.security.tokens import issue_token, keyed_digest
 
-INTERNAL_LOGIN_ROLES = frozenset({"admin", "internal"})
+INTERNAL_LOGIN_ROLES = INTERNAL_ADMISSION.roles
 LOGIN_CHALLENGE_LIFETIME = timedelta(minutes=5)
 
 
@@ -54,6 +55,7 @@ class LoginService:
         *,
         dummy_password_hash: str,
         rate_limit_hmac_key: bytes,
+        admission_policy: AdmissionPolicy = INTERNAL_ADMISSION,
     ) -> None:
         if not dummy_password_hash:
             raise ValueError("dummy password hash must not be empty")
@@ -64,6 +66,7 @@ class LoginService:
         self._password_verifier = password_verifier
         self._dummy_password_hash = dummy_password_hash
         self._rate_limit_hmac_key = rate_limit_hmac_key
+        self.admission_policy = admission_policy
 
     async def authenticate(
         self,
@@ -102,7 +105,10 @@ class LoginService:
             password,
         )
 
-        if not password_matches or not _eligible_for_internal_login(account):
+        eligible = account is not None and self.admission_policy.allows(
+            active=account.active, roles=account.roles
+        )
+        if not password_matches or not eligible:
             blocked_until = await self._repository.record_failed_login(
                 account_bucket_hash,
                 ip_bucket_hash,
@@ -136,14 +142,6 @@ class LoginService:
 
 def normalize_email(email: str) -> str:
     return email.strip().casefold()
-
-
-def _eligible_for_internal_login(account: LoginAccount | None) -> bool:
-    return bool(
-        account is not None
-        and account.active
-        and INTERNAL_LOGIN_ROLES.intersection(account.roles)
-    )
 
 
 def _retry_after_seconds(blocked_until: datetime, now: datetime) -> int:

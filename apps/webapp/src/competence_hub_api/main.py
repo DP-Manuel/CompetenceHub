@@ -1,11 +1,13 @@
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta
 from pathlib import Path
+import logging
 from typing import AsyncContextManager
 
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy.exc import SQLAlchemyError
 
 from competence_hub_api.auth.account_lifecycle import (
     AccountLifecycleService,
@@ -21,6 +23,7 @@ from competence_hub_api.web.auth import (
     router as auth_router,
     utc_now,
 )
+from competence_hub_api.web.portal_access import router as portal_access_router
 from competence_hub_api.web.admin import router as admin_router
 from competence_hub_api.web.companies import router as companies_router
 from competence_hub_api.web.calendar import (
@@ -29,6 +32,7 @@ from competence_hub_api.web.calendar import (
 )
 from competence_hub_api.web.health import router as health_router
 from competence_hub_api.web.middleware import SecurityHeadersMiddleware
+from competence_hub_api.web.problems import problem_response
 
 ReadinessProbe = Callable[[], Awaitable[bool]]
 Clock = Callable[[], datetime]
@@ -45,6 +49,9 @@ def create_app(
     *,
     session_repository: SessionRepository | None = None,
     calendar_session_repository: SessionRepository | None = None,
+    portal_session_repository: SessionRepository | None = None,
+    portal_login_service: LoginService | None = None,
+    portal_mfa_service: MfaService | None = None,
     login_service: LoginService | None = None,
     mfa_service: MfaService | None = None,
     account_lifecycle_service: AccountLifecycleService | None = None,
@@ -69,6 +76,9 @@ def create_app(
     )
     app.state.readiness_probe = readiness_probe or not_ready
     app.state.session_repository = session_repository
+    app.state.portal_session_repository = portal_session_repository
+    app.state.portal_login_service = portal_login_service
+    app.state.portal_mfa_service = portal_mfa_service
     app.state.calendar_session_repository = (
         calendar_session_repository or session_repository
     )
@@ -86,8 +96,20 @@ def create_app(
     app.state.session_idle_timeout = session_idle_timeout
     app.state.clock = clock
     app.add_middleware(SecurityHeadersMiddleware)
+
+    @app.exception_handler(SQLAlchemyError)
+    async def database_failure(_request, error: SQLAlchemyError):
+        # PostgreSQL DETAIL can contain an entire row even with hidden parameters.
+        logging.getLogger(__name__).error(
+            "database_operation_failed", extra={"error_type": type(error).__name__}
+        )
+        return problem_response(
+            status=503, code="portal_unavailable", title="Portal derzeit nicht verfuegbar"
+        )
+
     app.include_router(health_router)
     app.include_router(auth_router)
+    app.include_router(portal_access_router)
     app.include_router(admin_router)
     app.include_router(companies_router)
     app.include_router(public_calendar_router)

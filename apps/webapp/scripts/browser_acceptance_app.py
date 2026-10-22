@@ -16,6 +16,7 @@ from cryptography.x509.oid import NameOID
 import uvicorn
 
 from competence_hub_api.auth.login_service import LoginAccepted, LoginRejected
+from competence_hub_api.auth.admission import AdmissionPolicy, INTERNAL_ADMISSION, PORTAL_ADMISSION
 from competence_hub_api.auth.mfa_service import (
     MfaRejected,
     MfaSessionCreated,
@@ -109,8 +110,9 @@ def utc_now() -> datetime:
 
 
 class SyntheticSessionRepository:
-    def __init__(self) -> None:
-        self._sessions: dict[bytes, tuple[str, bytes, UUID]] = {}
+    def __init__(self, *, policy=INTERNAL_ADMISSION, sessions=None) -> None:
+        self.policy = policy
+        self._sessions: dict[bytes, tuple[str, bytes, UUID]] = sessions if sessions is not None else {}
 
     def activate(self, identity_email: str) -> tuple[str, str]:
         session_token = secrets.token_urlsafe(32)
@@ -130,6 +132,8 @@ class SyntheticSessionRepository:
             return None
         identity_email, csrf_token_hash, session_id = session
         user_id, display_name, roles = SYNTHETIC_IDENTITIES[identity_email]
+        if not self.policy.allows(active=True, roles=roles):
+            return None
         return SessionPrincipal(
             session_id=session_id,
             user_id=user_id,
@@ -187,8 +191,9 @@ class SyntheticSessionRepository:
 
 
 class SyntheticLoginService:
-    def __init__(self) -> None:
+    def __init__(self, policy: AdmissionPolicy = INTERNAL_ADMISSION) -> None:
         self._challenges: dict[str, tuple[str, str]] = {}
+        self.policy = policy
 
     def resolve_challenge(self, login_token: str, csrf_token: str) -> str | None:
         expected = self._challenges.get(login_token)
@@ -208,6 +213,8 @@ class SyntheticLoginService:
         if password != SYNTHETIC_PASSWORD:
             return LoginRejected()
         if normalized_email not in SYNTHETIC_IDENTITIES:
+            return LoginRejected()
+        if not self.policy.allows(active=True, roles=SYNTHETIC_IDENTITIES[normalized_email][2]):
             return LoginRejected()
         state = "mfa_enrollment_required" if normalized_email == ENROLLMENT_EMAIL else "mfa_required"
         suffix = normalized_email.split("@", 1)[0].replace(".", "-")
@@ -735,10 +742,15 @@ class InMemoryCalendarRepository:
 def create_acceptance_app(port: int = DEFAULT_PORT):
     sessions = SyntheticSessionRepository()
     login_service = SyntheticLoginService()
+    portal_sessions = SyntheticSessionRepository(policy=PORTAL_ADMISSION, sessions=sessions._sessions)
+    portal_login = SyntheticLoginService(PORTAL_ADMISSION)
     return create_app(
         readiness_probe=_ready,
         session_repository=sessions,
-        calendar_session_repository=sessions,
+        calendar_session_repository=portal_sessions,
+        portal_session_repository=portal_sessions,
+        portal_login_service=portal_login,
+        portal_mfa_service=SyntheticMfaService(portal_sessions, portal_login),
         login_service=login_service,
         mfa_service=SyntheticMfaService(sessions, login_service),
         company_service=CompanyService(InMemoryCompanyRepository()),

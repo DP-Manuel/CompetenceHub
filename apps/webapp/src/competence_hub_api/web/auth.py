@@ -246,7 +246,10 @@ def _session_created_response(
 
 @router.post("/login")
 async def login(request: Request) -> Response:
-    service = _login_service(request)
+    return await login_response(request, _login_service(request))
+
+
+async def login_response(request: Request, service: LoginService | None) -> Response:
     if service is None:
         return problem_response(
             status=503,
@@ -421,7 +424,10 @@ async def _complete_account_token(request: Request, *, purpose: str) -> Response
 
 @router.post("/mfa/totp/enrollment")
 async def start_totp_enrollment(request: Request) -> Response:
-    service = _mfa_service(request)
+    return await enrollment_response(request, _mfa_service(request))
+
+
+async def enrollment_response(request: Request, service: MfaService | None) -> Response:
     if service is None:
         return problem_response(
             status=503,
@@ -448,21 +454,22 @@ async def start_totp_enrollment(request: Request) -> Response:
 
 @router.post("/mfa/totp/enrollment/confirm")
 async def confirm_totp_enrollment(request: Request) -> Response:
-    return await _verify_mfa_code(request, method="confirm_totp_enrollment")
+    return await verify_mfa_response(request, _mfa_service(request), method="confirm_totp_enrollment")
 
 
 @router.post("/mfa/totp/verify")
 async def verify_totp_code(request: Request) -> Response:
-    return await _verify_mfa_code(request, method="verify_totp")
+    return await verify_mfa_response(request, _mfa_service(request), method="verify_totp")
 
 
 @router.post("/mfa/recovery/verify")
 async def verify_recovery_code(request: Request) -> Response:
-    return await _verify_mfa_code(request, method="verify_recovery_code")
+    return await verify_mfa_response(request, _mfa_service(request), method="verify_recovery_code")
 
 
-async def _verify_mfa_code(request: Request, *, method: str) -> Response:
-    service = _mfa_service(request)
+async def verify_mfa_response(
+    request: Request, service: MfaService | None, *, method: str
+) -> Response:
     if service is None:
         return problem_response(
             status=503,
@@ -500,7 +507,10 @@ async def _verify_mfa_code(request: Request, *, method: str) -> Response:
 
 @router.get("/session")
 async def get_session(request: Request) -> Response:
-    repository = _repository(request)
+    return await session_response(request, _repository(request))
+
+
+async def session_response(request: Request, repository: SessionRepository | None) -> Response:
     token_hash = _session_digest(request)
     if repository is None or token_hash is None:
         return _authentication_failed()
@@ -518,7 +528,10 @@ async def get_session(request: Request) -> Response:
 
 @router.post("/session/csrf", status_code=204)
 async def rotate_session_csrf(request: Request) -> Response:
-    repository = _repository(request)
+    return await session_csrf_response(request, _repository(request))
+
+
+async def session_csrf_response(request: Request, repository: SessionRepository | None) -> Response:
     token_hash = _session_digest(request)
     if repository is None or token_hash is None:
         return _authentication_failed()
@@ -546,8 +559,11 @@ async def rotate_session_csrf(request: Request) -> Response:
 
 @router.delete("/session", status_code=204)
 async def delete_session(request: Request) -> Response:
+    return await logout_response(request, _repository(request))
+
+
+async def logout_response(request: Request, repository: SessionRepository | None) -> Response:
     response = Response(status_code=204)
-    repository = _repository(request)
     token_hash = _session_digest(request)
     if repository is None or token_hash is None:
         clear_session_cookie(response)

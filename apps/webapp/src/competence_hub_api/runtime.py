@@ -11,6 +11,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from competence_hub_api.auth.login_service import LoginService
+from competence_hub_api.auth.admission import PORTAL_ADMISSION
 from competence_hub_api.auth.mfa_service import MfaService
 from competence_hub_api.auth.account_lifecycle import AccountLifecycleService
 from competence_hub_api.auth.postgres_account_lifecycle import (
@@ -80,12 +81,27 @@ def create_runtime_app(
         dummy_password_hash=dummy_password_hash,
         rate_limit_hmac_key=settings.rate_limit_hmac_key,
     )
+    portal_login_service = LoginService(
+        login_repository,
+        password_service,
+        dummy_password_hash=dummy_password_hash,
+        rate_limit_hmac_key=settings.rate_limit_hmac_key,
+        admission_policy=PORTAL_ADMISSION,
+    )
     totp_secret_cipher = SecretCipher(
         settings.totp_encryption_keys,
         settings.totp_active_key_version,
     )
     mfa_service = MfaService(
         PostgresMfaRepository(engine),
+        totp_secret_cipher,
+        recovery_hmac_keys=settings.recovery_hmac_keys,
+        recovery_active_key_version=settings.recovery_hmac_active_key_version,
+        rate_limit_hmac_key=settings.rate_limit_hmac_key,
+        session_idle_timeout=settings.session_idle_timeout,
+    )
+    portal_mfa_service = MfaService(
+        PostgresMfaRepository(engine, admission_policy=PORTAL_ADMISSION),
         totp_secret_cipher,
         recovery_hmac_keys=settings.recovery_hmac_keys,
         recovery_active_key_version=settings.recovery_hmac_active_key_version,
@@ -129,6 +145,11 @@ def create_runtime_app(
         readiness_probe=readiness_probe,
         session_repository=session_repository,
         calendar_session_repository=calendar_session_repository,
+        portal_session_repository=PostgresSessionRepository(
+            engine, accepted_roles=PORTAL_ADMISSION.roles
+        ),
+        portal_login_service=portal_login_service,
+        portal_mfa_service=portal_mfa_service,
         login_service=login_service,
         mfa_service=mfa_service,
         account_lifecycle_service=account_lifecycle_service,

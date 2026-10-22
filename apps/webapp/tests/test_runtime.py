@@ -19,6 +19,7 @@ from competence_hub_api.runtime import (
     create_runtime_app,
     database_is_ready,
 )
+from competence_hub_api.auth.admission import INTERNAL_ADMISSION, PORTAL_ADMISSION
 
 
 @pytest.fixture
@@ -145,6 +146,13 @@ async def test_runtime_app_wires_repository_origin_and_readiness() -> None:
         app.state.calendar_session_repository, PostgresSessionRepository
     )
     assert app.state.session_repository.accepted_roles == ("admin", "internal")
+    assert app.state.login_service.admission_policy == INTERNAL_ADMISSION
+    assert app.state.portal_login_service.admission_policy == PORTAL_ADMISSION
+    assert app.state.portal_session_repository.accepted_roles == (
+        "admin", "calendar_reviewer", "coach", "internal"
+    )
+    assert app.state.portal_mfa_service._repository.admission_policy == PORTAL_ADMISSION
+    assert app.state.mfa_service._repository.admission_policy == INTERNAL_ADMISSION
     assert app.state.calendar_session_repository.accepted_roles == (
         "admin",
         "calendar_reviewer",
@@ -182,3 +190,20 @@ async def test_runtime_app_disposes_engine_on_shutdown() -> None:
         assert engine.disposed is False
 
     assert engine.disposed is True
+
+
+@pytest.mark.anyio
+async def test_database_errors_never_log_row_payload_or_return_details(caplog) -> None:
+    app = create_runtime_app(runtime_settings(), engine_factory=lambda _: FakeEngine())
+
+    @app.get("/synthetic-database-failure")
+    async def fail():
+        raise SQLAlchemyError("DETAIL: Failing row contains synthetic-private-token-payload")
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="https://test.invalid") as client:
+        response = await client.get("/synthetic-database-failure")
+    assert response.status_code == 503
+    assert response.json()["code"] == "portal_unavailable"
+    assert "synthetic-private" not in response.text
+    assert "synthetic-private" not in caplog.text
+    assert "database_operation_failed" in caplog.text

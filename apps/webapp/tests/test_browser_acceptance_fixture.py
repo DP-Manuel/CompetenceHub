@@ -36,13 +36,13 @@ def mutation_headers(csrf_token: str) -> dict[str, str]:
 
 async def login(client: AsyncClient, email: str) -> str:
     response = await client.post(
-        "/api/v1/auth/login",
+        "/api/v1/portal/access/login",
         json={"email": email, "password": SYNTHETIC_PASSWORD},
     )
     assert response.status_code == 202
     challenge = response.json()
     verified = await client.post(
-        "/api/v1/auth/mfa/totp/verify",
+        "/api/v1/portal/access/mfa/totp/verify",
         json={"code": TOTP_CODE},
         headers=mutation_headers(challenge["csrf_token"]),
     )
@@ -232,10 +232,15 @@ async def test_calendar_fixture_exposes_role_specific_surfaces_fail_closed() -> 
         assert admin_capabilities.json()["can_administer_offers"] is True
         assert admin_capabilities.json()["can_review_offers"] is True
 
-        for email in (INTERNAL_EMAIL, COMPANY_CONTACT_EMAIL):
+        for email in (INTERNAL_EMAIL,):
             await login(client, email)
             denied = await client.get("/api/v1/portal/calendar/capabilities")
             assert denied.status_code == 403
+        denied_login = await client.post(
+            "/api/v1/portal/access/login",
+            json={"email": COMPANY_CONTACT_EMAIL, "password": SYNTHETIC_PASSWORD},
+        )
+        assert denied_login.status_code == 401
 
 
 @pytest.mark.anyio

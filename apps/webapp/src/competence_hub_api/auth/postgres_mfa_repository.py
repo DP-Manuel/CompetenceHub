@@ -3,6 +3,7 @@ from uuid import UUID
 
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine
+from competence_hub_api.auth.admission import AdmissionPolicy, INTERNAL_ADMISSION
 
 from competence_hub_api.auth.mfa_repository import (
     MfaChallenge,
@@ -44,7 +45,7 @@ _FIND_ACTIVE_CHALLENGE = text(
           JOIN competence_hub.roles AS role
             ON role.id = user_role.role_id
            AND role.active
-           AND role.code IN ('admin', 'internal')
+           AND role.code = ANY(CAST(:accepted_roles AS text[]))
           WHERE user_role.user_id = portal_user.id
       )
     """
@@ -76,7 +77,7 @@ _SAVE_PENDING_TOTP = text(
           JOIN competence_hub.roles AS role
             ON role.id = user_role.role_id
            AND role.active
-           AND role.code IN ('admin', 'internal')
+           AND role.code = ANY(CAST(:accepted_roles AS text[]))
           WHERE portal_user.id = :user_id
             AND portal_user.active
       )
@@ -226,7 +227,7 @@ _CONSUME_CHALLENGE = text(
           JOIN competence_hub.roles AS role
             ON role.id = user_role.role_id
            AND role.active
-           AND role.code IN ('admin', 'internal')
+           AND role.code = ANY(CAST(:accepted_roles AS text[]))
           WHERE portal_user.id = :user_id
             AND portal_user.active
       )
@@ -323,8 +324,11 @@ class _AtomicMfaRejected(Exception):
 
 
 class PostgresMfaRepository:
-    def __init__(self, engine: AsyncEngine) -> None:
+    def __init__(
+        self, engine: AsyncEngine, *, admission_policy: AdmissionPolicy = INTERNAL_ADMISSION
+    ) -> None:
         self._engine = engine
+        self.admission_policy = admission_policy
 
     async def find_active_challenge(
         self,
@@ -335,7 +339,8 @@ class PostgresMfaRepository:
         async with self._engine.connect() as connection:
             result = await connection.execute(
                 _FIND_ACTIVE_CHALLENGE,
-                {"token_hash": token_hash, "now": now},
+                {"token_hash": token_hash, "now": now,
+                 "accepted_roles": sorted(self.admission_policy.roles)},
             )
             row = result.mappings().one_or_none()
         if row is None:
@@ -373,6 +378,7 @@ class PostgresMfaRepository:
                     "encrypted_secret": encrypted_secret,
                     "key_version": key_version,
                     "now": now,
+                    "accepted_roles": sorted(self.admission_policy.roles),
                 },
             )
             return result.rowcount == 1
@@ -559,6 +565,7 @@ class PostgresMfaRepository:
                 "user_id": user_id,
                 "state": state,
                 "now": now,
+                "accepted_roles": sorted(self.admission_policy.roles),
             },
         )
         if result.rowcount != 1:

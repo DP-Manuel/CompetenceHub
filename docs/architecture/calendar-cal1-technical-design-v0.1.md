@@ -1,12 +1,93 @@
 # CAL-1 Technical Design v0.1
 
-Stand: 18.09.2026
+Stand: 22.10.2026; Calendar access supplement below, historical migration evidence unchanged.
 
 Status: accepted design baseline. CAL-T01 through CAL-T06, migrations `0005`
 and `0006`, repository and protected/public API are proven locally and on
-isolated Staging. The synthetic Same-Origin Portal UI is implemented locally;
-manual browser acceptance is open. No account, role assignment, real data or
-production rollout is authorized.
+isolated Staging. The synthetic Same-Origin Portal UI browser gate was closed
+locally on 18.09; native Staging UI acceptance is a separate gate. No real
+account, real role assignment, real data or production rollout is authorized.
+
+The local browser gate was subsequently closed on 18.09. The 21.10 native UI
+preflight found the separate access gap; the 22.10 access implementation and
+synthetic acceptance batch are authorized, never real accounts or production.
+
+## Calendar Access Supplement: 22.10.2026
+
+Portal admission is not internal authorization. The existing role vocabulary
+is retained: `admin`, `internal`, `coach`, `calendar_reviewer`. No new role,
+identity table, inferred Coach mapping or migration is introduced.
+
+`auth/admission.py` owns two explicit policies:
+
+- `INTERNAL_ADMISSION`: admin/internal, unchanged.
+- `PORTAL_ADMISSION`: those roles plus coach/calendar_reviewer. Company-contact
+  alone, unknown/absent roles and disabled accounts are not admitted.
+
+The additive `/api/v1/portal/access` API reuses the real Auth handlers and
+services, not a second MFA mechanism. Its operations are:
+
+| Method / path under `/api/v1/portal/access` | Contract |
+| --- | --- |
+| POST `/login` | Existing email/password JSON and generic rejection; admitted active account receives only a five-minute challenge |
+| POST `/mfa/totp/enrollment` | Exact Origin and challenge-CSRF; pending authenticated encryption and provisioning URI |
+| POST `/mfa/totp/enrollment/confirm` | Valid enrollment TOTP; consumes challenge, creates MFA session, returns ten recovery codes once |
+| POST `/mfa/totp/verify` | Valid TOTP with replay protection; consumes challenge and creates a new MFA session |
+| POST `/mfa/recovery/verify` | Single-use HMAC-backed recovery; same admission/session boundary |
+| GET `/session` | Reconstruct active MFA principal and current admitted roles from database, never browser role state |
+| POST `/session/csrf` | Existing exact-Origin rotation; old token stops authorizing writes |
+| DELETE `/session` | Existing Origin/CSRF-verified revocation and cookie clearing |
+
+Authentication requires valid credentials, then completed MFA. A challenge is
+not a session. TOTP/recovery, encryption/key versioning, rate limits, challenge
+expiry/consumption, opaque Host-only Secure/HttpOnly/SameSite cookie, 30-minute
+idle/eight-hour absolute lifetime, 32-KiB validation and `no-store` are reused.
+Admission is rechecked at MFA lookup, enrollment persistence and atomic
+challenge consumption; role removal between factors cannot complete admission.
+
+The packaged Portal shell uses the additive access endpoints for login, MFA,
+resume, CSRF and logout. `/api/v1/auth/*` retains its internal policy/defaults
+and response shapes. Internal invitations/password lifecycle are not broadened
+to Calendar-only accounts; external account onboarding/SMTP remain gated.
+
+Three explicit runtime session views share the same hashed session storage:
+
+- Internal view: unchanged admin/internal, used by companies/contacts/Admin.
+- Portal admission view: four admitted roles, used only by shell/session access.
+- Calendar view: existing endpoint-specific resolver, still authorizing each
+  domain operation and actual `coaches.portal_user_id` ownership independently.
+
+No role is granted by login. Session resume reads live roles and account state,
+preserves Calendar roles without adding internal/admin and denies revoked,
+expired, disabled or pre-MFA sessions. Coach ownership is queried again at the
+domain boundary, not inferred from name/email/URL or a client Coach ID. A
+Reviewer gets review capabilities without company/contact/Admin access; an
+Internal gets no Calendar capability unless explicitly assigned. Explicit mixed
+roles combine only their documented grants. API denial remains server-side.
+
+The lightweight visual fixture now uses the same admission policy and separate
+internal/Portal session views. It still simulates MFA for visual-only tests;
+it is not native authentication evidence. The permanent `test_portal_access`
+regression uses real LoginService, Argon2, MfaService, TOTP, encryption, recovery
+and HTTP handlers with a local persistence double. Runtime-wiring tests also
+protect the default internal versus additive Portal PostgreSQL policies.
+The native batch runner uses the unchanged runtime factory and PostgreSQL
+repositories; no injected session, synthetic MFA verifier or role escalation.
+
+Acceptance additionally checks browser reload, logout/re-login, stale CSRF,
+expired/replayed/incorrect MFA, disabled/revoked roles and direct company,
+contact, Admin, foreign-Coach and Reviewer-route denial. Database exceptions
+receive a generic unavailable response and type-only operational log; PostgreSQL
+DETAIL must never serialize whole records into logs even when bind parameters
+are hidden. No client capability is an authorization substitute.
+
+Local and native results belong in the dated acceptance evidence, not in this
+contract. Native execution requires a fresh empty isolated Staging preflight,
+synthetic UUID manifest, exact-ID cleanup, SQL zero residue and service/network
+postflight in one tunnel window. Production, real identities/mappings, SMTP,
+reservations and tracking remain outside this supplement.
+Current local evidence and the prepared operator batch are recorded in the
+[22.10 acceptance report](calendar-cal1-access-batch-2026-10-22.md).
 
 ## Purpose And Sources
 

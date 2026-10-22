@@ -2,6 +2,7 @@ from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 import pytest
+from httpx import ASGITransport, AsyncClient
 
 from competence_hub_api.auth.login_repository import LoginAccount
 from competence_hub_api.auth.login_service import (
@@ -10,6 +11,7 @@ from competence_hub_api.auth.login_service import (
     LoginRejected,
     LoginService,
 )
+from competence_hub_api.main import create_app
 
 NOW = datetime(2026, 8, 14, 10, 0, tzinfo=UTC)
 USER_ID = UUID("00000000-0000-4000-8000-000000000001")
@@ -116,7 +118,15 @@ async def test_unknown_account_uses_dummy_hash_and_generic_rejection() -> None:
 @pytest.mark.anyio
 @pytest.mark.parametrize(
     "account",
-    [_account(active=False), _account(roles=("coach",))],
+    [
+        _account(active=False),
+        _account(roles=("coach",)),
+        _account(roles=("calendar_reviewer",)),
+        _account(roles=("company_contact",)),
+        _account(roles=("coach", "calendar_reviewer")),
+        _account(roles=()),
+    ],
+    ids=["inactive", "coach", "reviewer", "company-contact", "calendar-only", "no-role"],
 )
 async def test_inactive_or_external_account_is_rejected_after_hash_check(
     account: LoginAccount,
@@ -134,6 +144,43 @@ async def test_inactive_or_external_account_is_rejected_after_hash_check(
     assert isinstance(outcome, LoginRejected)
     assert verifier.calls == [("synthetic-real-hash", "synthetic password")]
     assert repository.challenges == []
+    assert len(repository.failures) == 1
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "roles",
+    [("coach",), ("calendar_reviewer",), ("company_contact",), ("coach", "calendar_reviewer")],
+    ids=["coach", "reviewer", "company-contact", "calendar-only"],
+)
+async def test_calendar_only_account_cannot_enter_existing_internal_auth_endpoint(
+    roles: tuple[str, ...],
+) -> None:
+    repository = FakeLoginRepository(_account(roles=roles, mfa_enrolled=True))
+    verifier = FakePasswordVerifier(True)
+    origin = "https://portal.example.invalid"
+    app = create_app(
+        login_service=_service(repository, verifier),
+        allowed_origin=origin,
+        clock=lambda: NOW,
+    )
+
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url=origin
+    ) as client:
+        response = await client.post(
+            "/api/v1/auth/login",
+            headers={"Origin": origin},
+            json={"email": "synthetic@example.invalid", "password": "synthetic password"},
+        )
+
+    assert response.status_code == 401
+    assert response.json()["code"] == "authentication_failed"
+    assert response.headers["cache-control"] == "no-store"
+    assert "set-cookie" not in response.headers
+    assert repository.challenges == []
+    assert len(repository.failures) == 1
+    assert verifier.calls == [("synthetic-real-hash", "synthetic password")]
 
 
 @pytest.mark.anyio
@@ -175,14 +222,20 @@ async def test_failure_that_reaches_limit_returns_generic_rate_limit() -> None:
 
 @pytest.mark.anyio
 @pytest.mark.parametrize(
+    "roles",
+    [("internal",), ("admin",), ("internal", "calendar_reviewer"), ("admin", "coach")],
+    ids=["internal", "admin", "internal-reviewer", "admin-coach"],
+)
+@pytest.mark.parametrize(
     ("mfa_enrolled", "expected_state"),
     [(False, "mfa_enrollment_required"), (True, "mfa_required")],
 )
 async def test_valid_first_factor_creates_only_short_lived_challenge(
+    roles: tuple[str, ...],
     mfa_enrolled: bool,
     expected_state: str,
 ) -> None:
-    repository = FakeLoginRepository(_account(mfa_enrolled=mfa_enrolled))
+    repository = FakeLoginRepository(_account(roles=roles, mfa_enrolled=mfa_enrolled))
     verifier = FakePasswordVerifier(True)
 
     outcome = await _service(repository, verifier).authenticate(
