@@ -69,8 +69,27 @@ Zoom-Bilder wurden mit kalibrierten physischen Maßen neu aufgenommen.
 
 ## Veröffentlichung Und Weiterführung
 
-Commit/Push/Pages-Preview sind separat autorisiert und werden erst nach den
-lokalen Gates ausgeführt. Öffentliche URL/Actions-Run werden nach Erfolg ergänzt.
+Die getrennt freigegebenen Änderungen sind committed und gepusht.
+Pages veröffentlichte ausschließlich die Vorschau aus
+`3e99e8e6151d78e281e17ed54d6c435bf4e9d740`:
+[Actions39932275108](https://github.com/DP-Manuel/CompetenceHub/actions/runs/39932275108),
+Build und Deployment erfolgreich am23.10.2026.
+
+[Susannes öffentliches Profil](https://dp-manuel.github.io/CompetenceHub/coaches/susanne-klemm/)
+wurde danach im echten Edge erneut geprüft:89 Onboardingchecks einschließlich
+Desktop1440,390CSS-px, echtem200-%-Zoom, geladenem Porträt, acht Workshops,
+noindex/fehlender Canonical, Textgeometrie, Tastatur-Kontaktweg und beiden
+Themenfiltern bestanden. Zusätzlich134 öffentliche Hubchecks über fünf Breiten
+und echtes200-%-Zoom bestanden. Öffentliche Mobil-/Zoom-Aufnahmen visuell geprüft.
+
+Onboarding-Evidence separat unter
+`apps/website/release-artifacts/susanne-public-20261023/acceptance.json`;
+dafür wurde derselbe unveränderte lokale Runner mit öffentlichem Ursprung
+statt lokalem Static-Server ausgeführt. Hub-Evidence:
+`apps/website/release-artifacts/hub-ux-20261022/public-acceptance.json`
+(Ordnername historisch; aktueller Lauf23.10). Alle eigenen Browserkontexte,
+temporären Zoomprofile und Testcontainer beendet beziehungsweise entfernt.
+
 Keine Produktionsfreigabe, serverseitige Migration oder reale UUID-Zuordnung.
 COACH-1 definiert die spätere Registry-Projektion; dieser Quellenfall ersetzt
 keinen freigegebenen Import-/Mappingprozess.

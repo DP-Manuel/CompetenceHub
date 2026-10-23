@@ -12,7 +12,7 @@ The additive Calendar access/native runtime gate is complete. Reviewed cryptogra
 
 - IONOS: https://competencehub.donner-partner.de/ remains at verified SB-54 source `1b4e33efa5e1` (25.09).
 - 21.10 read-only checks before and after Pages publication: Mindforge HTML/CSS return 200 and match the September hashes; this is a spot-check, not a full production retest.
-- Official preview: https://dp-manuel.github.io/CompetenceHub/ is currently published from `1cc481de9210`. Susanne's explicitly approved profile/portrait makes nine local Preview Coaches; publishing the verified change is authorized and pending Actions/public smoke.
+- Official preview: https://dp-manuel.github.io/CompetenceHub/ is published from `3e99e8e6151d` through successful Pages run39932275108 (23.10). Nine Preview Coaches, including Susanne's approved profile/portrait; actual public89 onboarding and134 Hub checks PASS. [Publication evidence](docs/content/susanne-klemm-preview-2026-10-23.md).
 - Preview-only isolation: production's entire 52-file build manifest remains byte-identical; no IONOS write or backend deployment.
 - Portal/backend is not productively activated; real accounts/mappings, reservations, SMTP and Analytics remain inactive.
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.

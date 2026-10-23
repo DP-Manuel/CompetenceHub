@@ -1,5 +1,16 @@
 # GitHub Pages Preview: 21.10.2026
 
+## Current Publication: 23.10.2026
+
+The historical checks below remain dated. Current Preview source is
+`3e99e8e6151d78e281e17ed54d6c435bf4e9d740`, successful
+[Pages run39932275108](https://github.com/DP-Manuel/CompetenceHub/actions/runs/39932275108).
+Susanne Klemm is the ninth approved Preview Coach;89 actual public onboarding
+and134 Hub checks PASS, including390px and native200% zoom. Source/portrait
+rights, taxonomy, screenshots and production isolation are owned by the
+[23.10 content report](../content/susanne-klemm-preview-2026-10-23.md).
+No IONOS write, backend activation or real Coach Registry import.
+
 ## Preview UX Follow-Up: 22.10.2026
 
 Manuel's batched-development addendum authorizes the preview-only topic Hub and
