@@ -4,6 +4,11 @@ Status: authorized local implementation, 23.10.2026. No server migration,
 public API activation, IONOS update, bulk import or real account mapping.
 Decision: [ADR0008](../decisions/0008-coach-registry-and-static-publication.md).
 
+Follow-on23.10: [COACH-2 local Admin UI](coach-admin-ui-contract-v0.1.md) is
+separately authorized and accepted with synthetic data. The original COACH-1
+slice/evidence below stays dated; [COACH-3 analysis](coach3-existing-content-migration-plan-2026-10-23.md)
+now owns the proposed import gate, not an actual migration.
+
 ## Existing Schema And Gap Analysis
 
 Reuse `coaches.id` (random UUID), optional unique `portal_user_id`,
@@ -131,16 +136,17 @@ memory and must not be copied to chat. Never pass a VPS URL to this harness.
 
 ## Remaining Boundaries
 
-No Admin UI, server migration, real data/import, account/Calendar mapping,
-asset upload service or active Website projection importer is included.
+COACH-1 itself did not include Admin UI; the subsequent COACH-2 link above owns
+that completed local scope. No server migration, real data/import,
+account/Calendar mapping, asset upload service or active Website importer.
 The pure public_projection generator is tested; asset hash verification and
 approved-source ingestion must be added before replacing static Astro data.
-List reads are paginated; detail/aggregate history currently loads all revisions
-and needs a history-pagination/load review before productive management at scale.
+COACH-2 adds bounded management reads/history and minimal mutation responses.
+Legacy detail responses and internal write aggregates still load all revisions;
+load review of those paths remains necessary before productive management at scale.
 Privacy erasure/exceptional hard delete needs a separate retention/admin contract;
 it is deliberately not a normal business operation or API DELETE endpoint.
 
-Recommended next block: local synthetic Coach-management UI, using this contract
-and existing MFA/Admin API, with history pagination and native local E2E proof;
-no new source import, server write or IONOS change. Separate implementation scope
-is needed; this completed block does not authorize that UI automatically.
+The earlier UI recommendation is completed by COACH-2. Current recommended
+next slice is COACH-3A lossless import contract/synthetic dry-run; separate scope
+approval and content/evidence decisions required, no real import/server/Website change.

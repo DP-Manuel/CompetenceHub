@@ -6,7 +6,7 @@ Updated: 2026-10-23.
 
 Post-Messe product consolidation is complete for the authorized scope: Context V2, official frontend preview and Analytics discovery.
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
-The additive Calendar access/native runtime gate is complete. Reviewed cryptography50.0.2 maintenance and the actual local Linux/HTTPS proxy gate now pass. COACH-1 local Registry/domain/migration/API/projection is verified and separately approved for commit/push; no server migration or backend activation. Next proposed block is a small local synthetic Coach Admin UI. App-domain/TLS decisions remain open in parallel.
+The additive Calendar access/native runtime gate is complete. Reviewed cryptography50.0.2 maintenance and the actual local Linux/HTTPS proxy gate pass. COACH-1 and COACH-2 local Registry/Admin UI are verified with synthetic data only. COACH-3 inventory/migration planning is complete, not an import. Next proposed block: lossless import contract and synthetic dry-run, after field/evidence decisions and separate scope approval. App-domain/TLS inputs remain open in parallel.
 
 ## Production State
 
@@ -27,13 +27,14 @@ The additive Calendar access/native runtime gate is complete. Reviewed cryptogra
 - [CAL-1 readiness package](docs/operations/cal1-production-readiness-2026-10-22.md): deployment/migration/rollback/smoke plan and role/mapping/operations gates prepared; no installation, public backend exposure or real-data activation.
 - [23.10 security/Linux close-out](docs/operations/cryptography-maintenance-2026-10-23.md): isolated compatibility and baseline rebuilds pass; fresh Linux install, actual proxy/auth/cookies and cleanup verified. Unit syntax is not VPS systemd activation. One consolidated EDV request; old vulnerable packages remain blocked.
 - [COACH-1 contract](docs/architecture/coach-registry-contract-v0.1.md) and [ADR0008](docs/decisions/0008-coach-registry-and-static-publication.md): stable UUID, revision/lifecycle, independent publication/account/Calendar boundaries, local PostgreSQL and real MFA-backed Admin API proof. Migration0007 remains local; normal runtime Registry is unavailable by default.
+- [COACH-2 UI contract/acceptance](docs/architecture/coach-admin-ui-contract-v0.1.md): native local PG/MFA/browser management, bounded reads/history, scoped actions, stale-edit/CSRF recovery,390px/native200% zoom and keyboard; all owned test resources removed. [COACH-3 analysis](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md) owns canonical static inventory, gaps, rights and idempotent migration design; no real import or Website switch.
 - [Susanne source/Preview evidence](docs/content/susanne-klemm-preview-2026-10-23.md): only the authorized Coach07 directory read; profile/both portraits explicitly approved for public Preview. Actual390px/native200%-zoom, taxonomy, links and52-file production isolation verified.
 - [Context audit](docs/architecture/context-migration-audit-2026-10-21.md): hash-preserved history, small read sets and cold-start PASS.
 
 ## Protected / Current Blockers
 
 Secrets, private sources, production systems and real Portal identities remain protected by AGENTS.
-Public preview and the completed synthetic CAL-1 Staging UI task are authorized; no real-data or production authorization follows.
+The completed synthetic CAL-1 and COACH-2 tasks do not authorize real data or production. This block did not change the public Preview; commit/push is authorized, deployment is not.
 Manuel confirmed no additional Messefeedback is currently available; Elisabeth's spelling is confirmed.
 SMTP/app-origin, mailbox receipt, backup scheduling/notifications, VPS systemd/public TLS and named-account gates remain unproven.
 23.10 security-baseline packages are verified local candidates, not deployment authorization and not the later Registry release. No current COACH-1 deployment artifact/real Coach import is approved. All owned local test containers removed;20-table CAL-1 cleanup passed, Registry's whole disposable database destroyed.
@@ -42,7 +43,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended next block: local synthetic Coach Admin UI, with bounded revision/history views and explicit publication/lifecycle actions against existing MFA/Admin API. Inputs: Registry contract/ADR0008 and separate scope approval. Done: actual local PG/MFA/browser flows, stale-state, keyboard/390px/200%-zoom proof, no real data/server writes. Ordered horizon: [active plan](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md). No SSH/password action now.
+1. Recommended next block: COACH-3A lossless import contract and synthetic dry-run. Inputs: Registry/UI contracts, static inventory, explicit field/therapy/evidence decisions and separate slice approval. Done: repeat runs without duplicate identities/topics/offerings/revisions, conflict/asset/privacy tests and loss report; no real DB records or Website/server changes. Ordered horizon: [active plan](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md). No SSH/password action now.
 2. Resolve parallel operational inputs when available; do not silently expand the UI gate.
 3. Review [Analytics proposal and consent decision](docs/requirements/analytics-01-discovery-2026-10-21.md); architecture/retention remain proposals and consent is OPEN.
 4. Any later IONOS promotion needs its own bundled review and production approval.

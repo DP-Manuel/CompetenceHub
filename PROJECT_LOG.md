@@ -3,6 +3,13 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-23 | implementation / acceptance | COACH-2 And COACH-3 Planning
+
+- Local Admin management accepted with real disposable PostgreSQL, Login/MFA and browser flows. Bounded history/capabilities preserve older valid activation approvals; two-tab CSRF/concurrency and lost creation response are covered. [UI contract](docs/architecture/coach-admin-ui-contract-v0.1.md) owns detailed evidence and limits.
+- [COACH-3 analysis](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md) inventories only public/canonical content and plans identity-safe, idempotent migration. No Quellen access, real data import, account mapping, server migration or Pages/IONOS/VPS change.
+- Complete local regression and CAL-1 local/browser/API checks passed; owned containers/servers/profiles removed. Commit/push authorized for the green scope; existing unrelated files preserved. Reusable skill proposals recorded, global skills unchanged.
+- Next proposed gate: COACH-3A lossless field/evidence contract and synthetic import dry-run; real import remains separately gated.
+
 ## 2026-10-23 | security / Coach Registry / Preview
 
 - Cryptography49->50.0.2 isolated compatibility, reproducible baseline and actual local Linux/HTTPS gate complete; no VPS changes. [Security close-out](docs/operations/cryptography-maintenance-2026-10-23.md) owns hashes, audit, limitations and EDV request.
