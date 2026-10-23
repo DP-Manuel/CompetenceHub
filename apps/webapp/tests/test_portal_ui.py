@@ -65,8 +65,8 @@ async def test_portal_shell_is_noindex_and_uses_only_external_local_assets() -> 
     assert "connect-src 'self'" in csp
     assert "'unsafe-inline'" not in csp
     assert '<meta name="robots" content="noindex, nofollow, noarchive">' in response.text
-    assert '<link rel="stylesheet" href="./styles.css">' in response.text
-    assert '<script type="module" src="./app.js"></script>' in response.text
+    assert '<link rel="stylesheet" href="/portal/styles.css">' in response.text
+    assert '<script type="module" src="/portal/app.js"></script>' in response.text
     assert "<style" not in response.text
     assert "<script>" not in response.text
     assert 'autocomplete="current-password"' in response.text

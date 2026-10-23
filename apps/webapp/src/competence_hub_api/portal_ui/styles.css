@@ -18,6 +18,39 @@
   line-height: 1.5;
 }
 
+.coach-management { min-width: 0; }
+.coach-management h2 { max-width: 100%; font-size: 1.75rem; overflow-wrap: anywhere; }
+.coach-management h3 { margin: 20px 0 12px; }
+.coach-management fieldset { min-width: 0; margin: 0 0 20px; padding: 16px; border: 1px solid var(--color-line); }
+.coach-management legend { padding: 0 6px; font-weight: 700; }
+.cm-filters { display: grid; grid-template-columns: repeat(2,minmax(0,320px)); gap: 16px; }
+.cm-list { list-style: none; margin: 0; padding: 0; }
+.cm-list > li { padding: 20px 0; border-top: 1px solid var(--color-line); }
+.cm-coach-link { min-height: 44px; padding: 4px 0; border: 0; border-bottom: 2px solid currentColor; background: transparent; color: var(--color-brand-strong); font-size: 1.125rem; font-weight: 700; text-align: left; overflow-wrap: anywhere; }
+.cm-meta { display: grid; grid-template-columns: minmax(120px,200px) minmax(0,1fr); gap: 8px 20px; margin: 16px 0 24px; }
+.cm-meta dt { font-weight: 700; }
+.cm-meta dd { margin: 0; overflow-wrap: anywhere; }
+.cm-toolbar, .cm-save { margin: 20px 0; }
+.cm-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 24px 0; padding-bottom: 8px; border-bottom: 1px solid var(--color-line); }
+.cm-tabs button { padding: 8px 12px; min-height: 44px; }
+.cm-tabs button[aria-selected="true"] { color: var(--color-surface); background: var(--color-brand-strong); }
+.cm-topic-categories { display: block; font-weight: 400; }
+.cm-publication { padding: 20px 0; border-top: 1px solid var(--color-line); }
+#cm-panel-publication > button { margin: 0 8px 12px 0; }
+.cm-pagination { margin: 20px 0; }
+.cm-history { padding-left: 20px; }
+.cm-history li { margin-bottom: 12px; overflow-wrap: anywhere; }
+.coach-management [role="tabpanel"] { min-width: 0; }
+.coach-management .field input, .coach-management .field textarea, .coach-management .field select { min-width: 0; max-width: 100%; }
+.coach-management .button, dialog .button { white-space: normal; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .cm-filters { grid-template-columns: minmax(0,1fr); }
+  .cm-meta { grid-template-columns: minmax(0,1fr); gap: 4px; }
+  .cm-meta dd { margin-bottom: 12px; }
+  .coach-management .workspace-heading { flex-direction: column; }
+  .cm-save > button { width: 100%; }
+}
+
 * {
   box-sizing: border-box;
 }

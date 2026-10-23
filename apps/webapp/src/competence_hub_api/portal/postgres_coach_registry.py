@@ -146,17 +146,34 @@ class PostgresCoachRegistryRepository:
             row["publication_floor"],
         )
 
-    async def _load(self, connection, coach_id):
+    async def _load(self, connection, coach_id, *, bounded=False, selected_id=None):
         found = await rows(
             connection, "SELECT * FROM competence_hub.coaches WHERE id=:id", id=coach_id
         )
         if not found:
             return None
         coach = self._coach(found[0])
+        selection = ""
+        if bounded:
+            # Keep an older activation-eligible revision even when newer unapproved
+            # revisions exist. At most six revisions, independent of history length.
+            selection = """ AND (id IN (SELECT id FROM competence_hub.coach_profile_revisions
+                WHERE coach_id=:id ORDER BY revision_number DESC LIMIT 2)
+                OR id IN (SELECT r.id FROM competence_hub.coach_profile_revisions r
+                    WHERE r.coach_id=:id AND r.status='submitted'
+                    AND r.revision_number>(SELECT publication_floor FROM competence_hub.coaches WHERE id=:id)
+                    AND EXISTS(SELECT 1 FROM competence_hub.coach_profile_approvals a WHERE a.revision_id=r.id AND a.kind='content_review')
+                    AND EXISTS(SELECT 1 FROM competence_hub.coach_profile_approvals a WHERE a.revision_id=r.id AND a.kind='person_consent')
+                    ORDER BY r.revision_number DESC LIMIT 1)
+                OR id IN (SELECT revision_id FROM competence_hub.coach_publications WHERE coach_id=:id)
+                OR id=:selected_id)"""
         revisions = await rows(
             connection,
-            "SELECT * FROM competence_hub.coach_profile_revisions WHERE coach_id=:id ORDER BY revision_number",
+            "SELECT * FROM competence_hub.coach_profile_revisions WHERE coach_id=:id"
+            + selection
+            + " ORDER BY revision_number",
             id=coach_id,
+            **({"selected_id": selected_id} if bounded else {}),
         )
         ids = [r["id"] for r in revisions]
         children = {}

@@ -17,6 +17,13 @@ ApprovalKind = Literal["content_review", "person_consent", "preview", "productio
 CATEGORIES = frozenset(
     {"personalentwicklung", "persoenlichkeitsentwicklung", "karrierecoaching"}
 )
+LIFECYCLE_TRANSITIONS = {
+    "draft": {"active", "inactive", "archived"},
+    "active": {"paused", "inactive", "archived"},
+    "paused": {"active", "inactive", "archived"},
+    "inactive": {"active", "archived"},
+    "archived": {"inactive"},
+}
 
 
 class RegistryConflict(ValueError):
@@ -165,6 +172,82 @@ class RegistryRepository(Protocol):
     async def has_future_calendar(self, coach_id: UUID, now: datetime) -> bool: ...
 
 
+def activation_ready(coach):
+    return any(
+        r.number > coach.publication_floor
+        and r.status == "submitted"
+        and {"content_review", "person_consent"} <= {a.kind for a in r.approvals}
+        for r in coach.revisions
+    )
+
+
+def publication_ready(coach, revision, environment):
+    previous = coach.publications.get(environment)
+    return (
+        coach.lifecycle == "active"
+        and revision.status == "submitted"
+        and revision.number > coach.publication_floor
+        and {"content_review", "person_consent", environment}
+        <= {a.kind for a in revision.approvals}
+        and bool(revision.content.profile_path)
+        and all(
+            not a.active or environment in a.scopes for a in revision.content.assets
+        )
+        and not (
+            previous
+            and previous.state == "withdrawn"
+            and revision.number <= coach.revision(previous.revision_id).number
+        )
+    )
+
+
+def management_capabilities(coach, revision, *, future_calendar=False):
+    """Business actions, not UI role guesses; mutations still recheck under the row lock."""
+    if coach.request_id is None:
+        return {
+            "new_revision": False,
+            "lifecycles": [],
+            "editable": False,
+            "submit": False,
+            "approvals": [],
+            "publish": [],
+            "withdraw": [],
+        }
+    return {
+        "new_revision": coach.lifecycle != "archived"
+        and not any(r.status == "draft" for r in coach.revisions),
+        "lifecycles": sorted(
+            s
+            for s in LIFECYCLE_TRANSITIONS[coach.lifecycle]
+            if (activation_ready(coach) if s == "active" else not future_calendar)
+        ),
+        "editable": bool(revision and revision.status == "draft"),
+        "submit": bool(revision and revision.status == "draft"),
+        "approvals": (
+            sorted(
+                {"content_review", "person_consent", "preview", "production"}
+                - {a.kind for a in revision.approvals}
+            )
+            if revision and revision.status == "submitted"
+            else []
+        ),
+        "publish": [
+            e
+            for e in ("preview", "production")
+            if revision
+            and publication_ready(coach, revision, e)
+            and not (
+                coach.publications.get(e)
+                and coach.publications[e].state == "published"
+                and coach.publications[e].revision_id == revision.id
+            )
+        ],
+        "withdraw": [
+            e for e, p in coach.publications.items() if p.state == "published"
+        ],
+    }
+
+
 class CoachRegistryService:
     def __init__(self, repository: RegistryRepository):
         self.repository = repository
@@ -255,25 +338,10 @@ class CoachRegistryService:
                 )
                 entity_id = revision.id
             elif operation == "lifecycle":
-                allowed = {
-                    "draft": {"active", "inactive", "archived"},
-                    "active": {"paused", "inactive", "archived"},
-                    "paused": {"active", "inactive", "archived"},
-                    "inactive": {"active", "archived"},
-                    "archived": {"inactive"},
-                }
-                if lifecycle not in allowed[coach.lifecycle]:
+                if lifecycle not in LIFECYCLE_TRANSITIONS[coach.lifecycle]:
                     raise RegistryConflict("invalid lifecycle transition")
                 if lifecycle == "active":
-                    candidates = [
-                        r
-                        for r in coach.revisions
-                        if r.number > coach.publication_floor
-                        and r.status == "submitted"
-                        and {"content_review", "person_consent"}
-                        <= {a.kind for a in r.approvals}
-                    ]
-                    if not candidates:
+                    if not activation_ready(coach):
                         raise RegistryConflict("fresh reviewed revision required")
                 else:
                     if await self.repository.has_future_calendar(coach.id, now):

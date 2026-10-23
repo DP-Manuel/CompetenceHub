@@ -110,6 +110,16 @@ def detail(coach):
     }
 
 
+def mutation_result(request, coach):
+    # Management reloads a bounded read model; legacy clients retain their contract.
+    if request.headers.get("prefer") == "return=minimal":
+        return {
+            **summary(coach),
+            "latest_revision_id": coach.revisions[-1].id if coach.revisions else None,
+        }
+    return detail(coach)
+
+
 @router.get("")
 async def list_coaches(
     request: Request,
@@ -161,7 +171,9 @@ async def create_coach(request: Request):
         return failure(409, "registry_conflict")
     except ValueError:
         return failure(400, "invalid_request")
-    return JSONResponse(status_code=201, content=jsonable_encoder(detail(coach)))
+    return JSONResponse(
+        status_code=201, content=jsonable_encoder(mutation_result(request, coach))
+    )
 
 
 async def mutate(request, coach_id, model, operation, **fixed):
@@ -190,7 +202,7 @@ async def mutate(request, coach_id, model, operation, **fixed):
         return failure(403, "authorization_failed")
     except ValueError:
         return failure(400, "invalid_request")
-    return JSONResponse(jsonable_encoder(detail(coach)))
+    return JSONResponse(jsonable_encoder(mutation_result(request, coach)))
 
 
 @router.post("/{coach_id}/revisions")

@@ -19,6 +19,8 @@ from competence_hub_api.portal.companies import CompanyService
 from competence_hub_api.portal.calendar import CalendarService
 from competence_hub_api.portal.coach_registry import CoachRegistryService
 from competence_hub_api.web.coach_registry import router as coach_registry_router
+from competence_hub_api.web.coach_management import router as coach_management_router
+from competence_hub_api.portal.coach_management import CoachManagementQueries
 from competence_hub_api.security.calendar_cursor import CalendarCursorCodec
 from competence_hub_api.web.auth import (
     DEFAULT_SESSION_IDLE_TIMEOUT,
@@ -60,6 +62,7 @@ def create_app(
     company_service: CompanyService | None = None,
     calendar_service: CalendarService | None = None,
     coach_registry_service: CoachRegistryService | None = None,
+    coach_management_queries: CoachManagementQueries | None = None,
     calendar_cursor_hmac_key: bytes | None = None,
     allowed_origin: str | None = None,
     session_idle_timeout: timedelta = DEFAULT_SESSION_IDLE_TIMEOUT,
@@ -91,6 +94,7 @@ def create_app(
     app.state.company_service = company_service
     app.state.calendar_service = calendar_service
     app.state.coach_registry_service = coach_registry_service
+    app.state.coach_management_queries = coach_management_queries
     app.state.calendar_cursor_codec = (
         CalendarCursorCodec(calendar_cursor_hmac_key)
         if calendar_cursor_hmac_key is not None
@@ -116,6 +120,7 @@ def create_app(
     app.include_router(portal_access_router)
     app.include_router(admin_router)
     app.include_router(coach_registry_router)
+    app.include_router(coach_management_router)
     app.include_router(companies_router)
     app.include_router(public_calendar_router)
     app.include_router(protected_calendar_router)

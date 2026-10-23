@@ -1,3 +1,5 @@
+import { createCoachManagement } from "./coach-management.js";
+
 const API = {
   session: "/api/v1/portal/access/session",
   sessionCsrf: "/api/v1/portal/access/session/csrf",
@@ -51,6 +53,16 @@ const restrictedCalendarNodes = {
   offerDialog: document.querySelector("#calendar-offer-dialog"),
   reviewDialog: document.querySelector("#calendar-review-dialog"),
 };
+
+const coachManagement = createCoachManagement({
+  request,
+  refreshCsrf: async () => {
+    const response = await request(API.sessionCsrf, {method: "POST"});
+    if (response.ok) state.sessionCsrf = response.headers.get("X-CSRF-Token");
+    return response;
+  },
+  denied: () => showLogin("Der Zugriff ist nicht mehr gültig. Bitte melden Sie sich erneut an."),
+});
 
 function byId(id) {
   return document.getElementById(id);
@@ -208,6 +220,8 @@ function showLogin(message = "") {
 }
 
 function clearPortalClientState() {
+  coachManagement.reset();
+  coachManagement.root.remove();
   state.companies = [];
   state.selectedCompany = null;
   state.calendarCapabilities = null;
@@ -521,6 +535,14 @@ async function configurePortalAreas() {
   if (canUseCompanies) {
     areas.push({ id: "companies", label: "Firmen" });
   }
+  if (roles.has("admin") && await coachManagement.available()) {
+    views.portal.append(coachManagement.root);
+    areas.push({ id: "coaches", label: "Coaches" });
+    if (window.location.pathname === "/portal/coaches/") state.activePortalArea = "coaches";
+  } else {
+    coachManagement.reset();
+    coachManagement.root.remove();
+  }
   if (canManageCalendar) {
     areas.push({ id: "coach-calendar", label: "Kalenderangebote" });
   }
@@ -581,15 +603,17 @@ function renderPortalNavigation(areas) {
 }
 
 function switchPortalWorkspace(area) {
+  coachManagement.root.hidden = area !== "coaches";
   byId("company-workspace").hidden = area !== "companies";
   restrictedCalendarNodes.coachWorkspace.hidden = area !== "coach-calendar";
   restrictedCalendarNodes.reviewWorkspace.hidden = area !== "review-calendar";
 }
 
 async function selectPortalArea(area) {
+  if (state.activePortalArea === "coaches" && area !== "coaches" && !coachManagement.canLeave()) return;
   state.activePortalArea = area;
   switchPortalWorkspace(area);
-  const selectedLabel = area === "companies"
+  const selectedLabel = area === "coaches" ? "Coaches" : area === "companies"
     ? "Firmen"
     : area === "coach-calendar"
       ? "Kalenderangebote"
@@ -600,7 +624,9 @@ async function selectPortalArea(area) {
   byId("admin-invitation-panel").hidden = !(
     area === "companies" && state.session.user.roles.includes("admin")
   );
-  if (area === "companies") {
+  if (area === "coaches") {
+    await coachManagement.index();
+  } else if (area === "companies") {
     await loadCompanies();
   } else if (area === "coach-calendar") {
     await loadCalendarTopics();
@@ -1733,6 +1759,13 @@ function bindEvents() {
   });
 }
 
+document.querySelectorAll(".brand, #logout-button").forEach((item) => {
+  item.addEventListener("click", (event) => {
+    if (state.activePortalArea === "coaches" && !coachManagement.canLeave()) {
+      event.preventDefault(); event.stopImmediatePropagation();
+    }
+  }, true);
+});
 bindEvents();
 configureRestrictedCalendarNodes(false, false);
 if (!consumeAccountActionFromFragment()) {

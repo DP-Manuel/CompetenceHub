@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([Parameter(Mandatory=$true)][string]$PythonPath)
+param([Parameter(Mandatory=$true)][string]$PythonPath, [switch]$ManagementBrowser)
 $ErrorActionPreference = 'Stop'
 $python = (Resolve-Path -LiteralPath $PythonPath).Path
 $webapp = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
@@ -35,7 +35,11 @@ try {
     $env:COMPETENCE_HUB_COACH_REGISTRY_LOCAL_DATABASE_URL = "postgresql+asyncpg://competence_hub_app:${password}@127.0.0.1:55434/competence_hub_staging"
     $env:COMPETENCE_HUB_COACH_REGISTRY_LOCAL_OWNER_URL = "postgresql+asyncpg://competence_hub_migrator:${password}@127.0.0.1:55434/competence_hub_staging"
     $env:PYTHONPATH = Join-Path $webapp 'src'
-    & $python -m pytest tests/test_coach_registry_postgres_local.py
+    if ($ManagementBrowser) {
+        & $python -u scripts/run-coach-management-acceptance.py
+    } else {
+        & $python -m pytest tests/test_coach_registry_postgres_local.py
+    }
     if ($LASTEXITCODE -ne 0) { throw 'Local Registry database gate failed.' }
 }
 finally {
