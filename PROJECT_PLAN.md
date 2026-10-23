@@ -1,6 +1,6 @@
 # Competence Hub Roadmap
 
-Updated: 2026-10-22. Current state belongs to [PROJECT_CONTEXT](PROJECT_CONTEXT.md); the next gate and rolling horizon belong to the [active plan](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
+Updated: 2026-10-23. Current state belongs to [PROJECT_CONTEXT](PROJECT_CONTEXT.md); the next gate and rolling horizon belong to the [active plan](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
 
 ## Vision And Ownership
 
@@ -13,7 +13,8 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 | Phase | Outcome | Gate / evidence | Confidence |
 | --- | --- | --- | --- |
 | Post-Messe consolidation: complete | Stable IONOS, published preview, Context V2 and Analytics discovery | Completed scope, build isolation, public smoke | High |
-| Backend continuation | Additive access/native CAL-1 UI gate PASS; readiness package prepared | Runtime inputs, clean Linux package and separately authorized synthetic proxy/install rehearsal remain | Medium |
+| Backend continuation | Native CAL-1, cryptography maintenance and local Linux/proxy gates PASS | External domain/TLS/owners and separately authorized VPS rehearsal/activation remain | Medium |
+| Coach Registry / lifecycle | Accepted PostgreSQL canonical-source direction; first local COACH-1 core/API/projection verified | [ADR0008](docs/decisions/0008-coach-registry-and-static-publication.md); separate Admin UI, controlled imports and server migration gates | Medium |
 | Portal operation | Named accounts, mail, monitored backups, operational handover | DNS/SMTP/runtime/data/privacy/Go-No-Go evidence | Medium |
 | Future calendar | CAL-2 reservations and provider-neutral .ics delivery | Business/concurrency/privacy/client-compatibility gates | Low |
 | Analytics | Datensparse aggregate statistics in protected Admin cockpit | Architecture choice, privacy/legal and security approval | Medium |

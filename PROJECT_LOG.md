@@ -3,6 +3,14 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-23 | security / Coach Registry / Preview
+
+- Cryptography49->50.0.2 isolated compatibility, reproducible baseline and actual local Linux/HTTPS gate complete; no VPS changes. [Security close-out](docs/operations/cryptography-maintenance-2026-10-23.md) owns hashes, audit, limitations and EDV request.
+- COACH-1 accepted direction recorded in ADR0008; additive local migration/domain/repository/Admin API, lifecycle, revision evidence and static projection verified, including native local Login/MFA/role revocation. Separate commit/push approval received; no real data or server migration.
+- Susanne's exact source directory audited; profile and both portraits explicitly approved for Preview. Local site/zoom/keyboard/filters and production-byte isolation verified; actual public Actions result remains in the [content report](docs/content/susanne-klemm-preview-2026-10-23.md), not assumed here.
+- Full local488 tests pass;18 opt-in skips, including the dedicated Registry scenario separately executed successfully. Final native-local CAL-1 run142/API17 and cleanup pass after a reproduced sampled-now query-window race was corrected only in the harness. Source/runtime validation and real VPS gate remain distinct.
+- Reusable evidence added to existing skill proposals; no global skill or unrelated-project changes. Next proposed block: local synthetic Coach Admin UI, not automatic implementation/deployment approval.
+
 ## 2026-10-22 | operations / security gate | Linux/proxy preparation
 
 - Authorized preparation only: reviewed existing proposed app domain, current name-not-found DNS, free separate loopback port 8001, runtime/cert-timer metadata and isolation; no VPS write or frontend action.
