@@ -16,7 +16,7 @@ from urllib.parse import urlsplit
 import pyotp
 from playwright.sync_api import expect, sync_playwright
 
-from native_calendar_fixture import NativeCalendarFixture
+from native_calendar_fixture import NativeCalendarFixture, public_query_window
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT.parents[1] / "release-artifacts/cal1-native-ui-20261022"
@@ -208,7 +208,7 @@ def exercise(fixture, report):
             checks.check("Expired session cannot resume", foreign_context.request.get(base + ACCESS + "/session").status == 401)
             foreign_context.close()
 
-            public = context.request.get(base + "/api/v1/calendar/offers", params={"from": fixture.now.isoformat(), "to": (fixture.now + timedelta(days=80)).isoformat()})
+            public = context.request.get(base + "/api/v1/calendar/offers", params=public_query_window(fixture.now))
             checks.check("Native public projection reads published only", public.status == 200 and len(public.json()["items"]) == 2)
             private_ids = [str(value) for value in (*fixture.users.values(), *fixture.coaches.values())]
             public_text = public.text()

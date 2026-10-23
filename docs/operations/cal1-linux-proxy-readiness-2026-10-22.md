@@ -1,6 +1,9 @@
 # CAL-1 Linux / Reverse-Proxy Preparation
 
-Date: 2026-10-22. Status: **PREPARED WITH OPEN GATES; LINUX RUNTIME DRY-RUN BLOCKED**.
+Date: 2026-10-22. Historical preparation; the blocked cryptography gate and
+local Linux dry-run were resolved by the separately authorized
+[23.10 maintenance](cryptography-maintenance-2026-10-23.md).
+The below22.10 findings/artifacts remain dated history, not current candidates.
 Scope: local preparation only; Linux/proxy execution on the VPS is NOT authorized.
 This document owns domain/TLS/port/package/service preparation.
 The closed native runtime gate remains in the [acceptance report](../architecture/calendar-cal1-access-batch-2026-10-22.md);

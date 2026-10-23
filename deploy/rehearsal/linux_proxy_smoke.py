@@ -138,8 +138,8 @@ def main(report):
             challenge = json.loads(body)["csrf_token"]
             status, _, _ = request(ACCESS + "/mfa/totp/enrollment", "POST", {}, {"Origin": "https://forged.example.invalid", "X-CSRF-Token": challenge})
             check(role + " foreign Origin denied", status == 403)
-            status, _, _ = request(ACCESS + "/mfa/totp/enrollment", "POST", {}, {"Origin": ORIGIN, "X-CSRF-Token": "wrong"})
-            check(role + " wrong challenge CSRF denied", status == 403)
+            status, _, body = request(ACCESS + "/mfa/totp/enrollment", "POST", {}, {"Origin": ORIGIN, "X-CSRF-Token": "wrong"})
+            check(role + " wrong challenge CSRF denied", status == 401 and json.loads(body)["code"] == "authentication_failed")
             status, _, body = request(ACCESS + "/mfa/totp/enrollment", "POST", {}, {"Origin": ORIGIN, "X-CSRF-Token": challenge})
             check(role + " actual enrollment", status == 201)
             secret = parse_qs(urlsplit(json.loads(body)["provisioning_uri"]).query)["secret"][0]

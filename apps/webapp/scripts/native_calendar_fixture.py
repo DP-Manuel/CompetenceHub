@@ -25,6 +25,12 @@ TABLES = (
 )
 
 
+def public_query_window(now):
+    """Avoid the moving validation boundary without changing the server clock."""
+    return {"from": (now + timedelta(days=1)).isoformat(),
+            "to": (now + timedelta(days=80)).isoformat()}
+
+
 def staging_urls(environment):
     urls = []
     for name, role in (
