@@ -32,6 +32,17 @@
 - Only synthetic test data is allowed while the external-backup and privacy
   gates remain open.
 
+## Local COACH-1 Status (23.10.2026)
+
+VPS Staging was last verified at 0001-0006. New `0007_coach_registry.sql` is authorized
+and tested ONLY in a disposable local PostgreSQL 16 container, not on the VPS.
+It extends the existing Coach identity with ten relational tables, explicit
+lifecycle, immutable submitted/abandoned revisions, revision evidence and scoped
+publications. No real Coach/account/topic import or server mapping is included.
+The [Registry contract](../../../docs/architecture/coach-registry-contract-v0.1.md)
+owns the exact schema/API/workflows and local invocation. The CAL-1 local runner
+deliberately applies only 0001-0006; Registry has its own guarded 0001-0007 runner.
+
 ## Migration 0001
 
 The migration implements the confirmed B2B-first core:

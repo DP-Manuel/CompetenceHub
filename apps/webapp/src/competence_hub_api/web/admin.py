@@ -69,7 +69,7 @@ async def _read_invitation_request(request: Request) -> InvitationRequest | None
         return None
 
 
-async def _admin_principal(request: Request) -> SessionPrincipal | Response:
+async def _admin_principal(request: Request, *, require_csrf: bool = True) -> SessionPrincipal | Response:
     repository = request.app.state.session_repository
     token = request.cookies.get(SESSION_COOKIE_NAME)
     if repository is None or token is None:
@@ -91,6 +91,8 @@ async def _admin_principal(request: Request) -> SessionPrincipal | Response:
             code="authorization_failed",
             title="Berechtigung nicht vorhanden",
         )
+    if not require_csrf:
+        return principal
     allowed_origin = request.app.state.allowed_origin
     csrf_token = request.headers.get("x-csrf-token")
     if (

@@ -23,6 +23,7 @@ DEPLOY_FILES = frozenset({
         "competence-hub-postgres-restore-check", "competence-hub-backup-notification-render")],
 })
 DOC_FILES = frozenset({
+    "docs/architecture/coach-registry-contract-v0.1.md",
     "docs/operations/cryptography-maintenance-2026-10-23.md",
     "docs/architecture/webapp-release-rehearsal-runbook.md",
     "docs/architecture/postgresql-backup-restore-runbook.md",
@@ -51,7 +52,7 @@ def destination(path):
                 re.fullmatch(r"portal_ui/[a-z0-9_-]+\.(html|css|js)", relative)):
             return "package-source/src/competence_hub_api/" + relative
     if (path in {base + "database/README.md", base + "database/bootstrap-staging.sql"}
-            or re.fullmatch(base + r"database/(migrations|verification)/000[1-6]_[a-z0-9_]+\.sql", path)):
+            or re.fullmatch(base + r"database/(migrations|verification)/000[1-7]_[a-z0-9_]+\.sql", path)):
         return "bundle/" + path.removeprefix(base)
     if path in DEPLOY_FILES or path in DOC_FILES:
         return "bundle/" + path

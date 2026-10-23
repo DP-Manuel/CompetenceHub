@@ -26,6 +26,8 @@ def test_release_denylist_is_not_a_recursive_copy(path):
     "apps/webapp/src/competence_hub_api/auth/admission.py",
     "apps/webapp/src/competence_hub_api/portal_ui/app.js",
     "apps/webapp/database/migrations/0006_coach_public_profile_path.sql",
+    "apps/webapp/database/migrations/0007_coach_registry.sql",
+    "docs/architecture/coach-registry-contract-v0.1.md",
     "docs/operations/cal1-production-readiness-2026-10-22.md",
     "docs/operations/cal1-linux-proxy-readiness-2026-10-22.md",
     "deploy/nginx/competence-hub-acme-http.conf.example",

@@ -4,6 +4,7 @@
 | --- | --- | --- |
 | Post-Messe product scope | [Accepted addendum](post-messe-product-2026-10-21.md) | Preview content/topics and Analytics scope |
 | Portal roles/gates | [RBAC](portal-rbac-matrix-v0.1.md), [Open gates](portal-open-gates-v0.1.md) | Role boundaries and activation blockers; historical test counts are dated |
+| Coach Registry | [Accepted COACH-1 contract](../architecture/coach-registry-contract-v0.1.md) | Onboard/pause/offboard/reactivate, revision approval, per-environment publication and optional account/Calendar links |
 | CAL-0 / business rules | [Calendar decisions](calendar-stakeholder-decisions-2026-09-11.md) | Accepted behavior and .ics direction |
 | CAL-1 current accepted scope | [Browser handoff](../handoffs/2026-09-18-cal1-browser-acceptance-handoff.md) | Local acceptance and next synthetic Staging UI gate |
 | CAL-1 API/UI | [API contract](../architecture/calendar-cal1-api-contract-v0.1.md), [UI contract](../architecture/calendar-cal1-portal-ui-contract-v0.1.md) | Protected/public projection and capabilities |

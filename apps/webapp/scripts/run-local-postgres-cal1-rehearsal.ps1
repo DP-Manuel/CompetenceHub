@@ -28,7 +28,9 @@ try {
     if (-not $ready) { throw 'Local PostgreSQL did not become ready.' }
     Get-Content -Raw '.\database\bootstrap-staging.sql' | & docker exec -i $container psql -v ON_ERROR_STOP=1 -U postgres -d postgres
     if ($LASTEXITCODE -ne 0) { throw 'Local bootstrap failed.' }
-    Get-ChildItem '.\database\migrations' -Filter '*.sql' -File | Sort-Object Name | ForEach-Object {
+    $migrations = @(Get-ChildItem '.\database\migrations' -Filter '*.sql' -File | Where-Object Name -Match '^000[1-6]_' | Sort-Object Name)
+    if ($migrations.Count -ne 6) { throw 'Expected the six reviewed CAL-1 migrations; pending Registry migrations belong to their own local runner.' }
+    $migrations | ForEach-Object {
         Get-Content -Raw -LiteralPath $_.FullName | & docker exec -i $container psql -v ON_ERROR_STOP=1 -U postgres -d competence_hub_staging
         if ($LASTEXITCODE -ne 0) { throw "Existing local migration failed: $($_.Name)" }
     }
