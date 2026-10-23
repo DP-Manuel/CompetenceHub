@@ -1,5 +1,9 @@
 # Webapp Dependency Gate: 22.10.2026
 
+Historical finding. The separately authorized 23.10 maintenance and current
+verification are owned by the [maintenance report](../operations/cryptography-maintenance-2026-10-23.md).
+The original stopped artifacts below must not be reused.
+
 Status: **LINUX PACKAGE GATE BLOCKED**, not a finding of an exposed production
 Portal. No dependency upgrade, risk waiver or server installation is authorized
 by this report. Native CAL-1 evidence remains dated evidence for its tested code.

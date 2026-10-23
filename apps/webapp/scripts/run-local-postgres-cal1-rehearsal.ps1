@@ -1,15 +1,17 @@
 [CmdletBinding()]
-param()
+param([string]$PythonPath)
 $ErrorActionPreference = 'Stop'
-$python = Join-Path $PSScriptRoot '..\.venv\Scripts\python.exe'
+$python = if ($PythonPath) { (Resolve-Path -LiteralPath $PythonPath).Path } else { Join-Path $PSScriptRoot '..\.venv\Scripts\python.exe' }
 $webapp = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $container = $null
 $savedLocation = Get-Location
+$savedPythonPath = $env:PYTHONPATH
 if (Get-NetTCPConnection -LocalPort 55433 -State Listen -ErrorAction SilentlyContinue) {
     throw 'Loopback port 55433 is occupied; refusing to reuse another database.'
 }
 try {
     Set-Location -LiteralPath $webapp
+    $env:PYTHONPATH = Join-Path $webapp 'src'
     $env:POSTGRES_PASSWORD = [Guid]::NewGuid().ToString('N') + [Guid]::NewGuid().ToString('N')
     $container = (& docker run --detach --name "competence-hub-cal1-local-$([Guid]::NewGuid().ToString('N'))" `
         --publish '127.0.0.1:55433:5432' --env POSTGRES_PASSWORD `
@@ -48,6 +50,7 @@ finally {
     Remove-Item Env:COMPETENCE_HUB_TEST_MIGRATOR_DATABASE_URL -ErrorAction SilentlyContinue
     $app = $null
     $migrator = $null
+    $env:PYTHONPATH = $savedPythonPath
     if ($container -match '^[a-f0-9]{64}$') {
         & docker rm --force $container
         if ($LASTEXITCODE -ne 0) { Write-Warning 'Dedicated local rehearsal container needs cleanup.' }

@@ -23,6 +23,7 @@ DEPLOY_FILES = frozenset({
         "competence-hub-postgres-restore-check", "competence-hub-backup-notification-render")],
 })
 DOC_FILES = frozenset({
+    "docs/operations/cryptography-maintenance-2026-10-23.md",
     "docs/architecture/webapp-release-rehearsal-runbook.md",
     "docs/architecture/postgresql-backup-restore-runbook.md",
     "docs/architecture/calendar-cal1-technical-design-v0.1.md",

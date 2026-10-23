@@ -12,6 +12,18 @@ SECOND_KEY = b"b" * 32
 SUBJECT_ID = "00000000-0000-0000-0000-000000000001"
 
 
+def test_cryptography_50_reads_existing_49_envelope() -> None:
+    # Generated with 49.0.0 and the synthetic FIRST_KEY, never production data.
+    envelope = bytes.fromhex(
+        "43485431ad06976c374f3cf6e4408b91205ad2d2f244046d292b098203f073d0cde"
+        "9e684227de202c00c79aa315a11c80a9748"
+    )
+    cipher = SecretCipher({"v1": FIRST_KEY, "v2": SECOND_KEY}, "v2")
+    assert cipher.decrypt(envelope, key_version="v1", subject_id=SUBJECT_ID) == "SYNTHETICTOTPSECRET"
+    with pytest.raises(SecretEncryptionError, match="authenticated"):
+        cipher.decrypt(envelope, key_version="v2", subject_id=SUBJECT_ID)
+
+
 def test_secret_cipher_encrypts_and_authenticates_subject_binding() -> None:
     cipher = SecretCipher({"v1": FIRST_KEY}, "v1")
 
