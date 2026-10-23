@@ -1,6 +1,6 @@
 # Coach-Veröffentlichungsmatrix
 
-Stand: 21.10.2026. Production-Regel vom 24.09. bleibt bestehen; Preview-Freigabe siehe unten.
+Stand: 23.10.2026. Production-Regel vom 24.09. bleibt bestehen; Preview-Freigabe siehe unten.
 
 Die folgende historische Production-Matrix begrenzt den öffentlichen Messeauftritt. Sie ersetzt frühere
 Einzelfreigaben, soweit sie mehr als die beiden unten genannten echten Profile
@@ -53,6 +53,7 @@ unverändert wirksam.
 | Herr T. Wegner-Ney | Git 53a89a8, Route wegner-ney | unveränderte Git-JPG |
 | Herr Goran Celic | Git 53a89a8, Route goran-celic | unveränderte Git-PNG |
 | Frau Dr. Stefanie Becker | Git 53a89a8, Route stefanie-becker | unveränderte Git-WebP |
+| Frau Susanne Klemm | Konkreter Quellenordner07, Profil und beide Porträts von Manuel am23.10.2026 ausdrücklich für die öffentliche GitHub-Preview freigegeben; [Quellenprüfung/QA](susanne-klemm-preview-2026-10-23.md) | _DSC5321 als proportional verkleinerte, metadatenfreie WebP; zweites Bild nicht ausgeliefert |
 
 Neueste explizite Namenskorrektur am 21.10.2026: Manuel bestätigt
 **Elisabeth Schwabauer (bisheriges Profil)**. Diese Bestätigung überschreibt

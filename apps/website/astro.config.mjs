@@ -7,6 +7,7 @@ const environment = websiteEnvironment();
 const restoredSlugs = [
   "carolin-hupp", "elisabeth-schwabauer", "goran-celic",
   "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney",
+  "susanne-klemm",
 ];
 
 export default defineConfig({

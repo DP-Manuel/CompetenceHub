@@ -75,6 +75,7 @@ def main():
                     check(f"{width} Hub CTA clearance", metric["bottom_gap"] >= 24)
                     check(f"{width} home no overflow", not metric["overflow"])
                     page.goto(base + "/coaches/", wait_until="networkidle")
+                    all_coaches = page.locator("[data-preview-coach]").count()
                     toggle = page.locator("[data-hub-toggle]")
                     check(f"{width} initial central bubble only", toggle.is_visible()
                           and not page.locator("#preview-categories").is_visible()
@@ -106,7 +107,7 @@ def main():
                     page.reload(wait_until="networkidle")
                     expect(health).to_have_attribute("aria-pressed", "true")
                     toggle.click()
-                    check(f"{width} return to All", page.locator("[data-preview-coach]:visible").count() == 8
+                    check(f"{width} return to All", page.locator("[data-preview-coach]:visible").count() == all_coaches
                           and not page.locator("#preview-topic-options").is_visible())
                     toggle.click()
                     expect(toggle).to_have_attribute("aria-expanded", "false")

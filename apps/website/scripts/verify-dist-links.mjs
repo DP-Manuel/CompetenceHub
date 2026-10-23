@@ -11,6 +11,8 @@ const htmlFiles = [];
 const allFiles = [];
 
 const forbiddenPublicIdentityFragments = [
+  "Susanne Klemm",
+  "susanne-klemm",
   "Carolin Hupp",
   "Elisabeth Schwabauer",
   "Goran Celic",
@@ -132,7 +134,7 @@ if (environment.preview) {
   assert.equal(readFileSync(join(dist, "robots.txt"), "utf8"), "User-agent: *\nDisallow: /\n");
   assert.doesNotMatch(readFileSync(join(dist, "sitemap.xml"), "utf8"), /<url>/);
   for (const slug of ["carolin-hupp", "elisabeth-schwabauer", "goran-celic",
-    "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney"]) {
+    "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm"]) {
     const html = readFileSync(join(dist, "coaches", slug, "index.html"), "utf8");
     assert.doesNotMatch(html, /rel="canonical"|property="og:url"/, slug);
   }

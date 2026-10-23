@@ -16,8 +16,9 @@ const { coaches } = await vite.ssrLoadModule("/src/preview/coaches.ts");
 const { coaches: production } = await vite.ssrLoadModule("/src/data/coaches.ts");
 const { categories, topics, topicsForCategory } = await vite.ssrLoadModule("/src/preview/topics.ts");
 const { offerGroups } = await vite.ssrLoadModule("/src/preview/elisabeth-offers.ts");
+const { susanneKlemm, workshops, qualifications } = await vite.ssrLoadModule("/src/preview/susanne-klemm.ts");
 const slugs = ["carolin-hupp", "elisabeth-schwabauer", "goran-celic",
-  "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney"];
+  "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm"];
 
 test("one validated mode controls host, base and artifact, rejecting legacy drift", () => {
   assert.equal(websiteEnvironment({}).mode, "production");
@@ -29,12 +30,23 @@ test("one validated mode controls host, base and artifact, rejecting legacy drif
   assert.throws(() => websiteEnvironment({ WEBSITE_ENV: "preview", GITHUB_PAGES_REVIEW: "false" }));
   assert.throws(() => websiteEnvironment({ WEBSITE_ENV: "preview", PUBLIC_REVIEW_MODE: "false" }));
 });
-test("preview has eight unique real Coaches; production retains two real and six fictional", () => {
-  assert.equal(coaches.length, 8);
-  assert.equal(new Set(coaches.map((coach) => coach.profilePath)).size, 8);
+test("preview real Coach records and detail templates agree; production remains unchanged", () => {
+  assert.deepEqual(new Set(coaches.map((coach) => coach.profilePath)),
+    new Set([...production.filter((coach) => coach.kind === "approved").map((coach) => coach.profilePath), ...slugs.map((slug) => `coaches/${slug}`)]));
+  assert.equal(new Set(coaches.map((coach) => coach.profilePath)).size, coaches.length);
   assert.ok(coaches.every((coach) => coach.kind === "approved"));
   assert.equal(production.filter((coach) => coach.kind === "approved").length, 2);
   assert.equal(production.filter((coach) => coach.kind === "demo").length, 6);
+});
+
+test("Susanne uses approved workshops and qualification scope, not inferred academic or mediation credentials", () => {
+  assert.equal(susanneKlemm.profilePath, "coaches/susanne-klemm");
+  assert.deepEqual(susanneKlemm.topics, ["fuehrung", "teams-konflikte", "gesundheit-praevention"]);
+  assert.equal(workshops.length, 8);
+  assert.equal(qualifications.length, 8);
+  assert.ok(qualifications.includes("Weiterbildung „Systemische Supervision kompakt“ (44 Zeitstunden)"));
+  assert.ok(!JSON.stringify({ susanneKlemm, qualifications }).match(/DGSv|Mediatorin|Diplom|M\.Sc\./));
+  assert.ok(!production.some((coach) => coach.profilePath === susanneKlemm.profilePath));
 });
 test("latest explicit spelling preserves the historical route; Carolin has no invented portrait", () => {
   const elisabeth = coaches.find((coach) => coach.profilePath === "coaches/elisabeth-schwabauer");

@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 NODE = Path(os.environ.get("WEBSITE_NODE", str(ROOT.parents[1] / "tools/node-v22.16.0-win-x64/node.exe")))
 EVIDENCE = ROOT / "release-artifacts/preview-qa"
 RESTORED = ("carolin-hupp", "elisabeth-schwabauer", "goran-celic",
-            "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney")
+            "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm")
 count = 0
 
 
@@ -68,6 +68,7 @@ def main():
     for file in sorted((ROOT / "dist-preview").rglob("*.html")):
         path = file.relative_to(ROOT / "dist-preview").as_posix()
         routes.append("/" if path == "index.html" else "/" + path.removesuffix("index.html"))
+    expected_profiles = {route for route in routes if route.startswith("/coaches/") and route != "/coaches/"}
     with static_server() as origin, sync_playwright() as playwright:
         base = origin + "/CompetenceHub"
         browser = playwright.chromium.launch(channel="msedge", headless=True)
@@ -125,7 +126,7 @@ def main():
                               and canonical.get_attribute("href") == "https://competencehub.donner-partner.de" + route)
 
                 page.goto(base + "/coaches/", wait_until="networkidle")
-                check(f"{name} eight coaches", page.locator("[data-preview-coach]").count() == 8)
+                check(f"{name} all built Coach profiles listed", page.locator("[data-preview-coach]").count() == len(expected_profiles))
                 check(f"{name} progressive disclosure initial", not page.locator("#preview-categories").is_visible()
                       and not page.locator("#preview-topic-options").is_visible())
                 page.locator("[data-hub-toggle]").click()
@@ -148,6 +149,7 @@ def main():
                 check(f"{name} sourced health coaches", first == [
                     "Herr Christian Galvano", "Frau Elisabeth Schwabauer",
                     "Frau Carolin Hupp", "Frau Gülcan Elmas-Brandes",
+                    "Frau Susanne Klemm",
                 ])
                 page.locator('[data-category="persoenlichkeitsentwicklung"]').click()
                 check(f"{name} health in personality", health.is_visible())
@@ -159,12 +161,12 @@ def main():
                 page.locator('[data-category="karrierecoaching"]').click()
                 check(f"{name} irrelevant health hidden", not health.is_visible())
                 page.locator('[data-hub-toggle]').click()
-                check(f"{name} All computed", page.locator("[data-preview-coach]:visible").count() == 8)
+                check(f"{name} All computed", page.locator("[data-preview-coach]:visible").count() == len(expected_profiles))
                 unassigned = page.locator("[data-preview-coach]").first
                 original_topics = unassigned.get_attribute("data-topics")
                 unassigned.evaluate("e => e.dataset.topics = ''")
                 page.locator('[data-hub-toggle]').click()
-                check(f"{name} All includes unassigned Coach", page.locator("[data-preview-coach]:visible").count() == 8)
+                check(f"{name} All includes unassigned Coach", page.locator("[data-preview-coach]:visible").count() == len(expected_profiles))
                 unassigned.evaluate("(e, value) => e.dataset.topics = value", original_topics)
                 if not page.locator("#preview-categories").is_visible():
                     page.locator('[data-hub-toggle]').click()
@@ -235,7 +237,7 @@ def main():
 
                 page.goto(base + "/", wait_until="networkidle")
                 rail_links = page.locator(".coach-preview__card").evaluate_all("nodes => nodes.map(n => n.href)")
-                check(f"{name} eight home profiles", len(rail_links) == 8)
+                check(f"{name} all built home profiles", len(rail_links) == len(expected_profiles))
                 for href in rail_links:
                     check(f"{name} rail link resolves", href.startswith(base + "/coaches/") and context.request.get(href).status == 200)
                 context.close()
