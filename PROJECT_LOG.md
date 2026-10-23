@@ -3,6 +3,13 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-23 | implementation / acceptance | COACH-3A Synthetic Import
+
+- [Import contract](docs/architecture/coach-import-contract-v0.1.md): stable source identity, explicit typed mapping, no-op content comparison, source/item/evidence ledger and read-only validation/dry-run. No HTTP importer or runtime activation.
+- Local0008 adds only import bookkeeping; atomic Registry reuse verified with actual PostgreSQL. Repeat runs2/3 leave every table/xmin, audit and public projection unchanged; exception/cancellation/SQL failure roll back the whole batch. Offer/asset snapshot rows are distinct from stable logical item IDs.
+- [COACH-3 plan](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3a-nachweis) owns actual regression evidence and remaining real field/rendering/therapy/consent decisions. Full local suite and both separate local-PG gates pass; owned tmpfs databases removed. Commit/push authorized after green, no deployment or real-data approval.
+- No Quellen read, real Coach/portrait/account/mapping, VPS migration or Pages/IONOS change. Reusable import/no-op learning captured locally; no global skill edits. Next gate is COACH-3B decision preparation, not execution.
+
 ## 2026-10-23 | implementation / acceptance | COACH-2 And COACH-3 Planning
 
 - Local Admin management accepted with real disposable PostgreSQL, Login/MFA and browser flows. Bounded history/capabilities preserve older valid activation approvals; two-tab CSRF/concurrency and lost creation response are covered. [UI contract](docs/architecture/coach-admin-ui-contract-v0.1.md) owns detailed evidence and limits.

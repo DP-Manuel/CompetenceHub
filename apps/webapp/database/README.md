@@ -43,6 +43,16 @@ The [Registry contract](../../../docs/architecture/coach-registry-contract-v0.1.
 owns the exact schema/API/workflows and local invocation. The CAL-1 local runner
 deliberately applies only 0001-0006; Registry has its own guarded 0001-0007 runner.
 
+## Local COACH-3A Import Status (23.10.2026)
+
+`0008_coach_import_ledger.sql` adds source identity, logical source item identities
+and historical evidence with unknown-date support. It is tested ONLY in the
+owned loopback55435 tmpfs container, never on VPS. The existing Calendar and
+Registry runners retain their0006/0007 boundaries. Real source imports and
+server migrations are not authorized by the synthetic proof.
+See the [import contract](../../../docs/architecture/coach-import-contract-v0.1.md)
+for idempotence, no-op audit, rollback, conflict classes and guarded operator flow.
+
 ## Migration 0001
 
 The migration implements the confirmed B2B-first core:

@@ -25,11 +25,23 @@ async def rows(connection, statement, **parameters):
 
 
 class PostgresCoachRegistryRepository:
-    def __init__(self, engine):
+    def __init__(self, engine, *, connection=None):
         self.engine = engine
+        self.connection = connection
+
+    @asynccontextmanager
+    async def _connection(self, *, transaction=False):
+        # Controlled imports reuse the existing domain inside one outer transaction.
+        if self.connection is not None:
+            yield self.connection
+        else:
+            async with (
+                self.engine.begin() if transaction else self.engine.connect()
+            ) as connection:
+                yield connection
 
     async def create(self, *, display_name, request_id, actor_id, now):
-        async with self.engine.begin() as connection:
+        async with self._connection(transaction=True) as connection:
             inserted = await rows(
                 connection,
                 """
@@ -54,6 +66,8 @@ class PostgresCoachRegistryRepository:
             return await self._load(connection, current[0]["id"])
 
     async def get(self, coach_id):
+        if self.connection is not None:
+            return await self._load(self.connection, coach_id)
         async with self.engine.connect() as connection:
             async with connection.begin():
                 await connection.execute(
@@ -64,7 +78,7 @@ class PostgresCoachRegistryRepository:
     async def list_coaches(self, *, limit, offset):
         if not 1 <= limit <= 100 or not 0 <= offset <= 10000:
             raise ValueError("invalid pagination")
-        async with self.engine.connect() as connection:
+        async with self._connection() as connection:
             result = await rows(
                 connection,
                 "SELECT * FROM competence_hub.coaches ORDER BY lower(display_name),id LIMIT :limit OFFSET :offset",
@@ -76,7 +90,7 @@ class PostgresCoachRegistryRepository:
     @asynccontextmanager
     async def edit(self, coach_id, expected_version):
         try:
-            async with self.engine.begin() as connection:
+            async with self._connection(transaction=True) as connection:
                 locked = await rows(
                     connection,
                     "SELECT id FROM competence_hub.coaches WHERE id=:id FOR UPDATE",
@@ -102,7 +116,7 @@ class PostgresCoachRegistryRepository:
     async def topics(self, topic_ids):
         if not topic_ids:
             return ()
-        async with self.engine.connect() as connection:
+        async with self._connection() as connection:
             result = await rows(
                 connection,
                 """
@@ -121,7 +135,7 @@ class PostgresCoachRegistryRepository:
         return tuple(by_id[id] for id in topic_ids)
 
     async def has_future_calendar(self, coach_id, now):
-        async with self.engine.connect() as connection:
+        async with self._connection() as connection:
             return await self._future(connection, coach_id, now)
 
     @staticmethod

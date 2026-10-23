@@ -17,6 +17,8 @@ spec.loader.exec_module(release)
     "apps/webapp/src/competence_hub_api/portal_ui/backup.zip", "../deploy/README.md",
     "/deploy/README.md", "deploy/../deploy/README.md", "deploy\\README.md",
     "apps/webapp/database/real-database.dump", "apps/webapp/database/verification/fixtures.sql",
+    "apps/webapp/scripts/coach-import.py", "apps/webapp/scripts/coach_import_fixture.py",
+    "apps/webapp/database/migrations/0009_unreviewed.sql",
 ])
 def test_release_denylist_is_not_a_recursive_copy(path):
     assert release.destination(path) is None
@@ -27,6 +29,8 @@ def test_release_denylist_is_not_a_recursive_copy(path):
     "apps/webapp/src/competence_hub_api/portal_ui/app.js",
     "apps/webapp/database/migrations/0006_coach_public_profile_path.sql",
     "apps/webapp/database/migrations/0007_coach_registry.sql",
+    "apps/webapp/database/migrations/0008_coach_import_ledger.sql",
+    "docs/architecture/coach-import-contract-v0.1.md",
     "docs/architecture/coach-registry-contract-v0.1.md",
     "docs/operations/cal1-production-readiness-2026-10-22.md",
     "docs/operations/cal1-linux-proxy-readiness-2026-10-22.md",

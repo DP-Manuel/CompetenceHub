@@ -14,7 +14,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 | --- | --- | --- | --- |
 | Post-Messe consolidation: complete | Stable IONOS, published preview, Context V2 and Analytics discovery | Completed scope, build isolation, public smoke | High |
 | Backend continuation | Native CAL-1, cryptography maintenance and local Linux/proxy gates PASS | External domain/TLS/owners and separately authorized VPS rehearsal/activation remain | Medium |
-| Coach Registry / lifecycle | COACH-1 core and COACH-2 local synthetic Admin UI verified; COACH-3 inventory/plan complete, not an import | [ADR0008](docs/decisions/0008-coach-registry-and-static-publication.md); lossless import contract, real identity/evidence and server migration remain separate gates | Medium |
+| Coach Registry / lifecycle | COACH-1/2 and synthetic COACH-3A import/no-op/rollback verified; no real import | [COACH-3 plan/decision matrix](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md); real field/rendering, identity/evidence and server migration remain separate gates | Medium |
 | Portal operation | Named accounts, mail, monitored backups, operational handover | DNS/SMTP/runtime/data/privacy/Go-No-Go evidence | Medium |
 | Future calendar | CAL-2 reservations and provider-neutral .ics delivery | Business/concurrency/privacy/client-compatibility gates | Low |
 | Analytics | Datensparse aggregate statistics in protected Admin cockpit | Architecture choice, privacy/legal and security approval | Medium |

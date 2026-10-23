@@ -1,9 +1,12 @@
 # COACH-3: Bestandsinventur Und Migrationsplan
 
-Stand:23.10.2026. **Nur Analyse und Plan, kein Import.** Nach lokaler COACH-2-
+Stand:23.10.2026. **Inventur plus abgeschlossener synthetischer COACH-3A-Nachweis;
+kein realer Import.** Die Bestandsinventur wurde nach lokaler COACH-2-
 Abnahme aus kanonischen, bereits öffentlichen Projektinhalten ermittelt.
 `Quellen/` wurde in diesem Block nicht geöffnet. Keine echten Personen-UUIDs,
-DB-Einträge, Accounts, Kalenderrollen, Migrationen oder Veröffentlichungen erzeugt.
+DB-Einträge, Accounts, Kalenderrollen oder Veröffentlichungen erzeugt.
+Die spätere COACH-3A-Freigabe erlaubt ausschließlich lokale Migration0008 und
+synthetische Testeinträge in einer anschließend vollständig entfernten Datenbank.
 
 ## Reproduzierbare Inventur
 
@@ -93,8 +96,8 @@ sind für einen rein synthetischen Import-Dry-Run keine Voraussetzung.
    Bericht. Unabbildbare Abschnitte und Therapie-/Qualifikationsfragen stoppen
    den Record, statt Felder fallenzulassen oder Inhalte zu erfinden.
 3. **Canonical Topic Matching:** Slug-Referenzliste gegen freigegebenes Mapping.
-   NFKC/Casefold/Leerzeichen-/Bindestrichnormalisierung nur zur Kollisionswarnung;
-   keine automatische semantische Zusammenlegung. Neue Themen benötigen einen
+   NFC/Casefold/Leerzeichen-/Bindestrichnormalisierung nur für ausdrücklich
+   kuratierte Aliase; keine automatische semantische Zusammenlegung. Neue Themen benötigen einen
    eigenen freigegebenen Vertrag mit normalisierter Eindeutigkeit.
 4. **Coach UUID:** vor echtem Schreiben manuell bestätigte Personenidentität und
    separates Importledger. Neue UUID zufällig, bestehende bestätigte UUID bewahren;
@@ -141,18 +144,70 @@ Servermigration, Rollen und Website-Umschaltung benötigen jeweils eigene Freiga
   Dieser Lifecycle ist bereits synthetisch durch COACH-2 abgesichert, nicht mit
   realen Personen durchgeführt.
 
-Die statische Inventur selbst ist bereits deterministisch; das ist **kein**
-Nachweis eines implementierten idempotenten DB-Importers. Ledger, Importer und
-verlustfreies Rendering sind noch nicht gebaut. Keine DB- oder Websiteänderung
-folgt aus dieser Analyse.
+Die statische Inventur allein ist **kein** Nachweis eines DB-Importers. Der
+nachfolgende, separat freigegebene COACH-3A-Block ergänzt diesen Nachweis nur
+synthetisch. Verlustfreies Rendering aller realen Profile bleibt ein offenes Gate.
+
+## COACH-3A-Nachweis
+
+Verbindlicher [Importvertrag](coach-import-contract-v0.1.md), typisierte Records,
+reine Validierung, schreibfreier DB-Dry-Run und kontrollierter Fixture-APPLY sind
+implementiert. Keine neue HTTP-API und kein Standardruntime-Schalter.
+Migration0008 ergänzt nur Quellbindung, logische Itemidentität und datierte/
+undatierte Nachweise;0007 allein enthielt diese Importinformationen nicht.
+
+| Tatsächlich geprüft | Ergebnis |
+| --- | --- |
+| Alpha/Beta/Gamma/Delta | Vier synthetische Coaches: vollständiges Preview-Profil, bewusst ohne Porträt, explizite synthetische Therapiegrenze, getrennte Rollen/Qualifikationen |
+| Leerer Fachbestand, DB-Dry-Run | CREATE4; alle Tabellen einschließlich xmin unverändert |
+| Paralleler Erstanlauf | Ein CREATE4, ein NO-OP; keine doppelte UUID/Revision |
+| Zweiter und dritter identischer Lauf | UNCHANGED4, null Mutationen; alle Tabellen einschließlich Ledger/Audit/xmin identisch, Projektion bytegleich |
+| Taxonomie | Acht bestehende Themen, drei Kategorien,18 M:N-Links; nur kuratierte Aliase, keine Anlage von „Alle“ oder inferierten Kompetenzen |
+| Namens-/Kurztextänderung Alpha | Gleiche UUID und Route; genau neue Draft-Revision2, keine Freigaben übernommen, veröffentlichte Revision1 unverändert |
+| Angebote | Zwei fachliche Alpha-Angebote bleiben über logische IDs stabil; neue Revision kopiert Snapshots. Explizite Änderung/Deaktivierung/Ergänzung in importer-eigenem Draft, Wiederholung NO-OP |
+| Fehlende Items | Konflikt statt Löschen; gesamter Batch unverändert |
+| Assetbytes | Hashprüfung; neue Bytes unter alter Referenz blockiert, neue explizite Versionsreferenz im Draft möglich, alter veröffentlichter Verweis erhalten |
+| Themen-/Kategoriesnapshot | Bestandteil des Profilhashs; kanonische Themenumbenennung aktualisiert nur den Draft, nicht die veröffentlichte Fassung |
+| Nachweise | Preview/Production getrennt, unbekannte historische Zeitpunkte bleiben NULL, bekannte UTC-Zeit getrennt von Import-/Attestationszeit |
+| Technische Provenienzänderung | Nur Ledger-Metadaten; keine Profilrevision und kein fachlicher Audit |
+| Pause/Ausscheiden/Wiederkehr | Active2026 -> inactive2027 -> frisch geprüft active2028 mit derselben UUID; Import nach manueller Zustandsänderung blockiert, keine stille Reaktivierung |
+| Hard Conflict / Abbruch | Pfad-/Identitäts-/Freigabekonflikte ohne Teilpersistenz; vollständiger Rollback auch bei Ausnahme, Cancellation und SQL-Fehler nach bereits begonnenen Writes |
+| DB-Schutz / CLI | Unveränderliche Bindung/Item-IDs, eindeutige Pfade/FKs, Evidence-Umgebung und eingeschränkte Grants direkt geprüft; Defaults schreibfrei, synthetischer Scope und DB-Admin überprüft |
+
+Verifikation23.10.2026: **559 lokale Tests bestanden,19 vorgesehene Skips**
+(17 Staging, je ein dedizierter lokaler Registry-/Import-PG-Test).
+Beide opt-in-PG-Szenarien separat wirklich ausgeführt und bestanden. Der neue
+Importlauf wurde wiederholt; CLI-Dry-Run und expliziter synthetischer CLI-APPLY
+gegen die laufende Testdatenbank ergaben NO-OP. Compileall, pip check,
+PowerShell-Syntax, Dokumentlinks/Archivintegrität und git diff --check bestanden.
+Kein JS geändert; kein neuer Browser-/Website-Abnahmeclaim.
+
+Testdateien: [Unit/CLI](../../apps/webapp/tests/test_coach_import.py),
+[echtes PostgreSQL](../../apps/webapp/tests/test_coach_import_postgres_local.py).
+Der Testbestand wird durch vollständiges Entfernen des eigenen tmpfs-Containers
+gelöscht; keine Historienguards abgeschaltet. Keine Quellenordner, echten
+Porträts, realen Coach-UUIDs, Accounts oder Kalenderzuordnungen eingelesen.
+Pages, VPS und IONOS unverändert; weder Paketbau noch Deployment durchgeführt.
+
+## Verbindliche Entscheidungsmatrix Vor COACH-3B
+
+| Bereich | Bereits technisch entschieden | Noch fachlich zu bestätigen |
+| --- | --- | --- |
+| Qualifikationen | Getrennte typisierte Eingabe; niemals Kompetenz/operative Rolle inferieren. Öffentlich wörtlich nur nach explizitem Hintergrund-Mapping; intern aktuell nicht unterstützt | Für reale Listen: vollständige öffentliche Darstellung als eigener Hintergrundabschnitt oder eigener strukturierter Feld-/Renderingvertrag? Welche Angaben bleiben intern? |
+| Rollenbezeichnungen / Darstellung | Eigener Source-Typ; ungeprüfte Zuordnung stoppt. Keine automatische Zerlegung zusammengesetzter Rollen | Reale Rollen/previewRole und Fokus sowie Zitat, Sprachen, Formatgruppen und Advisory-Link verlustfrei und in vorgesehenen Abschnitten darstellen; kein pauschaler Freitextdump |
+| Therapie-/Coachinggrenze | Unmapped blockiert; nur ausdrücklich freigegebener Wortlaut, synthetisches Beispiel nie buchbar | Exakte öffentliche Einordnung insbesondere Elisabeths „Psychotherapie (HeilprG)“ und der17 Angebotsgruppen; nicht still als aktives Coaching übernehmen |
+| Freigabeevidence | Revision/Coach/Art/Umgebung/Quelle getrennt; unknown bleibt NULL, aktuelle Attestation separat, keine Vererbung | Welche vorhandenen konkreten Nachweise decken Inhalt, Person/Porträt und jeweilige Umgebung ab? Prüfer und bekannte Zeitpunkte/Umfang explizit zuordnen |
+| Porträt fehlt | Zulässig, kein Ersatzbild erzwingen; keine neue Entscheidung erforderlich | Keine |
+| Fehlendes Angebot/Item | Gesamter Batch stoppt; keine automatische Löschung. Explizit active:false ist unterstützt | Nur bei einem konkreten späteren Konflikt Quelle vervollständigen oder Deaktivierung freigeben |
+| Identität/Themen/Assets | Keine Namenszuordnung, kein Legacy-Adopt, keine unfreigegebenen UUID-Mappings oder Assetbytes | Eigene reale Mapping-/Ausführungsfreigabe bleibt vor jedem COACH-3B-Schreibschritt erforderlich |
 
 ## Ein Empfohlener Nächster Block
 
-**COACH-3A: Verlustfreier Importvertrag und synthetischer Dry-Run.**
-Zweck: die offenen Inhalts-/Identitätsfragen vor einem echten Import auflösen.
-Inputs: diese Inventur, COACH-1/2, bestätigte Feld-/Rendering- und Therapiegrenzen
-sowie separate Slice-Freigabe. Deliverables: verbindliche Abbildung, typisierte
-Validierung, getestetes Idempotenzledger/-verhalten und lokale synthetische
-Projektion. Done: zwei Wiederholungen ohne Duplikate oder neue Revisionen,
-Konflikt-/Asset-/Datenschutztests, vollständiger Verlustbericht, keine echten
-DB-Records und keine Änderung von Pages/IONOS/VPS.
+**COACH-3B-Vorbereitung: reale Feld-/Rendering- und Nachweismatrix abstimmen.**
+Zweck: verbleibende fachliche Informationsverluste vor Echtdatenübernahme klären.
+Inputs: diese Inventur, der Importvertrag, kanonische öffentliche Profile und
+Manuels Entscheidungen zu Qualifikationen, Rollen/Darstellung, Therapiegrenze
+und konkreter Freigabeevidence. Deliverables: bestätigte Zuordnungs-/Verlustmatrix
+und begrenzter Ausführungsplan. Done: alle fachlichen Konflikte entschieden,
+Identitäts-/Themen-/Asset-/Umgebungsumfang ausdrücklich dokumentiert; weiterhin
+kein realer Import, keine Servermigration oder Veröffentlichung ohne eigenes Gate.
