@@ -1,6 +1,6 @@
 # Coach-Veröffentlichungsmatrix
 
-Stand: 23.10.2026. Production-Regel vom 24.09. bleibt bestehen; Preview-Freigabe siehe unten.
+Stand: 29.10.2026. Historische Production-Regel vom24.09 und Preview-Freigabe bleiben dokumentiert; neue Gülcan-Freigabe siehe unten, noch kein Release.
 
 Die folgende historische Production-Matrix begrenzt den öffentlichen Messeauftritt. Sie ersetzt frühere
 Einzelfreigaben, soweit sie mehr als die beiden unten genannten echten Profile
@@ -70,3 +70,24 @@ Coachqualifikationen. Insbesondere wird niemand neu Mediation zugeordnet.
 Es wurde kein privater Quellenpfad gelesen. Es liegt aktuell kein weiteres
 Messefeedback vor. Technische Trennung und QA:
 [GitHub-Pages-Preview](../architecture/github-pages-preview-2026-10-21.md).
+
+## Zusätzliche Rechtefreigabe Gülcan Vom 29.10.2026
+
+Manuel bestätigt ausdrücklich **Gülcan Elmas-Brandes: Vorschau und IONOS**,
+nach konkreter Rückfrage zu Profil, Porträt und kurzen öffentlichen
+Angebotsdarstellungen. Damit ist Gülcan zusätzlich zu den beiden historischen
+Production-Profilen für diese Inhalte freigegeben. Die ausgelieferte IONOS-
+Website bleibt unverändert; diese Rechtefreigabe ist kein ausgeführter Release.
+
+| Gegenstand | Preview | IONOS / Production | Grenzen |
+| --- | --- | --- | --- |
+| Bestehendes Gülcan-Profil und Porträt guelcan-elmas-brandes.png | APPROVED | APPROVED | Vorhandene verifizierte Bildbytes und belegte Profildaten; keine neue Qualifikation erfinden |
+| Kurze öffentliche Darstellungen der drei Angebotsfamilien / fünf belegten Formatkandidaten | APPROVED | APPROVED | Titel, Format, Zielgruppe, belegte Dauer/Durchführung, grobe Schwerpunkte und belegte Boundary; nur tatsächlich extrahierte Fakten |
+| Vollständige Konzepte, Abläufe, Übungen, Arbeitsblätter und Originaldateien | NOT_APPROVED_BY_THIS_SCOPE | NOT_APPROVED_BY_THIS_SCOPE | Bleiben geschützt, kein vollständiger Abdruck aus einer pauschalen Coach-Freigabe |
+| Noch unlesbare Tagesworkshop-/Reflexionsreihendetails | UNKNOWN | UNKNOWN | Ersatzquellen folgen später; keine Details ergänzen oder Lesbarkeit behaupten |
+
+Freigebender: Manuel; bekanntes Datum29.10.2026, Uhrzeit nicht festgehalten.
+Für die spätere Registry konkrete Revision/Assethash/Angebotsinhalt und Umgebung
+gesondert binden; unbekannte ursprüngliche Einwilligungszeitpunkte nicht erfinden.
+Keine Accounts, echten DB-Imports, Migrationen, Pages- oder IONOS-Uploads dadurch
+ausgeführt oder im aktuellen Vorbereitungsslice freigegeben.

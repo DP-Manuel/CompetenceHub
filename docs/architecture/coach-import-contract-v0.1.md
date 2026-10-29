@@ -176,6 +176,13 @@ names, approval strings and full input objects are not echoed.
 
 ## Acceptance And Limits
 
+29.10 follow-on: [confirmed COACH-3B matrix and minimal target proposal](coach3-existing-content-migration-plan-2026-10-23.md#bestätigte-entscheidungen-vom-2910)
+supersede the earlier open business questions, not this executable v0.1 schema.
+The existing importer remains synthetic-only. Structured internal/public
+qualifications, role/presentation fields, exact asset/offer evidence and offering
+families require a separate compatible implementation and synthetic acceptance.
+Current read-only preparation reports NO_GO_APPLY, not real import readiness.
+
 Detailed actual results: [COACH-3 plan evidence](coach3-existing-content-migration-plan-2026-10-23.md#coach-3a-nachweis).
 Unit/CLI tests cover normalization, ambiguity, strict fields, all conflict
 classes, safe defaults/targets and planner ownership. Real PostgreSQL tests

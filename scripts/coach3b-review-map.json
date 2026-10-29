@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "decision_date": "2026-10-29",
+  "scope": "PREPARATION_ONLY_NO_DATABASE_OR_PUBLICATION",
+  "source_snapshot_sha256": "e3feda67b2bdb681b080e2336d82fd9c9eb39128735f2955c47773fed5e743a9",
+  "coaches": {
+    "christian-galvano": {
+      "roles": [{"canonical": "lecturer", "display": "Dozent"}, {"canonical": "trainer", "display": "Fachtrainer"}, {"canonical": "coach", "display": "Coach"}],
+      "credential_kinds": ["qualification", "qualification", "qualification", "qualification", "role_descriptor", "role_descriptor"],
+      "background_note": "Studium ist kein zusätzlich behaupteter Abschluss; Buchautor bleibt Rollenbeschreibung.",
+      "project_evidence": {"profile": "APPROVED", "portrait": "APPROVED", "preview": "APPROVED", "production": "APPROVED"}
+    },
+    "manuela-rodriguez": {
+      "roles": [{"canonical": "ai_manager", "display": "KI-Managerin"}, {"canonical": "digital_strategy_lead", "display": "Leitung Digitalstrategie"}, {"canonical": "lecturer", "display": "Dozentin"}, {"canonical": "coach", "display": "Coach"}, {"canonical": "moderator", "display": "Moderatorin"}, {"canonical": "speaker", "display": "Speakerin"}],
+      "credential_kinds": ["qualification", "qualification", "role_descriptor", "role_descriptor", "background", "qualification", "background", "role_descriptor"],
+      "background_note": "Methodenbezug Hypnotherapie begründet weder Heilkundeberechtigung noch eigenes Psychotherapieangebot; M.A. aus bestätigtem Namen erhalten.",
+      "project_evidence": {"profile": "APPROVED", "portrait": "APPROVED", "preview": "APPROVED", "production": "APPROVED"}
+    },
+    "elisabeth-schwabauer": {
+      "roles": [{"canonical": "psychologist", "display": "Psychologin (M.Sc.)"}],
+      "credential_kinds": ["qualification", "qualification", "background", "competency", "competency", "competency", "qualification"],
+      "background_note": "Heilpraktikererlaubnis bleibt Qualifikation; Psychotherapie (HeilprG) separat und nicht über Competence Hub angeboten.",
+      "project_evidence": {"profile": "APPROVED", "portrait": "APPROVED", "preview": "APPROVED", "production": "UNKNOWN"}
+    },
+    "carolin-hupp": {
+      "roles": [{"canonical": "sports_scientist", "display": "Diplom-Sportwissenschaftlerin"}],
+      "credential_kinds": ["qualification", "background", "competency", "competency", "competency", "background"],
+      "background_note": "ZPP-Angabe betrifft Präventionskurse, nicht eine neu attestierte personenbezogene Zertifizierung; kein Porträt erforderlich.",
+      "project_evidence": {"profile": "APPROVED", "portrait": "NOT_REQUIRED", "preview": "APPROVED", "production": "UNKNOWN"}
+    },
+    "guelcan-elmas-brandes": {
+      "roles": [{"canonical": "coach", "display": "Coach"}, {"canonical": "trainer", "display": "Trainerin"}],
+      "credential_kinds": ["qualification", "qualification", "qualification", "qualification", "qualification", "qualification", "qualification", "competency", "competency", "languages"],
+      "background_note": "Diplom-Betriebswirtin (VWA) getrennt erhalten; keine Mediatorin/Supervisorin aus Konfliktformaten ableiten.",
+      "project_evidence": {"profile": "APPROVED", "portrait": "APPROVED", "preview": "APPROVED", "production": "APPROVED"},
+      "scope_confirmation_date": "2026-10-29",
+      "scope_confirmation_reference": "docs/content/coach-publication-matrix-2026-09-24.md#zusätzliche-rechtefreigabe-gülcan-vom-29102026"
+    },
+    "wegner-ney": {
+      "roles": [{"canonical": "consultant", "display": "Unternehmensberater"}, {"canonical": "speaker", "display": "Speaker"}, {"canonical": "workshop_leader", "display": "Workshop-Leiter"}, {"canonical": "coach", "display": "Coach"}],
+      "credential_kinds": ["qualification", "qualification", "qualification", "competency", "competency", "competency"],
+      "background_note": "Keine Titelangebote aus den allgemeinen Workshop-/Vortragshinweisen erzeugen.",
+      "project_evidence": {"profile": "APPROVED", "portrait": "APPROVED", "preview": "APPROVED", "production": "UNKNOWN"}
+    },
+    "goran-celic": {
+      "roles": [{"canonical": "coach", "display": "Coach für Rhetorik und Vertrieb"}],
+      "credential_kinds": ["background", "background", "competency", "competency", "competency", "format_description"],
+      "background_note": "Erfahrung und Teilnehmerzahlen sind öffentliche Quellbehauptungen, keine Ausbildungsnachweise.",
+      "project_evidence": {"profile": "APPROVED", "portrait": "APPROVED", "preview": "APPROVED", "production": "UNKNOWN"}
+    },
+    "stefanie-becker": {
+      "roles": [{"canonical": "executive_coach", "display": "Executive Coach"}, {"canonical": "organisation_developer", "display": "Team- und Organisationsentwicklerin"}],
+      "credential_kinds": ["qualification", "background", "background", "background", "background", "background"],
+      "background_note": "Dr. erhalten, Promotion belegt im öffentlichen Bestand; Methodenbezeichnungen nicht zu Zertifikatsabschlüssen ausbauen.",
+      "project_evidence": {"profile": "APPROVED", "portrait": "APPROVED", "preview": "APPROVED", "production": "UNKNOWN"}
+    },
+    "susanne-klemm": {
+      "roles": [{"canonical": "coach", "display": "Coach"}, {"canonical": "trainer", "display": "Trainerin"}],
+      "credential_kinds": ["qualification", "qualification", "qualification", "qualification", "qualification", "qualification", "qualification", "qualification"],
+      "background_note": "44 Zeitstunden Systemische Supervision kompakt, keine DGSv-Qualifikation oder automatisch freigegebene Supervisionsleistung.",
+      "project_evidence": {"profile": "APPROVED", "portrait": "APPROVED", "preview": "APPROVED", "production": "UNKNOWN"}
+    }
+  },
+  "new_offering_families": [
+    {
+      "key": "family/business-balance",
+      "coach_key": "coach/guelcan-elmas-brandes",
+      "title": "Business & Balance",
+      "subtitle": "Struktur, Klarheit & Energie für Unternehmerinnen",
+      "target_group": "Unternehmerinnen",
+      "target_focus": "alleinerziehende Unternehmerinnen",
+      "boundary_ref": "guelcan-balance-six-weeks:P12",
+      "service_domains": ["coaching", "training"],
+      "excluded_services": ["therapy", "medical_treatment", "psychotherapy", "legal_advice", "tax_advice"],
+      "module_count": 6,
+      "formats": [
+        {"key": "business-balance/day", "label": "Tagesworkshop", "kind": "workshop", "clock_window": "10:00-16:30", "source_status": "SOURCE_REPLACEMENT_REQUIRED", "confirmed_ref": "guelcan-balance-six-weeks:P14", "detail_fields": null},
+        {"key": "business-balance/six-weeks", "label": "6-Wochen-Vertiefungsprogramm", "kind": "coaching", "weeks": 6, "sessions_per_week": 1, "session_minutes": 60, "delivery_label": "online oder live", "delivery_mode": "LIVE_UNSPECIFIED_OR_ONLINE", "standalone_or_extension": true, "source_status": "READY", "confirmed_ref": "guelcan-balance-six-weeks:P14"}
+      ],
+      "options": [{"key": "community", "kind": "optional_add_on", "label": "Community zwischen den Sessions"}],
+      "offering_content_approval": "APPROVED",
+      "public_copy_approval": "APPROVED",
+      "publication_scopes": ["preview", "production"],
+      "approval_reference": "Manuel:2026-10-29:guelcan-public-short-copy",
+      "excluded_rights": ["full_concepts", "worksheets", "exercise_scripts", "unread_details"]
+    },
+    {
+      "key": "family/gesundheit-im-unternehmensalltag",
+      "coach_key": "coach/guelcan-elmas-brandes",
+      "title": "Gesundheit im Unternehmensalltag",
+      "target_group": "Unternehmen und Teams",
+      "boundary_ref": "guelcan-health:P13",
+      "service_domains": ["health_promotion", "training"],
+      "excluded_services": ["medical_treatment", "psychotherapy", "healing_treatment", "diagnosis", "individual_nutrition_therapy"],
+      "core_areas": ["Bewegung", "Ernährung", "Stressregulation", "mentale Gesundheit"],
+      "formats": [{"key": "gesundheit/half-day", "label": "Halbtagsworkshop", "kind": "workshop", "clock_window": "10:00-14:00", "duration_minutes": 240, "delivery_mode": "IN_PERSON", "location_label": "im Unternehmen oder externer Raum", "source_status": "READY", "confirmed_ref": "guelcan-health:P16-P18"}],
+      "options": [
+        {"key": "full-day", "kind": "variant", "label": "Ganztag", "duration_minutes": null},
+        {"key": "deeper-practice", "kind": "option", "label": "Vertiefende Übungen"},
+        {"key": "follow-up", "kind": "optional_add_on", "label": "Follow-up nach 4-6 Wochen"},
+        {"key": "ergonomics", "kind": "optional_add_on", "label": "Ergonomie-Begehung vor dem Workshop"}
+      ],
+      "offering_content_approval": "APPROVED",
+      "public_copy_approval": "APPROVED",
+      "publication_scopes": ["preview", "production"],
+      "approval_reference": "Manuel:2026-10-29:guelcan-public-short-copy",
+      "excluded_rights": ["full_concepts", "worksheets", "exercise_scripts", "unread_details"]
+    },
+    {
+      "key": "family/konfliktklaerung-teamreflexion",
+      "coach_key": "coach/guelcan-elmas-brandes",
+      "title": "Konfliktklärung & Teamreflexion",
+      "target_group": "Teams und Unternehmen",
+      "boundary_ref": "guelcan-conflict-day:P12",
+      "service_domains": ["coaching", "moderation"],
+      "excluded_services": ["mediation", "supervision", "legal_advice", "binding_dispute_resolution"],
+      "formats": [
+        {"key": "konfliktklaerung/day", "label": "Konfliktklärung im Team – Ein Tag der Klärung", "kind": "workshop", "clock_window": "10:00-16:00", "source_status": "READY", "confirmed_ref": "guelcan-conflict-day:P13-P14"},
+        {"key": "teamreflexion/series", "label": "Reflexionsreihe", "kind": null, "source_status": "SOURCE_REPLACEMENT_REQUIRED", "detail_fields": null, "confirmed_ref": "authorized-addendum:format-2"}
+      ],
+      "options": [],
+      "offering_content_approval": "APPROVED",
+      "public_copy_approval": "APPROVED",
+      "publication_scopes": ["preview", "production"],
+      "approval_reference": "Manuel:2026-10-29:guelcan-public-short-copy",
+      "excluded_rights": ["full_concepts", "worksheets", "exercise_scripts", "unread_details"]
+    }
+  ],
+  "source_quality": [
+    {"key": "guelcan-health", "file": "Gesundheit-im-Unternehmensalltag-Halbtag-10-14Uhr.docx", "status": "READY", "sha256": "5ce324fc125caca7e92b2afd6f4ec75451942eae0284724a01fbd906fa393f2e"},
+    {"key": "guelcan-balance-six-weeks", "file": "Gülcan Elmas_Business-Balance-6-Wochen-Programm_60 Minuten.docx", "status": "READY", "sha256": "d218bd1b02c4464a4d78da925c785d0ca60393b88848c7dd31f845be02cb4fae"},
+    {"key": "guelcan-balance-day", "file": "Gülcan Elmas_Business-Balance-Tagesworkshop für Unternehmerinnen.docx", "status": "SOURCE_REPLACEMENT_REQUIRED", "sha256": "24e3a1f5ba140f1c5d0cd86ffc89954c31de79f821c394f82741eb7739d070e6"},
+    {"key": "guelcan-conflict-day", "file": "Gülcan Elmas_Konfliktklaerung-Teamreflexion-Tagesworkshop.docx", "status": "READY", "sha256": "ea6fee6c72b7dfa7c37309c333d00205f0aafc34e42e4276c485afb84adc5125"},
+    {"key": "guelcan-reflection-series", "file": "Gülcan Elmas_Konfliktklaerung-Teamreflexion-Reflexionsreihe.docx", "status": "SOURCE_REPLACEMENT_REQUIRED", "sha256": "30f83dff1ffd26e080097f479526541da6879d62f79fd53f123c604fe8fc2e7c"}
+  ],
+  "private_exclusions": ["private_contacts", "certificate_numbers", "original_documents", "signatures", "verification_notes", "detailed_workshop_scripts", "worksheets", "unconfirmed_pricing"],
+  "scan_review": {"source": "Document_261029_073807.pdf", "sha256": "a68554e6062555efe1a3509017f4b4af649c8154b712485fbae8277a569b87ad", "pages_visually_reviewed": [1, 2], "pricing": "INTERNAL_UNCONFIRMED_NOT_IMPORTED", "susanne_notes": "REVIEW_REQUIRED_NO_NEW_SUPERVISION_QUALIFICATION_OR_DUPLICATE_OFFERS"}
+}

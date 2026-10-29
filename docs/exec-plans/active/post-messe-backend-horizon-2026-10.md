@@ -1,18 +1,20 @@
 # Post-Messe Backend Horizon
 
-Updated: 2026-10-23. Status: security/local Linux, COACH-1/2 and synthetic COACH-3A accepted; no real import. Domain/TLS inputs and any VPS execution remain separate open gates.
+Updated: 2026-10-29. Status: local security/Linux and synthetic COACH-1/2/3A accepted; COACH-3B read-only preparation complete, real APPLY blocked by target/evidence gaps. Domain/TLS and VPS execution remain separate gates.
 The [authorized consolidation block](../completed/post-messe-konsolidierung-2026-10.md) is complete.
 Current checkpoint: [PROJECT_CONTEXT](../../../PROJECT_CONTEXT.md). Synthetic Staging acceptance is authorized; production and real-data activation are not.
 
-## Recommended Next Block: COACH-3B Decision Preparation
+## Recommended Next Block: Synthetic Lossless Target Extension
 
-Purpose: close actual field/rendering and consent decisions before real migration.
-Inputs: [COACH-3 inventory/decision matrix](../../architecture/coach3-existing-content-migration-plan-2026-10-23.md), [verified import contract](../../architecture/coach-import-contract-v0.1.md) and Manuel's qualification/role/therapy/evidence decisions.
-Deliverables: confirmed lossless mapping matrix and bounded execution proposal.
-Definition of Done: every field/boundary/evidence gap decided, exact identity/topic/asset/environment scope documented; no real records, server migration or Website changes.
+Purpose: close demonstrated executable-model gaps before any real migration.
+Inputs: [confirmed29.10 matrix/minimal proposal](../../architecture/coach3-existing-content-migration-plan-2026-10-23.md) and [existing import contract](../../architecture/coach-import-contract-v0.1.md); separate implementation scope approval required.
+Deliverables: compatible Domain/DB/Admin/Import/Public-Projection fields for public/internal qualifications, roles, subject evidence, families/options and boundaries.
+Definition of Done: synthetic revision/evidence/family/parity proof without data loss or public-private leakage; no real records, server migration or Website changes.
 No manual credential window now. Domain/DNS/TLS inputs progress in parallel using exactly the consolidated request in the [security close-out](../../operations/cryptography-maintenance-2026-10-23.md).
 
 ## Current Execution
+
+- 29.10 COACH-3B preparation complete:9/9 canonical profiles analyzed without DB; confirmed decisions, actual source quality and pure mapping tests. Current executable target BLOCKED9; new Gülcan3 families/5 formats held,2 source replacements later. [Completed plan](../completed/coach-3b-preparation-2026-10-29.md). No website/real-import changes.
 
 - 23.10 security maintenance closed: isolated49->50.0.2 compatibility, reproducible baseline ZIPs, exact Linux wheel/advisory check and actual local HTTPS/auth/proxy test. Full evidence and hashes live only in the close-out above; no VPS installation.
 - 23.10 COACH-1 local slice: existing Coach identity extended, migration0007 tested only in owned local PG, revision/lifecycle/scoped publication and guarded Admin API. Default runtime remains unconfigured; no real Coach import or account mapping.
@@ -33,7 +35,7 @@ No manual credential window now. Domain/DNS/TLS inputs progress in parallel usin
 
 | # | Intended outcome / status | Gate / dependency | Planned evidence | Confidence |
 | --- | --- | --- | --- | --- |
-| 1 | COACH-3B field/rendering and evidence decision preparation / recommended | Canonical inventory, verified3A contract and Manuel's real mapping decisions | Confirmed loss matrix and bounded proposal; no real import | High priority; medium confidence |
+| 1 | Synthetic lossless target extension / recommended | Confirmed29.10 matrix, minimal schema/DTO/editor proposal, separate implementation approval | Revision/public-private/subject-evidence/family/parity tests; no real data | High priority; medium confidence |
 | 2 | Runtime/operations input closure / parallel, waiting inputs | Non-secret origin/DNS/TLS/port/path and owner/window decisions | Completed consolidated input matrix and dedicated rehearsal plan | High priority, external timing unknown |
 | 3 | Controlled synthetic VPS Linux/proxy rehearsal / waiting external gate | Final domain/TLS/owners and separate execution approval; exact reviewed artifact, not automatic Registry promotion | Real unit/HTTPS/cookies, rollback, cleanup and co-host health in one prepared window | Medium |
 | 4 | Portal activation review / waiting | Rehearsal from 3 plus backup/alerts/mail/privacy/real-role/onboarding gates | Separate Go/No-Go and exact source/artifact/operations scope | Medium-low |
@@ -49,7 +51,7 @@ No new pilot deadline, budget or stakeholder meeting date is invented.
 
 ## Product / Maintenance Backlog Outside Current WIP
 
-Additional Messefeedback: none currently available per Manuel; reopen only with a concrete authorized source.
+Additional sources29.10: only the explicitly authorized20261029 package. Gülcan's profile/portrait/short offering copy explicitly approved for both Preview/IONOS; full scripts and missing details excluded. No other source-folder access, import or release inferred.
 Website toolchain: [17 advisory packages and scoped reachability assessment](../../architecture/preview-dependency-assessment-2026-10-21.md); deliberate upgrade/compatibility block before untrusted content, SSR or exposed development tooling.
 Preview stakeholder review, later bundled IONOS promotion, .ics delivery, deeper analytics, PWA and broader request/finance automation retain separate gates.
 The 21.10 preflight was analysis-only. The separately authorized 22.10 batch implements additive access and sanitized database-error logging hardening; neither is deployed to production. Native acceptance and the following readiness-preparation slice are complete. Further activation needs the explicit open inputs and environment-specific gates above.

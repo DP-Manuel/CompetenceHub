@@ -3,6 +3,14 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-29 | preparation / source review | COACH-3B Field And Evidence Matrix
+
+- Manuel confirms public/internal qualification separation, independent profile roles, distinct psychotherapy and subject/environment evidence. [Existing COACH-3 plan](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md) now owns9/9 field/role/qualification/offer/asset/evidence matrices, conditional scope, current target gaps and one future import/parity/rollback window.
+- Authorized20261029 sources only: three DOCX structurally readable, two not valid DOCX containers; replacement files follow later per Manuel. Both PDF scan pages visually inspected; private pricing and unconfirmed Susanne supervision ideas excluded from canonical offers/qualifications. Gülcan's three families/five formats modeled as held preparation, no complete workshop scripts in Git/public copy.
+- Manuel explicitly clarifies Gülcan's profile/portrait/short offering copy approval for both Preview and IONOS. Recorded as dated subject/environment rights, not inferred from prior general approval and not an upload authorization in this preparation block. Unread details and full workshop scripts remain excluded.
+- Pure canonical AST/typed preparation checks produce NO_GO_APPLY, zero DB connections/writes; current target0 READY/0 REVIEW_REQUIRED/9 BLOCKED despite complete fact mapping.0008 alone lacks the richer qualified/family/evidence/rendering shape. Minimal extension proposed, not migrated or enabled.
+- Scoped commit/push allowed after green. No real UUID/account/Calendar mapping, source-file publication, Preview build, Pages/VPS/IONOS access or deployment. Unrelated worktree files preserved. Next gate: local synthetic lossless target extension; detailed actual checks recorded in the canonical plan.
+
 ## 2026-10-23 | implementation / acceptance | COACH-3A Synthetic Import
 
 - [Import contract](docs/architecture/coach-import-contract-v0.1.md): stable source identity, explicit typed mapping, no-op content comparison, source/item/evidence ledger and read-only validation/dry-run. No HTTP importer or runtime activation.
