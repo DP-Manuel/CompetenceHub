@@ -8,13 +8,15 @@ DB-Einträge, Accounts, Kalenderrollen oder Veröffentlichungen erzeugt.
 Die spätere COACH-3A-Freigabe erlaubt ausschließlich lokale Migration0008 und
 synthetische Testeinträge in einer anschließend vollständig entfernten Datenbank.
 
-Aktueller Nachtrag: Der separat freigegebene **COACH-3C-Zielvertrag** ist lokal
-implementiert; [Domainvertrag](coach-registry-contract-v0.1.md#coach-3c-additive-target-contract)
-und [aktueller Prüfplan](../exec-plans/completed/coach-3c-target-2026-10-29.md)
-besitzen Implementierung und Abnahme. Die datierten Inventur-/0008-Befunde unten
-bleiben historisch erhalten. Neuer Recheck: **0 READY / 9 REVIEW_REQUIRED /
-0 BLOCKED**, **0 unbeabsichtigter kanonischer Feldverlust**, weiterhin NO_GO_APPLY.
-0009 ist ausschließlich in eigenen lokalen Testcontainern angewandt worden.
+Aktueller Gate nach dem separat freigegebenen **COACH-3B-Reviewabschluss**:
+**9 READY / 0 REVIEW_REQUIRED / 0 BLOCKED**, **0 unbeabsichtigter kanonischer
+Feldverlust**. **GO FOR COACH-3B APPLY, pending separate Manuel approval.**
+Keine DB-Verbindung, UUID-Vergabe, Migration oder Veröffentlichung in diesem
+Review. Die früheren0/9/0- und0008-Befunde unten bleiben datierte Historie.
+[Aktueller Reviewabschluss, Zahlen und Runbook](#coach-3b-reviewabschluss-2910)
+gelten vor historischen Empfehlungen. Der
+[COACH-3C-Zielvertrag](coach-registry-contract-v0.1.md#coach-3c-additive-target-contract)
+bleibt technisch unverändert;0009 ist weiterhin nur lokal getestet.
 
 ## Reproduzierbare Inventur
 
@@ -642,7 +644,7 @@ Die Auswertung meldet WOULD_CREATE_IF_GATES_PASS9, WOULD_MATCH_CANONICAL_TOPICS8
 WOULD_LINK_EDITORIAL_TOPICS22, WOULD_SKIP_PORTRAIT1, BLOCKED_CURRENT_TARGET9.
 Tatsächliche Business-Mutationen und Veröffentlichungseffekte: **je0**.
 
-## Zusammenhängendes Künftiges COACH-3B-Runbook
+## Historischer Vorbereitungsstand Des COACH-3B-Runbooks
 
 **Vorbereiteter Plan, jetzt nicht ausführen.** Die existierende COACH-3A-CLI
 akzeptiert absichtlich nur synthetische Fixtures. Es gibt noch keinen echten
@@ -810,3 +812,217 @@ abschließen. Inputs: neue Zielvalidierung, bestehende Reviewmatrix und verfügb
 Ersatzquellen. Deliverable: freigegebene konkrete Zuordnungs-/Evidence-Matrix mit
 begründeten verbleibenden Ausschlüssen. Done: jeder Reviewpunkt ausdrücklich
 entschieden; ein echter Import benötigt danach weiterhin seine eigene Freigabe.
+
+## COACH-3B Reviewabschluss 29.10
+
+Manuels neuer Reviewauftrag erlaubt ausdrücklich, vorhandene belegte Freigaben,
+kanonische Zuordnungen und bereits entschiedene Regeln selbstständig zu schließen.
+Ein optionales UNKNOWN ist kein zusätzlicher Entscheidungsbedarf. Werkzeug:
+[coach3b_review_closure.py](../../scripts/coach3b_review_closure.py); ausschließlich
+VALIDATE/DRY-MAPPING im Speicher. Source-/Review-/Rechtedokumente,9 Templates und
+8 Assetbytes sind hashgebunden; geänderte Dateien stoppen den Lauf.
+
+### Finale Field- Und Evidence-Matrix
+
+Identitäten/Pfade bleiben exakt wie in der Coachmatrix. Künftige Personen-UUIDs
+werden erst vom genehmigten Import erzeugt. Alle22 redaktionellen Themenlinks
+und18 Kategoriebeziehungen sind durch den bestehenden Bestand entschieden;
+„Alle Themen“ bleibt berechnet. Der spätere technische MATCH_ONLY löst echte
+UUIDs gegen8 eindeutige kanonische Referenzen auf, ohne Fuzzy-Matching oder
+automatische Themenanlage. Keine neue Zuordnung aus Lebenslauf/Modulnamen.
+
+| Coach | Gate | Themen / Kompetenzen / Q / Formate | Porträt | Preview | Production | Objekt-Evidence Preview / Production |
+| --- | --- | --- | --- | --- | --- | --- |
+| Christian Galvano | READY |3 /0 /4 /0 | vorhanden | APPROVED21.10 | APPROVED bestehender Umfang |7 /7 |
+| Manuela Rodríguez, M.A. | READY |3 /0 /3 /0 | vorhanden | APPROVED21.10 | APPROVED24.09, Name/Abschluss25.09 |6 /6 |
+| Elisabeth Schwabauer | READY |3 /3 /3 /17 | vorhanden | APPROVED21.10 | UNKNOWN, nicht vorgesehen |23 /0 |
+| Carolin Hupp | READY |1 /3 /1 /0 | NOT_REQUIRED | APPROVED21.10 | UNKNOWN, nicht vorgesehen |3 /0 |
+| Gülcan Elmas-Brandes | READY |3 /2 /7 /5 | vorhanden | APPROVED29.10 | APPROVED29.10 |18 /18 |
+| T. Wegner-Ney | READY |3 /3 /3 /0 | vorhanden | APPROVED21.10 | UNKNOWN, nicht vorgesehen |6 /0 |
+| Goran Celic | READY |1 /3 /0 /0 | vorhanden | APPROVED21.10 | UNKNOWN, nicht vorgesehen |3 /0 |
+| Dr. Stefanie Becker | READY |2 /0 /1 /0 | vorhanden | APPROVED21.10 | UNKNOWN, nicht vorgesehen |4 /0 |
+| Susanne Klemm | READY |3 /0 /8 /8 | ausgewählte WebP | APPROVED23.10 | UNKNOWN, nicht vorgesehen |19 /0 |
+
+Profile, Rollen,30 öffentliche Qualifikationen und14 Kompetenzlabels sind anhand
+der vorhandenen kanonischen Texte getrennt bestätigt. Public Label bedeutet
+keine zusätzliche Urkundenprüfung; SOURCE_ASSERTED/alte Prüfhinweise bleiben
+intern. Kompakte öffentliche Sammelüberschrift künftig bevorzugt:
+„Qualifikationen & beruflicher Hintergrund“. Keine aktuelle Websiteänderung.
+
+Belege: [datierte Veröffentlichungsmatrix](../content/coach-publication-matrix-2026-09-24.md)
+und [Susannes konkrete Freigabe](../content/susanne-klemm-preview-2026-10-23.md).
+Nicht bloße Sichtbarkeit, sondern dokumentierte Projektentscheidungen tragen
+Profil-, Bild-, bisherige Titel-/Qualifikations- und Umgebungsfreigaben.
+Bekannte Projekttage bleiben DAY-Präzision; CGs ursprüngliches Production-Datum
+und alle unbekannten persönlichen Originaleinwilligungen bleiben NULL.
+Die spätere `person_consent`-Zeile ist eine **aktuelle Operatorattestation der
+dokumentierten Projektrechte**, keine erfundene Unterschrift des Coaches.
+
+Die120 Objekt-Nachweispläne binden Source Identity, konkretes Objekt, Inhaltshash
+und Umgebung. Profilhashes berücksichtigen fachliche Themenreferenzen; sie heißen
+absichtlich `candidate_subject_sha256`, **nicht** ausführbarer `subject_hash`.
+Reale Revisions-/Themen-UUIDs, Operator und recorded_at fehlen weiterhin bewusst.
+Beim genehmigten Lauf: exakt aufgelöste Inhalte/UUIDs erneut hashen, mit dem
+fachlichen Reviewmanifest vergleichen und erst dann Runtime-Nachweise binden.
+Ein geänderter Inhalt invalidiert die Bindung; Preview ist keine Production-
+Freigabe. Die6 unbekannten Production-Scopes bleiben geschlossen, nicht blockiert.
+
+### Gülcan Und Fachliche Grenzen
+
+Die3 Familien/5 Formate sind für den belegten Kurzumfang READY. Die beiden
+Ersatzdateien bleiben **optional für diesen Umfang**, für vollständige Detail-
+konzepte später weiterhin erforderlich. Kein Pflichtfeld erfordert deren Inhalt:
+Reflexionsreihe bleibt generischer Formattyp `other`, konkrete Dauer unbekannt;
+„online oder live“ bleibt `live_unspecified`, keine erfundene Ortsentscheidung.
+Modultexte bleiben leer; „eigenständig oder Vertiefung“ begründet keine zweite
+Variante oder Buchungsbehauptung. Alle Formate bleiben bookable=false.
+
+| Familie | Formate | Optionen, keine zusätzlichen Hauptangebote | Leistungsgrenze |
+| --- | --- | --- | --- |
+| Business & Balance | Tagesworkshop,6-Wochen-Programm | Community zwischen Sessions | Coaching/Training; keine Therapie, ärztliche/psychotherapeutische Behandlung, Rechts-/Steuerberatung |
+| Gesundheit im Unternehmensalltag | Halbtagsworkshop | Ganztagsvariante, vertiefende Übungen, Follow-up, Ergonomie-Begehung | Gesundheitsförderung/Training; keine ärztliche Behandlung, Psychotherapie, Heilbehandlung, Diagnostik oder individuelle Ernährungstherapie |
+| Konfliktklärung & Teamreflexion | Tagesworkshop,Reflexionsreihe | keine zusätzlichen Optionen | Coaching/Moderation; keine Mediation, Supervision, Rechtsberatung oder rechtsverbindliche Streitbeilegung |
+
+Die öffentlichen Boundary-Kurztexte setzen ausschließlich die im neuen Auftrag
+verbindlich vorgegebenen Regeln um. Geschützte Konzepte, Programme, Ablaufpläne,
+Übungen, Arbeitsblätter und unbestätigte Preise werden **nicht importiert** und
+nicht öffentlich projiziert. Interne Ausschlusspolitik ist kein Preisdatensatz.
+Susannes Scanideen bleiben außerhalb der8 bestätigten Workshops und erzeugen
+keine neue Supervisionsqualifikation. Elisabeths Psychotherapie bleibt separat,
+inaktiv/nicht buchbar und nicht Mindforge/Coaching zugeordnet.
+
+### Exakte Dry-Mapping-Zahlen
+
+Voraussetzung: später nachgewiesenes leeres Ziel ohne Source-Bindungen. Kein
+aktueller DB-DRY-RUN und keine Zusage über den heute unbekannten Serverbestand.
+
+| Planposition | WOULD, nicht ausgeführt |
+| --- | --- |
+| Coaches / Profilrevisionen / bestehende Coaches matchen |9 /9 /0 |
+| Themen-Lookups / Kategoriebeziehungen / Profil-Themenlinks |8 /18 /22 |
+| Kompetenzlabels / Rollenlabels / öffentliche Qualifikationen |14 /22 /30 |
+| Interne Qualifikationen neu |0; Nachweis-/Prüfinformationen bleiben separat intern |
+| Angebotsfamilien / Formatrecords / Varianten-Add-ons |3 /30 /5 |
+| Aktive Katalogformate / inaktive separate Therapieanzeige |29 /1 |
+| Porträtreferenzen / bewusst ohne Porträt |8 /1 |
+| Geplante Registry-Preview-/Production-Publications |9 /3; Production nur CG/MR/GE, kein Website-Upload |
+| Objekt-Evidence / aktuelle generische Attestationen |120 /30, zusammen150 interne Domänen-Nachweisrecords |
+| Zusätzliche historische Import-Evidence-Ledgerzeilen |30 technische Referenzen; nicht als150 weitere Rechte zählen |
+| Unbekannte Production-Scopes |6, keine positive Freigabe |
+| Geschützte Langtexte / Preisrecords / erfundene optionale Details |0 /0 /0 |
+| Tatsächliche DB-Mutationen / neue UUIDs / Uploads |0 /0 /0 |
+
+Die25 bisherigen Katalogtitel bleiben separat von5 neuen Gülcan-Formaten.
+Elisabeths4 vorhandene Darstellungsgruppen bleiben Präsentation, keine4 neu
+erfundenen Angebotsfamilien. Die inaktive Therapiebezeichnung bleibt zusammen mit
+der bestehenden Nicht-Hub-Therapiegrenze sichtbar, ohne aktives Therapieangebot.
+
+### Projection Parity Und Aktueller Gate
+
+Quell-Leaf-Audit plus Public-DTO-Vergleich prüfen9 Pfade/Namen,22 Themenlabels,
+30 öffentliche Qualifikationen,25 alte Titel,8 Porträts und bestehende Grenzen:
+**0 unbeabsichtigter Verlust**. Freigegebenes erwartetes Delta: Gülcan3 Familien/
+5 kurze Formatdarstellungen/5 Optionen und explizite Grenzen. Keine geänderten
+bestehenden Namen, Pfade, Qualifikationen, Porträts oder erfundene Termine.
+Das ist semantische Dry-Projection-Parity, keine Abnahme eines neuen Astro-
+Renderers. Ein späterer Website-Rebuild benötigt separate gerenderte Parity.
+
+**DECISIONS REQUIRED FROM MANUEL: 0.** Fehlende optionale Angaben bleiben
+UNKNOWN/NOT_IMPORTED. Keine neun erneuten Einzelfreigaben verlangen.
+**GO FOR COACH-3B APPLY, pending separate Manuel approval.**
+Einziger empfohlener nächster Block: **COACH-3B REAL APPLY**, nur nach separater
+Freigabe des konkreten Ziels, Operators, Manifests und Backup-/Rollbackumfangs.
+
+### Finales Späteres Ein-Fenster-Runbook
+
+Noch nicht ausführen. Die bestehende Import-CLI bleibt **synthetic-only**; dieses
+Review ergänzt weder echten File-Reader noch Real-APPLY-Schalter. Vor dem späteren
+Serverfenster ist ein explizit freigegebener echter Runner lokal vorzubereiten
+und zu prüfen; keinen synthetischen Guard umgehen. Fachliches GO ist nicht die
+Behauptung, dieser Real-Runner sei bereits implementiert oder der VPS geprüft.
+
+| Schritt | Prüfung / Stop-Regel |
+| --- | --- |
+| 1 Preflight | Zielumgebung, Source-Bindungen/Versionen, Owner/Grants, freie Betriebsgrenzen und Co-Host-Dienste lesen; kein Namens-/E-Mail-Match |
+| 2 Backup | Vollständiges geschütztes, verschlüsseltes Ziel-DB-Backup, Hash/Restorepfad und Recovery-Verantwortlichen verifizieren; keine Secrets in Logs |
+| 3 Schemastand | Tatsächlichen Stand lesen;0006 ist letzter dokumentierter Stand, kein aktueller Serverclaim |
+| 4 Migrationen | Nur freigegebene fehlende0007/0008/0009 in Reihenfolge; lokal geprobt, Pool-Reconnect nach DDL; bei Abweichung STOP |
+| 5 VALIDATE | Unveränderte Quellen-/Rechte-/Assetbytes und geschlossene Pflichtfelder;8 Themen/18 Kategorien exakt auflösen |
+| 6 DB-DRY-RUN | Read-only echte Source-Bindungen/Versionen/UUIDs prüfen; bei anderem Bestand Mengen neu berechnen und STOP zur konsolidierten Bestätigung |
+| 7 Bericht | Ein gesamtes freigegebenes Manifest mit realen technischen Bindungen und150 Nachweisplänen; keine Coach-für-Coach-Passwortserie |
+| 8 APPLY einmal | Ein atomarer Batch:9 initiale Revisionen, exakte Nachweise und nur ausdrücklich genehmigte Registry-Zustände; keine Accounts/CAL-1-Rechte |
+| 9 Wiederholung | Exakt gleicher freigegebener Input; kein blindes Wiederholen nach unklarem Commit-Ausgang |
+| 10 Nullmutation |0 fachliche Mutationen, Domänen-/Ledger-/Auditzeilen und xmin unverändert; technische Runmetadaten getrennt |
+| 11 Public Projection | Nur lokales geschütztes QA-Artefakt für explizite Umgebung, keine automatische Pages-/IONOS-Publikation |
+| 12 Parity |9 Baselineprofile,25 alte Titel,3 Familien/5 neue Formate als erlaubtes Delta; keine privaten Felder |
+| 13 Admin-Smoke | Echte freigegebene native Admin-Session; neue Ansicht nur lokal, keine still angelegten Realaccounts |
+| 14 CAL-1-Sicherheit | Bestehende Regression, public_profile_path/coach_topics/Portal-Mappings unverändert |
+| 15 Health | Dienste, PG localhost-only und Co-Host unverändert; keine zusätzliche öffentliche API |
+| 16 Evidence | Source-/Migrations-/Backup-/Report-/Projektionshashes und geprüfte Counts geschützt sichern; nur eigene temporäre Ressourcen entfernen |
+| 17 STOP | Vor Website-Deployment und jeder nicht ausdrücklich freigegebenen Aktivierung |
+
+Fehlende kanonische Themen brauchen einen im Real-Block ausdrücklich genehmigten
+Bootstrap von höchstens8 Themen/18 Kategoriezuordnungen; der Coach-Importer bleibt
+MATCH_ONLY und erzeugt sie nicht selbst. Das ist ein technischer Ausführungs-
+Preflight, keine erneut offene redaktionelle Themenentscheidung.
+
+Rollback: Vor Commit komplette Transaktion zurückrollen. Nach bestätigtem Commit
+keine DELETE-Reparatur gegen unveränderliche Historie: getrennt validierter
+Ziel-DB-Restore oder freigegebene Vorwärtskorrektur mit denselben Source-IDs.
+Keine Cluster-/Chatbot-DB restaurieren oder fremde Writer überschreiben. Vor dem
+Fenster Restoreprobe/Schreibpause und Owner bestätigen; aktuelles Backup wurde
+in diesem Review nicht erzeugt. Migrationen0007-0009 und Backup-/Rollbackplan vorbereitet,
+reale Durchführung und Restore-Nachweis bleiben Ausführungsbedingungen.
+
+### Tatsächliche Verifikation Des Reviewabschlusses
+
+| Prüfung29.10 | Ergebnis |
+| --- | --- |
+| Gesamte lokale Suite |739 PASS,21 vorgesehene Integrations-Skips; keine DB-Verbindung in diesem Slice |
+| Neue reine Review-/Parity-Tests |64 PASS:19 Closure- und45 Public-Parity-Tests |
+| Neun-Profil-Dry-Mapping |9 READY/0 REVIEW_REQUIRED/0 BLOCKED,0 Feldverlust/zusätzliche Manuel-Entscheidungen;0 Mutationen/UUIDs |
+| Determinismus | Zwei identische tatsächliche Closure-Läufe liefern denselben Reporthash |
+| Live-Preview GET-only |18 Antworten: Index,9 Profile,8 Bilder;9 Namen/30 öffentliche Qualifikationen/25 bisherige Titel/8 Bytehashes/9 Routen/22 Themenlinks PASS |
+| Negative Regression | Fehlende Rechte, vertauschte Umgebung, ungültige Pflichtfelder, geänderte öffentliche Labels, unbekannte Ausdrücke, veränderte Nachweise/Eingaben und verwaiste Familien stoppen; optionale UNKNOWNs blockieren nicht |
+| Weitere Prüfungen | compileall, pip check, Dokumentlinks/Archivintegrität, git diff --check |
+
+Aktuelle öffentliche Gegenprobe:
+[Coaches-Preview](https://dp-manuel.github.io/CompetenceHub/coaches/), ausführbar
+mit [coach3b_preview_parity.py](../../scripts/coach3b_preview_parity.py).
+Festes HTTPS-Ziel, GET-only, begrenzte Antworten, Redirect-Zielprüfung vor dem
+Folgen, keine Authdaten, kein HTML-/Bilddump und keine lokalen Berichtswrites.
+Fehlende/zusätzliche Karten, falsche Themen oder geänderte Bildbytes scheitern.
+Die5 neuen Gülcan-Formate sind freigegebenes Dry-Delta, keine aktuelle Live-
+Erwartung. Der fehlgeschlagene Web-Tool-Zugriff wurde nicht als Websitefehler
+gewertet; der direkte HTTPS-Abgleich lief erfolgreich und wiederholbar.
+
+Closure-Report-SHA-256:
+`7d79a9d1b91d959459e2c3a525a6c5763024dc15656c6f5890dfc89562dd0f59`.
+Live-Response-Manifest-SHA-256 (URLs/Status/Bytehashes, kein HTML):
+`93e48e1581c57d0a6daf64c854007564fda77c525b8722f6097428ad68c02aca`.
+Auch der programmatische Closure-Einstieg prüft den tatsächlichen normalisierten
+Payload gegen den eingefrorenen Quell-/Reviewstand, nicht nur dessen behauptetes
+Hashfeld. Synthetische Policy-Auswertung kann keinen Real-Input-GO ausgeben.
+Alle Familien müssen eindeutig einem der geprüften Coaches gehören. Beide
+Reviewbefunde behoben, unabhängig mit19 Closure-Tests nachgeprüft; keine offenen
+High-/Medium-Befunde im überprüften Review-Werkzeug-Scope.
+
+Dieser reine Review ändert keine Domain/API/UI/SQL-Datei. Frühere native165/
+109- und lokale PostgreSQL-Gates bleiben datierte COACH-3C-Nachweise und wurden
+hier nicht erneut ausgeführt. Kein Live-Backend-/Restore-/Deployment-Abnahmeclaim.
+
+Reproduktion in **einem PowerShell-Terminal**, Repositorywurzel; keine Passwörter
+oder Secrets erforderlich, keine APPLY-Option in beiden Werkzeugen:
+
+```powershell
+Set-Location 'C:\Users\RödelManuel\Documents\IT\Firmendingsbums\Website'
+$env:PYTHONPATH = (Resolve-Path '.\apps\webapp\src').Path
+& '.\apps\webapp\.venv\Scripts\python.exe' '.\scripts\coach3b_review_closure.py' --validate
+& '.\apps\webapp\.venv\Scripts\python.exe' '.\scripts\coach3b_preview_parity.py' --verify
+Remove-Item Env:PYTHONPATH
+```
+
+Erwartet:9 READY, GO_FOR_COACH_3B_APPLY_PENDING_SEPARATE_APPROVAL,
+business_mutations=0/database_snapshot=NOT_READ/uuid_allocation=false; Public-
+Parity status=PASS und gaps={}. Ein später geänderter öffentlicher Stand darf
+die Gegenprobe fehlschlagen lassen; nicht automatisch Erwartungswerte ändern.

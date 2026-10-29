@@ -3,6 +3,14 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-29 | review closure / read-only | COACH-3B READY
+
+- [Canonical matrix/runbook](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-reviewabschluss-2910):9 READY/0 REVIEW_REQUIRED/0 BLOCKED,0 canonical field loss and0 additional Manuel business decisions. Existing approved taxonomy/roles/public qualifications retained; optional original consent dates/Production scopes/Gülcan replacement details no longer create artificial blockers.
+- Gülcan's3 families/5 confirmed short formats and5 options carry explicit approved boundaries; incomplete modules/live location/series details remain UNKNOWN/NOT_IMPORTED. Protected sources/prices/new scan ideas excluded; psychotherapy separate/inactive. Final quantities and120 object-evidence plus30 current project-attestation plans computed, no real UUIDs/records allocated.
+- Pure closure validates exact canonical/review/document provenance; changed inputs and orphan families fail closed. Separate readonly live Preview script confirms9 names,30 qualifications,25 existing titles,8 asset hashes and22 index topic links; approved new Gülcan delta excluded from current-live expectations. Semantic DTO parity is not a new renderer/deployment acceptance.
+- No DB connection, migration, real APPLY, accounts/roles/Calendar mappings, VPS/Pages/IONOS write or deployment. Existing synthetic guards unchanged; actual real-runner preparation and target/backup/hash rebinding remain part of the separately approved REAL APPLY block. Unrelated files preserved, reusable readiness-versus-optional-unknown learning captured locally.
+- Verification:739 local tests PASS/21 opt-in skips;64 new pure closure/parity cases. Actual18 public HTTPS responses match the frozen baseline; deterministic closure report and independent input-binding/ownership review PASS. No native/PG rerun or new deployment evidence claimed in this read-only slice.
+
 ## 2026-10-29 | local implementation / acceptance | COACH-3C Lossless Target
 
 - Additive0009 extends the existing Registry, not a second Coach domain. Typed qualifications/private verification, public roles, offering families/formats/variants, bounded presentation and exact object/hash/revision/environment consent; original legacy approval/hash behavior preserved.

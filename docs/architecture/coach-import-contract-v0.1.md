@@ -4,6 +4,13 @@ COACH-3A, 23.10.2026. Implemented for **synthetic local proof only**.
 Real COACH-3B, server migration, account/Calendar mappings, static Website
 integration and every deployment remain separate gates.
 
+29.10 business-review closure: [the existing-content matrix](coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-reviewabschluss-2910)
+records9 READY for the frozen reviewed scope. Documented project approvals can
+be attested by the actual future operator; unknown original personal signatures/
+dates stay NULL. Logical candidate hashes are not executable runtime evidence:
+actual topic/revision/actor bindings must be verified in the separately approved
+real window. This does not enable real file input/APPLY in the current CLI.
+
 Owners: [Registry](coach-registry-contract-v0.1.md),
 [Admin UI](coach-admin-ui-contract-v0.1.md),
 [existing-content inventory/decision matrix](coach3-existing-content-migration-plan-2026-10-23.md).
