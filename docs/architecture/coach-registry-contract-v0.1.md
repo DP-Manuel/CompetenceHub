@@ -134,7 +134,99 @@ Requires Docker Desktop and an unused55434. Success:
 No real passwords are requested; generated fixture credentials remain in process
 memory and must not be copied to chat. Never pass a VPS URL to this harness.
 
-## Remaining Boundaries
+## COACH-3C Additive Target Contract
+
+Authorized29.10, local synthetic implementation only. Migration
+[0009](../../apps/webapp/database/migrations/0009_coach_lossless_target.sql)
+extends the same Coach UUID/profile revisions/offerings; it does not introduce a
+second Coach aggregate. Actual acceptance is tracked in the
+[COACH-3C execution plan](../exec-plans/completed/coach-3c-target-2026-10-29.md).
+
+`ProfileContent.target_version=0` retains the existing contract and historical
+approval semantics. Existing rows gain only empty/NULL optional target fields;
+no historical consent, person, timestamp or verification is inferred. Version1
+opts into the richer typed contract and exact object evidence. An existing rich
+Coach cannot be downgraded to0. Full-snapshot clients must explicitly retain or
+change populated fields, including matching nested qualification/family/format
+fields; omission conflicts rather than silently erasing unknown data.
+
+### Qualifications And Roles
+
+`public_roles` are editorial role labels, not Portal permissions. They remain
+separate from topics, competencies, qualifications and offerings.
+`coach_qualifications` stores a stable item key, canonical title, optional explicit
+public display label, issuer/type, ordering, public visibility, active/historical
+status and separate internal verification state/reference/note. Identity is
+`(Coach UUID, item key)` across immutable revision snapshots, not a mutable title.
+Public qualifications require an explicitly supplied public label. Canonical
+titles and internal verification metadata never become public by default.
+There is no automatic conversion from a role or experience into a qualification.
+
+### Families And Formats
+
+`coach_offering_families` groups existing `coach_offerings` by stable family key
+within the same revision/Coach. Renaming a family/format does not change its key.
+Inactive formats remain in their revision history. An active family is projected
+only when it has active formats. Formats of inactive families are not projected.
+Grouped formats are not duplicated in the standalone public offering list.
+
+Typed bounded metadata holds variants/options/add-ons (not duplicate main
+offerings), target groups/focus, service domains, duration and delivery mode.
+Duration supports same-day clock windows, minutes or weeks/session schedules;
+`Live` can remain `live_unspecified`, not guessed as online or in-person.
+Program modules are brief public module names, never a workshop-document copy
+and never automatically global topics. Profile/family/format boundaries are
+explicit text and excluded-service codes. Psychotherapy is a separate domain,
+cannot be a coaching format and remains nonbookable. Conflict work does not
+infer mediation/supervision; health promotion does not infer medical treatment.
+There is no price field or protected source body in this contract.
+
+### Exact Evidence
+
+Admin-only `coach_object_evidence` is append-only. Each entry binds a stable
+evidence key to Coach, revision, subject type/key, exact server-calculated SHA-256,
+evidence kind, environment, scope and approved/unknown/rejected decision.
+Subjects are profile, portrait, qualification, family or format. Kinds distinguish
+profile content, portrait asset, qualification, offering content and publication.
+`public_content`, `internal_verification` and `protected_source_content` are
+separate scopes. Consent for a protected original is never consent for short
+public copy, or vice versa. Private source references are opaque, not file reads.
+
+Optional historical approver/time/day remain NULL when unknown. A day-only
+source is not converted into an invented timestamp. Recording actor/time are
+separate technical metadata. Future historical dates and wrong subject/hash/kind
+bindings are rejected. New revisions inherit no evidence. Latest matching
+decision wins; a rejection of required consent withdraws that environment's
+publication, while retaining all history. Re-publication still requires a newer
+approved revision under the existing withdrawal contract.
+
+Rich publication requires the original reviewed/consented/environment approvals
+AND matching public evidence for profile content/publication, active portrait,
+public active qualifications, visible families and formats. Preview and
+Production are independent; internal verification and unknown evidence cannot
+satisfy a public gate. Domain guards and additive PostgreSQL guards enforce this.
+
+### Public Allowlist
+
+Projection positively selects legacy public fields and safe asset fields. Rich
+output adds role labels, explicitly public active qualification labels/issuer/type,
+family/format short descriptions, metadata and boundaries. Typed presentation
+preserves teaser, section text, cards, quotes, languages, image dimensions and
+environment-specific HTTPS links. All text is data, never executable HTML.
+No generic Admin serialization is a public export: evidence objects/references,
+verification states, internal notes, source paths, protected originals, prices,
+audit/import metadata and internal UUIDs are absent. This does not switch Astro
+to DB output or remove already deployed static bytes automatically.
+
+### Local Upgrade Operation
+
+0009 is an offline local gate: reconnect/restart database pools after DDL so
+cached prepared statements cannot retain the old row shape. No blind retry of
+failed writes. Previous Registry7/Import8 runners retain their exact baselines;
+the new owned localhost55436 runner alone exercises target9. No VPS migration,
+real import or publication follows from these checks.
+
+## Historical Remaining Boundaries
 
 COACH-1 itself did not include Admin UI; the subsequent COACH-2 link above owns
 that completed local scope. No server migration, real data/import,

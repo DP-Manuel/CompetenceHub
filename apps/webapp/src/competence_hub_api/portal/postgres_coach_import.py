@@ -20,10 +20,14 @@ from competence_hub_api.portal.coach_registry import (
     CoachAggregate,
     CoachRegistryService,
     RegistryConflict,
+    require_complete_target_update,
 )
 from competence_hub_api.portal.postgres_coach_registry import (
     PostgresCoachRegistryRepository,
     rows,
+)
+from competence_hub_api.portal.postgres_coach_target import (
+    available as target_available,
 )
 
 
@@ -55,7 +59,14 @@ class ImportPlan:
     def report(self):
         counts = {
             name: sum(step.operation == name for step in self.steps)
-            for name in ("CREATE", "REVISION", "EDIT_DRAFT", "UNCHANGED", "METADATA")
+            for name in (
+                "CREATE",
+                "REVISION",
+                "EDIT_DRAFT",
+                "UNCHANGED",
+                "METADATA",
+                "EVIDENCE",
+            )
         }
         return {
             "result": "CONFLICT" if self.issues else "PASS",
@@ -126,13 +137,26 @@ def plan_records(validated: ValidationResult, snapshot: ImportSnapshot):
             ):
                 issue("ASSET_MAPPING_REQUIRED", "immutable_asset_reference")
         revision = coach.revision(ledger["last_revision_id"])
+        try:
+            require_complete_target_update(revision.content, record.content)
+        except RegistryConflict:
+            issue("STATE_CONFLICT", "incomplete_target_snapshot")
+        stored_evidence = {e.value.key: e.value for e in revision.object_evidence}
+        requested_evidence = {e.key: e for e in record.object_evidence}
+        same_profile = record.profile_hash == ledger["profile_content_hash"]
+        if (
+            same_profile
+            and tuple(e.value for e in revision.object_evidence)
+            != record.object_evidence[: len(stored_evidence)]
+        ):
+            issue("STATE_CONFLICT", "immutable_object_evidence")
         if (
             coach.version != ledger["last_registry_version"]
             or profile_fingerprint(revision.content, revision.topics)
             != ledger["profile_content_hash"]
         ):
             issue("STATE_CONFLICT", "registry_version_or_content")
-        if record.profile_hash == ledger["profile_content_hash"]:
+        if same_profile:
             operation = (
                 "UNCHANGED"
                 if (
@@ -141,6 +165,8 @@ def plan_records(validated: ValidationResult, snapshot: ImportSnapshot):
                 )
                 else "METADATA"
             )
+            if set(requested_evidence) - set(stored_evidence):
+                operation = "EVIDENCE"
         elif revision.status == "draft":
             operation = "EDIT_DRAFT"
         elif any(r.status == "draft" for r in coach.revisions):
@@ -152,23 +178,36 @@ def plan_records(validated: ValidationResult, snapshot: ImportSnapshot):
     return plan
 
 
-def local_import_url(raw):
+def local_import_url(raw, *, target_v2=False):
     url = make_url(raw)
     if (
         url.drivername != "postgresql+asyncpg"
         or url.host != "127.0.0.1"
-        or url.port != 55435
+        or url.port != (55436 if target_v2 else 55435)
         or url.database != "competence_hub_staging"
         or url.username != "competence_hub_app"
         or not url.password
         or url.query
     ):
-        raise ValueError("Synthetic import requires the owned loopback55435 container")
+        raise ValueError(
+            "Synthetic import requires its explicitly owned loopback container"
+        )
 
 
 class PostgresCoachImporter:
-    def __init__(self, engine):
+    def __init__(self, engine, *, target_v2=False):
         self.engine = engine
+        self.target_v2 = target_v2
+
+    def _scope_allowed(self, values, contract):
+        rich = contract.version == "coach-import-v2"
+        namespace = "synthetic-coach3c" if rich else "synthetic-coach3a"
+        return (not rich or self.target_v2) and all(
+            isinstance(v, dict)
+            and isinstance(v.get("source_identity"), dict)
+            and v["source_identity"].get("source_system") == namespace
+            for v in values
+        )
 
     async def _snapshot(self, connection, records, *, lock=False):
         repo = PostgresCoachRegistryRepository(self.engine, connection=connection)
@@ -222,10 +261,27 @@ class PostgresCoachImporter:
         )
 
     async def dry_run(self, values, contract, asset_bytes):
+        if contract.version == "coach-import-v2":
+            if not self._scope_allowed(values, contract):
+                return {
+                    "result": "CONFLICT",
+                    "issues": [{"code": "SYNTHETIC_SCOPE_REQUIRED"}],
+                    "business_mutations_planned": 0,
+                }
+            local_import_url(
+                str(self.engine.url.render_as_string(hide_password=False)),
+                target_v2=True,
+            )
         async with self.engine.begin() as c:
             await c.execute(
                 text("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY")
             )
+            if self.target_v2 and not await target_available(c):
+                return {
+                    "result": "CONFLICT",
+                    "issues": [{"code": "TARGET_SCHEMA_REQUIRED"}],
+                    "business_mutations_planned": 0,
+                }
             now = await c.scalar(text("SELECT clock_timestamp()"))
             validated = await self._validate(c, values, contract, asset_bytes, now)
             return plan_records(
@@ -233,13 +289,13 @@ class PostgresCoachImporter:
             ).report()
 
     async def apply_synthetic(self, values, contract, asset_bytes, *, actor):
-        local_import_url(str(self.engine.url.render_as_string(hide_password=False)))
+        local_import_url(
+            str(self.engine.url.render_as_string(hide_password=False)),
+            target_v2=self.target_v2,
+        )
         # No file-backed APPLY in this slice. The operator wrapper supplies only
         # the bundled fixtures; this guard also rejects real-source namespaces.
-        if any(
-            v.get("source_identity", {}).get("source_system") != "synthetic-coach3a"
-            for v in values
-        ):
+        if not self._scope_allowed(values, contract):
             return {
                 "result": "CONFLICT",
                 "issues": [{"code": "SYNTHETIC_SCOPE_REQUIRED"}],
@@ -249,6 +305,14 @@ class PostgresCoachImporter:
         try:
             async with self.engine.begin() as c:
                 await c.execute(text("SELECT pg_advisory_xact_lock(64731,3)"))
+                if self.target_v2:
+                    schema_ready = await target_available(c)
+                    if not schema_ready:
+                        return {
+                            "result": "CONFLICT",
+                            "issues": [{"code": "TARGET_SCHEMA_REQUIRED"}],
+                            "business_mutations": 0,
+                        }
                 allowed = await c.scalar(
                     text("""SELECT EXISTS(SELECT 1 FROM competence_hub.portal_users u
                     JOIN competence_hub.user_roles ur ON ur.user_id=u.id JOIN competence_hub.roles r ON r.id=ur.role_id
@@ -330,8 +394,19 @@ class PostgresCoachImporter:
                 content=r.content,
             )
         revision_id = coach.revisions[-1].id
+        if r.object_evidence and step.operation != "METADATA":
+            revision = coach.revision(revision_id)
+            if revision.status == "draft":
+                await mutate("submit", revision_id=revision_id)
+            existing = {
+                e.value.key for e in coach.revision(revision_id).object_evidence
+            }
+            for evidence in r.object_evidence:
+                if evidence.key not in existing:
+                    await mutate("evidence", revision_id=revision_id, evidence=evidence)
         if step.operation == "CREATE" and r.source.publication.lifecycle == "active":
-            await mutate("submit", revision_id=revision_id)
+            if coach.revision(revision_id).status == "draft":
+                await mutate("submit", revision_id=revision_id)
             for evidence in r.source.publication.evidence:
                 await mutate(
                     "approve",

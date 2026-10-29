@@ -9,6 +9,7 @@ from sqlalchemy.exc import IntegrityError
 
 from competence_hub_api.portal.coach_registry import (
     Approval,
+    ObjectEvidence,
     Asset,
     CoachAggregate,
     Offering,
@@ -18,6 +19,7 @@ from competence_hub_api.portal.coach_registry import (
     RegistryConflict,
     TopicSnapshot,
 )
+from competence_hub_api.portal import postgres_coach_target as target
 
 
 async def rows(connection, statement, **parameters):
@@ -190,6 +192,11 @@ class PostgresCoachRegistryRepository:
             **({"selected_id": selected_id} if bounded else {}),
         )
         ids = [r["id"] for r in revisions]
+        target_children = (
+            await target.load(connection, ids)
+            if revisions and "target_version" in revisions[0]
+            else {}
+        )
         children = {}
         for table in (
             "coach_profile_labels",
@@ -228,6 +235,7 @@ class PostgresCoachRegistryRepository:
                 )
             )
             content = ProfileContent(
+                **target.content_fields(row, target_children),
                 **{
                     k: row[k]
                     for k in (
@@ -248,6 +256,7 @@ class PostgresCoachRegistryRepository:
                 topic_ids=tuple(t.id for t in topics),
                 offerings=tuple(
                     Offering(
+                        **target.offering_fields(o),
                         **{
                             k: o[k]
                             for k in (
@@ -257,7 +266,7 @@ class PostgresCoachRegistryRepository:
                                 "active",
                                 "ordering",
                             )
-                        }
+                        },
                     )
                     for o in sorted(
                         subset("coach_offerings"), key=lambda o: o["ordering"]
@@ -289,6 +298,19 @@ class PostgresCoachRegistryRepository:
                 Approval(a["kind"], a["actor_id"], a["occurred_at"], a["evidence_ref"])
                 for a in subset("coach_profile_approvals")
             ]
+            revision.object_evidence = [
+                ObjectEvidence(
+                    e["id"],
+                    target.evidence_fields(e),
+                    e["recorded_by"],
+                    e["recorded_at"],
+                )
+                for e in sorted(
+                    target_children.get("coach_object_evidence", []),
+                    key=lambda e: e["sequence"],
+                )
+                if e["revision_id"] == row["id"]
+            ]
             coach.revisions.append(revision)
         publications = await rows(
             connection,
@@ -304,14 +326,20 @@ class PostgresCoachRegistryRepository:
         return coach
 
     async def _save(self, connection, before, coach):
+        has_target = await target.available(connection)
+        if not has_target and any(r.content.target_version for r in coach.revisions):
+            raise RegistryConflict("local target migration required")
         for revision in coach.revisions:
             previous = next((r for r in before.revisions if r.id == revision.id), None)
             if previous is None:
                 await connection.execute(
-                    text("""
-                    INSERT INTO competence_hub.coach_profile_revisions(id,coach_id,revision_number,status,display_name,academic_suffix,short_intro,description,professional_background,profile_path,created_by,created_at)
-                    VALUES (:id,:coach_id,:number,'draft',:display_name,:academic_suffix,:short_intro,:description,:professional_background,:profile_path,:actor,:now)
-                """),
+                    text(
+                        "INSERT INTO competence_hub.coach_profile_revisions(id,coach_id,revision_number,status,display_name,academic_suffix,short_intro,description,professional_background,profile_path,created_by,created_at"
+                        + (",target_version" if has_target else "")
+                        + ") VALUES (:id,:coach_id,:number,'draft',:display_name,:academic_suffix,:short_intro,:description,:professional_background,:profile_path,:actor,:now"
+                        + (",:target_version" if has_target else "")
+                        + ")"
+                    ),
                     {
                         "id": revision.id,
                         "coach_id": coach.id,
@@ -380,6 +408,8 @@ class PostgresCoachRegistryRepository:
                             "ref": approval.evidence_ref,
                         },
                     )
+            if has_target:
+                await target.write_evidence(connection, coach.id, revision, previous)
         await connection.execute(
             text(
                 "UPDATE competence_hub.coaches SET lifecycle_status=:state,registry_lock_version=:version,publication_floor=:floor WHERE id=:id"
@@ -428,6 +458,7 @@ class PostgresCoachRegistryRepository:
 
     @staticmethod
     async def _write_content(connection, coach_id, revision):
+        has_target = await target.available(connection)
         for table in (
             "coach_profile_topic_categories",
             "coach_profile_topics",
@@ -439,6 +470,8 @@ class PostgresCoachRegistryRepository:
                 text(f"DELETE FROM competence_hub.{table} WHERE revision_id=:id"),
                 {"id": revision.id},
             )
+        if has_target:
+            await target.write_content(connection, coach_id, revision)
         for kind, labels in (
             ("target_group", revision.content.target_groups),
             ("competency", revision.content.competencies),
@@ -476,6 +509,8 @@ class PostgresCoachRegistryRepository:
                 ),
                 {"id": revision.id, "coach_id": coach_id, **offering.model_dump()},
             )
+            if has_target:
+                await target.write_offering(connection, revision.id, offering)
         for asset in revision.content.assets:
             await connection.execute(
                 text(

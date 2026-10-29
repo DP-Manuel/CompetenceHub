@@ -25,14 +25,15 @@ from competence_hub_api.security.passwords import PasswordPolicy, PasswordServic
 
 class LocalCoachManagementFixture:
     database = NativeCalendarFixture.database
+    _DATABASE_ENV = "COMPETENCE_HUB_COACH_REGISTRY_LOCAL_DATABASE_URL"
+    _OWNER_ENV = "COMPETENCE_HUB_COACH_REGISTRY_LOCAL_OWNER_URL"
+    _DATABASE_PORT = 55434
+    _MIGRATIONS = tuple(f"000{i}" for i in range(1, 8))
+    _EMPTY_TABLES = TABLES
 
     def __init__(self):
-        self.app_url = os.environ.get(
-            "COMPETENCE_HUB_COACH_REGISTRY_LOCAL_DATABASE_URL", ""
-        )
-        self.owner_url = os.environ.get(
-            "COMPETENCE_HUB_COACH_REGISTRY_LOCAL_OWNER_URL", ""
-        )
+        self.app_url = os.environ.get(self._DATABASE_ENV, "")
+        self.owner_url = os.environ.get(self._OWNER_ENV, "")
         for raw, role in (
             (self.app_url, "competence_hub_app"),
             (self.owner_url, "competence_hub_migrator"),
@@ -41,7 +42,7 @@ class LocalCoachManagementFixture:
             if (
                 u.drivername != "postgresql+asyncpg"
                 or (u.host, u.port, u.database, u.username)
-                != ("127.0.0.1", 55434, "competence_hub_staging", role)
+                != ("127.0.0.1", self._DATABASE_PORT, "competence_hub_staging", role)
                 or not u.password
                 or u.query
             ):
@@ -82,9 +83,9 @@ class LocalCoachManagementFixture:
                 .scalars()
                 .all()
             )
-            if versions != [f"000{i}" for i in range(1, 8)]:
-                raise RuntimeError("Expected only the seven local migrations")
-            for table in TABLES:
+            if versions != list(self._MIGRATIONS):
+                raise RuntimeError("Unexpected local fixture migration set")
+            for table in self._EMPTY_TABLES:
                 if await c.scalar(text(f"SELECT count(*) FROM competence_hub.{table}")):
                     raise RuntimeError("Disposable database was not empty")
             self.now = (await c.scalar(text("SELECT clock_timestamp()"))).astimezone(

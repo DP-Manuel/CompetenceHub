@@ -1,18 +1,20 @@
 # Post-Messe Backend Horizon
 
-Updated: 2026-10-29. Status: local security/Linux and synthetic COACH-1/2/3A accepted; COACH-3B read-only preparation complete, real APPLY blocked by target/evidence gaps. Domain/TLS and VPS execution remain separate gates.
+Updated: 2026-10-29. Status: local security/Linux and synthetic COACH-1/2/3A/3C accepted; real9-profile recheck lossless,9 REVIEW_REQUIRED for explicit evidence/topic/source decisions. NO-GO real APPLY. Domain/TLS and VPS execution remain separate gates.
 The [authorized consolidation block](../completed/post-messe-konsolidierung-2026-10.md) is complete.
 Current checkpoint: [PROJECT_CONTEXT](../../../PROJECT_CONTEXT.md). Synthetic Staging acceptance is authorized; production and real-data activation are not.
 
-## Recommended Next Block: Synthetic Lossless Target Extension
+## Recommended Next Block: COACH-3B Review Closure Without APPLY
 
-Purpose: close demonstrated executable-model gaps before any real migration.
-Inputs: [confirmed29.10 matrix/minimal proposal](../../architecture/coach3-existing-content-migration-plan-2026-10-23.md) and [existing import contract](../../architecture/coach-import-contract-v0.1.md); separate implementation scope approval required.
-Deliverables: compatible Domain/DB/Admin/Import/Public-Projection fields for public/internal qualifications, roles, subject evidence, families/options and boundaries.
-Definition of Done: synthetic revision/evidence/family/parity proof without data loss or public-private leakage; no real records, server migration or Website changes.
+Purpose: decide the remaining real-data review points after the local technical target gate.
+Inputs: [confirmed29.10 matrix/recheck](../../architecture/coach3-existing-content-migration-plan-2026-10-23.md), [COACH-3C acceptance](../completed/coach-3c-target-2026-10-29.md) and available replacement sources.
+Deliverables: approved exact topic/subject-evidence mappings, family detail/copy decisions and justified exclusions.
+Definition of Done: every review point explicitly decided; real APPLY, server migrations and Website publication still need separate approval.
 No manual credential window now. Domain/DNS/TLS inputs progress in parallel using exactly the consolidated request in the [security close-out](../../operations/cryptography-maintenance-2026-10-23.md).
 
 ## Current Execution
+
+- 29.10 COACH-3C complete locally: additive0009, same Registry aggregate, typed private/public qualifications, exact object/hash/environment evidence, families/formats/options, Admin and importv2/public allowlist. Actual8->9 preservation, rich repeat/no-op and native165-browser proof; nine real profiles validated only in memory,827 fields/22 topic labels/0 canonical loss. No real data or Website/server changes. [Execution/evidence](../completed/coach-3c-target-2026-10-29.md).
 
 - 29.10 COACH-3B preparation complete:9/9 canonical profiles analyzed without DB; confirmed decisions, actual source quality and pure mapping tests. Current executable target BLOCKED9; new Gülcan3 families/5 formats held,2 source replacements later. [Completed plan](../completed/coach-3b-preparation-2026-10-29.md). No website/real-import changes.
 
@@ -35,7 +37,7 @@ No manual credential window now. Domain/DNS/TLS inputs progress in parallel usin
 
 | # | Intended outcome / status | Gate / dependency | Planned evidence | Confidence |
 | --- | --- | --- | --- | --- |
-| 1 | Synthetic lossless target extension / recommended | Confirmed29.10 matrix, minimal schema/DTO/editor proposal, separate implementation approval | Revision/public-private/subject-evidence/family/parity tests; no real data | High priority; medium confidence |
+| 1 | COACH-3B review closure without APPLY / recommended | New typed9-profile validation, explicit topic/subject-evidence decisions, available replacement sources | Reviewed mapping/evidence/copy matrix; separate execution approval retained | High priority; medium confidence |
 | 2 | Runtime/operations input closure / parallel, waiting inputs | Non-secret origin/DNS/TLS/port/path and owner/window decisions | Completed consolidated input matrix and dedicated rehearsal plan | High priority, external timing unknown |
 | 3 | Controlled synthetic VPS Linux/proxy rehearsal / waiting external gate | Final domain/TLS/owners and separate execution approval; exact reviewed artifact, not automatic Registry promotion | Real unit/HTTPS/cookies, rollback, cleanup and co-host health in one prepared window | Medium |
 | 4 | Portal activation review / waiting | Rehearsal from 3 plus backup/alerts/mail/privacy/real-role/onboarding gates | Separate Go/No-Go and exact source/artifact/operations scope | Medium-low |

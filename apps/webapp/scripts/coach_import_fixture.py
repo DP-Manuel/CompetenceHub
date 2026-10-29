@@ -161,3 +161,208 @@ def fixture():
         {"key": "two", "text": "Synthetic qualification B"},
     ]
     return records, mapping, catalogue, dict(ASSET_BYTES)
+
+
+def target_fixture():
+    """Fixed Alpha-Epsilon v2 data for the separate schema9/55436 proof."""
+    from competence_hub_api.portal.coach_import import validate_records
+    from competence_hub_api.portal.coach_target import requirements, subjects
+
+    records, old_mapping, catalogue, assets = fixture()
+    mapping = ImportMappingContract(
+        version="coach-import-v2",
+        topics=old_mapping.topics,
+        review_ref="synthetic:review-3c",
+        attest_initial_publication=True,
+    )
+    alpha_publication = records[0].pop("publication")
+    for record in records:
+        record["source_identity"]["source_system"] = "synthetic-coach3c"
+        record["profile"]["target_version"] = 1
+        for i, role in enumerate(record.get("roles", [])):
+            record["roles"][i] = {
+                "key": role["key"],
+                "code": role["key"],
+                "display_label": role["text"],
+                "ordering": i,
+            }
+        for i, qualification in enumerate(record.get("qualifications", [])):
+            record["qualifications"][i] = {
+                "key": qualification["key"],
+                "canonical_title": qualification["text"],
+                "public_display_label": qualification["text"],
+                "public": True,
+                "ordering": i,
+                "verification_state": "source_asserted",
+                "evidence_reference": "synthetic:qualification",
+            }
+        for offer in record.get("offerings", []):
+            offer["content"]["key"] = offer["key"]
+    records[2]["offerings"][0]["content"]["service_domains"] = ["psychotherapy"]
+    records.append(
+        {
+            "source_identity": {
+                "source_system": "synthetic-coach3c",
+                "source_key": "coach/epsilon",
+            },
+            "profile": {
+                "target_version": 1,
+                "display_name": "Synthetic Coach Epsilon",
+                "short_intro": "Synthetic rich target.",
+                "profile_path": "/coaches/synthetic-epsilon/",
+            },
+            "roles": [
+                {
+                    "key": "trainer",
+                    "code": "trainer",
+                    "display_label": "Synthetic Trainer",
+                }
+            ],
+            "qualifications": [
+                {
+                    "key": "degree",
+                    "canonical_title": "Synthetic degree",
+                    "public_display_label": "Synthetic degree",
+                    "public": True,
+                    "ordering": 0,
+                },
+                {
+                    "key": "private",
+                    "canonical_title": "Synthetic internal verification",
+                    "public": False,
+                    "internal_note": "Synthetic private note",
+                    "ordering": 1,
+                },
+            ],
+            "offering_families": [
+                {
+                    "key": "balance",
+                    "title": "Synthetic balance family",
+                    "service_domains": ["training", "coaching"],
+                    "target_groups": ["Synthetic teams"],
+                    "target_focus": ["Synthetic focus"],
+                    "boundaries": [
+                        {
+                            "key": "scope",
+                            "text": "Synthetic development, no therapy.",
+                            "excluded_services": ["therapy", "medical_treatment"],
+                        }
+                    ],
+                    "variants": [
+                        {
+                            "key": "community",
+                            "kind": "add_on",
+                            "title": "Synthetic community",
+                        }
+                    ],
+                    "protected_source_reference": "synthetic:protected-concept",
+                }
+            ],
+            "offerings": [
+                {
+                    "key": "balance/day",
+                    "content": {
+                        "key": "balance/day",
+                        "family_key": "balance",
+                        "title": "Synthetic day",
+                        "type": "workshop",
+                        "ordering": 0,
+                        "service_domains": ["training"],
+                        "duration": {"clock_start": "10:00", "clock_end": "16:30"},
+                        "bookable": False,
+                        "delivery_mode": "in_person",
+                        "delivery_label": "Synthetic location",
+                        "target_groups": ["Synthetic teams"],
+                        "variants": [
+                            {
+                                "key": "practice",
+                                "kind": "option",
+                                "title": "Synthetic practice",
+                            }
+                        ],
+                    },
+                },
+                {
+                    "key": "balance/six-weeks",
+                    "content": {
+                        "key": "balance/six-weeks",
+                        "family_key": "balance",
+                        "title": "Synthetic six-week format",
+                        "type": "coaching",
+                        "ordering": 1,
+                        "service_domains": ["coaching"],
+                        "duration": {
+                            "weeks": 6,
+                            "sessions_per_week": 1,
+                            "session_minutes": 60,
+                        },
+                        "delivery_mode": "live_unspecified",
+                        "delivery_label": "Synthetic online or live, location unresolved",
+                        "program_modules": [
+                            "Synthetic module one",
+                            "Synthetic module two",
+                        ],
+                        "protected_source_reference": "synthetic:protected-format",
+                    },
+                },
+            ],
+            "presentation": {
+                "teaser": "Synthetic teaser",
+                "focus_labels": ["Synthetic focus"],
+                "languages": ["Synthetic language"],
+                "sections": [
+                    {
+                        "key": "profile",
+                        "kind": "profile",
+                        "headings": ["Synthetic heading"],
+                        "paragraphs": ["Synthetic paragraph"],
+                    }
+                ],
+                "quote": "Synthetic quote",
+                "external_links": [
+                    {
+                        "key": "website",
+                        "label": "Synthetic website",
+                        "preview_url": "https://example.invalid/preview",
+                        "production_url": "https://example.invalid/production",
+                    }
+                ],
+            },
+            "boundaries": [{"key": "scope", "text": "Synthetic service boundary."}],
+            "provenance": {"source_ref": "synthetic:fixture/epsilon"},
+        }
+    )
+    prepared = validate_records(records, mapping, catalogue, assets, now=NOW)
+    assert not prepared.issues
+    for index in (0, 4):
+        content = prepared.records[index].content
+        hashes = subjects(content, [catalogue[t] for t in content.topic_ids])
+        records[index]["object_evidence"] = [
+            {
+                "key": f"preview/{kind}/{key}/{evidence_kind}",
+                "subject_type": kind,
+                "subject_key": key,
+                "subject_hash": hashes[(kind, key)],
+                "kind": evidence_kind,
+                "environment": "preview",
+                "status": "approved",
+                "evidence_reference": "synthetic:explicit-public-copy",
+                "approved_by": "Synthetic reviewer",
+            }
+            for kind, key, evidence_kind in sorted(requirements(content))
+        ]
+    epsilon = prepared.records[4].content
+    records[4]["object_evidence"].append(
+        {
+            "key": "protected/balance",
+            "subject_type": "family",
+            "subject_key": "balance",
+            "subject_hash": subjects(epsilon)[("family", "balance")],
+            "kind": "protected_source",
+            "environment": "preview",
+            "scope": "protected_source_content",
+            "status": "unknown",
+        }
+    )
+    records[0]["publication"] = alpha_publication
+    return records, mapping, catalogue, assets

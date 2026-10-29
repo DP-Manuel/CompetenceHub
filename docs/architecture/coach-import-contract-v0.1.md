@@ -174,7 +174,55 @@ Technical run_id/mode/start/finish/result is separate stdout JSON, not business
 audit or a stored source payload. SQL/error text, URLs/passwords, source documents,
 names, approval strings and full input objects are not echoed.
 
-## Acceptance And Limits
+## COACH-3C Structured Import V2
+
+`coach-import-v2` additively maps typed roles, public/internal qualifications,
+families, existing offering formats, nested variants/boundaries, presentation
+and exact object evidence into the
+[same target contract](coach-registry-contract-v0.1.md#coach-3c-additive-target-contract).
+Version1 input/hashes and its schema8/55435 harness remain compatible. No global
+qualification catalogue, second Coach aggregate or arbitrary document importer.
+
+V2 uses a separate explicit `target_v2` opt-in, fixed `synthetic-coach3c` namespace,
+owned localhost55436 and schema9. The existing CLI still exposes only its bundled
+synthetic inputs; no real file-backed APPLY is enabled. Database schema readiness
+uses accessible schema metadata, not a new app grant on schema_migrations.
+Validation and planning do not create UUIDs/rows, issue consents or access sources.
+
+The existing stable source/item ledger gains family, variant, presentation,
+section/link and object-evidence kinds. Nested keys include the stable parent;
+titles do not define identity. Removed known items require explicit review, not
+silent deletion. Rich mapped fields retain their supplied/omitted distinction;
+omission of populated existing fields conflicts, while an explicit clear is a
+deliberate revision. Matching evidence keys are immutable. Additional evidence
+for unchanged submitted content is an append operation, not a fake metadata no-op.
+
+An identical run must perform zero business/ledger/audit writes, not merely keep
+the entity count constant. The local proof compares every table's content and
+xmin, stable item IDs and projection bytes on repeats2/3. Rich-content changes
+use new immutable revisions; no consent is inherited. Exception injection must
+roll back the whole batch. New profiles cannot publish from protected-source or
+internal qualification verification alone. Old import gates retain their own
+exception/cancellation/SQL rollback coverage.
+
+The9 real canonical profiles are checked only in memory against actual typed
+target validation and field-by-field source parity. No real topic UUID/person
+mapping is invented. Remaining subject evidence/source reviews keep real APPLY
+NO-GO even when technical field loss is zero. Actual final evidence lives in the
+[COACH-3C execution plan](../exec-plans/completed/coach-3c-target-2026-10-29.md).
+
+PowerShell, repository root, no user passwords (generated process-only fixtures):
+
+```powershell
+.\apps\webapp\scripts\run-coach-target-local.ps1 -PythonPath '.\apps\webapp\.venv\Scripts\python.exe'
+.\apps\webapp\scripts\run-coach-target-local.ps1 -PythonPath '.\apps\webapp\.venv\Scripts\python.exe' -Browser
+```
+
+Both runs own and destroy their exact tmpfs container. The first starts at8 and
+tests the real upgrade to9, then import. The second starts a fresh9 database and
+tests native local Auth/MFA/Edge. Do not point either harness to VPS or a real DB.
+
+## Historical Acceptance And Limits
 
 29.10 follow-on: [confirmed COACH-3B matrix and minimal target proposal](coach3-existing-content-migration-plan-2026-10-23.md#bestätigte-entscheidungen-vom-2910)
 supersede the earlier open business questions, not this executable v0.1 schema.

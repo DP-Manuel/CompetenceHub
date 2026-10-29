@@ -8,6 +8,14 @@ DB-Einträge, Accounts, Kalenderrollen oder Veröffentlichungen erzeugt.
 Die spätere COACH-3A-Freigabe erlaubt ausschließlich lokale Migration0008 und
 synthetische Testeinträge in einer anschließend vollständig entfernten Datenbank.
 
+Aktueller Nachtrag: Der separat freigegebene **COACH-3C-Zielvertrag** ist lokal
+implementiert; [Domainvertrag](coach-registry-contract-v0.1.md#coach-3c-additive-target-contract)
+und [aktueller Prüfplan](../exec-plans/completed/coach-3c-target-2026-10-29.md)
+besitzen Implementierung und Abnahme. Die datierten Inventur-/0008-Befunde unten
+bleiben historisch erhalten. Neuer Recheck: **0 READY / 9 REVIEW_REQUIRED /
+0 BLOCKED**, **0 unbeabsichtigter kanonischer Feldverlust**, weiterhin NO_GO_APPLY.
+0009 ist ausschließlich in eigenen lokalen Testcontainern angewandt worden.
+
 ## Reproduzierbare Inventur
 
 Read-only Werkzeug: [coach3-static-inventory.mjs](../../scripts/coach3-static-inventory.mjs).
@@ -736,7 +744,7 @@ korrekt abgeschlossenen Vorbereitung. Generierte Reports unter `.tmp` bleiben
 ignoriert; private Scan-Renderbilder nach Sichtprüfung entfernt. Kein neuer
 Source-Dokumentdump, Zertifikat oder Porträt im Commit. Globale Skills unverändert.
 
-## Ein Empfohlener Nächster Block
+## Historischer Nächster Block Nach Der Vorbereitung
 
 **Verlustfreien Zielvertrag lokal mit synthetischen Daten umsetzen und abnehmen.**
 Zweck: die hier belegten technischen Field-Loss-Blocker vor Echtdaten schließen.
@@ -747,3 +755,58 @@ gesamter synthetischer Parity-/Evidence-/Familientest. Done: kein stiller Verlus
 keine Servermigration oder Veröffentlichung. Ersatzquellen und konkrete
 konkrete Nachweisbindungen können parallel vorbereitet werden. Für COACH-3B APPLY
 bleibt es bis dahin bei **NO-GO**, nicht nur „Ausführung noch nicht angeklickt“.
+
+## COACH-3C Recheck Des Realen Bestands
+
+Nur VALIDATE/in-memory, keine DB-Verbindung oder echten UUIDs: Alle9 kanonischen
+Profile werden tatsächlich als `ProfileContent.target_version=1` validiert.
+Ein rekonstruktiver Leaf-Audit vergleicht827 Quellfelder mit dem Ziel; unbekannte
+Felder, veränderte Werte und ungelöste Ausdrücke blockieren statt als „gemappt“
+durchzugehen. Die22 Themenlabels bleiben erhalten, ohne8 fachliche Themen-IDs
+in erfundene PostgreSQL-UUIDs umzuwandeln. Die14 Kompetenzlabels,30 öffentlichen
+Qualifikationseinträge,25 bisherigen Katalogtitel und8 Porträtreferenzen bleiben
+darstellbar. Quellen-/Template-Metadaten sind ausdrücklich nicht öffentliche
+Profilfelder. Interne/private Inhalte und unbestätigte Preise sind Policy-
+Ausschlüsse, keine versehentlich verworfenen Felder.
+
+| Gate | Ergebnis |
+| --- | --- |
+| Tatsächliche Zielmodellvalidierung |9 PASS /0 FAIL |
+| Unbeabsichtigter kanonischer Feldverlust |0,827 geprüfte Felder |
+| Fachlich freigabefertig für echten APPLY |0 READY /9 REVIEW_REQUIRED /0 technisch BLOCKED |
+| Echte DB-Verbindung / Mutationen |0 /0 |
+| Echte öffentliche Registry-Projektion / Veröffentlichung |Keine; nur in-memory Kandidat |
+
+Die neuen Gülcan3 Familien/5 Formate sind separat erfasst und bleiben inaktiv.
+Das synthetische Gegenstück beweist, dass das Zielmodell sie vollständig tragen
+kann; es erfindet nicht die noch fehlenden echten Detailtexte. Offen bleiben
+genaue Boundary-Kurztexte, Modulbezeichnungen, Standalone-/Erweiterungsentscheidung,
+die genaue Bedeutung von „Live“ und die2 angekündigten Ersatzquelldateien.
+Diese offenen Reviewfelder sind getrennt vom0-Verlust-Audit des bisherigen
+kanonischen Bestands ausgewiesen.
+
+Vor realem APPLY müssen weiterhin kanonische Themen-UUID-Zuordnungen, genaue
+Objekt-/Revisions-/Hash-/Umgebungsnachweise und das separate Ziel-/Backup-/Rollback-
+Ausführungsfenster genehmigt werden. Frühere Gülcan-Rechte für beide Websites
+bleiben gültig; sie werden nicht in erfundene historische Registry-Nachweise
+umgewandelt. Unbekannte historische Person/Datum bleiben NULL.
+
+Reproduktion nach vorhandenem kanonischem Snapshot, **ein PowerShell-Terminal**,
+Repositorywurzel; keine Passwörter, keine APPLY-Option:
+
+```powershell
+$env:PYTHONPATH = (Resolve-Path '.\apps\webapp\src').Path
+& '.\apps\webapp\.venv\Scripts\python.exe' '.\scripts\coach3b_preparation.py' --validate
+Remove-Item Env:PYTHONPATH
+```
+
+Erwartet: validation=PASS,9 Modellvalidierungen,0 Verlust,9 REVIEW_REQUIRED,
+NO_GO_APPLY und business_mutations=0. Deterministischer Report-SHA-256:
+`1e4336dd8abb95e7ee23babb5da503aecdd26a4ba341594b3bf566c4a2736b71`.
+
+**Ein empfohlener nächster Gate: COACH-3B Reviewabschluss ohne APPLY.**
+Zweck: die verbliebenen Nachweis-/Mapping-/Quellenentscheidungen gemeinsam
+abschließen. Inputs: neue Zielvalidierung, bestehende Reviewmatrix und verfügbare
+Ersatzquellen. Deliverable: freigegebene konkrete Zuordnungs-/Evidence-Matrix mit
+begründeten verbleibenden Ausschlüssen. Done: jeder Reviewpunkt ausdrücklich
+entschieden; ein echter Import benötigt danach weiterhin seine eigene Freigabe.

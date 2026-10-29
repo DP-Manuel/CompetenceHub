@@ -23,6 +23,16 @@ from competence_hub_api.portal.coach_registry import (
     Offering,
     ProfileContent,
 )
+from competence_hub_api.portal.coach_target import (
+    Boundary,
+    ObjectEvidenceInput,
+    OfferingFamily,
+    Presentation,
+    PublicRole,
+    Qualification,
+    requirements,
+    subjects,
+)
 
 Category = Literal[
     "personalentwicklung", "persoenlichkeitsentwicklung", "karrierecoaching"
@@ -124,10 +134,27 @@ class CoachImportRecord(StrictModel):
         def visit(node):
             if isinstance(node, dict):
                 for key, item in node.items():
-                    if key == "active" and type(item) is not bool:
-                        raise ValueError("active requires a JSON boolean")
-                    if key == "ordering" and type(item) is not int:
-                        raise ValueError("ordering requires a JSON integer")
+                    if (
+                        key in {"active", "bookable", "public"}
+                        and type(item) is not bool
+                    ):
+                        raise ValueError("actual JSON boolean required")
+                    if (
+                        key
+                        in {
+                            "ordering",
+                            "target_version",
+                            "minutes",
+                            "weeks",
+                            "sessions_per_week",
+                            "session_minutes",
+                            "portrait_width",
+                            "portrait_height",
+                        }
+                        and item is not None
+                        and type(item) is not int
+                    ):
+                        raise ValueError("actual JSON integer required")
                     visit(item)
             elif isinstance(node, (list, tuple)):
                 for item in node:
@@ -148,6 +175,47 @@ class CoachImportRecord(StrictModel):
             )
         ):
             raise ValueError("collections belong only in the typed import sections")
+        if any(
+            (
+                self.profile.public_roles,
+                self.profile.qualifications,
+                self.profile.offering_families,
+                self.profile.presentation,
+                self.profile.boundaries,
+            )
+        ):
+            raise ValueError("target collections belong in the typed import sections")
+        if (
+            not isinstance(self, CoachTargetImportRecord)
+            and self.profile.target_version
+        ):
+            raise ValueError("target_version 1 requires the v2 import contract")
+        if not isinstance(self, CoachTargetImportRecord):
+            ProfileContent.model_validate(
+                {
+                    **self.profile.model_dump(),
+                    "offerings": [o.content for o in self.offerings],
+                }
+            )
+        return self
+
+
+class CoachTargetImportRecord(CoachImportRecord):
+    """Selected only by an explicit coach-import-v2 mapping contract."""
+
+    roles: tuple[PublicRole, ...] = Field(default=(), max_length=20)
+    qualifications: tuple[Qualification, ...] = Field(default=(), max_length=50)
+    boundaries: tuple[Boundary, ...] = Field(default=(), max_length=10)
+    offering_families: tuple[OfferingFamily, ...] = Field(default=(), max_length=30)
+    presentation: Presentation | None = None
+    object_evidence: tuple[ObjectEvidenceInput, ...] = Field(default=(), max_length=500)
+
+    @model_validator(mode="after")
+    def explicit_target(self):
+        if self.profile.target_version != 1:
+            raise ValueError("v2 requires target_version 1")
+        if any(o.content.key != o.key for o in self.offerings):
+            raise ValueError("offering source and target keys must match exactly")
         return self
 
 
@@ -159,7 +227,7 @@ class TopicRule(StrictModel):
 
 
 class ImportMappingContract(StrictModel):
-    version: Literal["coach-import-v1"] = "coach-import-v1"
+    version: Literal["coach-import-v1", "coach-import-v2"] = "coach-import-v1"
     topics: tuple[TopicRule, ...] = Field(default=(), max_length=100)
     role_mapping: Literal["unmapped", "literal_background_v1"] = "unmapped"
     qualification_mapping: Literal["unmapped", "literal_background_v1"] = "unmapped"
@@ -184,6 +252,7 @@ class PreparedRecord:
     contract_hash: str
     publication_hash: str
     items: dict[tuple[str, str], str]
+    object_evidence: tuple[ObjectEvidenceInput, ...] = ()
 
 
 @dataclass
@@ -205,13 +274,115 @@ def fingerprint(value):
 def profile_fingerprint(content, topics):
     return fingerprint(
         {
-            "content": content.model_dump(mode="json"),
+            "content": import_profile_data(content),
             "topics": [
                 {"id": str(t.id), "name": t.name, "categories": sorted(t.categories)}
                 for t in sorted(topics, key=lambda t: str(t.id))
             ],
         }
     )
+
+
+def import_offering_data(offer, *, target_version):
+    data = offer.model_dump(mode="json")
+    if not target_version:
+        data = {
+            k: data[k] for k in ("title", "type", "description", "active", "ordering")
+        }
+    return data
+
+
+def import_profile_data(content):
+    """Keep schema8 ledger hashes byte-compatible after additive domain defaults."""
+    data = content.model_dump(mode="json")
+    if not content.target_version:
+        for name in (
+            "target_version",
+            "public_roles",
+            "qualifications",
+            "offering_families",
+            "presentation",
+            "boundaries",
+        ):
+            data.pop(name, None)
+        data["offerings"] = [
+            import_offering_data(o, target_version=0) for o in content.offerings
+        ]
+    return data
+
+
+def normalized_target(content):
+    """Order keyed collections and semantic sets, preserving literal sequence fields."""
+    if not content.get("target_version"):
+        return content
+
+    def visit(value, name=""):
+        if isinstance(value, dict):
+            return {k: visit(v, k) for k, v in value.items()}
+        if isinstance(value, list):
+            result = [visit(v) for v in value]
+            if name in {"service_domains", "excluded_services", "scopes"}:
+                return sorted(result)
+            if (
+                name not in {"sections", "external_links"}
+                and result
+                and all(isinstance(v, dict) and "key" in v for v in result)
+            ):
+                return sorted(result, key=lambda v: (v.get("ordering", 0), v["key"]))
+            return result
+        return value
+
+    return visit(content)
+
+
+def target_items(source, items, issue):
+    """Nested identity includes its stable parent, never the current display title."""
+
+    def add(kind, key, value):
+        if len(key) > 120:
+            issue("VALIDATION_ERROR", "nested_item_key")
+        if (kind, key) in items:
+            issue("IDENTITY_CONFLICT", kind)
+        items[(kind, key)] = fingerprint(
+            normalized_target({"target_version": 1, "value": value})["value"]
+        )
+
+    def nested(owner, value):
+        for variant in value.variants:
+            add("variant", owner + "/" + variant.key, variant.model_dump(mode="json"))
+        for boundary in value.boundaries:
+            add(
+                "boundary", owner + "/" + boundary.key, boundary.model_dump(mode="json")
+            )
+
+    for family in source.offering_families:
+        add(
+            "family",
+            family.key,
+            normalized_target(
+                {"target_version": 1, "value": family.model_dump(mode="json")}
+            )["value"],
+        )
+        nested("family/" + family.key, family)
+    for offer in source.offerings:
+        nested("offering/" + offer.key, offer.content)
+    if source.presentation:
+        add(
+            "presentation",
+            "presentation",
+            normalized_target(
+                {
+                    "target_version": 1,
+                    "value": source.presentation.model_dump(mode="json"),
+                }
+            )["value"],
+        )
+        for section in source.presentation.sections:
+            add("presentation_section", section.key, section.model_dump(mode="json"))
+        for link in source.presentation.external_links:
+            add("presentation_link", link.key, link.model_dump(mode="json"))
+    for evidence in source.object_evidence:
+        add("object_evidence", evidence.key, evidence.model_dump(mode="json"))
 
 
 def text_value(value):
@@ -275,7 +446,12 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
     identities, paths = set(), set()
     for index, raw in enumerate(values):
         try:
-            source = CoachImportRecord.model_validate(normalized_input(raw))
+            model = (
+                CoachTargetImportRecord
+                if contract.version == "coach-import-v2"
+                else CoachImportRecord
+            )
+            source = model.model_validate(normalized_input(raw))
         except ValidationError:
             result.issues.append(
                 ImportIssue("VALIDATION_ERROR", f"record-{index}", "schema")
@@ -326,7 +502,8 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
                     "categories": sorted(snapshot.categories),
                 }
             )
-        content = source.profile.model_dump(mode="json")
+        rich = isinstance(source, CoachTargetImportRecord)
+        content = source.profile.model_dump(mode="json", exclude_unset=rich)
         for kind, collection in (
             ("competency", source.competencies),
             ("target_group", source.target_groups),
@@ -337,7 +514,10 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
             for item in collection:
                 if (kind, item.key) in items:
                     issue("IDENTITY_CONFLICT", kind)
-                if item.visibility != "public":
+                if (
+                    not (rich and kind in {"role", "qualification", "boundary"})
+                    and item.visibility != "public"
+                ):
                     issue(
                         {
                             "qualification": "QUALIFICATION_MAPPING_REQUIRED",
@@ -346,7 +526,12 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
                         }.get(kind, "UNSUPPORTED_INFORMATION"),
                         kind,
                     )
-                items[(kind, item.key)] = fingerprint(item.model_dump(mode="json"))
+                item_data = item.model_dump(mode="json")
+                if rich:
+                    item_data = normalized_target(
+                        {"target_version": 1, "value": item_data}
+                    )["value"]
+                items[(kind, item.key)] = fingerprint(item_data)
         background = content.get("professional_background") or ""
         for name, collection, mode, code in (
             (
@@ -362,7 +547,7 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
                 "QUALIFICATION_MAPPING_REQUIRED",
             ),
         ):
-            if collection:
+            if collection and not rich:
                 if mode != "literal_background_v1" or not contract.review_ref:
                     issue(code, name)
                 else:
@@ -376,7 +561,7 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
                     )
                     background = "\n\n".join(filter(None, (background, section)))
         content["professional_background"] = background or None
-        if source.boundaries:
+        if source.boundaries and not rich:
             if (
                 contract.boundary_mapping != "literal_description_v1"
                 or not contract.review_ref
@@ -400,10 +585,44 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
         for offer in sorted(source.offerings, key=lambda o: o.content.ordering):
             if ("offering", offer.key) in items:
                 issue("IDENTITY_CONFLICT", "offerings")
-            items[("offering", offer.key)] = fingerprint(
-                offer.content.model_dump(mode="json")
+            offer_data = import_offering_data(
+                offer.content, target_version=source.profile.target_version
             )
-            content["offerings"].append(offer.content.model_dump(mode="json"))
+            if rich:
+                offer_data = normalized_target(
+                    {"target_version": 1, "value": offer_data}
+                )["value"]
+            items[("offering", offer.key)] = fingerprint(offer_data)
+            content["offerings"].append(
+                offer.content.model_dump(mode="json", exclude_unset=True)
+                if rich
+                else offer_data
+            )
+        if rich:
+            content.update(
+                public_roles=[
+                    v.model_dump(mode="json", exclude_unset=True) for v in source.roles
+                ],
+                qualifications=[
+                    v.model_dump(mode="json", exclude_unset=True)
+                    for v in source.qualifications
+                ],
+                offering_families=[
+                    v.model_dump(mode="json", exclude_unset=True)
+                    for v in source.offering_families
+                ],
+                boundaries=[
+                    v.model_dump(mode="json", exclude_unset=True)
+                    for v in source.boundaries
+                ],
+                presentation=(
+                    source.presentation.model_dump(mode="json", exclude_unset=True)
+                    if source.presentation
+                    else None
+                ),
+            )
+            content = normalized_target(content)
+            target_items(source, items, issue)
         content["assets"] = []
         for asset in source.assets:
             data = asset_bytes.get(asset.content.reference)
@@ -414,7 +633,33 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
                 "scopes": sorted(asset.content.scopes),
             }
             items[("asset", asset.key)] = fingerprint(asset_data)
-            content["assets"].append(asset_data)
+            content["assets"].append(
+                asset.content.model_dump(mode="json", exclude_unset=True)
+                if rich
+                else asset_data
+            )
+        if rich:
+            # Expanded defaults must not turn omitted populated fields into clears.
+            sections = {
+                "public_roles": "roles",
+                "qualifications": "qualifications",
+                "offering_families": "offering_families",
+                "presentation": "presentation",
+                "boundaries": "boundaries",
+                "topic_ids": "topics",
+                "competencies": "competencies",
+                "target_groups": "target_groups",
+                "offerings": "offerings",
+                "assets": "assets",
+            }
+            present = (source.profile.model_fields_set - sections.keys()) | {
+                target
+                for target, original in sections.items()
+                if original in source.model_fields_set
+            }
+            content = normalized_target(
+                {k: v for k, v in content.items() if k in present}
+            )
         pub = source.publication
         kinds = {e.kind for e in pub.evidence}
         if (
@@ -443,6 +688,45 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
         except ValidationError:
             issue("UNSUPPORTED_INFORMATION", "mapped_profile")
             continue
+        object_evidence = ()
+        if rich:
+            hashes = subjects(mapped, mapped_topics.values())
+            object_evidence = tuple(source.object_evidence)
+            for evidence in object_evidence:
+                if (
+                    hashes.get((evidence.subject_type, evidence.subject_key))
+                    != evidence.subject_hash
+                ):
+                    issue(
+                        "OBJECT_EVIDENCE_REVIEW_REQUIRED",
+                        "object_evidence.subject_hash",
+                    )
+                if (evidence.approved_at and evidence.approved_at > now) or (
+                    evidence.approved_on and evidence.approved_on > now.date()
+                ):
+                    issue(
+                        "OBJECT_EVIDENCE_REVIEW_REQUIRED",
+                        "object_evidence.historical_date",
+                    )
+            for env in pub.published:
+                for kind, key, evidence_kind in requirements(mapped):
+                    matches = [
+                        e
+                        for e in object_evidence
+                        if (
+                            e.subject_type,
+                            e.subject_key,
+                            e.kind,
+                            e.environment,
+                            e.scope,
+                        )
+                        == (kind, key, evidence_kind, env, "public_content")
+                    ]
+                    if not matches or matches[-1].status != "approved":
+                        issue(
+                            "OBJECT_EVIDENCE_REVIEW_REQUIRED",
+                            "publication.object_evidence",
+                        )
         if len(result.issues) == start:
             publication_hash = fingerprint(
                 {
@@ -455,17 +739,20 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
                 }
             )
             profile_hash = profile_fingerprint(mapped, mapped_topics.values())
-            source_hash = fingerprint(
-                {
-                    "profile": profile_hash,
-                    "publication": publication_hash,
-                    "source_ref": source.provenance.source_ref,
-                    "items": [
-                        [kind, key, value]
-                        for (kind, key), value in sorted(items.items())
-                    ],
-                }
-            )
+            source_data = {
+                "profile": profile_hash,
+                "publication": publication_hash,
+                "source_ref": source.provenance.source_ref,
+                "items": [
+                    [kind, key, value] for (kind, key), value in sorted(items.items())
+                ],
+            }
+            if rich:
+                # Evidence order is append-only history; the latest exact slot wins.
+                source_data["object_evidence"] = [
+                    e.model_dump(mode="json") for e in object_evidence
+                ]
+            source_hash = fingerprint(source_data)
             result.records.append(
                 PreparedRecord(
                     source,
@@ -475,6 +762,7 @@ def validate_records(values, contract, catalogue, asset_bytes, *, now):
                     contract_hash,
                     publication_hash,
                     items,
+                    object_evidence,
                 )
             )
     return result

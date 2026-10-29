@@ -1,6 +1,6 @@
 # Skill Feedback Router
 
-Updated: 2026-10-23. This file is on-demand, not part of routine boot context.
+Updated: 2026-10-29. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
@@ -28,6 +28,8 @@ Project-local implementation does not mean a canonical CodexSkills proposal is c
 | Bounded views must retain authoritative action inputs | History pagination must not hide older still-valid activation evidence; bounded loader includes latest eligible revision plus selected/publication references. Browser readiness awaits rendered lists, not network idle. Capture scrolled fixed-element/zoom artifacts before diagnosing layout. Global proposal open | COACH-2 bounded-read and13-revision regression |
 | Prove import no-op, do not only count entities | Compare all domain/ledger/audit rows and xmin; separate logical source IDs from revision snapshot rows. Inject cancellation/SQL failure after writes; preserve unknown historic dates and stop typed mapping gaps. Project implemented, global proposal open | [Import contract](docs/architecture/coach-import-contract-v0.1.md), [COACH-3 evidence](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3a-nachweis) |
 | Real source shape versus executable target |29.10 proof: green preparation may correctly mean NO_GO_APPLY. Separate source readability/access/copy rights/subject evidence/model readiness; request replacements early, preserve day-only dates and do not infer qualifications from handwritten service ideas. Global proposal open | [COACH-3 matrix/runbook](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md) |
+| Additive models need field-presence and hash compatibility |29.10 COACH-3C: protect recursively populated nested fields, distinguish omission from explicit null/empty, preserve field presence through import normalization, retain v1 hash shape and prove old row/xmin identity through real DDL. New evidence is exact object/hash/environment consent, not a timestamp fabricated by import. Project regressions implemented; global proposal open | [Target contract](docs/architecture/coach-registry-contract-v0.1.md#coach-3c-additive-target-contract) and target/import tests |
+| Nested disclosures need direct-child focus tests | Native add-family test found descendant last-of-type selecting an old nested variant. Select the new direct child and assert open state plus first editable focus; include long hostile literal text in390px/actual200% geometry. Add safe file/function/line diagnostics, not only exception type. Project fixed; global proposal open | COACH-3C native runner and Coach management UI |
 
 ## Implemented / Historical
 

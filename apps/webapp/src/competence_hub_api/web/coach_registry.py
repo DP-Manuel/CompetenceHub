@@ -15,6 +15,8 @@ from competence_hub_api.portal.coach_registry import (
     RegistryConflict,
     RegistryDenied,
 )
+from competence_hub_api.portal.coach_management import target_revision_detail
+from competence_hub_api.portal.coach_target import ObjectEvidenceInput
 from competence_hub_api.web.admin import _admin_principal
 from competence_hub_api.web.problems import problem_response
 
@@ -49,6 +51,10 @@ class ApprovalRequest(VersionRequest):
 
 class PublishRequest(VersionRequest):
     revision_id: UUID
+
+
+class EvidenceRequest(VersionRequest):
+    evidence: ObjectEvidenceInput
 
 
 def failure(status, code):
@@ -103,6 +109,7 @@ def detail(coach):
                 "status": r.status,
                 "content": r.content.model_dump(mode="json"),
                 "approvals": [asdict(a) for a in r.approvals],
+                **target_revision_detail(r),
             }
             for r in coach.revisions
         ],
@@ -234,6 +241,13 @@ async def approve(coach_id: UUID, revision_id: UUID, request: Request):
 @router.patch("/{coach_id}/lifecycle")
 async def lifecycle(coach_id: UUID, request: Request):
     return await mutate(request, coach_id, LifecycleRequest, "lifecycle")
+
+
+@router.post("/{coach_id}/revisions/{revision_id}/evidence")
+async def record_evidence(coach_id: UUID, revision_id: UUID, request: Request):
+    return await mutate(
+        request, coach_id, EvidenceRequest, "evidence", revision_id=revision_id
+    )
 
 
 @router.post("/{coach_id}/publications/{environment}")

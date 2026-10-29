@@ -6,10 +6,35 @@ from datetime import datetime
 from typing import Literal, Protocol
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictBool,
+    field_validator,
+    model_validator,
+)
 
 from competence_hub_api.auth.session_repository import SessionPrincipal
 from competence_hub_api.portal.coach_profiles import validate_public_profile_path
+from competence_hub_api.portal.coach_target import (
+    KEY,
+    REF,
+    Boundary,
+    Domain,
+    Duration,
+    ObjectEvidenceInput,
+    OfferingFamily,
+    Presentation,
+    PublicRole,
+    Qualification,
+    Variant,
+    evidence_ready,
+    public_offering,
+    public_target,
+    subjects,
+    unique_items,
+)
 
 Lifecycle = Literal["draft", "active", "paused", "inactive", "archived"]
 Environment = Literal["preview", "production"]
@@ -44,6 +69,46 @@ class Offering(PublicModel):
     description: str | None = Field(default=None, max_length=2000)
     active: bool = True
     ordering: int = Field(default=0, ge=0, le=1000)
+    key: str | None = Field(default=None, pattern=KEY)
+    family_key: str | None = Field(default=None, pattern=KEY)
+    service_domains: tuple[Domain, ...] = Field(default=(), max_length=6)
+    bookable: StrictBool = False
+    duration: Duration | None = None
+    delivery_mode: Literal[
+        "unknown",
+        "online",
+        "in_person",
+        "online_or_in_person",
+        "hybrid",
+        "live_unspecified",
+    ] = "unknown"
+    delivery_label: str | None = Field(default=None, max_length=250)
+    target_groups: tuple[str, ...] = Field(default=(), max_length=20)
+    target_focus: tuple[str, ...] = Field(default=(), max_length=20)
+    program_modules: tuple[str, ...] = Field(default=(), max_length=30)
+    boundaries: tuple[Boundary, ...] = Field(default=(), max_length=10)
+    variants: tuple[Variant, ...] = Field(default=(), max_length=20)
+    protected_source_reference: str | None = Field(default=None, pattern=REF)
+
+    @model_validator(mode="after")
+    def coherent_target(self):
+        unique_items(self.variants, "offering variants")
+        if len(set(self.service_domains)) != len(self.service_domains):
+            raise ValueError("duplicate service domain")
+        if len({b.key for b in self.boundaries}) != len(self.boundaries):
+            raise ValueError("duplicate boundary")
+        if any(
+            not s.strip() or len(s) > 500
+            for s in (*self.target_groups, *self.target_focus, *self.program_modules)
+        ):
+            raise ValueError("invalid offering label")
+        if "psychotherapy" in self.service_domains and (
+            self.bookable
+            or self.type == "coaching"
+            or "coaching" in self.service_domains
+        ):
+            raise ValueError("psychotherapy remains separate and nonbookable")
+        return self
 
 
 class Asset(PublicModel):
@@ -77,6 +142,12 @@ class ProfileContent(PublicModel):
     competencies: tuple[str, ...] = Field(default=(), max_length=50)
     offerings: tuple[Offering, ...] = Field(default=(), max_length=100)
     assets: tuple[Asset, ...] = Field(default=(), max_length=1)
+    target_version: Literal[0, 1] = 0
+    public_roles: tuple[PublicRole, ...] = Field(default=(), max_length=20)
+    qualifications: tuple[Qualification, ...] = Field(default=(), max_length=50)
+    offering_families: tuple[OfferingFamily, ...] = Field(default=(), max_length=30)
+    presentation: Presentation | None = None
+    boundaries: tuple[Boundary, ...] = Field(default=(), max_length=10)
 
     @field_validator("profile_path")
     @classmethod
@@ -98,6 +169,38 @@ class ProfileContent(PublicModel):
             raise ValueError("duplicate topic")
         if len({o.ordering for o in self.offerings}) != len(self.offerings):
             raise ValueError("offering order must be unique")
+        for name in ("public_roles", "qualifications", "offering_families"):
+            unique_items(getattr(self, name), name)
+        if len({b.key for b in self.boundaries}) != len(self.boundaries):
+            raise ValueError("duplicate boundary")
+        rich = any(
+            (
+                self.public_roles,
+                self.qualifications,
+                self.offering_families,
+                self.presentation,
+                self.boundaries,
+            )
+        )
+        rich = rich or any(
+            o.model_dump(exclude={"title", "type", "description", "active", "ordering"})
+            != Offering(title=o.title, type=o.type).model_dump(
+                exclude={"title", "type", "description", "active", "ordering"}
+            )
+            for o in self.offerings
+        )
+        if rich and not self.target_version:
+            raise ValueError("rich fields require target_version 1")
+        if self.target_version:
+            if any(not o.key for o in self.offerings) or len(
+                {o.key for o in self.offerings}
+            ) != len(self.offerings):
+                raise ValueError("stable offering keys required")
+            families = {f.key for f in self.offering_families}
+            if any(
+                o.family_key and o.family_key not in families for o in self.offerings
+            ):
+                raise ValueError("unknown offering family")
         return self
 
 
@@ -116,6 +219,14 @@ class Approval:
     evidence_ref: str
 
 
+@dataclass(frozen=True)
+class ObjectEvidence:
+    id: UUID
+    value: ObjectEvidenceInput
+    recorded_by: UUID
+    recorded_at: datetime
+
+
 @dataclass
 class ProfileRevision:
     id: UUID
@@ -126,6 +237,7 @@ class ProfileRevision:
     status: Literal["draft", "submitted", "abandoned"] = "draft"
     topics: tuple[TopicSnapshot, ...] = ()
     approvals: list[Approval] = field(default_factory=list)
+    object_evidence: list[ObjectEvidence] = field(default_factory=list)
 
 
 @dataclass
@@ -190,6 +302,7 @@ def publication_ready(coach, revision, environment):
         and {"content_review", "person_consent", environment}
         <= {a.kind for a in revision.approvals}
         and bool(revision.content.profile_path)
+        and evidence_ready(revision, environment)
         and all(
             not a.active or environment in a.scopes for a in revision.content.assets
         )
@@ -212,6 +325,7 @@ def management_capabilities(coach, revision, *, future_calendar=False):
             "approvals": [],
             "publish": [],
             "withdraw": [],
+            "object_evidence": False,
         }
     return {
         "new_revision": coach.lifecycle != "archived"
@@ -222,6 +336,11 @@ def management_capabilities(coach, revision, *, future_calendar=False):
             if (activation_ready(coach) if s == "active" else not future_calendar)
         ),
         "editable": bool(revision and revision.status == "draft"),
+        "object_evidence": bool(
+            revision
+            and revision.status == "submitted"
+            and revision.content.target_version == 1
+        ),
         "submit": bool(revision and revision.status == "draft"),
         "approvals": (
             sorted(
@@ -246,6 +365,43 @@ def management_capabilities(coach, revision, *, future_calendar=False):
             e for e, p in coach.publications.items() if p.state == "published"
         ],
     }
+
+
+def require_complete_target_update(previous, content):
+    """Full-snapshot writes must not erase fields unknown to an older client."""
+    if not previous.target_version:
+        return
+    if not content.target_version:
+        raise RegistryConflict("rich contract downgrade forbidden")
+
+    def complete(old, new, path=""):
+        for name, spec in type(old).model_fields.items():
+            old_value, new_value = getattr(old, name), getattr(new, name)
+            if name not in new.model_fields_set and getattr(
+                old, name
+            ) != spec.get_default(call_default_factory=True):
+                raise RegistryConflict("rich field omitted: " + path + name)
+            if isinstance(old_value, BaseModel) and isinstance(new_value, BaseModel):
+                complete(old_value, new_value, path + name + ".")
+            elif isinstance(old_value, (tuple, list)) and isinstance(
+                new_value, (tuple, list)
+            ):
+                keyed = {
+                    v.key: v
+                    for v in old_value
+                    if isinstance(v, BaseModel) and hasattr(v, "key")
+                }
+                for index, value in enumerate(new_value):
+                    if isinstance(value, BaseModel):
+                        previous_item = (
+                            keyed.get(value.key)
+                            if hasattr(value, "key")
+                            else (old_value[index] if index < len(old_value) else None)
+                        )
+                        if isinstance(previous_item, BaseModel):
+                            complete(previous_item, value, path + name + ".")
+
+    complete(previous, content)
 
 
 class CoachRegistryService:
@@ -280,6 +436,7 @@ class CoachRegistryService:
         kind=None,
         evidence_ref=None,
         environment=None,
+        evidence=None,
     ):
         self.authorize(actor)
         async with self.repository.edit(coach_id, expected_version) as coach:
@@ -293,6 +450,13 @@ class CoachRegistryService:
                     raise RegistryConflict("existing draft or archived")
                 if content is None:
                     raise ValueError("profile required")
+                if (
+                    any(r.content.target_version for r in coach.revisions)
+                    and not content.target_version
+                ):
+                    raise RegistryConflict("rich contract downgrade forbidden")
+                if coach.revisions:
+                    require_complete_target_update(coach.revisions[-1].content, content)
                 revision = ProfileRevision(
                     uuid4(), len(coach.revisions) + 1, content, actor.user_id, now
                 )
@@ -303,6 +467,7 @@ class CoachRegistryService:
                 revision = coach.revision(revision_id)
                 if revision.status != "draft" or content is None:
                     raise RegistryConflict("immutable revision")
+                require_complete_target_update(revision.content, content)
                 revision.content = content
                 revision.topics = await self.repository.topics(content.topic_ids)
                 entity_id = revision.id
@@ -336,6 +501,41 @@ class CoachRegistryService:
                 revision.approvals.append(
                     Approval(kind, actor.user_id, now, evidence_ref.strip())
                 )
+                entity_id = revision.id
+            elif operation == "evidence":
+                revision = coach.revision(revision_id)
+                if (
+                    revision.status != "submitted"
+                    or not revision.content.target_version
+                ):
+                    raise RegistryConflict("submitted target revision required")
+                if not isinstance(evidence, ObjectEvidenceInput):
+                    raise ValueError("typed object evidence required")
+                if (
+                    subjects(revision.content, revision.topics).get(
+                        (evidence.subject_type, evidence.subject_key)
+                    )
+                    != evidence.subject_hash
+                ):
+                    raise RegistryConflict("evidence subject/hash mismatch")
+                if any(e.value.key == evidence.key for e in revision.object_evidence):
+                    raise RegistryConflict("evidence key already recorded")
+                if (evidence.approved_at and evidence.approved_at > now) or (
+                    evidence.approved_on and evidence.approved_on > now.date()
+                ):
+                    raise ValueError("future historical approval forbidden")
+                revision.object_evidence.append(
+                    ObjectEvidence(uuid4(), evidence, actor.user_id, now)
+                )
+                publication = coach.publications.get(evidence.environment)
+                if (
+                    publication
+                    and publication.state == "published"
+                    and publication.revision_id == revision.id
+                    and not evidence_ready(revision, evidence.environment)
+                ):
+                    publication.state = "withdrawn"
+                    publication.actor_id, publication.occurred_at = actor.user_id, now
                 entity_id = revision.id
             elif operation == "lifecycle":
                 if lifecycle not in LIFECYCLE_TRANSITIONS[coach.lifecycle]:
@@ -401,6 +601,10 @@ class CoachRegistryService:
                         for a in revision.content.assets
                     ):
                         raise RegistryConflict("path or scoped asset approval missing")
+                    if not evidence_ready(revision, environment):
+                        raise RegistryConflict(
+                            "missing exact object/environment evidence"
+                        )
                     coach.publications[environment] = Publication(
                         revision.id, "published", actor.user_id, now
                     )
@@ -445,6 +649,7 @@ def public_projection(
             or revision.number <= coach.publication_floor
             or not {"content_review", "person_consent", environment}
             <= {a.kind for a in revision.approvals}
+            or not evidence_ready(revision, environment)
         ):
             raise RegistryConflict("inconsistent publication")
         content = revision.content
@@ -454,21 +659,41 @@ def public_projection(
             raise RegistryConflict("missing/duplicate public path")
         paths.add(content.profile_path)
         item = content.model_dump(
-            mode="json", exclude={"topic_ids", "assets", "offerings"}
+            mode="json",
+            include={
+                "display_name",
+                "academic_suffix",
+                "short_intro",
+                "description",
+                "professional_background",
+                "target_groups",
+                "profile_path",
+                "competencies",
+            },
         )
         item["topics"] = [
             {"name": t.name, "categories": list(t.categories)} for t in revision.topics
         ]
         item["assets"] = [
-            a.model_dump(mode="json", exclude={"scopes", "active"})
+            a.model_dump(
+                mode="json", include={"type", "reference", "sha256", "alt_text"}
+            )
             for a in content.assets
             if a.active and environment in a.scopes
         ]
         item["offerings"] = [
-            o.model_dump(mode="json", exclude={"active"})
+            (
+                public_offering(o)
+                if content.target_version
+                else o.model_dump(
+                    mode="json", include={"title", "type", "description", "ordering"}
+                )
+            )
             for o in sorted(content.offerings, key=lambda x: x.ordering)
-            if o.active
+            if o.active and (not content.target_version or not o.family_key)
         ]
+        if content.target_version:
+            item.update(public_target(content, environment))
         items.append(item)
     return {
         "schema": 1,

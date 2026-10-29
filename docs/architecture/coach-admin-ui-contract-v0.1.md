@@ -127,7 +127,30 @@ des Tests unter dessen temporärer lokalen URL erreichbar; danach wird sie gesto
 Browser/Profile/HTTPS-Server beendet, gesamte eigene Testdatenbank durch Entfernen
 des exakt eigenen Containers gelöscht. Kein VPS-, Pages- oder IONOS-Zugriff.
 
-## Nicht Enthalten
+## COACH-3C Erweiterung
+
+Der [additive Zielvertrag](coach-registry-contract-v0.1.md#coach-3c-additive-target-contract)
+ergänzt denselben Admin-Arbeitsbereich um Qualifikationen, Angebotsfamilien und
+objektbezogene Nachweise. Der bisherige Vertrag bleibt für alte Revisionen
+erhalten; erweiterte Felder werden im Entwurf ausdrücklich aktiviert.
+Qualifikationen zeigen öffentliche Bezeichnung/Sichtbarkeit getrennt von
+internem Titel, Prüfstatus und Notiz. Familien gruppieren Formate; Details zu
+Varianten, Dauer, Zielgruppe, Durchführung und Abgrenzung werden aufgeklappt.
+Stabile Schlüssel werden nicht aus bearbeiteten Titeln neu erzeugt.
+Rollen und Darstellung bleiben separat und stufenweise zugänglich.
+
+Nachweise sind ausschließlich Adminfunktionen für eingereichte Revisionen.
+Objekt und SHA kommen vom Server; Umgebung, Scope, Status, Referenz und bekannte
+historische Angaben werden ausdrücklich gewählt. Unbekannte historische Daten
+bleiben leer. Eine neue Revision übernimmt keine Nachweise. Vorhandene Rollen-,
+CSRF-, Fokus-, Dirty-State- und409-Verträge gelten unverändert. Speichern anderer
+Tabs erhält sämtliche nicht dort bearbeiteten strukturierten Felder.
+Kein Roh-JSON-Editor, keine Quellenansicht und keine Veröffentlichung des Backends.
+Der datierte [COACH-3C-Plan](../exec-plans/completed/coach-3c-target-2026-10-29.md)
+besitzt die aktuelle zusätzliche Abnahme; historische109 Checks oben bleiben
+als ursprüngliche COACH-2-Abnahme erhalten.
+
+## Weiterhin Nicht Enthalten
 
 Themen-Neuanlage und Kategorieänderung besitzen noch keinen COACH-1-Schreibvertrag;
 keine semantische Dublettenprüfung wird vorgetäuscht. Kein Medienupload,

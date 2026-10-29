@@ -3,6 +3,14 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-29 | local implementation / acceptance | COACH-3C Lossless Target
+
+- Additive0009 extends the existing Registry, not a second Coach domain. Typed qualifications/private verification, public roles, offering families/formats/variants, bounded presentation and exact object/hash/revision/environment consent; original legacy approval/hash behavior preserved.
+- [Target contract](docs/architecture/coach-registry-contract-v0.1.md#coach-3c-additive-target-contract), Admin and import contracts updated. Full-snapshot omission checks recurse through nested structures; import retains supplied-field presence. Actual browser tests found/fixed nested-family add focus and long-title mobile overflow. Public output is a positive allowlist, no internal evidence/notes/price/source body.
+- [Execution/evidence](docs/exec-plans/completed/coach-3c-target-2026-10-29.md) owns actual local/PG/native/adjacent results and remaining limits. Real8->9 upgrade retains old rows/xmin; repeat import preserves every row/audit/projection byte. Owned containers/servers/profiles removed.
+- Real9-profile mapping remains in-memory only:9 valid targets,827 audited fields,22 topic labels,0 canonical field loss;0 READY/9 REVIEW_REQUIRED/0 BLOCKED. No real IDs/accounts/roles/mappings/import, VPS migration, Astro DB projection or deployment. Websites unchanged.
+- Commit/push authorized after green. Next gate is concrete COACH-3B evidence/topic/source review closure without APPLY. Reusable presence/hash/focus/geometry lessons recorded locally; no global skills or unrelated-project edits.
+
 ## 2026-10-29 | preparation / source review | COACH-3B Field And Evidence Matrix
 
 - Manuel confirms public/internal qualification separation, independent profile roles, distinct psychotherapy and subject/environment evidence. [Existing COACH-3 plan](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md) now owns9/9 field/role/qualification/offer/asset/evidence matrices, conditional scope, current target gaps and one future import/parity/rollback window.

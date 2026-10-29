@@ -7,6 +7,25 @@ const ENV = { preview: "GitHub Preview", production: "Production" };
 const APPROVAL = { content_review: "Inhalt geprüft", person_consent: "Einwilligung belegt", preview: "Preview freigegeben", production: "Production freigegeben" };
 const CATEGORY = { personalentwicklung: "Personalentwicklung", persoenlichkeitsentwicklung: "Persönlichkeitsentwicklung", karrierecoaching: "Karrierecoaching" };
 const TYPES = { lecture: "Vortrag", workshop: "Workshop", coaching: "Coaching", individual: "Individuelles Angebot", other: "Sonstiges" };
+const DOMAINS = {coaching:"Coaching", consulting:"Beratung", psychotherapy:"Psychotherapie", training:"Training", moderation:"Moderation", health_promotion:"Gesundheitsförderung"};
+const DELIVERY = {unknown:"Unbekannt", online:"Online", in_person:"Präsenz", online_or_in_person:"Online oder Präsenz", hybrid:"Hybrid", live_unspecified:"Live, nicht näher bestimmt"};
+const EVIDENCE_KIND = {profile_content:"Profilinhalt", publication:"Veröffentlichung", portrait_asset:"Porträt", qualification:"Qualifikation", offering_content:"Angebotsinhalt", protected_source:"Geschützter Quellinhalt"};
+const EVIDENCE_SCOPE = {public_content:"Öffentlicher Inhalt", internal_verification:"Interne Prüfung", protected_source_content:"Geschützter Quellinhalt"};
+const EVIDENCE_STATUS = {unknown:"Unbekannt", approved:"Genehmigt", rejected:"Abgelehnt"};
+const ITEM_KEY = ["key","Stabiler Schlüssel","key"];
+const ORDER = ["ordering","Reihenfolge","number",1000];
+const DURATION_FIELDS = [["clock_start","Beginn","time"],["clock_end","Ende","time"],["minutes","Dauer in Minuten","number",10080],["weeks","Wochen","number",104],["sessions_per_week","Termine pro Woche","number",14],["session_minutes","Minuten pro Termin","number",1440],["label","Dauerbezeichnung","text",250]];
+const VARIANT_FIELDS = [ITEM_KEY,["kind","Art","select",{variant:"Variante",add_on:"Zusatz",option:"Option"}],["title","Titel","required",250],["description","Beschreibung","text",500],ORDER,["active","Aktiv","bool"],["duration","Dauer","object",DURATION_FIELDS]];
+const BOUNDARY_FIELDS = [ITEM_KEY,["text","Abgrenzung","required-area",2000],["excluded_services","Ausgeschlossene Leistungen","lines",1300]];
+const TARGET_FIELDS = [["target_groups","Zielgruppen","lines",10000],["target_focus","Zielschwerpunkte","lines",10000],["service_domains","Leistungsbereiche","checks",DOMAINS],
+  ["boundaries","Abgrenzungen","collection",BOUNDARY_FIELDS,10],["variants","Varianten und Optionen","collection",VARIANT_FIELDS,20],["protected_source_reference","Geschützte Quellreferenz (intern)","reference"]];
+const FAMILY_FIELDS = [ITEM_KEY,["title","Titel","required",250],["description","Beschreibung","area",2000],ORDER,["active","Aktiv","bool"],...TARGET_FIELDS];
+const OFFER_FIELDS = [ITEM_KEY,["family_key","Angebotsfamilie","family"],["bookable","Buchbar","bool"],["duration","Dauer","object",DURATION_FIELDS],["delivery_mode","Durchführung","select",DELIVERY],["delivery_label","Durchführungsbezeichnung","text",250],["program_modules","Programmmodule","lines",15030],...TARGET_FIELDS];
+const QUALIFICATION_FIELDS = [ITEM_KEY,["canonical_title","Kanonischer Titel (intern)","required",1000],["public_display_label","Öffentliche Bezeichnung","text",1000],["issuer","Aussteller","text",250],["qualification_type","Qualifikationsart","text",100],ORDER,["public","Öffentlich sichtbar","bool"],["status","Status","select",{active:"Aktiv",historical:"Historisch"}],["verification_state","Prüfstatus (intern)","select",{unknown:"Unbekannt",source_asserted:"Laut Quelle",verified:"Geprüft"}],["evidence_reference","Nachweisreferenz (intern)","reference"],["internal_note","Interne Notiz","area",1000]];
+const PRESENTATION_FIELDS = [["teaser","Teaser","area",1000],["focus_labels","Schwerpunktbezeichnungen","lines",30030],["background_labels","Hintergrundbezeichnungen","lines",50050],["languages","Sprachen","lines",10010],["quote","Zitat","area",3000],["initials","Initialen","text",8],["portrait_width","Porträtbreite","number",20000],["portrait_height","Porträthöhe","number",20000],
+  ["sections","Abschnitte","collection",[ITEM_KEY,["kind","Art","select",{profile:"Profil",topics:"Themen",background:"Hintergrund",formats:"Formate",boundary:"Abgrenzung",contact:"Kontakt",pending:"Ausstehend"}],["headings","Überschriften","lines",20010],["paragraphs","Absätze","lines",24012]],20],
+  ["topic_cards","Themenkarten","collection",[["title","Titel","required",250],["text","Text","required-area",2000]],20],
+  ["external_links","Externe Links","collection",[ITEM_KEY,["label","Bezeichnung","required",250],["preview_url","Preview-URL","url",1000],["production_url","Production-URL","url",1000]],10]];
 
 function node(tag, text = "", cls = "") {
   const item = document.createElement(tag);
@@ -66,6 +85,8 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
   let topicOffset = 0;
   let selectedTopics = new Set();
   let offerings = [];
+  let richDraft = null;
+  let fieldSerial = 0;
   let form = null;
   let error = null;
   let status = null;
@@ -83,6 +104,7 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
     form = null;
     selectedTopics.clear();
     offerings = [];
+    richDraft = null;
     creationAttempt = null;
     for (const dialog of dialogs) { dialog.close(); dialog.remove(); }
     dialogs.clear();
@@ -267,7 +289,7 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
     root.append(node("p", "Lifecycle: " + LIFE[current.lifecycle], "cm-lifecycle"), toolbar);
     const tabs = node("div", "", "cm-tabs"); tabs.setAttribute("role", "tablist"); tabs.setAttribute("aria-label", "Coachdetails");
     const panels = node("div");
-    const sections = [["overview","Übersicht"], ["profile","Profil"], ["topics","Themen"], ["competencies","Kompetenzen"], ["offerings","Angebote"], ["publication","Veröffentlichung"], ["history","Historie"]];
+    const sections = [["overview","Übersicht"], ["profile","Profil"], ["topics","Themen"], ["competencies","Kompetenzen"], ["qualifications","Qualifikationen"], ["families","Angebotsfamilien"], ["offerings","Angebote"], ["evidence","Nachweise (Admin)"], ["publication","Veröffentlichung"], ["history","Historie"]];
     const selectTab = (key, focus = false) => {
       for (const tab of tabs.children) { const selected=tab.dataset.key===key; tab.setAttribute("aria-selected", String(selected)); tab.tabIndex=selected?0:-1; if(selected && focus) tab.focus(); }
       for (const panel of panels.children) panel.hidden=panel.id!=="cm-panel-"+key;
@@ -308,6 +330,7 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
       panel("profile").append(action("Neue Profilrevision", base+"/revisions", {expected_version:version,content:seed}));
     }
     renderPublication(panel("publication"),base,version);
+    renderEvidence(panel("evidence"),base,version);
     renderHistory(panel("history"));
     selectTab("overview"); title.focus();
   }
@@ -316,6 +339,7 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
     const editable=current.capabilities.editable;
     selectedTopics=new Set(content.topic_ids);
     offerings=structuredClone(content.offerings);
+    richDraft=structuredClone(content);
     const fields=node("fieldset"); fields.disabled=!editable;
     fields.append(node("legend", `Revision ${revision.number} · ${REV[revision.status]}`));
     for(const [name,label,max,multi,required] of [["display_name","Anzeigename",200,false,true],["academic_suffix","Akademischer Zusatz",100,false,false],
@@ -343,6 +367,25 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
     const topicArea=node("div"); panel("topics").append(topicArea); topicOffset=0;
     loadTopics(topicArea,editable,revision.topics);
     const offerArea=node("div"); panel("offerings").append(offerArea); renderOfferings(offerArea,editable);
+    const richArea=node("div"); panel("profile").append(richArea);
+    const renderTarget = () => {
+      richArea.replaceChildren(); panel("qualifications").replaceChildren(); panel("families").replaceChildren();
+      if (richDraft.target_version !== 1) {
+        if (editable) richArea.append(button("Erweiterte Profilfelder aktivieren", () => {
+          captureOfferings(offerArea);
+          richDraft.target_version=1;
+          for (const offer of offerings) if (!offer.key) offer.key="format-"+crypto.randomUUID();
+          dirty=true; renderTarget(); renderOfferings(offerArea,editable);
+        }));
+        return;
+      }
+      const extra=node("details"); extra.append(node("summary","Rollen, Darstellung und Abgrenzungen"));
+      editObject(extra,richDraft,[["public_roles","Öffentliche Rollen","collection",[ITEM_KEY,["code","Rollencode","required",120],["display_label","Öffentliche Bezeichnung","required",250],ORDER],20],["presentation","Darstellung","object",PRESENTATION_FIELDS],["boundaries","Profilabgrenzungen","collection",BOUNDARY_FIELDS,10]],editable);
+      richArea.append(extra);
+      editObject(panel("qualifications"),richDraft,[["qualifications","Qualifikationen","collection",QUALIFICATION_FIELDS,50]],editable);
+      editObject(panel("families"),richDraft,[["offering_families","Angebotsfamilien","collection",FAMILY_FIELDS,30]],editable);
+    };
+    renderTarget();
     if(editable) {
       const controls=node("div","","button-row cm-save");
       const saveButton=node("button","Profilentwurf speichern","button button-primary"); saveButton.type="submit"; saveButton.setAttribute("form",form.id);
@@ -354,6 +397,94 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
   function checkBox(label, id, checked) {
     const wrap=node("label", "", "check-row"); const control=node("input"); control.type="checkbox"; control.id=id; control.checked=checked;
     control.setAttribute("form",form.id); wrap.htmlFor=id; wrap.append(control,node("span",label)); return wrap;
+  }
+  function newItem(specs, values) {
+    const result={};
+    for (const [key,,type,options] of specs) {
+      if (type==="key") result[key]="item-"+crypto.randomUUID();
+      else if (type==="number" && key==="ordering") result[key]=Math.max(-1,...values.map(v=>v.ordering ?? -1))+1;
+      else if (type==="bool") result[key]=key==="active";
+      else if (type==="select") result[key]=Object.keys(options)[0];
+      else if (["lines","checks","collection"].includes(type)) result[key]=[];
+      else if (type.startsWith("required")) result[key]="";
+      else result[key]=null;
+    }
+    return result;
+  }
+  function editObject(container, value, specs, editable) {
+    const group=node("fieldset"); group.disabled=!editable;
+    group.append(node("legend",container.querySelector(":scope > summary")?.textContent || "Profilfelder"));
+    container.append(group);
+    for (const [key,label,type,options,limit] of specs) {
+      const id="cm-rich-"+(++fieldSerial);
+      if (type==="collection") {
+        const section=node("section"); section.append(node("h4",label)); group.append(section);
+        const list=node("div"); section.append(list);
+        const render = (focusLast=false) => {
+          list.replaceChildren();
+          const values=value[key] || [];
+          values.forEach((entry,n)=>{
+            const detail=node("details"); detail.append(node("summary",entry.title || entry.canonical_title || entry.display_label || entry.label || `${label} ${n+1}`));
+            editObject(detail,entry,options,editable); list.append(detail);
+          });
+          if (editable && values.length<limit) list.append(button(label+" hinzufügen",()=>{
+            value[key] ||= []; value[key].push(newItem(options,value[key])); dirty=true; render(true);
+          }));
+          if (focusLast) {const last=list.querySelector(":scope > details:last-of-type"); last.open=true; last.querySelector("input:not([readonly]),select,textarea")?.focus();}
+        };
+        render(); continue;
+      }
+      if (type==="object") {
+        const detail=node("details"); detail.append(node("summary",label)); group.append(detail);
+        if (value[key]) editObject(detail,value[key],options,editable);
+        else if (editable) detail.append(button(label+" ergänzen",()=>{
+          value[key]={}; dirty=true; detail.replaceChildren(node("summary",label)); editObject(detail,value[key],options,editable); detail.open=true;
+          detail.querySelector("input,select,textarea")?.focus();
+        }));
+        else detail.append(node("p","Nicht erfasst."));
+        continue;
+      }
+      if (type==="checks") {
+        const checks=node("fieldset"); checks.append(node("legend",label));
+        for (const [code,title] of Object.entries(options)) {
+          const wrap=checkBox(title,id+"-"+code,(value[key] || []).includes(code));
+          wrap.querySelector("input").addEventListener("change",()=>{value[key]=[...checks.querySelectorAll("input:checked")].map(i=>i.dataset.code);});
+          wrap.querySelector("input").dataset.code=code; checks.append(wrap);
+        }
+        group.append(checks); continue;
+      }
+      let wrap;
+      if (type==="bool") wrap=checkBox(label,id,value[key] ?? false);
+      else if (type==="select") wrap=selectField(label,options,value[key] ?? Object.keys(options)[0],id);
+      else if (type==="family") {
+        const choices=()=>({"":"Ohne Familie",...Object.fromEntries((richDraft.offering_families || []).map(f=>[f.key,f.title || f.key]))});
+        wrap=selectField(label,choices(),value[key] || "",id);
+        wrap.querySelector("select").addEventListener("focus",(e)=>{
+          const control=e.target; control.replaceChildren();
+          for (const [key,title] of Object.entries(choices())) {const option=node("option",title); option.value=key; control.append(option);}
+          control.value=value[key] || "";
+        });
+      } else {
+        wrap=inputField(label,id,type==="lines"?(value[key] || []).join("\n"):String(value[key] ?? ""),typeof options==="number"?options:200,["area","required-area","lines"].includes(type),type.startsWith("required"));
+      }
+      const control=wrap.querySelector("input,textarea,select"); control.setAttribute("form",form.id);
+      control.dataset.targetField=key;
+      if (type==="key") {control.readOnly=true; control.required=true; control.maxLength=120; control.pattern="[a-z0-9][a-z0-9/_-]{0,119}";}
+      if (type==="reference") control.pattern="[a-zA-Z0-9][a-zA-Z0-9:._/-]{0,199}";
+      if (type==="number") {control.type="number"; control.min=key==="ordering"?"0":"1"; control.max=String(options); control.step="1"; if(key==="ordering") control.required=true;}
+      if (type==="time" || type==="url") control.type=type;
+      if (type==="url") control.pattern="https://.*";
+      control.addEventListener(type==="bool" || control.tagName==="SELECT"?"change":"input",()=>{
+        value[key]=type==="bool"?control.checked:type==="lines"?control.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean):type==="number"?(control.value===""?null:Number(control.value)):control.value.trim() || (type.startsWith("required")?"":null);
+      });
+      group.append(wrap);
+    }
+    if (specs===QUALIFICATION_FIELDS) {
+      const visible=group.querySelector('[data-target-field="public"]');
+      const label=group.querySelector('[data-target-field="public_display_label"]');
+      const requireLabel=()=>{label.required=visible.checked;};
+      visible.addEventListener("change",requireLabel); requireLabel();
+    }
   }
   async function loadTopics(container, editable, snapshots) {
     const id=current.id, version=current.version, at=topicOffset;
@@ -376,7 +507,8 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
     } catch(failure) {message(failure.message,true);}
   }
   function captureOfferings(container) {
-    offerings=[...container.querySelectorAll(".cm-offering")].map((row)=>({
+    offerings=[...container.querySelectorAll(".cm-offering")].map((row,n)=>({
+      ...structuredClone(offerings[n]),
       title:row.querySelector('[name="offering-title"]').value,
       type:row.querySelector('[name="offering-type"]').value,
       description:row.querySelector('[name="offering-description"]').value || null,
@@ -397,12 +529,17 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
       const active=checkBox("Angebot aktiv",`cm-offering-active-${n}`,offer.active);
       [title,type,description,ordering,active].forEach((wrap,i)=>{
         const control=wrap.querySelector("input,textarea,select"); control.name=["offering-title","offering-type","offering-description","offering-ordering","offering-active"][i]; control.setAttribute("form",form.id); row.append(wrap);
-      }); group.append(row);
+      });
+      if (richDraft?.target_version===1) {
+        const details=node("details"); details.append(node("summary","Format, Varianten und Abgrenzungen"));
+        editObject(details,offer,OFFER_FIELDS,editable); row.append(details);
+      }
+      group.append(row);
     });
     if(!offerings.length) group.append(node("p","Noch keine Angebote vorhanden."));
     if(editable && offerings.length<100) group.append(button("Angebot hinzufügen",()=>{
       captureOfferings(container); const used=new Set(offerings.map(o=>o.ordering)); let ordering=0; while(used.has(ordering)) ordering++;
-      offerings.push({title:"",type:"workshop",description:null,active:true,ordering}); dirty=true; renderOfferings(container,editable);
+      offerings.push({title:"",type:"workshop",description:null,active:true,ordering,...(richDraft?.target_version===1?{key:"format-"+crypto.randomUUID()}: {})}); dirty=true; renderOfferings(container,editable);
       container.querySelector(".cm-offering:last-of-type input").focus();
     }));
     container.append(group);
@@ -413,10 +550,10 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
     const lines=(id)=>read(id).split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
     captureOfferings(root.querySelector("#cm-panel-offerings"));
     const reference=read("asset-reference");
-    return {display_name:read("display_name"),academic_suffix:optional("academic_suffix"),short_intro:read("short_intro"),
+    return {...structuredClone(richDraft),display_name:read("display_name"),academic_suffix:optional("academic_suffix"),short_intro:read("short_intro"),
       description:optional("description"),professional_background:optional("professional_background"),profile_path:optional("profile_path"),
       target_groups:lines("target_groups"),competencies:lines("competencies"),topic_ids:[...selectedTopics],offerings,
-      assets:reference?[{type:"portrait",reference,sha256:read("asset-sha256"),alt_text:read("asset-alt_text"),
+      assets:reference?[{...structuredClone(current.revision.content.assets[0] || {}),type:"portrait",reference,sha256:read("asset-sha256"),alt_text:read("asset-alt_text"),
         scopes:Object.keys(ENV).filter(e=>root.querySelector("#cm-asset-"+e).checked),active:root.querySelector("#cm-asset-active").checked}]:[]};
   }
   function save() {
@@ -425,6 +562,7 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
       if (!control.checkValidity()) {
         const panel=control.closest('[role="tabpanel"]');
         if (panel) root.querySelector("#"+panel.getAttribute("aria-labelledby")).click();
+        for (let ancestor=control.parentElement; ancestor && ancestor!==root; ancestor=ancestor.parentElement) if (ancestor.tagName==="DETAILS") ancestor.open=true;
         control.setAttribute("aria-invalid","true");
         control.focus(); control.reportValidity(); return;
       }
@@ -439,6 +577,71 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
       message("Bitte prüfen Sie doppelte Einträge, Feldlängen und eindeutige Angebotsreihenfolgen.",true); return;
     }
     change(WRITE+"/"+current.id+"/revisions/"+current.revision.id,{expected_version:current.version,content},"PATCH");
+  }
+  function renderEvidence(container, base, version) {
+    const revision=current.revision;
+    if (!revision || revision.content.target_version!==1) {
+      container.append(node("p","Diese Revision verwendet den bisherigen Freigabevertrag.")); return;
+    }
+    const subjects=revision.evidence_subjects || [];
+    const subjectList=node("details"); subjectList.append(node("summary","Objekte dieser Revision"));
+    const list=node("ul");
+    for (const subject of subjects) {
+      const row=node("li",`${subject.subject_type} · ${subject.subject_key} · ${subject.label}`);
+      const hash=node("code",subject.subject_hash); hash.style.overflowWrap="anywhere";
+      row.append(node("br"),hash); list.append(row);
+    }
+    subjectList.append(list); container.append(subjectList);
+    for (const entry of revision.object_evidence || []) {
+      const evidence=entry.value;
+      const detail=node("details"); detail.append(node("summary",`${evidence.subject_type} · ${evidence.subject_key} · ${ENV[evidence.environment]} · ${EVIDENCE_STATUS[evidence.status]}`));
+      const meta=node("dl","","cm-meta");
+      for (const [label,value] of [["Art",EVIDENCE_KIND[evidence.kind]],["Umgebung",evidence.environment],["Scope",evidence.scope],["Status",evidence.status],["SHA-256",evidence.subject_hash],["Nachweisreferenz",evidence.evidence_reference],["Freigebende Person",evidence.approved_by],["Historischer Freigabetag",evidence.approved_on],["Freigabezeitpunkt",evidence.approved_at],["Erfasst am",entry.recorded_at],["Interne Notiz",evidence.internal_note]]) {
+        if (value==null) continue;
+        const text=node("dd",value); text.style.overflowWrap="anywhere"; meta.append(node("dt",label),text);
+      }
+      detail.append(meta); container.append(detail);
+    }
+    if (!current.capabilities.object_evidence) return;
+    const disclosure=node("details"); disclosure.append(node("summary","Nachweis erfassen")); container.append(disclosure);
+    const evidenceForm=node("form"); disclosure.append(evidenceForm);
+    const add=(wrap)=>{evidenceForm.append(wrap); return wrap.querySelector("input,select,textarea");};
+    const subject=add(selectField("Objekt",{"":"Bitte auswählen",...Object.fromEntries(subjects.map((s,n)=>[n,`${s.subject_type} · ${s.subject_key} · ${s.label}`]))},"","cm-evidence-subject")); subject.required=true;
+    const hash=node("p"); hash.style.overflowWrap="anywhere"; evidenceForm.append(hash);
+    const kind=add(selectField("Nachweisart",{"":"Bitte auswählen"},"","cm-evidence-kind")); kind.required=true;
+    subject.addEventListener("change",()=>{
+      const selected=subjects[subject.value]; hash.textContent=selected?"SHA-256: "+selected.subject_hash:"";
+      kind.replaceChildren();
+      const allowed={profile:["profile_content","publication"],portrait:["portrait_asset"],qualification:["qualification"],family:["offering_content","protected_source"],offering:["offering_content","protected_source"]}[selected?.subject_type] || [];
+      for (const code of ["",...allowed]) {const option=node("option",code?EVIDENCE_KIND[code]:"Bitte auswählen"); option.value=code; kind.append(option);}
+    });
+    for (const [key,label,options] of [["environment","Umgebung",ENV],["scope","Scope",EVIDENCE_SCOPE],["status","Status",EVIDENCE_STATUS]]) {
+      const control=add(selectField(label,{"":"Bitte auswählen",...options},"","cm-evidence-"+key)); control.required=true;
+    }
+    const reference=add(inputField("Nachweisreferenz","cm-evidence-reference","",200)); reference.pattern="[a-zA-Z0-9][a-zA-Z0-9:._/-]{0,199}";
+    evidenceForm.querySelector("#cm-evidence-status").addEventListener("change",e=>{reference.required=e.target.value==="approved";});
+    add(inputField("Freigebende Person","cm-evidence-approved-by","",200));
+    const day=add(inputField("Historischer Freigabetag (optional)","cm-evidence-approved-on","",10)); day.type="date";
+    add(inputField("Interne Notiz","cm-evidence-note","",1000,true));
+    const submit=node("button","Nachweis erfassen","button button-primary"); submit.type="submit"; evidenceForm.append(submit);
+    const key="evidence-"+crypto.randomUUID();
+    evidenceForm.addEventListener("submit",e=>{
+      e.preventDefault();
+      if (dirty) {message("Bitte zuerst den Profilentwurf speichern oder die Änderungen verwerfen.",true); return;}
+      if (!evidenceForm.reportValidity()) return;
+      const selected=subjects[subject.value];
+      if (!selected) return;
+      const read=(id)=>evidenceForm.querySelector("#cm-evidence-"+id).value.trim();
+      const scope=read("scope"), selectedKind=kind.value;
+      if ((selectedKind==="protected_source")!==(scope==="protected_source_content") || (scope==="internal_verification" && selected.subject_type!=="qualification")) {
+        message("Nachweisart und Scope passen nicht zum gewählten Objekt.",true); return;
+      }
+      change(base+"/revisions/"+revision.id+"/evidence",{expected_version:version,evidence:{key,
+        subject_type:selected.subject_type,subject_key:selected.subject_key,subject_hash:selected.subject_hash,
+        kind:selectedKind,environment:read("environment"),scope,status:read("status"),
+        evidence_reference:reference.value.trim() || null,approved_by:read("approved-by") || null,
+        approved_on:day.value || null,internal_note:read("note") || null}},"POST",()=>open(current.id,revision.id,false));
+    });
   }
   function renderPublication(container, base, version) {
     const revision=current.revision;
@@ -477,7 +680,7 @@ export function createCoachManagement({ request, refreshCsrf, denied }) {
           if(section==="revisions") li.append(button(`Revision ${item.number} · ${REV[item.status]}`,()=>open(current.id,item.id)));
           else {
             const parts=item.action.split(".");
-            const label={create:"Coach angelegt",revision:"Profilrevision erstellt",draft:"Profilentwurf gespeichert",submit:"Profil eingereicht",approve:"Freigabe dokumentiert",revision_abandoned:"Entwurf abgeschlossen",publish:"Veröffentlichung",withdraw:"Veröffentlichung zurückgezogen",lifecycle:"Lifecycle geändert"}[parts[1]] || "Status aktualisiert";
+            const label={create:"Coach angelegt",revision:"Profilrevision erstellt",draft:"Profilentwurf gespeichert",submit:"Profil eingereicht",approve:"Freigabe dokumentiert",evidence:"Objektnachweis erfasst",revision_abandoned:"Entwurf abgeschlossen",publish:"Veröffentlichung",withdraw:"Veröffentlichung zurückgezogen",lifecycle:"Lifecycle geändert"}[parts[1]] || "Status aktualisiert";
             li.append(node("span",label+(parts[2]?" · "+(LIFE[parts[2]] || ENV[parts[2]] || ""):"")+" · "+date(item.occurred_at)));
           } list.append(li);
         }

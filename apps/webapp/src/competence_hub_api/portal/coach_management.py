@@ -5,7 +5,34 @@ from dataclasses import asdict
 from sqlalchemy import text
 
 from competence_hub_api.portal.coach_registry import management_capabilities
+from competence_hub_api.portal.coach_target import subjects
 from competence_hub_api.portal.postgres_coach_registry import rows
+
+
+def target_revision_detail(revision):
+    """Admin-only exact subjects; never accept hashes or labels from the client."""
+    content = revision.content
+    labels = {
+        ("profile", "profile"): content.display_name,
+        ("portrait", "portrait"): "Portraet",
+    }
+    labels.update(
+        {("qualification", q.key): q.canonical_title for q in content.qualifications}
+    )
+    labels.update({("family", f.key): f.title for f in content.offering_families})
+    labels.update({("offering", o.key): o.title for o in content.offerings})
+    return {
+        "object_evidence": [asdict(e) for e in revision.object_evidence],
+        "evidence_subjects": [
+            {
+                "subject_type": kind,
+                "subject_key": key,
+                "subject_hash": digest,
+                "label": labels[(kind, key)],
+            }
+            for (kind, key), digest in subjects(content, revision.topics).items()
+        ],
+    }
 
 
 class CoachManagementQueries:
@@ -92,6 +119,7 @@ class CoachManagementQueries:
                         "created_at": selected.created_at,
                         "content": selected.content.model_dump(mode="json"),
                         "topics": [asdict(t) for t in selected.topics],
+                        **target_revision_detail(selected),
                         "approvals": [
                             {"kind": a.kind, "occurred_at": a.occurred_at}
                             for a in selected.approvals

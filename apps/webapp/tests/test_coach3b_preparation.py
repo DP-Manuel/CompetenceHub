@@ -28,7 +28,11 @@ def inputs():
             )
         ],
         "topics": [
-            {"id": f"topic-{i}", "categories": ["personalentwicklung"]}
+            {
+                "id": f"topic-{i}",
+                "label": f"Synthetic canonical topic {i}",
+                "categories": ["personalentwicklung"],
+            }
             for i in range(8)
         ],
         "coaches": [
@@ -326,3 +330,201 @@ def test_changed_or_unclassified_inputs_stop_preparation(mutation):
         source["categories"].append({"id": "all"})
     with pytest.raises(ValueError):
         policy.prepare(source, review)
+
+
+def test_target_preparation_constructs_real_models_without_io_or_readiness_invention(
+    monkeypatch,
+):
+    from competence_hub_api.portal.coach_registry import ProfileContent
+
+    source, review = inputs()
+    record = source["coaches"][0]
+    record.update(
+        text="Synthetic introduction",
+        previewRole="Synthetic preview label",
+        sections=[
+            {
+                "source_key": "section-1",
+                "kind": "coach-profile-hero",
+                "headings": ["Synthetic heading"],
+                "paragraphs": ["Synthetic paragraph"],
+            }
+        ],
+        quotes=["Synthetic quote"],
+        topic_cards=[{"title": "Synthetic card", "text": "Synthetic card text"}],
+        external_links=[
+            {
+                "kind": "quoted",
+                "target": "https://example.invalid/",
+                "label": "Synthetic link",
+            }
+        ],
+    )
+    before = deepcopy(source)
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("target preparation must remain in memory")
+
+    monkeypatch.setattr(Path, "read_bytes", forbidden)
+    monkeypatch.setattr(Path, "write_text", forbidden)
+    monkeypatch.setattr(socket, "create_connection", forbidden)
+    result = policy.prepare_target(source, review)
+    actual = result["coaches"][0]
+    content = ProfileContent.model_validate(actual["target_content"])
+    assert content.target_version == 1 and not content.topic_ids
+    assert content.public_roles[0].code == "trainer"
+    assert content.qualifications[0].canonical_title == "Synthetic degree"
+    assert content.presentation.quote == "Synthetic quote"
+    assert content.presentation.sections[0].paragraphs == ("Synthetic paragraph",)
+    assert (
+        content.presentation.external_links[0].preview_url == "https://example.invalid/"
+    )
+    assert actual["object_evidence"] == []
+    assert (
+        actual["mapping_status"]
+        == actual["evidence_scope_status"]
+        == actual["source_scope_status"]
+        == "REVIEW_REQUIRED"
+    )
+    assert result["mapping_status_counts"] == {
+        "READY": 0,
+        "REVIEW_REQUIRED": 1,
+        "BLOCKED": 0,
+    }
+    assert result["target_validation_counts"] == {"PASS": 1, "FAIL": 0}
+    assert "Synthetic canonical topic 0" in content.presentation.focus_labels
+    assert result["field_loss_counts"]["unmapped_or_changed"] == 0
+    assert result["field_loss_counts"]["canonical_topic_labels_preserved"] == 1
+    assert any(
+        a["field"] == "topics/approved_uuid_mapping" for a in actual["mapping_reviews"]
+    )
+    assert (
+        source == before
+        and result["business_mutations"] == result["publication_side_effects"] == 0
+    )
+    assert result["go_no_go"] == "NO_GO_APPLY"
+    assert result == policy.prepare_target(source, review)
+
+
+def test_target_preparation_rejects_model_overflow_and_reports_unresolved_expressions():
+    source, review = inputs()
+    source["coaches"][0]["quotes"] = ["x" * 3001]
+    result = policy.prepare_target(source, review)
+    assert result["target_validation_counts"]["FAIL"] == 1
+    assert result["coaches"][0]["mapping_status"] == "BLOCKED"
+    assert "target_content" not in result["coaches"][0]
+    assert any(
+        a["field"] == "presentation/quote" for a in result["coaches"][0]["field_loss"]
+    )
+    source["coaches"][0]["quotes"] = []
+    source["coaches"][0]["dynamic_text_expressions"] = [
+        {"expression": "unknown.doNotEvaluate()", "line": 1}
+    ]
+    result = policy.prepare_target(source, review)
+    assert any(
+        a["field"] == "dynamic_text_expressions/0/unresolved"
+        for a in result["coaches"][0]["mapping_reviews"]
+    )
+    assert result["coaches"][0]["mapping_status"] == "BLOCKED"
+
+
+def test_environment_conditional_links_are_explicit_not_evaluated_or_flattened():
+    links, issues = policy.target_links(
+        [
+            {
+                "kind": "expression",
+                "target": 'import.meta.env.PUBLIC_REVIEW_MODE === "true"\n ? "https://example.invalid/preview" : "https://example.invalid/production"',
+                "label": "Synthetic",
+            }
+        ]
+    )
+    assert not issues
+    assert links[0]["preview_url"] != links[0]["production_url"]
+    links, issues = policy.target_links(
+        [{"kind": "expression", "target": "call.arbitraryCode()", "label": "Synthetic"}]
+    )
+    assert not links and issues == ["external_links/0/unresolved_expression"]
+
+
+def test_target_new_families_remain_inactive_and_unread_details_are_not_invented():
+    source, review = inputs()
+    review["new_offering_families"] = [
+        {
+            "key": "family/synthetic",
+            "coach_key": "coach/one",
+            "title": "Synthetic family",
+            "target_group": "Synthetic teams",
+            "boundary_ref": "synthetic:boundary",
+            "excluded_services": ["therapy"],
+            "service_domains": ["training"],
+            "module_count": 6,
+            "formats": [
+                {
+                    "key": "synthetic/day",
+                    "label": "Synthetic day",
+                    "kind": "workshop",
+                    "clock_window": "10:00-16:30",
+                    "source_status": "SOURCE_REPLACEMENT_REQUIRED",
+                    "confirmed_ref": "synthetic:cross-reference",
+                    "detail_fields": None,
+                }
+            ],
+            "options": [
+                {
+                    "key": "community",
+                    "kind": "optional_add_on",
+                    "label": "Synthetic community",
+                }
+            ],
+        }
+    ]
+    result = policy.prepare_target(source, review)
+    candidate = result["coaches"][0]["target_content"]
+    assert candidate["offering_families"][0]["active"] is False
+    assert candidate["offering_families"][0]["variants"][0]["kind"] == "add_on"
+    assert candidate["offerings"][0]["family_key"] == "family/synthetic"
+    assert (
+        candidate["offerings"][0]["active"] is False
+        and candidate["offerings"][0]["program_modules"] == []
+    )
+    assert candidate["offerings"][0]["duration"]["clock_start"] == "10:00"
+    assert candidate["offering_families"][0]["boundaries"] == []
+    assert any(
+        a["field"].endswith("excluded_services_public_text")
+        for a in result["coaches"][0]["mapping_reviews"]
+    )
+    assert (
+        result["new_offering_families"][0]["protected_source_status"]
+        == "REVIEW_REQUIRED"
+    )
+
+
+def test_target_audit_never_classifies_unknown_fields_or_lost_values_as_mapped():
+    source, review = inputs()
+    source["coaches"][0]["new_unknown_field"] = "must not disappear"
+    with pytest.raises(ValueError, match="FIELD_LOSS"):
+        policy.prepare_target(source, review)
+    source, review = inputs()
+    source["coaches"][0]["source_identity"][
+        "new_unknown_nested_field"
+    ] = "must not disappear"
+    result = policy.prepare_target(source, review)
+    assert result["coaches"][0]["mapping_status"] == "BLOCKED"
+    assert {
+        "field": "source_identity/new_unknown_nested_field",
+        "classification": "unmapped_or_changed",
+    } in result["coaches"][0]["source_field_audit"]
+    source, review = inputs()
+    content, _ = policy.target_candidate(
+        source["coaches"][0],
+        review["coaches"]["synthetic"],
+        topic_catalogue={t["id"]: t for t in source["topics"]},
+    )
+    damaged = content.model_copy(update={"display_name": "Incorrect output"})
+    audit = policy.source_target_audit(
+        source["coaches"][0],
+        review["coaches"]["synthetic"],
+        damaged,
+        {t["id"]: t for t in source["topics"]},
+    )
+    assert {"field": "name", "classification": "unmapped_or_changed"} in audit
