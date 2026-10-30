@@ -86,6 +86,9 @@ async def test_initial_admin_is_created_and_audited_in_one_transaction() -> None
     assert result == USER_ID
     calls = engine.connection.executed
     assert len(calls) == 7
+    assert "pg_advisory_xact_lock" in str(calls[0][0])
+    assert "FOR SHARE" not in str(calls[2][0])
+    assert "FOR UPDATE" not in str(calls[2][0])
     assert calls[3][1] == {
         "normalized_email": "admin@example.invalid",
         "display_name": "Synthetic Admin",
@@ -130,3 +133,110 @@ async def test_missing_active_admin_role_fails_closed_before_user_creation() -> 
         )
 
     assert len(engine.connection.executed) == 3
+
+
+@pytest.mark.anyio
+async def test_strict_bootstrap_locks_and_checks_before_any_write() -> None:
+    engine = FakeEngine(
+        [
+            FakeResult(),
+            FakeResult(),
+            FakeResult(True),
+            FakeResult(True),
+            FakeResult(False),
+            FakeResult(ROLE_ID),
+            FakeResult(USER_ID),
+            FakeResult(),
+            FakeResult(),
+            FakeResult(),
+        ]
+    )
+    repository = PostgresInitialAdminRepository(
+        engine,
+        require_empty_target=True,
+        bootstrap_deadline=NOW,
+    )
+    assert (
+        await repository.create_initial_admin(
+            normalized_email="admin@example.invalid",
+            display_name="Synthetic Admin",
+            password_hash="synthetic-argon2id-hash",
+            now=NOW,
+        )
+        == USER_ID
+    )
+    calls = engine.connection.executed
+    assert len(calls) == 10
+    assert "pg_advisory_xact_lock" in str(calls[0][0])
+    lock_sql = str(calls[1][0])
+    assert lock_sql == (
+        "LOCK TABLE competence_hub.portal_users, competence_hub.user_roles, "
+        "competence_hub.coaches IN SHARE ROW EXCLUSIVE MODE"
+    )
+    assert "NOT EXISTS (SELECT 1 FROM competence_hub.portal_users)" in str(calls[2][0])
+    assert "NOT EXISTS (SELECT 1 FROM competence_hub.coaches)" in str(calls[2][0])
+    assert str(calls[3][0]) == "SELECT clock_timestamp() <= :bootstrap_deadline"
+    assert calls[3][1] == {"bootstrap_deadline": NOW}
+    assert all(
+        not str(statement).lstrip().startswith("INSERT") for statement, _ in calls[:6]
+    )
+    assert str(calls[6][0]).lstrip().startswith("INSERT")
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "empty,fresh,expected_calls", [(False, True, 3), (True, False, 4)]
+)
+async def test_strict_bootstrap_rejects_nonempty_or_expired_before_writes(
+    empty,
+    fresh,
+    expected_calls,
+) -> None:
+    engine = FakeEngine(
+        [FakeResult(), FakeResult(), FakeResult(empty), FakeResult(fresh)]
+    )
+    repository = PostgresInitialAdminRepository(
+        engine,
+        require_empty_target=True,
+        bootstrap_deadline=NOW,
+    )
+    with pytest.raises(InitialAdminConfigurationError):
+        await repository.create_initial_admin(
+            normalized_email="admin@example.invalid",
+            display_name="Synthetic Admin",
+            password_hash="synthetic-argon2id-hash",
+            now=NOW,
+        )
+    assert len(engine.connection.executed) == expected_calls
+    assert all(
+        not str(statement).lstrip().startswith("INSERT")
+        for statement, _ in engine.connection.executed
+    )
+
+
+@pytest.mark.anyio
+async def test_deadline_can_be_required_without_changing_default_empty_target_policy() -> (
+    None
+):
+    engine = FakeEngine([FakeResult(), FakeResult(False)])
+    repository = PostgresInitialAdminRepository(engine, bootstrap_deadline=NOW)
+    with pytest.raises(InitialAdminConfigurationError, match="deadline has expired"):
+        await repository.create_initial_admin(
+            normalized_email="admin@example.invalid",
+            display_name="Synthetic Admin",
+            password_hash="synthetic-argon2id-hash",
+            now=NOW,
+        )
+    assert len(engine.connection.executed) == 2
+    assert (
+        str(engine.connection.executed[1][0])
+        == "SELECT clock_timestamp() <= :bootstrap_deadline"
+    )
+
+
+@pytest.mark.parametrize("deadline", [NOW.replace(tzinfo=None), "not-a-datetime"])
+def test_invalid_deadline_rejected_before_transaction(deadline) -> None:
+    engine = FakeEngine()
+    with pytest.raises(InitialAdminConfigurationError, match="timezone-aware"):
+        PostgresInitialAdminRepository(engine, bootstrap_deadline=deadline)
+    assert engine.connection.executed == []

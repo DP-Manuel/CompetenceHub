@@ -3,6 +3,21 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-10-30 | backend sprint / local preparation verified | Named Admin And Source Annex
+
+- Later addendum approves exactly one named admin-only Staging operator and new secure configuration preparation; green local preparation including prior Phase A may be committed/pushed. Chosen login stays in private operator input. No additional business roles/Coach/Calendar mapping, migration/import or deployment.
+- [Elisabeth source check](docs/architecture/elisabeth-source-reconciliation-2026-10-30.md):13 pages,17 old titles retained,8 optional detail conflicts and4 deferred typed gaps. Frozen9 READY/0 REVIEW_REQUIRED/0 BLOCKED and all prior counts unchanged. Repeated private annex hash identical; detailed values and Janay email draft remain private, not new Git/Website copy.
+- [Operator preparation/evidence](docs/operations/staging-admin-bootstrap-2026-10-30.md): durable DPAPI/GPG custody, operational public negative corpus, unique exported-MVCC encrypted snapshot and exact isolated restore before guarded first Admin write. Pending/uncertain/confirmed receipts prevent blind retry; new process/TTY and diagnostic guards preserve secret boundaries.
+- Actual local verification:1080 PASS/29 opt-in skips; separate owned PG/native Edge8 PASS and actual restore orchestration1 PASS with deliberately fake GPG, never actual encryption evidence. Independent security findings fixed/reviewed. Compile/pip/context links/integrity verified. Existing read-only VPS services/PG-loopback rechecked; no DB credential or real data access.
+- Real Admin/MFA/recovery/current encrypted backup/restore and import remain NOT EXECUTED. One private manual Admin window is next; real Coach APPLY remains hard-disabled.19.11 business milestone recorded without customer data; no Finance work or tenth import. Reusable feedback captured locally, global skills untouched. Generated local Windows cache excluded, cleanup protection respected; unrelated work preserved.
+
+## 2026-10-30 | local preparation / execution STOP | COACH-3B real-import candidate
+
+- Explicit approval: known VPS/competence_hub_staging, nine reviewed Coaches, missing0007-0009, encrypted prebackup and isolated restore probe. Manuel subsequently confirms no existing Admin and requests STOP before import; no implicit account/role/UUID workaround. [Canonical scope/evidence](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-real-apply-vorbereitung-3010).
+- Private pinned manifest and separate real-operator candidate reuse v2/domain writers; original synthetic guards unchanged. Existing target upgrade/import regression30 PASS. Full window orchestrator/current backup/restore/native real-Admin proof remain unimplemented/unproven, not an execution-ready release.
+- Local acceptance:72 pure cases,2 owned PG16 adapter checks and full812 PASS/22 opt-in skips. Synthetic CREATE9/fault rollback/repeat2/3 preserve MVCC/DTO state. Public APPLY hard-disabled pending actual window orchestrator; hand-authored proof cannot enable it. Canonical operator lock rights preserved, zero-Admin preflight STOP and owned-DB nonce protected.
+- Read-only SSH host/services/PG loopback checks PASS. Noninteractive sudo metadata read refused missing password; no DB query, credentials prompt, migration, backup or real import. No Website/backend/accounts/Calendar changes. Candidate left local, no commit/push; reusable audit-actor/taxonomy/backup preflight learning recorded.
+
 ## 2026-10-29 | review closure / read-only | COACH-3B READY
 
 - [Canonical matrix/runbook](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-reviewabschluss-2910):9 READY/0 REVIEW_REQUIRED/0 BLOCKED,0 canonical field loss and0 additional Manuel business decisions. Existing approved taxonomy/roles/public qualifications retained; optional original consent dates/Production scopes/Gülcan replacement details no longer create artificial blockers.

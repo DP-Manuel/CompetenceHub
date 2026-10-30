@@ -13,8 +13,19 @@ _LOCK_INITIAL_ADMIN = text(
     "SELECT pg_advisory_xact_lock(hashtext('competence_hub.initial_admin'))"
 )
 
-_ACTIVE_ADMIN_EXISTS = text(
-    """
+_LOCK_EMPTY_TARGET = text(
+    "LOCK TABLE competence_hub.portal_users, competence_hub.user_roles, "
+    "competence_hub.coaches IN SHARE ROW EXCLUSIVE MODE"
+)
+
+_TARGET_IS_EMPTY = text(
+    "SELECT NOT EXISTS (SELECT 1 FROM competence_hub.portal_users) "
+    "AND NOT EXISTS (SELECT 1 FROM competence_hub.coaches)"
+)
+
+_BOOTSTRAP_WITHIN_DEADLINE = text("SELECT clock_timestamp() <= :bootstrap_deadline")
+
+_ACTIVE_ADMIN_EXISTS = text("""
     SELECT EXISTS (
         SELECT 1
         FROM competence_hub.portal_users AS portal_user
@@ -26,21 +37,16 @@ _ACTIVE_ADMIN_EXISTS = text(
           AND role.active
           AND role.code = 'admin'
     )
-    """
-)
+    """)
 
-_FIND_ADMIN_ROLE = text(
-    """
+_FIND_ADMIN_ROLE = text("""
     SELECT id
     FROM competence_hub.roles
     WHERE code = 'admin'
       AND active
-    FOR SHARE
-    """
-)
+    """)
 
-_CREATE_USER = text(
-    """
+_CREATE_USER = text("""
     INSERT INTO competence_hub.portal_users (
         display_name,
         email,
@@ -55,11 +61,9 @@ _CREATE_USER = text(
         :now
     )
     RETURNING id
-    """
-)
+    """)
 
-_ASSIGN_ADMIN_ROLE = text(
-    """
+_ASSIGN_ADMIN_ROLE = text("""
     INSERT INTO competence_hub.user_roles (
         user_id,
         role_id,
@@ -71,11 +75,9 @@ _ASSIGN_ADMIN_ROLE = text(
         :now,
         NULL
     )
-    """
-)
+    """)
 
-_CREATE_PASSWORD_CREDENTIAL = text(
-    """
+_CREATE_PASSWORD_CREDENTIAL = text("""
     INSERT INTO competence_hub.auth_password_credentials (
         portal_user_id,
         password_hash,
@@ -89,11 +91,9 @@ _CREATE_PASSWORD_CREDENTIAL = text(
         :now,
         :now
     )
-    """
-)
+    """)
 
-_AUDIT_INITIAL_ADMIN = text(
-    """
+_AUDIT_INITIAL_ADMIN = text("""
     INSERT INTO competence_hub.audit_events (
         actor_user_id,
         occurred_at,
@@ -109,13 +109,28 @@ _AUDIT_INITIAL_ADMIN = text(
         :user_id,
         'success'
     )
-    """
-)
+    """)
 
 
 class PostgresInitialAdminRepository:
-    def __init__(self, engine: AsyncEngine) -> None:
+    def __init__(
+        self,
+        engine: AsyncEngine,
+        *,
+        require_empty_target: bool = False,
+        bootstrap_deadline: datetime | None = None,
+    ) -> None:
+        if bootstrap_deadline is not None and (
+            not isinstance(bootstrap_deadline, datetime)
+            or bootstrap_deadline.tzinfo is None
+            or bootstrap_deadline.utcoffset() is None
+        ):
+            raise InitialAdminConfigurationError(
+                "bootstrap deadline must be timezone-aware"
+            )
         self._engine = engine
+        self._require_empty_target = require_empty_target
+        self._bootstrap_deadline = bootstrap_deadline
 
     async def create_initial_admin(
         self,
@@ -127,12 +142,29 @@ class PostgresInitialAdminRepository:
     ) -> UUID:
         async with self._engine.begin() as connection:
             await connection.execute(_LOCK_INITIAL_ADMIN)
+            if self._require_empty_target:
+                await connection.execute(_LOCK_EMPTY_TARGET)
+                empty = await connection.execute(_TARGET_IS_EMPTY)
+                if not empty.scalar_one():
+                    raise InitialAdminConfigurationError(
+                        "bootstrap requires an empty target"
+                    )
+            if self._bootstrap_deadline is not None:
+                fresh = await connection.execute(
+                    _BOOTSTRAP_WITHIN_DEADLINE,
+                    {"bootstrap_deadline": self._bootstrap_deadline},
+                )
+                if not fresh.scalar_one():
+                    raise InitialAdminConfigurationError(
+                        "bootstrap deadline has expired"
+                    )
             existing_admin = await connection.execute(_ACTIVE_ADMIN_EXISTS)
             if existing_admin.scalar_one():
                 raise InitialAdminAlreadyExistsError(
                     "an active initial administrator already exists"
                 )
 
+            # roles is read-only for the app; the advisory lock serializes bootstrap.
             role_result = await connection.execute(_FIND_ADMIN_ROLE)
             role_id = role_result.scalar_one_or_none()
             if role_id is None:

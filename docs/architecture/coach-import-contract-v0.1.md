@@ -11,6 +11,19 @@ dates stay NULL. Logical candidate hashes are not executable runtime evidence:
 actual topic/revision/actor bindings must be verified in the separately approved
 real window. This does not enable real file input/APPLY in the current CLI.
 
+30.10: [real-operator Phase A candidate and explicit STOP](coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-real-apply-vorbereitung-3010).
+The original fixture CLI/guards remain synthetic-only. A separate local candidate
+uses the same v2/planner/domain writer with a pinned manifest, exact target and
+existing Admin checks. It is not a completed one-window workflow or deployment;
+Manuel confirms no Admin and STOP before import. No real DB mutation occurred.
+
+Later30.10 addendum supersedes the missing-operator decision only for one named
+admin-only Staging bootstrap. The [operator preparation](../operations/staging-admin-bootstrap-2026-10-30.md)
+does not enable real Coach APPLY. [Elisabeth's new source reconciliation](elisabeth-source-reconciliation-2026-10-30.md)
+adds a private readiness annex; the reviewed nine-Coach short payload/counts and
+previous immutable manifest remain unchanged. New detailed source processing
+does not grant publication rights or resolve contradictory source fields.
+
 Owners: [Registry](coach-registry-contract-v0.1.md),
 [Admin UI](coach-admin-ui-contract-v0.1.md),
 [existing-content inventory/decision matrix](coach3-existing-content-migration-plan-2026-10-23.md).

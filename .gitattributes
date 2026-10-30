@@ -1,4 +1,5 @@
 deploy/scripts/competence-hub-postgres-backup text eol=lf
+deploy/scripts/competence-hub-postgres-snapshot text eol=lf
 deploy/scripts/competence-hub-postgres-backup-monitor text eol=lf
 deploy/scripts/competence-hub-backup-notification-render text eol=lf
 deploy/scripts/competence-hub-postgres-restore-check text eol=lf

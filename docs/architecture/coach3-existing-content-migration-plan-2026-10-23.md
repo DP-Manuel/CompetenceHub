@@ -1026,3 +1026,163 @@ Erwartet:9 READY, GO_FOR_COACH_3B_APPLY_PENDING_SEPARATE_APPROVAL,
 business_mutations=0/database_snapshot=NOT_READ/uuid_allocation=false; Public-
 Parity status=PASS und gaps={}. Ein später geänderter öffentlicher Stand darf
 die Gegenprobe fehlschlagen lassen; nicht automatisch Erwartungswerte ändern.
+
+## COACH-3B Real Apply Vorbereitung 30.10
+
+**EXECUTION STOP: kein bestehender Admin.** Fachlicher Review bleibt9 READY.
+Manuel hat Ziel `competence_hub_staging` auf dem bekannten VPS, die neun geprüften
+Coachdatensätze, erforderliche additive0007-0009 und verschlüsseltes Vorher-Backup
+mit isolierter Restoreprobe ausdrücklich bestätigt. Anschließend ausdrücklich:
+**„Es gibt noch keinen Admin; vor Import stoppen“**. Kein Konto/keine Rolle als
+Import-Workaround anlegen; kein realer DB-Schreibzugriff erfolgte.
+
+Der bestehende Vertrag verlangt eine aktive DB-bestätigte Admin-Identität:
+Revision `created_by`, Approval `actor_id` und Object Evidence `recorded_by`
+referenzieren unveränderlich `portal_users`. SSH-/DB-Rolle ist keine Portal-
+Identität. Ein erfundener UUID-/MFA-Principal, synthetisches Ersatzkonto oder
+temporäre Rolle mit anschließend verwaister Historie wäre kein zulässiger Ersatz.
+Das erfordert einen separaten Admin-Onboarding-/Bootstrap-Gate, keine erneute
+Freigabe der neun fachlich bereits geschlossenen Profile.
+
+### Lokaler Kandidat Und Unveränderliches Manifest
+
+- [Manifest/Binder](../../scripts/coach3b_real_manifest.py): exakter Reviewhash,
+  Quellidentitäten, öffentliche Inhalte/Assethashes, logische Themen und getrennte
+  Nachweise. Manipuliertes Businesspayload kann auch mit neu berechnetem Hash
+  nicht freigegeben werden. Unbekannte historische Daten bleiben NULL.
+- [Separater echter Operator-Kandidat](../../scripts/coach3b_real_apply.py):
+  Default offline VALIDATE; ausdrückliche Modi preflight/dry-run/apply. Der
+  bisherige synthetische Importpfad und seine Ziel-/Namespaceguards bleiben
+  unverändert. Kein Import-HTTP-Endpoint und keine Runtime-Aktivierung.
+- Tatsächliche acht Themen werden ausschließlich MATCH_ONLY anhand geprüfter
+  Referenzen/Aliasse/Kategorien und vorhandener aktiver DB-UUIDs aufgelöst.
+  Profil-Subjecthash erst aus normalisiertem Zielinhalt samt tatsächlichen
+  Themen-Snapshots berechnen; logische Candidatehashes werden nicht übernommen.
+- APPLY-Kandidat verlangt Ziel-/Schema-/Owner-/Quellbindung, bestehenden Admin,
+  frisches exaktes Window-Proof-Artefakt mit Backup-/Restorebindung sowie den
+  unveränderten DB-Dry-Run-Plan. Gemeinsame bestehende Domainwriter und eine
+  Gesamttransaktion, keine neuen Accounts, Themen oder Kalenderzuordnungen.
+- Der öffentliche APPLY-Einstieg ist zusätzlich **hart deaktiviert**, ohne
+  Freischaltparameter: manuell verfasstes und korrekt gehashtes Proof-JSON kann
+  keinen echten Lauf ermöglichen. Nur der private Transaktionskandidat wird im
+  nachweislich eigenen synthetischen Container getestet. Der künftige tatsächliche
+  Backup-/Restore-/Source-/Target-Prüfer ist noch nicht implementiert.
+- MVCC-/Count-Vergleich ohne Authfeld-/Credential-Payloads schützt angrenzende
+  Tabellen. Erste Anlage oder identischer Neun-Coach-Batch, keine stillen
+  Revisionen/Metadata-Reparaturen. Parity/Counts prüfen vor Transaktionscommit;
+  unsicherer Fehler bedeutet STOP, kein automatischer Wiederholungsversuch.
+
+Tatsächliches, ignoriertes Phase-A-Artefakt:
+`.tmp/coach3b-real-2026-10-30/manifest.json`, Quellenstand
+`30d69d999401701f0d71d8fb49dbfe492004eac3`.
+Datei-SHA-256:
+`872b4df0610ae54ceec1688f323e4d99001befd87d7a3d2395a0001fc82c02fc`.
+Das ist der Quellen-/Reviewstand, **kein gepushter neuer Runner-Release**.
+Manifest enthält operative Nachweiszuordnungen und bleibt privat/ignoriert.
+Counts stimmen mit dem abgeschlossenen Review überein;0 echte UUID-Zuteilungen
+und0 DB-Mutationen. Keine Preise/geschützten Langtexte als öffentliche Daten.
+
+### Betriebsgrenzen Vor Wiederaufnahme
+
+Das eine echte Serverfenster wurde nicht eröffnet. Der vollständige echte
+Window-Orchestrator/Proof-Erzeuger ist noch nicht implementiert oder abgenommen;
+den erwarteten Proof niemals manuell als PASS-JSON erzeugen. Der geprüfte lokale
+Adapter allein ist **nicht ausführungsbereit**. Nach Admin-Gate fehlen weiterhin
+aktueller DB-/Themen-/Migrationsstand, sauber gepushter Runner, tatsächlicher
+Backup-/Restore-Nachweis und nativer Admin-Smoke gegen das reale Ziel.
+
+Private GPG-Schlüssel bleiben außerhalb des VPS. Restore lokal in isoliertem
+PostgreSQL mit exaktem verschlüsseltem Dump, Baseline-/Migrations-/Countvergleich
+und bestätigter Container-/Temporärdaten-/Klartextbereinigung. Historische
+25.08-Restoreprobe ist kein aktueller Vorher-Backup-Nachweis. Der Tagesbackup-
+Aufruf verweigert ein zweites Tagesziel und führt Retention aus; nicht löschen,
+überschreiben oder still als unmittelbaren Pre-Import-Stand wiederverwenden.
+Ein späterer eigener Pre-Import-Stand muss diese Grenzen explizit erfüllen.
+
+30.10 tatsächlich rein lesend geprüft: SSH-Schlüssel/known-host-Verbindung zum
+bekannten VPS, Hostname `ubuntu`, vier Dienste jeweils `active`, PG-Listener nur
+`127.0.0.1:5432`. Nichtinteraktiver `sudo -n`-Metadatenversuch scheiterte mit
+„a password is required“; keine DB-Abfrage ausgeführt, kein Passwort abgefragt.
+Keine aktuellen DB-Counts, Backupdaten oder Restore-PASS daraus ableiten.
+
+**Nicht durchgeführt:** reales Backup/Restore,0007-0009 auf VPS, DB-DRY-RUN,
+echter APPLY/No-op, neue reale Public Projection, nativer Admin/API-Smoke und
+CAL-1-Staging-Regressionslauf. Keine Websites/Backenddienste/Portalrollen/
+Calendar-Mappings verändert. Kein Rollback nötig, weil keine realen DB-Writes.
+Kein Commit/Push dieses lokalen Kandidaten; der Auftrag erlaubt nach realem
+Erfolg Evidence-/Context-Updates, kein implizites Pushen unvollständiger Runner.
+
+Einziger nächster empfohlener Block: **ADMIN OPERATOR READINESS**, mit separater
+Freigabe für die benannte Identität/Bootstrap-Prozedur, aktuellem Auth/MFA- und
+Recovery-Vertrag. DoD: genehmigter, tatsächlich nutzbarer Admin und nachvollzieh-
+bare UUID-Bindung, ohne Coach-/Calendar-Onboarding. Danach den hier pausierten
+Import samt vollständigem Ein-Fenster-Orchestrator erneut auf Ausführbarkeit
+prüfen; kein jetzt ausgeführter Import und keine neue Website-Freigabe.
+
+### Verifikation Des Lokalen Kandidaten
+
+| Tatsächlich30.10 geprüft | Ergebnis / Grenze |
+| --- | --- |
+| Offline echtes eingefrorenes Manifest | PASS; exakter Reviewhash/alle acht Assetbytes, erwartete9er-Counts,0 UUIDs/DB-Writes |
+| Neue reine Schutz-/Manifesttests |72 PASS: Ziel-/Scope-/Payload-/Themen-/Evidencebindung, unbekannte historische Daten, handgeschriebener Window-Proof kann APPLY nicht aktivieren |
+| Neues eigenes PG16-Adapter-Gate |2 PASS; neun ausschließlich synthetische Coaches, fehlender Admin/Proof und stale Plan stoppen, Fehler im zweiten Record rollt Gesamtbatch zurück, identische Läufe2/3 erhalten alle Zeilenversionen/Counts und Projektionen9/3 |
+| Bestehendes Target-Upgrade-/Import-Gate |30 PASS;0008->0009 erhält Altzeilen/xmin und alte Projektion, bestehende Rich-Import-/Revisions-/No-op-Verträge unverändert |
+| Vollständige lokale Suite |812 PASS,22 erwartete opt-in Skips; darunter der separat tatsächlich ausgeführte neue PG-Test, kein Staginglauf |
+| Weitere Checks | compileall, pip check, PowerShell-Parser, Dokumentlinks/Archivintegrität und diff-Prüfung |
+
+[Lokaler Harness](../../scripts/run-coach3b-real-local.ps1) prüft freien55432,
+benutzt nur einen exakt eigenen tmpfs-Container mit gecachtem Image (`--pull
+never`) und markiert die DB mit einer zufälligen prozessinternen Ownership-Nonce.
+Der Test bestätigt diesen Marker **vor jeder synthetischen Mutation**; der
+gleiche Loopback-Port allein beweist kein lokales Testziel. Keine Wiederverwendung
+eines VPS-Tunnels. Schema/Owner/Grants entsprechen dem echten Vertrag, ohne
+UPDATE auf `roles` zu erlauben; Operator sperrt nur zulässige `portal_users`/
+`user_roles`-Zeilen. Containerentfernung und Abwesenheit tatsächlich bestätigt.
+
+Die synthetische Policy-/Window-Substitution bleibt ausschließlich im Test und
+erteilt keine echte Freigabe. Kein echter Schlüssel, kein aktueller Backupdump,
+keine lokale Kopie echter Registry-Daten und keine native Real-Admin-Abnahme.
+Read-only Preflight darf bei null Admins nur STOP/NOT_COMPLETE melden, nicht eine
+erfolgreiche Ausführungsbereitschaft. Drei Reviewbefunde (Proof-Vertrauen,
+Role-Lock-Rechte, falsches Preflight-PASS) wurden entsprechend abgesichert.
+
+## Backend Sprint Addendum 30.10: Neuer Aktueller Stand
+
+Die vorstehende Phase A bleibt datierte Vorbereitung. Der spaetere Auftrag
+genehmigt Manuel als genau einen realen Staging-Admin, admin only, mit einmal
+gewaehltem privatem Login; keine Coach-/Internal-/Reviewer-/Contact-Rolle oder
+Calendar-Zuordnung. Neue sichere Konfiguration vorbereiten und den gruenen
+lokalen Vorbereitungsstand einschliesslich Phase A committen/pushen ist jetzt
+ausdruecklich erlaubt. Die frueheren Aussagen "kein Bootstrap/kein Push" sind
+damit fuer diesen begrenzten neuen Block ueberholt, nicht die Importguards.
+
+[Elisabeths Quellenabgleich](elisabeth-source-reconciliation-2026-10-30.md) ist
+vollstaendig:13 Seiten,3 Familien/12 Konzepte/21 Detailformate,9 referenzierende
+Pakete,2 Erweiterungen und8 optionale Quellenkonflikte.17 vorhandene Titel
+erhalten; neue Details bleiben im hashgebundenen privaten Anhang statt neuer
+oeffentlicher Copy oder realer Daten. Vier echte neue Modellluecken sind
+zurueckgestellt, kein stiller Field Loss im bestehenden Importumfang. Keine
+weitere Migration. Der eingefrorene Kurzbatch bleibt **9 READY/0 REVIEW_REQUIRED/
+0 BLOCKED**,0 Verlust, mit unveraenderten bisherigen Counts und Rechteumfaengen.
+Die8 Detailkonflikte sind kein fachliches GO fuer diese Detailfelder.
+
+[Aktueller Betriebsnachweis und Grenzen](../operations/staging-admin-bootstrap-2026-10-30.md):
+dauerhafte DPAPI/GPG-Key-Custody, betriebliche Passwort-Pruefliste, eindeutiger
+verschluesselter Vorher-Snapshot und exakter isolierter Restorevergleich vor
+erstem echten Konto. Lokaler nativer Operator mit synthetischer PostgreSQL/MFA/
+Edge und separate Restore-Orchestrierung tatsaechlich geprueft; letztere mit
+bewusstem GPG-Testersatz, nicht echtem verschluesseltem VPS-Dump. Aktuelle echte
+Backup-/Restore-/Admin-Gates bleiben NOT EXECUTED. Kein Passwort/Key wurde durch
+den Agenten gelesen oder echter Zugang improvisiert.
+
+Das private Adminfenster migriert keine Tabellen und importiert keine Coaches
+oder Themen. Die echte APPLY-CLI bleibt hart deaktiviert. Anschliessend fehlen
+weiterhin aktueller Themen-/Schema-/Dry-Run-Nachweis und ein gesondert abgenommener
+vollstaendiger Import-Orchestrator. MATCH_ONLY darf bei leerem Themenbestand
+nicht durch stilles Anlegen oder erfundene UUIDs umgangen werden.
+
+Business-Milestone19.11.2026 ohne Kundendaten dokumentiert; Manuel ist ein
+spaeterer standardisierter Post-Migrations-Onboardingfall, nicht Coach10 im
+neuner Manifest. FIN-01/Kundenmodul und alle Website-/Backenddeployments bleiben
+ausserhalb. Naechster Block ist ausschliesslich das vorbereitete private
+Admin-/Backup-/Restorefenster aus geprueftem gepushtem Quellstand.

@@ -1,18 +1,32 @@
 # Post-Messe Backend Horizon
 
-Updated: 2026-10-29. Status: local security/Linux and synthetic COACH-1/2/3A/3C accepted; COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED,0 field loss/remaining business decisions. GO pending separate real-execution approval; no DB access/import. Domain/TLS and VPS execution remain separate gates.
+Updated: 2026-10-30. Status: local security/Linux and synthetic COACH-1/2/3A/3C accepted; COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED. Later30.10 addendum approves Manuel as one admin-only Staging operator and green preparation commit/push. Source reconciliation and private operator preparation are local; actual Admin/backup/restore/import remain unexecuted. Domain/TLS remain separate gates.
 The [authorized consolidation block](../completed/post-messe-konsolidierung-2026-10.md) is complete.
 Current checkpoint: [PROJECT_CONTEXT](../../../PROJECT_CONTEXT.md). Synthetic Staging acceptance is authorized; production and real-data activation are not.
 
-## Recommended Next Block: COACH-3B REAL APPLY
+## Recommended Next Block: PRIVATE ADMIN OPERATOR WINDOW
 
-Purpose: execute the reviewed import only after its own target/data/migration/backup approval.
-Inputs: [closed29.10 review and final runbook](../../architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-reviewabschluss-2910), [COACH-3C acceptance](../completed/coach-3c-target-2026-10-29.md), actual target/operator/window and recovery evidence.
-Deliverables: safely scoped real runner prepared/reviewed locally, one approved server window, atomic import and identical repeat/no-op, parity/Admin/CAL-1/health report.
-Definition of Done: every runbook check passes, exact real bindings recorded and STOP before Website deployment. Existing CLI remains synthetic-only; no real runner or target preflight is implied by business READY.
-No manual credential window now. Domain/DNS/TLS inputs progress in parallel using exactly the consolidated request in the [security close-out](../../operations/cryptography-maintenance-2026-10-23.md).
+Purpose: prove the approved single Admin without adding business roles/mappings.
+Inputs: approved private login, reviewed pushed preparation, durable key custody,
+and current encrypted snapshot plus exact isolated restore before first real write.
+Deliverables: actual MFA/recovery/session/Admin authorization and private UUID binding.
+Definition of Done: every actual native, backup/restore, scope, cleanup and health
+gate passes; no Coach/Calendar mapping, migration/import or Website deployment.
+[Operator procedure/limits](../../operations/staging-admin-bootstrap-2026-10-30.md),
+[current batch](backend-sprint-2026-10-30.md). One private human window only after
+local review/tests and approved source packaging. Domain/DNS/TLS inputs progress
+in parallel using the [security close-out](../../operations/cryptography-maintenance-2026-10-23.md).
 
 ## Current Execution
+
+- Later30.10 backend addendum: all13 Elisabeth pages reconciled;17 old titles
+  retained,8 optional detail conflicts and4 deferred new structural gaps. Frozen
+  nine-Coach short import unchanged, no new public rights/migration. One named
+  admin-only bootstrap and new secure local configuration preparation approved;
+  local native/restore security tools verified separately from real operation.
+  [Current evidence](../../operations/staging-admin-bootstrap-2026-10-30.md).
+
+- 30.10 real-import Phase A candidate: exact private manifest, separate guarded writer and pure runtime hash binding. Target/data/0007-0009/backup scope approved, but Manuel confirms no Admin and STOP before import. SSH host/four services/PG loopback metadata PASS; DB sudo read unavailable without password, no DB query or credential window. No real migration/backup/import/Website changes; candidate edits local. [Active plan](coach-3b-real-apply-2026-10-30.md).
 
 - 29.10 COACH-3B review closure complete: documented Preview/Production rights reconciled without inventing original consent dates; optional Gülcan detail/source gaps excluded without blocking confirmed short copy.9 READY,0 reviews/technical blockers/field loss. Read-only current public Preview confirms9 profiles/30 qualifications/25 baseline titles/8 images/22 topic links. No DB, UUIDs, source-directory read or Website/server changes. Canonical matrix owns final quantities and one-window execution/rollback gates.
 
@@ -39,19 +53,23 @@ No manual credential window now. Domain/DNS/TLS inputs progress in parallel usin
 
 | # | Intended outcome / status | Gate / dependency | Planned evidence | Confidence |
 | --- | --- | --- | --- | --- |
-| 1 | COACH-3B REAL APPLY / proposed, awaiting separate approval | Closed review; exact target/window/data/migrations/backup approval, real-runner preparation, actual source/topic/schema preflight | Atomic one-window import, repeat0 mutations, parity/Admin/CAL-1/health; STOP before Website deploy | High priority; medium confidence |
-| 2 | Runtime/operations input closure / parallel, waiting inputs | Non-secret origin/DNS/TLS/port/path and owner/window decisions | Completed consolidated input matrix and dedicated rehearsal plan | High priority, external timing unknown |
-| 3 | Controlled synthetic VPS Linux/proxy rehearsal / waiting external gate | Final domain/TLS/owners and separate execution approval; exact reviewed artifact, not automatic Registry promotion | Real unit/HTTPS/cookies, rollback, cleanup and co-host health in one prepared window | Medium |
-| 4 | Portal activation review / waiting | Rehearsal from 3 plus backup/alerts/mail/privacy/real-role/onboarding gates | Separate Go/No-Go and exact source/artifact/operations scope | Medium-low |
-| 5 | Analytics Level-1 local POC / provisional, separate | Architecture choice, metrics/retention and privacy gates | Synthetic minimization, no storage/identifier, abuse/RBAC tests | Medium-low |
-| 6 | CAL-2 reservations discovery / future | CAL-1 closure and separate product approval | Business transitions, concurrency and privacy acceptance | Low |
-| 7 | FIN-01 bookkeeping discovery / future | Bookkeeping participation and authoritative-system decisions | Approved requirements and finance role/data boundaries | Low |
+| 1 | Approved private Staging Admin window / local preparation | Green pushed preparation, existing private login, durable key custody, exact current encrypted restore before bootstrap; no extra roles/mappings | Actual MFA/recovery/session, one Admin, unchanged business/schema, cleanup and co-host health | High priority; medium confidence until manual result |
+| 2 | Reassess paused COACH-3B real import / waiting actual Admin | Actual taxonomy/schema, separate missing-topic bootstrap decision if empty, full reviewed import orchestrator and fresh source/backup/restore gates | Atomic9/import repeat-zero/parity/Admin/CAL-1/health; public APPLY stays disabled until ready, STOP Website | High priority; medium confidence |
+| 3 | Runtime/operations input closure / parallel, waiting inputs | Non-secret origin/DNS/TLS/port/path and owner/window decisions | Completed consolidated input matrix and dedicated rehearsal plan | High priority, external timing unknown |
+| 4 | Controlled synthetic VPS Linux/proxy rehearsal / waiting external gate | Final domain/TLS/owners and separate execution approval; exact reviewed artifact, not automatic Registry promotion | Real unit/HTTPS/cookies, rollback, cleanup and co-host health in one prepared window | Medium |
+| 5 | Portal activation review / waiting | Rehearsal from4 plus backup/alerts/mail/privacy/real-role/onboarding gates | Separate Go/No-Go and exact source/artifact/operations scope | Medium-low |
+| 6 | Analytics Level-1 local POC / provisional, separate | Architecture choice, metrics/retention and privacy gates | Synthetic minimization, no storage/identifier, abuse/RBAC tests | Medium-low |
+| 7 | CAL-2 reservations discovery / future | CAL-1 closure and separate product approval | Business transitions, concurrency and privacy acceptance | Low |
+| 8 | FIN-01 bookkeeping discovery / future | Bookkeeping participation and authoritative-system decisions | Approved requirements and finance role/data boundaries | Low |
 
 ## Parallel Organizational Gates
 
 EDV app-origin/SMTP/sender, actual mailbox receipt, named accounts/roles, operational break-glass access, production backup scheduling and notifications remain unproven.
 These are tracked separately from the recommended UI block; they are not implied prerequisites for every local synthetic task.
-No new pilot deadline, budget or stakeholder meeting date is invented.
+First real coaching engagement19.11.2026 is a business milestone only, no customer
+data or Finance implementation. Manuel's Coach onboarding follows the nine-Coach
+migration through the standard Admin workflow. Janay unavailable about two weeks;
+batch stakeholder-independent work. No broader pilot date or budget is invented.
 
 ## Product / Maintenance Backlog Outside Current WIP
 

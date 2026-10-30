@@ -1,6 +1,6 @@
 # Competence Hub Roadmap
 
-Updated: 2026-10-23. Current state belongs to [PROJECT_CONTEXT](PROJECT_CONTEXT.md); the next gate and rolling horizon belong to the [active plan](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
+Updated: 2026-10-30. Current state belongs to [PROJECT_CONTEXT](PROJECT_CONTEXT.md); the next gate and rolling horizon belong to the [active plan](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
 
 ## Vision And Ownership
 
@@ -14,7 +14,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 | --- | --- | --- | --- |
 | Post-Messe consolidation: complete | Stable IONOS, published preview, Context V2 and Analytics discovery | Completed scope, build isolation, public smoke | High |
 | Backend continuation | Native CAL-1, cryptography maintenance and local Linux/proxy gates PASS | External domain/TLS/owners and separately authorized VPS rehearsal/activation remain | Medium |
-| Coach Registry / lifecycle | COACH-1/2/3A/3C locally verified; COACH-3B review9 READY,0 canonical field loss,0 remaining business decisions | [COACH-3 review/runbook](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-reviewabschluss-2910); separate REAL APPLY approval, real-runner preparation and actual target/backup/preflight gates; no execution yet | Medium |
+| Coach Registry / lifecycle | COACH-1/2/3A/3C locally verified; COACH-3B review9 READY.30.10 approves Manuel as sole admin-only Staging operator; preparation locally verified, human window pending | [Current batch](docs/exec-plans/active/backend-sprint-2026-10-30.md); exact encrypted backup/restore before bootstrap, native MFA/recovery, actual target/topic gates before separate real APPLY; no real execution yet | Medium |
 | Portal operation | Named accounts, mail, monitored backups, operational handover | DNS/SMTP/runtime/data/privacy/Go-No-Go evidence | Medium |
 | Future calendar | CAL-2 reservations and provider-neutral .ics delivery | Business/concurrency/privacy/client-compatibility gates | Low |
 | Analytics | Datensparse aggregate statistics in protected Admin cockpit | Architecture choice, privacy/legal and security approval | Medium |
@@ -25,7 +25,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 
 Only the [active plan](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md) selects the next proposed execution gate.
 [Future ideas](docs/requirements/future-system-ideas-backlog.md), [FIN-01](docs/requirements/fin-01-invoice-management-epic.md) and [PWA strategy](docs/architecture/pwa-app-distribution-strategy-2026-08-11.md) remain product backlog.
-Budget, new pilot date and ongoing content ownership are not yet confirmed.
+First real coaching engagement:19.11.2026, business milestone only; no customer identity/data or invoice implementation. Manuel's Coach profile is a later standard post-migration onboarding case, not a tenth record in the reviewed batch. Janay unavailable approximately two weeks; prepare coherent blocks without new stakeholder decisions. Budget, broader pilot date and ongoing content ownership are not yet confirmed.
 
 ## Constraints And History
 

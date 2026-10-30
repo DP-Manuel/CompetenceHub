@@ -1,0 +1,221 @@
+#!/usr/bin/env bash
+# Preparation candidate, NOT blanket execution approval. In a separately approved
+# one-authentication window, invoke as: sudo -u postgres -- <script>
+# --confirm-staging-snapshot --run-id <unique-lowercase-id>
+# Parent must quiesce target-DB writers/DDL and cluster role changes BEFORE the
+# snapshot until the external restore gate completes; no first real Admin/Coach
+# writes before that gate. Do not stop or modify co-hosted services.
+# No install, timers, retention, configuration reads, transfer or restore here.
+# Private key/decryption must stay OFF the VPS, on the protected restore host.
+#
+# Success stdout is exactly one JSON object containing only absolute *_path and
+# lowercase *_sha256 fields. Nonzero exit or absent stdout is NOT a usable set.
+# SHA256SUMS covers exactly database.dump.gpg, globals.sql.gpg and METADATA,
+# compatible with the existing Docker restore's three-entry/two-payload gate.
+# METADATA is JSON Lines v1: one header, database, migrations (sorted versions),
+# then schema/relation/table records. All non-system schemas are covered;
+# relation records include views/sequences; table records include partitions and
+# materialized views and their exact row_count (not estimates or business rows).
+# Parent must validate record kinds/uniqueness, complete relation/table key sets,
+# migration versions and each count against the exact external-copy restore.
+# Existing Docker positive-table-count output alone is NOT a full restore PASS.
+# Its --no-owner/--no-privileges mode cannot prove original owner/ACL restoration:
+# retain original owners here; separately verify globals/roles and ownership
+# recovery in isolation. Password-free globals require separate credential reset.
+# Database + baseline share one exported MVCC snapshot; cluster globals cannot
+# share that snapshot, hence the parent-enforced quiet window above is mandatory.
+set -Eeuo pipefail
+set +x
+readonly PATH="/usr/sbin:/usr/bin:/sbin:/bin"
+export PATH LC_ALL=C
+readonly BACKUP_ROOT="/var/backups/competence-hub"
+readonly GPG_HOME="/var/lib/competence-hub-backup/gnupg"
+readonly DATABASE="competence_hub_staging"
+readonly RECIPIENT="2E44306121629A100F76A8B08CCA3D9186A28D4C"
+
+fail() { printf 'competence-hub snapshot: %s\n' "$1" >&2; exit 1; }
+usage() { fail 'requires --confirm-staging-snapshot --run-id <1-64 lowercase letters/digits/underscore/hyphen; first alphanumeric>'; }
+confirmed=false
+run_id=""
+while (( $# )); do
+    case "$1" in
+        --confirm-staging-snapshot) [[ "$confirmed" == false ]] || usage; confirmed=true; shift ;;
+        --run-id) [[ $# -ge 2 && -z "$run_id" ]] || usage; run_id="$2"; shift 2 ;;
+        *) usage ;;
+    esac
+done
+[[ "$confirmed" == true && "$run_id" =~ ^[a-z0-9][a-z0-9_-]{0,63}$ ]] || usage
+[[ "$(id -un)" == postgres ]] || fail 'run as the postgres OS user via sudo -u postgres, not root'
+umask 077
+for command_name in awk chmod date find flock gpg mktemp mv pg_dump pg_dumpall psql realpath rm rmdir sha256sum stat touch; do
+    command -v "$command_name" >/dev/null 2>&1 || fail "required command is missing: $command_name"
+done
+
+# Do not inspect inherited connection values or allow libpq to read credentials.
+for variable in ${!PG@}; do unset "$variable"; done
+readonly PG_SOCKET="/var/run/postgresql"
+export PGPASSFILE=/dev/null PGSERVICEFILE=/dev/null PGSYSCONFDIR=/nonexistent
+export PGCONNECT_TIMEOUT=10
+export PGOPTIONS='-c default_transaction_read_only=on -c statement_timeout=600000 -c lock_timeout=10000'
+
+protected_directory() {
+    local directory="$1" ancestor owner mode
+    [[ -d "$directory" && ! -L "$directory" && "$(realpath -e "$directory")" == "$directory" ]] \
+        || fail 'required directory is absent, symlinked or non-canonical'
+    [[ "$(stat -c %U "$directory")" == postgres && "$(stat -c %a "$directory")" == 700 ]] \
+        || fail 'required directory must already be postgres-owned mode 0700; no permission repair is attempted'
+    ancestor="${directory%/*}"
+    while [[ -n "$ancestor" ]]; do
+        [[ ! -L "$ancestor" && -d "$ancestor" ]] || fail 'unsafe directory ancestor'
+        owner="$(stat -c %U "$ancestor")"
+        mode="$(stat -c %a "$ancestor")"
+        [[ "$owner" == root || "$owner" == postgres ]] || fail 'untrusted directory ancestor owner'
+        (( (8#$mode & 0022) == 0 )) || fail 'directory ancestor is group/other writable'
+        ancestor="${ancestor%/*}"
+    done
+}
+protected_directory "$BACKUP_ROOT"
+protected_directory "$GPG_HOME"
+[[ -z "$(find "$GPG_HOME" -mindepth 1 -maxdepth 1 -type l -print -quit)" ]] \
+    || fail 'GPG home contains a symlink'
+[[ ! -e "$GPG_HOME/secring.gpg" ]] || fail 'legacy private keyring is not allowed on the snapshot server'
+# Check presence only, never open a private-key file (including agent stubs).
+if [[ -e "$GPG_HOME/private-keys-v1.d" || -L "$GPG_HOME/private-keys-v1.d" ]]; then
+    [[ -d "$GPG_HOME/private-keys-v1.d" && ! -L "$GPG_HOME/private-keys-v1.d" ]] \
+        || fail 'unsafe private-key directory'
+    [[ -z "$(find "$GPG_HOME/private-keys-v1.d" -mindepth 1 -maxdepth 1 -print -quit)" ]] \
+        || fail 'private keys or key stubs are not allowed on the snapshot server'
+fi
+gpg_args=(--no-options --homedir "$GPG_HOME" --batch --no-tty --no-autostart --no-auto-key-retrieve)
+primary_fingerprint="$(gpg "${gpg_args[@]}" --with-colons --fingerprint "$RECIPIENT" 2>/dev/null \
+    | awk -F: '$1 == "fpr" && !seen++ { print toupper($10) }')" \
+    || fail 'public recipient lookup failed'
+[[ "$primary_fingerprint" == "$RECIPIENT" ]] || fail 'approved primary public fingerprint is unavailable'
+
+readonly final_set="$BACKUP_ROOT/prechange-$run_id"
+[[ ! -e "$final_set" && ! -L "$final_set" ]] || fail 'run-id already exists; never overwrite a snapshot'
+readonly lock_file="$BACKUP_ROOT/.snapshot.lock"
+if [[ ! -e "$lock_file" && ! -L "$lock_file" ]]; then
+    (set -o noclobber; : > "$lock_file") 2>/dev/null || fail 'cannot exclusively create snapshot lock'
+fi
+[[ -f "$lock_file" && ! -L "$lock_file" && "$(stat -c %h "$lock_file")" == 1 \
+    && "$(stat -c %U "$lock_file")" == postgres && "$(stat -c %a "$lock_file")" == 600 ]] \
+    || fail 'unsafe snapshot lock'
+exec 9>>"$lock_file"
+flock -n 9 || fail 'another snapshot is active'
+[[ ! -e "$final_set" && ! -L "$final_set" ]] || fail 'run-id already exists'
+
+work_dir=""
+snapshot_pid=""
+owned_final=false
+cleanup() {
+    local result=$?
+    trap - EXIT HUP INT TERM
+    if [[ -n "$snapshot_pid" ]]; then
+        kill "$snapshot_pid" 2>/dev/null || true
+        wait "$snapshot_pid" 2>/dev/null || true
+    fi
+    # Only flat files in this invocation's protected directory; never recursive.
+    if [[ "$owned_final" == true ]]; then work_dir="$final_set"; fi
+    if [[ -n "$work_dir" ]]; then
+        if [[ -d "$work_dir" && ! -L "$work_dir" && "$(realpath -e "$work_dir")" == "$work_dir" ]]; then
+            chmod 0700 "$work_dir" 2>/dev/null || true
+            if ! find "$work_dir" -mindepth 1 -maxdepth 1 -type f -delete || ! rmdir -- "$work_dir"; then
+                printf 'competence-hub snapshot: protected temporary cleanup failed; operator review required\n' >&2
+                result=1
+            fi
+        else
+            printf 'competence-hub snapshot: unsafe cleanup directory; operator review required\n' >&2
+            result=1
+        fi
+    fi
+    exit "$result"
+}
+trap cleanup EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+work_dir="$(mktemp -d "$BACKUP_ROOT/.snapshot-$run_id-XXXXXX")"
+[[ "$work_dir" == "$BACKUP_ROOT/.snapshot-$run_id-"* ]] || fail 'unsafe working directory'
+protected_directory "$work_dir"
+readonly stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+printf '{"kind":"header","format":"competence-hub.prechange.v1","run_id":"%s","created_at_utc":"%s","database":"%s","recipient":"%s","encryption":"openpgp","role_passwords_included":false,"baseline_scope":"all_non_system_schemas","consistency":"exported_mvcc_snapshot","restore_verified":false}\n' \
+    "$run_id" "$stamp" "$DATABASE" "$RECIPIENT" > "$work_dir/METADATA"
+
+# A live read-only psql transaction owns the snapshot until pg_dump finishes.
+# All client diagnostics stay protected and are removed, never sent to stdout.
+coproc SNAPSHOT_DB { exec psql --host "$PG_SOCKET" --port 5432 --username postgres --dbname "$DATABASE" \
+    --no-password --no-psqlrc --quiet --tuples-only --no-align --set ON_ERROR_STOP=1 \
+    2>"$work_dir/client.stderr"; }
+snapshot_pid=$SNAPSHOT_DB_PID
+exec {sql_in}>&"${SNAPSHOT_DB[1]}"
+exec {sql_out}<&"${SNAPSHOT_DB[0]}"
+printf '%s\n' 'BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;' \
+    "SELECT current_database() || '|' || (SELECT count(*) FROM pg_namespace WHERE nspname='competence_hub') || '|' || (SELECT count(*) FROM pg_foreign_table);" \
+    'SELECT pg_export_snapshot();' >&"$sql_in"
+IFS= read -r -t 60 identity <&"$sql_out" || fail 'database identity check failed'
+[[ "$identity" == "$DATABASE|1|0" ]] || fail 'unexpected database/schema or unsupported foreign tables'
+IFS= read -r -t 60 snapshot <&"$sql_out" || fail 'snapshot export failed'
+[[ "$snapshot" =~ ^[A-Fa-f0-9]+-[A-Fa-f0-9]+-[0-9]+$ ]] || fail 'invalid exported snapshot identifier'
+
+read -r -d '' baseline_sql <<'SQL' || true
+SELECT json_build_object('kind','database','name',datname,'owner',pg_get_userbyid(datdba)) FROM pg_database WHERE datname=current_database();
+SELECT json_build_object('kind','migrations','versions',COALESCE(json_agg(version ORDER BY version),'[]'::json)) FROM competence_hub.schema_migrations;
+SELECT json_build_object('kind','schema','name',nspname,'owner',pg_get_userbyid(nspowner)) FROM pg_namespace WHERE nspname <> 'information_schema' AND nspname !~ '^pg_' ORDER BY nspname COLLATE "C";
+SELECT json_build_object('kind','relation','schema',n.nspname,'name',c.relname,'relkind',c.relkind,'owner',pg_get_userbyid(c.relowner)) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname <> 'information_schema' AND n.nspname !~ '^pg_' AND c.relkind IN ('r','p','m','v','S') ORDER BY n.nspname COLLATE "C",c.relname COLLATE "C";
+SELECT format('SELECT json_build_object(''kind'',''table'',''schema'',%L,''name'',%L,''row_count'',count(*)) FROM %I.%I;',n.nspname,c.relname,n.nspname,c.relname) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname <> 'information_schema' AND n.nspname !~ '^pg_' AND c.relkind IN ('r','p','m') ORDER BY n.nspname COLLATE "C",c.relname COLLATE "C"
+\gexec
+SELECT 'BASELINE_END';
+SQL
+printf '%s\n' "$baseline_sql" >&"$sql_in"
+baseline_lines=0
+while true; do
+    IFS= read -r -t 660 record <&"$sql_out" || fail 'baseline read failed or timed out'
+    [[ "$record" != BASELINE_END ]] || break
+    [[ "$record" == \{*\} ]] || fail 'unexpected baseline output'
+    printf '%s\n' "$record" >> "$work_dir/METADATA"
+    ((baseline_lines += 1))
+done
+(( baseline_lines >= 5 )) || fail 'baseline is incomplete'
+pg_dumpall --host "$PG_SOCKET" --port 5432 --username postgres --no-password \
+    --globals-only --no-role-passwords > "$work_dir/globals.sql" 2>"$work_dir/client.stderr" \
+    || fail 'password-free globals export failed'
+pg_dump --host "$PG_SOCKET" --port 5432 --username postgres --no-password --dbname "$DATABASE" \
+    --snapshot "$snapshot" --format=custom --compress=9 --file "$work_dir/database.dump" \
+    2>"$work_dir/client.stderr" || fail 'custom dump failed'
+printf '%s\n' 'COMMIT;' '\q' >&"$sql_in"
+exec {sql_in}>&-
+wait "$snapshot_pid" || fail 'snapshot transaction failed'
+snapshot_pid=""
+exec {sql_out}<&-
+[[ -s "$work_dir/database.dump" && -s "$work_dir/globals.sql" ]] || fail 'empty backup payload'
+
+for payload in database.dump globals.sql; do
+    gpg "${gpg_args[@]}" --trust-model always --recipient "$RECIPIENT" \
+        --output "$work_dir/$payload.gpg" --encrypt "$work_dir/$payload" \
+        > /dev/null 2>"$work_dir/client.stderr" || fail 'encryption failed'
+    [[ -s "$work_dir/$payload.gpg" ]] || fail 'empty encrypted payload'
+done
+rm -- "$work_dir/database.dump" "$work_dir/globals.sql" "$work_dir/client.stderr"
+(
+    cd "$work_dir"
+    sha256sum --text database.dump.gpg globals.sql.gpg METADATA > SHA256SUMS
+    sha256sum --check --strict SHA256SUMS >/dev/null
+)
+touch "$work_dir/COMPLETE"
+find "$work_dir" -mindepth 1 -maxdepth 1 -type f -exec chmod 0400 {} +
+# -T prevents moving inside an existing directory; -n refuses any replacement.
+mv -T -n -- "$work_dir" "$final_set"
+[[ ! -d "$work_dir" ]] || fail 'publication refused an existing target'
+owned_final=true
+work_dir=""
+chmod 0500 "$final_set" || fail 'published snapshot permissions could not be secured'
+dump_hash="$(sha256sum "$final_set/database.dump.gpg")"; dump_hash="${dump_hash%% *}"
+globals_hash="$(sha256sum "$final_set/globals.sql.gpg")"; globals_hash="${globals_hash%% *}"
+metadata_hash="$(sha256sum "$final_set/METADATA")"; metadata_hash="${metadata_hash%% *}"
+checksums_hash="$(sha256sum "$final_set/SHA256SUMS")"; checksums_hash="${checksums_hash%% *}"
+complete_hash="$(sha256sum "$final_set/COMPLETE")"; complete_hash="${complete_hash%% *}"
+printf '{"snapshot_path":"%s","dump_path":"%s/database.dump.gpg","dump_sha256":"%s","globals_path":"%s/globals.sql.gpg","globals_sha256":"%s","metadata_path":"%s/METADATA","metadata_sha256":"%s","checksums_path":"%s/SHA256SUMS","checksums_sha256":"%s","complete_path":"%s/COMPLETE","complete_sha256":"%s"}\n' \
+    "$final_set" "$final_set" "$dump_hash" "$final_set" "$globals_hash" "$final_set" "$metadata_hash" \
+    "$final_set" "$checksums_hash" "$final_set" "$complete_hash"
+owned_final=false
