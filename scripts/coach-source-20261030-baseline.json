@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "scope": "PROCESSED_SOURCE_BYTES_NOT_PUBLICATION_APPROVAL",
+  "processed_on": "2026-11-02",
+  "files": [
+    {"relative_path": "Konzept_Schwabauer.pdf", "sha256": "04805b6e6b96313e68f285d01c922d9342bd692ce4ec2cce68b9b124191f4620"},
+    {"relative_path": "Profil Dr. Stefanie Becker_für Donner_Partner Copy.pdf", "sha256": "427348eb053c44a1d57e0582b6e0c73f9f26f1b6c9d87891d20ddb1957796e2f"},
+    {"relative_path": "noch zu Becker.docx", "sha256": "97a41614e1519bc9c1f2442002f4a14372eceff674b7e20c4a7175a8d121da46"}
+  ]
+}

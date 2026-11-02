@@ -415,6 +415,53 @@ def test_diff_attention_and_parity_dimensions():
     }
 
 
+def test_incremental_source_diff_breaks_down_public_fields_without_item_identity():
+    a = projection()
+    b = deepcopy(a)
+    b["coaches"][0]["qualifications"][0]["label"] = "Changed public qualification"
+    b["coaches"][0]["offering_families"][0]["boundaries"][0][
+        "text"
+    ] = "Changed public boundary"
+    b["coaches"][0]["topics"] = []
+    b["coaches"][1]["assets"] = deepcopy(b["coaches"][0]["assets"])
+    report = projection_diff(a, b)
+    fields = report["field_changes"]
+    alpha, beta = [c["profile_path"] for c in a["coaches"]]
+    assert fields["qualifications"]["CHANGED"] == [alpha]
+    assert fields["boundaries"]["CHANGED"] == [alpha]
+    assert fields["topics"]["REMOVED"] == [alpha]
+    assert fields["assets"]["ADDED"] == [beta]
+    assert set(fields) == {
+        "coaches",
+        "profiles",
+        "qualifications",
+        "topics",
+        "offerings",
+        "assets",
+        "boundaries",
+        "publication_visibility",
+        "routes",
+    }
+    unchanged = projection_diff(a, a)
+    assert all(
+        not paths
+        for states in unchanged["field_changes"].values()
+        for paths in states.values()
+    )
+    empty = deepcopy(a)
+    empty["coaches"][0]["offering_families"][0]["boundaries"] = []
+    changed = deepcopy(empty)
+    changed["coaches"][0]["offerings"] = [
+        dict(title="No boundary", type="other", description=None, ordering=9)
+    ]
+    assert all(
+        not values
+        for values in projection_diff(empty, changed)["field_changes"][
+            "boundaries"
+        ].values()
+    )
+
+
 def test_production_visibility_and_private_approval_changes():
     registry = synthetic_registry()
     a = generate_projection(registry, "production")

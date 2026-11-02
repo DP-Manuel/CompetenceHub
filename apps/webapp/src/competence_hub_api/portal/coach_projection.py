@@ -406,6 +406,42 @@ def projection_diff(current, candidate):
         if _therapy(a) != _therapy(b):
             attention("THERAPEUTIC_CONTENT_CHANGED", route)
     report["equal"] = current == candidate
+    # Counts are profile-route-level, not inferred qualification/person identity.
+    fields = {
+        "coaches": lambda c: c,
+        "profiles": lambda c: c,
+        "qualifications": lambda c: c.get("qualifications", []),
+        "topics": lambda c: c["topics"],
+        "offerings": _offerings,
+        "assets": lambda c: c["assets"],
+        "boundaries": _boundaries,
+        "publication_visibility": lambda c: True,
+        "routes": lambda c: c["profile_path"],
+    }
+
+    def populated(value):
+        if isinstance(value, (dict, list)):
+            return any(
+                populated(v)
+                for v in (value.values() if isinstance(value, dict) else value)
+            )
+        return bool(value)
+
+    changes = {}
+    for name, extract in fields.items():
+        changes[name] = {"ADDED": [], "REMOVED": [], "CHANGED": []}
+        for route in sorted(old.keys() | new.keys()):
+            a = extract(old[route]) if route in old else None
+            b = extract(new[route]) if route in new else None
+            if a == b or (not populated(a) and not populated(b)):
+                continue
+            state = (
+                "ADDED"
+                if not populated(a)
+                else "REMOVED" if not populated(b) else "CHANGED"
+            )
+            changes[name][state].append(route)
+    report["field_changes"] = changes
     return report
 
 
@@ -463,6 +499,13 @@ def review_markdown(report):
             "",
         ]
     lines += [
+        "## Field Changes By Profile Route",
+        *[
+            f"- {name}: "
+            + ", ".join(f"{state}={len(paths)}" for state, paths in states.items())
+            for name, states in report["field_changes"].items()
+        ],
+        "",
         "## High Attention",
         *["- " + a["code"] + ": " + a["route"] for a in report["high_attention"]],
         "",
