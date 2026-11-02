@@ -96,6 +96,42 @@ function Assert-WindowNoPriorAttempt {
     if (Test-Path -LiteralPath $Path) { throw 'PRIOR_ACCOUNT_ATTEMPT_REQUIRES_MANUAL_RECONCILIATION_NO_RETRY' }
 }
 
+function Assert-WindowCustodyComplete {
+    param([string]$Path)
+    if (-not (Test-Path -LiteralPath $Path)) { return }
+    $directory = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+    if (-not $directory.PSIsContainer -or ($directory.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+        throw 'CUSTODY_PATH_UNSAFE'
+    }
+    # Presence only: never open keys, decrypt, repair or regenerate a partial set.
+    # Complete-looking sets still undergo the existing cryptographic validation.
+    foreach ($name in @('staging-operator.keys.clixml', 'staging-operator.keys.json.gpg', 'staging-operator.metadata.json')) {
+        $file = Join-Path $Path $name
+        if (-not (Test-Path -LiteralPath $file -PathType Leaf)) {
+            throw 'CUSTODY_INCOMPLETE_REQUIRES_PRIVATE_RECONCILIATION'
+        }
+        if ((Get-Item -LiteralPath $file -Force -ErrorAction Stop).Attributes -band [IO.FileAttributes]::ReparsePoint) {
+            throw 'CUSTODY_PATH_UNSAFE'
+        }
+    }
+}
+
+function Get-WindowStopCode {
+    param([string]$Message)
+    # Only exact fixed codes may leave the private error boundary, never the
+    # original exception, path, subprocess diagnostics or credential values.
+    $known = @(
+        'CUSTODY_PATH_UNSAFE', 'CUSTODY_INCOMPLETE_REQUIRES_PRIVATE_RECONCILIATION',
+        'PRIOR_ACCOUNT_ATTEMPT_REQUIRES_MANUAL_RECONCILIATION_NO_RETRY',
+        'SOURCE_IDENTITY_REJECTED', 'REVIEWED_SOURCE_MUST_BE_CLEAN_AND_TRACKED',
+        'PUSHED_SOURCE_GATE_FAILED', 'PORT55432_ALREADY_IN_USE_NEVER_REUSE_OR_KILL',
+        'CLEAN_PRIVATE_DIAGNOSTIC_ENVIRONMENT_REQUIRED', 'CLEAN_OPERATOR_PROCESS_REQUIRED',
+        'REVIEWED_INPUT_MISSING_OR_LINKED'
+    )
+    if ($Message -cin $known) { return $Message }
+    return 'PRIVATE_MANUAL_REVIEW_REQUIRED'
+}
+
 function Assert-WindowNoDiagnostics {
     foreach ($name in [Environment]::GetEnvironmentVariables('Process').Keys) {
         if ($name -match '^(DEBUG|PWDEBUG|PW_|PLAYWRIGHT_|NODE_|PYTHON(INSPECT|STARTUP|BREAKPOINT|HOME|USERBASE|PATH|ASYNCIODEBUG)$)') {
@@ -285,6 +321,7 @@ function Invoke-StagingAdminWindow {
     $corpus = Join-Path $base 'staging-operator-corpus-20261030/compromised-password-fingerprints.sha256'
     $attempt = Join-Path $custody 'bootstrap-attempt.json'
     Assert-WindowNoPriorAttempt $attempt
+    Assert-WindowCustodyComplete $custody
     $null = Assert-StagingCorpus $corpus $script:WindowCorpusHash
     $context = Invoke-WindowCommand $docker @('context', 'inspect', '--format', '{{json .Endpoints.docker.Host}}')
     if ($context -cnotmatch '^"npipe:////\./pipe/(docker_engine|dockerDesktopLinuxEngine)"$') { throw 'LOCAL_DOCKER_ENGINE_REQUIRED' }
@@ -293,7 +330,7 @@ function Invoke-StagingAdminWindow {
     $run = 'admin-' + [Guid]::NewGuid().ToString('N')
     $output = Join-Path $base ('staging-window-' + $run)
     New-StagingPrivateDirectory $output
-    $result = [ordered]@{ schema = 1; status = 'NOT_COMPLETE'; phase = 'local_readiness'; real_coach_apply = 'DISABLED'; account_creation = 'NOT_ATTEMPTED'; source_commit = $Commit; remote_cleanup = 'NOT_NEEDED'; tunnel_cleanup = 'NOT_NEEDED' }
+    $result = [ordered]@{ schema = 1; status = 'NOT_COMPLETE'; gate = 'PRIVATE_MANUAL_REVIEW_REQUIRED'; phase = 'local_readiness'; real_coach_apply = 'DISABLED'; account_creation = 'NOT_ATTEMPTED'; source_commit = $Commit; remote_cleanup = 'NOT_NEEDED'; tunnel_cleanup = 'NOT_NEEDED' }
     $tunnel = $null; $remoteOwned = $false; $sudo = $null; $appPassword = $null; $ownerPassword = $null
     try {
         if (-not (Test-Path -LiteralPath $custody)) {
@@ -389,9 +426,9 @@ function Invoke-StagingAdminWindow {
         if ($account.status -cne 'PASS' -or $account.account_creation -cne 'CONFIRMED' -or @($account.roles).Count -ne 1 -or $account.roles[0] -cne 'admin' -or $null -ne $account.coach_mapping -or $null -ne $account.calendar_mapping -or $account.real_coach_apply -cne 'DISABLED') { throw 'ACTUAL_ADMIN_POSTCHECK_REQUIRED' }
         $result.account_creation = 'CONFIRMED'; $result.phase = 'postflight'
         Write-WindowRecord (Join-Path $output 'service-postflight.json') (Get-WindowHealth $ssh)
-        $result.status = 'PASS'; $result.phase = 'complete'
+        $result.status = 'PASS'; $result.gate = 'NONE'; $result.phase = 'complete'
     } catch {
-        $result.status = 'STOP'; $result.gate = 'SANITIZED_WINDOW_FAILURE_MANUAL_REVIEW_REQUIRED'
+        $result.status = 'STOP'; $result.gate = Get-WindowStopCode $_.Exception.Message
     } finally {
         foreach ($secret in @($sudo, $appPassword, $ownerPassword)) { if ($secret) { $secret.Dispose() } }
         if ($tunnel) {
@@ -411,7 +448,7 @@ function Invoke-StagingAdminWindow {
         }
         Write-WindowRecord (Join-Path $output 'window-result.json') $result
     }
-    if ($result.status -cne 'PASS') { throw 'WINDOW_NOT_COMPLETE_PRIVATE_EVIDENCE_RETAINED_NO_BLIND_RETRY' }
+    if ($result.status -cne 'PASS') { throw $result.gate }
     return [pscustomobject]@{ status = $result.status; real_coach_apply = 'DISABLED'; private_evidence_directory = $output }
 }
 
@@ -420,6 +457,10 @@ if ($MyInvocation.InvocationName -ne '.') {
         Write-Output 'STAGING_ADMIN_WINDOW=NOT_EXECUTED READINESS_ONLY REAL_COACH_APPLY=DISABLED'
     } else {
         try { Invoke-StagingAdminWindow -Commit $ExpectedSourceCommit -PrivateWindow:$AcknowledgePrivateWindow -QuietDatabase:$AcknowledgeQuietDatabase -OperatorCustody:$AcknowledgeOperatorCustody }
-        catch { [Console]::Error.WriteLine('STAGING_ADMIN_WINDOW=STOP PRIVATE_MANUAL_REVIEW_REQUIRED REAL_COACH_APPLY=DISABLED'); exit 1 }
+        catch {
+            $code = Get-WindowStopCode $_.Exception.Message
+            [Console]::Error.WriteLine("STAGING_ADMIN_WINDOW=STOP GATE=$code REAL_COACH_APPLY=DISABLED")
+            exit 1
+        }
     }
 }

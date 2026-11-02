@@ -1,10 +1,15 @@
 # Post-Messe Backend Horizon
 
-Updated: 2026-10-30. Status: local security/Linux and synthetic COACH-1/2/3A/3C accepted; COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED. Later30.10 addendum approves Manuel as one admin-only Staging operator and green preparation commit/push. Source reconciliation and private operator preparation are local; actual Admin/backup/restore/import remain unexecuted. Domain/TLS remain separate gates.
+Updated: 2026-11-02. Status: local security/Linux and synthetic COACH-1/2/3A/3C accepted; COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED.02.11 actual operator attempts stopped at local key readiness before backup/tunnel/Admin. Manuel defers this backup/operator window until his manual signal (different workstation/no stick); existing files remain untouched. Domain/TLS remain separate gates.
 The [authorized consolidation block](../completed/post-messe-konsolidierung-2026-10.md) is complete.
 Current checkpoint: [PROJECT_CONTEXT](../../../PROJECT_CONTEXT.md). Synthetic Staging acceptance is authorized; production and real-data activation are not.
 
 ## Recommended Next Block: PRIVATE ADMIN OPERATOR WINDOW
+
+WAIT for Manuel's explicit manual signal. Reconcile the preserved partial key
+state on a suitable workstation first; do not regenerate keys, repeat the old
+command or bypass backup to write real accounts. Independent local/read-only
+work remains possible. [02.11 evidence and decision](../../operations/staging-admin-bootstrap-2026-10-30.md#bedienentscheidung-und-stop-am-02112026).
 
 Purpose: prove the approved single Admin without adding business roles/mappings.
 Inputs: approved private login, reviewed pushed preparation, durable key custody,

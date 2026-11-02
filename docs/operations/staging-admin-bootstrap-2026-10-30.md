@@ -7,6 +7,89 @@ Der [Quellenabgleich](../architecture/elisabeth-source-reconciliation-2026-10-30
 und der [Importvertrag](../architecture/coach-import-contract-v0.1.md) bleiben
 separate fachliche und technische Grenzen.
 
+## Bedienentscheidung und STOP am 02.11.2026
+
+**Aktuell nicht erneut starten.** Manuel arbeitet nach eigener Angabe an einem
+anderen Rechner, hat keinen Zugriff auf den Backup-Stick und verschiebt dieses
+Backup-/Operatorfenster ausdruecklich bis zu seinem manuellen Signal. Kein
+automatischer neuer Versuch, Backup-Bypass oder vorgezogene reale Admin-Anlage.
+Bereits bestehende Backupjobs bleiben unveraendert; nur dieses Fenster wartet.
+
+Zwei lokale, bereinigte Ergebnisbelege zeigen `status=STOP`,
+`phase=local_readiness`, `account_creation=NOT_ATTEMPTED` und Remote-/Tunnel-
+Bereinigung jeweils `NOT_NEEDED`. Metadatenpruefung: vorhandene lokale DPAPI-
+und verschluesselte Keydatei, aber kein abgeschlossener Verifikationsvermerk
+und kein Account-Anlageversuchsmarker. Dieser Codepfad liegt vor dem VPS-
+Vorherbackup, Tunnel und ersten DB-Schreibzugriff. Kein aktueller DB-Nullstand
+wird aus den lokalen Belegen abgeleitet oder neu auf dem Server abgefragt.
+
+Die erste Initialisierung wurde nicht vollstaendig verifiziert; ob Dialogabbruch,
+Zeitablauf oder fehlender privater Keyzugriff der urspruengliche Ausloeser war,
+ist aus den sicheren Metadaten nicht bestimmbar. Ein weiterer Lauf legt den
+vorhandenen Ordner bewusst nicht neu an und erreicht deshalb keinen erneuten
+Passwortdialog. Die lokalen Dateien werden weder gelesen, geloescht, ersetzt
+noch automatisch importiert. Wiederaufnahme muss spaeter den bestehenden
+Zustand pruefen, statt die Schluessel still neu zu erzeugen.
+
+Die lokale Diagnosekorrektur erkennt diesen Teilzustand vor Key-/GPG-/Server-
+Aktionen und nennt den festen Code
+`CUSTODY_INCOMPLETE_REQUIRES_PRIVATE_RECONCILIATION`. Nach aussen gelangen nur
+exakt erlaubte Fehlercodes; unbekannte Fehlertexte bleiben verborgen. Eine
+vollstaendig aussehende Dateiliste ist weiterhin kein kryptographisches PASS.
+
+Arbeitsplatzwechsel: DPAPI ist benutzer-/rechnergebunden. Die Existenz eines
+GPG-Ordners allein beweist keinen nutzbaren privaten Schluessel. Kein Kopieren
+privater Keydateien in Repository/Chat oder blinder Austausch der DPAPI-Ablage.
+Manuels bestehende Login-Entscheidung bleibt gueltig und wird nicht erneut
+abgefragt. Neue Daten-/Sicherheitsfreigaben sind aus dem Backupaufschub nicht
+abzuleiten. Die Diagnosekorrektur bleibt lokal; kein neuer Commit/Push/Deploy.
+
+Im ersten02.11 Diagnoseblock gezielt verifiziert:26 Window-/Custody-Tests PASS,
+einschliesslich Teilzustandserkennung ohne Keyinhalt/GPG/Passwortdialog und
+zulassungslistenbasierter Fehlerausgabe. Dokumentlinks/Archivintegritaet und
+Diffpruefung PASS. Damals kein neuer Vollsuite-, nativer Staging- oder Restorelauf;
+der nachfolgende lokale Wiederaufnahmeblock hat eigene Evidenz unten.
+
+## Lokal vorbereitete Wiederaufnahme
+
+Manuel bestaetigt am02.11 ausdruecklich: zunaechst **ohne Stick weiterarbeiten**.
+Deshalb wird auch der neue Wiederaufnahmeweg nicht auf echten Dateien ausgefuehrt.
+Backup-/Admin-/Importfenster bleiben zurueckgestellt; es gibt keinen Ersatz-
+Schluessel, keine neue Schluesselerzeugung und keinen Backup-Bypass.
+
+Der Initializer hat jetzt einen getrennten ausdruecklichen Modus
+`-ResumeExisting` / `Complete-StagingOperatorConfig` fuer eine spaetere private
+Bedienung. Er verlangt vorhandene geschuetzte DPAPI- und verschluesselte Dateien,
+verweigert bestehende Metadaten oder einen vorherigen Account-Anlageversuch und
+benutzt dieselbe typ-/versionsstrenge Payloadpruefung wie der normale Loader.
+Nur beim spaeteren manuellen Lauf werden die vorhandenen Schluessel im lokalen
+Prozess geladen; GPG-Pinentry vergleicht die vorhandene portable Kopie bytegenau
+im Speicher. Keine neue Verschluesselung, kein Export, kein Plattformwechsel-
+Fallback. Dateihashes/ACLs werden vor und nach der Pruefung kontrolliert.
+
+Erst nach Erfolg wird ausschliesslich ein neuer nicht geheimer Verifikations-
+Datensatz atomar und ohne Ueberschreiben veroeffentlicht. Abbruch, falscher
+Benutzer/Rechner, unpassende Kopie oder geaenderte Dateien erzeugen kein READY;
+die bestehenden beiden Keydateien bleiben erhalten. Das ist nur Key-Custody,
+kein DB-Backup, Restore-Nachweis, Admin-Konto oder betriebsbereiter Backenddienst.
+Echte Pinentry-/Key-/Stick-Pruefung bleibt ein manuelles offenes Gate. Noch
+keinen Ausfuehrungsbefehl fuer diesen Rechner schicken oder automatisch starten.
+
+Fuer die neue Funktion werden ausschliesslich frisch erzeugte synthetische
+DPAPI-Dateien mit einem GPG-Testersatz verwendet. Ein unabhaengiger begrenzter
+Code-Review findet keine wesentlichen Sicherheits-/Korrektheitsbefunde; er
+oeffnet keine privaten Artefakte und ersetzt keine echte GPG-Abnahme. Die
+Aenderungen bleiben lokal, ohne neuen Commit/Push oder Deployment.
+
+Tatsaechliche neue Verifikation02.11: **1097 PASS,29 erwartete Opt-in-Skips** in
+der vollstaendigen lokalen Suite;14 neue Wiederaufnahme-/Payloadfaelle umfassen
+Erfolg, abgebrochenen Dialog, unpassende Kopie, DPAPI-Verweigerung, geaenderte
+Dateien, vorherigen Anlageversuch, fehlende Bestaetigung, Metadatenkollision und
+ungueltige Schluesselformate/-versionen. Synthetischer Erfolg wird auch vom
+vorhandenen Loader akzeptiert; Originaldateihashes bleiben unveraendert.
+Keine echte GPG-/Stick-/Staging-Abnahme oder neue Restoreprobe daraus ableiten.
+Keine neuen Eingaben fuer Manuel, solange ohne Stick weitergearbeitet wird.
+
 ## Freigabe und Grenzen
 
 Manuel ist ausdruecklich als genau ein aktiver Staging-Admin genehmigt. Die
@@ -143,6 +226,9 @@ Recovery-Radios werden ausdruecklich als Radios statt mehrdeutiger Labels gesuch
 
 ## Einmalige Bedienung
 
+Die nachfolgende Bedienung ist bis zu Manuels manuellem Wiederaufnahmesignal
+zurueckgestellt; zuerst den Teilzustand im vorstehenden Abschnitt klaeren.
+
 Nur **ein Terminal A**, Repositorywurzel, PowerShell7 ueber `pwsh -NoProfile`.
 Das [Fensterskript](../../apps/webapp/scripts/run-staging-admin-window.ps1)
 bleibt ohne `-Execute` schreibfrei und startet nichts.
@@ -160,10 +246,12 @@ Bei STOP nichts blind wiederholen, keine Konten loeschen, keine Keys ersetzen.
 
 ## Einziger Naechster Block
 
-Das gepruefte, gepushte private Adminfenster ausfuehren. Inputs: genehmigter
-Login, lokale Key-Custody und Passwortabfragen; Deliverable: aktueller echter
-Backup-/Restorebeleg und genau ein nutzbarer Staging-Admin. DoD: alle nativen
-Auth-/Recovery-/RBAC-/Bereinigungs-/Dienstpruefungen tatsaechlich bestanden.
+Nach Manuels manuellem Signal geschuetzt wiederaufnehmen. Inputs: geeigneter
+Arbeitsplatz/privater Keyzugriff, genehmigter Login, vorhandener unveraenderter
+Teilzustand und gepruefter gepushter Quellstand. Deliverable: nachvollziehbar
+verifizierte Key-Custody, aktueller echter Backup-/Restorebeleg und genau ein
+nutzbarer Staging-Admin. DoD: alle nativen Auth-/Recovery-/RBAC-/Bereinigungs-/
+Dienstpruefungen tatsaechlich bestanden, kein Backup-Bypass oder Key-Neuanlegen.
 Erst danach reale Importbereitschaft neu bewerten. MATCH_ONLY-Themen bleiben
 streng: ein weiterhin leerer Themenkatalog braucht eine eigene Bootstrap-
 Entscheidung, nicht erfundene UUIDs oder still erzeugte Themen. Kein echter

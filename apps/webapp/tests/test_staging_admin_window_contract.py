@@ -89,6 +89,8 @@ def test_window_has_fixed_scope_secret_and_source_contracts():
         "--pinentry-mode loopback",
         "systemctl restart",
         "systemctl stop",
+        "SkipBackup",
+        "BypassBackup",
         "ALTER ROLE",
         "CREATE USER",
         "--pull always",
@@ -448,3 +450,46 @@ foreach ($name in @('DEBUG','DEBUG_FILE','DEBUGP','PWDEBUG','PLAYWRIGHT_DRIVER_P
 }
 """,
     )
+
+
+def test_partial_custody_is_reported_without_reading_or_replacing_any_keys(powershell, tmp_path):
+    run_private(powershell, tmp_path, r"""
+function Get-Content { throw 'Key contents must not be opened' }
+function Import-Clixml { throw 'Existing keys must not be imported' }
+function Invoke-StagingGpg { throw 'GPG must not be started' }
+function Read-Host { throw 'No password prompts in presence check' }
+$directory = Join-Path $env:WINDOW_TEST_ROOT 'synthetic-partial'
+Assert-WindowCustodyComplete $directory
+$null = New-Item -ItemType Directory -Path $directory
+foreach ($name in @('staging-operator.keys.clixml','staging-operator.keys.json.gpg')) {
+    [IO.File]::WriteAllText((Join-Path $directory $name), 'SYNTHETIC_PRESERVE_EXISTING_BYTES')
+}
+$rejected = $false
+try { Assert-WindowCustodyComplete $directory }
+catch { $rejected = $_.Exception.Message -ceq 'CUSTODY_INCOMPLETE_REQUIRES_PRIVATE_RECONCILIATION' }
+if (-not $rejected -or @(Get-ChildItem -LiteralPath $directory).Count -ne 2) { throw 'Partial set accepted or modified' }
+foreach ($file in Get-ChildItem -LiteralPath $directory) {
+    if ([IO.File]::ReadAllText($file.FullName) -cne 'SYNTHETIC_PRESERVE_EXISTING_BYTES') { throw 'Existing file changed' }
+}
+# Presence is not cryptographic verification: no file content is consulted here.
+[IO.File]::WriteAllText((Join-Path $directory 'staging-operator.metadata.json'), 'SYNTHETIC_NOT_A_VALID_PROOF')
+Assert-WindowCustodyComplete $directory
+""")
+
+
+def test_stop_diagnostics_emit_only_exact_allowlisted_codes(powershell, tmp_path):
+    run_private(powershell, tmp_path, r"""
+$code = 'CUSTODY_INCOMPLETE_REQUIRES_PRIVATE_RECONCILIATION'
+if ((Get-WindowStopCode $code) -cne $code) { throw 'Known reason hidden' }
+foreach ($message in @('SYNTHETIC_SECRET_MUST_NOT_LEAK', ('prefix ' + $code), $code.ToLowerInvariant())) {
+    if ((Get-WindowStopCode $message) -cne 'PRIVATE_MANUAL_REVIEW_REQUIRED') { throw 'Untrusted error text escaped' }
+}
+""")
+
+
+def test_partial_custody_guard_precedes_any_key_initialization_or_server_activity():
+    source = SCRIPT.read_text(encoding="ascii")
+    body = source.split("function Invoke-StagingAdminWindow", 1)[1]
+    assert body.index("Assert-WindowCustodyComplete $custody") < body.index("New-StagingPrivateDirectory $output")
+    assert body.index("Assert-WindowCustodyComplete $custody") < body.index("Initialize-StagingOperatorConfig")
+    assert body.index("Assert-WindowCustodyComplete $custody") < body.index("Get-WindowHealth $ssh")

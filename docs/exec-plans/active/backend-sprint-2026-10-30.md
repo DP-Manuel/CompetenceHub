@@ -1,6 +1,7 @@
 # Backend Sprint Addendum 30.10
 
-Status: LOCAL PREPARATION VERIFIED. One consolidated private operator action pending.
+Status: LOCAL PREPARATION VERIFIED; actual02.11 attempts stopped before server/DB.
+Manual backup/operator resumption is deferred until Manuel signals readiness.
 
 Authority: Manuel is now the named real Staging Admin/Operator, admin only.
 This supersedes the missing-operator decision, not the previous real-APPLY
@@ -21,9 +22,12 @@ Only newly authorized source directory: `Quellen/20261030`.
    owned PostgreSQL/native Edge8 PASS and actual SQL restore orchestration1 PASS
    with deliberately fake GPG. Independent security findings fixed and reviewed;
    source packaging explicitly approved. No real encryption/console/Admin claim.
-6. Prepared, NOT EXECUTED: one consolidated MANUEL ACTION REQUIRED for the chosen login ID,
-   hidden authentication, MFA/recovery custody and the prepared operator window.
-   No real write before current backup/restore gates; real APPLY stays disabled.
+6.02.11 attempts STOP at local_readiness; NOT_ATTEMPTED account state, partial
+   custody files preserved and verification record absent. Manuel defers this
+   backup window (different workstation/no stick) until his manual signal. No
+   real write before current backup/restore gates; real APPLY stays disabled.
+   Latest reply confirms work without stick: explicit local ResumeExisting
+   prepared/tested, no execution on real custody. No regeneration/backup bypass.
 7. Complete: evidence/checkpoint/horizon and reusable workflow feedback reconciled;
    next block is only the private Admin/backup/restore window, not real import.
 
@@ -39,6 +43,11 @@ is verified against the canonical remote by the operator window, never guessed.
 Canonical [operator verification and instructions](../../operations/staging-admin-bootstrap-2026-10-30.md)
 own scope, tools and pending real gates. Runtime diagnostics (including Playwright
 protocol logging) are rejected before secrets; private source details are not in Git.
+
+02.11 local continuation:1097 PASS/29 opt-in skips, including14 new existing-
+custody/payload cases; independent bounded security review without material
+findings. Actual pinentry/key access remains manual. No real secret-file read,
+backup/Admin/DB action or new commit/push/deployment by this continuation.
 
 Canonical import/source/operations evidence stays in the existing
 [COACH-3 migration plan](../../architecture/coach3-existing-content-migration-plan-2026-10-23.md).

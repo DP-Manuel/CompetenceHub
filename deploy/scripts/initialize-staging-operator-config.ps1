@@ -15,6 +15,7 @@ param(
     [string]$AllowedOrigin,
     [string]$GpgHome = (Join-Path $env:LOCALAPPDATA 'CompetenceHub/backup-gnupg'),
     [string]$GpgExecutable = 'gpg.exe',
+    [switch]$ResumeExisting,
     [switch]$AcknowledgeProtectedStorage,
     [switch]$AcknowledgeOperatorCustody
 )
@@ -274,6 +275,129 @@ function Initialize-StagingOperatorConfig {
     }
 }
 
+function Assert-StagingOperatorPayload {
+    param($Payload, $Versions)
+    if ($Payload -isnot [Collections.IDictionary] -or
+        (@(Compare-Object @($Payload.Keys) @('schema','environment','variables') -CaseSensitive)).Count -or
+        ($Payload.schema -isnot [int] -and $Payload.schema -isnot [long]) -or
+        $Payload.schema -ne 1 -or $Payload.environment -cne 'staging' -or
+        $Payload.variables -isnot [Collections.IDictionary] -or
+        $Versions -isnot [Collections.IDictionary]) { throw 'Unexpected secret payload schema.' }
+    $expected = @('COMPETENCE_HUB_RATE_LIMIT_HMAC_KEY', 'COMPETENCE_HUB_IDEMPOTENCY_HMAC_KEY')
+    foreach ($stem in @('TOTP', 'OUTBOX', 'RECOVERY_HMAC')) {
+        $expected += "COMPETENCE_HUB_${stem}_KEYRING", "COMPETENCE_HUB_${stem}_ACTIVE_KEY_VERSION"
+    }
+    $variables = $Payload.variables
+    if ((@(Compare-Object @($variables.Keys) $expected -CaseSensitive)).Count) { throw 'Unexpected secret payload schema.' }
+    $unique = [Collections.Generic.HashSet[string]]::new()
+    foreach ($name in @('COMPETENCE_HUB_RATE_LIMIT_HMAC_KEY', 'COMPETENCE_HUB_IDEMPOTENCY_HMAC_KEY')) {
+        $decoded = [Convert]::FromBase64String($variables[$name])
+        try { if ($decoded.Length -ne 32 -or -not $unique.Add($variables[$name])) { throw 'Invalid distinct-key contract.' } }
+        finally { [Array]::Clear($decoded, 0, $decoded.Length) }
+    }
+    foreach ($purpose in @('totp', 'outbox', 'recovery')) {
+        $stem = @{totp = 'TOTP'; outbox = 'OUTBOX'; recovery = 'RECOVERY_HMAC'}[$purpose]
+        $version = $script:OperatorKeyVersions[$purpose]
+        $ring = $variables["COMPETENCE_HUB_${stem}_KEYRING"] | ConvertFrom-Json -AsHashtable -ErrorAction Stop
+        if ($ring -isnot [Collections.IDictionary] -or $ring.Count -ne 1 -or
+            @($ring.Keys)[0] -cne $version -or $Versions[$purpose] -cne $version -or
+            $variables["COMPETENCE_HUB_${stem}_ACTIVE_KEY_VERSION"] -cne $version) { throw 'Invalid key-version contract.' }
+        $decoded = [Convert]::FromBase64String($ring[$version])
+        try { if ($decoded.Length -ne 32 -or -not $unique.Add($ring[$version])) { throw 'Invalid distinct-key contract.' } }
+        finally { [Array]::Clear($decoded, 0, $decoded.Length) }
+    }
+}
+
+function Complete-StagingOperatorConfig {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$StorageDirectory,
+        [Parameter(Mandatory)][string]$FingerprintPath,
+        [string]$ExpectedCorpusSha256 = '80329796cebfd72be3dd68e8114ed91140f18d0ff60a98fe0123549dfcb8a8da',
+        [Parameter(Mandatory)][string]$AllowedOrigin,
+        [Parameter(Mandatory)][string]$GpgHome,
+        [string]$GpgExecutable = 'gpg.exe',
+        [switch]$AcknowledgeProtectedStorage,
+        [switch]$AcknowledgeOperatorCustody
+    )
+    $ErrorActionPreference = 'Stop'
+    if (-not $IsWindows -or -not $AcknowledgeProtectedStorage -or -not $AcknowledgeOperatorCustody) { throw 'Private Windows operator acknowledgments required.' }
+    foreach ($name in [Environment]::GetEnvironmentVariables('Process').Keys) {
+        if ($name -match '^(DEBUG|PWDEBUG|PW_|PLAYWRIGHT_|NODE_)') { throw 'Private diagnostic environment required.' }
+    }
+    Assert-StagingOrigin $AllowedOrigin
+    $directory = Assert-StagingExternalPath $StorageDirectory
+    Assert-StagingPrivateAcl $directory -Directory
+    $store = Join-Path $directory $script:OperatorStoreName
+    $backup = Join-Path $directory $script:OperatorBackupName
+    $metadata = Join-Path $directory $script:OperatorMetadataName
+    if (Test-Path -LiteralPath $metadata) { throw 'Existing metadata must not be replaced.' }
+    if (Test-Path -LiteralPath (Join-Path $directory 'bootstrap-attempt.json')) { throw 'Prior account attempt requires separate reconciliation.' }
+    foreach ($file in @($store,$backup)) {
+        Assert-StagingPrivateAcl $file
+        if (-not [IO.File]::Exists($file) -or (Get-Item -LiteralPath $file).Length -eq 0) { throw 'Existing complete key files required; no recreation.' }
+    }
+    $corpus = Assert-StagingCorpus $FingerprintPath $ExpectedCorpusSha256
+    $keyDirectory = Assert-StagingExternalPath $GpgHome
+    if (-not [IO.Directory]::Exists($keyDirectory) -or $directory -eq $keyDirectory -or
+        $keyDirectory.StartsWith($directory + '\', [StringComparison]::OrdinalIgnoreCase) -or
+        $directory.StartsWith($keyDirectory + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'Separate existing GPG home required.' }
+    $executable = Assert-StagingExternalPath (Get-Command $GpgExecutable -CommandType Application -ErrorAction Stop).Source
+    $storeHash = (Get-FileHash -LiteralPath $store -Algorithm SHA256).Hash.ToLowerInvariant()
+    $backupHash = (Get-FileHash -LiteralPath $backup -Algorithm SHA256).Hash.ToLowerInvariant()
+    $pending = Join-Path $directory ('.metadata-' + [Guid]::NewGuid().ToString('N') + '.pending')
+    $pendingOwned = $false; $secret = $null; $plain = $null; $restored = $null; $verification = $null
+    $bstr = [IntPtr]::Zero; $text = $null; $payload = $null
+    try {
+        # Operator-only execution: existing DPAPI and GPG material never leaves
+        # this private process. No generation, encryption, export or fallback.
+        $secret = Import-Clixml -LiteralPath $store -ErrorAction Stop
+        if ($secret -isnot [Security.SecureString]) { throw 'Existing DPAPI SecureString required.' }
+        $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
+        $text = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
+        $plain = [Text.Encoding]::UTF8.GetBytes($text)
+        $payload = $text | ConvertFrom-Json -AsHashtable -ErrorAction Stop
+        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr); $bstr = [IntPtr]::Zero; $text = $null
+        Assert-StagingOperatorPayload $payload $script:OperatorKeyVersions
+        $verification = [IO.MemoryStream]::new()
+        Invoke-StagingGpg -Executable $executable -KeyHome $keyDirectory -Mode Decrypt -EncryptedPath $backup -OutputStream $verification
+        $restored = $verification.ToArray()
+        if (-not [Security.Cryptography.CryptographicOperations]::FixedTimeEquals($plain, $restored)) { throw 'Existing portable key backup does not match.' }
+        $null = Assert-StagingCorpus $corpus $ExpectedCorpusSha256
+        Assert-StagingPrivateAcl $directory -Directory
+        foreach ($file in @($store,$backup)) { Assert-StagingPrivateAcl $file }
+        if ((Get-FileHash -LiteralPath $store -Algorithm SHA256).Hash.ToLowerInvariant() -cne $storeHash -or
+            (Get-FileHash -LiteralPath $backup -Algorithm SHA256).Hash.ToLowerInvariant() -cne $backupHash) { throw 'Existing key files changed during verification.' }
+        $record = [ordered]@{
+            schema=1; status='READY'; environment='staging'; created_at=[DateTime]::UtcNow.ToString('o')
+            source='CompetenceHub staging operator existing-custody completion v1'
+            corpus_path=$corpus; corpus_sha256=$ExpectedCorpusSha256
+            corpus_provenance_path=(Join-Path ([IO.Path]::GetDirectoryName($corpus)) 'corpus-provenance.json')
+            allowed_origin=$AllowedOrigin; key_versions=$script:OperatorKeyVersions
+            recipient=$script:OperatorRecipient; portable_backup_verified=$true
+            store_sha256=$storeHash; backup_sha256=$backupHash
+        }
+        $data = [Text.Encoding]::UTF8.GetBytes(($record | ConvertTo-Json -Depth 5))
+        $stream = [IO.File]::Open($pending, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
+        $pendingOwned = $true
+        try { $stream.Write($data,0,$data.Length); $stream.Flush($true) } finally { $stream.Dispose() }
+        Assert-StagingPrivateAcl $pending
+        [IO.File]::Move($pending,$metadata,$false)
+        $pendingOwned = $false
+        return [pscustomobject]@{status='READY'; existing_keys_preserved=$true; metadata_path=$metadata; account_created=$false; database_access='NONE'}
+    } catch {
+        throw 'Private custody completion failed. Existing files retained; no regeneration or automatic retry.'
+    } finally {
+        if ($pendingOwned) { [IO.File]::Delete($pending) }
+        if ($verification) { [Array]::Clear($verification.GetBuffer(),0,[int]$verification.Length); $verification.Dispose() }
+        if ($plain) { [Array]::Clear($plain,0,$plain.Length) }
+        if ($restored) { [Array]::Clear($restored,0,$restored.Length) }
+        if ($bstr -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr) }
+        if ($secret -is [Security.SecureString]) { $secret.Dispose() }
+        $text=$null; $payload=$null
+    }
+}
+
 function Use-StagingOperatorEnvironment {
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$StorageDirectory,
@@ -302,31 +426,8 @@ function Use-StagingOperatorEnvironment {
         $text = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
         $payload = $text | ConvertFrom-Json -AsHashtable -ErrorAction Stop
         [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr); $bstr = [IntPtr]::Zero; $text = $null
-        $expected = @('COMPETENCE_HUB_RATE_LIMIT_HMAC_KEY', 'COMPETENCE_HUB_IDEMPOTENCY_HMAC_KEY')
-        foreach ($stem in @('TOTP', 'OUTBOX', 'RECOVERY_HMAC')) {
-            $expected += "COMPETENCE_HUB_${stem}_KEYRING", "COMPETENCE_HUB_${stem}_ACTIVE_KEY_VERSION"
-        }
-        if ($payload.schema -ne 1 -or $payload.environment -cne 'staging' -or
-            $payload.variables -isnot [Collections.IDictionary] -or
-            (@(Compare-Object @($payload.variables.Keys) $expected)).Count) { throw 'Unexpected secret payload schema.' }
+        Assert-StagingOperatorPayload $payload $record.key_versions
         $variables = $payload.variables
-        $unique = [Collections.Generic.HashSet[string]]::new()
-        foreach ($name in @('COMPETENCE_HUB_RATE_LIMIT_HMAC_KEY', 'COMPETENCE_HUB_IDEMPOTENCY_HMAC_KEY')) {
-            $decoded = [Convert]::FromBase64String($variables[$name])
-            try { if ($decoded.Length -ne 32 -or -not $unique.Add($variables[$name])) { throw 'Invalid distinct-key contract.' } }
-            finally { [Array]::Clear($decoded, 0, $decoded.Length) }
-        }
-        foreach ($purpose in @('totp', 'outbox', 'recovery')) {
-            $stem = @{totp = 'TOTP'; outbox = 'OUTBOX'; recovery = 'RECOVERY_HMAC'}[$purpose]
-            $version = $script:OperatorKeyVersions[$purpose]
-            $ring = $variables["COMPETENCE_HUB_${stem}_KEYRING"] | ConvertFrom-Json -AsHashtable -ErrorAction Stop
-            if ($ring.Count -ne 1 -or -not $ring.ContainsKey($version) -or
-                $record.key_versions[$purpose] -cne $version -or
-                $variables["COMPETENCE_HUB_${stem}_ACTIVE_KEY_VERSION"] -cne $version) { throw 'Invalid key-version contract.' }
-            $decoded = [Convert]::FromBase64String($ring[$version])
-            try { if ($decoded.Length -ne 32 -or -not $unique.Add($ring[$version])) { throw 'Invalid distinct-key contract.' } }
-            finally { [Array]::Clear($decoded, 0, $decoded.Length) }
-        }
         $variables['COMPETENCE_HUB_ALLOWED_ORIGIN'] = $record.allowed_origin
         $variables['COMPETENCE_HUB_COMPROMISED_PASSWORD_FINGERPRINTS_PATH'] = $corpus
         foreach ($name in $variables.Keys) {
@@ -352,7 +453,8 @@ function Use-StagingOperatorEnvironment {
 }
 
 if ($MyInvocation.InvocationName -ne '.') {
-    Initialize-StagingOperatorConfig -StorageDirectory $StorageDirectory -FingerprintPath $FingerprintPath `
+    $operation = if ($ResumeExisting) { 'Complete-StagingOperatorConfig' } else { 'Initialize-StagingOperatorConfig' }
+    & $operation -StorageDirectory $StorageDirectory -FingerprintPath $FingerprintPath `
         -ExpectedCorpusSha256 $ExpectedCorpusSha256 -AllowedOrigin $AllowedOrigin -GpgHome $GpgHome `
         -GpgExecutable $GpgExecutable -AcknowledgeProtectedStorage:$AcknowledgeProtectedStorage `
         -AcknowledgeOperatorCustody:$AcknowledgeOperatorCustody

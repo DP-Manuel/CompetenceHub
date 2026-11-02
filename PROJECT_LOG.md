@@ -3,6 +3,18 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-02 | without-stick continuation / local custody-resume preparation
+
+- Manuel explicitly chooses continued work without the stick; manual backup/real-write hold stays unchanged. Existing-custody completion is prepared as a separate explicit local mode, not run on real files. Same DPAPI/GPG pair must match in private memory; no new keys, ciphertext replacement, DB access or automatic recovery. Only new verification metadata may be published atomically after success.
+- Shared strict payload validation is reused by normal loader and completion. Real Windows DPAPI is tested only on fresh synthetic material with fake GPG.14 new cases; full1097 PASS/29 opt-in skips. Bounded independent review has no material findings; actual private key/pinentry and native operator result remain unverified.
+- [Canonical preparation/limits](docs/operations/staging-admin-bootstrap-2026-10-30.md#lokal-vorbereitete-wiederaufnahme). Current changes remain local, no commit/push/deployment, no customer/Coach/account/migration writes. Future protected resumption needs appropriate key access and manual signal; prior keys and original approvals remain intact.
+
+## 2026-11-02 | local operator STOP / manual deferral
+
+- Two sanitized receipts stop at local_readiness with account creation NOT_ATTEMPTED and no remote/tunnel work. Existence-only checks find partial local custody files but no verification record/attempt marker. Secret/private-key contents not opened; no new server query/write, backup or role change.
+- Manuel reports a different workstation/no backup-stick access and explicitly defers this backup window until his manual signal. Dependent first-real-Admin/import gates remain pending; no backup bypass, automatic retry, file deletion or key regeneration. Existing scheduled backup jobs unchanged.
+- Local diagnostic correction detects incomplete custody before GPG/server actions and emits only fixed allowlisted reasons.26 focused Window/Custody tests PASS; links/integrity/diff checked, no full/native rerun. Original pinentry interruption cause remains unknown; fresh attempts must reconcile preserved files, not blindly reopen/reinitialize. [Canonical evidence/hold](docs/operations/staging-admin-bootstrap-2026-10-30.md#bedienentscheidung-und-stop-am-02112026). No new commit/push/deployment.
+
 ## 2026-10-30 | backend sprint / local preparation verified | Named Admin And Source Annex
 
 - Later addendum approves exactly one named admin-only Staging operator and new secure configuration preparation; green local preparation including prior Phase A may be committed/pushed. Chosen login stays in private operator input. No additional business roles/Coach/Calendar mapping, migration/import or deployment.

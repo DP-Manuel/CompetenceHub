@@ -1,6 +1,6 @@
 # Competence Hub Current Context
 
-Updated: 2026-10-30.
+Updated: 2026-11-02.
 
 ## Current Milestone
 
@@ -8,7 +8,7 @@ Post-Messe product consolidation is complete for the authorized scope: Context V
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
 The additive Calendar/native runtime, local security/Linux and synthetic COACH-1/2/3A/3C gates remain complete.
 30.10 backend sprint addendum names Manuel as the single authorized Staging Admin/Operator, admin only; earlier missing-operator STOP is superseded for this bootstrap, not real-APPLY safety.
-Elisabeth's newly authorized13-page concept is reconciled locally: existing short scope unchanged, conflicting details held privately. Secure Admin/backup/restore operator preparation is locally verified; the private human window remains unexecuted. No real DB write or import yet.
+Elisabeth's newly authorized13-page concept is reconciled locally: existing short scope unchanged, conflicting details held privately.02.11 operator attempts stopped at local key-custody readiness before backup/tunnel/Admin creation. Partial local key files are preserved, verification metadata is absent. Manuel reports a different workstation/no backup-stick access and explicitly defers this backup window until his manual signal. Dependent real Admin/import work waits too; no protection bypass, key regeneration or real DB write.
 [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md); [prior execution evidence](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-real-apply-vorbereitung-3010). App-domain/TLS inputs remain open independently.
 
 First real coaching engagement scheduled for19.11.2026. Business milestone only:
@@ -41,6 +41,8 @@ Manuel's own Coach profile is a later post-migration onboarding case.
 - [COACH-3B review closure](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-reviewabschluss-2910): immutable canonical/documentary input binding, all9 mappings READY,3 Gülcan families/5 additional short formats, independent environment rights and unknown original dates. Read-only live Preview comparison confirms9 profiles/30 qualification labels/25 baseline titles/8 asset hashes/22 topic links. Logical evidence candidates require real revision/topic-hash rebinding only inside the separately approved execution window; no real UUIDs allocated.
 - [30.10 Phase A candidate](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-real-apply-vorbereitung-3010): immutable private manifest and guarded separate operator candidate; original synthetic guard unchanged. Current SSH host/services/PG-loopback checks PASS; sudo metadata read refused noninteractive credentials, so DB baseline/backup/restore/native Admin remain unproven. Missing existing Admin is user-confirmed, not inferred from old cleanup counts. No password request or server writes.
 - Later30.10 [source reconciliation](docs/architecture/elisabeth-source-reconciliation-2026-10-30.md) and [Admin operator preparation](docs/operations/staging-admin-bootstrap-2026-10-30.md): private additive source annex preserves frozen nine-Coach short scope; durable DPAPI/GPG setup, current exact-copy prechange restore gate and guarded one-console bootstrap prepared. Actual owned PG/Edge and fake-GPG restore orchestration verified separately from real operation. Independent security findings fixed; no real keys/account/migration/import/deployment. The actual manual result, not local fixture success, closes the Admin gate.
+- [02.11 local STOP and manual deferral](docs/operations/staging-admin-bootstrap-2026-10-30.md#bedienentscheidung-und-stop-am-02112026): two sanitized local receipts say local_readiness/NOT_ATTEMPTED, no remote/tunnel cleanup needed. Existing DPAPI/encrypted key files but no verification record; only existence/status metadata inspected. Local diagnostic fix reports a fixed partial-custody code without exposing error details or reopening secret prompts. No new commit/push or server action for this repair.
+- Latest02.11 reply explicitly continues without the stick. [Local resume preparation](docs/operations/staging-admin-bootstrap-2026-10-30.md#lokal-vorbereitete-wiederaufnahme) verifies the preserved pair only in a future private manual action and atomically adds metadata without key generation/replacement. Shared strict validation, synthetic DPAPI/fake-GPG regressions and bounded independent review; no real key access, backup, account or deployment. Manual backup hold remains in force.
 - [Susanne source/Preview evidence](docs/content/susanne-klemm-preview-2026-10-23.md): only the authorized Coach07 directory read; profile/both portraits explicitly approved for public Preview. Actual390px/native200%-zoom, taxonomy, links and52-file production isolation verified.
 - [Context audit](docs/architecture/context-migration-audit-2026-10-21.md): hash-preserved history, small read sets and cold-start PASS.
 
@@ -57,7 +59,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended next block: one consolidated private ADMIN OPERATOR window from the reviewed pushed preparation. Inputs: approved named login, durable key custody, exact current encrypted snapshot and isolated restore proof before first real write. Deliverable: one usable admin-only account plus native MFA/recovery/session/RBAC and protected UUID binding. Done only on actual checks, without Coach/Calendar mappings; then reassess the paused real-import window and actual taxonomy. [Operator instructions](docs/operations/staging-admin-bootstrap-2026-10-30.md), [active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md), [ordered horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
+1. Recommended next block, only after Manuel's manual signal and suitable workstation/key access: reconcile existing partial custody privately without regenerating keys, then resume the reviewed/pushed Admin window with exact current encrypted backup/restore before first real write. Deliverable: verified key custody and one usable admin-only account with MFA/recovery/session/RBAC. DoD: actual proof and cleanup/health pass, no Coach/Calendar mappings or import. Do not repeat the old command against a dirty/different source. [Current instructions/hold](docs/operations/staging-admin-bootstrap-2026-10-30.md), [active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md), [ordered horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
 2. Resolve parallel operational inputs when available; do not silently expand the UI gate.
 3. Review [Analytics proposal and consent decision](docs/requirements/analytics-01-discovery-2026-10-21.md); architecture/retention remain proposals and consent is OPEN.
 4. Any later IONOS promotion needs its own bundled review and production approval.

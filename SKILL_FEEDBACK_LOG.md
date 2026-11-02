@@ -1,6 +1,6 @@
 # Skill Feedback Router
 
-Updated: 2026-10-30. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-02. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
@@ -35,6 +35,17 @@ Project-local implementation does not mean a canonical CodexSkills proposal is c
 | Real human bootstrap needs durable custody and outcome receipts |30.10: prepare persistent versioned keys, protected pending receipt and current exact-copy restore before enrollment/write; recheck after unbounded password prompts and enforce empty scope/deadline inside the DB transaction. Preserve uncertain commits, never blind retry. Human instructions must remain visible when a key loader suppresses stdout. Project implemented/tested locally; actual human window pending, global proposal open | [Admin operator preparation](docs/operations/staging-admin-bootstrap-2026-10-30.md) |
 | Actual subprocess/restore evidence beyond static script checks |30.10: real isolated PostgreSQL restore found unset LASTEXITCODE and temporary initdb readiness races; use explicit owned child exit codes and final-server readiness. Include SystemDrive in sanitized Windows child environments; synthetic GPG or positive table counts must never be reported as actual encryption/restore readiness. Project regression added; global proposal open | Restore supervisor, owned PG/Edge harness and operator contracts |
 | Detailed sources must not silently replace approved short scope |30.10: preserve prior17 offerings and bind a private additive source annex; distinguish concept/format/package references, optional intra-source conflicts and genuinely unsupported typed fields. New processing permission is not publication consent; no forced schema expansion or invented exact durations. Project evaluator/reconciliation implemented; global proposal open | [Elisabeth source reconciliation](docs/architecture/elisabeth-source-reconciliation-2026-10-30.md) |
+
+New open proposal02.11: after interrupted pinentry, distinguish metadata-only
+partial custody from verified configuration before prompting or contacting a
+server. Preserve existing keys, report a fixed safe reason and never equate
+"retry" with regeneration. Recheck workstation-bound prerequisites and honor
+manual backup deferral without bypassing dependent first-write gates. Project
+diagnostic regression added; canonical/global skill change remains open.
+Later02.11: explicit existing-custody completion prepared with synthetic proof;
+one shared payload validator, exact memory comparison and no-overwrite metadata
+publication. No automatic key regeneration or real secret execution. Full local
+suite1097/29 opt-in skips and bounded independent review; global proposal open.
 
 ## Implemented / Historical
 
