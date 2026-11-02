@@ -24,6 +24,12 @@ in parallel using the [security close-out](../../operations/cryptography-mainten
 
 ## Current Execution
 
+- Complete02.11 local-only COACH-4: public artifact/diff/parity, separate Preview/
+  Production, opt-in Astro comparison, blank normal onboarding and preserved-key
+  restart checklist. [Verification and residual gates](../completed/coach-4-local-readiness-2026-11-02.md).
+  No live Registry exporter, canonical Website switch, key/server operation or
+  publication. The next protected Admin block still waits for Manuel's signal.
+
 - Later30.10 backend addendum: all13 Elisabeth pages reconciled;17 old titles
   retained,8 optional detail conflicts and4 deferred new structural gaps. Frozen
   nine-Coach short import unchanged, no new public rights/migration. One named

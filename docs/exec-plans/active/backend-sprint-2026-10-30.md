@@ -2,6 +2,8 @@
 
 Status: LOCAL PREPARATION VERIFIED; actual02.11 attempts stopped before server/DB.
 Manual backup/operator resumption is deferred until Manuel signals readiness.
+Independent02.11 [COACH-4 local block](../completed/coach-4-local-readiness-2026-11-02.md)
+is complete; it does not close this real operating window or switch Website data.
 
 Authority: Manuel is now the named real Staging Admin/Operator, admin only.
 This supersedes the missing-operator decision, not the previous real-APPLY

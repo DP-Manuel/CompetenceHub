@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "document_type": "coach_onboarding_review_worksheet",
+  "directly_importable": false,
+  "identity": {
+    "intent": null,
+    "existing_coach_id": null,
+    "duplicate_check_reference": null
+  },
+  "review": {
+    "identity_authorization": "unknown",
+    "source_access_authorization": "unknown",
+    "source_reference": null,
+    "privacy_review": "unknown",
+    "content_scope_review": "unknown",
+    "taxonomy_review": "unknown",
+    "portrait_bytes_verified": "unknown",
+    "runtime_authorization": "unknown"
+  },
+  "submission": {
+    "coach_id": null,
+    "revision_id": null,
+    "expected_version": null,
+    "status": null
+  },
+  "profile": {
+    "display_name": null,
+    "academic_suffix": null,
+    "short_intro": null,
+    "description": null,
+    "professional_background": null,
+    "target_groups": [],
+    "profile_path": null,
+    "topic_ids": [],
+    "competencies": [],
+    "offerings": [],
+    "assets": [],
+    "target_version": 1,
+    "public_roles": [],
+    "qualifications": [],
+    "offering_families": [],
+    "presentation": null,
+    "boundaries": []
+  },
+  "topic_review": [],
+  "object_evidence": [],
+  "revision_approvals": {
+    "content_review": {
+      "status": "unknown",
+      "evidence_ref": null
+    },
+    "person_consent": {
+      "status": "unknown",
+      "evidence_ref": null
+    },
+    "preview": {
+      "status": "unknown",
+      "evidence_ref": null
+    },
+    "production": {
+      "status": "unknown",
+      "evidence_ref": null
+    }
+  },
+  "publication_review": {
+    "preview": {
+      "decision": "unknown",
+      "publish_requested": false,
+      "release_approved": false
+    },
+    "production": {
+      "decision": "unknown",
+      "publish_requested": false,
+      "release_approved": false
+    }
+  },
+  "item_templates": {
+    "topic_review": {
+      "canonical_topic_id": null,
+      "canonical_label": null,
+      "categories": [],
+      "review_reference": null
+    },
+    "public_role": {
+      "key": null,
+      "code": null,
+      "display_label": null,
+      "ordering": null
+    },
+    "qualification": {
+      "key": null,
+      "canonical_title": null,
+      "public_display_label": null,
+      "issuer": null,
+      "qualification_type": null,
+      "ordering": null,
+      "public": false,
+      "status": null,
+      "verification_state": "unknown",
+      "evidence_reference": null,
+      "internal_note": null
+    },
+    "offering_family": {
+      "key": null,
+      "title": null,
+      "description": null,
+      "ordering": null,
+      "active": null,
+      "target_groups": [],
+      "target_focus": [],
+      "service_domains": [],
+      "boundaries": [],
+      "variants": [],
+      "protected_source_reference": null
+    },
+    "offering": {
+      "title": null,
+      "type": null,
+      "description": null,
+      "active": null,
+      "ordering": null,
+      "key": null,
+      "family_key": null,
+      "service_domains": [],
+      "bookable": false,
+      "duration": null,
+      "delivery_mode": null,
+      "delivery_label": null,
+      "target_groups": [],
+      "target_focus": [],
+      "program_modules": [],
+      "boundaries": [],
+      "variants": [],
+      "protected_source_reference": null
+    },
+    "variant": {
+      "key": null,
+      "kind": null,
+      "title": null,
+      "description": null,
+      "ordering": null,
+      "active": null,
+      "duration": null
+    },
+    "duration": {
+      "clock_start": null,
+      "clock_end": null,
+      "minutes": null,
+      "weeks": null,
+      "sessions_per_week": null,
+      "session_minutes": null,
+      "label": null
+    },
+    "boundary": {
+      "key": null,
+      "text": null,
+      "excluded_services": []
+    },
+    "asset": {
+      "type": null,
+      "reference": null,
+      "sha256": null,
+      "alt_text": null,
+      "scopes": [],
+      "active": null
+    },
+    "presentation": {
+      "teaser": null,
+      "focus_labels": [],
+      "background_labels": [],
+      "languages": [],
+      "sections": [],
+      "topic_cards": [],
+      "quote": null,
+      "external_links": [],
+      "initials": null,
+      "portrait_width": null,
+      "portrait_height": null
+    },
+    "public_section": {
+      "key": null,
+      "kind": null,
+      "headings": [],
+      "paragraphs": []
+    },
+    "public_card": {
+      "title": null,
+      "text": null
+    },
+    "public_link": {
+      "key": null,
+      "label": null,
+      "preview_url": null,
+      "production_url": null
+    },
+    "object_evidence": {
+      "key": null,
+      "subject_type": null,
+      "subject_key": null,
+      "subject_hash": null,
+      "kind": null,
+      "environment": null,
+      "scope": null,
+      "status": "unknown",
+      "evidence_reference": null,
+      "approved_by": null,
+      "approved_at": null,
+      "approved_on": null,
+      "internal_note": null
+    }
+  }
+}

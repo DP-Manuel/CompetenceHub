@@ -12,6 +12,7 @@
 | Coach Registry / lifecycle | [COACH-1 contract](coach-registry-contract-v0.1.md), [ADR0008](../decisions/0008-coach-registry-and-static-publication.md) | Stable identity, local migration/API, scoped publication and static projection; no server activation |
 | Coach Admin management | [COACH-2 UI/acceptance](coach-admin-ui-contract-v0.1.md) | Local synthetic Admin UI, bounded reads/history, native Auth, lifecycle/publication and concurrency |
 | Existing Coach migration | [COACH-3 inventory/evidence](coach3-existing-content-migration-plan-2026-10-23.md), [Import contract](coach-import-contract-v0.1.md) | Typed identity/mapping, synthetic no-op/rollback proof, real lossless mapping decisions; no real import |
+| Static Coach publication | [COACH-4 projection contract](coach-public-projection-contract-v0.1.md) | Local allowlisted artifacts, independent Preview/Production, diff/parity and opt-in Astro comparison; no live export/deployment |
 | Elisabeth source reconciliation | [30.10 concept comparison](elisabeth-source-reconciliation-2026-10-30.md) | Frozen short scope retained, optional source conflicts and deferred detailed model fields; no publication/import |
 | Current Calendar acceptance | [22.10 access/batch report](calendar-cal1-access-batch-2026-10-22.md) | Local versus native evidence, one operator window and next gate |
 | Backend package security | [22.10 dependency assessment](webapp-dependency-assessment-2026-10-22.md) | Cryptography advisory/limited reachability; no automatic waiver or major upgrade |

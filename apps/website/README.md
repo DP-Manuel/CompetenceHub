@@ -2,6 +2,10 @@
 
 Astro workspace for the static public website MVP.
 
+COACH-4 adds only an opt-in local comparison build. Static defaults remain
+canonical. See the [projection/transition contract](../../docs/architecture/coach-public-projection-contract-v0.1.md)
+for public artifacts, environment rights, isolated output and later release gates.
+
 ## Current MVP Routes
 
 - `/` - homepage

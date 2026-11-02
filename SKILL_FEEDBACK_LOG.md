@@ -47,6 +47,21 @@ one shared payload validator, exact memory comparison and no-overwrite metadata
 publication. No automatic key regeneration or real secret execution. Full local
 suite1097/29 opt-in skips and bounded independent review; global proposal open.
 
+COACH-4 learning02.11 (open global proposal): use held real-operation windows to
+finish independently gated local pipelines, not bypass custody. Separate public
+visibility diff from private stable-identity/approval readiness; never infer an
+identity/consent event from a removed/added route. Prove deterministic public
+bytes, exact assets and frozen-review simulation separately from real DB parity.
+Validate every existing output ancestor before mkdir/write/empty and test native
+Windows junctions, not only mocked metadata. Actual Astro outside-CWD output
+copied intermediate cache files: keep comparison builds inside the Website CWD,
+reject leaked caches and bind screenshot/HTML/input hashes. Use existing JSON AST
+parser for decoded duplicate keys, not a second regex parser. Hostile literal
+mobile headings need glyph-level wrap/clipping tests. Full regression belongs
+after the final stable edit batch, with focused checks during development.
+Project implementation/evidence: [COACH-4](docs/exec-plans/completed/coach-4-local-readiness-2026-11-02.md).
+No global skill or ManuWiki change made.
+
 ## Implemented / Historical
 
 The archive's Implemented Feedback section preserves authoritative-clock-integration-tests and design-system-derivation.
