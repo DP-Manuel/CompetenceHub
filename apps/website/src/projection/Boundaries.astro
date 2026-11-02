@@ -1,0 +1,11 @@
+---
+import type { Boundary } from "./model";
+interface Props { items?: Boundary[] }
+const { items = [] } = Astro.props;
+---
+{items.length > 0 && <aside class="projection-boundaries" aria-label="Leistungsgrenzen" data-boundaries>
+  <h4>Leistungsgrenzen</h4>
+  <ul>{items.map((item) => <li>{item.text}
+    {item.excluded_services.length > 0 && <p>Ausgeschlossen: {item.excluded_services.join(", ")}</p>}
+  </li>)}</ul>
+</aside>}

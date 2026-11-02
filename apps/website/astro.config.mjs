@@ -2,8 +2,10 @@ import { defineConfig } from "astro/config";
 import { cp, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { websiteEnvironment } from "./config/environment.mjs";
+import { coachProjectionIntegration } from "./config/coach-projection.mjs";
 
 const environment = websiteEnvironment();
+const projection = coachProjectionIntegration(environment);
 const restoredSlugs = [
   "carolin-hupp", "elisabeth-schwabauer", "goran-celic",
   "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney",
@@ -13,7 +15,7 @@ const restoredSlugs = [
 export default defineConfig({
   site: environment.site,
   base: environment.base,
-  outDir: environment.outDir,
+  outDir: projection ? `./.tmp/coach4/site-${environment.mode}` : environment.outDir,
   vite: {
     envDir: false,
     define: {
@@ -26,7 +28,7 @@ export default defineConfig({
       )),
     } },
   },
-  integrations: environment.preview ? [{
+  integrations: [...(projection ? [projection] : []), ...(environment.preview ? [{
     name: "approved-preview-content",
     hooks: {
       "astro:config:setup": ({ injectRoute }) => {
@@ -43,5 +45,5 @@ export default defineConfig({
         await cp(new URL("./src/preview/portraits/", import.meta.url), target, { recursive: true });
       },
     },
-  }] : [],
+  }] : [])],
 });

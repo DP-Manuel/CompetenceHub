@@ -1,0 +1,62 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { coaches } from "virtual:coach-projection";
+import type { ProjectedCoach } from "./model";
+import Offering from "./Offering.astro";
+import Variants from "./Variants.astro";
+import Boundaries from "./Boundaries.astro";
+import { categoryLabels } from "../../config/coach-projection.mjs";
+import "../styles/global.css";
+import "./projection.css";
+export function getStaticPaths() {
+  return coaches.map((coach) => ({ params: { slug: coach.slug }, props: { coach } }));
+}
+interface Props { coach: ProjectedCoach }
+const { coach } = Astro.props;
+const p = coach.presentation;
+const url = (path: string) => `${import.meta.env.BASE_URL.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+---
+<BaseLayout title={`${coach.display_name} | Competence Hub`} description={coach.short_intro} noindex={true} canonical={false}>
+  <main class="subpage projection" data-projection-profile>
+    <a href={url("projected-coaches/")}>Alle Coach-Profile</a>
+    <header class="projection-profile-heading">
+      <div><p class="eyebrow">Competence Hub</p><h1>{coach.display_name}{coach.academic_suffix && `, ${coach.academic_suffix}`}</h1>
+        {(coach.roles?.length ?? 0) > 0 && <p data-roles>{coach.roles?.map((role) => role.label).join(" · ")}</p>}
+        <p class="projection-lead">{coach.short_intro}</p>{p?.teaser && <p>{p.teaser}</p>}
+      </div>
+      <div class="projection-portrait">{coach.assets[0]
+        ? <img src={url(coach.assets[0].reference)} alt={coach.assets[0].alt_text} width={p?.portrait_width ?? 400} height={p?.portrait_height ?? 500} />
+        : <span class="projection-monogram" role="img" aria-label={`Kein Porträt: ${coach.display_name}`}>{coach.initials}</span>}
+      </div>
+    </header>
+    {coach.description && <section><h2>Profil</h2><p>{coach.description}</p></section>}
+    {coach.topics.length > 0 && <section><h2>Themenschwerpunkte</h2><ul>{coach.topics.map((topic) => <li>{topic.name}
+      {topic.categories.length > 0 && ` · ${topic.categories.map((id) => categoryLabels[id as keyof typeof categoryLabels]).join(", ")}`}
+    </li>)}</ul></section>}
+    {(Boolean(coach.professional_background) || (p?.background_labels.length ?? 0) > 0) && <section><h2>Beruflicher Hintergrund</h2>
+      {coach.professional_background && <p>{coach.professional_background}</p>}
+      <ul>{p?.background_labels.map((label) => <li>{label}</li>)}</ul>
+    </section>}
+    {(coach.qualifications?.length ?? 0) > 0 && <section><h2>Qualifikationen</h2><ul data-qualifications>{coach.qualifications?.map((item) => <li>
+      <strong>{item.label}</strong>{item.issuer && <p>{item.issuer}</p>}{item.type && <p>{item.type}</p>}
+    </li>)}</ul></section>}
+    {[{ title: "Kompetenzen", items: coach.competencies }, { title: "Zielgruppen", items: coach.target_groups },
+      { title: "Fokus", items: p?.focus_labels ?? [] }, { title: "Sprachen", items: p?.languages ?? [] }].filter((group) => group.items.length).map((group) =>
+      <section><h2>{group.title}</h2><ul>{group.items.map((label) => <li>{label}</li>)}</ul></section>)}
+    {p?.sections.map((section) => <section data-public-section>
+      {section.headings.map((heading) => <h2>{heading}</h2>)}{section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </section>)}
+    {(p?.topic_cards.length ?? 0) > 0 && <section><h2>Fachliche Perspektiven</h2>{p?.topic_cards.map((card) => <div><h3>{card.title}</h3><p>{card.text}</p></div>)}</section>}
+    {p?.quote && <blockquote>{p.quote}</blockquote>}
+    <Boundaries items={coach.boundaries} />
+    {coach.offering_families?.map((family) => <section class="projection-family" data-family>
+      <h2>{family.title}</h2>{family.description && <p>{family.description}</p>}
+      <dl>{[{ title: "Zielgruppen", items: family.target_groups }, { title: "Schwerpunkte", items: family.target_focus }, { title: "Leistungsbereiche", items: family.service_domains }]
+        .filter((group) => group.items.length).map((group) => <><dt>{group.title}</dt><dd>{group.items.join(", ")}</dd></>)}</dl>
+      <Boundaries items={family.boundaries} /><Variants items={family.variants} />
+      {family.formats.map((item) => <Offering item={item} />)}
+    </section>)}
+    {coach.offerings.length > 0 && <section><h2>Weitere Angebote</h2>{coach.offerings.map((item) => <Offering item={item} />)}</section>}
+    {(p?.external_links.length ?? 0) > 0 && <section><h2>Weitere Informationen</h2><ul>{p?.external_links.map((link) => <li><a href={link.url} rel="noopener noreferrer">{link.label}</a></li>)}</ul></section>}
+  </main>
+</BaseLayout>

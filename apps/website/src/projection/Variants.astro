@@ -1,0 +1,13 @@
+---
+import type { Variant } from "./model";
+import { durationLabel } from "../../config/coach-projection.mjs";
+interface Props { items?: Variant[] }
+const { items = [] } = Astro.props;
+const labels = { variant: "Variante", option: "Option", add_on: "Erg\u00e4nzung" };
+---
+{items.length > 0 && <ul class="projection-variants" aria-label="Varianten und Optionen">
+  {items.map((item) => <li data-variant><strong>{labels[item.kind]}: {item.title}</strong>
+    {item.description && <p>{item.description}</p>}
+    {item.duration && <p>{durationLabel(item.duration)}</p>}
+  </li>)}
+</ul>}

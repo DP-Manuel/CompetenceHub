@@ -1,0 +1,24 @@
+---
+import type { Offering } from "./model";
+import Boundaries from "./Boundaries.astro";
+import Variants from "./Variants.astro";
+import { durationLabel } from "../../config/coach-projection.mjs";
+interface Props { item: Offering }
+const { item } = Astro.props;
+const types: Record<string, string> = { lecture: "Vortrag", workshop: "Workshop", coaching: "Coaching", individual: "Einzelformat", other: "Weiteres Format" };
+const delivery: Record<string, string> = { online: "Online", in_person: "Vor Ort", online_or_in_person: "Online oder vor Ort", hybrid: "Hybrid", live_unspecified: "Live" };
+---
+<article class="projection-offering" data-offering>
+  <p class="eyebrow">{types[item.type]}</p><h3>{item.title}</h3>
+  {item.description && <p>{item.description}</p>}
+  <dl>
+    {(item.service_domains?.length ?? 0) > 0 && <><dt>Leistungsbereiche</dt><dd>{item.service_domains?.join(", ")}</dd></>}
+    {item.duration && <><dt>Dauer</dt><dd>{durationLabel(item.duration)}</dd></>}
+    {(item.delivery_label || delivery[item.delivery_mode ?? ""]) && <><dt>Durchführung</dt><dd>{item.delivery_label || delivery[item.delivery_mode ?? ""]}</dd></>}
+    {(item.target_groups?.length ?? 0) > 0 && <><dt>Zielgruppen</dt><dd>{item.target_groups?.join(", ")}</dd></>}
+    {(item.target_focus?.length ?? 0) > 0 && <><dt>Schwerpunkte</dt><dd>{item.target_focus?.join(", ")}</dd></>}
+  </dl>
+  {(item.program_modules?.length ?? 0) > 0 && <><h4>Module</h4><ul>{item.program_modules?.map((label) => <li>{label}</li>)}</ul></>}
+  {item.bookable === false && <p data-nonbookable>Keine Buchung über Competence Hub.</p>}
+  <Variants items={item.variants} /><Boundaries items={item.boundaries} />
+</article>

@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro check && astro build",
+    "build:coach-projection": "astro build",
     "check": "astro check",
-    "test:preview": "node --test scripts/test-preview-model.mjs",
+    "test:preview": "node --test scripts/test-preview-model.mjs scripts/test-coach-projection.mjs",
+    "test:coach-projection": "node --test scripts/test-coach-projection.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "verify:dist": "node scripts/verify-dist-links.mjs"
   },

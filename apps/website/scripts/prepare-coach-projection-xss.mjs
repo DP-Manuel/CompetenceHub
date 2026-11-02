@@ -1,0 +1,21 @@
+import { readFileSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { adaptProjection, assertProjectionArtifactTarget, loadProjection } from "../config/coach-projection.mjs";
+
+const root = new URL("../../../.tmp/coach4/", import.meta.url);
+const source = new URL("synthetic-preview.json", root);
+loadProjection(fileURLToPath(source), "preview", fileURLToPath(new URL("assets/", root)));
+const value = JSON.parse(readFileSync(source, "utf8"));
+const attack = '<img src=x onerror="window.__coachProjectionXss=1"><script>window.__coachProjectionXss=1</script>';
+const coach = value.coaches[0];
+coach.description = `Literal description ${attack}`;
+coach.roles[0].label = `Literal role ${attack}`;
+coach.qualifications[0].label = `Literal qualification ${attack}`;
+coach.topics[0].name = `Literal topic ${attack}`;
+coach.offering_families[0].formats[0].title = `Literal format ${attack}`;
+coach.presentation.sections = [{ kind: "profile", headings: [`Literal heading ${attack}`], paragraphs: [`Literal paragraph ${attack}`] }];
+adaptProjection(value, "preview");
+const target = fileURLToPath(new URL("synthetic-xss-preview.json", root));
+assertProjectionArtifactTarget(target);
+writeFileSync(target, JSON.stringify(value));
+console.log("COACH_PROJECTION_XSS_FIXTURE=READY");
