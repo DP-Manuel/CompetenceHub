@@ -62,6 +62,21 @@ after the final stable edit batch, with focused checks during development.
 Project implementation/evidence: [COACH-4](docs/exec-plans/completed/coach-4-local-readiness-2026-11-02.md).
 No global skill or ManuWiki change made.
 
+Incremental-source learning02.11 (open global proposal): distinguish a previous
+processed-file baseline from an assumed complete folder snapshot. Hash bytes,
+not modified time, decide NEW/MODIFIED/UNCHANGED; hash-confirmed known documents
+must not be reinterpreted at every inventory. Persist processed-byte metadata
+separately from rights and keep frozen approved short scope separate from a
+private optional detail annex. Repeated method/credential headings, individual/
+general labels and workshop/lecture blanket statements need contextual mapping,
+not automatic role/qualification/format multiplication. Reference/customer,
+contact, price and embedded attendee/image data stay out of public outputs;
+preserve only necessary classification. Physical PDF page anchors avoid doubled
+footer numbering. Publication diff needs explicit field groups and must not
+invent identity/approval changes or flag empty boundary containers. Evidence:
+[incremental review](docs/architecture/source-ingestion-20261030-2026-11-02.md).
+Project safeguards/tests implemented; canonical skills unchanged.
+
 ## Implemented / Historical
 
 The archive's Implemented Feedback section preserves authoritative-clock-integration-tests and design-system-derivation.

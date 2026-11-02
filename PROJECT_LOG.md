@@ -3,6 +3,14 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-02 | incremental20261030 ingestion / frozen public scope retained
+
+- Explicit single-folder authorization:3 files inventoried with path/type/size/UTC mtime/hash/readability.1 known concept unchanged,2 new-to-processed-baseline Becker inputs,0 modified/removed/unreadable. Only new PDF12 pages and DOCX body interpreted;7 PDF pages additionally visual. Metadata timestamps do not establish supersession. [Canonical technical review](docs/architecture/source-ingestion-20261030-2026-11-02.md).
+- Private annex holds7 provisional groups/9 format candidates,5 training-label and2 role assertions. No verified new qualification, public copy, embedded-photo reuse or rights inferred.3 optional clarifications include1 deferred legal-service semantic boundary gap; mediation/method supervision and broad format applicability not guessed. Private customer/business presence recorded only as status; no values, price, contacts, protected text or raw sources in Git/public projection.
+- Exact old manifest/counts retained:9 READY/0 REVIEW_REQUIRED/0 BLOCKED,0 canonical field loss; new full detail scope explicitly not imported/approved. Fresh frozen-scope9/3 simulation/parity and field-level public diffs byte-identical,0 adds/removals/changes/attention. Source-byte baseline updated for future no-reparse verification, with no consent meaning.
+- 1212 local tests PASS/29 expected opt-in skips,25 Website contracts and pip check PASS.38 new synthetic cases cover source deltas/bindings/privacy/optional-vs-required holds and granular diff, without source-derived testfixtures. No fresh browser needed for unchanged payloads; previous755 checks remain historical. Source raw/semantic/receipt hashes bound, repeated private receipt identical; docs/integrity/diff verified before scoped commit/push. No server, key, backup/restore, account, migration, real import, Website change/deployment or global skill update.
+- Recommended next local block while key hold persists: consistent read-only Registry export snapshot adapter/synthetic tests, not another epic. Actual operator window remains gated by Manuel's manual signal/key access, exact current backup/restore and native Admin proof. Existing unrelated worktree material preserved; incremental-learning feedback captured locally.
+
 ## 2026-11-02 | COACH-4 local publication/onboarding readiness
 
 - Explicit without-key continuation: deterministic public Registry artifacts, independent Preview/Production fail-closed, exact local assets, structured diff/private stable-identity attention and frozen-reviewed10-dimension parity. Simulation9/3 only, no real migration/consent/live Website claim. [Canonical contract](docs/architecture/coach-public-projection-contract-v0.1.md).

@@ -1146,6 +1146,17 @@ Read-only Preflight darf bei null Admins nur STOP/NOT_COMPLETE melden, nicht ein
 erfolgreiche Ausführungsbereitschaft. Drei Reviewbefunde (Proof-Vertrauen,
 Role-Lock-Rechte, falsches Preflight-PASS) wurden entsprechend abgesichert.
 
+## Incremental Source Recheck 02.11
+
+The newly authorized20261030 folder is reconciled incrementally:1 unchanged known
+concept,2 new inputs for an existing Coach,0 modified/unreadable files. Private
+new details/rights/qualification/service-boundary questions remain an annex, not
+new public copy. Exact nine-Coach manifest, existing counts and9 READY/0 reviews/
+0 blockers stay unchanged.0 canonical loss;1 additional semantic service gap is
+explicitly deferred, not silently mapped. [Current source/diff evidence and limits](source-ingestion-20261030-2026-11-02.md).
+No real import, server, key or Website operation. The dated30.10 evidence below
+remains intact and is not a claim to cover every new detailed source field.
+
 ## Backend Sprint Addendum 30.10: Neuer Aktueller Stand
 
 Die vorstehende Phase A bleibt datierte Vorbereitung. Der spaetere Auftrag

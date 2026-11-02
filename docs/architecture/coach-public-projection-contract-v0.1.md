@@ -64,6 +64,12 @@ visibility changes. High attention includes new/removed route or Coach, portrait
 offering boundary and therapeutic-content changes. Production visibility changes
 are explicitly marked for approval review, not asserted to be approval events.
 `review_markdown` provides a bounded human summary rather than raw profile JSON.
+Incremental review additionally breaks down ADDED/REMOVED/CHANGED by profile
+route for Coaches/profiles, qualifications, topics, offerings, assets, boundaries,
+publication visibility and routes. These are route-level field changes, not
+invented stable identities for public qualification items. Empty nested boundary
+containers do not generate false additions. Source-ingestion evidence is owned
+by the [incremental review](source-ingestion-20261030-2026-11-02.md).
 
 Public JSON intentionally contains no UUID or approval history. A removed and
 added route therefore cannot be automatically declared the same person. The

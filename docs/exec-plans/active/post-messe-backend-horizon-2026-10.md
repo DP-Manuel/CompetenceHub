@@ -4,7 +4,15 @@ Updated: 2026-11-02. Status: local security/Linux and synthetic COACH-1/2/3A/3C 
 The [authorized consolidation block](../completed/post-messe-konsolidierung-2026-10.md) is complete.
 Current checkpoint: [PROJECT_CONTEXT](../../../PROJECT_CONTEXT.md). Synthetic Staging acceptance is authorized; production and real-data activation are not.
 
-## Recommended Next Block: PRIVATE ADMIN OPERATOR WINDOW
+## Recommended Local Block While Key Hold Persists
+
+Prepare the existing COACH-4 gap: consistent bounded read-only Registry snapshot
+export and synthetic completeness/concurrency/read-only tests. No VPS, key,
+business-role/data write or publication. [Current source/local handoff](../../architecture/source-ingestion-20261030-2026-11-02.md#one-recommended-next-local-block)
+owns inputs and DoD. Source review is complete only for confirmed short scope;
+new optional detail/qualification/legal-service decisions remain held privately.
+
+## Protected Admin Operator Window: WAIT
 
 WAIT for Manuel's explicit manual signal. Reconcile the preserved partial key
 state on a suitable workstation first; do not regenerate keys, repeat the old
@@ -23,6 +31,11 @@ local review/tests and approved source packaging. Domain/DNS/TLS inputs progress
 in parallel using the [security close-out](../../operations/cryptography-maintenance-2026-10-23.md).
 
 ## Current Execution
+
+- Complete latest02.11 source block:1 known unchanged/2 new processed inputs in
+  the sole authorized20261030 folder. Exact9-Coach manifest/counts/public payloads
+  unchanged; private optional source annex and processed-byte baseline retained.
+  [Current evidence](../../architecture/source-ingestion-20261030-2026-11-02.md).
 
 - Complete02.11 local-only COACH-4: public artifact/diff/parity, separate Preview/
   Production, opt-in Astro comparison, blank normal onboarding and preserved-key
@@ -61,6 +74,9 @@ in parallel using the [security close-out](../../operations/cryptography-mainten
 - Preserve dated September native API evidence and local browser checklist; do not convert them into October native acceptance.
 
 ## Ordered Rolling Horizon
+
+The independent local preparation above is the immediate work while the key is
+unavailable. This protected/longer horizon remains gated, not automatic execution.
 
 | # | Intended outcome / status | Gate / dependency | Planned evidence | Confidence |
 | --- | --- | --- | --- | --- |
