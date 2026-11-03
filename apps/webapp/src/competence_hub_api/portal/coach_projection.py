@@ -259,35 +259,42 @@ def generate_projection(coaches, environment):
 def verify_assets(value, asset_root):
     """Exact reviewed bytes in an explicit local public-only asset tree."""
     validate_projection(value)
+    return verify_asset_references(
+        [asset for coach in value["coaches"] for asset in coach["assets"]], asset_root
+    )
+
+
+def verify_asset_references(assets, asset_root):
+    """Shared validation for public projections and private Registry review."""
     root = checked_local_path(asset_root).resolve(strict=True)
     if not root.is_dir():
         raise ValueError("asset root must be a directory")
     hashes = {}
-    for coach in value["coaches"]:
-        for asset in coach["assets"]:
-            reference = asset["reference"]
-            current = root
-            for part in Path(reference).parts:
-                current = current / part
-                if (
-                    current.is_symlink()
-                    or getattr(current.stat(), "st_file_attributes", 0)
-                    & stat.FILE_ATTRIBUTE_REPARSE_POINT
-                ):
-                    raise ValueError("asset links forbidden")
-            path = current.resolve(strict=True)
+    for asset in assets:
+        PublicAsset.model_validate(asset)
+        reference = asset["reference"]
+        current = root
+        for part in Path(reference).parts:
+            current = current / part
             if (
-                not path.is_relative_to(root)
-                or not path.is_file()
-                or path.stat().st_size > 20 * 1024 * 1024
+                current.is_symlink()
+                or getattr(current.stat(), "st_file_attributes", 0)
+                & stat.FILE_ATTRIBUTE_REPARSE_POINT
             ):
-                raise ValueError("invalid local public asset")
-            digest = hashlib.sha256(path.read_bytes()).hexdigest()
-            if digest != asset["sha256"] or (
-                reference in hashes and hashes[reference] != digest
-            ):
-                raise ValueError("asset hash mismatch")
-            hashes[reference] = digest
+                raise ValueError("asset links forbidden")
+        path = current.resolve(strict=True)
+        if (
+            not path.is_relative_to(root)
+            or not path.is_file()
+            or path.stat().st_size > 20 * 1024 * 1024
+        ):
+            raise ValueError("invalid local public asset")
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if digest != asset["sha256"] or (
+            reference in hashes and hashes[reference] != digest
+        ):
+            raise ValueError("asset hash mismatch")
+        hashes[reference] = digest
     return hashes
 
 

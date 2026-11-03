@@ -39,6 +39,7 @@ def synthetic_registry():
             name,
             description="Synthetic public profile. No real person.",
             competencies=("Synthetic facilitation",),
+            topic_ids=(UUID(int=40),),
         )
         if index == 1:
             content = content.model_copy(

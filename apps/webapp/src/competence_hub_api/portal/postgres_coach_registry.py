@@ -212,6 +212,16 @@ class PostgresCoachRegistryRepository:
                 f"SELECT * FROM competence_hub.{table} WHERE revision_id=ANY(CAST(:ids AS uuid[]))",
                 ids=ids,
             )
+        publications = await rows(
+            connection,
+            "SELECT * FROM competence_hub.coach_publications WHERE coach_id=:id",
+            id=coach_id,
+        )
+        return self.hydrate(coach, revisions, children, target_children, publications)
+
+    @staticmethod
+    def hydrate(coach, revisions, children, target_children, publications):
+        """Reconstruct the same aggregate for single reads and bounded exports."""
         for row in revisions:
 
             def subset(table):
@@ -312,11 +322,6 @@ class PostgresCoachRegistryRepository:
                 if e["revision_id"] == row["id"]
             ]
             coach.revisions.append(revision)
-        publications = await rows(
-            connection,
-            "SELECT * FROM competence_hub.coach_publications WHERE coach_id=:id",
-            id=coach_id,
-        )
         coach.publications = {
             p["environment"]: Publication(
                 p["revision_id"], p["state"], p["actor_id"], p["occurred_at"]
