@@ -1,11 +1,22 @@
 # Skill Feedback Router
 
-Updated: 2026-11-02. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-03. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+03.11 open proposal: read-only export needs both a narrow fixed-read capability
+and transaction enforcement; paginated reads are not a consistent snapshot.
+Reuse one domain hydrator and publication filter. Preserve full subject/evidence
+only in the canonical memory snapshot; a redacted administrative artifact cannot
+be rehashed into permission. Separate synthetic SQL-double proof from native DB
+isolation, and reject real/tunnel targets before opening the local test seam.
+When public bytes match the previous commit, verify actual consumer compatibility
+and avoid repeating unchanged browser suites.91 new local cases plus prior-byte/
+Astro checks demonstrate this; [evidence](docs/architecture/coach-read-only-export-contract-v0.1.md).
+No global skill or ManuWiki write; native disposable-DB proof is the next gate.
 
 | Proposal | Recorded state | Evidence home |
 | --- | --- | --- |

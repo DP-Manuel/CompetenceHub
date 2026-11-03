@@ -6,7 +6,9 @@ Independent02.11 [COACH-4 local block](../completed/coach-4-local-readiness-2026
 is complete; it does not close this real operating window or switch Website data.
 Latest independent [incremental source block](../../architecture/source-ingestion-20261030-2026-11-02.md)
 is complete for known/new inputs; approved short scope stays9 READY and unchanged.
-New details remain private. Read-only export preparation is next locally while
+New details remain private.03.11 [read-only adapter](../../architecture/coach-read-only-export-contract-v0.1.md)
+is complete locally:1303 PASS/29 opt-in skips, unchanged public bytes. No actual
+SQL/server. Next separate local gate is disposable PostgreSQL enforcement proof;
 this protected window still awaits Manuel's manual signal/key access.
 
 Authority: Manuel is now the named real Staging Admin/Operator, admin only.

@@ -22,10 +22,13 @@ success. Unknown/rejected Production evidence or Preview approval never grants
 Production. Paused/inactive/archived Coaches are excluded; history is retained.
 
 The export function takes an already obtained consistent Registry snapshot.
-There is deliberately no live DB CLI/session in this slice. A later separately
-reviewed real-export adapter must obtain all required revisions/topics/evidence
-from one consistent read-only snapshot, not concatenate mutable paginated reads
-and call that a snapshot. The frozen simulation is not such an adapter.
+The03.11 [read-only export adapter](coach-read-only-export-contract-v0.1.md)
+now seals existing aggregates, exposes a minimized internal review and reuses this
+public filter unchanged. Its fixed local synthetic SQL seam is tested with a
+transaction double, not actual PostgreSQL or a live DB CLI/session. Any later
+real export still needs its own scoped target/read-only-role gate after actual
+backup/restore/Admin/import; never concatenate mutable paginated reads and call
+that a snapshot. Frozen simulation is not actual DB acceptance.
 
 ## Artifact And Assets
 

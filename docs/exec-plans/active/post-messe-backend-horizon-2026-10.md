@@ -1,16 +1,19 @@
 # Post-Messe Backend Horizon
 
-Updated: 2026-11-02. Status: local security/Linux and synthetic COACH-1/2/3A/3C accepted; COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED.02.11 actual operator attempts stopped at local key readiness before backup/tunnel/Admin. Manuel defers this backup/operator window until his manual signal (different workstation/no stick); existing files remain untouched. Domain/TLS remain separate gates.
+Updated: 2026-11-03. Status: local security/Linux and synthetic COACH-1/2/3A/3C accepted; COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED.03.11 local read-only export complete, native SQL proof separate.02.11 actual operator attempts stopped at local key readiness before backup/tunnel/Admin. Manuel defers this backup/operator window until his manual signal (different workstation/no stick); existing files remain untouched. Domain/TLS remain separate gates.
 The [authorized consolidation block](../completed/post-messe-konsolidierung-2026-10.md) is complete.
 Current checkpoint: [PROJECT_CONTEXT](../../../PROJECT_CONTEXT.md). Synthetic Staging acceptance is authorized; production and real-data activation are not.
 
 ## Recommended Local Block While Key Hold Persists
 
-Prepare the existing COACH-4 gap: consistent bounded read-only Registry snapshot
-export and synthetic completeness/concurrency/read-only tests. No VPS, key,
-business-role/data write or publication. [Current source/local handoff](../../architecture/source-ingestion-20261030-2026-11-02.md#one-recommended-next-local-block)
-owns inputs and DoD. Source review is complete only for confirmed short scope;
-new optional detail/qualification/legal-service decisions remain held privately.
+03.11 [read-only export adapter](../../architecture/coach-read-only-export-contract-v0.1.md)
+is complete locally:1303 PASS/29 opt-in skips, unchanged public bytes, explicit
+synthetic-only SQL target and no actual server. Next LOCAL block is disposable
+synthetic PostgreSQL read-only/isolation/shared-hydration acceptance, separately
+authorized before server/container start. The contract owns purpose/inputs/
+deliverables/DoD. No VPS, key, real-role/data write or publication. Source review
+remains complete only for confirmed short scope; optional detail/qualification/
+legal-service decisions remain held privately.
 
 ## Protected Admin Operator Window: WAIT
 
@@ -31,6 +34,13 @@ local review/tests and approved source packaging. Domain/DNS/TLS inputs progress
 in parallel using the [security close-out](../../operations/cryptography-maintenance-2026-10-23.md).
 
 ## Current Execution
+
+- Complete03.11 local export adapter: one bounded canonical in-memory seal,
+  minimized internal schema1 review, existing Preview/Production allowlist,
+  deterministic manifest/diff and actual Astro loader acceptance.91 new synthetic
+  tests,1303 full PASS/29 opt-in skips,25 Website tests and Astro0 diagnostics.
+  Shared Registry hydration reused; strict SQL double is not native SQL proof.
+  No real data/Website/default build change or server activation.
 
 - Complete latest02.11 source block:1 known unchanged/2 new processed inputs in
   the sole authorized20261030 folder. Exact9-Coach manifest/counts/public payloads

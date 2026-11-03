@@ -1,6 +1,6 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-02.
+Updated: 2026-11-03.
 
 ## Current Milestone
 
@@ -25,6 +25,11 @@ checkpoint and next local gate](docs/architecture/source-ingestion-20261030-2026
 First real coaching engagement scheduled for19.11.2026. Business milestone only:
 no customer data/module, invoice workflow or tenth Coach in the existing import.
 Manuel's own Coach profile is a later post-migration onboarding case.
+
+03.11 read-only export adapter is complete locally: sealed existing aggregates,
+minimized internal review, byte-unchanged public DTOs and fixed disposable SQL-
+target guard.1303 tests PASS/29 opt-in skips,25 Website contracts, Astro0
+diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evidence](docs/architecture/coach-read-only-export-contract-v0.1.md).
 
 ## Production State
 
@@ -72,7 +77,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended local block while key access remains absent: prepare the consistent read-only Registry-to-projection snapshot adapter and synthetic tests. Inputs: existing0009/repository/publication contracts; deliverable: bounded consistent snapshot, deterministic export and fail-closed incomplete/concurrent-read tests, no writes/VPS/secrets/publication. [Current local handoff](docs/architecture/source-ingestion-20261030-2026-11-02.md#one-recommended-next-local-block).
+1. Recommended next LOCAL block while key access remains absent: disposable synthetic PostgreSQL proof of actual read-only/isolation/shared-hydration behavior on owned55437. This needs separate authorization before any server/container start. Purpose, inputs, deliverables and DoD: [export contract](docs/architecture/coach-read-only-export-contract-v0.1.md#live-gate-and-one-next-local-block). No VPS/real DB/key/Website action. Completed SQL-double success is not native PostgreSQL proof.
 2. Only after Manuel's manual signal and suitable workstation/key access: reconcile preserved custody privately, then reviewed/pushed Admin window with current exact encrypted backup/restore before first real write. DoD: actual MFA/recovery/session/RBAC, cleanup/health PASS, no Coach/Calendar mappings/import. No blind old-command retry. [Manual hold](docs/operations/staging-admin-bootstrap-2026-10-30.md), [active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md), [horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
 3. Resolve parallel operational inputs when available; do not expand the current local/source gate silently.
 4. Any later IONOS promotion needs its own bundled review and production approval.

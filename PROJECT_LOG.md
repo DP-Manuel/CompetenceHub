@@ -3,6 +3,13 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-03 | read-only Registry export / local synthetic scope
+
+- [Export contract](docs/architecture/coach-read-only-export-contract-v0.1.md): sealed existing aggregates, bounded consistent reader, shared hydration and minimized versioned internal review; unchanged COACH-4 public allowlist, no second domain model or diff engine. Fixed loopback55437/disposable synthetic DB guard rejects real/tunnel targets before queries; prepared read-only/repeatable transaction, bounded13-table batch and rollback. SQL double only, no actual server/DB/secret access.
+- All three actual local synthetic CLI exports/manifests generated; repeated hashes stable, prior `a4ba869` public fixture bytes identical, existing diff shows no attention, actual Astro loader accepts public2/1 and rejects internal4. Complete topic-ID link repaired in synthetic fixture only; Website code/default inputs untouched. Internal review omits actors/audit/source/evidence references/private notes/prices; public additionally excludes internal IDs/private qualification titles. Family/format/variant/boundary/qualification/lifecycle semantics preserved.
+- 1303 local tests PASS/29 expected opt-in skips,91 new adapter cases;25 Website contracts and Astro71 files/0 diagnostics PASS. Python compilation, pip check, document archive/router/link integrity and diff checks PASS. No browser repeat because public bytes/rendering unchanged; old755 browser checks remain historical. No new dependencies, real sources or Coach10 data. Existing nine-Coach manifest hash unchanged;9 READY retained, not a fresh real DB claim.
+- Commit/push authorized only for this green local block; no Website/backend deployment, key/backup/restore/Admin/migration/real APPLY/live export/source switch. Next one LOCAL block: separately authorize disposable PostgreSQL read-only/isolation/parity proof and exact cleanup. Protected real operating window still waits for Manuel/key access. Learning recorded locally; global skills unchanged. Unfamiliar editor/cache/weekly files preserved.
+
 ## 2026-11-02 | incremental20261030 ingestion / frozen public scope retained
 
 - Explicit single-folder authorization:3 files inventoried with path/type/size/UTC mtime/hash/readability.1 known concept unchanged,2 new-to-processed-baseline Becker inputs,0 modified/removed/unreadable. Only new PDF12 pages and DOCX body interpreted;7 PDF pages additionally visual. Metadata timestamps do not establish supersession. [Canonical technical review](docs/architecture/source-ingestion-20261030-2026-11-02.md).
