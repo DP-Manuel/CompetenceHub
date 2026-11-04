@@ -1,5 +1,11 @@
 # Staging: Checkliste Bei Stick-Rueckkehr
 
+Aktuelle Eingrenzung04.11: ausschliesslich den
+[lokalen Schluesselblock](local-staging-keys-2026-11-04.md) benutzen. Er akzeptiert
+VERIFY/verify mit aeusseren Leerzeichen, endet nach der verschluesselten Kopie
+und startet weder Backup noch Admin. Die folgenden fuenf Betriebsschritte sind
+spaetere getrennte Gates, nicht durch die Schluesselbestaetigung genehmigt.
+
 Stand: 04.11.2026. Das Signal liegt vor: Stick entsperrt/Passwoerter verfuegbar,
 geschuetzter Betriebsweg freigegeben. [Aktueller einzelner Resume-Einstieg](staging-resume-2026-11-04.md)
 mit getrennten VERIFY/BACKUP/ADMIN-Bestaetigungen; alte Befehle nicht wiederholen.

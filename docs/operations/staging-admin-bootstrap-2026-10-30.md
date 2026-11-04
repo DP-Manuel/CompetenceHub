@@ -1,5 +1,11 @@
 # Staging Admin: Sicheres Operatorfenster
 
+**Aktueller enger Auftrag04.11:** Zuerst nur
+[lokale Schluesselpruefung und verschluesselte Kopie](local-staging-keys-2026-11-04.md),
+mit tolerantem VERIFY und ohne automatische Fortsetzung. Das echte Betriebs-
+fenster in diesem Runbook bleibt separat; kein alter Execute-Befehl fuer die
+Schluesselaufgabe und kein Backup auf ein ungeprueftes Ziel.
+
 30.10.2026. Lokale Vorbereitung; **kein reales Konto und kein aktueller echter
 Backup-/Restore-Nachweis aus diesem Bericht**. Der aktuelle Ausfuehrungsstand
 steht im [aktiven Batch](../exec-plans/active/backend-sprint-2026-10-30.md).

@@ -7,6 +7,16 @@ Updated: 2026-11-04. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+Later04.11 open proposal: normalize non-secret human confirmation tokens with
+Trim + ordinal case-insensitive equality, never passwords/cryptographic material.
+Invalid/cancel must explain expected input without echoing submitted content or
+automatic retry. Split a small key gate from the multi-stage admin window; old
+entry paths must not retain hidden continuation. Reuse a valid hash-bound proof
+after copy failure instead of repeating GPG prompts. Compare keycopy metadata
+against device space separately from database volume/backup destination readiness.
+18 new local cases plus synthetic full-flow proof; [evidence](docs/operations/local-staging-keys-2026-11-04.md).
+Global proposal open; no global skill edit or actual operator execution.
+
 04.11 open proposal: availability, consent and completed evidence are different
 states. On stick return, inspect presence/ACL only, resume existing custody and
 collect separate concrete runtime approvals before real backup/Admin writes.

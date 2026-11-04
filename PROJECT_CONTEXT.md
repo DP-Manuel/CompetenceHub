@@ -8,7 +8,7 @@ Post-Messe product consolidation is complete for the authorized scope: Context V
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
 The additive Calendar/native runtime, local security/Linux and synthetic COACH-1/2/3A/3C gates remain complete.
 30.10 backend sprint addendum names Manuel as the single authorized Staging Admin/Operator, admin only; earlier missing-operator STOP is superseded for this bootstrap, not real-APPLY safety.
-Elisabeth's newly authorized13-page concept is reconciled locally: existing short scope unchanged, conflicting details held privately.02.11 operator attempts stopped at local key-custody readiness before backup/tunnel/Admin creation.04.11 Manuel confirms unlocked D:\CompetenceHub/password availability and approves the described protected resumption. Existing key pair/ACL PASS by metadata only; verification metadata and account-attempt marker remain absent. Actual key/backup/restore/Admin proof still needs his private terminal interaction, with separate VERIFY/BACKUP/ADMIN confirmations. No key regeneration, protection bypass or real DB write by this preparation. [Current resume evidence/entry](docs/operations/staging-resume-2026-11-04.md).
+Elisabeth's newly authorized13-page concept is reconciled locally: short scope unchanged, conflicting details held privately.04.11 later scope is LOCAL KEYS ONLY. Previous STOP was unaccepted VERIFY before cryptography; input now trims/case-folds with clear cancellation/error. Known keycopy1005 bytes versus1.87GiB USB free; current-user/machine DPAPI-only probe PASS, no plaintext output. Real GPG comparison/USB copy still pending private explicit confirmation. New isolated entry ends after keys; legacy entry also cannot continue into backup/Admin. No key regeneration/rotation/deletion, server/account/data/deployment action. [Current local-key contract](docs/operations/local-staging-keys-2026-11-04.md).
 [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md); [prior execution evidence](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-real-apply-vorbereitung-3010). App-domain/TLS inputs remain open independently.
 
 02.11 independent local COACH-4 preparation is complete: deterministic scoped
@@ -42,6 +42,8 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.
 
 ## Current Evidence
+
+- [Latest local-key correction](docs/operations/local-staging-keys-2026-11-04.md):1333 local tests PASS/30 opt-in skips,18 additional input/CLI/local-flow cases. VERIFY normalization, meaningful denial/cancel, existing-only GPG/DPAPI proof and no-repeat hash-bound resume, encrypted-copy/no-overwrite preserved. E2E synthetic DPAPI/fake GPG, not real GPG or USB execution. No DB/server dependency or automatic backend continuation; only local Git source check. Full Admin/backup remains outside current scope.
 
 - [04.11 native export/resume](docs/operations/staging-resume-2026-11-04.md): actual owned PostgreSQL55437 test1 PASS, seven database-enforced write denials, repeat-byte/COACH-4 parity, all-table/xmin no-op and concurrent new-draft/child snapshot proof. Exact container/port cleanup verified.1315 full local tests PASS/30 expected opt-in skips; the new native case was separately executed, not left untested. Private resume prepared with existing-key-only completion, encrypted USB-copy/no-overwrite and distinct per-block approvals. No actual keys/backup/Admin/VPS/Website action; real outcome remains pending, not inferred from fixtures.
 
@@ -79,7 +81,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended next block: the approved protected existing-key/backup/restore/Admin window with Manuel's private inputs. Native export probe is complete. Use the new single resume entry at the reviewed/pushed exact commit, not an old Execute command; VERIFY, BACKUP and ADMIN are separate runtime approvals. Inputs/deliverables/DoD and current pending real evidence: [04.11 resume](docs/operations/staging-resume-2026-11-04.md#genau-ein-naechster-block). No key recreation, extra roles, import or deployment.
+1. Recommended next block: ONLY the local existing-key verification/encrypted USB copy. Use verify-staging-keys.ps1 at the reviewed/pushed exact commit, one tolerant VERIFY prompt and at most necessary private GPG dialogue. No backup/Admin continuation, no live target. Inputs/deliverables/DoD: [local-key contract](docs/operations/local-staging-keys-2026-11-04.md). Actual full GPG/copy PASS must come from Manuel's private execution, not synthetic tests.
 2. COACH-3B REAL APPLY/live export remain disabled and are not recommended for execution until every actual prerequisite above passes and a separate import approval is obtained. [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md), [horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
 3. Resolve parallel operational inputs when available; do not expand the current local/source gate silently.
 4. Any later IONOS promotion needs its own bundled review and production approval.

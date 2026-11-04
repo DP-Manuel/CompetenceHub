@@ -1,24 +1,24 @@
 # Post-Messe Backend Horizon
 
-Updated: 2026-11-04. Status: COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED. Native local export1 PASS and exact container/port cleanup; protected private resumption approved, awaiting actual operator inputs. Existing key pair/ACL checked only; no real crypto/backup/Admin proof or real Coach APPLY. Domain/TLS remain separate gates.
+Updated: 2026-11-04. Status: COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED; native local export/cleanup PASS. Latest scope is LOCAL KEYS ONLY with tolerant confirmation,1333 tests PASS/30 skips. Windows DPAPI-only match PASS; full GPG/copy still needs private execution. Backup/Admin/import/deployment remain separate. Domain/TLS remain open.
 The [authorized consolidation block](../completed/post-messe-konsolidierung-2026-10.md) is complete.
 Current checkpoint: [PROJECT_CONTEXT](../../../PROJECT_CONTEXT.md). Synthetic Staging acceptance is authorized; production and real-data activation are not.
 
-## Current Protected Resume Gate
+## Current Local Key Gate
 
-04.11 owned native PostgreSQL export proof PASS, exact container/port cleanup.
-Stick/Passwoerter now confirmed, protected resumption approved. Single next block:
-[private resume/backup/Admin window](../../operations/staging-resume-2026-11-04.md)
-with existing keys only and distinct VERIFY/BACKUP/ADMIN confirmations.1315 full
-local PASS/30 expected opt-in skips; native1 separately PASS. Actual key/GPG,
-current real backup/restore/Admin proof remain pending user interaction, not
-inferred from fixtures. No real Coach APPLY/migration/live export/publication.
+Latest04.11 scope: ONLY [local keys](../../operations/local-staging-keys-2026-11-04.md).
+Previous VERIFY STOP precedes cryptography; case/outer whitespace now accepted,
+clear error/cancel. New key entry and compatible old entry both stop after
+existing-key GPG proof/encrypted USB copy. No backend continuation.1333 full local
+PASS/30 opt-in skips; actual GPG/copy pending private confirmation. Existing
+native PostgreSQL proof/cleanup retained, not repeated. Real backup/Admin/import
+and storage-target approval are separate later gates, no real Coach APPLY.
 
-## Protected Admin Operator Window: PRIVATE INPUT REQUIRED
+## Protected Admin Operator Window: OUTSIDE CURRENT SCOPE
 
-The04.11 signal/availability/approval are present. Reconcile the preserved partial
-key state through the new protected entry; do not regenerate keys, repeat the old
-command or bypass backup to write real accounts. [Current evidence/entry](../../operations/staging-resume-2026-11-04.md),
+Earlier04.11 signal/availability/approval are retained, but latest task narrows to
+local keys. Complete that isolated proof first; no automatic full-window restart,
+key regeneration or bypass. [Current local entry](../../operations/local-staging-keys-2026-11-04.md),
 [historical02.11 STOP](../../operations/staging-admin-bootstrap-2026-10-30.md#bedienentscheidung-und-stop-am-02112026).
 
 Purpose: prove the approved single Admin without adding business roles/mappings.

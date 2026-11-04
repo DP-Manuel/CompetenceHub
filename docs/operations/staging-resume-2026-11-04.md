@@ -3,6 +3,13 @@
 Lokale Implementierung/Nativprobe als `0260161` verpackt; Dokumentation separat.
 Kein echter Betriebslauf durch das Packaging.
 
+**Spaetere Korrektur04.11:** Dieser kombinierte Startablauf ist fuer den aktuellen
+Auftrag abgeloest durch den [lokalen Schluesselblock](local-staging-keys-2026-11-04.md).
+VERIFY jetzt tolerant/verstaendlich; neuer Einstieg endet nach GPG/verschluesselter
+Kopie. Auch der kompatible alte Resume-Pfad startet kein Backup/Admin mehr.
+Die folgende Vollfensterplanung und1315-Testevidenz bleiben historische Grenzen;
+aktueller Auftrag startet keine Server-/Backup-/Adminaktion.
+
 ## Freigabe und Grenze
 
 Manuel bestaetigt physischen Zugriff, entsperrtes `D:\CompetenceHub` und benoetigte

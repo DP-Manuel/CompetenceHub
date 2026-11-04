@@ -13,7 +13,8 @@
 | Backup/restore | [Backup runbook](../architecture/postgresql-backup-restore-runbook.md), [Wuerzburg evidence](sb23-wuerzburg-execution.md) | External exact-copy restore and remaining scheduling gates |
 | Named Staging Admin / current prechange gate | [30.10 operator preparation](staging-admin-bootstrap-2026-10-30.md) | Durable private key custody, exact-copy restore before one admin-only bootstrap; real Coach APPLY remains disabled |
 | Manual restart after key deferral | [Stick-return checklist](staging-stick-resume-checklist.md) | Five steps, preserved keys, no blind Execute retry or backup bypass |
-| Current approved private resume | [04.11 resume](staging-resume-2026-11-04.md) | Actual local SQL proof, metadata-only key status and single protected entry with distinct per-block approvals |
+| Current local key gate | [Local-key contract](local-staging-keys-2026-11-04.md) | Tolerant confirmation, existing-only GPG verification, hash-bound USB copy; no backend continuation |
+| Prior full-window preparation | [04.11 resume](staging-resume-2026-11-04.md) | Actual local SQL proof and historical full-window plan; latest task narrowed to keys only |
 | Post-migration Coach operations | [Normal onboarding/return](coach-post-migration-onboarding.md) | Blank intake, standard Admin workflow, same UUID/reactivation and separate publication release gates |
 | Roles/notifications | [Operating decisions](pilot-account-operations-decisions-2026-09-11.md) | Manuel, Janay, Thomas and notification boundary |
 | Activation inputs | [Input contract](../requirements/activation-input-contract-2026-08-24.md) | Required DNS/SMTP/runtime/data inputs |

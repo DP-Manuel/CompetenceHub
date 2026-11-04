@@ -3,6 +3,13 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-04 | friendly isolated local key verification
+
+- Latest scope narrows to keys only. VERIFY now trims outer whitespace and accepts case variants; other input gets explicit safe guidance, empty/interrupted input cancels once without retry. New verify-staging-keys.ps1 and old compatibility path both stop after existing-only local verification/encrypted-copy; no server/Docker/DB/Admin/import dependency or continuation. Local clean-source/commit guard retained without remote Git lookup. [Canonical scope/evidence](docs/operations/local-staging-keys-2026-11-04.md).
+- Existing Complete/Use verification reused: in-memory DPAPI/GPG exact comparison only when proof absent; valid protected proof is hash-bound and rechecked on manual resume, no unnecessary GPG/password repeat. USB uses fixed approved path, fresh capacity metadata, exclusive creation/identical-copy reuse and source/target SHA-256; no key replacement/rotation/deletion or plaintext files. Corrupt proof or copy stops. Real pair/copy execution not performed by this preparation.
+- Prior audit: expected encrypted copy1005 bytes versus USB2012151808 free; DPAPI-only current-user/machine check PASS without secret output/dialog/writes. Full GPG still unproven. C: NTFS capacity candidate only, current volume encryption/DB-target approval not established; never conflate keycopy with database backup or invoke BitLocker unlock again.
+- 1333 full local tests PASS/30 expected opt-in skips,18 new confirmation/CLI/local-flow cases. Isolated synthetic DPAPI/fake GPG covers cancel, GPG interruption, copy-failure resume, valid-proof reuse without new dialog, hash-conflict and unchanged originals. Focused57 PASS before2 added CLI cases in full run; parser/compile/pip/link/integrity/diff gates before authorized separate commit/push. No real keys opened/copied in this implementation, no server/data/Website/migration/deployment. Unfamiliar files preserved; learning captured locally, global skills untouched.
+
 ## 2026-11-04 | native export proof / protected resume preparation
 
 - Manuel confirms unlocked `D:\CompetenceHub` and passwords, then approves the described protected operating path. Availability alone is not a real-write grant; new terminal entry requires distinct VERIFY/BACKUP/ADMIN confirmations after exact scope/target/rollback display. REAL APPLY/migrations/live export/deployment remain excluded. [Current report and entry](docs/operations/staging-resume-2026-11-04.md).

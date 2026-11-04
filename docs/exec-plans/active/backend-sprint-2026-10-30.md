@@ -1,8 +1,9 @@
 # Backend Sprint Addendum 30.10
 
-Status04.11: LOCAL NATIVE EXPORT PASS; protected existing-key/backup/Admin
-resumption approved, waiting Manuel's private terminal inputs and per-block
-confirmations. [Current scope/evidence/entry](../../operations/staging-resume-2026-11-04.md).
+Status04.11 latest: LOCAL KEYS ONLY; tolerant confirmation/isolated existing-key
+GPG/USB entry prepared and tested1333 PASS/30 opt-in skips. Actual pair/copy still
+needs private confirmation; backup/Admin outside current task.
+[Current scope/evidence/entry](../../operations/local-staging-keys-2026-11-04.md).
 Actual02.11 attempts stopped before server/DB; key files are preserved and still
 not cryptographically verified. No real account/backup proof from local tests.
 Independent02.11 [COACH-4 local block](../completed/coach-4-local-readiness-2026-11-02.md)
@@ -40,7 +41,7 @@ Only newly authorized source directory: `Quellen/20261030`.
    Latest reply confirms work without stick: explicit local ResumeExisting
    prepared/tested, no execution on real custody. No regeneration/backup bypass.
 7. Complete: evidence/checkpoint/horizon and reusable workflow feedback reconciled;
-   next block is only the private Admin/backup/restore window, not real import.
+   latest next block is ONLY local key proof/copy, no combined Admin window/import.
 
 Business milestone: first real coaching engagement on19.11.2026; no customer
 identity or personal details recorded. Manuel's own Coach profile is a later
