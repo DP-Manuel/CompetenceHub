@@ -3,6 +3,14 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-04 | native export proof / protected resume preparation
+
+- Manuel confirms unlocked `D:\CompetenceHub` and passwords, then approves the described protected operating path. Availability alone is not a real-write grant; new terminal entry requires distinct VERIFY/BACKUP/ADMIN confirmations after exact scope/target/rollback display. REAL APPLY/migrations/live export/deployment remain excluded. [Current report and entry](docs/operations/staging-resume-2026-11-04.md).
+- Actual owned PostgreSQL16/schema9/55437 native test1 PASS: READ ONLY/REPEATABLE READ, seven database-enforced write denials with SQLSTATE25006, three deterministic Internal/Preview/Production exports and exact COACH-4 parity, all-table rows/xmin unchanged on reads/denied writes, genuine concurrent new-draft/child commit excluded until the next snapshot. Container-ID absence and listener cleanup verified after failures/success; no real DB/server contact. Initial fixture NOT NULL omission corrected without changing schema/adapter.
+- Existence/private ACL checks only: initial two keyfiles remain, no metadata/attempt marker, no key contents opened. Known local GPG/corpus and approved private login input present; actual crypto/backup/restore/Admin/MFA/RBAC/health still NOT EXECUTED. Resume invokes existing completion/verification only, never key generation; encrypted portable keycopy to approved USB is exclusive/hash-bound. Original files remain untouched; errors emit fixed phase only.
+- 1315 local regression PASS/30 expected opt-in skips; new native case separately executed.12 new synthetic Resume/copy/approval cases, focused178 PASS; Python compile, pip check and3-script PowerShell parser PASS. Documentation/integrity/diff gated before safe scoped commit/push. No private keys/data/dumps in Git; no global skill changes, sources or Website edits. Unfamiliar editor/cache/weekly files preserved.
+- One next block is the approved private operator window, not real Coach import. Only after actual key/backup/restore/Admin/native health gates all PASS may COACH-3B REAL APPLY be recommended with its own separate approval. No old Execute retry, blanket role grant or backupjob changes.
+
 ## 2026-11-03 | read-only Registry export / local synthetic scope
 
 - [Export contract](docs/architecture/coach-read-only-export-contract-v0.1.md): sealed existing aggregates, bounded consistent reader, shared hydration and minimized versioned internal review; unchanged COACH-4 public allowlist, no second domain model or diff engine. Fixed loopback55437/disposable synthetic DB guard rejects real/tunnel targets before queries; prepared read-only/repeatable transaction, bounded13-table batch and rollback. SQL double only, no actual server/DB/secret access.

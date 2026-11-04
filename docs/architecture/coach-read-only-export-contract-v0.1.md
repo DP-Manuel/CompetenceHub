@@ -5,6 +5,13 @@ No real DB connection, server/container, secret, source document, account, impor
 Website switch or deployment. Commit/push authorized after green checks only.
 Implementation packaged as `f2a080d`; this document/checkpoint is packaged separately.
 
+Update04.11: the separately approved owned native PostgreSQL probe now PASS,
+including actual write denial, concurrent new-draft/child isolation, no-op xmin
+and repeated COACH-4 parity. Container/port removed; [current evidence and pending
+private operator gate](../operations/staging-resume-2026-11-04.md). The03.11
+no-native-server statements below retain their dated evidence scope, not today's
+latest acceptance. Real Staging/live export/source switch remain disabled.
+
 ## Boundary And Models
 
 [Adapter](../../apps/webapp/src/competence_hub_api/portal/coach_export.py):
@@ -194,12 +201,10 @@ synthetic target guard must not be removed as an incidental configuration tweak.
 No key access, backup bypass, real mappings, migration, remote read/write,
 Website source switch, Pages/IONOS/backend deployment or new feature is authorized.
 
-One recommended next LOCAL block, separately authorized because this task forbids
-starting a server: disposable synthetic PostgreSQL acceptance of this adapter.
-Purpose: replace SQL-double assumptions with actual database enforcement proof.
-Inputs: this contract, existing schema0009/local harness patterns, generated
-process-only test credentials and owned loopback55437. Deliverables: fixed local
-fixture DB, actual read-only write rejection, concurrent-snapshot/hydration/parity
-tests and cleanup receipt. DoD: all SQL/public-byte checks PASS, exact owned
-container removed, no secrets/real data/VPS/key access/publication. Real operating
-gates remain separate; do not start this next block automatically.
+The03.11 recommended local block was separately authorized and completed04.11:
+owned disposable PostgreSQL16/schema9/loopback55437, actual write denial,
+concurrent draft/children, deterministic parity and exact container/port cleanup
+PASS. [Current single recommended protected block](../operations/staging-resume-2026-11-04.md#genau-ein-naechster-block)
+is existing-key verification/current backup/restore/Admin with Manuel's private
+terminal interaction and individual block approvals, not a repeated local probe
+or real Coach APPLY. No live target guard has been relaxed.

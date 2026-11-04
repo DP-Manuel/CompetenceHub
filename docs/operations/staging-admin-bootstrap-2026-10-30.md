@@ -3,6 +3,14 @@
 30.10.2026. Lokale Vorbereitung; **kein reales Konto und kein aktueller echter
 Backup-/Restore-Nachweis aus diesem Bericht**. Der aktuelle Ausfuehrungsstand
 steht im [aktiven Batch](../exec-plans/active/backend-sprint-2026-10-30.md).
+
+**Aktueller Stand04.11:** Stick/Passwoerter wieder verfuegbar, Betriebsweg von
+Manuel freigegeben. Lokale native Exportprobe bestanden und bereinigt; echte
+Keyverifikation/Backup/Restore/Admin noch nicht ausgefuehrt. Neuer einziger
+[Resume-Einstieg und Nachweise](staging-resume-2026-11-04.md) ersetzen den alten
+Startbefehl: vorhandenes Paar nur verifizieren, dann jeden Betriebsblock im
+privaten Terminal einzeln bestaetigen. Der folgende02.11-Aufschub ist Historie,
+keine erneute Frage nach Stickverfuegbarkeit. REAL APPLY bleibt gesperrt.
 Der [Quellenabgleich](../architecture/elisabeth-source-reconciliation-2026-10-30.md)
 und der [Importvertrag](../architecture/coach-import-contract-v0.1.md) bleiben
 separate fachliche und technische Grenzen.
@@ -228,6 +236,11 @@ Recovery-Radios werden ausdruecklich als Radios statt mehrdeutiger Labels gesuch
 
 Die nachfolgende Bedienung ist bis zu Manuels manuellem Wiederaufnahmesignal
 zurueckgestellt; zuerst den Teilzustand im vorstehenden Abschnitt klaeren.
+
+Superseded04.11: das Signal liegt vor. Ausschliesslich den neuen
+[geschuetzten Resume-Einstieg](staging-resume-2026-11-04.md#ein-privates-terminalfenster)
+mit aktuellem geprueftem/publiziertem Commit benutzen, nicht dieses alte
+Execute-Schema wiederholen. Backup und Admin benoetigen getrennte Bestaetigungen.
 
 Nur **ein Terminal A**, Repositorywurzel, PowerShell7 ueber `pwsh -NoProfile`.
 Das [Fensterskript](../../apps/webapp/scripts/run-staging-admin-window.ps1)

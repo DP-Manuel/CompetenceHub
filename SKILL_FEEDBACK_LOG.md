@@ -1,11 +1,22 @@
 # Skill Feedback Router
 
-Updated: 2026-11-03. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-04. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+04.11 open proposal: availability, consent and completed evidence are different
+states. On stick return, inspect presence/ACL only, resume existing custody and
+collect separate concrete runtime approvals before real backup/Admin writes.
+One consolidated protected terminal entry avoids repeated password/command loops;
+retain phase-only diagnostics and never regenerate partial keys. Native snapshot
+tests must commit new child rows AFTER an earlier parent SELECT, not merely
+update a row already read (which READ COMMITTED could also pass). Follow real
+DDL-required fields in fixtures and prove exact cleanup after failed attempts.
+Project evidence: [04.11 report](docs/operations/staging-resume-2026-11-04.md).
+Global skill proposal remains open; no canonical/global changes made.
 
 03.11 open proposal: read-only export needs both a narrow fixed-read capability
 and transaction enforcement; paginated reads are not a consistent snapshot.

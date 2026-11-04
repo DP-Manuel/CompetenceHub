@@ -1,26 +1,25 @@
 # Post-Messe Backend Horizon
 
-Updated: 2026-11-03. Status: local security/Linux and synthetic COACH-1/2/3A/3C accepted; COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED.03.11 local read-only export complete, native SQL proof separate.02.11 actual operator attempts stopped at local key readiness before backup/tunnel/Admin. Manuel defers this backup/operator window until his manual signal (different workstation/no stick); existing files remain untouched. Domain/TLS remain separate gates.
+Updated: 2026-11-04. Status: COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED. Native local export1 PASS and exact container/port cleanup; protected private resumption approved, awaiting actual operator inputs. Existing key pair/ACL checked only; no real crypto/backup/Admin proof or real Coach APPLY. Domain/TLS remain separate gates.
 The [authorized consolidation block](../completed/post-messe-konsolidierung-2026-10.md) is complete.
 Current checkpoint: [PROJECT_CONTEXT](../../../PROJECT_CONTEXT.md). Synthetic Staging acceptance is authorized; production and real-data activation are not.
 
-## Recommended Local Block While Key Hold Persists
+## Current Protected Resume Gate
 
-03.11 [read-only export adapter](../../architecture/coach-read-only-export-contract-v0.1.md)
-is complete locally:1303 PASS/29 opt-in skips, unchanged public bytes, explicit
-synthetic-only SQL target and no actual server. Next LOCAL block is disposable
-synthetic PostgreSQL read-only/isolation/shared-hydration acceptance, separately
-authorized before server/container start. The contract owns purpose/inputs/
-deliverables/DoD. No VPS, key, real-role/data write or publication. Source review
-remains complete only for confirmed short scope; optional detail/qualification/
-legal-service decisions remain held privately.
+04.11 owned native PostgreSQL export proof PASS, exact container/port cleanup.
+Stick/Passwoerter now confirmed, protected resumption approved. Single next block:
+[private resume/backup/Admin window](../../operations/staging-resume-2026-11-04.md)
+with existing keys only and distinct VERIFY/BACKUP/ADMIN confirmations.1315 full
+local PASS/30 expected opt-in skips; native1 separately PASS. Actual key/GPG,
+current real backup/restore/Admin proof remain pending user interaction, not
+inferred from fixtures. No real Coach APPLY/migration/live export/publication.
 
-## Protected Admin Operator Window: WAIT
+## Protected Admin Operator Window: PRIVATE INPUT REQUIRED
 
-WAIT for Manuel's explicit manual signal. Reconcile the preserved partial key
-state on a suitable workstation first; do not regenerate keys, repeat the old
-command or bypass backup to write real accounts. Independent local/read-only
-work remains possible. [02.11 evidence and decision](../../operations/staging-admin-bootstrap-2026-10-30.md#bedienentscheidung-und-stop-am-02112026).
+The04.11 signal/availability/approval are present. Reconcile the preserved partial
+key state through the new protected entry; do not regenerate keys, repeat the old
+command or bypass backup to write real accounts. [Current evidence/entry](../../operations/staging-resume-2026-11-04.md),
+[historical02.11 STOP](../../operations/staging-admin-bootstrap-2026-10-30.md#bedienentscheidung-und-stop-am-02112026).
 
 Purpose: prove the approved single Admin without adding business roles/mappings.
 Inputs: approved private login, reviewed pushed preparation, durable key custody,
@@ -34,6 +33,13 @@ local review/tests and approved source packaging. Domain/DNS/TLS inputs progress
 in parallel using the [security close-out](../../operations/cryptography-maintenance-2026-10-23.md).
 
 ## Current Execution
+
+- Complete04.11 local native export1 PASS: actual PostgreSQL write denial,
+  concurrent new draft/children, deterministic public/internal repeat and COACH-4
+  parity, all-table/xmin unchanged on read attempts, exact container/port cleanup.
+  Existing key path/ACL presence checked only, no contents. Single protected
+  entry and per-block runtime approvals prepared;1315 regression PASS/30 skips.
+  Actual operator result remains pending; see current protected gate above.
 
 - Complete03.11 local export adapter: one bounded canonical in-memory seal,
   minimized internal schema1 review, existing Preview/Production allowlist,
@@ -85,8 +91,8 @@ in parallel using the [security close-out](../../operations/cryptography-mainten
 
 ## Ordered Rolling Horizon
 
-The independent local preparation above is the immediate work while the key is
-unavailable. This protected/longer horizon remains gated, not automatic execution.
+The approved private resume above is the immediate next block now that key/stick
+availability is confirmed. This longer horizon stays gated, not automatic execution.
 
 | # | Intended outcome / status | Gate / dependency | Planned evidence | Confidence |
 | --- | --- | --- | --- | --- |

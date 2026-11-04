@@ -1,10 +1,12 @@
 # Staging: Checkliste Bei Stick-Rueckkehr
 
-Stand: 02.11.2026. Nur spaetere manuelle Wiederaufnahme, **jetzt nichts starten**.
-Der Backupaufschub bleibt bis zu Manuels ausdruecklichem Signal bestehen. Diese
+Stand: 04.11.2026. Das Signal liegt vor: Stick entsperrt/Passwoerter verfuegbar,
+geschuetzter Betriebsweg freigegeben. [Aktueller einzelner Resume-Einstieg](staging-resume-2026-11-04.md)
+mit getrennten VERIFY/BACKUP/ADMIN-Bestaetigungen; alte Befehle nicht wiederholen.
+Kryptografische/Backup-/Admin-Ergebnisse bleiben bis zur echten Bedienung offen. Diese
 Checkliste ersetzt nicht das [kanonische Admin-Runbook](staging-admin-bootstrap-2026-10-30.md)
 oder den [Backup-/Restorevertrag](../architecture/postgresql-backup-restore-runbook.md).
-Keine ausfuehrbaren Befehle, kein Keyzugriff und kein neues Betriebs-PASS hier.
+Kein Keyzugriff oder neues Betriebs-PASS allein aus dieser Checkliste.
 
 1. **Freigabe und Arbeitsplatz.** Manuelles Signal, Stick/privater Keyzugriff und
    geeigneter Windows-Benutzer/Rechner vorhanden? DPAPI ist rechner-/benutzergebunden.

@@ -1,15 +1,18 @@
 # Backend Sprint Addendum 30.10
 
-Status: LOCAL PREPARATION VERIFIED; actual02.11 attempts stopped before server/DB.
-Manual backup/operator resumption is deferred until Manuel signals readiness.
+Status04.11: LOCAL NATIVE EXPORT PASS; protected existing-key/backup/Admin
+resumption approved, waiting Manuel's private terminal inputs and per-block
+confirmations. [Current scope/evidence/entry](../../operations/staging-resume-2026-11-04.md).
+Actual02.11 attempts stopped before server/DB; key files are preserved and still
+not cryptographically verified. No real account/backup proof from local tests.
 Independent02.11 [COACH-4 local block](../completed/coach-4-local-readiness-2026-11-02.md)
 is complete; it does not close this real operating window or switch Website data.
 Latest independent [incremental source block](../../architecture/source-ingestion-20261030-2026-11-02.md)
 is complete for known/new inputs; approved short scope stays9 READY and unchanged.
 New details remain private.03.11 [read-only adapter](../../architecture/coach-read-only-export-contract-v0.1.md)
-is complete locally:1303 PASS/29 opt-in skips, unchanged public bytes. No actual
-SQL/server. Next separate local gate is disposable PostgreSQL enforcement proof;
-this protected window still awaits Manuel's manual signal/key access.
+is complete locally;04.11 native PostgreSQL enforcement/parity proof1 PASS,
+exact container/port cleanup.1315 full local PASS/30 opt-in skips. Signal/key
+availability now confirmed; protected real window still needs local interaction.
 
 Authority: Manuel is now the named real Staging Admin/Operator, admin only.
 This supersedes the missing-operator decision, not the previous real-APPLY

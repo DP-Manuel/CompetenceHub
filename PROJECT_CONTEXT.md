@@ -1,6 +1,6 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-03.
+Updated: 2026-11-04.
 
 ## Current Milestone
 
@@ -8,7 +8,7 @@ Post-Messe product consolidation is complete for the authorized scope: Context V
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
 The additive Calendar/native runtime, local security/Linux and synthetic COACH-1/2/3A/3C gates remain complete.
 30.10 backend sprint addendum names Manuel as the single authorized Staging Admin/Operator, admin only; earlier missing-operator STOP is superseded for this bootstrap, not real-APPLY safety.
-Elisabeth's newly authorized13-page concept is reconciled locally: existing short scope unchanged, conflicting details held privately.02.11 operator attempts stopped at local key-custody readiness before backup/tunnel/Admin creation. Partial local key files are preserved, verification metadata is absent. Manuel reports a different workstation/no backup-stick access and explicitly defers this backup window until his manual signal. Dependent real Admin/import work waits too; no protection bypass, key regeneration or real DB write.
+Elisabeth's newly authorized13-page concept is reconciled locally: existing short scope unchanged, conflicting details held privately.02.11 operator attempts stopped at local key-custody readiness before backup/tunnel/Admin creation.04.11 Manuel confirms unlocked D:\CompetenceHub/password availability and approves the described protected resumption. Existing key pair/ACL PASS by metadata only; verification metadata and account-attempt marker remain absent. Actual key/backup/restore/Admin proof still needs his private terminal interaction, with separate VERIFY/BACKUP/ADMIN confirmations. No key regeneration, protection bypass or real DB write by this preparation. [Current resume evidence/entry](docs/operations/staging-resume-2026-11-04.md).
 [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md); [prior execution evidence](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-real-apply-vorbereitung-3010). App-domain/TLS inputs remain open independently.
 
 02.11 independent local COACH-4 preparation is complete: deterministic scoped
@@ -42,6 +42,8 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.
 
 ## Current Evidence
+
+- [04.11 native export/resume](docs/operations/staging-resume-2026-11-04.md): actual owned PostgreSQL55437 test1 PASS, seven database-enforced write denials, repeat-byte/COACH-4 parity, all-table/xmin no-op and concurrent new-draft/child snapshot proof. Exact container/port cleanup verified.1315 full local tests PASS/30 expected opt-in skips; the new native case was separately executed, not left untested. Private resume prepared with existing-key-only completion, encrypted USB-copy/no-overwrite and distinct per-block approvals. No actual keys/backup/Admin/VPS/Website action; real outcome remains pending, not inferred from fixtures.
 
 - [Preview contract/QA](docs/architecture/github-pages-preview-2026-10-21.md): build isolation and local acceptance; [restart report](docs/handoffs/2026-10-21-post-messe-restart.md): successful Actions/public smoke and remaining work.
 - [SB-54 handoff](docs/handoffs/2026-09-25-mindforge-notice-layout-p0-handoff.md) owns production release/rollback evidence.
@@ -77,8 +79,8 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended next LOCAL block while key access remains absent: disposable synthetic PostgreSQL proof of actual read-only/isolation/shared-hydration behavior on owned55437. This needs separate authorization before any server/container start. Purpose, inputs, deliverables and DoD: [export contract](docs/architecture/coach-read-only-export-contract-v0.1.md#live-gate-and-one-next-local-block). No VPS/real DB/key/Website action. Completed SQL-double success is not native PostgreSQL proof.
-2. Only after Manuel's manual signal and suitable workstation/key access: reconcile preserved custody privately, then reviewed/pushed Admin window with current exact encrypted backup/restore before first real write. DoD: actual MFA/recovery/session/RBAC, cleanup/health PASS, no Coach/Calendar mappings/import. No blind old-command retry. [Manual hold](docs/operations/staging-admin-bootstrap-2026-10-30.md), [active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md), [horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
+1. Recommended next block: the approved protected existing-key/backup/restore/Admin window with Manuel's private inputs. Native export probe is complete. Use the new single resume entry at the reviewed/pushed exact commit, not an old Execute command; VERIFY, BACKUP and ADMIN are separate runtime approvals. Inputs/deliverables/DoD and current pending real evidence: [04.11 resume](docs/operations/staging-resume-2026-11-04.md#genau-ein-naechster-block). No key recreation, extra roles, import or deployment.
+2. COACH-3B REAL APPLY/live export remain disabled and are not recommended for execution until every actual prerequisite above passes and a separate import approval is obtained. [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md), [horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
 3. Resolve parallel operational inputs when available; do not expand the current local/source gate silently.
 4. Any later IONOS promotion needs its own bundled review and production approval.
 
