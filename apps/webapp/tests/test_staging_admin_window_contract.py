@@ -39,7 +39,6 @@ def test_window_has_fixed_scope_secret_and_source_contracts():
         "LOCALAPPDATA",
         "New-StagingPrivateDirectory",
         "Assert-StagingPrivateAcl",
-        "Initialize-StagingOperatorConfig",
         "Use-StagingOperatorEnvironment",
         "Assert-WindowNoPriorAttempt",
         "PRIOR_ACCOUNT_ATTEMPT_REQUIRES_MANUAL_RECONCILIATION_NO_RETRY",
@@ -99,7 +98,6 @@ def test_window_has_fixed_scope_secret_and_source_contracts():
     body = source[source.index("function Invoke-StagingAdminWindow") :]
     ordered = [
         "Assert-WindowSource $Commit",
-        "Initialize-StagingOperatorConfig",
         "LOCAL_GPG_ROUNDTRIP_REQUIRED",
         "Get-WindowHealth $ssh",
         "encrypted_prechange_snapshot",
@@ -114,6 +112,8 @@ def test_window_has_fixed_scope_secret_and_source_contracts():
     ]
     positions = [body.index(item) for item in ordered]
     assert positions == sorted(positions)
+    assert "Initialize-StagingOperatorConfig" not in body
+    assert "EXPLICIT_VERIFIED_KEY_REBASE_AND_BACKUP_TARGET_REQUIRED" in body
     assert re.search(r"postgres@sha256:[a-f0-9]{64}", source)
 
 
@@ -491,5 +491,6 @@ def test_partial_custody_guard_precedes_any_key_initialization_or_server_activit
     source = SCRIPT.read_text(encoding="ascii")
     body = source.split("function Invoke-StagingAdminWindow", 1)[1]
     assert body.index("Assert-WindowCustodyComplete $custody") < body.index("New-StagingPrivateDirectory $output")
-    assert body.index("Assert-WindowCustodyComplete $custody") < body.index("Initialize-StagingOperatorConfig")
+    assert "Initialize-StagingOperatorConfig" not in body
+    assert body.index("Assert-WindowCustodyComplete $custody") < body.index("Use-StagingOperatorEnvironment")
     assert body.index("Assert-WindowCustodyComplete $custody") < body.index("Get-WindowHealth $ssh")

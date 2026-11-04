@@ -29,22 +29,33 @@ set +x
 readonly PATH="/usr/sbin:/usr/bin:/sbin:/bin"
 export PATH LC_ALL=C
 readonly BACKUP_ROOT="/var/backups/competence-hub"
-readonly GPG_HOME="/var/lib/competence-hub-backup/gnupg"
 readonly DATABASE="competence_hub_staging"
-readonly RECIPIENT="2E44306121629A100F76A8B08CCA3D9186A28D4C"
+RECIPIENT="2E44306121629A100F76A8B08CCA3D9186A28D4C"
+GPG_HOME="/var/lib/competence-hub-backup/gnupg"
 
 fail() { printf 'competence-hub snapshot: %s\n' "$1" >&2; exit 1; }
 usage() { fail 'requires --confirm-staging-snapshot --run-id <1-64 lowercase letters/digits/underscore/hyphen; first alphanumeric>'; }
 confirmed=false
 run_id=""
+rebase_recipient=""
+rebase_selected=false
 while (( $# )); do
     case "$1" in
         --confirm-staging-snapshot) [[ "$confirmed" == false ]] || usage; confirmed=true; shift ;;
         --run-id) [[ $# -ge 2 && -z "$run_id" ]] || usage; run_id="$2"; shift 2 ;;
+        --rebase-recipient) [[ $# -ge 2 && "$rebase_selected" == false ]] || usage; rebase_selected=true; rebase_recipient="$2"; shift 2 ;;
         *) usage ;;
     esac
 done
 [[ "$confirmed" == true && "$run_id" =~ ^[a-z0-9][a-z0-9_-]{0,63}$ ]] || usage
+if [[ "$rebase_selected" == true ]]; then
+    [[ "$rebase_recipient" =~ ^[A-F0-9]{40}$ && "$rebase_recipient" != "$RECIPIENT" ]] || fail 'new explicit full recipient required'
+    [[ "${rebase_recipient//${rebase_recipient:0:1}/}" != "" ]] || fail 'placeholder recipient rejected'
+    RECIPIENT="$rebase_recipient"
+    # Additive, separately provisioned PUBLIC-KEY-ONLY home; old jobs unchanged.
+    GPG_HOME="/var/lib/competence-hub-backup/rebase-20261104-gnupg"
+fi
+readonly RECIPIENT GPG_HOME
 [[ "$(id -un)" == postgres ]] || fail 'run as the postgres OS user via sudo -u postgres, not root'
 umask 077
 for command_name in awk chmod date find flock gpg mktemp mv pg_dump pg_dumpall psql realpath rm rmdir sha256sum stat touch; do

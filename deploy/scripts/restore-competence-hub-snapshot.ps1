@@ -19,6 +19,7 @@ param(
     [string]$PythonPath = 'python.exe',
     [string]$GpgPath = 'C:\Program Files\GnuPG\bin\gpg.exe',
     [string]$DockerPath = 'docker.exe',
+    [ValidatePattern('^[A-F0-9]{40}$')][string]$ExpectedRecipient = '2E44306121629A100F76A8B08CCA3D9186A28D4C',
     [Parameter(Mandatory = $true)][switch]$ConfirmProtectedSource,
     [Parameter(Mandatory = $true)][switch]$ConfirmIsolatedRestore
 )
@@ -203,7 +204,7 @@ try {
     $endpoint = Invoke-Native $docker @('context', 'inspect', '--format', '{{json .Endpoints.docker.Host}}')
     if ($endpoint -cnotmatch '^"npipe:////\./pipe/(docker_engine|dockerDesktopLinuxEngine)"$') { throw 'local_docker_engine_required' }
     $phase = 'source_baseline_validation'
-    $validation = (Invoke-Native $python @($verifier, 'validate', '--expected', (Join-Path $source 'METADATA'))) | ConvertFrom-Json
+    $validation = (Invoke-Native $python @($verifier, 'validate', '--expected', (Join-Path $source 'METADATA'), '--expected-recipient', $ExpectedRecipient)) | ConvertFrom-Json
     if ($validation.status -cne 'VALID' -or $validation.metadata_sha256 -cne $hashes['METADATA']) { throw 'source_baseline_invalid' }
     $null = Invoke-Native $docker @('image', 'inspect', $image)
 
@@ -283,7 +284,7 @@ try {
     $actual = Invoke-Native $docker @('exec', $containerId, 'psql', '-XqAt', '-U', 'postgres', '-d', $restoreDatabase, '-v', 'ON_ERROR_STOP=1', '-f', '/restore/baseline.sql')
     $actualFile = Join-Path $restoreRoot 'restored-baseline.jsonl'
     [IO.File]::WriteAllText($actualFile, $actual + "`n", $utf8)
-    $comparison = (Invoke-Native $python @($verifier, 'compare', '--expected', (Join-Path $restoreRoot 'METADATA'), '--actual', $actualFile)) | ConvertFrom-Json
+    $comparison = (Invoke-Native $python @($verifier, 'compare', '--expected', (Join-Path $restoreRoot 'METADATA'), '--actual', $actualFile, '--expected-recipient', $ExpectedRecipient)) | ConvertFrom-Json
     if ($comparison.status -cne 'PASS' -or $comparison.metadata_sha256 -cne $hashes['METADATA'] -or
         $comparison.baseline_sha256 -cne $validation.baseline_sha256 -or -not $comparison.owners_verified) { throw 'baseline_comparison_failed' }
 }

@@ -12,7 +12,13 @@ param(
     [string]$ExpectedSourceCommit,
     [switch]$AcknowledgePrivateWindow,
     [switch]$AcknowledgeQuietDatabase,
-    [switch]$AcknowledgeOperatorCustody
+    [switch]$AcknowledgeOperatorCustody,
+    [string]$RebasedStorageDirectory,
+    [string]$RebasedGpgHome,
+    [string]$ExpectedBackupRecipient,
+    [string]$BackupDestinationDirectory,
+    [long]$RequiredBackupFreeBytes,
+    [switch]$AcknowledgeBackupKeyRebase
 )
 
 $script:WindowRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
@@ -128,18 +134,28 @@ function Get-WindowStopCode {
         'CLEAN_PRIVATE_DIAGNOSTIC_ENVIRONMENT_REQUIRED', 'CLEAN_OPERATOR_PROCESS_REQUIRED',
         'REVIEWED_INPUT_MISSING_OR_LINKED'
         'OPERATION_BLOCK_NOT_APPROVED'
+        'EXPLICIT_VERIFIED_KEY_REBASE_AND_BACKUP_TARGET_REQUIRED'
+        'EXPLICIT_BACKUP_RECIPIENT_REQUIRED', 'LEGACY_CUSTODY_NOT_A_REBASE'
+        'REBASE_ORIGIN_AND_RECIPIENT_BINDING_REQUIRED'
+        'VERIFIED_ENCRYPTED_BACKUP_TARGET_REQUIRED'
+        'VERIFIED_ENCRYPTED_RESTORE_WORKSPACE_REQUIRED'
+        'CURRENT_VOLUME_PROTECTION_STATUS_UNAVAILABLE'
     )
     if ($Message -cin $known) { return $Message }
     return 'PRIVATE_MANUAL_REVIEW_REQUIRED'
 }
 
 function Confirm-WindowOperation {
-    param([ValidateSet('BACKUP','ADMIN')][string]$Block)
+    param([ValidateSet('BACKUP','RESTORE','ADMIN')][string]$Block)
     if ($Block -ceq 'BACKUP') {
         Write-Host 'TARGET: manuel@217.160.255.86 / competence_hub_staging. No production DB.'
-        Write-Host 'PLAN: new encrypted prechange backup, exact protected external copy and isolated local restore.'
+        Write-Host 'PLAN: new encrypted prechange backup and exact protected external copy; restore needs its own approval.'
         Write-Host 'BACKUP also confirms: no other operator/DDL/role/data changes during this quiet database window.'
         Write-Host 'Existing backup jobs/data stay unchanged. Rollback: retain backups; remove only owned temporary artifacts.'
+    } elseif ($Block -ceq 'RESTORE') {
+        Write-Host 'TARGET: owned isolated local PostgreSQL container, network none. Never replace Staging or replay cluster roles.'
+        Write-Host 'PLAN: verify exact encrypted copy, restore database/schema/owners/counts, then remove owned plaintext/container.'
+        Write-Host 'Rollback: original encrypted set and live database unchanged; stop if cleanup cannot be proved.'
     } else {
         Write-Host 'TARGET: competence_hub_staging. Exactly one Manuel account with existing approved private login, admin only.'
         Write-Host 'PLAN: first account write only after current exact backup/restore; native MFA/recovery/session/logout/audit/RBAC.'
@@ -189,10 +205,12 @@ function Get-WindowSnapshotPlan {
 }
 
 function Get-WindowRootScript {
+    param([string]$Recipient = $script:WindowRecipient)
+    if ($Recipient -cnotmatch '^[A-F0-9]{40}$' -or $Recipient -cmatch '^(.)\1{39}$') { throw 'EXPLICIT_BACKUP_RECIPIENT_REQUIRED' }
     # Reviewed, fixed-scope root wrapper. Snapshot itself executes as postgres.
     # Export is encrypted-only: fixed five files, no globals replay or permissions
     # repair of any existing source. The protected original snapshot is retained.
-    return @'
+    $template = @'
 #!/bin/bash
 set -Eeuo pipefail
 set +x
@@ -225,6 +243,31 @@ chmod 0700 -- "$export_dir"
 for service in dp-chatbot.service nginx.service fail2ban.service postgresql.service; do systemctl is-active --quiet "$service"; done
 printf '%s\n' "$result"
 '@
+    if ($Recipient -cne $script:WindowRecipient) {
+        $template = $template.Replace('--run-id "$run")', ('--run-id "$run" --rebase-recipient ' + $Recipient + ')'))
+    }
+    return $template
+}
+
+function Assert-WindowEncryptedBackupTarget {
+    param([string]$Path,[long]$RequiredFreeBytes)
+    $full = Assert-StagingExternalPath $Path
+    Assert-StagingPrivateAcl $full -Directory
+    $mount = [IO.Path]::GetPathRoot($full)
+    try {
+        $volume = Get-Volume -DriveLetter $mount.Substring(0,1) -ErrorAction Stop
+        $protection = Get-BitLockerVolume -MountPoint $mount -ErrorAction Stop
+    } catch { throw 'CURRENT_VOLUME_PROTECTION_STATUS_UNAVAILABLE' }
+    if ($volume.FileSystem -cne 'NTFS' -or [string]$protection.VolumeStatus -cne 'FullyEncrypted' -or
+        [string]$protection.ProtectionStatus -cne 'On' -or [string]$protection.LockStatus -cne 'Unlocked' -or
+        $RequiredFreeBytes -lt 512MB -or [IO.DriveInfo]::new($mount).AvailableFreeSpace -lt $RequiredFreeBytes) { throw 'VERIFIED_ENCRYPTED_BACKUP_TARGET_REQUIRED' }
+    # Restore helper creates temporary plaintext under LOCALAPPDATA, also verify it.
+    $tempMount = [IO.Path]::GetPathRoot($env:LOCALAPPDATA)
+    try { $tempProtection = Get-BitLockerVolume -MountPoint $tempMount -ErrorAction Stop }
+    catch { throw 'CURRENT_VOLUME_PROTECTION_STATUS_UNAVAILABLE' }
+    if ([string]$tempProtection.VolumeStatus -cne 'FullyEncrypted' -or [string]$tempProtection.ProtectionStatus -cne 'On' -or
+        [string]$tempProtection.LockStatus -cne 'Unlocked' -or [IO.DriveInfo]::new($tempMount).AvailableFreeSpace -lt $RequiredFreeBytes) { throw 'VERIFIED_ENCRYPTED_RESTORE_WORKSPACE_REQUIRED' }
+    return $full
 }
 
 function Remove-WindowRemoteArtifacts {
@@ -301,10 +344,15 @@ function Invoke-WindowConsoleOperator {
 }
 
 function Invoke-StagingAdminWindow {
-    param([string]$Commit, [switch]$PrivateWindow, [switch]$QuietDatabase, [switch]$OperatorCustody)
+    param([string]$Commit, [switch]$PrivateWindow, [switch]$QuietDatabase, [switch]$OperatorCustody,
+          [string]$CustodyPath,[string]$KeyHome,[string]$Recipient,[string]$TargetDirectory,
+          [long]$RequiredFreeBytes,[switch]$RebaseApproved)
     $ErrorActionPreference = 'Stop'; $VerbosePreference = 'SilentlyContinue'; $DebugPreference = 'SilentlyContinue'
     Set-StrictMode -Version Latest
     if (-not $IsWindows -or -not $PrivateWindow -or -not $QuietDatabase -or -not $OperatorCustody) { throw 'PRIVATE_QUIET_CUSTODY_ACKNOWLEDGMENTS_REQUIRED' }
+    if (-not $RebaseApproved -or -not $CustodyPath -or -not $KeyHome -or -not $TargetDirectory -or
+        $Recipient -cnotmatch '^[A-F0-9]{40}$' -or $Recipient -ceq $script:WindowRecipient -or
+        $Recipient -cmatch '^(.)\1{39}$') { throw 'EXPLICIT_VERIFIED_KEY_REBASE_AND_BACKUP_TARGET_REQUIRED' }
     Assert-WindowNoDiagnostics
     if (@(Get-ChildItem Env: | Where-Object { $_.Name -like 'COMPETENCE_HUB_*' -or $_.Name -like 'DOCKER_*' }).Count) { throw 'CLEAN_OPERATOR_PROCESS_REQUIRED' }
     Assert-WindowPortFree
@@ -324,7 +372,7 @@ function Invoke-StagingAdminWindow {
         if (-not (Test-Path -LiteralPath $path -PathType Leaf) -or (Get-Item -LiteralPath $path -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'REVIEWED_INPUT_MISSING_OR_LINKED' }
     }
     $restoreApi = Get-Command $restore -ErrorAction Stop
-    foreach ($parameter in @('BackupSet', 'ProofPath', 'GpgHome', 'PythonPath', 'GpgPath', 'DockerPath', 'ConfirmProtectedSource', 'ConfirmIsolatedRestore')) {
+    foreach ($parameter in @('BackupSet', 'ProofPath', 'GpgHome', 'PythonPath', 'GpgPath', 'DockerPath', 'ExpectedRecipient', 'ConfirmProtectedSource', 'ConfirmIsolatedRestore')) {
         if (-not $restoreApi.Parameters.ContainsKey($parameter)) { throw 'RESTORE_API_NOT_INTEGRATED' }
     }
     Assert-WindowSource $Commit $git
@@ -334,37 +382,40 @@ function Invoke-StagingAdminWindow {
     # The initializer requires an existing external parent; creating that parent
     # is a separate local readiness gate, never an implicit permissive mkdir.
     if (-not [IO.Directory]::Exists($base)) { throw 'EXTERNAL_PROTECTED_PARENT_REQUIRED' }
-    $custody = Join-Path $base 'staging-operator'
-    $gpgHome = Join-Path $base 'backup-gnupg'
+    $custody = Assert-StagingExternalPath $CustodyPath
+    $gpgHome = Assert-StagingExternalPath $KeyHome
+    $legacyCustody = Join-Path $base 'staging-operator'
+    $legacyGpgHome = Join-Path $base 'backup-gnupg'
+    if ($custody -eq $legacyCustody -or $gpgHome -eq $legacyGpgHome) { throw 'LEGACY_CUSTODY_NOT_A_REBASE' }
+    Assert-StagingPrivateAcl $gpgHome -Directory
+    $target = Assert-WindowEncryptedBackupTarget $TargetDirectory $RequiredFreeBytes
     $corpus = Join-Path $base 'staging-operator-corpus-20261030/compromised-password-fingerprints.sha256'
     $attempt = Join-Path $custody 'bootstrap-attempt.json'
     Assert-WindowNoPriorAttempt $attempt
     Assert-WindowCustodyComplete $custody
+    $keyBinding = Get-Content -Raw -LiteralPath (Join-Path $custody 'staging-operator.metadata.json') | ConvertFrom-Json -AsHashtable
+    if ($keyBinding.allowed_origin -cne 'https://127.0.0.1:443' -or $keyBinding.recipient -cne $Recipient) { throw 'REBASE_ORIGIN_AND_RECIPIENT_BINDING_REQUIRED' }
     $null = Assert-StagingCorpus $corpus $script:WindowCorpusHash
     $context = Invoke-WindowCommand $docker @('context', 'inspect', '--format', '{{json .Endpoints.docker.Host}}')
     if ($context -cnotmatch '^"npipe:////\./pipe/(docker_engine|dockerDesktopLinuxEngine)"$') { throw 'LOCAL_DOCKER_ENGINE_REQUIRED' }
     $platform = Invoke-WindowCommand $docker @('image', 'inspect', '--format', '{{.Os}} {{.Architecture}}', $script:WindowImage)
     if ($platform -cne 'linux amd64') { throw 'CACHED_PINNED_RESTORE_IMAGE_REQUIRED_NO_PULL' }
     $run = 'admin-' + [Guid]::NewGuid().ToString('N')
-    $output = Join-Path $base ('staging-window-' + $run)
+    $output = Join-Path $target ('staging-window-' + $run)
     New-StagingPrivateDirectory $output
     $result = [ordered]@{ schema = 1; status = 'NOT_COMPLETE'; gate = 'PRIVATE_MANUAL_REVIEW_REQUIRED'; phase = 'local_readiness'; real_coach_apply = 'DISABLED'; account_creation = 'NOT_ATTEMPTED'; source_commit = $Commit; remote_cleanup = 'NOT_NEEDED'; tunnel_cleanup = 'NOT_NEEDED' }
     $tunnel = $null; $remoteOwned = $false; $sudo = $null; $appPassword = $null; $ownerPassword = $null
     try {
-        if (-not (Test-Path -LiteralPath $custody)) {
-            $null = Initialize-StagingOperatorConfig -StorageDirectory $custody -FingerprintPath $corpus -ExpectedCorpusSha256 $script:WindowCorpusHash `
-                -AllowedOrigin 'https://127.0.0.1:443' -GpgHome $gpgHome -GpgExecutable $gpg -AcknowledgeProtectedStorage -AcknowledgeOperatorCustody
-        }
-        Use-StagingOperatorEnvironment -StorageDirectory $custody -AcknowledgeOperatorCustody -Action { }
+        Use-StagingOperatorEnvironment -StorageDirectory $custody -ExpectedRecipient $Recipient -AcknowledgeOperatorCustody -Action { }
         # Prove actual local key/pinentry availability BEFORE touching the server.
         $probe = [Text.Encoding]::ASCII.GetBytes('Competence Hub non-secret key availability probe v1')
         $probePath = Join-Path $output 'gpg-readiness-probe.gpg'
         $encrypted = [IO.File]::Open($probePath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
         $memory = [IO.MemoryStream]::new()
         try {
-            Invoke-StagingGpg -Executable $gpg -KeyHome $gpgHome -Mode Encrypt -InputBytes $probe -OutputStream $encrypted
+            Invoke-StagingGpg -Executable $gpg -KeyHome $gpgHome -Mode Encrypt -Recipient $Recipient -InputBytes $probe -OutputStream $encrypted
             $encrypted.Dispose(); $encrypted = $null
-            Invoke-StagingGpg -Executable $gpg -KeyHome $gpgHome -Mode Decrypt -EncryptedPath $probePath -OutputStream $memory
+            Invoke-StagingGpg -Executable $gpg -KeyHome $gpgHome -Mode Decrypt -Recipient $Recipient -EncryptedPath $probePath -OutputStream $memory
             if (-not [Security.Cryptography.CryptographicOperations]::FixedTimeEquals($probe, $memory.ToArray())) { throw 'LOCAL_GPG_ROUNDTRIP_REQUIRED' }
         } finally { if ($encrypted) { $encrypted.Dispose() }; $memory.Dispose(); [Array]::Clear($probe, 0, $probe.Length) }
         Assert-WindowSource $Commit $git
@@ -378,7 +429,7 @@ function Invoke-StagingAdminWindow {
         if ($created -cne $run) { throw 'OWNED_REMOTE_DIRECTORY_NOT_CONFIRMED' }
         $remoteOwned = $true; $result.remote_cleanup = 'PENDING'
         $wrapper = Join-Path $output 'window-root.sh'
-        [IO.File]::WriteAllText($wrapper, ((Get-WindowRootScript).Replace("`r`n", "`n") + "`n"), [Text.Encoding]::ASCII)
+        [IO.File]::WriteAllText($wrapper, ((Get-WindowRootScript -Recipient $Recipient).Replace("`r`n", "`n") + "`n"), [Text.Encoding]::ASCII)
         foreach ($pair in @(@($producer, 'snapshot-helper'), @($wrapper, 'window-root.sh'))) {
             $null = Invoke-WindowCommand $scp ($script:WindowSshOptions + @($pair[0], ($script:WindowHost + ':' + $remote + '/' + $pair[1])))
             $hash = (Get-FileHash -LiteralPath $pair[0] -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -405,10 +456,12 @@ function Invoke-StagingAdminWindow {
         }
         if (@(Get-ChildItem -LiteralPath $backup -Force).Count -ne 5) { throw 'EXACT_FIVE_FILE_SET_REQUIRED' }
         Write-WindowRecord (Join-Path $output 'snapshot-binding.json') $snapshot
+        Confirm-WindowOperation -Block RESTORE
+        $null = Assert-WindowEncryptedBackupTarget $TargetDirectory $RequiredFreeBytes
         $result.phase = 'isolated_restore'
         $proof = Join-Path $output 'restore-proof.json'
         $null = Invoke-WindowCommand $pwsh @('-NoProfile', '-File', $restore, '-BackupSet', $backup, '-ProofPath', $proof,
-            '-GpgHome', $gpgHome, '-PythonPath', $python, '-GpgPath', $gpg, '-DockerPath', $docker, '-ConfirmProtectedSource', '-ConfirmIsolatedRestore')
+            '-GpgHome', $gpgHome, '-PythonPath', $python, '-GpgPath', $gpg, '-DockerPath', $docker, '-ExpectedRecipient', $Recipient, '-ConfirmProtectedSource', '-ConfirmIsolatedRestore')
         if (-not (Test-Path -LiteralPath $proof -PathType Leaf)) { throw 'ACTUAL_RESTORE_PROOF_REQUIRED' }
         $restored = Get-Content -Raw -LiteralPath $proof | ConvertFrom-Json -AsHashtable
         if ($restored.schema -cne 'competence-hub.prechange-restore-proof.v1' -or $restored.status -cne 'PASS') { throw 'ACTUAL_RESTORE_PROOF_REQUIRED' }
@@ -436,10 +489,10 @@ function Invoke-StagingAdminWindow {
         $result.phase = 'private_admin_operator'
         $binding = Join-Path $output 'operator-binding.json'
         Use-WindowDatabaseEnvironment $appPassword $ownerPassword -Action {
-            Use-StagingOperatorEnvironment -StorageDirectory $custody -AcknowledgeOperatorCustody -Action {
+            Use-StagingOperatorEnvironment -StorageDirectory $custody -ExpectedRecipient $Recipient -AcknowledgeOperatorCustody -Action {
                 Write-WindowRecord $attempt @{ schema = 1; status = 'ATTEMPTED_CHECK_REQUIRED'; window = $output; source_commit = $Commit; started_at_utc = [DateTime]::UtcNow.ToString('o') }
                 $result.account_creation = 'ATTEMPTED_CHECK_REQUIRED'
-                Invoke-WindowConsoleOperator $python @($operator, '--login-file', $login, '--restore-proof', $proof, '--backup-set', $backup, '--binding-output', $binding)
+                Invoke-WindowConsoleOperator $python @($operator, '--login-file', $login, '--restore-proof', $proof, '--backup-set', $backup, '--binding-output', $binding, '--expected-backup-recipient', $Recipient)
             }
         }
         $account = Get-Content -Raw -LiteralPath $binding | ConvertFrom-Json -AsHashtable
@@ -476,7 +529,7 @@ if ($MyInvocation.InvocationName -ne '.') {
     if (-not $Execute) {
         Write-Output 'STAGING_ADMIN_WINDOW=NOT_EXECUTED READINESS_ONLY REAL_COACH_APPLY=DISABLED'
     } else {
-        try { Invoke-StagingAdminWindow -Commit $ExpectedSourceCommit -PrivateWindow:$AcknowledgePrivateWindow -QuietDatabase:$AcknowledgeQuietDatabase -OperatorCustody:$AcknowledgeOperatorCustody }
+        try { Invoke-StagingAdminWindow -Commit $ExpectedSourceCommit -PrivateWindow:$AcknowledgePrivateWindow -QuietDatabase:$AcknowledgeQuietDatabase -OperatorCustody:$AcknowledgeOperatorCustody -CustodyPath $RebasedStorageDirectory -KeyHome $RebasedGpgHome -Recipient $ExpectedBackupRecipient -TargetDirectory $BackupDestinationDirectory -RequiredFreeBytes $RequiredBackupFreeBytes -RebaseApproved:$AcknowledgeBackupKeyRebase }
         catch {
             $code = Get-WindowStopCode $_.Exception.Message
             [Console]::Error.WriteLine("STAGING_ADMIN_WINDOW=STOP GATE=$code REAL_COACH_APPLY=DISABLED")

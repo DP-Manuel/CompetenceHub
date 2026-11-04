@@ -143,7 +143,9 @@ def read_login(path):
     return value
 
 
-def verify_restore_proof(path, backup_set, now):
+def verify_restore_proof(
+    path, backup_set, now, *, expected_recipient=baseline_verifier.RECIPIENT
+):
     directory, proof_path = Path(backup_set).resolve(), Path(path).resolve()
     require(
         not directory.is_relative_to(ROOT)
@@ -181,7 +183,9 @@ def verify_restore_proof(path, backup_set, now):
         "CURRENT_RESTORE_REQUIRED",
     )
     metadata = baseline_verifier.regular_bytes(directory / "METADATA")
-    summary = baseline_verifier.validate_metadata(metadata)
+    summary = baseline_verifier.validate_metadata(
+        metadata, expected_recipient=expected_recipient
+    )
     header = json.loads(metadata.splitlines()[0])
     snapshot_time = datetime.strptime(
         header["created_at_utc"], "%Y%m%dT%H%M%SZ"
@@ -750,6 +754,7 @@ def main(argv=None):
     parser.add_argument("--restore-proof", required=True)
     parser.add_argument("--backup-set", required=True)
     parser.add_argument("--binding-output", required=True)
+    parser.add_argument("--expected-backup-recipient", default=baseline_verifier.RECIPIENT)
     args = parser.parse_args(argv)
     require_private_environment(os.environ)
     output = Path(args.binding_output).resolve()
@@ -761,7 +766,12 @@ def main(argv=None):
         logging.getLogger(name).setLevel(logging.CRITICAL)
     app_url, owner_url = target_urls(os.environ)
     login = read_login(args.login_file)
-    proof = verify_restore_proof(args.restore_proof, args.backup_set, datetime.now(UTC))
+    proof = verify_restore_proof(
+        args.restore_proof,
+        args.backup_set,
+        datetime.now(UTC),
+        expected_recipient=args.expected_backup_recipient,
+    )
     baseline = asyncio.run(inspect(owner_url, expected_baseline=proof))
     require(
         abs((datetime.now(UTC) - baseline["now"]).total_seconds()) <= 10,
@@ -788,7 +798,10 @@ def main(argv=None):
         # Human prompts have no bounded duration. Recheck all counts and both
         # snapshot/restore ages immediately before the guarded transaction.
         proof = verify_restore_proof(
-            args.restore_proof, args.backup_set, datetime.now(UTC)
+            args.restore_proof,
+            args.backup_set,
+            datetime.now(UTC),
+            expected_recipient=args.expected_backup_recipient,
         )
         baseline = asyncio.run(inspect(owner_url, expected_baseline=proof))
         require(

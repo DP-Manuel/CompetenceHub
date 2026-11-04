@@ -162,7 +162,9 @@ function New-StagingOperatorSecret {
 
 function Invoke-StagingGpg {
     param([string]$Executable, [string]$KeyHome, [ValidateSet('Encrypt', 'Decrypt')][string]$Mode,
-          [byte[]]$InputBytes, [string]$EncryptedPath, [IO.Stream]$OutputStream)
+          [byte[]]$InputBytes, [string]$EncryptedPath, [IO.Stream]$OutputStream,
+          [string]$Recipient = $script:OperatorRecipient)
+    if ($Recipient -cnotmatch '^[A-F0-9]{40}$' -or $Recipient -cmatch '^(.)\1{39}$') { throw 'Explicit full recipient required.' }
     $start = [Diagnostics.ProcessStartInfo]::new()
     $start.FileName = $Executable
     $start.UseShellExecute = $false
@@ -173,10 +175,10 @@ function Invoke-StagingGpg {
         $start.ArgumentList.Add($argument)
     }
     if ($Mode -eq 'Encrypt') {
-        foreach ($argument in @('--batch', '--no-tty', '--trust-model', 'always', '--recipient', $script:OperatorRecipient, '--encrypt')) { $start.ArgumentList.Add($argument) }
+        foreach ($argument in @('--batch', '--no-tty', '--trust-model', 'always', '--recipient', $Recipient, '--encrypt')) { $start.ArgumentList.Add($argument) }
     } else {
         # Native pinentry only. No loopback/passphrase arguments or plaintext output.
-        foreach ($argument in @('--pinentry-mode', 'ask', '--decrypt', $EncryptedPath)) { $start.ArgumentList.Add($argument) }
+        foreach ($argument in @('--pinentry-mode', 'ask', '--status-fd', '2', '--decrypt', $EncryptedPath)) { $start.ArgumentList.Add($argument) }
     }
     $process = [Diagnostics.Process]::new()
     $process.StartInfo = $start
@@ -188,10 +190,14 @@ function Invoke-StagingGpg {
         $stdout = $process.StandardOutput.BaseStream.CopyToAsync($OutputStream)
         if ($Mode -eq 'Encrypt') { $process.StandardInput.BaseStream.Write($InputBytes, 0, $InputBytes.Length) }
         $process.StandardInput.Close()
-        $stdout.GetAwaiter().GetResult()
+        $null = $stdout.GetAwaiter().GetResult()
         $process.WaitForExit()
-        $null = $stderr.GetAwaiter().GetResult()
+        $diagnostics = $stderr.GetAwaiter().GetResult()
         if ($process.ExitCode -ne 0) { throw 'GPG failed; no verified custody set was created.' }
+        if ($Mode -eq 'Decrypt') {
+            $keys = [regex]::Matches($diagnostics,'(?m)^\[GNUPG:\] DECRYPTION_KEY [A-F0-9]{40} ([A-F0-9]{40}) ')
+            if ($keys.Count -ne 1 -or $keys[0].Groups[1].Value -cne $Recipient) { throw 'GPG decryption recipient binding failed.' }
+        }
     } finally {
         if ($started -and -not $process.HasExited) { $process.Kill($true); $process.WaitForExit() }
         $process.Dispose()
@@ -318,10 +324,12 @@ function Complete-StagingOperatorConfig {
         [Parameter(Mandatory)][string]$GpgHome,
         [string]$GpgExecutable = 'gpg.exe',
         [switch]$AcknowledgeProtectedStorage,
-        [switch]$AcknowledgeOperatorCustody
+        [switch]$AcknowledgeOperatorCustody,
+        [string]$ExpectedRecipient = $script:OperatorRecipient
     )
     $ErrorActionPreference = 'Stop'
     if (-not $IsWindows -or -not $AcknowledgeProtectedStorage -or -not $AcknowledgeOperatorCustody) { throw 'Private Windows operator acknowledgments required.' }
+    if ($ExpectedRecipient -cnotmatch '^[A-F0-9]{40}$' -or $ExpectedRecipient -cmatch '^(.)\1{39}$') { throw 'Explicit full recipient required.' }
     foreach ($name in [Environment]::GetEnvironmentVariables('Process').Keys) {
         if ($name -match '^(DEBUG|PWDEBUG|PW_|PLAYWRIGHT_|NODE_)') { throw 'Private diagnostic environment required.' }
     }
@@ -360,7 +368,7 @@ function Complete-StagingOperatorConfig {
         [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr); $bstr = [IntPtr]::Zero; $text = $null
         Assert-StagingOperatorPayload $payload $script:OperatorKeyVersions
         $verification = [IO.MemoryStream]::new()
-        Invoke-StagingGpg -Executable $executable -KeyHome $keyDirectory -Mode Decrypt -EncryptedPath $backup -OutputStream $verification
+        Invoke-StagingGpg -Executable $executable -KeyHome $keyDirectory -Mode Decrypt -Recipient $ExpectedRecipient -EncryptedPath $backup -OutputStream $verification
         $restored = $verification.ToArray()
         if (-not [Security.Cryptography.CryptographicOperations]::FixedTimeEquals($plain, $restored)) { throw 'Existing portable key backup does not match.' }
         $null = Assert-StagingCorpus $corpus $ExpectedCorpusSha256
@@ -374,7 +382,7 @@ function Complete-StagingOperatorConfig {
             corpus_path=$corpus; corpus_sha256=$ExpectedCorpusSha256
             corpus_provenance_path=(Join-Path ([IO.Path]::GetDirectoryName($corpus)) 'corpus-provenance.json')
             allowed_origin=$AllowedOrigin; key_versions=$script:OperatorKeyVersions
-            recipient=$script:OperatorRecipient; portable_backup_verified=$true
+            recipient=$ExpectedRecipient; portable_backup_verified=$true
             store_sha256=$storeHash; backup_sha256=$backupHash
         }
         $data = [Text.Encoding]::UTF8.GetBytes(($record | ConvertTo-Json -Depth 5))
@@ -401,9 +409,11 @@ function Complete-StagingOperatorConfig {
 function Use-StagingOperatorEnvironment {
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$StorageDirectory,
-          [Parameter(Mandatory)][scriptblock]$Action, [switch]$AcknowledgeOperatorCustody)
+          [Parameter(Mandatory)][scriptblock]$Action, [switch]$AcknowledgeOperatorCustody,
+          [string]$ExpectedRecipient = $script:OperatorRecipient)
     $ErrorActionPreference = 'Stop'
     if (-not $AcknowledgeOperatorCustody) { throw 'Private operator custody acknowledgment is required.' }
+    if ($ExpectedRecipient -cnotmatch '^[A-F0-9]{40}$' -or $ExpectedRecipient -cmatch '^(.)\1{39}$') { throw 'Explicit full recipient required.' }
     $directory = Assert-StagingExternalPath $StorageDirectory
     Assert-StagingPrivateAcl $directory -Directory
     $store = Join-Path $directory $script:OperatorStoreName
@@ -412,7 +422,7 @@ function Use-StagingOperatorEnvironment {
     foreach ($file in @($store, $backup, $metadata)) { Assert-StagingPrivateAcl $file }
     $record = Get-Content -Raw -LiteralPath $metadata -ErrorAction Stop | ConvertFrom-Json -AsHashtable
     if ($record.schema -ne 1 -or $record.environment -cne 'staging' -or $record.status -cne 'READY' -or
-        $record.portable_backup_verified -ne $true -or $record.recipient -cne $script:OperatorRecipient -or
+        $record.portable_backup_verified -ne $true -or $record.recipient -cne $ExpectedRecipient -or
         (Get-FileHash -LiteralPath $store -Algorithm SHA256).Hash.ToLowerInvariant() -cne $record.store_sha256 -or
         (Get-FileHash -LiteralPath $backup -Algorithm SHA256).Hash.ToLowerInvariant() -cne $record.backup_sha256) { throw 'Verified custody metadata/hash gate failed.' }
     Assert-StagingOrigin $record.allowed_origin

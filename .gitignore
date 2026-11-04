@@ -18,6 +18,19 @@ tools/node-*/
 tools/*.zip
 .tmp/
 
+# Real key/recovery artifacts are external; also deny accidental repo copies.
+*.gpg
+*.asc
+*.clixml
+*.dump
+*.dump.*
+pubring.kbx*
+private-keys-v1.d/
+openpgp-revocs.d/
+backup-key-rebase-20*/
+staging-operator/
+staging-operator-rebase-*/
+
 # Internal source material
 Quellen/
 

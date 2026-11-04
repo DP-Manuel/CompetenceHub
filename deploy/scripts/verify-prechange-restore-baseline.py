@@ -85,11 +85,21 @@ def safe_identifier(value: object) -> bool:
     return type(value) is str and IDENTIFIER.fullmatch(value) is not None
 
 
-def validate_header(record: dict) -> None:
+def validate_recipient(recipient: str) -> None:
+    require(
+        type(recipient) is str
+        and re.fullmatch(r"[A-F0-9]{40}", recipient) is not None
+        and len(set(recipient)) > 1,
+        "explicit_full_recipient_required",
+    )
+
+
+def validate_header(record: dict, *, expected_recipient: str = RECIPIENT) -> None:
+    validate_recipient(expected_recipient)
     for key, expected in {
         "format": "competence-hub.prechange.v1",
         "database": DATABASE,
-        "recipient": RECIPIENT,
+        "recipient": expected_recipient,
         "encryption": "openpgp",
         "baseline_scope": "all_non_system_schemas",
         "consistency": "exported_mvcc_snapshot",
@@ -113,7 +123,13 @@ def validate_header(record: dict) -> None:
         raise ContractError("invalid_header_date") from None
 
 
-def parse_baseline(data: bytes, *, expected: bool, current: bool = False) -> list[dict]:
+def parse_baseline(
+    data: bytes,
+    *,
+    expected: bool,
+    current: bool = False,
+    expected_recipient: str = RECIPIENT,
+) -> list[dict]:
     require(not (expected and current), "invalid_parse_mode")
     require(type(data) is bytes and 0 < len(data) <= MAX_BYTES, "invalid_input_size")
     try:
@@ -142,7 +158,7 @@ def parse_baseline(data: bytes, *, expected: bool, current: bool = False) -> lis
         require(set(record) == FIELDS[kind], "invalid_record_fields")
         if kind == "header":
             require(expected and index == 0, "unexpected_header")
-            validate_header(record)
+            validate_header(record, expected_recipient=expected_recipient)
         elif kind == "database":
             name = record["name"]
             require(
@@ -260,18 +276,28 @@ def baseline_summary(records: list[dict]) -> dict:
     }
 
 
-def validate_metadata(data: bytes) -> dict:
+def validate_metadata(data: bytes, *, expected_recipient: str = RECIPIENT) -> dict:
     """Validate the complete source; no evidence of restore execution is implied."""
     return dict(
-        baseline_summary(parse_baseline(data, expected=True)),
+        baseline_summary(
+            parse_baseline(data, expected=True, expected_recipient=expected_recipient)
+        ),
         status="VALID",
         metadata_sha256=hashlib.sha256(data).hexdigest(),
     )
 
 
-def compare(expected_data: bytes, actual_data: bytes, *, current: bool = False) -> dict:
+def compare(
+    expected_data: bytes,
+    actual_data: bytes,
+    *,
+    current: bool = False,
+    expected_recipient: str = RECIPIENT,
+) -> dict:
     """Default: isolated restore only. current=True: explicit pre-write staging check."""
-    expected = parse_baseline(expected_data, expected=True)
+    expected = parse_baseline(
+        expected_data, expected=True, expected_recipient=expected_recipient
+    )
     actual = parse_baseline(actual_data, expected=False, current=current)
     require(expected == actual, "baseline_mismatch")
     return dict(
@@ -334,22 +360,30 @@ def main(argv: list[str] | None = None) -> int:
     query.add_argument("--current-staging", action="store_true")
     validator = commands.add_parser("validate")
     validator.add_argument("--expected", required=True, type=Path)
+    validator.add_argument("--expected-recipient", default=RECIPIENT)
     comparator = commands.add_parser("compare")
     comparator.add_argument("--expected", required=True, type=Path)
     comparator.add_argument("--actual", required=True, type=Path)
     comparator.add_argument("--current-staging", action="store_true")
+    comparator.add_argument("--expected-recipient", default=RECIPIENT)
     args = parser.parse_args(argv)
     try:
         if args.command == "query":
             sys.stdout.write(query_sql(current=args.current_staging))
         elif args.command == "validate":
             data = regular_bytes(args.expected.absolute())
-            print(json.dumps(validate_metadata(data), sort_keys=True))
+            print(
+                json.dumps(
+                    validate_metadata(data, expected_recipient=args.expected_recipient),
+                    sort_keys=True,
+                )
+            )
         else:
             result = compare(
                 regular_bytes(args.expected.absolute()),
                 regular_bytes(args.actual.absolute()),
                 current=args.current_staging,
+                expected_recipient=args.expected_recipient,
             )
             print(json.dumps(result, sort_keys=True, separators=(",", ":")))
     except (ContractError, OSError, UnicodeError) as exc:
