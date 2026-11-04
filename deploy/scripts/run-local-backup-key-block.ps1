@@ -5,9 +5,12 @@ passphrase entry. No server, DB, bootstrap, scheduler, deletion or activation.
 Private artifacts live outside Git; resume never regenerates an existing home.
 #>
 [CmdletBinding()]
-param([switch]$Execute,[string]$ExpectedSourceCommit)
+param([switch]$Execute,[string]$ExpectedSourceCommit,
+      [ValidatePattern('^([A-F0-9]{40})?$')][string]$ExistingFingerprint,
+      [ValidateSet('','PasswordManager','ProtectedOffline')][string]$PassphraseCustody)
 
 $entryExecute=$Execute; $entryCommit=$ExpectedSourceCommit
+$entryFingerprint=$ExistingFingerprint; $entryCustody=$PassphraseCustody
 . (Join-Path $PSScriptRoot 'prepare-backup-key-rebase.ps1')
 . (Join-Path $PSScriptRoot '../../apps/webapp/scripts/verify-staging-keys.ps1')
 
@@ -82,6 +85,48 @@ function Read-KeyBlockAuthorization {
             $record.source_hashes[$name] -cnotmatch '^[A-F0-9]{64}$') { throw 'KEY_AUTHORIZATION_INVALID' }
     }
     return $record
+}
+
+function Confirm-KeyBlockCustody {
+    param([string]$Root,[string]$Fingerprint,
+          [ValidateSet('','PasswordManager','ProtectedOffline')][string]$Method)
+    $legacy=Join-Path $Root 'passphrase-custody.json'
+    $path=Join-Path $Root 'passphrase-custody-v2.json'
+    $legacyHash=$null
+    if (Test-Path -LiteralPath $legacy) {
+        $previous=Read-KeyBlockReceipt $legacy
+        if ($previous.schema -ne 1 -or $previous.fingerprint -cne $Fingerprint -or
+            $previous.password_manager_confirmed -isnot [bool] -or -not $previous.password_manager_confirmed) { throw 'KEY_CUSTODY_RECEIPT_INVALID' }
+        $legacyHash=(Get-FileHash -LiteralPath $legacy -Algorithm SHA256).Hash
+    }
+    if (Test-Path -LiteralPath $path) {
+        $receipt=Read-KeyBlockReceipt $path
+        if ($receipt.schema -ne 2 -or $receipt.fingerprint -cne $Fingerprint -or
+            $receipt.method -cnotin @('PasswordManager','ProtectedOffline') -or
+            $receipt.confirmed -isnot [bool] -or -not $receipt.confirmed -or
+            $receipt.second_recovery -cne 'OPEN' -or $receipt.legacy_receipt_sha256 -cne $legacyHash -or
+            ($Method -and $receipt.method -cne $Method)) { throw 'KEY_CUSTODY_RECEIPT_INVALID' }
+        return
+    }
+    # An explicit non-secret method confirms custody without another prompt.
+    # Preserve the old receipt; the new record corrects its manager-only wording.
+    if (-not $Method -and $legacyHash) { $Method='PasswordManager' }
+    if (-not $Method) {
+        $answer=Read-Host 'Passphrase sicher verwahrt? PASSWORTMANAGER oder OFFLINE (geschuetzt und getrennt vom USB); leer = Abbruch. Kein Passwort eingeben'
+        $Method=switch (([string]$answer).Trim().ToUpperInvariant()) {
+            'PASSWORTMANAGER' { 'PasswordManager' }
+            'OFFLINE' { 'ProtectedOffline' }
+            default { '' }
+        }
+        if (-not $Method) {
+            Write-Host 'Nicht bestaetigt. Erwartet: PASSWORTMANAGER oder OFFLINE; Dateien bleiben unveraendert.'
+            throw 'KEY_PASSPHRASE_CUSTODY_NOT_CONFIRMED'
+        }
+    }
+    Write-KeyBlockReceipt $path @{
+        schema=2;fingerprint=$Fingerprint;method=$Method;confirmed=$true
+        legacy_receipt_sha256=$legacyHash;second_recovery='OPEN'
+    }
 }
 
 function Invoke-LocalKeyGpg {
@@ -216,13 +261,13 @@ function Write-KeyBlockUsbNotes {
     $lf=[string][char]10
     $notes=@('Competence Hub - lokale Schluessel-Recovery',
         ('Fingerprint: '+$Fingerprint),
-        'Passphrase separat in Manuels Passwortmanager, nicht auf diesem Stick.',
+        'Passphrase separat im Passwortmanager oder geschuetzt schriftlich offline, nicht auf diesem Stick.',
         'backup-private-key.gpg nur in ein neues geschuetztes GPG-Profil importieren.',
         'application-keys.json.gpg enthaelt die unveraenderten Portal-Anwendungsschluessel.',
         'Kein Datenbankbackup. Zweite unabhaengige Recovery-Kopie noch OFFEN.')
     $texts=@{
         SHA256SUMS=($PrivateHash.ToLowerInvariant()+'  backup-private-key.gpg'+$lf+$ApplicationHash.ToLowerInvariant()+'  application-keys.json.gpg'+$lf)
-        'RECOVERY-NOTES.txt'=(($notes -join $lf)+$lf)
+        'RECOVERY-NOTES-v2.txt'=(($notes -join $lf)+$lf)
     }
     foreach ($name in $texts.Keys) {
         $path=Join-Path $Usb $name
@@ -251,13 +296,16 @@ function Stop-OwnedRecoveryAgent {
 }
 
 function Invoke-LocalBackupKeyBlock {
-    param([string]$Commit)
+    param([string]$Commit,
+          [ValidatePattern('^([A-F0-9]{40})?$')][string]$ExistingFingerprint,
+          [ValidateSet('','PasswordManager','ProtectedOffline')][string]$PassphraseCustody)
     $ErrorActionPreference='Stop'; Set-StrictMode -Version Latest
     $script:KeyBlockPhase='preflight'
     $script:KeyBlockStep='source'
     Assert-LocalKeyEnvironment
     Assert-LocalKeySource $Commit
     $paths=Get-LocalBackupBlockPaths
+    if ($ExistingFingerprint -and -not [IO.Directory]::Exists($paths.live)) { throw 'KEY_EXISTING_PROFILE_REQUIRED_NO_GENERATION' }
     $script:KeyBlockStep='source_acl'
     $null=Assert-StagingExternalPath $paths.root
     Assert-StagingPrivateAcl $paths.source -Directory
@@ -288,12 +336,14 @@ function Invoke-LocalBackupKeyBlock {
         Assert-KeyBlockOriginals $paths.source $previous.source_hashes
         if ((@($previous.source_hashes.Keys).Count) -ne $hashes.Count) { throw 'KEY_ORIGINAL_SET_CHANGED' }
     }
-    Write-Host 'Nur lokaler neuer Backupschluessel, USB-Recovery und unveraenderte Anwendungsschluessel. Danach STOP.'
-    Write-Host 'Neue starke Passphrase: mindestens 20 Zeichen, nur im GPG-Dialog festlegen und im Passwortmanager speichern. Niemals ins Terminal/Chat eingeben.'
+    Write-Host 'Nur lokaler Backupschluessel, USB-Recovery und unveraenderte Anwendungsschluessel. Danach STOP.'
+    Write-Host 'Passphrase separat im Passwortmanager oder geschuetzt schriftlich offline verwahren. Eingabe nur im GPG-Dialog, niemals im Terminal/Chat.'
     $script:KeyBlockPhase='new_key'
     $script:KeyBlockStep='key_workflow'
     $policy=(@('enforce-passphrase-constraints','min-passphrase-len 20','min-passphrase-nonalpha 1','default-cache-ttl 300','max-cache-ttl 900') -join [char]10)+[char]10
     if (-not (Test-Path -LiteralPath $paths.live)) {
+        if ($ExistingFingerprint) { throw 'KEY_EXISTING_PROFILE_REQUIRED_NO_GENERATION' }
+        Write-Host 'Neue starke Passphrase im GPG-Dialog festlegen: mindestens 20 Zeichen.'
         New-StagingPrivateDirectory $paths.live
         Write-KeyBlockFile (Join-Path $paths.live 'gpg-agent.conf') ([Text.Encoding]::ASCII.GetBytes($policy)) -PrivateFile
         $null=Invoke-LocalKeyGpg $paths $paths.live Generate
@@ -303,10 +353,11 @@ function Invoke-LocalBackupKeyBlock {
     if ((Get-FileHash -LiteralPath $policyPath -Algorithm SHA256).Hash -cne [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::ASCII.GetBytes($policy)))) { throw 'KEY_PROFILE_POLICY_REVIEW_REQUIRED' }
     $metadata=Invoke-LocalKeyGpg $paths $paths.live Metadata
     $fingerprint=Get-LocalBackupFingerprint $metadata
+    if ($ExistingFingerprint -and $fingerprint -cne $ExistingFingerprint) { throw 'KEY_EXISTING_FINGERPRINT_MISMATCH' }
     $primary=([Text.Encoding]::UTF8.GetString($metadata) -split '\r?\n' | Where-Object { $_.StartsWith('sec:') })
     $expires=[DateTimeOffset]::FromUnixTimeSeconds([long]$primary.Split(':')[6]).ToString('yyyy-MM-dd')
-    Write-Host ('Neuer oeffentlicher Fingerprint fuer den Passwortmanager: '+$fingerprint)
-    Write-Host ('Ablaufdatum fuer den Passwortmanager: '+$expires)
+    Write-Host ('Oeffentlicher Fingerprint fuer die getrennte Verwahrung: '+$fingerprint)
+    Write-Host ('Ablaufdatum: '+$expires)
     $identity=Join-Path $paths.root 'identity.json'
     if (-not (Test-Path -LiteralPath $identity)) {
         Write-KeyBlockReceipt $identity @{schema=1;fingerprint=$fingerprint;expires=$expires}
@@ -315,15 +366,7 @@ function Invoke-LocalBackupKeyBlock {
     if (-not (Test-Path -LiteralPath $usb)) { $null=New-Item -ItemType Directory -Path $usb -ErrorAction Stop }
     if (-not [IO.Directory]::Exists($usb) -or (Get-Item -LiteralPath $usb -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'KEY_USB_DIRECTORY_UNSAFE' }
     $script:KeyBlockPhase='passphrase_custody'
-    $custody=Join-Path $paths.root 'passphrase-custody.json'
-    if (-not (Test-Path -LiteralPath $custody)) {
-        $answer=Read-Host 'Ist die NEUE Passphrase im Passwortmanager gespeichert? ja = fortsetzen, sonst Abbruch'
-        if (-not [string]::Equals($answer.Trim(),'ja',[StringComparison]::OrdinalIgnoreCase)) { throw 'KEY_PASSPHRASE_CUSTODY_NOT_CONFIRMED' }
-        Write-KeyBlockReceipt $custody @{schema=1;fingerprint=$fingerprint;password_manager_confirmed=$true;second_recovery='OPEN'}
-    } else {
-        $receipt=Read-KeyBlockReceipt $custody
-        if ($receipt.fingerprint -cne $fingerprint -or $receipt.password_manager_confirmed -ne $true) { throw 'KEY_CUSTODY_RECEIPT_INVALID' }
-    }
+    Confirm-KeyBlockCustody $paths.root $fingerprint $PassphraseCustody
     $script:KeyBlockPhase='protected_private_export'
     $export=Join-Path $paths.root 'backup-private-key.gpg'
     if (-not (Test-Path -LiteralPath $export)) {
@@ -345,7 +388,7 @@ function Invoke-LocalBackupKeyBlock {
         if (-not (Test-Path -LiteralPath $comparison)) {
         if (-not (Test-Path -LiteralPath $paths.recovered)) { New-StagingPrivateDirectory $paths.recovered }
         Stop-OwnedRecoveryAgent $paths
-        Write-Host 'Jetzt echte Wiederherstellungsprobe nur mit dem USB-Export: die NEUE Passphrase aus dem Passwortmanager im GPG-Dialog eingeben.'
+        Write-Host 'Jetzt echte Wiederherstellungsprobe nur mit dem USB-Export: die vorhandene Passphrase aus der getrennten Verwahrung im GPG-Dialog eingeben.'
         $null=Invoke-LocalKeyGpg $paths $paths.recovered Import $fingerprint $usbExport
         if ((Get-LocalBackupFingerprint (Invoke-LocalKeyGpg $paths $paths.recovered Metadata)) -cne $fingerprint) { throw 'KEY_USB_RECOVERED_IDENTITY_MISMATCH' }
         $script:KeyBlockPhase='application_rewrap'
@@ -411,7 +454,7 @@ if ($MyInvocation.InvocationName -ne '.') {
         Write-Output 'LOCAL_BACKUP_KEYS=NOT_EXECUTED SERVER_ACTIONS=NONE'
     } else {
         try {
-            $null=Invoke-LocalBackupKeyBlock $entryCommit
+            $null=Invoke-LocalBackupKeyBlock $entryCommit $entryFingerprint $entryCustody
             Write-Output 'LOCAL_BACKUP_KEYS=PASS RECOVERY=PASS DPAPI=UNCHANGED SECOND_RECOVERY=OPEN SERVER_ACTIONS=NONE'
         } catch {
             $phase=if ($script:KeyBlockPhase -cin @('preflight','new_key','passphrase_custody','protected_private_export','isolated_usb_import','application_rewrap','final_hash_check','complete')) {$script:KeyBlockPhase} else {'unknown'}
@@ -426,6 +469,7 @@ if ($MyInvocation.InvocationName -ne '.') {
                 'KEY_UNPROTECTED_OR_UNKNOWN_EXPORT_REJECTED','KEY_COPY_HASH_CONFLICT_NO_OVERWRITE',
                 'KEY_COMPLETION_BINDING_CHANGED','KEY_COMPARISON_BINDING_CHANGED','KEY_FINAL_HASH_CONFLICT')
             $known+=@('KEY_AUTHORIZATION_INVALID','KEY_AUTHORIZATION_OWNER_UNTRUSTED','KEY_AUTHORIZATION_LEGACY_OWNER_NOT_BOUND')
+            $known+=@('KEY_EXISTING_PROFILE_REQUIRED_NO_GENERATION','KEY_EXISTING_FINGERPRINT_MISMATCH','KEY_CUSTODY_RECEIPT_INVALID')
             $code=if ($_.Exception.Message -cin $known) {$_.Exception.Message} else {'PRIVATE_LOCAL_KEY_CHECK_NOT_COMPLETE'}
             [Console]::Error.WriteLine('Lokaler Schluesselblock gestoppt. Dateien bleiben erhalten; nicht neu erzeugen oder ueberschreiben. Keine Serveraktion.')
             if ($phase -ceq 'preflight') { [Console]::Error.WriteLine('Quellstand, gleicher Windows-Benutzer und aktueller BitLocker-Schutz muessen pruefbar sein. PowerShell7 bei Bedarf als Administrator mit demselben Benutzer starten; kein Laufwerk erneut entsperren.') }

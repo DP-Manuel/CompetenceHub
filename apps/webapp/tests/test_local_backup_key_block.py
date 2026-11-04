@@ -37,7 +37,7 @@ function Read-Host {
     param($Prompt)
     $script:ManagerPrompts++
     if ($case -ceq 'manager') { return 'nein' }
-    return ' JA '
+    return ' PASSWORTMANAGER '
 }
 function Invoke-LocalKeyGpg {
     param($Paths,$KeyHome,$Operation,$Fingerprint,$File,$InputBytes)
@@ -55,7 +55,10 @@ function Invoke-LocalKeyGpg {
         $text=($sec -join ':')+[char]10+'fpr:::::::::1234567890ABCDEF1234567890ABCDEF12345678:'+ [char]10+'uid:::::::::Competence Hub Staging Backup 2026-11:'+ [char]10
         return ,[Text.Encoding]::ASCII.GetBytes($text)
     }
-    if ($Operation -ceq 'SecretExport') { return ,[Text.Encoding]::ASCII.GetBytes('FAKE-PROTECTED-EXPORT') }
+    if ($Operation -ceq 'SecretExport') {
+        if ($case -ceq 'export-cancel') { throw 'Synthetic private export cancel' }
+        return ,[Text.Encoding]::ASCII.GetBytes('FAKE-PROTECTED-EXPORT')
+    }
     if ($Operation -ceq 'Packets') {
         $protected=if ($case -ceq 'unprotected') {'[1024 bits]'} else {'[v4 protected]'}
         return ,[Text.Encoding]::ASCII.GetBytes((':secret key packet:'+[char]10+' iter+salt S2K, algo: 9, hash: 2'+[char]10+' skey[2]: '+$protected+[char]10))
@@ -168,6 +171,104 @@ def test_runner_never_includes_server_admin_or_plaintext_export_commands():
     assert "Assert-ProtectedSecretExport" in source
     assert source.index("Assert-ProtectedSecretExport (Invoke-LocalKeyGpg -Paths") < source.index("Write-KeyBlockFile $export $bytes")
     assert "enforce-passphrase-constraints" in source
+
+
+@pytest.mark.parametrize("method", ["PasswordManager", "ProtectedOffline"])
+def test_custody_methods_resume_cancelled_export_without_generation_or_confirmation(
+    powershell, tmp_path, method
+):
+    run_private(powershell, tmp_path, "$case='export-cancel'\n" + FLOW +
+                "\n$method='" + method + "'\n" + r"""
+$failed=$false
+try { $null=Invoke-LocalBackupKeyBlock -Commit ('ab'*20) -PassphraseCustody $method 6>$null } catch { $failed=$true }
+if (-not $failed -or $script:GenerationCount -ne 1 -or $script:ManagerPrompts -ne 0) { throw 'Expected bounded export cancellation' }
+$receipt=Join-Path $script:BlockPaths.root 'passphrase-custody-v2.json'
+$before=(Get-FileHash -LiteralPath $receipt).Hash
+$record=Read-KeyBlockReceipt $receipt
+if ($record.method -cne $method -or $record.second_recovery -cne 'OPEN') { throw 'Custody method lost' }
+$case='success'
+$args=@{Commit=('ab'*20);ExistingFingerprint='1234567890ABCDEF1234567890ABCDEF12345678';PassphraseCustody=$method}
+$result=Invoke-LocalBackupKeyBlock @args 6>$null
+if ($result.status -cne 'PASS' -or $result.second_recovery -cne 'OPEN' -or $script:Imports -ne 1 -or $script:Decrypts -ne 1) { throw 'Missing isolated recovery on resume' }
+$again=Invoke-LocalBackupKeyBlock @args 6>$null
+if ($again.status -cne 'PASS' -or $script:GenerationCount -ne 1 -or $script:ManagerPrompts -ne 0 -or $script:Imports -ne 1 -or $script:Decrypts -ne 1) { throw 'Resume repeated generation/confirmation/crypto' }
+if ((Get-FileHash -LiteralPath $receipt).Hash -cne $before) { throw 'Custody receipt overwritten' }
+foreach ($name in $originalHashes.Keys) {
+    if ((Get-FileHash -LiteralPath (Join-Path $script:BlockPaths.source $name)).Hash -cne $originalHashes[$name]) { throw 'Original application keys changed' }
+}
+""")
+
+
+@pytest.mark.parametrize("case", ["manager", "offline", "invalid", "cancel", "legacy", "legacy-offline", "method-conflict", "wrong-fingerprint", "legacy-changed"])
+def test_custody_confirmation_and_append_only_legacy_resume(powershell, tmp_path, case):
+    run_private(powershell, tmp_path,
+                ". (Join-Path $script:OperatorRepositoryRoot 'deploy/scripts/run-local-backup-key-block.ps1')\n"
+                + "$case='" + case + "'\n" + r"""
+$root=Join-Path $env:CUSTODY_TEST_ROOT 'custody-only'
+New-StagingPrivateDirectory $root
+$fp='1234567890ABCDEF1234567890ABCDEF12345678'
+$script:PromptCount=0
+function Read-Host {
+    param($Prompt)
+    $script:PromptCount++
+    if ($Prompt -cnotmatch 'PASSWORTMANAGER oder OFFLINE') { throw 'Manager-only prompt remains' }
+    switch ($case) { 'offline' {return ' offline '} 'invalid' {return 'ja'} 'cancel' {return ''} default {return ' PASSWORTMANAGER '} }
+}
+$legacy=Join-Path $root 'passphrase-custody.json'
+$legacyHash=$null
+if ($case -cin @('legacy','legacy-offline','legacy-changed')) {
+    Write-KeyBlockReceipt $legacy @{schema=1;fingerprint=$fp;password_manager_confirmed=$true;second_recovery='OPEN'}
+    $legacyHash=(Get-FileHash -LiteralPath $legacy).Hash
+}
+$method=if ($case -ceq 'legacy-offline') {'ProtectedOffline'} else {''}
+$failed=$false
+try { Confirm-KeyBlockCustody $root $fp $method 6>$null } catch { $failed=$true }
+$path=Join-Path $root 'passphrase-custody-v2.json'
+if ($case -cin @('invalid','cancel')) {
+    if (-not $failed -or (Test-Path -LiteralPath $path)) { throw 'Unconfirmed custody accepted' }
+} else {
+    if ($failed) { throw 'Supported custody rejected' }
+    $record=Read-KeyBlockReceipt $path
+    $expected=if ($case -cin @('offline','legacy-offline')) {'ProtectedOffline'} else {'PasswordManager'}
+    if ($record.method -cne $expected -or $record.confirmed -ne $true -or $record.second_recovery -cne 'OPEN') { throw 'Custody contract mismatch' }
+    $hash=(Get-FileHash -LiteralPath $path).Hash
+    $count=$script:PromptCount
+    Confirm-KeyBlockCustody $root $fp $method
+    if ($script:PromptCount -ne $count) { throw 'Unnecessary confirmation on resume' }
+    if ($case -cin @('method-conflict','wrong-fingerprint','legacy-changed')) {
+        if ($case -ceq 'legacy-changed') {
+            [IO.File]::AppendAllText($legacy,' ')
+            $legacyHash=(Get-FileHash -LiteralPath $legacy).Hash
+        }
+        $testFp=if ($case -ceq 'wrong-fingerprint') {'ABCDEF1234567890ABCDEF1234567890ABCDEF12'} else {$fp}
+        $testMethod=if ($case -ceq 'method-conflict') {'ProtectedOffline'} else {$method}
+        $rejected=$false
+        try { Confirm-KeyBlockCustody $root $testFp $testMethod } catch { $rejected=$true }
+        if (-not $rejected) { throw 'Conflicting custody accepted' }
+    }
+    if ((Get-FileHash -LiteralPath $path).Hash -cne $hash) { throw 'Existing v2 receipt modified' }
+}
+if ($legacyHash -and (Get-FileHash -LiteralPath $legacy).Hash -cne $legacyHash) { throw 'Legacy receipt overwritten' }
+""")
+
+
+@pytest.mark.parametrize("case", ["missing-home", "wrong-key", "partial-home"])
+def test_existing_fingerprint_never_generates_a_replacement(powershell, tmp_path, case):
+    run_private(powershell, tmp_path, "$case='success'\n" + FLOW +
+                "\n$resumeCase='" + case + "'\n" + r"""
+if ($resumeCase -cne 'missing-home') {
+    New-StagingPrivateDirectory $script:BlockPaths.root
+    Write-KeyBlockReceipt (Join-Path $script:BlockPaths.root 'authorization.json') @{schema=1;scope='LOCAL_KEY_REBASE_ONLY';source_commit=('ab'*20);source_hashes=$originalHashes}
+    New-StagingPrivateDirectory $script:BlockPaths.live
+    $policy=(@('enforce-passphrase-constraints','min-passphrase-len 20','min-passphrase-nonalpha 1','default-cache-ttl 300','max-cache-ttl 900') -join [char]10)+[char]10
+    Write-KeyBlockFile (Join-Path $script:BlockPaths.live 'gpg-agent.conf') ([Text.Encoding]::ASCII.GetBytes($policy)) -PrivateFile
+    if ($resumeCase -ceq 'wrong-key') { [IO.File]::WriteAllText((Join-Path $script:BlockPaths.live 'synthetic-key.marker'),'SYNTHETIC') }
+}
+$failed=$false
+try { $null=Invoke-LocalBackupKeyBlock -Commit ('ab'*20) -ExistingFingerprint 'ABCDEF1234567890ABCDEF1234567890ABCDEF12' -PassphraseCustody ProtectedOffline 6>$null } catch { $failed=$true }
+if (-not $failed -or $script:GenerationCount -ne 0 -or $script:ManagerPrompts -ne 0 -or $script:Imports -ne 0) { throw 'Existing-key resume created/replaced identity' }
+if (Test-Path -LiteralPath (Join-Path $script:BlockPaths.root 'identity.json')) { throw 'Wrong/missing key created identity record' }
+""")
 
 
 def test_new_private_files_have_explicit_user_owner_and_cannot_overwrite(powershell, tmp_path):
