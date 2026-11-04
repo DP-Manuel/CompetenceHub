@@ -1,8 +1,11 @@
 # Backend Sprint Addendum 30.10
 
 Latest authorization04.11: K1/K2 real LOCAL key block is approved, not executed
-by the agent. Single private operator runner,1412 tests PASS/30 skips; one native
-Pinentry/manager interaction still needed. No repeat approval request. New
+by the agent. Manuel generated the new key; protected written offline custody
+is now explicitly accepted alongside a password manager. Existing-key-only
+resume preserves that key and corrects old manager-only wording append-only;
+actual USB/recovered-key/unchanged-DPAPI proof remains pending. No repeat custody
+prompt with explicit method or valid proof; no repeat approval request. New
 network destination remains only [planned/unapproved](../../operations/backup-destinations-2026-11-04.md);
 no proven current transition DB target. B/R/A and REAL APPLY remain separate.
 Current [local handover](../../operations/controlled-backup-key-rebase-2026-11-04.md#approved-local-runner-handover).
@@ -13,8 +16,9 @@ actual synthetic new-key recovery proof, NOT real operation. Manuel is sole
 technical key custodian; no Janay technical role. Original DPAPI/old files retained.
 
 Current ordered horizon:
-1. APPROVED / PENDING OPERATOR: K1/K2 new dedicated key + protected USB recovery
-   + unchanged-DPAPI candidate; one private same-user elevated PowerShell runner.
+1. APPROVED / PENDING OPERATOR: resume EXISTING dedicated key + protected USB
+   recovery + unchanged-DPAPI candidate; one private same-user elevated runner,
+   pinned full fingerprint and ProtectedOffline custody, no regeneration.
 2. PENDING INPUT: current encrypted NTFS DB target and plaintext workspace,
    approved read-only sizing/protection evidence; free C: alone insufficient.
 3. PREPARED: BACKUP approval, new public-only profile, unique current fixed-Staging

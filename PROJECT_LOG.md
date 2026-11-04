@@ -3,6 +3,13 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-04 | protected written custody / preserve existing new key
+
+- Manuel reports successful new-key generation in elevated operator window, then custody/export interruption; public fingerprint ends E92DE7854AF99C1F. No password manager; handwritten passphrase confirmed. Explicit latest decision accepts password manager OR protected separate offline paper. Do not regenerate/rotate/delete the new key or infer real recovery acceptance.
+- Metadata-only local inspection: live home, identity and legacy custody receipt present; no private export, recovered home, candidate, comparison or completion. No agent key operation or real artifact modification. ExistingFingerprint mode now rejects missing/partial/wrong identity without generation; explicit custody method skips redundant confirmation. Append-only v2 custody binds fingerprint and legacy hash, preserves old receipt; neutral versioned USB notes, no overwrite. [Contract](docs/operations/controlled-backup-key-rebase-2026-11-04.md#protected-offline-custody-and-existing-key-resume).
+- Full1433 PASS/30 expected opt-in skips in196.97s; focused72 PASS,14 added custody/resume cases. Native synthetic GPG/recovered-key proof remains green, actual real recovery still pending. Parser/inert CLI/pip/diff,135 changed-document links,256 router links/archive hashes PASS. Next block only existing-key native USB recovery/unchanged-DPAPI proof; second independent recovery OPEN. No DB backup/restore/Admin/server/migration/import/deployment. Existing source commit/push approval applies to green local corrections; actual key material stays outside Git.
+- Scoped source packaged separately as `b2730d4`; documentation/checkpoint separate. Unfamiliar editor/cache/weekly files preserved. The operator resume command pins the final documentation HEAD and existing full fingerprint, explicitly confirms ProtectedOffline and never includes a secret.
+
 ## 2026-11-04 | elevated preflight owner failure
 
 - Manuel reports BitLocker-unavailable STOP, then explicitly elevated retry with a DIFFERENT generic preflight STOP. Agent non-elevated read-only PS7 probe: BitLocker command available, CIM access denied. Actual failed-run metadata: protected root user-owned; authorization.json319 bytes Administrators-owned, ONLY user/SYSTEM full-control; no live key home, identity, candidate or completion. All preceding configured volume/DPAPI checks had progressed to receipt creation; no new OpenPGP key yet.

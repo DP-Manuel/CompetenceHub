@@ -8,7 +8,7 @@ Post-Messe product consolidation is complete for the authorized scope: Context V
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
 The additive Calendar/native runtime, local security/Linux and synthetic COACH-1/2/3A/3C gates remain complete.
 30.10 backend sprint addendum names Manuel as the single authorized Staging Admin/Operator, admin only; earlier missing-operator STOP is superseded for this bootstrap, not real-APPLY safety.
-Elisabeth's authorized13-page concept remains locally reconciled, short scope unchanged. Latest04.11: K1/K2 LOCAL backup-key block explicitly approved, including green source commit/push. Single private operator runner prepared; actual new key/USB recovery/unchanged-DPAPI proof remains PENDING OPERATOR Pinentry/password-manager interaction. Do not ask for K permission again or retry August passphrase. Manuel alone owns technical custody, not Janay. Preserve originals; second independent recovery may stay OPEN. Future SMB destination planned but unspecified/unapproved; no proven transition DB target yet. Real current DB backup, isolated restore and one admin remain later separate approvals. [Key contract](docs/operations/controlled-backup-key-rebase-2026-11-04.md), [destinations](docs/operations/backup-destinations-2026-11-04.md).
+Elisabeth's authorized13-page concept remains locally reconciled, short scope unchanged. Latest04.11: K1/K2 LOCAL backup-key block explicitly approved, including green source commit/push. Manuel generated the new key in his elevated window; no password manager, passphrase written down. Latest explicit decision accepts protected written offline OR manager custody. Existing-key-only resume prepared; actual USB recovery/unchanged-DPAPI proof still PENDING OPERATOR Pinentry. Do not regenerate the new key, ask K permission again or retry August passphrase. Manuel alone owns technical custody, not Janay. Preserve originals; second independent recovery stays OPEN. Future SMB destination planned but unspecified/unapproved; no proven transition DB target yet. Real current DB backup, isolated restore and one admin remain later separate approvals. [Key contract](docs/operations/controlled-backup-key-rebase-2026-11-04.md), [destinations](docs/operations/backup-destinations-2026-11-04.md).
 [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md); [prior execution evidence](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-real-apply-vorbereitung-3010). App-domain/TLS inputs remain open independently.
 
 02.11 independent local COACH-4 preparation is complete: deterministic scoped
@@ -42,6 +42,8 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.
 
 ## Current Evidence
+
+- [Offline custody/existing-key resume](docs/operations/controlled-backup-key-rebase-2026-11-04.md#protected-offline-custody-and-existing-key-resume): Manuel reports new E92DE7854AF99C1F key and handwritten passphrase; actual metadata shows live home/identity/legacy custody present, no export/recovered home/candidate/completion. No agent real key access/write. Runner supports explicit ProtectedOffline or PasswordManager without redundant confirmation, append-only v2 receipt corrects legacy wording, pinned existing fingerprint forbids replacement. Full1433 PASS/30 opt-in skips, focused72 PASS,14 added cases. Real isolated recovery and unchanged-DPAPI/USB acceptance remain pending; second independent recovery OPEN, no server continuation.
 
 - [Elevated owner correction](docs/operations/controlled-backup-key-rebase-2026-11-04.md#elevated-owner-fix): actual Admin preflight stopped after writing only non-secret authorization metadata. Windows chose Administrators owner, strict user-owner assertion rejected it. Explicit owner/DACL at CreateNew now prepared for all new private key-block files; known5b0f7ab receipt adopted READ ONLY under narrow scope/ACL/hash checks, no generic owner relaxation. Real read-only probe: original ciphertext hashes MATCH, no live key home/candidate/identity; no key/ACL/content writes. Full1419 PASS/30 opt-in skips; focused76 and24 owner/runner cases PASS. Actual GPG K1/K2 still pending updated-source operator run. Preflight STEP exposed safely, no old password/BitLocker retry.
 
@@ -81,7 +83,8 @@ confirms explicit LOCALAPPDATA/CompetenceHub/backup-gnupg, not the interactive
 APPDATA/gnupg default. Existing private-key-directory metadata is not a crypto
 proof. DPAPI protects Portal application keys, not the OpenPGP private key or
 passphrase. Latest decision supersedes old passphrase recovery: prepare independent
-rebase, no real key generation yet. [Historical diagnosis](docs/operations/local-staging-keys-2026-11-04.md).
+rebase. Manuel has now generated the new key; recovery remains unproven.
+[Historical diagnosis](docs/operations/local-staging-keys-2026-11-04.md).
 Current encrypted database target and actual new private-key recovery remain unproven;
 C: free space alone is not sufficient. Old25.08 backup no longer authoritative,
 but retained until actual new restore and separate deletion approval. Janay is
@@ -98,7 +101,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended next block: execute the ALREADY APPROVED K1/K2 single local runner in Manuel's private same-user PowerShell7, elevated for current BitLocker metadata. One reviewed source-pinned command, native new-passphrase entry/manager custody and exact USB recovery proof; then STOP. Inputs/deliverables/DoD: [local handover](docs/operations/controlled-backup-key-rebase-2026-11-04.md#approved-local-runner-handover). Real results remain pending, second independent recovery OPEN; no extra K permission request, old password retry or server continuation.
+1. Recommended next block: RESUME the ALREADY APPROVED K1/K2 single local runner in Manuel's private same-user elevated PowerShell7. One reviewed source-pinned command with full existing fingerprint and ProtectedOffline custody; NO new key and no extra custody prompt. Native existing-passphrase entry only as GPG requires; exact USB recovery and unchanged-DPAPI proof, then STOP. Inputs/deliverables/DoD: [resume contract](docs/operations/controlled-backup-key-rebase-2026-11-04.md#protected-offline-custody-and-existing-key-resume). Real results remain pending, second independent recovery OPEN; no extra K permission request, old password retry or server continuation.
 2. COACH-3B REAL APPLY/live export remain disabled and are not recommended for execution until every actual prerequisite above passes and a separate import approval is obtained. [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md), [horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
 3. Resolve parallel operational inputs when available; do not expand the current local/source gate silently.
 4. Any later IONOS promotion needs its own bundled review and production approval.

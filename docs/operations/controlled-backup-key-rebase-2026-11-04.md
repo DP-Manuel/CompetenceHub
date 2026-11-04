@@ -1,11 +1,13 @@
 # Controlled Backup Key Rebase
 
-Stand:04.11.2026. **LOCAL PREPARATION ONLY; real key/backup/restore/Admin NOT EXECUTED.**
+Stand:04.11.2026. **LOCAL CODE PREPARATION; operator-created new key exists; real recovery/backup/restore/Admin NOT ACCEPTED.**
 
 Later04.11 approval: **K1/K2 real LOCAL key block is explicitly authorized**,
 including protected USB export/import/recovery, unchanged-DPAPI rewrap and green
-source commit/push. Private Pinentry/password-manager interaction is still
-required; no actual real key run has occurred in this agent session.
+source commit/push. Manuel subsequently generated the new key in his elevated
+operator window, then stopped at custody/export. He confirms handwritten
+passphrase custody and no password manager. Private Pinentry recovery is still
+required; the agent has not executed the real key workflow.
 New [single local runner](../../deploy/scripts/run-local-backup-key-block.ps1)
 replaces separate generation/copy commands. It ends after K, regardless of
 success/failure; no database/Admin continuation. Second independent recovery
@@ -22,7 +24,8 @@ and a distinct, exact-path deletion approval. No migration/import/Website action
 ## Decision And Boundaries
 
 - New dedicated OpenPGP identity, separate approved protected local home, new
-  high-entropy passphrase in Manuel's password manager. Never reuse/guess the
+  high-entropy passphrase in Manuel's password manager OR protected written
+  offline custody, stored separately from the USB key export. Never reuse/guess the
   lost passphrase. Identity label proposal: Competence Hub Staging Backup2026-11.
 - Preserve the existing DPAPI application's32-byte keys and all version labels.
   Rebase is **rewrapping**, not Portal TOTP/HMAC/outbox-key rotation. No new
@@ -70,8 +73,8 @@ automatic deletion, overwrite, recreation or an Admin retry.
 
 | Gate | Necessary approval/input | Operations / acceptance |
 | --- | --- | --- |
-| K1 NEW KEY + RECOVERY | Explicit NEW key-generation/private recovery-copy approval; current protected local volume, Manuel's password-manager access and approved separate recovery target | Native GPG wizard in a NEW non-existing disjoint private home, RSA4096 with encryption capability, bounded expiry and reminder30 days before expiry. New passphrase only in Pinentry, saved privately in manager. Full fingerprint recorded as public metadata. No old-home access/import. |
-| K2 RECOVERED KEY + REWRAP | Same scoped local block; explicit recovery/private storage acknowledgments | Export ONLY new secret key with its passphrase protection intact; verify protected export, copy exclusively to protected recovery storage and compare SHA-256. Import THAT exact copy into a NEW isolated private home. Retrieve new passphrase from manager; prove decrypt there without original live home or old key. Then call existing-DPAPI rewrap candidate: preserve original hashes, copy DPAPI bytes, encrypt existing payload to new recipient, decrypt using recovered home, constant-time payload comparison, strict versions/schema, new READY metadata and loader acceptance. No plaintext key file. |
+| K1 NEW KEY + RECOVERY | Explicit NEW key-generation/private recovery-copy approval; current protected local volume, confirmed manager OR protected written offline custody and approved separate recovery target | Native GPG wizard in a NEW non-existing disjoint private home, RSA4096 with encryption capability, bounded expiry and reminder30 days before expiry. New passphrase only in Pinentry, saved in the chosen separate custody. Existing-key resume never generates a replacement. Full fingerprint recorded as public metadata. No old-home access/import. |
+| K2 RECOVERED KEY + REWRAP | Same scoped local block; explicit recovery/private storage acknowledgments | Export ONLY new secret key with its passphrase protection intact; verify protected export, copy exclusively to protected recovery storage and compare SHA-256. Import THAT exact copy into a NEW isolated private home. Retrieve passphrase from separate custody; prove decrypt there without original live home or old key. Then call existing-DPAPI rewrap candidate: preserve original hashes, copy DPAPI bytes, encrypt existing payload to new recipient, decrypt using recovered home, constant-time payload comparison, strict versions/schema, new READY metadata and loader acceptance. No plaintext key file. |
 | B BACKUP | Separate BACKUP approval with fixed VPS217.160.255.86 / competence_hub_staging, new recipient, exact protected target/size and quiet-window confirmation | Provision only new PUBLIC key in separate postgres-owned0700 home; confirm primary fingerprint and absence of private material before snapshot. This provisioning is separately reviewed within B, not done by the snapshot script. New unique current exported-MVCC snapshot, password-free globals, encrypted five-file set, SHA checks. Exact external copy to approved target; old automated jobs unchanged. |
 | R RESTORE | Separate RESTORE approval, protected plaintext workspace and cached pinned PostgreSQL16 image | Actual restore from THAT external copy in owned random container, network none/no ports, isolated DB only, no globals replay, expected migration/relation/count/owner baseline and hashes. Cleanup exact owned container/DB/plaintext and prove absence; retain encrypted source. Acceptance only after actual proof, not VALID/MATCH or synthetic PASS. |
 | A ADMIN | Separate ADMIN approval after K/B/R PASS; existing approved private Manuel login, no invented identifier | Exactly one admin-only account; no Coach/Internal/Reviewer/Contact grant or mapping. Human MFA enrollment, privately stored recovery codes, login/resume/logout, one-time recovery/replay rejection, Audit/RBAC. Snapshot and restore fresh <=4 hours, unchanged target baseline immediately before write. Uncertain outcome stops without retry/delete. |
@@ -107,8 +110,10 @@ Proposed new external paths, **not created/approved by preparation**:
   no plaintext secrets, DPAPI-only substitute, database dump or shared password.
   Do not assume a `.gpg` suffix proves protection. Never copy unprotected secret
   export to FAT. New key's public export may also be carried here.
-- Password manager: dedicated new backup-key entry owned by Manuel, with full
-  fingerprint/purpose/expiry and private passphrase. Its emergency-access method
+- Passphrase custody: password manager OR protected written offline record,
+  owned by Manuel, with full fingerprint/purpose/expiry and private passphrase.
+  Offline paper belongs in controlled secure storage, separate from the USB
+  export; never scan/copy it into Git, logs, Chat or recovery notes. Recovery
   must not depend on this GPG key, this Windows DPAPI profile or the same USB
   unlock secret. Passphrase and recovery media are stored separately. Record only
   a non-secret custody confirmation, never values. No access or role for Janay.
@@ -187,7 +192,7 @@ Official GnuPG references: [key management](https://www.gnupg.org/documentation/
 
 Recommend **execute the approved K1/K2 local block in the private operator window**.
 Real key/copy approval is granted. Inputs: protected Windows volume and separate
-protected recovery target, accessible password manager, preserved source pair,
+protected recovery target, accessible protected passphrase custody, preserved source pair,
 reviewed packaged source. Deliverables: new independently recovered OpenPGP key,
 protected export with matching copy hashes and validated byte-unchanged application
 keys in a separate candidate. DoD: actual K proof and originals preserved; STOP
@@ -195,6 +200,45 @@ before B/R/A. Collect remaining DB-target and later block approvals together,
 not one speculative command/password interruption at a time. REAL APPLY disabled.
 
 ## Approved Local Runner Handover
+
+### Protected Offline Custody And Existing-Key Resume
+
+Latest04.11 explicit decision: password-manager custody OR protected written
+offline custody is acceptable. Manuel confirms the new passphrase is written
+down; there is no password manager. Use the existing operator-created key only:
+full public fingerprint `22C82A2F175DAFB04B019502E92DE7854AF99C1F`, expiry2028-11-03
+per Manuel's native output. Never generate/rotate a replacement on this resume.
+
+The runner's `-ExistingFingerprint` refuses a missing live home BEFORE creating
+anything and refuses a different identity before custody/export/USB activity.
+Existing homes are never reinitialized, even if incomplete. Resume with
+`-PassphraseCustody ProtectedOffline` explicitly confirms protected separate
+paper custody without another Read-Host; `PasswordManager` is the alternative.
+Without an explicit method or valid prior receipt the single non-secret prompt
+accepts PASSWORTMANAGER or OFFLINE (case/edge-whitespace tolerant), not a password.
+Empty, unknown or generic ja stops with guidance, no receipt. Pinentry still
+requests the existing passphrase ONLY for actual GPG export/recovery operations.
+
+Append-only `passphrase-custody-v2.json` records the method, exact fingerprint,
+confirmation and SECOND_RECOVERY=OPEN; it contains no secret or storage location.
+An old manager-only receipt is preserved and SHA-bound, not rewritten. Explicit
+ProtectedOffline corrects that historical method claim in a NEW v2 receipt.
+Valid v2 resumes require no further custody prompt; method/identity/legacy-hash
+conflicts STOP without overwrite. Legacy accepted receipts remain readable.
+Versioned neutral `RECOVERY-NOTES-v2.txt` leaves old USB notes untouched.
+
+Actual metadata-only inspection before edits: live home/identity/legacy custody
+present; private export, recovered home, application candidate, comparison and
+completion absent. No private key opened, crypto command or real file write.
+This is partial operator progress, NOT completed recovery or a second copy.
+Local tests cover both methods, denied/cancelled confirmation, legacy correction,
+conflicts, cancelled export and exact-key resume, completed proof reuse and
+missing/wrong/partial-home no-generation. Full native synthetic recovery remains
+part of the regression; the real USB proof is still the operator's next gate.
+Focused runner/rebase regression:72 PASS, including14 added custody/resume
+cases. Full1433 PASS/30 expected opt-in skips in196.97s. Parser, inert CLI with
+the new public parameters, dependency check,
+135 changed-document links and256 context-router links/archive hashes PASS.
 
 ### Elevated Owner Fix
 
@@ -264,8 +308,9 @@ in private PowerShell7 elevated under Manuel's same Windows identity. No cwd
 change or second terminal, no clipboard-preloaded operations. GPG Pinentry owns
 the new passphrase; new live agent enforces at least20 characters and one
 non-letter, no bypass, with bounded cache. Only one necessary non-secret local
-confirmation records that Manuel has saved the new passphrase in his manager.
-Never type the passphrase into that yes/no prompt or send it to the assistant.
+confirmation records protected manager OR written offline custody. The explicit
+non-secret method parameter replaces that prompt; a valid receipt also skips it.
+Never type the passphrase into the custody prompt or send it to the assistant.
 See [GnuPG agent policy](https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html).
 
 The protected secret export is inspected IN MEMORY using GPG's packet metadata;
@@ -292,7 +337,7 @@ hash-bound crypto proof after a copy failure instead of asking the passphrase
 again. Finished reruns verify bound proof/hashes without regeneration/dialogs.
 At completion only the owned recovered profile's decrypted agent cache is
 cleared; private files/old keys are not deleted. Passphrase expiry metadata is
-printed for the password-manager record; active reminder scheduling is separate.
+printed for the separate custody record; active reminder scheduling is separate.
 Partial encrypted/application files are preserved; only their explicit safe
 completion can proceed, never re-encryption/overwrite or guessing old passwords.
 

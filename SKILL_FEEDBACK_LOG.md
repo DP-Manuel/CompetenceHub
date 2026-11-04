@@ -7,6 +7,17 @@ Updated: 2026-11-04. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+04.11 custody/partial-key lesson: never assume a password manager exists or ask
+an operator to attest to a false storage method. Accept explicitly approved
+protected written offline custody, kept separately from recovery media; record
+non-secret method, not values/precise storage location. Preserve a generated key
+across interrupted export: pin full identity and forbid replacement on resume.
+Explicit method/valid prior record replaces unnecessary confirmation; correct
+historical manager-only metadata append-only, never rewrite it. Paper passphrase
+custody is NOT a second independent private-key recovery copy or crypto proof.
+[Local contract](docs/operations/controlled-backup-key-rebase-2026-11-04.md#protected-offline-custody-and-existing-key-resume).
+Global skill proposal remains open; project-local implementation only.
+
 04.11 elevated-runtime regression: non-elevated success does not cover Windows
 elevated default file ownership. Create private files atomically with explicit
 user owner/security descriptor; never broadly relax owner checks to hide it.
