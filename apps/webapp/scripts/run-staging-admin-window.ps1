@@ -127,9 +127,27 @@ function Get-WindowStopCode {
         'PUSHED_SOURCE_GATE_FAILED', 'PORT55432_ALREADY_IN_USE_NEVER_REUSE_OR_KILL',
         'CLEAN_PRIVATE_DIAGNOSTIC_ENVIRONMENT_REQUIRED', 'CLEAN_OPERATOR_PROCESS_REQUIRED',
         'REVIEWED_INPUT_MISSING_OR_LINKED'
+        'OPERATION_BLOCK_NOT_APPROVED'
     )
     if ($Message -cin $known) { return $Message }
     return 'PRIVATE_MANUAL_REVIEW_REQUIRED'
+}
+
+function Confirm-WindowOperation {
+    param([ValidateSet('BACKUP','ADMIN')][string]$Block)
+    if ($Block -ceq 'BACKUP') {
+        Write-Host 'TARGET: manuel@217.160.255.86 / competence_hub_staging. No production DB.'
+        Write-Host 'PLAN: new encrypted prechange backup, exact protected external copy and isolated local restore.'
+        Write-Host 'BACKUP also confirms: no other operator/DDL/role/data changes during this quiet database window.'
+        Write-Host 'Existing backup jobs/data stay unchanged. Rollback: retain backups; remove only owned temporary artifacts.'
+    } else {
+        Write-Host 'TARGET: competence_hub_staging. Exactly one Manuel account with existing approved private login, admin only.'
+        Write-Host 'PLAN: first account write only after current exact backup/restore; native MFA/recovery/session/logout/audit/RBAC.'
+        Write-Host 'No Coach/Reviewer/Contact/Internal roles, migrations/import or deployment. Uncertain commit: STOP, no retry/delete.'
+        Write-Host 'Rollback: preserve pending outcome and prechange backup; any real DB restore needs separate approval.'
+    }
+    $answer = Read-Host ("Approve ONLY this block by typing " + $Block + '; otherwise stop')
+    if ($answer -cne $Block) { throw 'OPERATION_BLOCK_NOT_APPROVED' }
 }
 
 function Assert-WindowNoDiagnostics {
@@ -350,6 +368,7 @@ function Invoke-StagingAdminWindow {
             if (-not [Security.Cryptography.CryptographicOperations]::FixedTimeEquals($probe, $memory.ToArray())) { throw 'LOCAL_GPG_ROUNDTRIP_REQUIRED' }
         } finally { if ($encrypted) { $encrypted.Dispose() }; $memory.Dispose(); [Array]::Clear($probe, 0, $probe.Length) }
         Assert-WindowSource $Commit $git
+        Confirm-WindowOperation -Block BACKUP
         $result.phase = 'server_preflight'
         $health = Get-WindowHealth $ssh
         Write-WindowRecord (Join-Path $output 'service-preflight.json') $health
@@ -393,6 +412,7 @@ function Invoke-StagingAdminWindow {
         if (-not (Test-Path -LiteralPath $proof -PathType Leaf)) { throw 'ACTUAL_RESTORE_PROOF_REQUIRED' }
         $restored = Get-Content -Raw -LiteralPath $proof | ConvertFrom-Json -AsHashtable
         if ($restored.schema -cne 'competence-hub.prechange-restore-proof.v1' -or $restored.status -cne 'PASS') { throw 'ACTUAL_RESTORE_PROOF_REQUIRED' }
+        Confirm-WindowOperation -Block ADMIN
         Write-WindowRecord (Join-Path $output 'service-before-admin.json') (Get-WindowHealth $ssh)
         Assert-WindowPortFree
         $start = [Diagnostics.ProcessStartInfo]::new(); $start.FileName = $ssh
