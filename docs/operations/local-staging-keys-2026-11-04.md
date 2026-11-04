@@ -1,5 +1,11 @@
 # Lokaler Schluesselblock
 
+**Spaetere Entscheidung04.11:** Der August-Passphraseweg wird nicht fortgesetzt.
+Der [kontrollierte Rebase](controlled-backup-key-rebase-2026-11-04.md) ersetzt
+diesen aktuellen Bedienpfad; keine erneute VERIFY/GPG-Abfrage. Manuel allein
+verantwortet technische Keys/Backups, nicht Janay. Vorige Diagnose/Tests unten
+bleiben datierte Evidenz, keine aktuelle Aufforderung zur alten Wiederaufnahme.
+
 Stand:04.11.2026. Aktueller Auftrag: vorhandene Schluessel pruefen und genau die
 bestehende verschluesselte Kopie auf den bereits entsperrten Stick uebernehmen,
 erst nach expliziter lokaler Bestaetigung. Keine echte Ausfuehrung durch diese
@@ -63,6 +69,51 @@ startete kein GPG und schrieb nichts. Das ist kein voller GPG-Paarvergleich.
 Der echte Paarvergleich/die echte USB-Kopie bleiben bis zur privaten Bedienung
 offen; synthetische Tests werden nicht als echter Custody-PASS ausgegeben.
 
+## Aktueller STOP: GPG-Profil Und Passphrase
+
+Spaeter04.11: Manuel meldet unbekannte Passphrase und bricht die echte
+GPG-Pruefung ab. Kein erneuter Execute-/Entsperrversuch empfohlen. Die erfolgreiche
+DPAPI-Zuordnungsprobe bleibt davon getrennt; READY/USB-Nachweis bleiben offen.
+
+Der lokale Einstieg waehlt explizit
+`%LOCALAPPDATA%\CompetenceHub\backup-gnupg`, also unter dem Windows-Benutzerprofil
+in `AppData\Local`, nicht `AppData\Roaming`.
+Initialize, Complete und die Restorepfade verwenden dieses bestehende GPG-Home
+per `--homedir`; der lokale Block setzt weder GNUPGHOME noch einen temporaeren
+Keyring und importiert keinen privaten OpenPGP-Schluessel. Das interaktive
+Standardprofil `%APPDATA%\gnupg` ist eine andere Ablage. Ein negatives Listing
+dort beweist keinen fehlenden Schluessel im expliziten Projektprofil.
+
+Nur Metadaten geprueft: im Projektprofil genau1 Datei unter `private-keys-v1.d`,
+4024 Byte; im Standardprofil0 Dateien. Projekt-Keyring-Metadaten stammen vom
+25.08.2026. Keine privaten Inhalte, GPG-/Agent-Aufrufe oder Passwortversuche.
+Dateiexistenz allein beweist weder den Fingerprint noch Entschluesselbarkeit;
+Manuels voriger Dialog nennt den erwarteten Backup-Schluessel. Sein gemeldeter
+Gpg4win/../GnuPG-Binarypfad normalisiert auf denselben Pfad wie das Skript.
+
+Die DPAPI-Datei enthaelt versionierte zufaellige **Portal-Anwendungsschluessel**
+(TOTP, Outbox, Recovery-HMAC, Rate-Limit und Idempotenz), keinen OpenPGP-Private-Key
+und keine GPG-Passphrase. `staging-operator.keys.json.gpg` ist die portable
+verschluesselte Kopie dieser Payload, nicht der private OpenPGP-Schluessel.
+GPG/Agent verwendet den bereits eingerichteten privaten Schluessel im separaten
+Home; der Initializer legt nur Anwendungsschluessel an, keine OpenPGP-Identitaet.
+
+Exakter Dialogpfad jetzt: verify-staging-keys -> Phase key_verification ->
+Complete-StagingOperatorConfig -> Import-Clixml/DPAPI-Payloadpruefung ->
+Invoke-StagingGpg Mode Decrypt -> `--pinentry-mode ask --decrypt` -> lokaler
+Pinentry. Beim urspruenglichen Initialize erfolgte derselbe Dialog nach dem
+Verschluesseln beim ersten Vergleich. Der getrennte spaetere Adminlauf und
+Restore besitzen eigene Entschluesselungsschritte; sie sind hier nicht aktiv.
+
+Kein funktionaler Pfad-/Resumefehler nachgewiesen; deshalb keine Codeaenderung,
+kein Wechsel aufs leere Standardprofil und keine Wiederholung/Neuanlage. Ein
+sicherer naechster Block: die am25.08 bestaetigte Passphrase-Hinterlegung mit
+Manuel/benannter Recovery-Verantwortlicher Janay klaeren, ohne Werte in Chat
+oder Projektdokumente zu uebertragen. Safe ist fuer Stick/BitLocker-Recovery
+benannt; der genaue GPG-Passphrase-Ablageort wurde nicht dokumentiert.
+Siehe [historische Custody-Evidenz](sb23-wuerzburg-execution.md).
+Keine automatische Wiederaufnahme, solange diese Voraussetzung fehlt.
+
 ## Verschluesselte Kopie, Nicht Datenbankbackup
 
 Genehmigtes Ziel: `D:\CompetenceHub\staging-operator-key-backups\<sha256>.keys.json.gpg`.
@@ -116,8 +167,8 @@ STAGING_KEYS=PASS KEY_COPY=PASS SERVER_ACTIONS=NONE REAL_COACH_APPLY=DISABLED
 ```
 
 Bei STOP nur die bereinigte Meldung weitergeben, keine private Datei/Passphrase/
-Schluesselwerte. Genau ein naechster Block: dieser lokale Schluesselablauf mit
-einmaliger Bestaetigung, ggf. notwendigem GPG-Pinentry und gepruefter Ciphertext-
-Kopie. DoD: tatsaechlicher Paar-/Belegnachweis und USB-Hash PASS, Originale erhalten,
-keine weitere Aktion. Backup/Admin/Import/Migration/Deployment bleiben getrennt
-und sind durch diesen Aufruf weder freigegeben noch automatisch gestartet.
+Schluesselwerte. Der zuvor empfohlene Custody-Klaerungsblock ist durch den oben
+verlinkten Rebase ersetzt, nicht durch einen weiteren Aufruf. Historische DoD:
+tatsaechlicher Paar-/Belegnachweis und USB-Hash
+PASS, Originale erhalten, keine weitere Aktion. Backup/Admin/Import/Migration/
+Deployment bleiben getrennt und werden hier nicht automatisch gestartet.

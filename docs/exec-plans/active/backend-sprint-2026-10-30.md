@@ -1,5 +1,34 @@
 # Backend Sprint Addendum 30.10
 
+Latest authorization04.11: K1/K2 real LOCAL key block is approved, not executed
+by the agent. Single private operator runner,1412 tests PASS/30 skips; one native
+Pinentry/manager interaction still needed. No repeat approval request. New
+network destination remains only [planned/unapproved](../../operations/backup-destinations-2026-11-04.md);
+no proven current transition DB target. B/R/A and REAL APPLY remain separate.
+Current [local handover](../../operations/controlled-backup-key-rebase-2026-11-04.md#approved-local-runner-handover).
+
+Latest04.11: [controlled backup-key rebase](../../operations/controlled-backup-key-rebase-2026-11-04.md)
+supersedes the following old-key restart. Local preparation1367 PASS/30 skips;
+actual synthetic new-key recovery proof, NOT real operation. Manuel is sole
+technical key custodian; no Janay technical role. Original DPAPI/old files retained.
+
+Current ordered horizon:
+1. APPROVED / PENDING OPERATOR: K1/K2 new dedicated key + protected USB recovery
+   + unchanged-DPAPI candidate; one private same-user elevated PowerShell runner.
+2. PENDING INPUT: current encrypted NTFS DB target and plaintext workspace,
+   approved read-only sizing/protection evidence; free C: alone insufficient.
+3. PREPARED: BACKUP approval, new public-only profile, unique current fixed-Staging
+   snapshot and exact encrypted external copy, old jobs unchanged.
+4. PREPARED: RESTORE approval, isolated exact-copy/schema/count/owner proof and
+   owned cleanup; no live DB replacement. Actual success required.
+5. PREPARED: ADMIN approval, one approved Manuel admin-only login with human MFA,
+   recovery/replay/session/logout/Audit/RBAC and service/localhost health.
+6. DEFERRED: separately accept/promote backup scheduling/config, authorize any
+   old-file deletion, and only later reconsider REAL APPLY with its own gate.
+
+Later items remain conditional, not execution approvals. No key/server/data/
+Website operation or active config promotion by this preparation.
+
 Status04.11 latest: LOCAL KEYS ONLY; tolerant confirmation/isolated existing-key
 GPG/USB entry prepared and tested1333 PASS/30 opt-in skips. Actual pair/copy still
 needs private confirmation; backup/Admin outside current task.

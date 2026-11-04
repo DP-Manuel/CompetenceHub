@@ -204,8 +204,8 @@ Website source switch, Pages/IONOS/backend deployment or new feature is authoriz
 The03.11 recommended local block was separately authorized and completed04.11:
 owned disposable PostgreSQL16/schema9/loopback55437, actual write denial,
 concurrent draft/children, deterministic parity and exact container/port cleanup
-PASS. [Current single recommended protected block](../operations/local-staging-keys-2026-11-04.md)
-is local existing-key verification and encrypted USB copy with Manuel's private
-terminal confirmation. Backup/restore/Admin remain separate later gates, not an
+PASS. [Current single recommended protected block](../operations/controlled-backup-key-rebase-2026-11-04.md)
+is explicitly approved new backup-key recovery and unchanged-DPAPI rewrap, not an
+old-passphrase retry. Backup/restore/Admin remain separate later gates, not an
 automatic continuation, repeated local probe or real Coach APPLY. No live target
 guard has been relaxed.

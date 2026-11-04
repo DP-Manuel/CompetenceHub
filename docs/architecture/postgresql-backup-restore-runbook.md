@@ -2,6 +2,20 @@
 
 Stand: 11.09.2026
 
+04.11 later authority: [controlled key rebase](../operations/controlled-backup-key-rebase-2026-11-04.md)
+supersedes the old-passphrase dependency and September recovery-owner assignment.
+Manuel is sole technical operator; Janay is not a key custodian. New real key,
+current backup, isolated restore and Admin require distinct approvals. Old files
+and automated jobs stay unchanged; this historical runbook is not permission to
+run the old recipient or to delete the August backup. New target/protection proof
+must be current; previous C: capacity/encryption evidence is not sufficient.
+
+Later04.11 destination addendum: [internal SMB target is only planned](../operations/backup-destinations-2026-11-04.md),
+no share/path/access/approval yet. Offline configurable local/UNC evidence
+contract prepared, not an active copier or permission to create credentials.
+No proven transition DB target found from current C:/D: metadata; remain stopped
+before real backup. Already approved local key block proceeds independently.
+
 This runbook prepares the Competence Hub PostgreSQL backup, retention,
 monitoring and restore gate. It does not authorize installation, timer
 activation, network transfer, production data or deployment. The current VPS

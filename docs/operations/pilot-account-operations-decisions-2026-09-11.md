@@ -1,6 +1,6 @@
 # Pilot-Zugangs- und Betriebsentscheidungen
 
-Stand: 11.09.2026
+Stand: 11.09.2026; technische Schluesselverantwortung aktualisiert04.11.2026.
 
 Status: Grundentscheidungen durch Manuel bestaetigt; Aktivierung und Echtdaten
 bleiben hinter den bestehenden Produktionsgates.
@@ -16,7 +16,7 @@ bleiben hinter den bestehenden Produktionsgates.
 | OPS-D05 | Backup-Zeitplan | Verschluesseltes Backup taeglich um 02:15 UTC mit bis zu 15 Minuten Zufallsverzoegerung; Integritaets-/Frischepruefung um 08:00 UTC mit bis zu 10 Minuten Zufallsverzoegerung. | fachlich bestaetigt; Timeraktivierung bleibt separater VPS-Aenderungsschritt |
 | OPS-D06 | Aufbewahrung | Vorerst 30 taegliche und 12 monatliche verschluesselte Sicherungssaetze. | als Pilotwert bestaetigt; Datenschutz-/Legal-Pruefung vor Echtdaten bleibt erforderlich |
 | OPS-D07 | Benachrichtigung | Manuel erhaelt nach der automatischen Pruefung eine kurze Meldung ueber Erfolg oder Vorkommnisse. Der Kanal darf E-Mail oder ein spaeter freigegebener gleichwertiger Weg sein. | Anforderung bestaetigt; aktiver Kanal und Testzustellung warten auf EDV-/SMTP-Eingaben |
-| OPS-D08 | Notfall- und Recovery-Verantwortung | Janay bleibt fuer den Backup-Notfall benannt; BitLocker-Recovery-Code und GPG-Passphrase sind sicher hinterlegt. | bestaetigt; keine Secrets im Repository |
+| OPS-D08 | Technische Schluessel-/Backup-Verantwortung | Manuel ist alleiniger technischer Operator und Key Custodian. Janay ist nicht an technischer Administration oder Schluesselverwaltung beteiligt. | neue Entscheidung04.11; ersetzt September-Zuordnung; [aktueller Rebasevertrag](controlled-backup-key-rebase-2026-11-04.md), echte neue Recovery noch offen; keine Secrets im Repository |
 | OPS-D09 | Onboarding / Go-No-Go | Bevorzugter Termin ist 17.09.2026, Ausweichtermin 24.09.2026, sofern die dafuer erforderlichen Gates rechtzeitig schliessen. | Terminanfrage/-bestaetigung offen; kein stillschweigendes Go-Live |
 
 ## Betriebsgrenze

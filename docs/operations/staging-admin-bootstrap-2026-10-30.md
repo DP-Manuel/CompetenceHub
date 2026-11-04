@@ -1,5 +1,14 @@
 # Staging Admin: Sicheres Operatorfenster
 
+**Neueste Steuerung04.11:** [kontrollierter Backup-Key-Rebase](controlled-backup-key-rebase-2026-11-04.md).
+Nicht den August-Passphraseweg/alten Execute-Befehl fortsetzen. Neuer separater
+GPG-Key, vorhandene DPAPI-Anwendungsschluessel bytegleich, unabhaengige Recovery
+und aktueller verschluesselter Exact-Copy-Restore vor Admin. Das vorbereitete
+Fenster verlangt jetzt explizite neue Custody/Home/Recipient-/Speicherzielbindung
+und BACKUP/RESTORE/ADMIN getrennt; keine automatische Schluesselinitialisierung.
+Manuel ist alleiniger technischer Operator; Janay kein Recovery-Key-Verwalter.
+Keine echte Schluesselerzeugung, DB-/Adminaktion oder Importfreigabe hieraus.
+
 **Aktueller enger Auftrag04.11:** Zuerst nur
 [lokale Schluesselpruefung und verschluesselte Kopie](local-staging-keys-2026-11-04.md),
 mit tolerantem VERIFY und ohne automatische Fortsetzung. Das echte Betriebs-

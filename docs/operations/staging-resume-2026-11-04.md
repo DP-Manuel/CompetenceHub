@@ -1,5 +1,10 @@
 # Geschuetzte Wiederaufnahme 04.11.2026
 
+**Neuester Auftrag04.11:** [kontrollierter Backup-Key-Rebase](controlled-backup-key-rebase-2026-11-04.md).
+Alter Passphrase-/Schluesselpfad nicht erneut starten; neues unabhaengiges
+Key-Recovery plus erhaltene DPAPI-Anwendungsschluessel, danach separat aktuelles
+Backup/Restore/Admin. Folgende Vollfensterhistorie ist keine Ausfuehrungsfreigabe.
+
 Lokale Implementierung/Nativprobe als `0260161` verpackt; Dokumentation separat.
 Kein echter Betriebslauf durch das Packaging.
 

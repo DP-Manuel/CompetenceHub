@@ -1,5 +1,11 @@
 # Staging: Checkliste Bei Stick-Rueckkehr
 
+**Neueste Entscheidung04.11:** Statt des folgenden historischen August-Resume
+gilt der [kontrollierte Backup-Key-Rebase](controlled-backup-key-rebase-2026-11-04.md).
+Kein weiterer alter Passphraseversuch. Neue echte Schluessel/Recovery-Kopie erst
+nach expliziter Freigabe; Anwendungen behalten ihre DPAPI-Keys. Backupziel,
+aktueller Restore und genau ein Admin sind weitere getrennte Freigaben.
+
 Aktuelle Eingrenzung04.11: ausschliesslich den
 [lokalen Schluesselblock](local-staging-keys-2026-11-04.md) benutzen. Er akzeptiert
 VERIFY/verify mit aeusseren Leerzeichen, endet nach der verschluesselten Kopie

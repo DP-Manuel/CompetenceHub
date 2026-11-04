@@ -1,10 +1,24 @@
 # Post-Messe Backend Horizon
 
-Updated: 2026-11-04. Status: COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED; native local export/cleanup PASS. Latest scope is LOCAL KEYS ONLY with tolerant confirmation,1333 tests PASS/30 skips. Windows DPAPI-only match PASS; full GPG/copy still needs private execution. Backup/Admin/import/deployment remain separate. Domain/TLS remain open.
+Latest04.11: K1/K2 local operation and green packaging approved,1412 PASS/30
+skips; native real operator input pending, no actual keys/server actions yet.
+Only next block is the [single private key runner](../../operations/controlled-backup-key-rebase-2026-11-04.md#approved-local-runner-handover).
+[SMB target](../../operations/backup-destinations-2026-11-04.md) planned, no path/
+credentials/approval; transition DB target unproven. Do not delay keys or bypass
+backup/restore/Admin gates. Earlier preparation statuses below are historical.
+
+Updated: 2026-11-04. Status: COACH-3B review9 READY/0 REVIEW_REQUIRED/0 BLOCKED; native export/cleanup PASS. Latest scope: controlled BACKUP KEY REBASE preparation,1367 PASS/30 skips, actual disposable new-GPG recovery/DPAPI proof only. Sole technical operator Manuel, not Janay. Real key/backup/restore/Admin remain separately unexecuted/unapproved; no migration/import/deployment. Domain/TLS remain open.
 The [authorized consolidation block](../completed/post-messe-konsolidierung-2026-10.md) is complete.
 Current checkpoint: [PROJECT_CONTEXT](../../../PROJECT_CONTEXT.md). Synthetic Staging acceptance is authorized; production and real-data activation are not.
 
 ## Current Local Key Gate
+
+Latest decision replaces old-passphrase retry with
+[new dedicated key and unchanged-DPAPI rewrap](../../operations/controlled-backup-key-rebase-2026-11-04.md).
+Ordered approval/sizing/backup/restore/Admin/operating horizon is in the
+[active batch](backend-sprint-2026-10-30.md). Only next recommended block is local
+K1/K2 after explicit real key/recovery-copy approval. The following VERIFY scope
+is historical; do not rerun it or ask Janay for technical key administration.
 
 Latest04.11 scope: ONLY [local keys](../../operations/local-staging-keys-2026-11-04.md).
 Previous VERIFY STOP precedes cryptography; case/outer whitespace now accepted,

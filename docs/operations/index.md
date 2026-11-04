@@ -11,6 +11,8 @@
 | Linux/proxy preparation | [22.10 Linux report](cal1-linux-proxy-readiness-2026-10-22.md) | Domain/TLS/port/package/templates, actual versus blocked local smokes and consolidated inputs |
 | Security maintenance / local Linux proof | [23.10 close-out](cryptography-maintenance-2026-10-23.md) | Cryptography50.0.2, reproducible baseline, actual local proxy/auth proof and one EDV request; no VPS deployment |
 | Backup/restore | [Backup runbook](../architecture/postgresql-backup-restore-runbook.md), [Wuerzburg evidence](sb23-wuerzburg-execution.md) | External exact-copy restore and remaining scheduling gates |
+| Current controlled backup-key rebase | [04.11 rebase contract](controlled-backup-key-rebase-2026-11-04.md) | K1/K2 approved, private operator interaction pending; Manuel only, preserved DPAPI, second recovery OPEN; no backend continuation |
+| Planned configurable backup destinations | [Local / future SMB contract](backup-destinations-2026-11-04.md) | No share/credentials/approval yet; current encryption/capacity/integrity/restore gates, no active network connector |
 | Named Staging Admin / current prechange gate | [30.10 operator preparation](staging-admin-bootstrap-2026-10-30.md) | Durable private key custody, exact-copy restore before one admin-only bootstrap; real Coach APPLY remains disabled |
 | Manual restart after key deferral | [Stick-return checklist](staging-stick-resume-checklist.md) | Five steps, preserved keys, no blind Execute retry or backup bypass |
 | Current local key gate | [Local-key contract](local-staging-keys-2026-11-04.md) | Tolerant confirmation, existing-only GPG verification, hash-bound USB copy; no backend continuation |

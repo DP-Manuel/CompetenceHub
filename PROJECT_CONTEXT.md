@@ -8,7 +8,7 @@ Post-Messe product consolidation is complete for the authorized scope: Context V
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
 The additive Calendar/native runtime, local security/Linux and synthetic COACH-1/2/3A/3C gates remain complete.
 30.10 backend sprint addendum names Manuel as the single authorized Staging Admin/Operator, admin only; earlier missing-operator STOP is superseded for this bootstrap, not real-APPLY safety.
-Elisabeth's newly authorized13-page concept is reconciled locally: short scope unchanged, conflicting details held privately.04.11 later scope is LOCAL KEYS ONLY. Previous STOP was unaccepted VERIFY before cryptography; input now trims/case-folds with clear cancellation/error. Known keycopy1005 bytes versus1.87GiB USB free; current-user/machine DPAPI-only probe PASS, no plaintext output. Real GPG comparison/USB copy still pending private explicit confirmation. New isolated entry ends after keys; legacy entry also cannot continue into backup/Admin. No key regeneration/rotation/deletion, server/account/data/deployment action. [Current local-key contract](docs/operations/local-staging-keys-2026-11-04.md).
+Elisabeth's authorized13-page concept remains locally reconciled, short scope unchanged. Latest04.11: K1/K2 LOCAL backup-key block explicitly approved, including green source commit/push. Single private operator runner prepared; actual new key/USB recovery/unchanged-DPAPI proof remains PENDING OPERATOR Pinentry/password-manager interaction. Do not ask for K permission again or retry August passphrase. Manuel alone owns technical custody, not Janay. Preserve originals; second independent recovery may stay OPEN. Future SMB destination planned but unspecified/unapproved; no proven transition DB target yet. Real current DB backup, isolated restore and one admin remain later separate approvals. [Key contract](docs/operations/controlled-backup-key-rebase-2026-11-04.md), [destinations](docs/operations/backup-destinations-2026-11-04.md).
 [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md); [prior execution evidence](docs/architecture/coach3-existing-content-migration-plan-2026-10-23.md#coach-3b-real-apply-vorbereitung-3010). App-domain/TLS inputs remain open independently.
 
 02.11 independent local COACH-4 preparation is complete: deterministic scoped
@@ -43,6 +43,10 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 
 ## Current Evidence
 
+- [Approved single local operator window](docs/operations/controlled-backup-key-rebase-2026-11-04.md#approved-local-runner-handover):1412 tests PASS/30 expected skips.45 added cases on top of1367: bounded orchestration/aborts/resume/crypto-proof reuse/protected-export rejection and offline destination evidence. Real disposable RSA4096 GPG protected export/import/decrypt, native packet/colon inspection and actual decryption-primary fingerprint binding PASS; no real operator proof yet. Private Pinentry, manager custody confirmation, exclusive/hash-checked USB artifacts, no app-key rotation or server dependency. Source private-artifact ignore rules added; planned SMB contract has no default path/credentials/I/O or runtime acceptance.
+
+- [Controlled rebase preparation](docs/operations/controlled-backup-key-rebase-2026-11-04.md):1367 local tests PASS/30 opt-in skips, including34 new cases. Actual NEW disposable GPG protected export/import/recovered-home decrypt and byte-identical synthetic DPAPI rewrap PASS; owned test agents/profiles/export removed. Candidate is not activation. Explicit recipient flows through snapshot/baseline/restore/Admin, wrong recipient rejected, no inferred trust from metadata. Admin window now requires new custody/home and currently verified encrypted target/workspace plus BACKUP/RESTORE/ADMIN approvals, no initialization. Real key/recovery/backup/restore/Admin remain NOT EXECUTED.
+
 - [Latest local-key correction](docs/operations/local-staging-keys-2026-11-04.md):1333 local tests PASS/30 opt-in skips,18 additional input/CLI/local-flow cases. VERIFY normalization, meaningful denial/cancel, existing-only GPG/DPAPI proof and no-repeat hash-bound resume, encrypted-copy/no-overwrite preserved. E2E synthetic DPAPI/fake GPG, not real GPG or USB execution. No DB/server dependency or automatic backend continuation; only local Git source check. Full Admin/backup remains outside current scope.
 
 - [04.11 native export/resume](docs/operations/staging-resume-2026-11-04.md): actual owned PostgreSQL55437 test1 PASS, seven database-enforced write denials, repeat-byte/COACH-4 parity, all-table/xmin no-op and concurrent new-draft/child snapshot proof. Exact container/port cleanup verified.1315 full local tests PASS/30 expected opt-in skips; the new native case was separately executed, not left untested. Private resume prepared with existing-key-only completion, encrypted USB-copy/no-overwrite and distinct per-block approvals. No actual keys/backup/Admin/VPS/Website action; real outcome remains pending, not inferred from fixtures.
@@ -70,6 +74,17 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 
 ## Protected / Current Blockers
 
+Earlier04.11 local key STOP: GPG passphrase unknown. Code/metadata-only diagnosis
+confirms explicit LOCALAPPDATA/CompetenceHub/backup-gnupg, not the interactive
+APPDATA/gnupg default. Existing private-key-directory metadata is not a crypto
+proof. DPAPI protects Portal application keys, not the OpenPGP private key or
+passphrase. Latest decision supersedes old passphrase recovery: prepare independent
+rebase, no real key generation yet. [Historical diagnosis](docs/operations/local-staging-keys-2026-11-04.md).
+Current encrypted database target and actual new private-key recovery remain unproven;
+C: free space alone is not sufficient. Old25.08 backup no longer authoritative,
+but retained until actual new restore and separate deletion approval. Janay is
+not technical key custodian. [Current gates](docs/operations/controlled-backup-key-rebase-2026-11-04.md).
+
 Secrets, private sources, production systems and real Portal identities remain protected by AGENTS.
 Completed synthetic/review gates alone do not authorize real import or production.30.10 addendum and explicit replies approve exactly one named admin-only Staging account, the chosen login identifier and preparation of new secure configuration. Login is held in private local operator input, not guessed or repeated in public notes. No Coach/Internal/Reviewer/Contact role or Coach/Calendar mapping is approved by this bootstrap.
 Commit/push of the green local preparation, including preceding Phase A, is explicitly approved; Git records the exact published preparation revision. Website/backend deployment and real Coach APPLY remain excluded from that Git approval. The public real-APPLY entry stays hard-disabled.
@@ -81,7 +96,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended next block: ONLY the local existing-key verification/encrypted USB copy. Use verify-staging-keys.ps1 at the reviewed/pushed exact commit, one tolerant VERIFY prompt and at most necessary private GPG dialogue. No backup/Admin continuation, no live target. Inputs/deliverables/DoD: [local-key contract](docs/operations/local-staging-keys-2026-11-04.md). Actual full GPG/copy PASS must come from Manuel's private execution, not synthetic tests.
+1. Recommended next block: execute the ALREADY APPROVED K1/K2 single local runner in Manuel's private same-user PowerShell7, elevated for current BitLocker metadata. One reviewed source-pinned command, native new-passphrase entry/manager custody and exact USB recovery proof; then STOP. Inputs/deliverables/DoD: [local handover](docs/operations/controlled-backup-key-rebase-2026-11-04.md#approved-local-runner-handover). Real results remain pending, second independent recovery OPEN; no extra K permission request, old password retry or server continuation.
 2. COACH-3B REAL APPLY/live export remain disabled and are not recommended for execution until every actual prerequisite above passes and a separate import approval is obtained. [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md), [horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
 3. Resolve parallel operational inputs when available; do not expand the current local/source gate silently.
 4. Any later IONOS promotion needs its own bundled review and production approval.

@@ -7,6 +7,30 @@ Updated: 2026-11-04. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+Latest04.11 operator learning: keep an approved key block separate from an
+unconfigured future destination. Report unavailable volume metadata honestly,
+not as unencrypted/encrypted; do not infer approval from capacity or a mapped
+drive letter. A destination plan/evidence adapter is not runtime acceptance.
+Protect actual artifacts outside Git and deny accidental copies. Preserve CLI
+intent across dot-sourced PowerShell parameter blocks; avoid automatic HOME
+variable collisions; use native GPG byte/status/packet tests alongside stubs.
+One necessary manager-custody confirmation, no old-password loop, cryptographic
+proof reuse on copy resume and explicit OPEN second recovery prevent repeated
+operator work. [Evidence](docs/operations/controlled-backup-key-rebase-2026-11-04.md#approved-local-runner-handover).
+Project changes only; no global skill modification or real operation claim.
+
+Latest04.11 proposal: distinguish cryptographic layers before recovery advice:
+BitLocker, Windows DPAPI application keys, OpenPGP private identity and portable
+application-key ciphertext are not interchangeable. Record explicit GPG homedir,
+sole technical custodian and actual independent recovery proof; never infer secret
+custody from a business/contact role. Lost backup passphrase can justify a gated
+new backup identity without rotating accessible app keys. Test real disposable
+GPG export/import (not only fake roundtrips), pipeline output shape and cleanup;
+Task completion objects must not leak into a bounded status return. Pin new
+recipient at every downstream boundary and separately verify encrypted target
+and plaintext workspace, not free space only. [Local evidence](docs/operations/controlled-backup-key-rebase-2026-11-04.md).
+No global skill modification; proposed for canonical review after real operation.
+
 Later04.11 open proposal: normalize non-secret human confirmation tokens with
 Trim + ordinal case-insensitive equality, never passwords/cryptographic material.
 Invalid/cancel must explain expected input without echoing submitted content or
