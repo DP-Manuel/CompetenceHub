@@ -90,13 +90,8 @@ function Assert-StagingCorpus {
     return $full
 }
 
-function Assert-StagingPrivateAcl {
-    param([string]$Path, [switch]$Directory)
-    $null = Assert-StagingExternalPath $Path
-    $sid = [Security.Principal.WindowsIdentity]::GetCurrent().User
-    $acl = Get-Acl -LiteralPath $Path -ErrorAction Stop
-    if ($acl.GetOwner([Security.Principal.SecurityIdentifier]).Value -ne $sid.Value -or
-        ($Directory -and -not $acl.AreAccessRulesProtected)) { throw 'Operator ownership/protected directory ACL is required.' }
+function Assert-StagingPrivateAccessRules {
+    param([Security.AccessControl.FileSystemSecurity]$Acl,[Security.Principal.SecurityIdentifier]$Sid)
     $allowed = @($sid.Value, 'S-1-5-18')
     $found = [Collections.Generic.HashSet[string]]::new()
     foreach ($rule in $acl.GetAccessRules($true, $true, [Security.Principal.SecurityIdentifier])) {
@@ -107,6 +102,33 @@ function Assert-StagingPrivateAcl {
         $null = $found.Add($rule.IdentityReference.Value)
     }
     if ($found.Count -ne 2) { throw 'Both operator and SYSTEM ACL entries are required.' }
+}
+
+function Assert-StagingPrivateAcl {
+    param([string]$Path, [switch]$Directory)
+    $null = Assert-StagingExternalPath $Path
+    $sid = [Security.Principal.WindowsIdentity]::GetCurrent().User
+    $acl = Get-Acl -LiteralPath $Path -ErrorAction Stop
+    if ($acl.GetOwner([Security.Principal.SecurityIdentifier]).Value -ne $sid.Value -or
+        ($Directory -and -not $acl.AreAccessRulesProtected)) { throw 'Operator ownership/protected directory ACL is required.' }
+    Assert-StagingPrivateAccessRules $acl $sid
+}
+
+function New-StagingPrivateFileStream {
+    param([Parameter(Mandatory)][string]$Path)
+    $full=Assert-StagingExternalPath $Path
+    Assert-StagingPrivateAcl ([IO.Path]::GetDirectoryName($full)) -Directory
+    $sid=[Security.Principal.WindowsIdentity]::GetCurrent().User
+    $security=[Security.AccessControl.FileSecurity]::new()
+    $security.SetOwner($sid)
+    $security.SetAccessRuleProtection($true,$false)
+    foreach ($identity in @($sid,[Security.Principal.SecurityIdentifier]::new('S-1-5-18'))) {
+        $security.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($identity,'FullControl','Allow'))
+    }
+    # Explicit security at CreateNew avoids an elevated token's default group owner.
+    return [IO.FileSystemAclExtensions]::Create([IO.FileInfo]::new($full),
+        [IO.FileMode]::CreateNew,[Security.AccessControl.FileSystemRights]::FullControl,
+        [IO.FileShare]::None,4096,[IO.FileOptions]::None,$security)
 }
 
 function New-StagingPrivateDirectory {
@@ -386,7 +408,7 @@ function Complete-StagingOperatorConfig {
             store_sha256=$storeHash; backup_sha256=$backupHash
         }
         $data = [Text.Encoding]::UTF8.GetBytes(($record | ConvertTo-Json -Depth 5))
-        $stream = [IO.File]::Open($pending, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
+        $stream = New-StagingPrivateFileStream $pending
         $pendingOwned = $true
         try { $stream.Write($data,0,$data.Length); $stream.Flush($true) } finally { $stream.Dispose() }
         Assert-StagingPrivateAcl $pending

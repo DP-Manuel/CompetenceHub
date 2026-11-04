@@ -135,8 +135,9 @@ def test_additive_rebase_never_generates_deletes_or_contacts_server():
     for forbidden in ("New-StagingOperatorSecret", "Export-Clixml", "Remove-Item", "--generate", "--import", "--export-secret", "ssh ", "scp ", "Read-Host", "-Force"):
         assert forbidden not in body
     assert "-KeyHome $recoveredHome -Mode Decrypt" in body
-    assert "[IO.File]::Copy($store,$newStore,$false)" in body
-    assert "[IO.FileMode]::CreateNew" in body
+    assert "New-StagingPrivateFileStream $newStore" in body
+    assert "$inputStream.CopyTo($output)" in body
+    assert "New-StagingPrivateFileStream $metadata" in body
 
 
 def test_actual_synthetic_gpg_export_import_and_existing_dpapi_rewrap(powershell, tmp_path):

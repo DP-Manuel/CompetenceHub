@@ -37,14 +37,15 @@ function Assert-LocalKeyVolumes {
 }
 
 function Write-KeyBlockFile {
-    param([string]$Path,[byte[]]$Bytes)
-    $stream=[IO.File]::Open($Path,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+    param([string]$Path,[byte[]]$Bytes,[switch]$PrivateFile)
+    $stream=if ($PrivateFile) { New-StagingPrivateFileStream $Path } else { [IO.File]::Open($Path,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None) }
     try { $stream.Write($Bytes,0,$Bytes.Length); $stream.Flush($true) } finally { $stream.Dispose() }
+    if ($PrivateFile) { Assert-StagingPrivateAcl $Path }
 }
 
 function Write-KeyBlockReceipt {
     param([string]$Path,[Collections.IDictionary]$Record)
-    Write-KeyBlockFile $Path ([Text.Encoding]::UTF8.GetBytes(($Record | ConvertTo-Json -Depth 6 -Compress)))
+    Write-KeyBlockFile $Path ([Text.Encoding]::UTF8.GetBytes(($Record | ConvertTo-Json -Depth 6 -Compress))) -PrivateFile
     Assert-StagingPrivateAcl $Path
 }
 
@@ -53,6 +54,34 @@ function Read-KeyBlockReceipt {
     Assert-StagingPrivateAcl $Path
     if ((Get-Item -LiteralPath $Path).Length -gt 65536) { throw 'KEY_RECEIPT_SIZE_REJECTED' }
     return Get-Content -Raw -LiteralPath $Path | ConvertFrom-Json -AsHashtable
+}
+
+function Read-KeyBlockAuthorization {
+    param([string]$Root)
+    Assert-StagingPrivateAcl $Root -Directory
+    $path=Join-Path $Root 'authorization.json'
+    $null=Assert-StagingExternalPath $path
+    $item=Get-Item -LiteralPath $path -Force -ErrorAction Stop
+    if ($item.PSIsContainer -or $item.Length -gt 65536) { throw 'KEY_AUTHORIZATION_INVALID' }
+    $sid=[Security.Principal.WindowsIdentity]::GetCurrent().User
+    $acl=Get-Acl -LiteralPath $path -ErrorAction Stop
+    $owner=$acl.GetOwner([Security.Principal.SecurityIdentifier]).Value
+    if ($owner -cnotin @($sid.Value,'S-1-5-32-544')) { throw 'KEY_AUTHORIZATION_OWNER_UNTRUSTED' }
+    Assert-StagingPrivateAccessRules $acl $sid
+    $record=Get-Content -Raw -LiteralPath $path | ConvertFrom-Json -AsHashtable
+    if (@(Compare-Object @($record.Keys) @('schema','scope','source_commit','source_hashes') -CaseSensitive).Count -or
+        $record.schema -ne 1 -or $record.scope -cne 'LOCAL_KEY_REBASE_ONLY' -or
+        $record.source_commit -cnotmatch '^[a-f0-9]{40}$' -or
+        $record.source_hashes -isnot [Collections.IDictionary]) { throw 'KEY_AUTHORIZATION_INVALID' }
+    # Read-only exception solely for this known non-secret failed receipt.
+    # Private-key/application files and generic receipt validation stay strict.
+    if ($owner -ceq 'S-1-5-32-544' -and
+        $record.source_commit -cne '5b0f7ab24f1179b2b8c330bc37d3581f77e1b55a') { throw 'KEY_AUTHORIZATION_LEGACY_OWNER_NOT_BOUND' }
+    foreach ($name in $record.source_hashes.Keys) {
+        if ($name -cnotin @($script:OperatorStoreName,$script:OperatorBackupName,$script:OperatorMetadataName) -or
+            $record.source_hashes[$name] -cnotmatch '^[A-F0-9]{64}$') { throw 'KEY_AUTHORIZATION_INVALID' }
+    }
+    return $record
 }
 
 function Invoke-LocalKeyGpg {
@@ -225,28 +254,36 @@ function Invoke-LocalBackupKeyBlock {
     param([string]$Commit)
     $ErrorActionPreference='Stop'; Set-StrictMode -Version Latest
     $script:KeyBlockPhase='preflight'
+    $script:KeyBlockStep='source'
     Assert-LocalKeyEnvironment
     Assert-LocalKeySource $Commit
     $paths=Get-LocalBackupBlockPaths
+    $script:KeyBlockStep='source_acl'
     $null=Assert-StagingExternalPath $paths.root
     Assert-StagingPrivateAcl $paths.source -Directory
+    $script:KeyBlockStep='corpus'
     $null=Assert-StagingCorpus $paths.corpus '80329796cebfd72be3dd68e8114ed91140f18d0ff60a98fe0123549dfcb8a8da'
+    $script:KeyBlockStep='tools'
     foreach ($tool in @($paths.gpg,$paths.gpgconf)) { $null=Assert-StagingExternalPath (Get-Command $tool -CommandType Application -ErrorAction Stop).Source }
+    $script:KeyBlockStep='volume_status'
     Assert-LocalKeyVolumes $paths.root $paths.usb
+    $script:KeyBlockStep='source_hashes'
     $hashes=@{}
     foreach ($name in @($script:OperatorStoreName,$script:OperatorBackupName,$script:OperatorMetadataName)) {
         $file=Join-Path $paths.source $name
         if (Test-Path -LiteralPath $file) { Assert-StagingPrivateAcl $file; $hashes[$name]=(Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash }
     }
     if (-not $hashes.ContainsKey($script:OperatorStoreName) -or (Test-Path -LiteralPath (Join-Path $paths.source 'bootstrap-attempt.json'))) { throw 'KEY_SOURCE_CUSTODY_REVIEW_REQUIRED' }
+    $script:KeyBlockStep='dpapi_payload'
     Test-KeyBlockDpapi (Join-Path $paths.source $script:OperatorStoreName)
+    $script:KeyBlockStep='authorization_receipt'
     $authorization=Join-Path $paths.root 'authorization.json'
     if (-not (Test-Path -LiteralPath $paths.root)) {
         New-StagingPrivateDirectory $paths.root
         Write-KeyBlockReceipt $authorization @{schema=1;scope='LOCAL_KEY_REBASE_ONLY';source_commit=$Commit;source_hashes=$hashes}
     } else {
         Assert-StagingPrivateAcl $paths.root -Directory
-        $previous=Read-KeyBlockReceipt $authorization
+        $previous=Read-KeyBlockAuthorization $paths.root
         if ($previous.schema -ne 1 -or $previous.scope -cne 'LOCAL_KEY_REBASE_ONLY') { throw 'KEY_EXISTING_ROOT_NOT_OWNED' }
         Assert-KeyBlockOriginals $paths.source $previous.source_hashes
         if ((@($previous.source_hashes.Keys).Count) -ne $hashes.Count) { throw 'KEY_ORIGINAL_SET_CHANGED' }
@@ -254,10 +291,11 @@ function Invoke-LocalBackupKeyBlock {
     Write-Host 'Nur lokaler neuer Backupschluessel, USB-Recovery und unveraenderte Anwendungsschluessel. Danach STOP.'
     Write-Host 'Neue starke Passphrase: mindestens 20 Zeichen, nur im GPG-Dialog festlegen und im Passwortmanager speichern. Niemals ins Terminal/Chat eingeben.'
     $script:KeyBlockPhase='new_key'
+    $script:KeyBlockStep='key_workflow'
     $policy=(@('enforce-passphrase-constraints','min-passphrase-len 20','min-passphrase-nonalpha 1','default-cache-ttl 300','max-cache-ttl 900') -join [char]10)+[char]10
     if (-not (Test-Path -LiteralPath $paths.live)) {
         New-StagingPrivateDirectory $paths.live
-        Write-KeyBlockFile (Join-Path $paths.live 'gpg-agent.conf') ([Text.Encoding]::ASCII.GetBytes($policy))
+        Write-KeyBlockFile (Join-Path $paths.live 'gpg-agent.conf') ([Text.Encoding]::ASCII.GetBytes($policy)) -PrivateFile
         $null=Invoke-LocalKeyGpg $paths $paths.live Generate
     }
     $policyPath=Join-Path $paths.live 'gpg-agent.conf'
@@ -292,7 +330,7 @@ function Invoke-LocalBackupKeyBlock {
         $bytes=Invoke-LocalKeyGpg $paths $paths.live SecretExport $fingerprint
         try {
             Assert-ProtectedSecretExport (Invoke-LocalKeyGpg -Paths $paths -KeyHome $paths.live -Operation Packets -InputBytes $bytes)
-            Write-KeyBlockFile $export $bytes
+            Write-KeyBlockFile $export $bytes -PrivateFile
         } finally { [Array]::Clear($bytes,0,$bytes.Length) }
     }
     Assert-StagingPrivateAcl $export
@@ -377,6 +415,7 @@ if ($MyInvocation.InvocationName -ne '.') {
             Write-Output 'LOCAL_BACKUP_KEYS=PASS RECOVERY=PASS DPAPI=UNCHANGED SECOND_RECOVERY=OPEN SERVER_ACTIONS=NONE'
         } catch {
             $phase=if ($script:KeyBlockPhase -cin @('preflight','new_key','passphrase_custody','protected_private_export','isolated_usb_import','application_rewrap','final_hash_check','complete')) {$script:KeyBlockPhase} else {'unknown'}
+            $step=if ($script:KeyBlockStep -cin @('source','source_acl','corpus','tools','volume_status','source_hashes','dpapi_payload','authorization_receipt','key_workflow')) {$script:KeyBlockStep} else {'unknown'}
             $known=@('LOCAL_REVIEWED_COMMIT_REQUIRED','LOCAL_KEY_SOURCE_MUST_BE_CLEAN',
                 'CLEAN_PRIVATE_KEY_ENVIRONMENT_REQUIRED','KEY_VOLUME_STATUS_UNAVAILABLE_USE_SAME_USER_ELEVATED_POWERSHELL',
                 'KEY_VOLUME_PROTECTION_REQUIRED_NO_UNLOCK_ATTEMPT','KEY_VOLUME_SPACE_REQUIRED',
@@ -386,10 +425,11 @@ if ($MyInvocation.InvocationName -ne '.') {
                 'KEY_PASSPHRASE_CUSTODY_NOT_CONFIRMED','KEY_PROTECTED_SECRET_EXPORT_REQUIRED',
                 'KEY_UNPROTECTED_OR_UNKNOWN_EXPORT_REJECTED','KEY_COPY_HASH_CONFLICT_NO_OVERWRITE',
                 'KEY_COMPLETION_BINDING_CHANGED','KEY_COMPARISON_BINDING_CHANGED','KEY_FINAL_HASH_CONFLICT')
+            $known+=@('KEY_AUTHORIZATION_INVALID','KEY_AUTHORIZATION_OWNER_UNTRUSTED','KEY_AUTHORIZATION_LEGACY_OWNER_NOT_BOUND')
             $code=if ($_.Exception.Message -cin $known) {$_.Exception.Message} else {'PRIVATE_LOCAL_KEY_CHECK_NOT_COMPLETE'}
             [Console]::Error.WriteLine('Lokaler Schluesselblock gestoppt. Dateien bleiben erhalten; nicht neu erzeugen oder ueberschreiben. Keine Serveraktion.')
             if ($phase -ceq 'preflight') { [Console]::Error.WriteLine('Quellstand, gleicher Windows-Benutzer und aktueller BitLocker-Schutz muessen pruefbar sein. PowerShell7 bei Bedarf als Administrator mit demselben Benutzer starten; kein Laufwerk erneut entsperren.') }
-            [Console]::Error.WriteLine("LOCAL_BACKUP_KEYS=STOP PHASE=$phase CODE=$code SERVER_ACTIONS=NONE SECOND_RECOVERY=OPEN")
+            [Console]::Error.WriteLine("LOCAL_BACKUP_KEYS=STOP PHASE=$phase STEP=$step CODE=$code SERVER_ACTIONS=NONE SECOND_RECOVERY=OPEN")
             exit 1
         }
     }

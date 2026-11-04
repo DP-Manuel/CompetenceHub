@@ -170,6 +170,72 @@ def test_runner_never_includes_server_admin_or_plaintext_export_commands():
     assert "enforce-passphrase-constraints" in source
 
 
+def test_new_private_files_have_explicit_user_owner_and_cannot_overwrite(powershell, tmp_path):
+    run_private(powershell, tmp_path, r"""
+$dir=Join-Path $env:CUSTODY_TEST_ROOT 'explicit-owner'
+New-StagingPrivateDirectory $dir
+$path=Join-Path $dir 'synthetic-cipher.bin'
+$stream=New-StagingPrivateFileStream $path
+try { $stream.WriteByte(42) } finally { $stream.Dispose() }
+Assert-StagingPrivateAcl $path
+$acl=Get-Acl -LiteralPath $path
+if (-not $acl.AreAccessRulesProtected) { throw 'New file inherited uncontrolled rules' }
+$before=(Get-FileHash -LiteralPath $path).Hash
+$blocked=$false
+try { $stream=New-StagingPrivateFileStream $path; $stream.Dispose() } catch { $blocked=$true }
+if (-not $blocked -or (Get-FileHash -LiteralPath $path).Hash -cne $before) { throw 'CreateNew overwrote private file' }
+""")
+
+
+@pytest.mark.parametrize("case", ["known-admin", "other-commit", "scope", "world-access", "foreign-owner", "extra-field"])
+def test_only_known_nonsecret_authorization_accepts_admin_owner_readonly(
+    powershell, tmp_path, case
+):
+    run_private(
+        powershell, tmp_path,
+        ". (Join-Path $script:OperatorRepositoryRoot 'deploy/scripts/run-local-backup-key-block.ps1')\n"
+        + "$case='" + case + "'\n" + r"""
+$root=Join-Path $env:CUSTODY_TEST_ROOT 'owned-block'
+New-StagingPrivateDirectory $root
+$path=Join-Path $root 'authorization.json'
+$record=@{
+    schema=1;scope='LOCAL_KEY_REBASE_ONLY'
+    source_commit='5b0f7ab24f1179b2b8c330bc37d3581f77e1b55a'
+    source_hashes=@{'staging-operator.keys.clixml'=('AB'*32)}
+}
+if ($case -ceq 'other-commit') { $record.source_commit=('cd'*20) }
+if ($case -ceq 'scope') { $record.scope='ADMIN' }
+if ($case -ceq 'extra-field') { $record.extra='unexpected' }
+Write-KeyBlockReceipt $path $record
+$before=(Get-FileHash -LiteralPath $path).Hash
+$script:NativeGetAcl=Get-Command Get-Acl -CommandType Cmdlet
+$script:AuthorizationPath=$path
+$script:ReportedAcl=& $script:NativeGetAcl -LiteralPath $path
+# Simulate elevated default ownership in metadata only. Disk ACLs are untouched.
+$owner=if ($case -ceq 'foreign-owner') {'S-1-5-32-545'} else {'S-1-5-32-544'}
+$script:ReportedAcl.SetOwner([Security.Principal.SecurityIdentifier]::new($owner))
+if ($case -ceq 'world-access') {
+    $script:ReportedAcl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new(
+        [Security.Principal.SecurityIdentifier]::new('S-1-1-0'),'Read','Allow'))
+}
+function Get-Acl {
+    param($LiteralPath,$ErrorAction)
+    if ($LiteralPath -ceq $script:AuthorizationPath) { return $script:ReportedAcl }
+    return & $script:NativeGetAcl -LiteralPath $LiteralPath -ErrorAction Stop
+}
+$failed=$false
+try { $result=Read-KeyBlockAuthorization $root } catch { $failed=$true }
+if (($case -ceq 'known-admin') -eq $failed) { throw 'Authorization owner boundary mismatch' }
+$strict=$false
+try { $null=Read-KeyBlockReceipt $path } catch { $strict=$true }
+if (-not $strict) { throw 'Generic private receipt owner check weakened' }
+if ((Get-FileHash -LiteralPath $path).Hash -cne $before) { throw 'Authorization contents changed' }
+$actual=& $script:NativeGetAcl -LiteralPath $path
+if ($actual.GetOwner([Security.Principal.SecurityIdentifier]).Value -cne [Security.Principal.WindowsIdentity]::GetCurrent().User.Value) { throw 'Existing file ownership was changed' }
+""",
+    )
+
+
 @pytest.mark.parametrize("case", ["none", "plain", "second-plain", "cipher", "format"])
 def test_unknown_or_unprotected_secret_packet_is_rejected_before_file_write(
     powershell, tmp_path, case

@@ -92,12 +92,17 @@ function New-StagingOperatorRebaseCandidate {
         New-StagingPrivateDirectory $destination
         $newStore = Join-Path $destination $script:OperatorStoreName
         # Copy DPAPI ciphertext verbatim, never generate or serialize new keys.
-        [IO.File]::Copy($store,$newStore,$false)
+        $inputStream=[IO.File]::OpenRead($store)
+        try {
+            $output=New-StagingPrivateFileStream $newStore
+            $inputStream.CopyTo($output); $output.Flush($true)
+            $output.Dispose(); $output=$null
+        } finally { $inputStream.Dispose() }
         Assert-StagingPrivateAcl $newStore
         if ((Get-FileHash -LiteralPath $newStore -Algorithm SHA256).Hash -cne $originals[$script:OperatorStoreName]) { throw 'REBASE_DPAPI_COPY_CHANGED' }
         $backup = Join-Path $destination $script:OperatorBackupName
         $script:RebasePhase='new_encryption'
-        $output = [IO.File]::Open($backup,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+        $output = New-StagingPrivateFileStream $backup
         Invoke-StagingGpg -Executable $executable -KeyHome $newHome -Mode Encrypt -Recipient $NewRecipient -InputBytes $plain -OutputStream $output
         $output.Flush($true); $output.Dispose(); $output=$null
         Assert-StagingPrivateAcl $backup
@@ -124,7 +129,7 @@ function New-StagingOperatorRebaseCandidate {
         }
         $metadata = Join-Path $destination $script:OperatorMetadataName
         $script:RebasePhase='candidate_metadata'
-        $output = [IO.File]::Open($metadata,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+        $output = New-StagingPrivateFileStream $metadata
         $data = [Text.Encoding]::UTF8.GetBytes(($record | ConvertTo-Json -Depth 5))
         $output.Write($data,0,$data.Length); $output.Flush($true); $output.Dispose(); $output=$null
         $script:RebasePhase='candidate_loader'
