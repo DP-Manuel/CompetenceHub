@@ -7,6 +7,16 @@ Updated: 2026-11-04. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+04.11 elevated-runtime regression: non-elevated success does not cover Windows
+elevated default file ownership. Create private files atomically with explicit
+user owner/security descriptor; never broadly relax owner checks to hide it.
+Test default/elevated metadata, token context, no-overwrite and read-only recovery
+of partial NON-secret state. Record substep/known bounded error before asking an
+operator to retry; a new error code is not the same failure. Verify actual
+metadata instead of repeating administrator/password advice. Existing source
+keys/ACLs untouched; [local evidence](docs/operations/controlled-backup-key-rebase-2026-11-04.md#elevated-owner-fix).
+Global skill proposal remains open, no global edits.
+
 Latest04.11 operator learning: keep an approved key block separate from an
 unconfigured future destination. Report unavailable volume metadata honestly,
 not as unencrypted/encrypted; do not infer approval from capacity or a mapped

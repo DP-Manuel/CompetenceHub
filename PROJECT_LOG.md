@@ -3,6 +3,13 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-04 | elevated preflight owner failure
+
+- Manuel reports BitLocker-unavailable STOP, then explicitly elevated retry with a DIFFERENT generic preflight STOP. Agent non-elevated read-only PS7 probe: BitLocker command available, CIM access denied. Actual failed-run metadata: protected root user-owned; authorization.json319 bytes Administrators-owned, ONLY user/SYSTEM full-control; no live key home, identity, candidate or completion. All preceding configured volume/DPAPI checks had progressed to receipt creation; no new OpenPGP key yet.
+- Fix: native explicit user-owner/protected DACL at CreateNew for new private files, stream-copy original DPAPI ciphertext; shared owner validation remains strict. Read-only narrow recovery of known5b0f7ab non-secret authorization only, no old-file owner/content/ACL changes. Actual read-only probe PASS/original ciphertext hashes MATCH; no GPG or server operation. Bounded preflight STEP diagnostic added. [Contract/evidence](docs/operations/controlled-backup-key-rebase-2026-11-04.md#elevated-owner-fix).
+- Full1419 PASS/30 opt-in skips in166.12s; focused76 PASS and24 owner/runner PASS with seven added security regression cases. Keep the approved key scope and original receipt, never delete/reset or ask K approval again. Backup/restore/Admin/import/deployment still stopped.
+- Fix packaged separately as `ef70418`; three-script PowerShell parse, pip check,122 changed-document links,253 context-router links/archive integrity and diff checks PASS. Green source/docs commit and push authorized; no secrets or actual key artifacts staged. Actual elevated operator acceptance still pending, not inferred from simulated owner cases.
+
 ## 2026-11-04 | approved local key window / planned network destination
 
 - Manuel explicitly approves K1/K2 new dedicated key, protected native passphrase/manager custody, no-overwrite USB private recovery, actual isolated proof and unchanged-DPAPI rewrap; second independent recovery may stay OPEN. Green script/docs commit/push allowed; VPS backup/restore/Admin/migration/import/Website/deletion still excluded. [Current local handover](docs/operations/controlled-backup-key-rebase-2026-11-04.md#approved-local-runner-handover).

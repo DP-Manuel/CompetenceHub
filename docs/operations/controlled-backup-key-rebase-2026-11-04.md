@@ -196,6 +196,53 @@ not one speculative command/password interruption at a time. REAL APPLY disabled
 
 ## Approved Local Runner Handover
 
+### Elevated Owner Fix
+
+Later04.11 real operator attempts: first unavailable BitLocker status; agent's
+read-only PS7 probe reproduced non-elevated CIM access denied, command available.
+Manuel then confirms an elevated run; this returns a DIFFERENT generic preflight
+STOP. Root/authorization exist, live/recovered key homes and candidate do not.
+Actual ACL metadata identifies the cause: root owned by Manuel and protected;
+new authorization.json owned by BUILTIN Administrators, with ONLY operator and
+SYSTEM full-control entries. The old writer used the elevated token's default
+owner, then rejected it in its stricter user-owner check. This is a script defect,
+not a lost/new passphrase or another BitLocker unlock requirement.
+
+New private files now use FileSystemAclExtensions.Create with explicit current
+user owner, protected operator/SYSTEM DACL, CreateNew and exclusive stream at
+creation. This covers receipts, agent policy, private encrypted export, copied
+DPAPI ciphertext, new portable ciphertext/metadata and completion pending files.
+No chmod/ACL repair or overwrite of existing keys or artifacts is performed.
+The exact known failed authorization receipt can be read WITHOUT modifying its
+bytes/owner/ACL only in its trusted user-owned root, with private DACL, exact
+schema/scope/hash whitelist and buggy source commit5b0f7ab. Generic private-key
+and receipt owner checks stay strict. Unknown group owner/source or broad ACL
+still STOP. Native GPG-managed subfiles inherit the private home access rules;
+the helper does not rewrite their existing private contents/security.
+
+Real read-only probe confirms this receipt is accepted, original ciphertext
+hashes match, and live key home remains absent. No GPG/key generation, file copy,
+permission change, DB/Admin/server action in the diagnostic. The elevated run's
+progress implies the configured volume and DPAPI checks completed before the
+receipt failure; this is not a new unrestricted DB-target approval or an agent's
+independent elevated volume measurement. B/R/A still excluded.
+
+Preflight failures now include a bounded STEP (source/source_acl/corpus/tools/
+volume_status/source_hashes/dpapi_payload/authorization_receipt), not just a
+misleading generic phase. No submitted value, key or raw exception is printed.
+Regression includes explicit native file security/no-overwrite, six simulated
+elevated/foreign-owner and ACL/schema/source cases, unchanged on-disk metadata,
+strict generic private checks, existing full local flow and native synthetic GPG.
+Full regression:1419 PASS/30 expected opt-in skips in166.12s; focused76 PASS,
+then24 owner/runner cases PASS. Native secure-file creation ran under the agent's
+non-elevated token; elevated ownership rejection/recovery was simulated with ACL
+metadata doubles. Actual elevated operator K1/K2 acceptance remains pending.
+Fix packaged separately as `ef70418`. Three-script PowerShell parse, pip check,
+122 changed-document links,253 router links/archive integrity and diff checks
+PASS. Documentation packaging is separate; no private artifact is versioned.
+Only next block remains the ALREADY APPROVED local private K1/K2 run from updated
+pinned source. Keep the working directory/old receipt; do not delete/reset it.
+
 Implementation packaged as `cbc4a14`; independent offline destination contract
 as `d681088`. Documentation/checkpoint packaged separately. This is source
 delivery, not actual key generation/custody/USB execution or Website deployment.
