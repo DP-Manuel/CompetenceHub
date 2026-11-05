@@ -2,6 +2,8 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
+import OfferingFinder from "@website-offer-finder";
+import { finderEntries } from "../preview/offering-finder-data";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -114,13 +116,13 @@ const faqs = [
       ]}
     >
       <div slot="actions" class="actions">
-        <a class="button" href={url("kontakt")}>Anfrage stellen</a>
+        <a class="button" href={import.meta.env.PUBLIC_REVIEW_MODE === "true" ? "#angebotsfinder" : url("kontakt")}>{import.meta.env.PUBLIC_REVIEW_MODE === "true" ? "Angebote finden" : "Anfrage stellen"}</a>
         <a class="button button--ghost" href={url("mindforge")}>Mindforge entdecken</a>
         <a class="button button--ghost" href={url("unternehmen")}>Für Unternehmen</a>
       </div>
     </ConnectedPageHero>
 
-    <section class="offer-grid offer-grid--services" id="angebote" aria-label="Angebotsübersicht">
+    {import.meta.env.PUBLIC_REVIEW_MODE === "true" && <OfferingFinder entries={finderEntries} />}<section class="offer-grid offer-grid--services" id="angebote" aria-label="Angebotsübersicht">
       {services.map((service) => (
         <article class="offer-card" id={service.id}>
           <span class="offer-card__icon"><Icon name={service.icon} size={30} /></span>

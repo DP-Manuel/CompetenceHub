@@ -22,6 +22,10 @@ export default defineConfig({
       "import.meta.env.PUBLIC_REVIEW_MODE": JSON.stringify(String(environment.preview)),
     },
     resolve: { alias: {
+      "@website-offer-finder": fileURLToPath(new URL(
+        environment.preview ? "./src/preview/OfferingFinder.astro" : "./src/preview/NoOfferingFinder.astro",
+        import.meta.url,
+      )),
       "@website-coaches": fileURLToPath(new URL(
         environment.preview ? "./src/preview/coaches.ts" : "./src/data/coaches.ts",
         import.meta.url,

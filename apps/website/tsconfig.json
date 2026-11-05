@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@website-coaches": ["src/data/coaches.ts"]
+      "@website-coaches": ["src/data/coaches.ts"],
+      "@website-offer-finder": ["src/preview/OfferingFinder.astro"]
     }
   }
 }

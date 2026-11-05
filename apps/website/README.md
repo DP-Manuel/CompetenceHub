@@ -105,6 +105,16 @@ stays opt-in and inactive by default; no database or key setup is needed here.
 Version inventory, current return targets and environment differences:
 [Website-first report](../../docs/content/website-first-2026-11-05.md).
 
+COACH-5 extends the existing `/leistungen/#angebotsfinder` in Preview only:
+27 grouped entries /29 formats from the three explicitly approved offering
+lists, shared canonical topics, combined filters and contextual mail drafts.
+The component accepts a public view model; no Registry source is activated.
+Production resolves the Finder import to a no-output component at build time,
+so neither markup nor its client bundle enters the stable52-file artifact.
+[Scope and acceptance](../../docs/exec-plans/active/coach5-offering-finder-2026-11-05.md).
+For an explicitly selected installed browser the QA runner accepts
+`WEBSITE_QA_BROWSER_EXECUTABLE`; its report names the actual engine/version.
+
 For Edge browser checks use `scripts/run-preview-browser-acceptance.py` and the
 existing production `scripts/run-messe-browser-acceptance.py`. Both accept
 `WEBSITE_NODE` for the absolute Node executable in a separate worktree.

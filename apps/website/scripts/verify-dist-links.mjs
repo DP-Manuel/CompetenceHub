@@ -115,6 +115,9 @@ for (const sourceFile of htmlFiles) {
 for (const file of allFiles) {
   const publicPath = relative(dist, file).split(sep).join("/");
   const pathLower = publicPath.toLocaleLowerCase("de-DE");
+  if (!environment.preview && /offeringfinder/i.test(publicPath)) {
+    failures.push({ source: publicPath, reason: "Preview-only offering finder bundle in Production" });
+  }
   for (const fragment of environment.preview ? [] : forbiddenPublicIdentityFragments) {
     if (pathLower.includes(fragment.toLocaleLowerCase("de-DE"))) {
       failures.push({ source: publicPath, target: fragment, reason: "removed identity in artifact path" });
@@ -123,6 +126,9 @@ for (const file of allFiles) {
 
   if (!textExtensions.has(extname(file).toLowerCase())) continue;
   const content = readFileSync(file, "utf8").toLocaleLowerCase("de-DE");
+  if (!environment.preview && /data-offering-finder|data-finder-entry|angebotsfinder/.test(content)) {
+    failures.push({ source: publicPath, reason: "Preview-only offering finder content in Production" });
+  }
   for (const fragment of environment.preview ? [] : forbiddenPublicIdentityFragments) {
     if (content.includes(fragment.toLocaleLowerCase("de-DE"))) {
       failures.push({ source: publicPath, target: fragment, reason: "removed identity in generated content" });

@@ -40,6 +40,7 @@ const navigation = [
 
 const serviceNavigation = [
   { label: "Alle Leistungen", href: "leistungen", icon: "compass" as const },
+  ...(reviewMode ? [{ label: "Angebotsfinder", href: "leistungen#angebotsfinder", icon: "compass" as const }] : []),
   { label: "Mindforge · Coaching & Beratung", href: "mindforge", icon: "sparkles" as const },
   { label: "Recruiting", href: "leistungen#recruiting", icon: "user-round" as const },
   { label: "Personalentwicklung", href: "leistungen#personalentwicklung", icon: "users" as const },

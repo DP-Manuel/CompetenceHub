@@ -22,6 +22,8 @@ label = os.environ.get("WEBSITE_QA_LABEL", "preview-qa")
 if not re.fullmatch(r"[a-z0-9-]{1,70}", label):
     raise ValueError("Evidence label must remain a local simple directory name")
 EVIDENCE = ROOT / "release-artifacts" / label
+BROWSER_OPTIONS = ({"executable_path": os.environ["WEBSITE_QA_BROWSER_EXECUTABLE"]}
+                   if os.environ.get("WEBSITE_QA_BROWSER_EXECUTABLE") else {"channel": "msedge"})
 RESTORED = ("carolin-hupp", "elisabeth-schwabauer", "goran-celic",
             "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm")
 count = 0
@@ -156,6 +158,84 @@ def website_first_checks(page, base, name, expected_count):
     return [directory_path.name, offer_path.name]
 
 
+def offering_finder_checks(page, base, name):
+    page.goto(base + "/leistungen/#angebotsfinder", wait_until="networkidle")
+    root = page.locator("[data-offering-finder]")
+    form = root.get_by_role("form", name="Angebote filtern")
+    search = form.get_by_role("searchbox", name="Angebot oder Coach")
+    status = root.locator("[data-finder-status]")
+    rows = root.locator("[data-finder-entry]")
+    check(f"{name} finder 27 grouped offers", rows.count() == 27)
+    check(f"{name} finder initially bounded to eight rows", root.locator("[data-finder-entry]:visible").count() == 8 and "27 passende" in status.inner_text())
+    check(f"{name} no private data in finder payload", not re.search(r'source_path|source_key|revision_id|coach_uuid|review_required|\.pdf|\.docx', root.locator("[data-finder-data]").text_content(), re.I))
+    search.focus()
+    page.keyboard.press("Tab")
+    check(f"{name} finder predictable filter tab order", form.get_by_label("Zielgruppe").evaluate("e => e === document.activeElement"))
+    page.keyboard.press("Shift+Tab")
+    check(f"{name} finder search visible focus", search.evaluate("e => e.matches(':focus-visible') && getComputedStyle(e).outlineStyle !== 'none'"))
+    form.get_by_label("Zielgruppe").select_option("entrepreneurs")
+    form.get_by_label("Format", exact=True).select_option("program")
+    search.fill("Gulcan Balance")
+    root.locator(".finder-topics summary").click()
+    form.get_by_label("Kategorie", exact=True).select_option("personalentwicklung")
+    form.get_by_role("checkbox", name="Gesundheit & Prävention").check()
+    check(f"{name} all finder dimensions combine", root.locator("[data-finder-entry]:visible").count() == 1 and "1 passende" in status.inner_text())
+    family = root.locator('[data-finder-entry="family/business-balance"]')
+    family.locator("summary").focus()
+    page.keyboard.press("Enter")
+    check(f"{name} only matching family format visible", family.locator("[data-finder-format]:visible").count() == 1 and family.locator('[data-finder-format="business-balance/six-weeks"]').is_visible())
+    mail = urlsplit(family.locator("[data-finder-format]:visible a").get_attribute("href"))
+    check(f"{name} finder contextual mail draft", mail.scheme == "mailto" and mail.path == "competencehub@donner-partner.de"
+          and "6-Wochen-Vertiefungsprogramm" in parse_qs(mail.query)["subject"][0]
+          and "Gülcan" in parse_qs(mail.query)["body"][0])
+    check(f"{name} family known duration only", "6 Wochen" in family.inner_text() and "60 Minuten" in family.inner_text())
+    check(f"{name} finder Coach route resolves", page.request.get(base.rsplit("/CompetenceHub", 1)[0] + family.locator("[data-finder-profile]").get_attribute("href")).status == 200)
+    form.get_by_role("button", name="Filter zurücksetzen").click()
+    check(f"{name} finder reset clears all dimensions", search.input_value() == "" and form.get_by_label("Zielgruppe").input_value() == "all"
+          and form.get_by_label("Format", exact=True).input_value() == "all" and form.get_by_label("Kategorie", exact=True).input_value() == "all"
+          and form.locator('input[type="checkbox"]:checked').count() == 0 and "27 passende" in status.inner_text())
+    more = root.get_by_role("button", name="Weitere Angebote anzeigen")
+    more.focus()
+    page.keyboard.press("Enter")
+    check(f"{name} more exposes next eight and focuses first new result", root.locator("[data-finder-entry]:visible").count() == 16
+          and root.locator("[data-finder-entry]:visible").nth(8).locator("summary").evaluate("e => e === document.activeElement"))
+    more.click()
+    more.click()
+    check(f"{name} all offers reachable without duplicates", root.locator("[data-finder-entry]:visible").count() == 27 and not more.is_visible())
+    for row in rows.all():
+        row.locator("summary").click()
+        check(f"{name} requestable offer has profile and draft", row.locator("[data-finder-profile]").count() == 1 and row.locator('a[href^="mailto:"]').count() >= 1)
+    check(f"{name} finder no horizontal overflow", not overflow(page))
+    check(f"{name} finder actual visible text fits", root.evaluate("""root => {
+      for (const block of root.querySelectorAll('h2,h3,h4,p,strong,dd,a,summary')) {
+        if (!block.getClientRects().length) continue;
+        const bounds = block.getBoundingClientRect();
+        const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+          if (!walker.currentNode.textContent.trim()) continue;
+          const range = document.createRange(); range.selectNodeContents(walker.currentNode);
+          for (const rect of range.getClientRects()) {
+            if (rect.width && (rect.left < bounds.left - 2 || rect.right > bounds.right + 2 || rect.bottom > bounds.bottom + 2)) return false;
+          }
+        }
+      } return true;
+    }"""))
+    form.get_by_label("Zielgruppe").select_option("private")
+    check(f"{name} honest private-audience empty state", root.locator("[data-finder-empty]").is_visible()
+          and root.locator("[data-finder-entry]:visible").count() == 0 and root.locator('[data-finder-empty] a[href$="/mindforge"]').count() == 1)
+    form.get_by_role("button", name="Filter zurücksetzen").click()
+    search.fill('<img src=x onerror="window.finderInjected=1">')
+    check(f"{name} finder query literal and not persisted", root.locator("[data-finder-empty]").is_visible()
+          and page.evaluate("!window.finderInjected && !location.hash.includes('img') && !location.search"))
+    form.get_by_role("button", name="Filter zurücksetzen").click()
+    root.locator(".finder-topics").evaluate("e => e.open = false")
+    root.locator(".finder-offer").first.locator("summary").click()
+    root.evaluate("e => window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 180)")
+    path = EVIDENCE / f"finder-{name}.png"
+    page.screenshot(path=str(path))
+    return [path.name]
+
+
 def main():
     EVIDENCE.mkdir(parents=True, exist_ok=True)
     routes = []
@@ -165,7 +245,7 @@ def main():
     expected_profiles = {route for route in routes if route.startswith("/coaches/") and route != "/coaches/"}
     with static_server() as origin, sync_playwright() as playwright:
         base = origin + "/CompetenceHub"
-        browser = playwright.chromium.launch(channel="msedge", headless=True)
+        browser = playwright.chromium.launch(headless=True, **BROWSER_OPTIONS)
         external = []
         writes = []
         failures = []
@@ -341,15 +421,17 @@ def main():
                 for href in rail_links:
                     check(f"{name} rail link resolves", href.startswith(base + "/coaches/") and context.request.get(href).status == 200)
                 screenshots.extend(website_first_checks(page, base, name, len(expected_profiles)))
+                screenshots.extend(offering_finder_checks(page, base, name))
                 context.close()
 
             with tempfile.TemporaryDirectory(prefix="native-zoom-", dir=EVIDENCE) as folder:
+                print("PHASE=native-200", flush=True)
                 default = Path(folder) / "Default"
                 default.mkdir()
                 level = math.log(2) / math.log(1.2)
                 (default / "Preferences").write_text(json.dumps({"partition": {"default_zoom_level": {"x": level, "0": level}}}), encoding="utf8")
                 context = playwright.chromium.launch_persistent_context(
-                    folder, channel="msedge", headless=True, no_viewport=True,
+                    folder, headless=True, no_viewport=True, **BROWSER_OPTIONS,
                     args=["--window-size=1440,1000", "--force-device-scale-factor=1"], reduced_motion="reduce")
                 try:
                     context.route("**/*", guard)
@@ -359,10 +441,12 @@ def main():
                     check("actual native 200 percent zoom", abs(native_zoom["dpr"] - 2) < .05 and 600 < native_zoom["width"] < 800
                           and native_zoom["scale"] == 1 and native_zoom["cssZoom"] == "1")
                     screenshots.extend(website_first_checks(page, base, "native-200", len(expected_profiles)))
+                    screenshots.extend(offering_finder_checks(page, base, "native-200"))
                 finally:
                     context.close()
 
             context = browser.new_context(java_script_enabled=False, viewport={"width": 390, "height": 844})
+            print("PHASE=no-javascript", flush=True)
             try:
                 context.route("**/*", guard)
                 page = context.new_page()
@@ -372,6 +456,12 @@ def main():
                 page.goto(base + "/coaches/guelcan-elmas-brandes/", wait_until="networkidle")
                 check("no-JS approved offerings and mail drafts work", page.locator("[data-offer-format]").count() == 5
                       and page.locator("[data-offer-format] a").first.get_attribute("href").startswith("mailto:"))
+                page.goto(base + "/leistungen/#angebotsfinder", wait_until="networkidle")
+                check("no-JS finder is complete and no dead controls", page.locator("[data-finder-entry]:visible").count() == 27
+                      and not page.locator("[data-finder-form]").is_visible())
+                page.locator("[data-finder-entry] summary").first.click()
+                check("no-JS finder profile and mail draft work", page.locator("[data-finder-profile]:visible").count() == 1
+                      and page.locator('[data-finder-entry] a[href^="mailto:"]:visible').count() == 2)
             finally:
                 context.close()
 
@@ -379,7 +469,7 @@ def main():
             check("no broken resource responses", not failures)
             check("no off-origin network / analytics", not external)
             check("no write requests", not writes)
-            report = {"checks": count, "browser": "Microsoft Edge " + browser.version,
+            report = {"checks": count, "browser": ("Chromium " if "executable_path" in BROWSER_OPTIONS else "Microsoft Edge ") + browser.version,
                       "routes": len(routes), "screenshots": screenshots,
                       "externalRequests": external, "writeRequests": writes,
                       "resourceFailures": failures, "consoleErrors": console_errors,
