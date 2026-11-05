@@ -13,17 +13,18 @@ des neuen lokalen Vorschau-Builds. Davon sind neun unterschiedliche saubere
 Archivzustände, die bisherige Vorschau und der neue Vorschauzustand.
 Historisch technisch wiederherstellbar bedeutet NICHT aktuell veröffentlichbar:
 Rechteänderungen, alte Personenrouten und der behobene Mindforge-P0 gelten weiter.
-Die zwei bisherigen maßgeblichen Rückkehrreferenzen sind IONOS `1b4e33efa5e1`
-und die veröffentlichte Vorschau `3e99e8e6151d`.
+Die zwei aktiven Umgebungsstände sind IONOS `1b4e33efa5e1` und nach diesem
+Deployment die Vorschau `4daa9ade1d01`. Die vorherige freigegebene Vorschau
+`3e99e8e6151d` bleibt zusätzlich aus Git rekonstruierbar.
 
 | Speicherort | Inhalt | Commit/Hash | Stand | Wiederherstellbarkeit | Verwendungszweck |
 | --- | --- | --- | --- | --- | --- |
 | Lokales Repository, `apps/website` und `.git` | Vollständiger Website-Quellcode, Assets, Lockfile und Git-Historie; daneben separater Backend-Quellcode | Inventurbasis `44f4a9f729c28d02219817a7ed025c047ba31902` | 153 Commits, nicht flach; ein Worktree; fremde unversionierte Dateien erhalten | Saubere Commitstände erneut baubar; keine Datenbank-/Schlüsselsicherung | Entwicklung und Historie |
-| GitHub `DP-Manuel/CompetenceHub`, `main` | Zweite Quellcode-/Git-Historienkopie | Bei Inventur gleich `44f4a9f729c2`; Sprint-Commit nach Push separat nachgewiesen | Remote gelesen | Clone und Build; keine ungeprüften lokalen Dateien enthalten | Quellcode-Rückkehr unabhängig vom Rechner |
-| GitHub Pages `/CompetenceHub/` | Gebaute öffentliche Vorschau | Vor diesem Deployment `3e99e8e6151d78e281e17ed54d6c435bf4e9d740`, erfolgreicher Run `39932275108` | 23.10.; neun freigegebene Coaches | Git-Rebuild; kein dauerhaftes Actions-Artefakt für diesen Run nachgewiesen | Vorschau, NICHT IONOS |
+| GitHub `DP-Manuel/CompetenceHub`, `main` | Zweite Quellcode-/Git-Historienkopie | Inventurbasis `44f4a9f729c2`; Sprint `195a41a`, veröffentlichter Stand `4daa9ad` | Gepusht; nachfolgender Abschlusscommit nur Dokumentation | Clone und Build; keine ungeprüften lokalen Dateien enthalten | Quellcode-Rückkehr unabhängig vom Rechner |
+| GitHub Pages `/CompetenceHub/` | Gebaute öffentliche Vorschau | Jetzt `4daa9ade1d01b1157d32e2e54b6aca30ce99b0fb`, erfolgreicher Run `42042020729`; vorher `3e99e8e6151d` | 05.11.; neun freigegebene Coaches | Git-Rebuild; Actions-Artefakt nur bis 06.11., keine dauerhafte Sicherung | Vorschau, NICHT IONOS |
 | IONOS `competencehub.donner-partner.de` | Gebaute öffentliche Produktionswebsite | `1b4e33efa5e1`; ZIP-SHA unten | 25.09.; frische HTML/CSS-Stichproben stimmen | Aktuelles sauberes 52-Dateien-Release lokal vorhanden | Unveränderte Produktion |
 | `apps/website/dist` | Gebaute Produktionskopie | Inhaltsmanifest `766464db64835925bac21f94ca64ad5b93a7fdc15354e720cd3288bb90438f05` | 52 Dateien; auch nach Sprint vollständig bytegleich | Identisch zum aktuellen sauberen IONOS-Paket, keine zusätzliche Version | Lokale Produktionsregression |
-| `apps/website/dist-preview` | Neue gebaute Vorschau | Inhaltsmanifest `b63be15db8751ab741b859742bb211e5b90f1e636188944ee1373cfd3a6d3fad` | 59 Dateien; geprüfter Sprint | Aus aktuellem Sprint-Quellcode erneut baubar | Lokale Abnahme / Pages-Kandidat |
+| `apps/website/dist-preview` | Neue gebaute Vorschau | Inhaltsmanifest `b63be15db8751ab741b859742bb211e5b90f1e636188944ee1373cfd3a6d3fad` | 59 Dateien; geprüfter Sprint veröffentlicht | Aus aktuellem Sprint-Quellcode erneut baubar | Lokale Abnahme / veröffentlichte Pages-Inhalte |
 | `release-artifacts/website` | 14 ZIPs mit Metadaten | Alle 14 ZIP-SHA mit Sidecars verglichen | Zehn saubere Pakete = neun unterschiedliche Inhalte; vier Dirty-Pakete nicht als Rückkehrziel freigegeben | Saubere historische Pakete technisch vorhanden; aktuelle Rechte/Fehlerlage separat beachten | Archiv; bevorzugt aktuelles `1b4e33e` |
 | `release-artifacts/website-sftp-rehearsal` | Fünf bekannte Upload-Arbeitskopien | `1b4e33e`, `9955e03`, `d051a2e`, `d493e19`, `e608158` | Bereits vorhandene Releasekopien | Duplikate, keine weiteren unabhängigen Versionen | Historischer Uploadkontext |
 | `release-artifacts/website-sftp-rollback` | Fünf historische Download-/Restoreordner | `pre-9955e03`, `pre-d493e19`, `pre-1b4e33e`, `pre-d051a2e`, `safe-d493e195f80a` | Zwei Mischstände; `pre-1b4e33e` enthält alten P0-Stand | Nicht blind zurückspielen; sauberes aktuelles ZIP bevorzugen | Historische Belege, kein pauschales Rollbackziel |
@@ -92,6 +93,7 @@ Keine echten Kundendaten, Buchungen, Rechnungsfunktionen oder Coach-Zuordnungen.
 | Mobil / Zoom / Zugang | 390px, 640px-Reflow, echte native 200%, Tastatur/Fokus, Reduced Motion, ohne JS PASS |
 | Inhalte / Layout | Drei Familien/fünf Formate, Mailto-Ziele, Such-/Themenkombination, Reload/Reset, unabhängige Details und tatsächliche Textrechtecke PASS |
 | Browser-Nebenwirkungen | Keine externen Requests, Schreibrequests, Ressourcenfehler oder Konsolenfehler im lokalen Lauf |
+| Öffentlicher Pages-Browser | 171 zusätzliche Prüfungen PASS; alle 33 Indexrouten, Suche/Anfragen, 390px, 640px, echte native 200%, Tastatur, Reduced Motion und ohne JS; keine Drittanbieter-/Schreibrequests oder Seiten-/Ressourcenfehler |
 | Produktionsisolation | Alle 52 Builddateien unverändert; öffentliche Startseite/Mindforge/CSS passen zum Paket; kein IONOS-Schreibzugriff |
 
 Lokale Belege: `apps/website/release-artifacts/website-first-20261105/browser-report.json`
@@ -99,19 +101,29 @@ und 17 gelistete Screenshots; vier Vorherbilder in `.tmp/website-first-20261105`
 Diese erzeugten Belege bleiben außerhalb von Git. Kein Backend-/GPG-Testlauf
 als Voraussetzung für diese statische Änderung.
 
+Öffentliche Belege: `apps/website/release-artifacts/website-first-public-20261105/acceptance.json`
+und acht Screenshots. Startseite, Coach-Verzeichnis und Gülcan-Profil auf Pages
+sind zusätzlich SHA-256-bytegleich zum lokal geprüften HTML. Die IONOS-Stichproben
+nach dem Pages-Deployment blieben unverändert. 170 lokale Links in betroffenen
+Dokumentationen sowie Kontext-/Archivintegrität geprüft.
+
 ## Abschluss und Horizont
 
 Geprüfter Website-Quellstand: `195a41a` (05.11.). Enthält nur Website-Vorschau,
 zugehörige Tests und README; keine Schlüssel-/Backend-/Produktionsänderung.
 
-Inventur, Umsetzung und lokale Prüfung abgeschlossen. Git-Paketierung und das
-jetzt ausdrücklich beauftragte manuelle Pages-Deployment sind der nächste
-Abschlussschritt dieses Blocks; tatsächliche Run-/Public-Smoke-Ergebnisse werden
-nach Ausführung ergänzt, nicht vorweggenommen. IONOS bleibt `1b4e33efa5e1`.
+Inventur, Umsetzung, lokale Prüfung, Commit/Push und manuelles Pages-Deployment
+abgeschlossen. [Run 42042020729](https://github.com/DP-Manuel/CompetenceHub/actions/runs/42042020729)
+ist erfolgreich; Deployment `7575795099`, Quelle `4daa9ade1d01b1157d32e2e54b6aca30ce99b0fb`.
+Actions-Artefakt `13423220567` hat Transport-Digest
+`sha256:c51e2dcf38cbb05acd9d6019e4c77c2e014ede298762c7bc5a9dbf3a57be75b1`
+und läuft am 06.11. aus; nicht mit dem lokalen Inhaltsmanifest verwechseln.
+IONOS bleibt `1b4e33efa5e1`. Der nachfolgende Abschlusscommit ändert nur Dokumentation,
+nicht den veröffentlichten Website-Quellcode; keine erneute Veröffentlichung nötig.
 
-1. Geprüfte Website-/Dokumentationsänderungen gezielt committen und pushen.
-2. Bestehenden Pages-Workflow für diesen Quellstand manuell starten.
-3. Öffentliche geänderte Bereiche prüfen; IONOS-Stichproben unverändert bestätigen.
+1. DONE: geprüfte Website-/Dokumentationsänderungen gezielt committen und pushen.
+2. DONE: bestehenden Pages-Workflow für diesen Quellstand manuell starten.
+3. DONE: öffentliche geänderte Bereiche prüfen; IONOS-Stichproben unverändert bestätigen.
 4. Empfohlener nächster Website-Sprint: freigegebene Angebote nach Zielgruppe,
    Thema und Format auffindbar machen. Inputs: bestehende aktive freigegebene
    Kurztexte; Ergebnis: kompakte Angebotsübersicht mit Coach-/Anfragewegen.

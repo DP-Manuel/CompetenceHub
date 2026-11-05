@@ -15,8 +15,8 @@ No IONOS deployment, Registry source switch, Becker candidates or customer data.
 Website sprint locally complete: approved Gülcan3 families/5 formats, combined
 Coach/theme/offer search and contextual mail drafts;28 contracts and1377 browser
 checks PASS,390px/native200%/keyboard/no-JS. All52 Production files byte-identical.
-Manuel additionally requests GitHub Pages publication05.11; use the existing
-manual workflow after scoped green commit/push, then actual public smokes.
+Manuel's additional Pages request05.11 executed: source195a41a, published4daa9ad,
+manual run42042020729 SUCCESS,171 actual public browser checks PASS. No IONOS change.
 [Current Website checkpoint/inventory/horizon](docs/content/website-first-2026-11-05.md)
 owns this workstream. Backend plan is paused, not the active next gate.
 
@@ -52,12 +52,14 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 - IONOS: https://competencehub.donner-partner.de/ remains at verified SB-54 source `1b4e33efa5e1` (25.09).
 - Rights only29.10: Manuel explicitly approves Gülcan's profile/portrait and short offering descriptions for Preview and IONOS; [scope](docs/content/coach-publication-matrix-2026-09-24.md#zusätzliche-rechtefreigabe-gülcan-vom-29102026). No website release, full workshop scripts or unread details implied.
 - 21.10 read-only checks before and after Pages publication: Mindforge HTML/CSS return 200 and match the September hashes; this is a spot-check, not a full production retest.
-- Official preview: https://dp-manuel.github.io/CompetenceHub/ is published from `3e99e8e6151d` through successful Pages run39932275108 (23.10). Nine Preview Coaches, including Susanne's approved profile/portrait; actual public89 onboarding and134 Hub checks PASS. [Publication evidence](docs/content/susanne-klemm-preview-2026-10-23.md).
+- Official preview: https://dp-manuel.github.io/CompetenceHub/ is now published from `4daa9ade1d01` through successful Pages run42042020729 (05.11). Nine approved Coaches, Gülcan short offerings and Coach discovery/request improvements;171 additional actual public checks PASS. [Current evidence](docs/content/website-first-2026-11-05.md); [previous23.10 evidence](docs/content/susanne-klemm-preview-2026-10-23.md) remains historical.
 - Preview-only isolation: production's entire 52-file build manifest remains byte-identical; no IONOS write or backend deployment.
 - Portal/backend is not productively activated; real accounts/mappings, reservations, SMTP and Analytics remain inactive.
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.
 
 ## Current Evidence
+
+- [Website-first05.11](docs/content/website-first-2026-11-05.md): known-path version inventory,11 attributable static states (not11 eligible rollbacks),28 contracts/1377 local browser checks/171 public checks PASS. Manual Pages4daa9ad successful, all52 Production files unchanged; three IONOS spot hashes unchanged after publication. No GPG/USB/DB/server action, rebase PAUSED. Source195a41a and checkpoint4daa9ad pushed; follow-up documentation only.
 
 - [05.11 GPG analysis/cold lifecycle](docs/operations/gpg-root-cause-recovery-decision-2026-11-05.md): public UID/4096/fingerprint/self-signature/keygrip match, one4024-byte private object present but never opened. Explicit home/default signed Qt Pinentry consistent; no process running, historical input/layout unknown. No export/candidate/recovery/completion; no documented relevant new-key data use, no server inspection and USB unavailable. Demonstrated workflow gap: generation/custody before independent cold proof; prior tests loopback/warm cache. Full1441 PASS/30 skips, focused80 PASS/final8 rerun PASS; real Ask GPG with synthetic protocol-only Pinentry covers ASCII/Unicode/spaces, repeated cold exports and wrong-input11/correct recovery, owned cleanup. New R2 helper public entry INERT, fresh approval/root required; key-only cold export/exact USB import/cold decrypt before use, second recovery OPEN. Existing held fingerprint now refused before unlock. No new real key, secret read or real password attempt.
 
@@ -121,10 +123,9 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Finish the explicitly requested Pages publication and public smoke for the green Website-first source; no IONOS upload.
-2. Recommended next Website sprint: approved offering discovery by target group/topic/format. Inputs: existing approved active short copy. Deliverable: concise overview linked to Coach and honest request paths. DoD: rights/qualification boundaries preserved, mobile/keyboard/browser checks green, Production isolated. [Current horizon](docs/content/website-first-2026-11-05.md#abschluss-und-horizont).
-3. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
-4. Any later IONOS promotion needs its own bundled review and production approval.
+1. Recommended next Website sprint: approved offering discovery by target group/topic/format. Inputs: existing approved active short copy. Deliverable: concise overview linked to Coach and honest request paths. DoD: rights/qualification boundaries preserved, mobile/keyboard/browser checks green, Production isolated. [Current horizon](docs/content/website-first-2026-11-05.md#abschluss-und-horizont).
+2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
+3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 
 ## Domain References
 

@@ -9,6 +9,7 @@ The complete log through 25.09.2026 is preserved byte-for-byte in [the history a
 - One-time known-path inventory:14 Website ZIPs, ten clean packages/nine unique clean archive contents; old Preview plus new local Preview =11 attributable built states, not11 eligible public rollbacks. Current IONOS1b4e33e ZIP hash verified; published Preview at inventory3e99e8e. Git history/source and static artifacts distinguished from backend/DB/backups.
 - Preview-only Gülcan3 families/5 formats, combined approved Coach/theme/offer search, contextual honest mail drafts, useful empty state and independent Elisabeth disclosure sizing. Becker candidates held, Registry off, no new source reads or inferred qualifications.
 - 28 Website contracts,1377 actual Edge browser checks/34 routes,390px/native200%/keyboard/reduced-motion/no-JS PASS; Astro75 files zero diagnostics,1237 Production/1280 Preview links. All52 Production files byte-identical. [Inventory/sprint/evidence](docs/content/website-first-2026-11-05.md) owns the current Website horizon and publication close-out.
+- Source195a41a/checkpoint4daa9ad committed and pushed. Requested manual Pages run42042020729 successful, deployment7575795099;171 actual public browser checks PASS, three public HTML files byte-identical to local build. IONOS three no-cache spot hashes unchanged. Current release artifact is short-lived, Git rebuild remains durable return. Subsequent completion commit documentation-only; unrelated files preserved.
 
 ## 2026-11-05 | GPG cause assessment / independent cold recovery candidate
 

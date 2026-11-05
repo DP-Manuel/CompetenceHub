@@ -18,7 +18,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 
 | Phase | Outcome | Gate / evidence | Confidence |
 | --- | --- | --- | --- |
-| Website first | Approved static Preview offerings, Coach discovery and request UX; local28 contracts/1377 browser checks PASS | [Version inventory and sprint](docs/content/website-first-2026-11-05.md); manual Pages publication requested; IONOS separate | High |
+| Website first | Approved static Preview offerings, Coach discovery and request UX;28 contracts/1377 local and171 public browser checks PASS | [Version inventory and sprint](docs/content/website-first-2026-11-05.md); Pages4daa9ad published05.11, IONOS unchanged | High |
 | Post-Messe consolidation: complete | Stable IONOS, published preview, Context V2 and Analytics discovery | Completed scope, build isolation, public smoke | High |
 | Backend continuation | Native CAL-1, cryptography maintenance and local Linux/proxy gates PASS | External domain/TLS/owners and separately authorized VPS rehearsal/activation remain | Medium |
 | Coach Registry / lifecycle | COACH-1/2/3A/3C locally verified; COACH-3B review9 READY.30.10 approves Manuel as sole admin-only Staging operator; preparation locally verified, human window pending | [Current batch](docs/exec-plans/active/backend-sprint-2026-10-30.md); exact encrypted backup/restore before bootstrap, native MFA/recovery, actual target/topic gates before separate real APPLY; no real execution yet | Medium |
