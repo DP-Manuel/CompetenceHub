@@ -133,14 +133,19 @@ function Invoke-LocalKeyGpg {
     param([Collections.IDictionary]$Paths,[string]$KeyHome,
           [ValidateSet('Generate','Metadata','SecretExport','PublicExport','Packets','Import')][string]$Operation,
           [string]$Fingerprint,[string]$File,[byte[]]$InputBytes)
+    $script:KeyGpgFailureCode=0
     if ($KeyHome -cnotin @($Paths.live,$Paths.recovered)) { throw 'KEY_GPG_HOME_NOT_OWNED' }
     Assert-StagingPrivateAcl $KeyHome -Directory
     $start=[Diagnostics.ProcessStartInfo]::new()
     $start.FileName=$Paths.gpg; $start.UseShellExecute=$false; $start.CreateNoWindow=$true
     $start.RedirectStandardInput=$true; $start.RedirectStandardOutput=$true; $start.RedirectStandardError=$true
-    foreach ($argument in @('--no-options','--homedir',$KeyHome,'--no-auto-key-retrieve','--auto-key-locate','clear','--no-auto-key-import','--pinentry-mode','ask')) { $start.ArgumentList.Add($argument) }
+    foreach ($argument in @('--no-options','--homedir',$KeyHome,'--no-auto-key-retrieve','--auto-key-locate','clear','--no-auto-key-import','--pinentry-mode','ask','--status-fd','2')) { $start.ArgumentList.Add($argument) }
     $arguments=switch ($Operation) {
-        Generate { @('--batch','--quick-generate-key','Competence Hub Staging Backup 2026-11','rsa4096','encr','2y') }
+        Generate {
+            $uid=if ($Paths.Contains('uid')) { $Paths.uid } else { 'Competence Hub Staging Backup 2026-11' }
+            if ($uid -cnotin @('Competence Hub Staging Backup 2026-11','Competence Hub Staging Backup Recovery 2026-11-05 R2')) { throw 'KEY_DEDICATED_UID_REQUIRED' }
+            @('--batch','--quick-generate-key',$uid,'rsa4096','encr','2y')
+        }
         Metadata { @('--batch','--with-colons','--fingerprint','--list-secret-keys') }
         SecretExport { @('--export-secret-keys',$Fingerprint) }
         PublicExport { @('--batch','--armor','--export',$Fingerprint) }
@@ -157,8 +162,13 @@ function Invoke-LocalKeyGpg {
         if ($InputBytes) { $process.StandardInput.BaseStream.Write($InputBytes,0,$InputBytes.Length) }
         $process.StandardInput.Close()
         if (-not $process.WaitForExit(900000)) { throw 'KEY_GPG_DIALOG_TIMEOUT' }
-        $null=$copy.GetAwaiter().GetResult(); $null=$stderr.GetAwaiter().GetResult()
-        if ($process.ExitCode -ne 0 -or $output.Length -gt 1MB) { throw 'KEY_GPG_OPERATION_NOT_COMPLETE' }
+        $null=$copy.GetAwaiter().GetResult(); $diagnostics=$stderr.GetAwaiter().GetResult()
+        if ($process.ExitCode -ne 0 -or $output.Length -gt 1MB) {
+            # Fixed numeric libgpg-error status only; never expose raw diagnostics.
+            $failure=[regex]::Match($diagnostics,'(?m)^\[GNUPG:\] (?:FAILURE|ERROR) \S+ ([0-9]+)')
+            $script:KeyGpgFailureCode=if ($failure.Success) { [int]([long]$failure.Groups[1].Value -band 65535) } else { 0 }
+            throw 'KEY_GPG_OPERATION_NOT_COMPLETE'
+        }
         # The caller owns/clears the byte array. Never stringify secret export.
         return ,$output.ToArray()
     } finally {
@@ -168,7 +178,9 @@ function Invoke-LocalKeyGpg {
 }
 
 function Get-LocalBackupFingerprint {
-    param([byte[]]$Metadata)
+    param([byte[]]$Metadata,
+          [ValidateSet('Competence Hub Staging Backup 2026-11','Competence Hub Staging Backup Recovery 2026-11-05 R2')]
+          [string]$ExpectedUid='Competence Hub Staging Backup 2026-11')
     $lines=[Text.Encoding]::UTF8.GetString($Metadata) -split '\r?\n'
     $primary=@($lines | Where-Object { $_.StartsWith('sec:') })
     $users=@($lines | Where-Object { $_.StartsWith('uid:') })
@@ -177,7 +189,7 @@ function Get-LocalBackupFingerprint {
     $fields=$primary[0].Split(':')
     if ($fields.Count -lt 12 -or $fields[1] -cin @('r','e','d') -or $fields[2] -cne '4096' -or
         $fields[3] -cne '1' -or $fields[11] -cnotmatch '[eE]' -or
-        $users[0].Split(':')[9] -cne 'Competence Hub Staging Backup 2026-11') { throw 'KEY_DEDICATED_RSA4096_ENCRYPTION_REQUIRED' }
+        $users[0].Split(':')[9] -cne $ExpectedUid) { throw 'KEY_DEDICATED_RSA4096_ENCRYPTION_REQUIRED' }
     $fingerprint=$fingerprints[0].Split(':')[9]
     if ($fingerprint -cnotmatch '^[A-F0-9]{40}$' -or $fingerprint -ceq $script:OperatorRecipient) { throw 'KEY_NEW_FULL_FINGERPRINT_REQUIRED' }
     return $fingerprint
@@ -304,6 +316,7 @@ function Invoke-LocalBackupKeyBlock {
     $script:KeyBlockStep='source'
     Assert-LocalKeyEnvironment
     Assert-LocalKeySource $Commit
+    if ($ExistingFingerprint -ceq '22C82A2F175DAFB04B019502E92DE7854AF99C1F') { throw 'KEY_EXPORT_ON_HOLD_NO_UNLOCK' }
     $paths=Get-LocalBackupBlockPaths
     if ($ExistingFingerprint -and -not [IO.Directory]::Exists($paths.live)) { throw 'KEY_EXISTING_PROFILE_REQUIRED_NO_GENERATION' }
     $script:KeyBlockStep='source_acl'
@@ -353,6 +366,7 @@ function Invoke-LocalBackupKeyBlock {
     if ((Get-FileHash -LiteralPath $policyPath -Algorithm SHA256).Hash -cne [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::ASCII.GetBytes($policy)))) { throw 'KEY_PROFILE_POLICY_REVIEW_REQUIRED' }
     $metadata=Invoke-LocalKeyGpg $paths $paths.live Metadata
     $fingerprint=Get-LocalBackupFingerprint $metadata
+    if ($fingerprint -ceq '22C82A2F175DAFB04B019502E92DE7854AF99C1F') { throw 'KEY_EXPORT_ON_HOLD_NO_UNLOCK' }
     if ($ExistingFingerprint -and $fingerprint -cne $ExistingFingerprint) { throw 'KEY_EXISTING_FINGERPRINT_MISMATCH' }
     $primary=([Text.Encoding]::UTF8.GetString($metadata) -split '\r?\n' | Where-Object { $_.StartsWith('sec:') })
     $expires=[DateTimeOffset]::FromUnixTimeSeconds([long]$primary.Split(':')[6]).ToString('yyyy-MM-dd')
@@ -470,6 +484,7 @@ if ($MyInvocation.InvocationName -ne '.') {
                 'KEY_COMPLETION_BINDING_CHANGED','KEY_COMPARISON_BINDING_CHANGED','KEY_FINAL_HASH_CONFLICT')
             $known+=@('KEY_AUTHORIZATION_INVALID','KEY_AUTHORIZATION_OWNER_UNTRUSTED','KEY_AUTHORIZATION_LEGACY_OWNER_NOT_BOUND')
             $known+=@('KEY_EXISTING_PROFILE_REQUIRED_NO_GENERATION','KEY_EXISTING_FINGERPRINT_MISMATCH','KEY_CUSTODY_RECEIPT_INVALID')
+            $known+='KEY_EXPORT_ON_HOLD_NO_UNLOCK'
             $code=if ($_.Exception.Message -cin $known) {$_.Exception.Message} else {'PRIVATE_LOCAL_KEY_CHECK_NOT_COMPLETE'}
             [Console]::Error.WriteLine('Lokaler Schluesselblock gestoppt. Dateien bleiben erhalten; nicht neu erzeugen oder ueberschreiben. Keine Serveraktion.')
             if ($phase -ceq 'preflight') { [Console]::Error.WriteLine('Quellstand, gleicher Windows-Benutzer und aktueller BitLocker-Schutz muessen pruefbar sein. PowerShell7 bei Bedarf als Administrator mit demselben Benutzer starten; kein Laufwerk erneut entsperren.') }
