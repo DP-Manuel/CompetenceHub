@@ -2,6 +2,8 @@
 import Icon from "../components/Icon.astro";
 import { coaches } from "./coaches";
 import { categories, topics } from "./topics";
+import { publicOfferKeywords } from "./coach-discovery";
+import { coachRequestMailto } from "./request-links";
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const url = (path: string) => `${base}/${path}`;
 ---
@@ -23,6 +25,13 @@ const url = (path: string) => `${base}/${path}`;
   <section class="coach-topic-explorer" aria-labelledby="preview-topics-title">
     <div class="coach-topic-explorer__heading">
       <div><p class="eyebrow">Themenschwerpunkte</p><h2 id="preview-topics-title">Passende Expertise finden</h2></div>
+    </div>
+    <div class="preview-directory-tools" data-directory-tools hidden>
+      <label for="preview-coach-search">Coaches durchsuchen
+        <input id="preview-coach-search" type="search" autocomplete="off" maxlength="80"
+          placeholder="Name, Thema oder Angebot" aria-controls="preview-coach-grid" data-coach-search />
+      </label>
+      <button class="button button--ghost" type="button" data-directory-reset>Auswahl zurücksetzen</button>
     </div>
     <div class="preview-topic-hub" data-topic-hub data-expanded="false">
       <svg class="preview-topic-hub__links" viewBox="0 0 1000 360" preserveAspectRatio="none" aria-hidden="true">
@@ -64,7 +73,11 @@ const url = (path: string) => `${base}/${path}`;
   </section>
   <section class="coach-grid" id="preview-coach-grid" aria-label="Freigegebene Coach-Profile">
     {coaches.map((coach) => (
-      <article class="coach-card coach-card--featured" data-preview-coach data-topics={coach.topics.join(" ")}>
+      <article class="coach-card coach-card--featured" data-preview-coach data-topics={coach.topics.join(" ")}
+        data-search={[coach.name, coach.role, ...coach.focus, coach.text,
+          ...topics.filter((topic) => coach.topics.includes(topic.id)).map((topic) => topic.label),
+          ...publicOfferKeywords(coach.profilePath),
+        ].join(" ")}>
         <div class="coach-card__media">
           {coach.image ? <img src={url(coach.image)} alt={`Porträt: ${coach.name}`}
             width={coach.imageWidth} height={coach.imageHeight} loading="lazy" />
@@ -74,20 +87,38 @@ const url = (path: string) => `${base}/${path}`;
           <p class="eyebrow">Coach-Profil</p><h2>{coach.name}</h2><strong>{coach.role}</strong>
           <ul class="tag-list" aria-label="Themenschwerpunkte">{coach.focus.map((focus) => <li>{focus}</li>)}</ul>
           <p>{coach.text}</p>
-          <a class="button button--ghost" href={url(coach.profilePath)}>Profil ansehen</a>
+          <div class="preview-coach-actions">
+            <a class="button button--ghost" href={url(coach.profilePath)} data-profile-link>Profil ansehen</a>
+            <a class="text-link" href={coachRequestMailto(coach.name)} aria-label={`E-Mail-Anfrage zu ${coach.name}`} data-request-link>
+              E-Mail-Anfrage <Icon name="arrow-right" size={20} />
+            </a>
+          </div>
         </div>
       </article>
     ))}
   </section>
-  <p class="coach-topic-empty" data-preview-empty hidden>
-    Für diesen Themenbereich ist aktuell noch kein ausdrücklich qualifiziertes und freigegebenes Coach-Profil veröffentlicht.
-  </p>
+  <div class="coach-topic-empty" data-preview-empty hidden>
+    <p>Für diese Auswahl ist aktuell kein passendes freigegebenes Coach-Profil veröffentlicht.</p>
+    <a class="text-link" href={url("kontakt")}>Anliegen mit Janay besprechen <Icon name="arrow-right" size={20} /></a>
+  </div>
   <section class="cta-panel">
     <div><p class="eyebrow">Kontakt</p><h2>Coach-Profil oder Unternehmensbedarf besprechen</h2></div>
     <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
   </section>
 </main>
 <style is:inline>
+  [data-preview-directory] .preview-directory-tools {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 24px; align-items: end;
+  }
+  [data-preview-directory] .preview-directory-tools label { min-width: 0; font-weight: 750; }
+  [data-preview-directory] .preview-directory-tools input {
+    display: block; width: 100%; min-width: 0; min-height: 56px; margin-top: 10px; padding: 12px 14px;
+    border: 2px solid var(--color-line); border-radius: 8px; color: var(--color-dark); background: white; font: inherit;
+  }
+  [data-preview-directory] .preview-directory-tools input:focus-visible { outline: 3px solid var(--color-dark); outline-offset: 3px; }
+  [data-preview-directory] .preview-directory-tools button { min-height: 56px; }
+  [data-preview-directory] .preview-coach-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px 24px; }
+  [data-preview-directory] .text-link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; }
   [data-preview-directory] .preview-topic-hub,
   [data-preview-directory] .preview-topic-filter { display: none; }
   [data-preview-directory].is-enhanced .preview-topic-hub { display: block; }
@@ -136,6 +167,7 @@ const url = (path: string) => `${base}/${path}`;
     [data-preview-directory].is-enhanced .preview-topic-filter { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 700px) {
+    [data-preview-directory] .preview-directory-tools { grid-template-columns: minmax(0, 1fr); }
     [data-preview-directory] .preview-topic-hub,
     [data-preview-directory] .preview-topic-hub[data-expanded="true"] { height: auto; display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 10px 0; }
     [data-preview-directory] .preview-topic-hub .preview-topic-hub__core { position: relative; left: auto; top: auto; transform: none; flex-shrink: 0; }
@@ -163,6 +195,9 @@ const url = (path: string) => `${base}/${path}`;
     const cards = [...root.querySelectorAll("[data-preview-coach]")];
     const status = root.querySelector("[data-preview-status]");
     const empty = root.querySelector("[data-preview-empty]");
+    const search = root.querySelector("[data-coach-search]");
+    const reset = root.querySelector("[data-directory-reset]");
+    const normalize = (value) => value.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLocaleLowerCase("de-DE").replace(/ß/g, "ss");
     const words = (value) => (value || "").split(" ").filter(Boolean);
     let category = "all";
     let topic = "all";
@@ -187,30 +222,35 @@ const url = (path: string) => `${base}/${path}`;
       if (topic !== "all" && !available.has(topic)) topic = "all";
       topics.forEach((button) => pressed(button, button.dataset.topic === topic));
       let count = 0;
+      const query = search.value.trim().slice(0, 80);
+      const terms = normalize(query).split(/\s+/).filter(Boolean);
       cards.forEach((card) => {
         const ids = words(card.dataset.topics);
-        const visible = category === "all" && topic === "all"
+        const matchesTheme = category === "all" && topic === "all"
           ? true : topic === "all" ? ids.some((id) => available.has(id)) : ids.includes(topic);
+        const visible = matchesTheme && terms.every((term) => normalize(card.dataset.search).includes(term));
         card.hidden = !visible;
         if (visible) count++;
       });
       const categoryLabel = categories.find((button) => button.dataset.category === category)?.textContent.trim() || "Alle Themen";
       const topicLabel = topics.find((button) => button.dataset.topic === topic).textContent.trim();
-      status.textContent = category === "all" && topic === "all"
+      status.textContent = category === "all" && topic === "all" && !query
         ? `Alle ${count} Coach-Profile werden angezeigt.`
-        : `${categoryLabel} · ${topicLabel}: ${count} passende Coach-Profile.`;
+        : `${categoryLabel} · ${topicLabel}${query ? ` · Suche: ${query}` : ""}: ${count} passende Coach-Profile.`;
       empty.hidden = count > 0;
       if (updateUrl) {
         const url = new URL(location.href);
         const selection = new URLSearchParams();
         if (category !== "all") selection.set("kategorie", category);
         if (topic !== "all") selection.set("thema", topic);
+        if (query) selection.set("suche", query);
         url.hash = selection.toString();
         history.replaceState(null, "", url);
       }
     }
     function fromHash() {
       const params = new URLSearchParams(location.hash.slice(1));
+      search.value = (params.get("suche") || "").slice(0, 80);
       const cat = params.get("kategorie");
       category = categories.some((button) => button.dataset.category === cat) ? cat : "all";
       const selected = params.get("thema") || (location.hash.startsWith("#thema-") ? location.hash.slice(7) : "all");
@@ -236,6 +276,15 @@ const url = (path: string) => `${base}/${path}`;
       topic = button.dataset.topic;
       apply();
     }));
+    search.addEventListener("input", () => apply());
+    reset.addEventListener("click", () => {
+      search.value = "";
+      category = "all";
+      topic = "all";
+      expanded = false;
+      apply();
+    });
+    root.querySelector("[data-directory-tools]").hidden = false;
     root.classList.add("is-enhanced");
     fromHash();
     window.addEventListener("hashchange", fromHash);

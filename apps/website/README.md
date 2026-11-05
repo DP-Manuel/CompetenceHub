@@ -15,8 +15,8 @@ for public artifacts, environment rights, isolated output and later release gate
 - `/unternehmen` - company-facing page
 - `/coaches` - coach network page
 - `/kontakt` - static request/contact page
-- `/impressum` - legal placeholder, must be completed before live launch
-- `/datenschutz` - privacy placeholder, must be completed before live launch
+- `/impressum` - reference to the central D+P legal information
+- `/datenschutz` - reference to the central D+P privacy information
 
 Legacy/prototype routes remain build-safe but are not part of the main navigation:
 
@@ -96,6 +96,14 @@ node scripts/serve-dist.mjs
 Preview: http://127.0.0.1:4321/CompetenceHub/
 Production output stays in `dist`; preview output is isolated in `dist-preview`.
 Only the latter is uploaded by the manual Pages workflow.
+
+The05.11 Website-first slice adds approved Guelcan short offerings, combined
+Coach/topic/offer search and encoded Coach/format-specific email drafts in
+Preview only. These drafts open the visitor's mail client; the site does not
+send or store them. Held Becker candidates remain excluded. Registry projection
+stays opt-in and inactive by default; no database or key setup is needed here.
+Version inventory, current return targets and environment differences:
+[Website-first report](../../docs/content/website-first-2026-11-05.md).
 
 For Edge browser checks use `scripts/run-preview-browser-acceptance.py` and the
 existing production `scripts/run-messe-browser-acceptance.py`. Both accept

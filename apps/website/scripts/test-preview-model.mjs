@@ -17,6 +17,9 @@ const { coaches: production } = await vite.ssrLoadModule("/src/data/coaches.ts")
 const { categories, topics, topicsForCategory } = await vite.ssrLoadModule("/src/preview/topics.ts");
 const { offerGroups } = await vite.ssrLoadModule("/src/preview/elisabeth-offers.ts");
 const { susanneKlemm, workshops, qualifications } = await vite.ssrLoadModule("/src/preview/susanne-klemm.ts");
+const { guelcanOfferFamilies } = await vite.ssrLoadModule("/src/preview/guelcan-offers.ts");
+const { publicOfferKeywords } = await vite.ssrLoadModule("/src/preview/coach-discovery.ts");
+const { coachRequestMailto } = await vite.ssrLoadModule("/src/preview/request-links.ts");
 const slugs = ["carolin-hupp", "elisabeth-schwabauer", "goran-celic",
   "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm"];
 
@@ -98,4 +101,43 @@ test("restored templates are outside production pages and suppress non-existent 
     const source = readFileSync(new URL(`../src/preview/profiles/${slug}.astro`, import.meta.url), "utf8");
     assert.match(source, /canonical=\{false\}/);
   }
+});
+
+test("Guelcan approved short copy keeps three families, five formats and five non-bookable options", () => {
+  assert.deepEqual(guelcanOfferFamilies.map((family) => family.key), [
+    "family/business-balance", "family/gesundheit-im-unternehmensalltag", "family/konfliktklaerung-teamreflexion",
+  ]);
+  assert.deepEqual(guelcanOfferFamilies.map((family) => family.formats.length), [2, 1, 2]);
+  assert.deepEqual(guelcanOfferFamilies.map((family) => family.options.length), [1, 4, 0]);
+  assert.equal(new Set(guelcanOfferFamilies.flatMap((family) => family.formats.map((format) => format.key))).size, 5);
+  assert.ok(guelcanOfferFamilies.every((family) => family.boundary.length > 60));
+  assert.match(guelcanOfferFamilies[2].boundary, /keine Mediation.*Supervision.*Rechtsberatung/);
+  assert.match(guelcanOfferFamilies[1].boundary, /keine ärztliche Behandlung.*Diagnostik.*Ernährungstherapie/);
+  const series = guelcanOfferFamilies[2].formats[1];
+  assert.equal(series.title, "Reflexionsreihe");
+  assert.ok(!/\d/.test(series.detail), "unknown duration/frequency must not be invented");
+  assert.ok(!JSON.stringify(guelcanOfferFamilies).match(/https?:|€|\bEUR\b|2026-|bookable/));
+  assert.ok(!production.some((coach) => coach.profilePath === "coaches/guelcan-elmas-brandes"));
+});
+
+test("discovery uses only approved public active offers, never the held Becker or psychotherapy candidates", () => {
+  assert.ok(publicOfferKeywords("coaches/elisabeth-schwabauer").includes("Positive Leadership – Mitarbeiter stärken und Potenziale entfalten"));
+  assert.ok(!publicOfferKeywords("coaches/elisabeth-schwabauer").includes("Psychotherapie (HeilprG)"));
+  assert.deepEqual(publicOfferKeywords("coaches/susanne-klemm"), workshops);
+  assert.ok(publicOfferKeywords("coaches/guelcan-elmas-brandes").includes("Business & Balance"));
+  assert.deepEqual(publicOfferKeywords("coaches/stefanie-becker"), []);
+  assert.deepEqual(publicOfferKeywords("coaches/unknown"), []);
+});
+
+test("request links retain Coach/format context as an encoded mail draft, with no submission endpoint", () => {
+  const coach = "Frau Gülcan Elmas-Brandes";
+  const offering = "Business & Balance · 6-Wochen-Vertiefungsprogramm";
+  const link = new URL(coachRequestMailto(coach, offering));
+  assert.equal(link.protocol, "mailto:");
+  assert.equal(link.pathname, "competencehub@donner-partner.de");
+  assert.equal(link.searchParams.get("subject"), `Anfrage: ${offering} · ${coach}`);
+  assert.match(link.searchParams.get("body"), /Angebot \/ Format: Business & Balance/);
+  assert.ok(link.searchParams.get("body").includes(coach));
+  assert.equal(new URL(coachRequestMailto(coach)).searchParams.get("subject"), `Coaching-Anfrage: ${coach}`);
+  assert.ok(!link.href.includes("undefined"));
 });

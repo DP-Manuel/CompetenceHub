@@ -1,5 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import GuelcanOffers from "../GuelcanOffers.astro";
+import { coachRequestMailto } from "../request-links";
 import "../../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -45,7 +47,7 @@ const topics = [
           Schritte ausgerichtet.
         </p>
         <div class="coach-profile-actions">
-          <a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a>
+          <a class="button" href={coachRequestMailto("Frau Gülcan Elmas-Brandes")}>Anfrage per E-Mail</a>
           <a class="button button--ghost" href={url("coaches")}>Alle Coaches</a>
         </div>
       </div>
@@ -109,6 +111,8 @@ const topics = [
         <li>Deutsch, Englisch und Türkisch</li>
       </ul>
     </section>
+
+    <GuelcanOffers />
 
     <section class="coach-format-band" aria-labelledby="elmas-formats-title">
       <div>
