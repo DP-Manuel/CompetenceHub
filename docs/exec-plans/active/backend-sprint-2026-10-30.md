@@ -1,5 +1,17 @@
 # Backend Sprint Addendum 30.10
 
+LATEST05.11: [GPG root-cause and cold-lifecycle decision](../../operations/gpg-root-cause-recovery-decision-2026-11-05.md).
+No evidenced technical key repair; metadata consistent, rejection cause unknown.
+No relevant new-key data dependency in reviewed flow. R2 replacement identity
+and key-only cold proof prepared/synthetic-tested, real generation NOT approved.
+Earlier keys/DPAPI untouched; no more04.11 key attempts. USB D: absent today.
+
+CURRENT HOLD04.11: user reports native new-key export rejection twice, Pinentry
+attempt3/3. Cancel requested; no more password/GPG attempts or K-runner retry.
+Offline custody receipt exists but export/recovery/candidate do not. No code
+defect established; private input-path clarification next, key preserved.
+[Exact hold](../../operations/controlled-backup-key-rebase-2026-11-04.md#current-hold-native-export-passphrase-rejected).
+
 Latest authorization04.11: K1/K2 real LOCAL key block is approved, not executed
 by the agent. Manuel generated the new key; protected written offline custody
 is now explicitly accepted alongside a password manager. Existing-key-only
@@ -16,9 +28,9 @@ actual synthetic new-key recovery proof, NOT real operation. Manuel is sole
 technical key custodian; no Janay technical role. Original DPAPI/old files retained.
 
 Current ordered horizon:
-1. APPROVED / PENDING OPERATOR: resume EXISTING dedicated key + protected USB
-   recovery + unchanged-DPAPI candidate; one private same-user elevated runner,
-   pinned full fingerprint and ProtectedOffline custody, no regeneration.
+1. PENDING SEPARATE R2 APPROVAL / USB: preserve failed04.11 key, no retry; new
+   dedicated identity plus immediate cold export/import/decrypt proof only after
+   approval/protection checks. Written offline custody accepted; second copy OPEN.
 2. PENDING INPUT: current encrypted NTFS DB target and plaintext workspace,
    approved read-only sizing/protection evidence; free C: alone insufficient.
 3. PREPARED: BACKUP approval, new public-only profile, unique current fixed-Staging

@@ -7,6 +7,18 @@ Updated: 2026-11-04. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+05.11 crypto-custody acceptance learning: generation success, a written note,
+matching fingerprint or a warm-agent roundtrip is NOT independent recovery.
+Couple generation with cold protected export, exact external-copy import and
+cold recovered decrypt of a NON-secret challenge BEFORE encrypting business or
+application material. Prove both cold states and real native Ask transport;
+distinguish a protocol double from Qt/physical keyboard evidence. On failure,
+preserve partial identity, stop rather than request more operator guesses, and
+use dependency evidence to choose repair vs separately approved replacement.
+Observe bounded machine error classes, never raw secret diagnostics. Explain
+necessary independent prompts upfront. [Evidence](docs/operations/gpg-root-cause-recovery-decision-2026-11-05.md).
+Project-local preparation only; canonical skill proposal open, no global edits.
+
 04.11 custody/partial-key lesson: never assume a password manager exists or ask
 an operator to attest to a false storage method. Accept explicitly approved
 protected written offline custody, kept separately from recovery media; record

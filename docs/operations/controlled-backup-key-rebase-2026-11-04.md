@@ -1,5 +1,12 @@
 # Controlled Backup Key Rebase
 
+Latest05.11: [root-cause assessment and replacement preparation](gpg-root-cause-recovery-decision-2026-11-05.md)
+supersede the old resume recommendation. Existing04.11 identity is consistent
+but native passphrase rejection remains unexplained; no further attempts.
+No relevant data dependency found in the reviewed project flow. R2 cold-lifecycle
+candidate is prepared/synthetic-tested ONLY; new real generation needs a separate
+approval and the currently absent protected stick. Both old homes stay untouched.
+
 Stand:04.11.2026. **LOCAL CODE PREPARATION; operator-created new key exists; real recovery/backup/restore/Admin NOT ACCEPTED.**
 
 Later04.11 approval: **K1/K2 real LOCAL key block is explicitly authorized**,
@@ -200,6 +207,30 @@ before B/R/A. Collect remaining DB-target and later block approvals together,
 not one speculative command/password interruption at a time. REAL APPLY disabled.
 
 ## Approved Local Runner Handover
+
+### Current Hold: Native Export Passphrase Rejected
+
+Latest04.11 operator feedback after offline-custody update: two attempted native
+export entries were rejected; Pinentry shows "Falsches Passwort! (Versuch 3 von
+3)" for the existing new E92DE7854AF99C1F key. Operator instructed to CANCEL,
+not make the third attempt; cancellation itself not yet confirmed. Do not rerun
+the source-pinned command or trigger another prompt pending private input-path
+clarification. No automatic generation, rotation, deletion or protection bypass.
+
+Metadata-only inspection: identity and both custody receipts exist; private
+export, recovered profile, application candidate, comparison and completion do
+not. No key contents read, GPG operation, copy, password attempt or real write by
+the agent. Script review confirms native Pinentry owns input; the export command
+receives only the fixed homedir/fingerprint, no passphrase or text normalization.
+This is a native decryption rejection, not a failed custody assertion. Why the
+entered value does not unlock the key is NOT established: do not blame a typo,
+layout, handwritten record or script without evidence. New key remains preserved
+and actual recovery remains unproven. No code defect demonstrated or new fix.
+
+Next block: private local input-path/custody clarification WITHOUT another GPG
+attempt, no value shared/recorded. Only resume after that clarification and an
+explicit operator decision; a replacement key would need its own approval.
+Second independent recovery remains OPEN; B/R/A, REAL APPLY and deployment STOP.
 
 ### Protected Offline Custody And Existing-Key Resume
 
