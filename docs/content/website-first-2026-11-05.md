@@ -1,6 +1,9 @@
 # Website first: Inventur und Vorschau-Sprint
 
 Stand: 05.11.2026. Backup-Key-Rebase/R2 ist auf Manuels Entscheidung pausiert.
+Dieser Bericht dokumentiert die erste Inventur und den ersten Website-Block
+dieses Tages. Aktueller nachfolgender Angebotsfinder-/Demo- und Veröffentlichungsstand:
+[COACH-5](../exec-plans/active/coach5-offering-finder-2026-11-05.md).
 Keine Schlüssel-, USB-, Passwort-, Datenbank- oder Serveraktion in diesem Block.
 Manuel hat zusätzlich das GitHub-Pages-Deployment dieser Website ausdrücklich beauftragt.
 IONOS bleibt ausgeschlossen.

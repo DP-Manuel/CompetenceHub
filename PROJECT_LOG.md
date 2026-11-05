@@ -9,6 +9,7 @@ The complete log through 25.09.2026 is preserved byte-for-byte in [the history a
 - Actual reset timing bug fixed; production import boundary excludes even unused Finder JS.34 Website contracts,79 Astro files with zero diagnostics,1237 Production/1407 Preview links,1555 Chromium149 browser checks PASS.390px/native200%/keyboard/text rectangles/no-JS and existing Coachsearch covered.52 Production files fully unchanged.
 - Separate CAL-1 local synthetic demo reuses existing Portal/service/router/RBAC/revision behavior.37 focused tests/76 Chromium browser checks PASS. Actual local publish/read sequence, no productive Auth/DB/audit/request; two fiktive profiles only. CAL-0.1 shared-view runtime bridge still OPEN, transparently documented; no claimed Pages integration.
 - [Current plan/QA](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md), [six-step demo](docs/handoffs/2026-11-05-cal1-demo-readiness.md). No GPG/VPS/DB/Admin/import/IONOS action. Git/manual Pages close-out follows scoped green source, not a new production permission.
+- Sources50aed83/d6bf0f9 and checkpoint78c3470 pushed. Manual Pages run42060354587/deployment7578492359 SUCCESS;141 public checks PASS including390px/native200%/keyboard/no-JS and Coachsearch. Published services/Coach HTML byte-equal local build; IONOS three spot hashes unchanged. Local CAL runtime not hosted/published. Follow-up docs only; unknown worktree files preserved.
 
 ## 2026-11-05 | Website first / approved static Preview sprint
 

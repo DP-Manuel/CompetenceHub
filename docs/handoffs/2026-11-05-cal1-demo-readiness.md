@@ -193,9 +193,15 @@ Nachrichten, ICS/Outlook, Buchung und Zahlung werden hier nicht aktiviert.
 ## Übergabe und nächster Block
 
 Der koordinierende Sprint hat die geprüfte lokale Implementierung getrennt als
-`d6bf0f9` committet; Push folgt mit dem Finder-Paket `50aed83`. Keine Demo- oder
+`d6bf0f9` committet und mit dem Finder-Paket `50aed83`/Checkpoint `78c3470` gepusht. Keine Demo- oder
 Backend-Veröffentlichung durch den Pages-Workflow: dort wird nur die statische
 Website gebaut. Keine Server-/DB-/GPG-/Admin-/Coachimport-Aktion ausgeführt.
+
+Der zusätzliche CLI-Aufruf im Werkzeug-PTY konnte keinen Prozess anlegen
+(Windows-Zugriff auf die PTY-Shell verweigert); kein Umgehungsversuch. Der
+tatsächliche Server/HTTPS/UI/API-Lauf ist durch die76 Browserchecks mit derselben
+App belegt, nicht als PTY-Start ausgegeben. Der obige Ein-Terminal-Befehl ist
+für Manuels normale lokale PowerShell vorgesehen; keine Passworteingabe nötig.
 
 Genau ein empfohlener nächster CAL-1-Block: **gemeinsame lokale View-/Projektionsbrücke**.
 Inputs: bestehendes CAL-0.1 und diese synthetische API-Demo. Deliverable: gemeinsam

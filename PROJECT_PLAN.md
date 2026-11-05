@@ -18,7 +18,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 
 | Phase | Outcome | Gate / evidence | Confidence |
 | --- | --- | --- | --- |
-| COACH-5 / CAL demo |27 grouped offers/29 formats;1555 Website and76 local Calendar browser checks,37 CAL tests PASS | [Current scope/horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md); no real-data/IONOS activation; public close-out pending | High |
+| COACH-5 / CAL demo |27 grouped offers/29 formats;1555 Website,76 local Calendar and141 public browser checks,37 CAL tests PASS | [Current scope/horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md); Pages78c3470 published; demo local, no real-data/IONOS activation | High |
 | Website first | Approved static Preview offerings, Coach discovery and request UX;28 contracts/1377 local and171 public browser checks PASS | [Version inventory and sprint](docs/content/website-first-2026-11-05.md); Pages4daa9ad published05.11, IONOS unchanged | High |
 | Post-Messe consolidation: complete | Stable IONOS, published preview, Context V2 and Analytics discovery | Completed scope, build isolation, public smoke | High |
 | Backend continuation | Native CAL-1, cryptography maintenance and local Linux/proxy gates PASS | External domain/TLS/owners and separately authorized VPS rehearsal/activation remain | Medium |

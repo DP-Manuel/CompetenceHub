@@ -39,13 +39,25 @@ Keine IONOS-/VPS-/DB-/Schlüssel-/Admin-Aktivierung.
 | Vertrags-/Filter-/Dubletten-/Datenschutztests | PASS |34 Website-Verträge, sechs neue Finderfälle |
 | Browser, Mobil, native200%, Fokus, No-JS, Suchregression | PASS |1555 Checks,34 Routen, Chromium149.0.7827.55, Exit0; einschließlich bestehender Coachsuche |
 | CAL-1 lokale synthetische Vorführung | PASS |37 fokussierte Tests,76 Browserchecks; echte lokale Domain/API, synthetische Auth/Persistenz/Anfrage |
-| Gesamtdiff/Produktionshashes, Commit/Push, manuelle Pages-Abnahme | PENDING | Kein IONOS; nur public-allowlisted Vorschau |
+| Gesamtdiff/Produktionshashes, Commit/Push, manuelle Pages-Abnahme | DONE | Quellen50aed83/d6bf0f9, Paket78c3470 gepusht; Pages42060354587 SUCCESS,141 öffentliche Checks PASS, IONOS unverändert |
 
 ## Tatsächliche QA und Grenzen
 
 Quellpakete: Finder `50aed83`, getrennte lokale CAL-Demo `d6bf0f9`. Nur diese
 geprüften Implementierungen und bereinigte Dokumentation werden gepusht; keine
 erzeugten Testprofile, Screenshots, Tokens oder temporären TLS-Dateien.
+
+Manuelles Pages-Deployment erfolgreich aus `78c3470258ea034b677fffd1157d8da3e3fcde78`,
+[Run42060354587](https://github.com/DP-Manuel/CompetenceHub/actions/runs/42060354587),
+Deployment7578492359. **141 öffentliche Browserchecks PASS** in Chromium149:
+Desktop1440,390px, echte native200%, sämtliche Filter/Nulltreffer/Reset,
+Coachsuche-Regression und No-JS. Keine Drittanbieter-/Schreibrequests oder
+Seiten-/Ressourcenfehler; Belege unter
+`apps/website/release-artifacts/coach5-public-20261105/acceptance.json`.
+Die veröffentlichten Leistungs-/Coach-HTMLs sind bytegleich zum lokalen Build.
+IONOS-Startseite, Mindforge und CSS nach Deployment per No-Cache-GET unverändert.
+Keine CAL-Demo-/Portal-Runtime auf Pages; spätere Abschlussdokumentation allein
+verändert den publizierten Website-Quellcode nicht.
 
 Astro:79 Quelldateien, null Fehler/Warnungen/Hinweise. Production1237 und
 Preview1407 interne Referenzen geprüft. Gesamtes52-Dateien-Productionmanifest
@@ -78,15 +90,22 @@ im [Demo-Handoff](../../handoffs/2026-11-05-cal1-demo-readiness.md).
 
 ## Rollender Horizont
 
-1. Aktuellen Finder visuell und mit Tastatur/Mobil/native200% abnehmen; tatsächliche
-   Textrechtecke und Leermeldung prüfen, bestehende Coachsuche darf nicht regressieren.
-2. Lokale CAL-1-Demo über vorhandene Rollen/Revisionskontrollen zusammenführen und
-   in sechs fachlich verständlichen Schritten vorführen; alle Simulationen benennen.
-3. Nur geprüfte Quellen logisch committen/pushen, bestehenden manuellen Pages-Prozess
-   für freigegebene statische Änderungen nutzen und öffentlich nachprüfen.
+1. DONE: Finder visuell und mit Tastatur/Mobil/native200% abgenommen; tatsächliche
+   Textrechtecke, Leermeldung und bestehende Coachsuche geprüft.
+2. DONE: lokale CAL-1-Demo über vorhandene Rollen/Revisionskontrollen zusammengeführt
+   und in sechs Schritten abgenommen; alle Simulationen benannt.
+3. DONE: geprüfte Quellen getrennt committet/gepusht, bestehender manueller Pages-
+   Prozess nur für freigegebene statische Inhalte; öffentlich nachgeprüft.
 4. Vor Janays Rückkehr in der Woche ab16.11. Feedback zur Demo sammeln; keine erneute
    Entscheidung zu bereits akzeptierten CAL-D/T/ADR-Regeln erfragen. Echte Nutzung
    bleibt von eigenen Betriebs-/Identitäts-/Datengates abhängig.
 
 Spätere Schritte sind Planung, keine Aktivierungsfreigabe. Genau ein empfohlener
-nächster CAL-1-Ausbaublock folgt nach tatsächlicher Demo-Abnahme.
+nächster CAL-1-Ausbaublock: **gemeinsame lokale CAL-0.1-View-/CAL-1-Projektionsbrücke**.
+Inputs: vorhandene statische Ansicht und diese API-Demo. Deliverable: wiederverwendbare
+öffentliche Darstellung mit synthetischem Read-Adapter statt zweier Renderer.
+DoD: gleicher sechs-Schritt-Workflow, sichere öffentliche Projektion,390px/native200%,
+Tastatur/RBAC/Konflikte grün;52 Productiondateien unverändert, keine echten Daten
+oder Backend-/Website-Aktivierung. Janay beurteilt Verständlichkeit, nicht erneut
+die bereits bestätigten CAL-D/T-Fachregeln. Kein vollständiger Screenreader-
+Produkttest oder echte Betriebsabnahme aus diesen Browserchecks abzuleiten.

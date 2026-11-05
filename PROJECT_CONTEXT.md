@@ -27,7 +27,8 @@ demo:37 focused tests/76 browser checks PASS, actual Portal/CalendarService/API,
 synthetic Auth/Persistency/request only. CAL-0.1 runtime integration remains OPEN,
 no link from Pages to local runtime. [Current execution/QA](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md),
 [six-step Janay demonstration](docs/handoffs/2026-11-05-cal1-demo-readiness.md).
-Scoped source packaging and manual Pages publication are in progress.
+Source50aed83/local demo d6bf0f9 and checkpoint78c3470 are pushed. Pages run
+42060354587 SUCCESS from78c3470;141 actual public checks PASS. Demo stays local.
 
 Post-Messe product consolidation is complete for the authorized scope: Context V2, official frontend preview and Analytics discovery.
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
@@ -61,14 +62,14 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 - IONOS: https://competencehub.donner-partner.de/ remains at verified SB-54 source `1b4e33efa5e1` (25.09).
 - Rights only29.10: Manuel explicitly approves Gülcan's profile/portrait and short offering descriptions for Preview and IONOS; [scope](docs/content/coach-publication-matrix-2026-09-24.md#zusätzliche-rechtefreigabe-gülcan-vom-29102026). No website release, full workshop scripts or unread details implied.
 - 21.10 read-only checks before and after Pages publication: Mindforge HTML/CSS return 200 and match the September hashes; this is a spot-check, not a full production retest.
-- Official preview: https://dp-manuel.github.io/CompetenceHub/ is now published from `4daa9ade1d01` through successful Pages run42042020729 (05.11). Nine approved Coaches, Gülcan short offerings and Coach discovery/request improvements;171 additional actual public checks PASS. [Current evidence](docs/content/website-first-2026-11-05.md); [previous23.10 evidence](docs/content/susanne-klemm-preview-2026-10-23.md) remains historical.
+- Official preview: https://dp-manuel.github.io/CompetenceHub/ is now published from `78c3470258ea` through successful Pages run42060354587 (05.11). Nine approved Coaches,27 grouped offers/29 formats;141 current public checks PASS. [Current evidence](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md); [earlier Website-first inventory](docs/content/website-first-2026-11-05.md) remains dated evidence. Local CAL demo is not hosted on Pages.
 - Preview-only isolation: production's entire 52-file build manifest remains byte-identical; no IONOS write or backend deployment.
 - Portal/backend is not productively activated; real accounts/mappings, reservations, SMTP and Analytics remain inactive.
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.
 
 ## Current Evidence
 
-- [COACH-5 and demo05.11](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md): combined audience/topic/category/format filters, approved static short scope, grouped variants, true reset and No-JS. Chromium149 completed1555 Website and76 CAL-demo checks; Edge156 focused88 passed but broad teardown was incomplete, not a green acceptance.37 CAL domain/API/demo tests pass;52 Production files unchanged. No real identities, DB, VPS, GPG, active Registry or IONOS write.
+- [COACH-5 and demo05.11](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md): combined audience/topic/category/format filters, approved static short scope, grouped variants, true reset and No-JS. Chromium149 completed1555 Website,76 CAL-demo and141 public checks; Edge156 focused88 passed but broad teardown was incomplete, not a green acceptance.37 CAL domain/API/demo tests pass;52 Production files unchanged, three IONOS spot hashes unchanged after Pages. Sources50aed83/d6bf0f9/checkpoint78c3470 pushed; manual Pages42060354587 successful. No real identities, DB, VPS, GPG, active Registry or IONOS write.
 
 - [Website-first05.11](docs/content/website-first-2026-11-05.md): known-path version inventory,11 attributable static states (not11 eligible rollbacks),28 contracts/1377 local browser checks/171 public checks PASS. Manual Pages4daa9ad successful, all52 Production files unchanged; three IONOS spot hashes unchanged after publication. No GPG/USB/DB/server action, rebase PAUSED. Source195a41a and checkpoint4daa9ad pushed; follow-up documentation only.
 
@@ -134,7 +135,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Finish current scoped Git/Pages/public-smoke close-out. Then exactly one recommended CAL-1 block: shared LOCAL CAL-0.1 view / synthetic CAL-1 projection bridge. Inputs: existing static Calendar and the proven local demo. Deliverable: reusable public rendering without duplicated workflow logic. DoD: same six-step Janay flow,390px/native200%/roles/conflicts/privacy green,52 Production files unchanged, no real data/activation. [Current horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont).
+1. Exactly one recommended CAL-1 block: shared LOCAL CAL-0.1 view / synthetic CAL-1 projection bridge. Inputs: existing static Calendar and the proven local demo. Deliverable: reusable public rendering without duplicated workflow logic. DoD: same six-step Janay flow,390px/native200%/roles/conflicts/privacy green,52 Production files unchanged, no real data/activation. [Current horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont). Current source/Git/Pages/public-smoke gates complete.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 
