@@ -4,6 +4,22 @@ Updated: 2026-11-05.
 
 ## Current Milestone
 
+LATEST05.11 MANUEL DECISION: WEBSITE FIRST. Backup-key rebase/R2 is PAUSED by
+explicit user instruction. No key creation, passphrase dialog, GPG/USB operator
+resume or password workflow without a NEW explicit task. Preserve all existing
+keys/files/backups and automatic jobs. Website work is independent of those gates.
+Current slice: read-only known-location version inventory, then approved static
+Preview content/Coach discovery/request UX, local/browser tests and scoped Git.
+No IONOS deployment, Registry source switch, Becker candidates or customer data.
+
+Website sprint locally complete: approved Gülcan3 families/5 formats, combined
+Coach/theme/offer search and contextual mail drafts;28 contracts and1377 browser
+checks PASS,390px/native200%/keyboard/no-JS. All52 Production files byte-identical.
+Manuel additionally requests GitHub Pages publication05.11; use the existing
+manual workflow after scoped green commit/push, then actual public smokes.
+[Current Website checkpoint/inventory/horizon](docs/content/website-first-2026-11-05.md)
+owns this workstream. Backend plan is paused, not the active next gate.
+
 Post-Messe product consolidation is complete for the authorized scope: Context V2, official frontend preview and Analytics discovery.
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
 The additive Calendar/native runtime, local security/Linux and synthetic COACH-1/2/3A/3C gates remain complete.
@@ -105,9 +121,9 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended next block: separately approve R2 local replacement generation plus immediate cold recovery, with protected USB reattached. NO further04.11 key attempt. Inputs: exact new identity/root, private offline custody, fresh source/protection/target checks. Deliverable/DoD: real cold export/exact USB import/cold decrypt proof, BOTH earlier keys and DPAPI preserved, second independent copy OPEN; STOP before app rewrap/DB/restore/Admin/REAL APPLY. [Decision](docs/operations/gpg-root-cause-recovery-decision-2026-11-05.md#one-recommended-next-block). No generation command before separate approval.
-2. COACH-3B REAL APPLY/live export remain disabled and are not recommended for execution until every actual prerequisite above passes and a separate import approval is obtained. [Active batch](docs/exec-plans/active/backend-sprint-2026-10-30.md), [horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md).
-3. Resolve parallel operational inputs when available; do not expand the current local/source gate silently.
+1. Finish the explicitly requested Pages publication and public smoke for the green Website-first source; no IONOS upload.
+2. Recommended next Website sprint: approved offering discovery by target group/topic/format. Inputs: existing approved active short copy. Deliverable: concise overview linked to Coach and honest request paths. DoD: rights/qualification boundaries preserved, mobile/keyboard/browser checks green, Production isolated. [Current horizon](docs/content/website-first-2026-11-05.md#abschluss-und-horizont).
+3. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 4. Any later IONOS promotion needs its own bundled review and production approval.
 
 ## Domain References

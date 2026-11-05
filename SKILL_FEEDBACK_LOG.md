@@ -1,11 +1,23 @@
 # Skill Feedback Router
 
-Updated: 2026-11-04. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-05. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+05.11 Website-first learning: do not let a paused DB/key operating gate block
+independent static Website value. Inventory known source/history/build/archive
+locations once, deduplicate by content, distinguish technical reconstruction from
+currently lawful/working rollback. Verify the actual current return artifact;
+do not count copied folders as independent versions. Prove Preview isolation by
+all-file Production hashes, not only environment labels. Manual Pages dispatch
+requires scoped publication intent; a push alone is not deployment. Approved
+short copy is usable without forcing an unfinished Registry migration. Search
+only approved active offerings, and test real text rectangles/keyboard/no-JS.
+[Project evidence](docs/content/website-first-2026-11-05.md). Local learning captured;
+global skills unchanged, reusable proposal remains open.
 
 05.11 crypto-custody acceptance learning: generation success, a written note,
 matching fingerprint or a warm-agent roundtrip is NOT independent recovery.

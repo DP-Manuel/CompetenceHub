@@ -1,5 +1,10 @@
 # Backend Sprint Addendum 30.10
 
+05.11 PRIORITY OVERRIDE: this operating window, particularly GPG/R2, is PAUSED
+by Manuel. Do not follow the historical recommended R2 approval below. No new
+operator/password/key process without a NEW explicit task. Existing artifacts
+and automatic jobs preserved; static Website sprint is now the active workstream.
+
 LATEST05.11: [GPG root-cause and cold-lifecycle decision](../../operations/gpg-root-cause-recovery-decision-2026-11-05.md).
 No evidenced technical key repair; metadata consistent, rejection cause unknown.
 No relevant new-key data dependency in reviewed flow. R2 replacement identity

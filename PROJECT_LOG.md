@@ -3,6 +3,13 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-05 | Website first / approved static Preview sprint
+
+- Manuel pauses backup-key rebase/R2 and all GPG/password/operator resume. Existing files/jobs preserved; no server/key/data action. Later explicit request adds manual GitHub Pages publication only, not IONOS.
+- One-time known-path inventory:14 Website ZIPs, ten clean packages/nine unique clean archive contents; old Preview plus new local Preview =11 attributable built states, not11 eligible public rollbacks. Current IONOS1b4e33e ZIP hash verified; published Preview at inventory3e99e8e. Git history/source and static artifacts distinguished from backend/DB/backups.
+- Preview-only Gülcan3 families/5 formats, combined approved Coach/theme/offer search, contextual honest mail drafts, useful empty state and independent Elisabeth disclosure sizing. Becker candidates held, Registry off, no new source reads or inferred qualifications.
+- 28 Website contracts,1377 actual Edge browser checks/34 routes,390px/native200%/keyboard/reduced-motion/no-JS PASS; Astro75 files zero diagnostics,1237 Production/1280 Preview links. All52 Production files byte-identical. [Inventory/sprint/evidence](docs/content/website-first-2026-11-05.md) owns the current Website horizon and publication close-out.
+
 ## 2026-11-05 | GPG cause assessment / independent cold recovery candidate
 
 - Metadata-only real inspection:2.5.21 GPG/agent,1.12.2 libgcrypt, signed Qt Pinentry1.3.3; exact explicit live home/UID/fingerprint/verified public self-signature/private keygrip file4024 bytes consistent. No private contents read, true unlock/export attempt, agent start or real write. No process running. USB D: absent. Source/receipt/dependency trace finds no relevant new-key data artifact; unseen server/unrelated files not claimed audited.
