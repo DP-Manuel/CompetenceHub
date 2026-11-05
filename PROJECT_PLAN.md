@@ -6,7 +6,7 @@ paths. No new GPG/password/operator work; preserve existing jobs/artifacts. Back
 data gates remain valid for later backend work, not a blocker for static Website
 iteration. IONOS retains a separate release approval; Preview stays public/approved.
 
-Updated: 2026-11-05. Current state belongs to [PROJECT_CONTEXT](PROJECT_CONTEXT.md); the active Website horizon belongs to the [Website checkpoint](docs/content/website-first-2026-11-05.md#abschluss-und-horizont). Backend execution is paused.
+Updated: 2026-11-05. Current state belongs to [PROJECT_CONTEXT](PROJECT_CONTEXT.md); the active horizon belongs to the [COACH-5 / local CAL-demo plan](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont). Real backend execution is paused.
 
 ## Vision And Ownership
 
@@ -18,6 +18,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 
 | Phase | Outcome | Gate / evidence | Confidence |
 | --- | --- | --- | --- |
+| COACH-5 / CAL demo |27 grouped offers/29 formats;1555 Website and76 local Calendar browser checks,37 CAL tests PASS | [Current scope/horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md); no real-data/IONOS activation; public close-out pending | High |
 | Website first | Approved static Preview offerings, Coach discovery and request UX;28 contracts/1377 local and171 public browser checks PASS | [Version inventory and sprint](docs/content/website-first-2026-11-05.md); Pages4daa9ad published05.11, IONOS unchanged | High |
 | Post-Messe consolidation: complete | Stable IONOS, published preview, Context V2 and Analytics discovery | Completed scope, build isolation, public smoke | High |
 | Backend continuation | Native CAL-1, cryptography maintenance and local Linux/proxy gates PASS | External domain/TLS/owners and separately authorized VPS rehearsal/activation remain | Medium |
@@ -30,7 +31,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 
 ## Execution Versus Product Backlog
 
-The [Website horizon](docs/content/website-first-2026-11-05.md#abschluss-und-horizont) currently selects execution; the [backend horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md) is retained for later, not a reason to resume GPG work.
+The [current horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont) selects Website/local-demo execution; the [backend horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md) is retained for later, not a reason to resume GPG work.
 [Future ideas](docs/requirements/future-system-ideas-backlog.md), [FIN-01](docs/requirements/fin-01-invoice-management-epic.md) and [PWA strategy](docs/architecture/pwa-app-distribution-strategy-2026-08-11.md) remain product backlog.
 First real coaching engagement:19.11.2026, business milestone only; no customer identity/data or invoice implementation. Manuel's Coach profile is a later standard post-migration onboarding case, not a tenth record in the reviewed batch. Janay unavailable approximately two weeks; prepare coherent blocks without new stakeholder decisions. Budget, broader pilot date and ongoing content ownership are not yet confirmed.
 

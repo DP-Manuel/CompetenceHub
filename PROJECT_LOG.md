@@ -3,6 +3,13 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-05 | COACH-5 offering finder / separate CAL-1 demo
+
+- Existing Preview services page now offers27 grouped entries/29 formats from ES16/SK8/GE5, canonical topic/category navigation, combined filters, bounded list, honest empty states, profile links and contextual mail drafts. No invented private audience/service details, Becker candidates or real dates; optional additions not duplicated.
+- Actual reset timing bug fixed; production import boundary excludes even unused Finder JS.34 Website contracts,79 Astro files with zero diagnostics,1237 Production/1407 Preview links,1555 Chromium149 browser checks PASS.390px/native200%/keyboard/text rectangles/no-JS and existing Coachsearch covered.52 Production files fully unchanged.
+- Separate CAL-1 local synthetic demo reuses existing Portal/service/router/RBAC/revision behavior.37 focused tests/76 Chromium browser checks PASS. Actual local publish/read sequence, no productive Auth/DB/audit/request; two fiktive profiles only. CAL-0.1 shared-view runtime bridge still OPEN, transparently documented; no claimed Pages integration.
+- [Current plan/QA](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md), [six-step demo](docs/handoffs/2026-11-05-cal1-demo-readiness.md). No GPG/VPS/DB/Admin/import/IONOS action. Git/manual Pages close-out follows scoped green source, not a new production permission.
+
 ## 2026-11-05 | Website first / approved static Preview sprint
 
 - Manuel pauses backup-key rebase/R2 and all GPG/password/operator resume. Existing files/jobs preserved; no server/key/data action. Later explicit request adds manual GitHub Pages publication only, not IONOS.

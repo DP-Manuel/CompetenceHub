@@ -8,8 +8,8 @@ LATEST05.11 MANUEL DECISION: WEBSITE FIRST. Backup-key rebase/R2 is PAUSED by
 explicit user instruction. No key creation, passphrase dialog, GPG/USB operator
 resume or password workflow without a NEW explicit task. Preserve all existing
 keys/files/backups and automatic jobs. Website work is independent of those gates.
-Current slice: read-only known-location version inventory, then approved static
-Preview content/Coach discovery/request UX, local/browser tests and scoped Git.
+Current slice: COACH-5 approved static offering finder plus a separate local
+synthetic CAL-1 demonstration for Janay, expected return week16.11.
 No IONOS deployment, Registry source switch, Becker candidates or customer data.
 
 Website sprint locally complete: approved Gülcan3 families/5 formats, combined
@@ -19,6 +19,15 @@ Manuel's additional Pages request05.11 executed: source195a41a, published4daa9ad
 manual run42042020729 SUCCESS,171 actual public browser checks PASS. No IONOS change.
 [Current Website checkpoint/inventory/horizon](docs/content/website-first-2026-11-05.md)
 owns this workstream. Backend plan is paused, not the active next gate.
+
+COACH-5/local CAL-demo05.11:27 grouped public offerings/29 formats on existing
+Preview services route;1555 browser checks,34 Website contracts,79 Astro files
+zero diagnostics,52 Production files byte-identical. Separate local Calendar
+demo:37 focused tests/76 browser checks PASS, actual Portal/CalendarService/API,
+synthetic Auth/Persistency/request only. CAL-0.1 runtime integration remains OPEN,
+no link from Pages to local runtime. [Current execution/QA](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md),
+[six-step Janay demonstration](docs/handoffs/2026-11-05-cal1-demo-readiness.md).
+Scoped source packaging and manual Pages publication are in progress.
 
 Post-Messe product consolidation is complete for the authorized scope: Context V2, official frontend preview and Analytics discovery.
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
@@ -58,6 +67,8 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.
 
 ## Current Evidence
+
+- [COACH-5 and demo05.11](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md): combined audience/topic/category/format filters, approved static short scope, grouped variants, true reset and No-JS. Chromium149 completed1555 Website and76 CAL-demo checks; Edge156 focused88 passed but broad teardown was incomplete, not a green acceptance.37 CAL domain/API/demo tests pass;52 Production files unchanged. No real identities, DB, VPS, GPG, active Registry or IONOS write.
 
 - [Website-first05.11](docs/content/website-first-2026-11-05.md): known-path version inventory,11 attributable static states (not11 eligible rollbacks),28 contracts/1377 local browser checks/171 public checks PASS. Manual Pages4daa9ad successful, all52 Production files unchanged; three IONOS spot hashes unchanged after publication. No GPG/USB/DB/server action, rebase PAUSED. Source195a41a and checkpoint4daa9ad pushed; follow-up documentation only.
 
@@ -123,7 +134,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Recommended next Website sprint: approved offering discovery by target group/topic/format. Inputs: existing approved active short copy. Deliverable: concise overview linked to Coach and honest request paths. DoD: rights/qualification boundaries preserved, mobile/keyboard/browser checks green, Production isolated. [Current horizon](docs/content/website-first-2026-11-05.md#abschluss-und-horizont).
+1. Finish current scoped Git/Pages/public-smoke close-out. Then exactly one recommended CAL-1 block: shared LOCAL CAL-0.1 view / synthetic CAL-1 projection bridge. Inputs: existing static Calendar and the proven local demo. Deliverable: reusable public rendering without duplicated workflow logic. DoD: same six-step Janay flow,390px/native200%/roles/conflicts/privacy green,52 Production files unchanged, no real data/activation. [Current horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont).
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 

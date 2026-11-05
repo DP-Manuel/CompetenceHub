@@ -7,6 +7,19 @@ Updated: 2026-11-05. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+05.11 COACH-5/CAL-demo learning: derive finder entries only from explicitly
+approved offering lists, not qualifications; group family/formats/options and
+match every dimension on the SAME format. Do not relabel missing metadata or
+infer private-client offers. A runtime HTML conditional alone can still emit an
+unused client bundle: verify every Production file, use existing build-alias
+boundaries. Browser reset must assert values AND results, not only visual controls.
+Distinguish static calendar examples, real local API/domain transitions and
+synthetic auth/persistence; never call a replacement view existing-view reuse.
+Keep six-step human demo and actual backend activation separate. On QA teardown
+failure retain incomplete status; phase/engine/cleanup evidence matters, do not
+start another application/password loop. [Evidence](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md).
+Project-local learning, no global skill edits.
+
 05.11 Website-first learning: do not let a paused DB/key operating gate block
 independent static Website value. Inventory known source/history/build/archive
 locations once, deduplicate by content, distinguish technical reconstruction from
