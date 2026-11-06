@@ -4,7 +4,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from fastapi import Request
-from fastapi.responses import HTMLResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 
@@ -179,6 +179,11 @@ def create_demo_app(port=8446):
             return Response(status_code=404)
         name = "Demo-Coach " + slug[-1].upper()
         return HTMLResponse('<!doctype html><html lang="de"><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/demo-assets/styles.css"><title>' + name + '</title></head><body>' + BANNER + '<main><h1>' + name + '</h1><p>Fiktive Person. Keine echten Qualifikationen, keine persönliche Verfügbarkeit und keine Verbindung zu realen Coachprofilen.</p><a href="/demo/">Zum Demo-Kalender</a></main></body></html>')
+
+    @app.get("/demo-assets/calendar-month.mjs", response_class=FileResponse)
+    async def calendar_month_module():
+        # Windows MIME registry can label .mjs as text/plain; modules reject it.
+        return FileResponse(ASSETS / "calendar-month.mjs", media_type="text/javascript")
 
     app.mount("/demo-assets", StaticFiles(directory=ASSETS), name="demo-assets")
     return app

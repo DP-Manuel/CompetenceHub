@@ -24,11 +24,6 @@ p, dd, li { line-height: 1.6; }
 .toolbar label { flex: 1 1 200px; }
 .month-toolbar { display: grid; grid-template-columns: 48px minmax(0, 1fr) 48px; align-items: center; gap: 16px; margin-block: 24px; text-align: center; }
 .month-toolbar button { padding: 8px; }
-.month-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-.day { min-height: 96px; background: white; border: 1px solid #b9cfd1; padding: 8px; min-width: 0; }
-.day-label { display: block; margin-bottom: 8px; font-size: 14px; }
-.day button { display: block; width: 100%; font-size: 14px; text-align: left; overflow-wrap: anywhere; margin-block: 8px; }
-.day:first-child { grid-column-start: var(--weekday, 1); }
 dl { display: grid; grid-template-columns: minmax(100px, 1fr) minmax(0, 3fr); gap: 12px 24px; }
 dt { font-weight: bold; }
 dd { margin: 0; min-width: 0; }
@@ -40,9 +35,6 @@ dd { margin: 0; min-width: 0; }
 .skip-link:focus { top: 0; }
 .demo-fill { margin: 16px; }
 @media (max-width: 900px) {
-  .month-grid { display: block; }
-  .day { min-height: 0; margin-bottom: 8px; }
-  .day:not(:has(button)) { display: none; }
   main { padding: 16px; }
   dl { grid-template-columns: minmax(0, 1fr); gap: 6px; }
   dd { margin-bottom: 12px; }

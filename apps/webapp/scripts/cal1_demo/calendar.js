@@ -1,43 +1,28 @@
 "use strict";
+import { monthKeys, calendarInstantLabel, calendarMonthLabel, buildMonthLayout, renderMonth } from "./calendar-month.mjs";
 const $ = id => document.getElementById(id);
 const text = (tag, value) => { const element = document.createElement(tag); element.textContent = value; return element; };
 const formats = { online: "Online", praesenz: "Präsenz", hybrid: "Hybrid" };
-const now = new Date();
-const months = [0, 1, 2, 3].map(offset => new Date(now.getFullYear(), now.getMonth() + offset, 1));
+const months = monthKeys();
 let month = 0, offers = [], selected = null, loaded = false;
-const date = value => new Date(value).toLocaleString("de-DE", { timeZone: "Europe/Berlin", dateStyle: "medium", timeStyle: "short" });
-const dayKey = value => new Date(value).toLocaleDateString("sv-SE", { timeZone: "Europe/Berlin" });
+const date = calendarInstantLabel;
 
 function hideDetail() { selected = null; $("detail").hidden = true; $("request-status").textContent = ""; }
 function render() {
   hideDetail();
-  const first = months[month];
-  $("month-label").textContent = first.toLocaleDateString("de-DE", { month: "long", year: "numeric" });
+  $("month-label").textContent = calendarMonthLabel(months[month]);
   $("previous").disabled = month === 0;
   $("next").disabled = month === months.length - 1;
-  const items = offers.filter(offer => dayKey(offer.starts_at).slice(0, 7) === dayKey(first).slice(0, 7)
-    && (!$("topic").value || offer.topic.id === $("topic").value)
+  const items = offers.filter(offer => (!$("topic").value || offer.topic.id === $("topic").value)
     && (!$("format").value || offer.format === $("format").value));
-  $("grid").replaceChildren();
-  $("empty").hidden = !loaded || items.length > 0;
-  $("result-count").textContent = loaded ? `${items.length} freigegebene Demo-Termine` : "";
-  const count = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
-  for (let day = 1; day <= count; day++) {
-    const current = new Date(first.getFullYear(), first.getMonth(), day, 12);
-    const cell = text("div", ""); cell.className = "day";
-    if (day === 1) cell.style.setProperty("--weekday", String((current.getDay() + 6) % 7 + 1));
-    const label = text("time", current.toLocaleDateString("de-DE", { weekday: "short", day: "numeric" }));
-    label.className = "day-label"; label.dateTime = dayKey(current); cell.append(label);
-    for (const offer of items.filter(item => dayKey(item.starts_at) === dayKey(current))) {
-      const button = text("button", `${date(offer.starts_at).split(", ").pop()} · ${offer.title}`);
-      button.type = "button"; button.dataset.offer = offer.id;
-      button.addEventListener("click", () => show(offer)); cell.append(button);
-    }
-    $("grid").append(cell);
-  }
+  const layout = buildMonthLayout(items, months[month]);
+  $("empty").hidden = !loaded || layout.offerCount > 0;
+  $("result-count").textContent = loaded ? `${layout.offerCount} freigegebene Demo-Termine` : "";
+  renderMonth($("grid"), layout, show, "detail");
 }
 function show(offer) {
   selected = offer; $("detail").hidden = false;
+  $("detail").dataset.eventId = offer.id;
   $("detail-title").textContent = offer.title; $("summary").textContent = offer.summary || "";
   $("meta").replaceChildren();
   for (const [key, value] of Object.entries({ Coach: offer.coach.display_name,
@@ -80,8 +65,8 @@ async function load() {
     $("topic").replaceChildren(new Option("Alle Themen", ""));
     for (const [id, name] of new Map(offers.map(o => [o.topic.id, o.topic.name]))) $("topic").add(new Option(name, id));
     if ([...$("topic").options].some(o => o.value === currentTopic)) $("topic").value = currentTopic;
-    if (!loaded && offers.length && !offers.some(o => dayKey(o.starts_at).slice(0, 7) === dayKey(months[month]).slice(0, 7))) {
-      const found = months.findIndex(m => dayKey(m).slice(0, 7) === dayKey(offers[0].starts_at).slice(0, 7));
+    if (!loaded && offers.length && !buildMonthLayout(offers, months[month]).offerCount) {
+      const found = months.findIndex(key => buildMonthLayout(offers, key).offerCount > 0);
       if (found >= 0) month = found;
     }
     loaded = true; render();

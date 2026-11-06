@@ -1,4 +1,4 @@
-"""Actual Edge/HTTPS acceptance of the isolated local synthetic Calendar demo."""
+"""Actual browser/HTTPS acceptance of the isolated local synthetic Calendar demo."""
 import importlib.util
 import json
 import math
@@ -9,6 +9,7 @@ import hashlib
 import base64
 import argparse
 import os
+from datetime import datetime, timezone
 
 from playwright.sync_api import expect, sync_playwright
 
@@ -20,7 +21,7 @@ from scripts.browser_acceptance_app import COACH_EMAIL, EMPTY_COACH_EMAIL, REVIE
 spec = importlib.util.spec_from_file_location("cal1_qa", ROOT / "scripts/run-cal1-browser-acceptance.py")
 qa = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(qa)
-EVIDENCE = ROOT.parents[1] / "release-artifacts/cal1-demo-20261105"
+EVIDENCE = ROOT.parents[1] / "release-artifacts/cal1-multiday-20261106"
 PUBLIC = "/api/v1/calendar/offers"
 OFFERS = "/api/v1/portal/calendar/offers"
 
@@ -52,6 +53,7 @@ def geometry(page, checks, label):
 
 def public_load(page, base):
     page.goto(base + "/demo/", wait_until="networkidle")
+    expect(page.locator("#month-label")).not_to_have_text("")
     expect(page.locator("#loading")).to_be_hidden()
     expect(page.locator("#error")).to_be_hidden()
 
@@ -284,6 +286,112 @@ def states(browser, base, checks):
     ctx.close()
 
 
+def multiday_data():
+    def item(key, title, start, end):
+        return {"id": key, "title": "DEMO: " + title, "summary": "Synthetischer Darstellungstest",
+            "starts_at": start, "ends_at": end, "time_zone": "Europe/Berlin", "format": "praesenz",
+            "capacity": 12, "public_location": "Demo-Raum", "price_display_text": "Demo: nach Abstimmung",
+            "decision_deadline": "2026-11-20T10:00:00+01:00",
+            "topic": {"id": "3d362761-18b6-4360-b9ca-497dce38ffbb", "name": "Demo-Thema"},
+            "coach": {"display_name": "Demo-Coach A", "profile_path": "/coaches/demo-coach-a/"}}
+    return [
+        item("reported", "Workshop 28.–29. November", "2026-11-28T17:18+01:00", "2026-11-29T17:18+01:00"),
+        item("long", "Vier Tage", "2026-11-27T10:00+01:00", "2026-11-30T16:00+01:00"),
+        item("midnight", "Ende Mitternacht", "2026-11-29T22:00+01:00", "2026-11-30T00:00+01:00"),
+        item("month", "Monatswechsel", "2026-11-30T22:00+01:00", "2026-12-02T03:00+01:00"),
+        item("year", "Jahreswechsel", "2026-12-31T22:00+01:00", "2027-01-02T03:00+01:00"),
+        item("parallel", "Paralleltermin", "2026-11-28T19:00+01:00", "2026-11-29T09:00+01:00"),
+        item("single", "Eintägig", "2026-11-28T10:00+01:00", "2026-11-28T11:00+01:00"),
+        item("year-midnight", "Jahresende Mitternacht", "2026-12-31T22:00+01:00", "2027-01-01T00:00+01:00"),
+    ]
+
+
+def multiday(page, base, checks, label):
+    # Explicit read-response injection tests the renderer, not new API semantics.
+    # Fake browser clock keeps the named regression deterministic after November.
+    page.clock.install(time=datetime(2026, 11, 6, 12, tzinfo=timezone.utc))
+    writes = []
+    page.on("request", lambda request: writes.append(request.method) if request.method not in {"GET", "HEAD"} else None)
+    payload = json.dumps({"items": multiday_data(), "next_cursor": None})
+    handler = lambda route: route.fulfill(status=200, content_type="application/json", body=payload)
+    page.route("**/api/v1/calendar/offers?*", handler)
+    try:
+        public_load(page, base)
+        expect(page.locator("#month-label")).to_have_text("November 2026")
+        reported = page.locator('button[data-offer="reported"]')
+        checks.check(label + " reported interval occupies exactly Nov28 and Nov29", reported.count() == 2
+            and reported.evaluate_all("nodes => nodes.map(n => n.dataset.date)") == ["2026-11-28", "2026-11-29"])
+        checks.check(label + " begin and end retain 17:18", reported.nth(0).locator(".event-segment__phase").inner_text() == "Beginn 17:18 Uhr"
+            and reported.nth(1).locator(".event-segment__phase").inner_text() == "Ende 17:18 Uhr")
+        for button in reported.all():
+            button.focus(); page.keyboard.press("Enter")
+            expect(page.locator("#detail")).to_be_focused()
+            checks.check(label + " every segment opens identical event detail", page.locator("#detail").get_attribute("data-event-id") == "reported"
+                and page.locator("#detail-title").inner_text() == "DEMO: Workshop 28.–29. November")
+        checks.check(label + " segment accessible name has topic date phase and full range", all(
+            text in reported.first.get_attribute("aria-label") for text in ("Demo-Thema", "28. November 2026", "Beginn 17:18", "Gesamtzeitraum", "Europe/Berlin")))
+        reported.first.focus()
+        checks.check(label + " native button has accessible name and visible keyboard focus", page.get_by_role("button", name=reported.first.get_attribute("aria-label"), exact=True).count() == 1
+            and reported.first.get_attribute("aria-controls") == "detail"
+            and reported.first.evaluate("e => e === document.activeElement && getComputedStyle(e).outlineStyle !== 'none'"))
+        long = page.locator('button[data-offer="long"]')
+        checks.check(label + " four civil days cross week row without wrong phases", long.count() == 4
+            and long.evaluate_all("nodes => nodes.map(n => n.dataset.segmentRole)") == ["start", "continue", "continue", "end"])
+        checks.check(label + " Sunday to Monday is a meaningful band break", not long.nth(2).evaluate("e => e.classList.contains('is-connected-after')")
+            and not long.nth(3).evaluate("e => e.classList.contains('is-connected-before')"))
+        checks.check(label + " midnight excludes Nov30", page.locator('button[data-offer="midnight"]').count() == 1
+            and page.locator('button[data-offer="midnight"]').get_attribute("data-date") == "2026-11-29"
+            and "Folgetag" in page.locator('button[data-offer="midnight"]').inner_text())
+        checks.check(label + " single day remains one segment", page.locator('button[data-offer="single"]').count() == 1)
+        if label == "desktop":
+            first, last = reported.nth(0).bounding_box(), reported.nth(1).bounding_box()
+            checks.check("desktop turquoise band connects adjacent days in same lane", abs(first["y"] - last["y"]) < 1
+                and abs(first["height"] - last["height"]) < 1 and abs(first["x"] + first["width"] - last["x"]) < 1.5)
+            checks.check("desktop turquoise is visible and not only color-coded", reported.first.evaluate("e => getComputedStyle(e).backgroundColor === 'rgb(220, 239, 240)'")
+                and "Beginn" in reported.first.inner_text() and "Ende" in reported.last.inner_text())
+        checks.check(label + " all parallel buttons avoid geometric overlap", page.locator("#grid").evaluate("""root => {
+            const rects = [...root.querySelectorAll('button')].map(e => e.getBoundingClientRect());
+            return rects.every((a, i) => rects.slice(i+1).every(b =>
+              Math.min(a.right,b.right)-Math.max(a.left,b.left) < 1 || Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top) < 1));
+        }"""))
+        geometry(page, checks, label + " multiday")
+        if label == "native-200":
+            checks.check("multiday view actually uses native 200 percent", page.evaluate("devicePixelRatio === 2 && innerWidth > 600 && innerWidth < 800 && getComputedStyle(document.documentElement).zoom === '1'"))
+        page.locator("#grid").evaluate("e => window.scrollTo(0,e.getBoundingClientRect().top+scrollY-20)")
+        screenshot(page, EVIDENCE / (label + "-multiday.png"), label)
+        page.locator("#next").click()
+        checks.check(label + " December keeps month continuation and year start", page.locator('button[data-offer="month"]').count() == 2
+            and page.locator('button[data-offer="month"]').first.get_attribute("data-segment-role") == "continue"
+            and page.locator('button[data-offer="year"]').count() == 1)
+        page.locator("#next").click()
+        checks.check(label + " January keeps year continuation and excludes midnight end", page.locator('button[data-offer="year"]').count() == 2
+            and page.locator('button[data-offer="year"]').first.get_attribute("data-segment-role") == "continue"
+            and page.locator('button[data-offer="year-midnight"]').count() == 0)
+        page.locator('button[data-offer="year"]').last.click()
+        checks.check(label + " cross-month segment detail still has original record", page.locator("#detail").get_attribute("data-event-id") == "year")
+        checks.check(label + " display-only test writes no data", not writes)
+    finally:
+        page.unroute("**/api/v1/calendar/offers?*", handler)
+
+
+def daylight_saving(browser, base, checks):
+    for label, clock, start, end, expected in [
+        ("spring", datetime(2026, 3, 1, tzinfo=timezone.utc), "2026-03-28T17:18+01:00", "2026-03-29T17:18+02:00", ["2026-03-28", "2026-03-29"]),
+        ("autumn", datetime(2026, 10, 1, tzinfo=timezone.utc), "2026-10-24T17:18+02:00", "2026-10-25T17:18+01:00", ["2026-10-24", "2026-10-25"]),
+    ]:
+        ctx = browser.new_context(ignore_https_errors=True, timezone_id="America/Los_Angeles")
+        try:
+            page = ctx.new_page(); page.clock.install(time=clock)
+            item = {**multiday_data()[0], "starts_at": start, "ends_at": end}
+            page.route("**/api/v1/calendar/offers?*", lambda route: route.fulfill(status=200, content_type="application/json", body=json.dumps({"items": [item], "next_cursor": None})))
+            public_load(page, base)
+            checks.check(label + " actual browser uses Berlin civil days not client timezone", page.locator('button[data-offer="reported"]').evaluate_all("nodes => nodes.map(n => n.dataset.date)") == expected)
+            labels = page.locator('button[data-offer="reported"] .event-segment__phase').all_text_contents()
+            expected_zones = ["(MEZ)", "(MESZ)"] if label == "spring" else ["(MESZ)", "(MEZ)"]
+            checks.check(label + " DST labels distinguish seasonal time offsets", all(zone in value for zone, value in zip(expected_zones, labels)))
+        finally: ctx.close()
+
+
 def run(options):
     browser_options = ({"executable_path": str(options.browser_executable)} if options.browser_executable
                        else {"channel": "msedge"} if options.browser == "msedge" else {})
@@ -296,7 +404,14 @@ def run(options):
         browser = pw.chromium.launch(headless=True, **browser_options)
         report["browser"] = browser.version
         def observe(context):
-            context.on("page", lambda p: p.on("pageerror", lambda e: errors.append(e.name)))
+            def page_events(page):
+                page.on("pageerror", lambda e: errors.append(e.name))
+                def console_error(message):
+                    if message.type == "error" and ("module script" in message.text.lower()
+                            or "/demo-assets/" in message.location.get("url", "")):
+                        errors.append("asset_or_module_error")
+                page.on("console", console_error)
+            context.on("page", page_events)
             def guard(route):
                 if not route.request.url.startswith(base + "/"):
                     external.append(route.request.url); route.abort()
@@ -311,8 +426,13 @@ def run(options):
         try:
             exercise(browser, base, checks, report)
             states(browser, base, checks)
+            ctx = browser.new_context(ignore_https_errors=True, viewport={"width": 1440, "height": 1000}, reduced_motion="reduce")
+            multiday(ctx.new_page(), base, checks, "desktop"); ctx.close()
+            daylight_saving(browser, base, checks)
             ctx = browser.new_context(ignore_https_errors=True, viewport={"width": 390, "height": 844}, reduced_motion="reduce")
             responsive(ctx.new_page(), base, checks, "mobile-390"); ctx.close()
+            ctx = browser.new_context(ignore_https_errors=True, viewport={"width": 390, "height": 844}, reduced_motion="reduce")
+            multiday(ctx.new_page(), base, checks, "mobile-390"); ctx.close()
         finally:
             print("PHASE=close-functional-browser", flush=True)
             browser.close()
@@ -330,6 +450,7 @@ def run(options):
                 metrics = report["native_zoom"]
                 checks.check("Actual native 200 percent zoom, not CSS zoom or DPR emulation", abs(metrics["dpr"] - 2) < .05 and 600 < metrics["width"] < 800 and metrics["scale"] == 1 and metrics["cssZoom"] == "1")
                 responsive(page, base, checks, "native-200")
+                multiday(ctx.new_page(), base, checks, "native-200")
             finally: ctx.close()
     checks.check("All owned fixture/server/browser contexts stopped", True)
     checks.check("No external network traffic", not external)

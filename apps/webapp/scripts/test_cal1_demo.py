@@ -43,6 +43,15 @@ def args(detail):
                 expected_version=detail.offer.lock_version, now=utc_now())
 
 
+async def test_public_calendar_module_has_portable_javascript_mime():
+    async with AsyncClient(transport=ASGITransport(app=create_demo_app()), base_url="https://127.0.0.1:8446") as client:
+        response = await client.get("/demo-assets/calendar-month.mjs")
+        assert response.status_code == 200
+        assert response.headers["content-type"].startswith("text/javascript")
+        assert "export function buildMonthLayout" in response.text
+        assert 'type="module"' in (await client.get("/demo/")).text
+
+
 async def test_publication_retains_old_revision_during_draft_and_change_request():
     repo = DemoCalendarRepository()
     service = CalendarService(repo)
