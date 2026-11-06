@@ -1,11 +1,21 @@
 # Skill Feedback Router
 
-Updated: 2026-11-05. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-06. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+06.11 Calendar learning: render occupied civil days for [start,end), not only
+start date or fixed24-hour increments. Test exact midnight, DST/repeated hours,
+week/month/year clipping and concurrent lane geometry; count events, not segments.
+Keep original record identity/detail action and API contracts separate from view
+layout; explicitly record retrieval-window limits rather than silently widening
+access. Test browser asset MIME on Windows: a200 response is not sufficient for
+an ES module. Await a real initialization signal before accepting initially
+hidden loading/error elements. [Evidence](docs/handoffs/2026-11-05-cal1-demo-readiness.md#mehrtägige-veranstaltungen-06112026).
+Project-local implementation, global skill proposal still open.
 
 05.11 COACH-5/CAL-demo learning: derive finder entries only from explicitly
 approved offering lists, not qualifications; group family/formats/options and

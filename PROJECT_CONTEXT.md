@@ -1,6 +1,6 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-05.
+Updated: 2026-11-06.
 
 ## Current Milestone
 
@@ -29,6 +29,16 @@ no link from Pages to local runtime. [Current execution/QA](docs/exec-plans/acti
 [six-step Janay demonstration](docs/handoffs/2026-11-05-cal1-demo-readiness.md).
 Source50aed83/local demo d6bf0f9 and checkpoint78c3470 are pushed. Pages run
 42060354587 SUCCESS from78c3470;141 actual public checks PASS. Demo stays local.
+
+06.11 Manuel manually accepts the complete local Coach/Reviewer workflow.
+Reported multiday display repaired locally: Berlin [start,end) day segments,
+joined turquoise weekly lanes, explicit start/continuation/end, same event detail.
+26 JS tests (also two foreign TZs),38 focused Python tests and134 actual browser
+checks PASS,390px/native200%/DST/month/year/midnight/parallel spans.52 Production
+files unchanged. Pure view/CSS extracted for later CAL-0.1 adapter; existing
+future-start API-window limitation retained, not silently widened. [Current
+evidence and restart](docs/handoffs/2026-11-05-cal1-demo-readiness.md#mehrtägige-veranstaltungen-06112026).
+Implementation84f8e78; no deployment. GitHub Pages remains78c3470.
 
 Post-Messe product consolidation is complete for the authorized scope: Context V2, official frontend preview and Analytics discovery.
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
@@ -68,6 +78,8 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.
 
 ## Current Evidence
+
+- [06.11 multiday demo repair](docs/handoffs/2026-11-05-cal1-demo-readiness.md#mehrtägige-veranstaltungen-06112026): reported28.11 17:18–29.11 17:18 reproduced, now both civil days; midnight excludes next day. Pure layout/DOM/CSS with stable parallel lanes, explicit clock/zone labels, accessible native segments.26 JS/38 Python/134 browser checks PASS. Windows .mjs MIME issue separately regression-protected. No actual DB, role, Schema, API/business transition or Website change; no deployment. Ongoing records before API from-window remain a documented separate read-contract question.
 
 - [COACH-5 and demo05.11](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md): combined audience/topic/category/format filters, approved static short scope, grouped variants, true reset and No-JS. Chromium149 completed1555 Website,76 CAL-demo and141 public checks; Edge156 focused88 passed but broad teardown was incomplete, not a green acceptance.37 CAL domain/API/demo tests pass;52 Production files unchanged, three IONOS spot hashes unchanged after Pages. Sources50aed83/d6bf0f9/checkpoint78c3470 pushed; manual Pages42060354587 successful. No real identities, DB, VPS, GPG, active Registry or IONOS write.
 

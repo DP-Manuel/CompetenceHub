@@ -3,6 +3,14 @@
 Significant milestones only; newest first.
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
+## 2026-11-06 | CAL-1 multiday display correction
+
+- Manuel confirms full local Coach/Reviewer workflow manually tested. Reproduced reported28.11 17:18 to29.11 17:18 missing final day; start-only day/month matching was the cause.
+- Extracted public-view interval/lane renderer and scoped CSS: Berlin civil days, [start,end), connected weekly turquoise bands, explicit phase/clock/zone labels, wrapped rows and mobile agenda. Original event object retained for every segment/detail; no duplicate records or business/API changes.
+- 26 JS tests PASS, repeated under two foreign process timezones;38 focused Python tests PASS;134 actual Chromium149 browser checks PASS including390px/native200%, DST, midnight, month/year boundaries, parallel geometry and existing role/revision/publication flow.52 Production files unchanged. Static .mjs MIME corrected only in local demo fixture and regression-tested.
+- [Current evidence/restart/limits](docs/handoffs/2026-11-05-cal1-demo-readiness.md#mehrtägige-veranstaltungen-06112026). No DB/VPS/GPG/real users/IONOS/Pages action. Existing future-start API query cannot retrieve already-started records before its window; explicitly left outside this display fix. Same local CAL-0.1 view bridge remains the next proposed block.
+- Green implementation packaged separately as84f8e78; documentation checkpoint follows. No generated browser profiles, reports, TLS files or credentials staged; unknown user files preserved. Push does not trigger the manual-only Pages workflow.
+
 ## 2026-11-05 | COACH-5 offering finder / separate CAL-1 demo
 
 - Existing Preview services page now offers27 grouped entries/29 formats from ES16/SK8/GE5, canonical topic/category navigation, combined filters, bounded list, honest empty states, profile links and contextual mail drafts. No invented private audience/service details, Becker candidates or real dates; optional additions not duplicated.

@@ -1,6 +1,8 @@
 # COACH-5: Angebotsfinder und getrennte Kalender-Demo
 
 Stand: 05.11.2026. WEBSITE FIRST; Rebase/R2 bleibt pausiert.
+06.11 Follow-up: manueller Demo-Workflow bestätigt, mehrtägige Kalenderbänder
+lokal korrigiert und134 Browserchecks grün; [Belege/Modul/Read-Grenze](../../handoffs/2026-11-05-cal1-demo-readiness.md#mehrtägige-veranstaltungen-06112026).
 Scope: öffentliche GitHub-Vorschau mit bereits freigegebener Kurzfassung;
 zusätzlicher CAL-1-Auftrag ausschließlich lokal/synthetisch, siehe späteren
 [Demo-Handoff](../../handoffs/2026-11-05-cal1-demo-readiness.md).
@@ -104,6 +106,8 @@ Spätere Schritte sind Planung, keine Aktivierungsfreigabe. Genau ein empfohlene
 nächster CAL-1-Ausbaublock: **gemeinsame lokale CAL-0.1-View-/CAL-1-Projektionsbrücke**.
 Inputs: vorhandene statische Ansicht und diese API-Demo. Deliverable: wiederverwendbare
 öffentliche Darstellung mit synthetischem Read-Adapter statt zweier Renderer.
+Der06.11-Bandrenderer und seine isolierte CSS bilden jetzt die wiederverwendbare
+View-Basis; Provider-/CAL-0.1-Anschluss weiterhin nicht ausgeführt.
 DoD: gleicher sechs-Schritt-Workflow, sichere öffentliche Projektion,390px/native200%,
 Tastatur/RBAC/Konflikte grün;52 Productiondateien unverändert, keine echten Daten
 oder Backend-/Website-Aktivierung. Janay beurteilt Verständlichkeit, nicht erneut

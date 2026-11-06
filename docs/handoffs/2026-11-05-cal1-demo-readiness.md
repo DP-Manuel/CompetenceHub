@@ -3,6 +3,10 @@
 Stand: 05.11.2026. Ziel: fachliche Vorführung für Janay ab Woche 16.11.2026.
 Eigenständiger lokaler Block neben COACH-5; kein Deployment, kein realer Betrieb.
 
+06.11: Manuel bestätigt den vollständigen Coach-/Reviewer-/Freigabeablauf als
+erfolgreich manuell geprüft. Neuester Darstellungsfix und aktuelle QA:
+[Mehrtägige Veranstaltungen](#mehrtägige-veranstaltungen-06112026).
+
 ## Wiederverwendung und bewusste Adaptergrenze
 
 Unverändert wiederverwendet werden das tatsächliche Portal aus
@@ -214,3 +218,78 @@ Wiederverwendbare Lernnotiz: Statische Beispielansicht und echte lokale
 API-Veröffentlichung nie als dieselbe Integration ausgeben. Native Zoom-Bitmap-
 Erfassung und DOM-Geometrie getrennt prüfen; parallelen Build nicht als
 Produktionsregression einer unveränderten Demo-Quelle fehlklassifizieren.
+
+## Mehrtägige Veranstaltungen 06.11.2026
+
+Geprüfter Implementierungscommit: `84f8e78`. Nur lokale Demo-/Testskripte und
+komponentenbezogene Assets, kein Backend-Kern oder Website-Artefakt geändert.
+
+**Befund reproduziert:**28.11.2026 17:18 MEZ bis29.11.2026 17:18 MEZ erschien
+nur am28.11. Ursache: Tages- und Monatsfilter prüften allein `starts_at`.
+Die Darstellung beachtet nun das vollständige halboffene Intervall `[Beginn, Ende)`.
+Der letzte belegte Berliner Kalendertag stammt aus `Ende minus1Millisekunde`;
+keine Addition fester24-Stunden-Schritte über eine Zeitumstellung.
+
+- Durchgängige türkisfarbene Tagessegmente mit stabiler Spur je Veranstaltung
+  und Kalenderwoche. Gleiche Spuren teilen ihre Zeilenhöhe; parallele Buttons
+  überschneiden sich nicht. Am Wochen-/Monatsrand wird das Band sinnvoll umgebrochen.
+- Beginn mit Uhrzeit, Fortsetzung und Ende mit Uhrzeit sind sichtbar benannt.
+  Titel und Thema bleiben an jedem Segment lesbar. Ende00:00 erscheint nicht am
+  nächsten Tag; die Beschriftung sagt nötigenfalls „Folgetag“.
+- Alle Segmente verwenden dasselbe Originalobjekt und öffnen dieselbe Detailregion.
+  Keine zusätzlichen Termine/Revisionen, kein Schreibpfad durch die Visualisierung.
+- Mobil und bei200% wird dieselbe Datensicht als Tagesagenda dargestellt;
+  native Buttons, Fokus, `aria-controls`, vollständige zugängliche Namen mit
+  Tagesdatum/Phase/Gesamtzeitraum. Bei wechselndem Offset unterscheiden MEZ/MESZ
+  auch die im Herbst doppelt vorkommende Uhrzeit.
+- `calendar-month.mjs` trennt reine Intervall-/Spurlogik und `renderMonth`
+  von Fetch, Auth, Detailformular und Speicherung. `calendar-month.css` ist
+  komponentenbezogen. Diese Module können nach einem expliziten CAL-0.1-Read-
+  Adapter dieselbe Darstellung liefern; keine solche Anbindung jetzt aktiviert.
+  Der minimale View-Vertrag benötigt `id`, `title`, `starts_at`, `ends_at` und
+  `topic.name`; Monat, Detail-Callback und Zielregion werden übergeben. CAL-0.1
+  muss dafür konkrete Start-/Endinstants liefern, keine Endzeit aus unbekanntem
+  Freitext raten. Gemeinsamer Asset-Ort/Adapter gehört erst zum Anschlussblock.
+- Der Demo-Assetpfad liefert `.mjs` ausdrücklich mit JavaScript-MIME aus:
+  Die Windows-MIME-Registry lieferte zunächst `text/plain`, wodurch das Modul
+  nicht startete. Zusätzlicher HTTP-Vertragstest und Browser-Initialisierungs-
+  assertion verhindern eine scheinbar erfolgreiche leere Oberfläche.
+
+**Aktuelle Nachweise:**26 Node-Regressionstests PASS; derselbe Satz auch mit
+Prozesszeitzone America/Los_Angeles und Pacific/Kiritimati PASS.38 fokussierte
+Python-Service-/API-/Demo-Tests PASS, davon ein neuer MIME-Vertrag.134 tatsächliche
+Browserchecks PASS, Chromium149.0.7827.55, Desktop1440,390px und echter nativer200%-Zoom.
+Konkreter28./29.11.-Fall, ein-/mehrtägig, Ende00:00, Wochen-/Monats-/Jahreswechsel,
+Frühjahrs-/Herbstumstellung bei fremder Browserzeitzone, parallele Spuren,
+gleiche Details, Fokus, Text-Range-Geometrie und unveränderter Freigabeworkflow
+sind geprüft. ARIA-/Tastaturprüfung, keine behauptete NVDA-Sprachausgabe-Abnahme.
+Alle eigenen Testserver/Profile/TLS-Verzeichnisse beendet/entfernt;52 lokale
+Produktionsdateien vor/nach dem Lauf bytegleich. Kein Websitebuild/Deployment nötig.
+
+Belege (ignoriert): `release-artifacts/cal1-multiday-20261106/browser-report.json`,
+`before-desktop.png`, `desktop-multiday.png`, `mobile-390-multiday.png`,
+`native-200-multiday.png`. Datums-/DST-Frontendtests injizieren ausdrücklich nur
+synthetische Read-Antworten; sie behaupten keine erweiterten API-Leserechte.
+
+**Grenze bleibt bestehen:** Die CAL-1-Liste liefert Starts innerhalb ihres
+zukünftigen Abfragefensters (`from >= now`). Bereits davor begonnene laufende
+Veranstaltungen können nach einem Reload deshalb fehlen. Dieser Fix verteilt
+die tatsächlich gelieferten freigegebenen Datensätze korrekt, erweitert aber
+bewusst weder API noch Abfrageberechtigung. Vor echter Kalendernutzung muss
+diese bereits vorhandene Read-Vertragsfrage separat geprüft werden.
+
+**Neustart:** Ein bereits laufendes Demo-Terminal mit `Strg+C` beenden, danach
+denselben oben dokumentierten Ein-Terminal-Befehl starten und im Browser
+`Strg+F5` drücken. Dadurch wird auch die neue statische Modulroute registriert.
+Nur der flüchtige synthetische Demostand wird zurückgesetzt; echte Daten und
+Benutzer existieren hier nicht. Keine persönlichen Passwörter erforderlich.
+
+Gezielte Prüfbefehle aus dem Repository-Root, PowerShell:
+
+```powershell
+& .\tools\node-v22.16.0-win-x64\node.exe --test apps/webapp/scripts/test-calendar-month.mjs
+```
+
+Die oben dokumentierten Python-Prüfungen bleiben gültig; Browserbelege liegen
+jetzt im06.11.-Ordner. API/DTOs, RBAC, Review/Revision und Schema bleiben unverändert.
+Keine GPG-/Backup-/VPS-/IONOS-/Pages-Aktion, keine echten Konten oder DB-Änderung.
