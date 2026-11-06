@@ -85,10 +85,12 @@ erhalten, nachdem die angebotene Löschung vom Werkzeug blockiert wurde. Keine
 weiteren Löschversuche. Eigener Debug-Port52194 geschlossen; keine aktive Demo-
 oder QA-Verbindung aus diesem Versuch. Keine Schlüssel-/Backupdaten enthalten.
 
-Die aktuelle lokale CAL-Demo ist ausdrücklich eine separate Leseansicht für die
-tatsächliche CAL-1-API, noch NICHT CAL-0.1-Laufzeitintegration oder Pages-Anbindung.
-CAL-0.1 bleibt unverändert. Siehe die nachvollziehbare Grenze und sechs Schritte
-im [Demo-Handoff](../../handoffs/2026-11-05-cal1-demo-readiness.md).
+Historischer05.11-Stand war eine getrennte CAL-1-Leseansicht.06.11 ist die
+gemeinsame lokale CAL-0.1-Projektionsbrücke umgesetzt: vorhandenes Astro-Layout,
+identische Controller-/Mehrtagesassets, begrenzte überlappungsfähige Monatsabfrage,
+automatische Freigabe-/Rücknahme-Aktualisierung.229 Browserchecks sowie50
+fokussierte Python-/26 JS-/34 Website-Verträge PASS. Keine Pages-Anbindung.
+[Aktuelle Grenzen, QA und sechs Schritte](../../handoffs/2026-11-05-cal1-demo-readiness.md#gemeinsame-lokale-kalenderdemo-06112026).
 
 ## Rollender Horizont
 
@@ -98,18 +100,17 @@ im [Demo-Handoff](../../handoffs/2026-11-05-cal1-demo-readiness.md).
    und in sechs Schritten abgenommen; alle Simulationen benannt.
 3. DONE: geprüfte Quellen getrennt committet/gepusht, bestehender manueller Pages-
    Prozess nur für freigegebene statische Inhalte; öffentlich nachgeprüft.
-4. Vor Janays Rückkehr in der Woche ab16.11. Feedback zur Demo sammeln; keine erneute
+4. DONE: lokale CAL-0.1-Brücke und Monatsüberlappung; identische Mehrtagessegmente,
+   sicherer Public-DTO, automatische Aktualisierung,390px/native200% geprüft.
+5. Vor Janays Rückkehr in der Woche ab16.11. Feedback zur Demo sammeln; keine erneute
    Entscheidung zu bereits akzeptierten CAL-D/T/ADR-Regeln erfragen. Echte Nutzung
    bleibt von eigenen Betriebs-/Identitäts-/Datengates abhängig.
 
 Spätere Schritte sind Planung, keine Aktivierungsfreigabe. Genau ein empfohlener
-nächster CAL-1-Ausbaublock: **gemeinsame lokale CAL-0.1-View-/CAL-1-Projektionsbrücke**.
-Inputs: vorhandene statische Ansicht und diese API-Demo. Deliverable: wiederverwendbare
-öffentliche Darstellung mit synthetischem Read-Adapter statt zweier Renderer.
-Der06.11-Bandrenderer und seine isolierte CSS bilden jetzt die wiederverwendbare
-View-Basis; Provider-/CAL-0.1-Anschluss weiterhin nicht ausgeführt.
-DoD: gleicher sechs-Schritt-Workflow, sichere öffentliche Projektion,390px/native200%,
-Tastatur/RBAC/Konflikte grün;52 Productiondateien unverändert, keine echten Daten
-oder Backend-/Website-Aktivierung. Janay beurteilt Verständlichkeit, nicht erneut
-die bereits bestätigten CAL-D/T-Fachregeln. Kein vollständiger Screenreader-
-Produkttest oder echte Betriebsabnahme aus diesen Browserchecks abzuleiten.
+nächster Block: **Janays fachliche Demoabnahme**. Inputs: startbare gemeinsame Demo
+und sechs Schritte im Handoff. Deliverable: priorisierte Bedienungsbefunde.
+DoD: Janay kann Freigabe, Mehrtagesanzeige, Rücknahme und Anfrage-Simulation
+nachvollziehen; nur tatsächlich geprüfte Punkte abhaken. Keine erneute Freigabe
+der bestätigten CAL-D/T-Fachregeln, keine implizite Betriebsfreigabe. Native
+PostgreSQL-Monatsabfrage und echte Konten/Zuordnungen bleiben spätere eigene Gates.
+Kein vollständiger Screenreader-Produkttest aus diesen Browserchecks abzuleiten.

@@ -1,6 +1,7 @@
 """Focused local contracts; no PostgreSQL, runtime config or real identities."""
 from dataclasses import replace
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from uuid import uuid4
 
 import pytest
@@ -170,3 +171,64 @@ async def test_independent_app_reset_does_not_keep_state():
     assert len(fresh.state.demo_repository._offers) == 5
     assert not fresh.state.account_lifecycle_service
     assert not getattr(fresh.state, "database_engine", None)
+
+
+async def test_month_adapter_uses_only_approved_projection_and_signed_pagination():
+    app = create_demo_app()
+    month = utc_now().astimezone(ZoneInfo("Europe/Berlin")).strftime("%Y-%m")
+    repo = app.state.demo_repository
+    now = utc_now()
+    published = seeded(repo, "published")
+    replacement = await app.state.calendar_service.update_draft(**args(published),
+        draft=replace(published.current_revision.draft, title="PRIVATE REPLACEMENT", summary="PRIVATE SUMMARY"))
+    assert replacement.published_revision == published.published_revision
+    # Pin seed dates to visible month; do not infer visibility from the test runner's day.
+    start = datetime.fromisoformat(month + "-01T10:00:00+01:00")
+    for key, detail in list(repo._offers.items()):
+        if detail.published_revision:
+            approved = replace(detail.published_revision, draft=replace(detail.published_revision.draft,
+                starts_at=start, ends_at=start + timedelta(hours=2)))
+            repo._offers[key] = replace(detail, published_revision=approved)
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="https://127.0.0.1:8446") as client:
+        response = await client.get("/demo/api/public-calendar", params={"month": month, "limit": 1})
+        assert response.status_code == 200 and response.headers["cache-control"] == "no-store"
+        first = response.json()
+        assert len(first["items"]) == 1 and first["next_cursor"]
+        second = (await client.get("/demo/api/public-calendar", params={"month": month, "limit": 1, "cursor": first["next_cursor"]})).json()
+        assert first["items"][0]["id"] != second["items"][0]["id"]
+        assert second["next_cursor"] is None
+        for item in first["items"] + second["items"]:
+            assert set(item) == {"id", "coach", "topic", "title", "summary", "starts_at", "ends_at", "time_zone", "format", "public_location", "capacity", "decision_deadline", "price_display_text", "updated_at"}
+        assert "PRIVATE" not in response.text + str(second)
+        assert (await client.post("/demo/api/public-calendar", json={})).status_code == 405
+        assert (await client.get("/demo/api/public-calendar", params={"month": month, "cursor": "tampered"})).status_code == 422
+        assert (await client.get("/demo/api/public-calendar", params={"month": month, "topic_id": str(uuid4())})).json()["items"] == []
+        # Native public API's accepted future-only validation has NOT been widened.
+        assert (await client.get("/api/v1/calendar/offers", params={"from": (now - timedelta(days=1)).isoformat(), "to": (now + timedelta(days=20)).isoformat()})).status_code == 400
+
+
+@pytest.mark.parametrize("month", ["2026-00", "2026-13", "2020-01", "3000-01", "2026-1", "bad", "2026-11-01"])
+async def test_month_adapter_rejects_invalid_or_unbounded_window(month):
+    async with AsyncClient(transport=ASGITransport(app=create_demo_app()), base_url="https://127.0.0.1:8446") as client:
+        assert (await client.get("/demo/api/public-calendar", params={"month": month})).status_code == 422
+
+
+@pytest.mark.parametrize("start_delta,end_delta,visible", [(-10, 2, True), (-2, 0, False), (0, 2, True), (31, 32, False)])
+async def test_month_adapter_returns_overlap_not_only_start_date(start_delta, end_delta, visible):
+    app = create_demo_app()
+    app.state.clock = lambda: datetime(2026, 11, 6, tzinfo=timezone.utc)
+    repo = app.state.demo_repository
+    original = seeded(repo, "published")
+    start = datetime(2026, 11, 1, tzinfo=ZoneInfo("Europe/Berlin"))
+    revision = replace(original.published_revision, draft=replace(original.published_revision.draft,
+        starts_at=start + timedelta(days=start_delta), ends_at=start + timedelta(days=end_delta)))
+    repo._offers = {original.offer.id: replace(original, published_revision=revision)}
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="https://127.0.0.1:8446") as client:
+        response = await client.get("/demo/api/public-calendar", params={"month": "2026-11"})
+        assert response.status_code == 200
+        assert bool(response.json()["items"]) == visible
+        # No duplication of the single underlying event.
+        assert len(repo._offers) == 1
+        withdrawn = replace(original.offer, lifecycle_status="withdrawn")
+        repo._offers[original.offer.id] = replace(repo._offers[original.offer.id], offer=withdrawn)
+        assert (await client.get("/demo/api/public-calendar", params={"month": "2026-11"})).json()["items"] == []

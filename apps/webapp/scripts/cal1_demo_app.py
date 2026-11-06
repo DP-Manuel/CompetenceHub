@@ -1,9 +1,12 @@
 """Local synthetic presentation adapter. Never imports runtime/DB configuration."""
 from dataclasses import replace
+from datetime import datetime, timezone
 from pathlib import Path
-from uuid import uuid4
+from uuid import UUID, uuid4
+from zoneinfo import ZoneInfo
 
-from fastapi import Request
+from fastapi import Query, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
@@ -18,12 +21,13 @@ from competence_hub_api.portal.calendar import (
     CalendarService, CalendarTimeConflictError, CalendarTopicUnavailableError,
     CalendarTransitionConflictError,
 )
-from competence_hub_api.web.calendar import _protected_context
+from competence_hub_api.web.calendar import _protected_context, _public_offer
+from scripts.cal1_public_build import PUBLIC_BUILD
 
 ASSETS = Path(__file__).with_name("cal1_demo")
 BANNER = ('<nav class="demo-banner" aria-label="Lokale Kalender-Demo">'
           '<strong>DEMO · Nur synthetische Daten</strong> '
-          '<a href="/demo/">Demo-Kalender</a> '
+          '<a href="/demo/public/">Öffentlicher Demo-Kalender</a> '
           '<a href="/demo/#zugang">Testzugänge</a> '
           '<a href="/demo/history">Statusverlauf</a></nav>')
 
@@ -130,8 +134,9 @@ class DemoCalendarRepository(InMemoryCalendarRepository):
 
     async def list_public_offers(self, **values):
         rows = [self._public(d) for d in self._offers.values()
-                if d.offer.lifecycle_status == "active" and d.published_revision]
-        rows = [r for r in rows if values["from_at"] <= r.starts_at < values["to_at"]
+                if d.offer.lifecycle_status == "active" and d.published_revision
+                and d.published_revision.workflow_status == "published"]
+        rows = [r for r in rows if r.starts_at < values["to_at"] and r.ends_at > values["from_at"]
                 and (values["topic_id"] is None or r.topic_id == values["topic_id"])]
         rows.sort(key=lambda r: (r.starts_at, r.id))
         if values["after_starts_at"] is not None:
@@ -144,6 +149,38 @@ def create_demo_app(port=8446):
     repository = DemoCalendarRepository()
     app.state.calendar_service = CalendarService(repository)
     app.state.demo_repository = repository
+
+    @app.get("/demo/public/", response_class=FileResponse)
+    async def public_calendar():
+        return FileResponse(PUBLIC_BUILD / "index.html", headers={"Cache-Control": "no-store"})
+
+    @app.get("/demo/api/public-calendar")
+    async def public_calendar_data(request: Request, month: str,
+                                   limit: int = Query(default=100, ge=1, le=100),
+                                   cursor: str | None = Query(default=None, max_length=1024),
+                                   topic_id: UUID | None = None):
+        # Local-only month adapter, not a widening of the deployed API contract.
+        # Read only the existing approved projection, never protected summaries.
+        try:
+            year, number = (int(part) for part in month.split("-"))
+            start = datetime(year, number, 1, tzinfo=ZoneInfo("Europe/Berlin"))
+            now = request.app.state.clock().astimezone(start.tzinfo)
+            offset = (year - now.year) * 12 + number - now.month
+            if month != f"{year:04d}-{number:02d}" or not 0 <= offset <= 3:
+                raise ValueError("month outside local demo horizon")
+            end = datetime(year + (number == 12), number % 12 + 1, 1, tzinfo=start.tzinfo)
+            codec = request.app.state.calendar_cursor_codec
+            after_at, after_id = codec.decode(cursor) if cursor else (None, None)
+            rows = await repository.list_public_offers(from_at=start.astimezone(timezone.utc),
+                to_at=end.astimezone(timezone.utc), topic_id=topic_id,
+                after_starts_at=after_at, after_offer_id=after_id, limit=limit + 1)
+            items = rows[:limit]
+            continuation = codec.encode(items[-1].starts_at, items[-1].id) if len(rows) > limit else None
+            return JSONResponse(jsonable_encoder({"items": [_public_offer(item) for item in items],
+                "next_cursor": continuation}), headers={"Cache-Control": "no-store"})
+        except (ValueError, OverflowError):
+            return JSONResponse({"code": "invalid_calendar_window"}, status_code=422,
+                                headers={"Cache-Control": "no-store"})
 
     async def portal():
         html = (PORTAL_UI_DIRECTORY / "index.html").read_text(encoding="utf8")
@@ -186,4 +223,5 @@ def create_demo_app(port=8446):
         return FileResponse(ASSETS / "calendar-month.mjs", media_type="text/javascript")
 
     app.mount("/demo-assets", StaticFiles(directory=ASSETS), name="demo-assets")
+    app.mount("/demo/public/_astro", StaticFiles(directory=PUBLIC_BUILD / "_astro", check_dir=False), name="local-public-assets")
     return app

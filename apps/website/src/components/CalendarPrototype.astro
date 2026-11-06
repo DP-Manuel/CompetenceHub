@@ -1,5 +1,6 @@
 ---
 import Icon from "./Icon.astro";
+const { localCalendar = false } = Astro.props;
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
@@ -13,25 +14,29 @@ const topics = [
 ];
 ---
 
-<main class="calendar-preview" data-calendar-preview data-base={base}>
+<main class="calendar-preview" data-calendar-preview={localCalendar ? undefined : true} data-base={base}>
   <header class="calendar-preview__intro">
     <div>
       <p class="eyebrow">Kalender-Vorschau · Beispieltermine</p>
       <h1>Termine und Gruppenangebote im Blick</h1>
     </div>
     <p>
-      Verfügbare Formate lassen sich nach Thema und Monat sichten. Eine
-      Vormerkung wird erst nach interner Prüfung zu einem verbindlichen Angebot.
+      {localCalendar ? "Freigegebene Demo-Gruppenangebote nach Thema, Format und Monat. Eine Anfrage wird nur simuliert, nicht gesendet oder gebucht." : "Verfügbare Formate lassen sich nach Thema und Monat sichten. Eine Vormerkung wird erst nach interner Prüfung zu einem verbindlichen Angebot."}
     </p>
   </header>
 
   <p class="calendar-preview__scope">
     <strong>Ausschließlich Beispieldaten:</strong> Dies sind keine echten,
-    buchbaren oder veröffentlichten Termine. Für individuelle Termine sprechen
-    Sie uns bitte <a href={url("kontakt")}>direkt an</a>.
+    buchbaren oder veröffentlichten Termine. {localCalendar ? <a href="/demo/#zugang">Zu den synthetischen Testzugängen</a> : <Fragment>Für individuelle Termine sprechen Sie uns bitte <a href={url("kontakt")}>direkt an</a>.</Fragment>}
   </p>
 
-  <section class="calendar-toolbar" aria-label="Kalender filtern und Monat auswählen">
+  {localCalendar && <nav class="demo-banner" aria-label="Lokale Kalender-Demo"><strong>DEMO · Nur synthetische Daten</strong> <a href="/portal/">Coach / Reviewer</a> <a href="/demo/">CAL-1-Ansicht und Testzugänge</a> <a href="/demo/history">Statusverlauf</a></nav>}
+  <section id={localCalendar ? "calendar" : undefined} class="calendar-toolbar" aria-label="Kalender filtern und Monat auswählen">
+    {localCalendar ? <div class="toolbar">
+      <label>Thema<select id="topic"><option value="">Alle Themen</option></select></label>
+      <label>Format<select id="format"><option value="">Alle Formate</option><option value="online">Online</option><option value="praesenz">Präsenz</option><option value="hybrid">Hybrid</option></select></label>
+      <button id="reload" type="button">Aktualisieren</button>
+    </div> :
     <div class="calendar-topic-filter" role="group" aria-label="Themenfilter">
       <button type="button" class="is-active" data-topic="all" aria-pressed="true">
         Alle Themen
@@ -42,14 +47,14 @@ const topics = [
           {topic.label}
         </button>
       ))}
-    </div>
+    </div>}
 
     <div class="calendar-month-switcher">
-      <button type="button" class="calendar-icon-button calendar-icon-button--previous" data-previous-month aria-label="Vorheriger Monat">
+      <button id={localCalendar ? "previous" : undefined} type="button" class="calendar-icon-button calendar-icon-button--previous" data-previous-month aria-label="Vorheriger Monat">
         <Icon name="arrow-right" size={20} />
       </button>
-      <strong data-month-label aria-live="polite"></strong>
-      <button type="button" class="calendar-icon-button" data-next-month aria-label="Nächster Monat">
+      <strong id={localCalendar ? "month-label" : undefined} data-month-label aria-live="polite"></strong>
+      <button id={localCalendar ? "next" : undefined} type="button" class="calendar-icon-button" data-next-month aria-label="Nächster Monat">
         <Icon name="arrow-right" size={20} />
       </button>
     </div>
@@ -60,13 +65,19 @@ const topics = [
       <div class="calendar-weekdays" aria-hidden="true">
         {['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((day) => <span>{day}</span>)}
       </div>
-      <div class="calendar-grid" data-calendar-grid></div>
-      <p class="calendar-empty" data-calendar-empty hidden>
+      {localCalendar && <Fragment><p id="loading" role="status" hidden>Demo-Termine werden geladen …</p><p id="error" role="alert" tabindex="-1" hidden>Kalender konnte nicht geladen werden. Bitte erneut aktualisieren.</p><p id="result-count" role="status"></p></Fragment>}
+      <div id={localCalendar ? "grid" : undefined} class:list={["calendar-grid", {"local-calendar-grid": localCalendar}]} data-calendar-grid></div>
+      <p id={localCalendar ? "empty" : undefined} class="calendar-empty" data-calendar-empty hidden>
         In diesem Monat gibt es für den gewählten Themenfilter keinen Beispieltermin.
       </p>
     </div>
 
     <aside class="calendar-detail">
+      {localCalendar ? <section id="detail" tabindex="-1" aria-labelledby="detail-title" hidden>
+        <p class="eyebrow">Freigegeben · Synthetisches Gruppenangebot</p><h2 id="detail-title"></h2><p id="summary"></p><dl id="meta" class="local-calendar-meta"></dl>
+        <p><a id="coach">Demo-Coachprofil</a></p>
+        <form id="request" class="calendar-reservation"><label for="seats">Gewünschte Plätze (Simulation)</label><input id="seats" type="number" min="1" max="500" value="1" required/><button type="submit">Anfrage simulieren</button><p>Keine Reservierung, keine Nachricht und keine Änderung verfügbarer Plätze.</p><p id="request-status" role="status"></p></form>
+      </section> : <Fragment>
       <div class="calendar-detail__empty" data-detail-empty>
         <span class="calendar-detail__icon"><Icon name="calendar" size={30} /></span>
         <h2>Termin auswählen</h2>
@@ -107,11 +118,12 @@ const topics = [
           <p class="calendar-reservation__status" data-reservation-status role="status" aria-live="polite"></p>
         </form>
       </div>
+      </Fragment>}
     </aside>
   </section>
 
   <footer class="calendar-preview__footer">
-    <div class="calendar-legend" aria-label="Themenfarben">
+    <div class="calendar-legend" aria-label="Themenfarben" hidden={localCalendar || undefined}>
       {topics.map((topic) => (
         <span><i class:list={["topic-dot", `topic-dot--${topic.id}`]}></i>{topic.label}</span>
       ))}
@@ -119,6 +131,7 @@ const topics = [
     <p>Prototyp ohne Speicherung, Benachrichtigung oder echte Verfügbarkeit.</p>
   </footer>
 </main>
+{localCalendar && <script is:inline type="module" src="/demo-assets/calendar.js"></script>}
 
 <script>
   type PrototypeEvent = {

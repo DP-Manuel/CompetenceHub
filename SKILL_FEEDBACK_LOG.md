@@ -7,6 +7,19 @@ Updated: 2026-11-06. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+06.11 integration learning: a renderer regression cannot prove retrieval of
+already-running events; test the actual bounded month HTTP query separately.
+Reuse the existing public DTO, not protected summaries. Auto-refresh must not
+temporarily hide a retained detail panel (doing so drops keyboard focus to body),
+reset input or erase last-approved revision semantics. Test pre-opened public
+view publication and withdrawal without reload. Isolate local entry/source/output
+from normal public builds and inspect both emitted artifacts, not just routes.
+Native-zoom screenshots also need pixel/content verification: a manually supplied
+CDP clip can capture blank space after scrolling despite valid DOM geometry.
+Capture the native viewport without that clip and inspect the actual bitmap.
+[Evidence](docs/handoffs/2026-11-05-cal1-demo-readiness.md#gemeinsame-lokale-kalenderdemo-06112026).
+Captured project-locally; no global skill edit or new canonical proposal closure.
+
 06.11 Calendar learning: render occupied civil days for [start,end), not only
 start date or fixed24-hour increments. Test exact midnight, DST/repeated hours,
 week/month/year clipping and concurrent lane geometry; count events, not segments.

@@ -1,0 +1,37 @@
+---
+import CalendarPrototype from "../../components/CalendarPrototype.astro";
+import "../../styles/global.css";
+---
+<!doctype html><html lang="de"><head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="robots" content="noindex,nofollow,noarchive"/>
+  <title>Lokaler öffentlicher Demo-Kalender | Competence Hub</title>
+  <link rel="stylesheet" href="/demo-assets/calendar-month.css"/>
+</head><body class="local-calendar-public"><a href="#public-calendar" class="skip-link">Zum Kalender</a>
+<div id="public-calendar"><CalendarPrototype localCalendar /></div>
+<noscript>Diese lokale Demo benötigt JavaScript. Es wurde keine Anfrage gesendet.</noscript>
+</body></html>
+<style is:global>
+  .local-calendar-public .calendar-preview {padding: 28px; max-width: 1600px; margin: auto;}
+  .local-calendar-public .local-calendar-grid {display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px;}
+  .local-calendar-public .calendar-workspace {grid-template-columns: minmax(0, 1fr);}
+  .local-calendar-public .calendar-weekdays {display: none;}
+  .local-calendar-public .toolbar {display: flex; gap: 16px; flex-wrap: wrap; align-items: end;}
+  .local-calendar-public label {display: grid; gap: 8px;}
+  .local-calendar-public input,.local-calendar-public select,.local-calendar-public button {min-height: 44px;}
+  .local-calendar-public .toolbar select {max-width: 100%; padding: 8px; border: 2px solid var(--color-line-strong); background: white; font: inherit; border-radius: 4px;}
+  .local-calendar-public .toolbar button,.local-calendar-public #request button {padding: 10px 16px; border: 2px solid var(--color-pantone); background: white; font: inherit; font-weight: 750; border-radius: 4px; cursor: pointer;}
+  .local-calendar-public .demo-banner {display: flex; flex-wrap: wrap; gap: 16px; padding: 16px 0;}
+  .local-calendar-public .skip-link:not(:focus) {position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%);}
+  .local-calendar-public #detail {max-width: 900px;}
+  .local-calendar-public .local-calendar-meta {display: grid; grid-template-columns: minmax(110px, 1fr) minmax(0, 3fr); gap: 12px;}
+  .local-calendar-public dd {margin: 0; overflow-wrap: anywhere;}
+  .local-calendar-public .calendar-reservation {display: grid; gap: 12px;}
+  .local-calendar-public [hidden] {display: none !important;}
+  @media(max-width: 600px) {
+    .local-calendar-public .calendar-preview {padding: 16px;}
+    .local-calendar-public .calendar-preview__intro {display: block;}
+    .local-calendar-public .calendar-preview__intro h1 {font-size: 32px; overflow-wrap: anywhere;}
+    .local-calendar-public .local-calendar-meta {grid-template-columns: minmax(0,1fr);}
+  }
+</style>

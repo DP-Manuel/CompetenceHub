@@ -3,9 +3,83 @@
 Stand: 05.11.2026. Ziel: fachliche Vorführung für Janay ab Woche 16.11.2026.
 Eigenständiger lokaler Block neben COACH-5; kein Deployment, kein realer Betrieb.
 
+**Aktuell 06.11: lokale CAL-1/CAL-0.1-Integration ausführbar.** Der unten
+dokumentierte ursprüngliche getrennte Stand ist durch den
+[Integrationsabschluss](#gemeinsame-lokale-kalenderdemo-06112026) ergänzt.
+
 06.11: Manuel bestätigt den vollständigen Coach-/Reviewer-/Freigabeablauf als
-erfolgreich manuell geprüft. Neuester Darstellungsfix und aktuelle QA:
+erfolgreich manuell geprüft. Vorheriger Darstellungsfix, vor dem Integrationsblock:
 [Mehrtägige Veranstaltungen](#mehrtägige-veranstaltungen-06112026).
+
+## Gemeinsame lokale Kalenderdemo 06.11.2026
+
+- Derselbe Startbefehl baut jetzt zusätzlich genau eine lokale Astro-Seite aus
+  dem vorhandenen `CalendarPrototype.astro`. Voraussetzungen: vorhandene
+  Website-`node_modules` und mitgeliefertes Node, keine Installation oder Secrets.
+- `https://127.0.0.1:8446/demo/public/` ist die lokale öffentliche CAL-0.1-Sicht;
+  `/demo/` bleibt die CAL-1-Demo mit Testzugängen. Beide verwenden exakt
+  `calendar.js`, `calendar-month.mjs` und `calendar-month.css`.
+- Öffentliche Daten stammen ausschließlich aus der letzten freigegebenen
+  Revision desselben In-Memory-Bestands. Der vorhandene Public-DTO-Serializer
+  wird wiederverwendet. Kein Zugriff auf persönliche Verfügbarkeit, Reviewer-
+  Notizen, Schwelle, Benutzer-/Coach-IDs, geschützte Zusammenfassungen oder Rollen.
+- Der lokale GET-Adapter `/demo/api/public-calendar?month=YYYY-MM` akzeptiert
+  nur aktuellen Berliner Monat plus drei Folgemonate, signierte Cursor und
+  maximal 100 Datensätze pro Seite. Überlappung: `start < windowEnd` und
+  `end > windowStart`, also `[start,end)`. Auch zuvor begonnene Veranstaltungen
+  erscheinen; Ende exakt Monatsbeginn bleibt ausgeschlossen. Ein Datensatz,
+  mehrere Darstellungssegmente, keine zusätzlichen Veranstaltungen.
+- Beide Ansichten lesen anonym, ohne Session-Cookie und ohne Web Storage.
+  Sichtbare Tabs aktualisieren alle fünf Sekunden und beim Wiederanzeigen.
+  Unveränderte Daten lösen kein Rendering aus; Änderungen erhalten Fokus und
+  Anfrageeingabe, Rücknahmen entfernen Details. Ausfälle zeigen keinen
+  scheinbar aktuellen Altbestand. Anfragen bleiben reine lokale Simulation.
+- Der native API-/SQL-Vertrag, Planungshorizont für Schreibzugriffe, RBAC,
+  Revisionen und Auth bleiben unverändert. Der lokale Monatsadapter ist keine
+  bereits ausgelieferte Korrektur des nativen PostgreSQL-Abfragewegs. Vor echtem
+  Betrieb muss dieser überlappungsfähige Lesevertrag dort eigens übernommen
+  und mit realer Persistenz geprüft werden.
+- Separater Astro-Source-Root und `.tmp/cal1-public` verhindern Entdeckung durch
+  normale Production-/Preview-Builds. Kein Portal-/API-Endpoint oder Testzugang
+  im Pages-Artefakt, kein Pages-Aufruf zur lokalen Demo, kein Deployment.
+
+**Verifikation:** 50 fokussierte Python-Verträge, 26 Kalender-JS-Tests, 34
+Website-Verträge; Astro 82 Dateien ohne Diagnose. Production 1237 und Preview
+1407 interne Referenzen geprüft. Gesamte lokale Backend-pytest-Suite ebenfalls
+erfolgreich, externe Opt-in-Gates übersprungen. Tatsächliche Browserabnahme: 229 Checks PASS,
+Desktop,390px, native200%, Tastatur/Fokus/Reduced Motion, Rollen/CSRF/stale409,
+Freigabe ohne Reload, private Revision, Rücknahme, Kalendergrenzen und DST.
+Native-Zoom-Screenshots zusätzlich pixelgeprüft und visuell angesehen; ein
+falscher CDP-Zuschnitt wurde vor Abschluss korrigiert, nicht als QA akzeptiert.
+Die echte Monatsüberlappung wurde mit der tatsächlichen lokalen HTTP-Abfrage
+in beiden Ansichten geprüft; weitere Grenzfallprojektionen sind ausdrücklich
+Darstellungstests mit eingespeisten Antworten. Kein vollständiger NVDA-Test.
+
+Bereinigte lokale Belege (nicht versioniert):
+`release-artifacts/cal1-cal01-integration-20261106/browser-report.json`,
+`cal01-desktop-multiday.png`, `cal01-mobile-390-public.png`,
+`cal01-native-200-multiday.png`. Browser/Server/temporäre TLS- und Zoomprofile
+wurden vollständig beendet/entfernt. Der lokale Demo-Build lässt das vorhandene
+52-Dateien-Productionverzeichnis unverändert. Separater normaler Neubuild:
+50 Dateien bytegleich zum Sprintbeginn, zwei Kalender-HTMLs nur in
+Whitespace/Boolean-Attributschreibweise abweichend; normalisierte Markups gleich,
+CSS/JS-Bytes unverändert. Nicht als52 bytegleiche Vor-Sprint-Dateien ausgeben.
+
+**Simulation bleibt:** Auth/MFA-Fixture, flüchtige Persistenz, keine echten
+Accounts, Kundendaten, freien Platzzahlen, E-Mails, Reservierungen oder Zahlungen.
+IONOS bleibt auf `1b4e33efa5e1`, Pages auf `78c3470`; kein VPS-/GPG-/Backup-Block.
+
+**Bis echt:** native überlappungsfähige Monatsabfrage mit PostgreSQL-Nachweis,
+separat freigegebene sichere Backend-Betriebsbereitschaft, persönliche Konten
+mit MFA und expliziten Coach-/Reviewer-Zuordnungen, reale Inhalts-/Datenschutz-
+und Veröffentlichungsgates. CAL-2-Vormerkungen, Mail/Schwellenmeldungen und
+Kalendereinladungen sind eigene spätere Inkremente, keine Demo-Zusagen.
+
+**Genau nächster Block:** Janays fachliche Demoabnahme. Inputs: diese startbare
+Demo und sechs Schritte unten. Deliverable: priorisierte Bedienungsbefunde,
+keine erneute Entscheidung bereits akzeptierter CAL-D/T-Regeln. DoD: Janay kann
+Freigabe, Mehrtagesanzeige, Rücknahme und unverbindliche Anfrage nachvollziehen;
+nur tatsächlich geprüfte Punkte abhaken. Kein automatisches Betriebsgate.
 
 ## Wiederverwendung und bewusste Adaptergrenze
 
@@ -24,7 +98,8 @@ Grundlage bleiben [ADR 0007](../decisions/0007-calendar-and-reservation-incremen
 [RBAC](../requirements/calendar-cal1-rbac-matrix-v0.1.md). Bereits angenommene
 Fachregeln werden nicht erneut zur Entscheidung gestellt.
 
-**CAL-0.1 bleibt unverändert, ist aber nicht die Laufzeitansicht dieser Demo.**
+**Ursprüngliche Grenze 05.11, am 06.11 für den lokalen Integrationsblock ersetzt:**
+CAL-0.1 war zunächst nicht die Laufzeitansicht dieser Demo.
 `CalendarPrototype.astro` koppelt seinen Renderer an sieben feste Beispielobjekte,
 teilweise echte Coachlinks und erfundene Vormerkungszahlen mit lokaler Erhöhung.
 Die CAL-1-Projektion liefert dagegen ausschließlich freigegebene Revisionen,
@@ -82,7 +157,8 @@ eingeben. Keine Anwendungs- oder GPG-Schlüssel werden erzeugt oder verändert.
 
 ## Sechs Schritte für Janay
 
-1. **Coach:** Über „Coach / Reviewer“ als
+1. **Coach:** Zuerst `https://127.0.0.1:8446/demo/public/` in einem Browser-Tab
+   offen lassen. Im zweiten Browser-Tab über „Coach / Reviewer“ als
    `synthetic.coach@example.invalid` anmelden. Demo-Passwort
    `Synthetic-Portal-2026!`, synthetischer MFA-Code `123456`.
 2. **Entwurf:** „Neuer Entwurf“ öffnen, „Demo-Werte
@@ -95,12 +171,19 @@ eingeben. Keine Anwendungs- oder GPG-Schlüssel werden erzeugt oder verändert.
    konkretisieren, speichern und erneut einreichen. Revision 2 und Status prüfen.
 5. **Freigabe:** Wieder als Reviewer anmelden, dasselbe Angebot prüfen und
    veröffentlichen. „Statusverlauf“ zeigt die tatsächlich ausgeführten Schritte.
-6. **Öffentliche Sicht:** „Demo-Kalender“ öffnen/aktualisieren, ggf. Monat wählen,
-   Workshop, Details, Kapazität und fiktives Coachprofil ansehen. „Anfrage
+6. **Öffentliche Sicht:** Zum bereits geöffneten Kalender-Tab wechseln; nach
+   Freigabe erscheint der Workshop automatisch binnen etwa fünf Sekunden.
+   Ggf. Monat wählen, Details,
+   Kapazität und fiktives Coachprofil ansehen. „Anfrage
    simulieren“ mit zwei Plätzen zeigt ausdrücklich: nichts gesendet/reserviert.
 
 Der Rollenwechsel erfordert bewusst Abmelden, keine Rollenumschaltung mit
 ungeprüften Rechten. Namen wie Janay stehen nicht in der Autorisierungslogik.
+
+Für die Mehrtagesvorführung bei Schritt 2 das Ende auf den Folgetag setzen.
+Alle Tagessegmente öffnen dasselbe Angebot. Eine Rücknahme nach Schritt 6
+entfernt den Termin automatisch; eine noch ungeprüfte Ersatzrevision ändert
+die letzte veröffentlichte Fassung nicht.
 
 ## Echt ausführbar versus simuliert
 

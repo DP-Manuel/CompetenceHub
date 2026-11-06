@@ -1,6 +1,12 @@
 # Project Log
 
 Significant milestones only; newest first.
+06.11 CAL-1/CAL-0.1 local integration: existing Astro shell reuses the same
+multiday/controller assets, public-only anonymous month adapter and automatic
+publication/withdrawal refresh.229 browser checks PASS,50 focused Python,
+26 JS/34 Website contracts, Astro82 zero diagnostics. Actual overlap query
+proven in both views, protected fields excluded. No runtime/Website deployment,
+native SQL change, DB, accounts or GPG. [Evidence/Janay flow](docs/handoffs/2026-11-05-cal1-demo-readiness.md#gemeinsame-lokale-kalenderdemo-06112026).
 The complete log through 25.09.2026 is preserved byte-for-byte in [the history archive](docs/history/context-migration-2026-10-21/PROJECT_LOG.md).
 
 ## 2026-11-06 | CAL-1 multiday display correction

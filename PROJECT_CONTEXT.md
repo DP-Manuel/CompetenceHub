@@ -40,6 +40,15 @@ future-start API-window limitation retained, not silently widened. [Current
 evidence and restart](docs/handoffs/2026-11-05-cal1-demo-readiness.md#mehrtägige-veranstaltungen-06112026).
 Implementation84f8e78; no deployment. GitHub Pages remains78c3470.
 
+06.11 local CAL-1/CAL-0.1 bridge complete: existing Astro component in a separate
+local build, same controller/multiday renderer and approved public DTO; automatic
+five-second refresh, overlap-aware bounded Berlin months, no private revisions.
+50 focused Python/26 JS/34 Website tests and229 browser checks PASS including
+390px/native200%, actual pre-month-start HTTP retrieval and publication/removal
+without reload. No Pages/IONOS/VPS/data activation. Native SQL month semantics
+remain a later real-operation gate. [Current demo/QA/Janay flow](docs/handoffs/2026-11-05-cal1-demo-readiness.md#gemeinsame-lokale-kalenderdemo-06112026).
+Next: Janay demonstrates the six steps, collect usability feedback; not GPG.
+
 Post-Messe product consolidation is complete for the authorized scope: Context V2, official frontend preview and Analytics discovery.
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.
 The additive Calendar/native runtime, local security/Linux and synthetic COACH-1/2/3A/3C gates remain complete.
