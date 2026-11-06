@@ -349,6 +349,8 @@
             <h3>Noch keine Angebote</h3>
             <p>Mit einem Entwurf legen Sie die Eckdaten fest. Veröffentlicht wird erst nach der Prüfung.</p>
           </div>
+          <div class="calendar-list-filters"><label for="calendar-offer-search">Angebot suchen</label><input id="calendar-offer-search" type="search"><label for="calendar-offer-status">Status</label><select id="calendar-offer-status"><option value="">Alle Status</option><option value="draft">Entwurf</option><option value="in_review">Zur Prüfung eingereicht</option><option value="changes_requested">Änderung angefordert</option><option value="published">Veröffentlicht</option><option value="withdrawn">Zurückgezogen</option></select></div>
+          <p id="calendar-filter-count" role="status"></p>
           <ul class="calendar-list" id="coach-calendar-list"></ul>
         </section>
 
@@ -530,6 +532,7 @@
           <div class="field">
             <label for="calendar-review-threshold">Prüfschwelle <span aria-hidden="true">*</span></label>
             <input id="calendar-review-threshold" name="review_threshold" type="number" min="1" max="500" value="5" required>
+            <p>Interner Prüfschwellenwert, keine Mindestbuchung. Darf die Kapazität nicht überschreiten.</p>
           </div>
           <div class="field">
             <label for="calendar-decision-deadline">Entscheidungsfrist <span aria-hidden="true">*</span></label>

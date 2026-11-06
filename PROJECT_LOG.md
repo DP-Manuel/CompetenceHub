@@ -1,6 +1,14 @@
 # Project Log
 
 Significant milestones only; newest first.
+06.11 native CAL-1 local pilot slice: actual PostgreSQL16.15 storage and overlap
+queries, persisted sessions/revisions after app AND DB restart, shared public
+view, ICS snapshot and request draft; improved existing Portal filters/dirty-
+state/conflict UX.46 native SQL/browser checks+3 real PostgreSQL API tests PASS,
+1451 local tests/30 expected skips,237 additional browser checks and final72
+focused tests including ambiguous autumn-hour UTC export. Owned container/volume
+removed, zero residue.52 Production files unchanged; no Staging/VPS/Pages/IONOS,
+real accounts/data, mail or GPG actions. [Actual evidence and remaining gates](docs/handoffs/2026-11-06-cal1-pilot-readiness.md).
 06.11 CAL-1/CAL-0.1 local integration: existing Astro shell reuses the same
 multiday/controller assets, public-only anonymous month adapter and automatic
 publication/withdrawal refresh.229 browser checks PASS,50 focused Python,

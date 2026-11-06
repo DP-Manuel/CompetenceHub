@@ -270,9 +270,27 @@ def responsive(page, base, checks, label, path="/demo/"):
     screenshot(page, EVIDENCE / (label + "-form.png"), label)
     qa.tab_to_button(page, "Entwurf anlegen")
     checks.check(label + " save action reachable by keyboard and scrolled into view", page.evaluate("document.activeElement.getBoundingClientRect().bottom <= innerHeight + 1"))
+    page.once("dialog", lambda dialog: dialog.accept())
     page.keyboard.press("Escape")
     checks.check(label + " Escape closes native dialog", page.locator("#calendar-offer-dialog").is_hidden())
     checks.check(label + " reduced motion respected", page.evaluate("matchMedia('(prefers-reduced-motion: reduce)').matches"))
+
+
+def reviewer_responsive(page, base, checks, label):
+    # The persistent native-zoom profile previously hosted the Coach scenario.
+    # Test the Reviewer with a fresh fixture session, never a shared identity.
+    page.context.clear_cookies()
+    qa.login(page,base,REVIEWER_EMAIL)
+    expect(page.locator("#review-calendar-list .calendar-card").first).to_be_visible()
+    page.locator("#review-calendar-list .calendar-card").first.get_by_role("button",name="Angebot prüfen").click()
+    page.get_by_label("Änderungen anfordern",exact=True).check()
+    page.locator("#calendar-review-note").fill("Unveröffentlichte Prüfeingabe")
+    geometry(page,checks,label+" reviewer")
+    page.once("dialog",lambda dialog:dialog.dismiss()); page.keyboard.press("Escape")
+    checks.check(label+" reviewer dirty cancel preserves note",page.locator("#calendar-review-dialog").is_visible() and page.locator("#calendar-review-note").input_value()=="Unveröffentlichte Prüfeingabe")
+    screenshot(page,EVIDENCE/(label+"-reviewer.png"),label)
+    page.once("dialog",lambda dialog:dialog.accept()); page.get_by_role("button",name="Abbrechen",exact=True).click()
+    checks.check(label+" reviewer discard closes without publication",page.locator("#calendar-review-dialog").is_hidden())
 
 
 def states(browser, base, checks, path="/demo/"):
@@ -506,6 +524,8 @@ def run(options):
             ctx = browser.new_context(ignore_https_errors=True, viewport={"width": 390, "height": 844}, reduced_motion="reduce")
             responsive(ctx.new_page(), base, checks, "mobile-390"); ctx.close()
             ctx = browser.new_context(ignore_https_errors=True, viewport={"width": 390, "height": 844}, reduced_motion="reduce")
+            reviewer_responsive(ctx.new_page(),base,checks,"mobile-390"); ctx.close()
+            ctx = browser.new_context(ignore_https_errors=True, viewport={"width": 390, "height": 844}, reduced_motion="reduce")
             multiday(ctx.new_page(), base, checks, "mobile-390"); ctx.close()
             ctx = browser.new_context(ignore_https_errors=True, viewport={"width": 390, "height": 844}, reduced_motion="reduce")
             responsive(ctx.new_page(), base, checks, "cal01-mobile-390", "/demo/public/")
@@ -527,6 +547,7 @@ def run(options):
                 metrics = report["native_zoom"]
                 checks.check("Actual native 200 percent zoom, not CSS zoom or DPR emulation", abs(metrics["dpr"] - 2) < .05 and 600 < metrics["width"] < 800 and metrics["scale"] == 1 and metrics["cssZoom"] == "1")
                 responsive(page, base, checks, "native-200")
+                reviewer_responsive(ctx.new_page(),base,checks,"native-200")
                 multiday(ctx.new_page(), base, checks, "native-200")
                 responsive(ctx.new_page(), base, checks, "cal01-native-200", "/demo/public/")
                 multiday(ctx.new_page(), base, checks, "cal01-native-200", "/demo/public/")

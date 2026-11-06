@@ -1,12 +1,9 @@
 """Local synthetic presentation adapter. Never imports runtime/DB configuration."""
 from dataclasses import replace
-from datetime import datetime, timezone
 from pathlib import Path
 from uuid import UUID, uuid4
-from zoneinfo import ZoneInfo
 
 from fastapi import Query, Request
-from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
@@ -21,7 +18,7 @@ from competence_hub_api.portal.calendar import (
     CalendarService, CalendarTimeConflictError, CalendarTopicUnavailableError,
     CalendarTransitionConflictError,
 )
-from competence_hub_api.web.calendar import _protected_context, _public_offer
+from competence_hub_api.web.calendar import _protected_context, list_public_month
 from scripts.cal1_public_build import PUBLIC_BUILD
 
 ASSETS = Path(__file__).with_name("cal1_demo")
@@ -126,7 +123,10 @@ class DemoCalendarRepository(InMemoryCalendarRepository):
         published = replace(detail, current_revision=detail.published_revision)
         result = super()._public(published)
         suffix = "a" if detail.offer.coach_id == self.COACHES[SYNTHETIC_IDENTITIES[COACH_EMAIL][0]] else "b"
-        return replace(result, coach_profile_path=f"/coaches/demo-coach-{suffix}/")
+        return replace(result, coach_profile_path=f"/coaches/demo-coach-{suffix}/",
+            updated_at=detail.published_revision.updated_at,
+            publication_sequence=detail.published_revision.revision_number,
+            published_at=detail.published_revision.published_at or detail.published_revision.updated_at)
 
     async def get_public_offer(self, **values):
         detail = self._offers.get(values["offer_id"])
@@ -149,6 +149,11 @@ def create_demo_app(port=8446):
     repository = DemoCalendarRepository()
     app.state.calendar_service = CalendarService(repository)
     app.state.demo_repository = repository
+    return attach_demo_views(app, repository)
+
+
+def attach_demo_views(app, repository=None, native=False):
+    """Same local public view for memory or native PostgreSQL; no new Portal."""
 
     @app.get("/demo/public/", response_class=FileResponse)
     async def public_calendar():
@@ -159,28 +164,7 @@ def create_demo_app(port=8446):
                                    limit: int = Query(default=100, ge=1, le=100),
                                    cursor: str | None = Query(default=None, max_length=1024),
                                    topic_id: UUID | None = None):
-        # Local-only month adapter, not a widening of the deployed API contract.
-        # Read only the existing approved projection, never protected summaries.
-        try:
-            year, number = (int(part) for part in month.split("-"))
-            start = datetime(year, number, 1, tzinfo=ZoneInfo("Europe/Berlin"))
-            now = request.app.state.clock().astimezone(start.tzinfo)
-            offset = (year - now.year) * 12 + number - now.month
-            if month != f"{year:04d}-{number:02d}" or not 0 <= offset <= 3:
-                raise ValueError("month outside local demo horizon")
-            end = datetime(year + (number == 12), number % 12 + 1, 1, tzinfo=start.tzinfo)
-            codec = request.app.state.calendar_cursor_codec
-            after_at, after_id = codec.decode(cursor) if cursor else (None, None)
-            rows = await repository.list_public_offers(from_at=start.astimezone(timezone.utc),
-                to_at=end.astimezone(timezone.utc), topic_id=topic_id,
-                after_starts_at=after_at, after_offer_id=after_id, limit=limit + 1)
-            items = rows[:limit]
-            continuation = codec.encode(items[-1].starts_at, items[-1].id) if len(rows) > limit else None
-            return JSONResponse(jsonable_encoder({"items": [_public_offer(item) for item in items],
-                "next_cursor": continuation}), headers={"Cache-Control": "no-store"})
-        except (ValueError, OverflowError):
-            return JSONResponse({"code": "invalid_calendar_window"}, status_code=422,
-                                headers={"Cache-Control": "no-store"})
+        return await list_public_month(request, month, topic_id, limit, cursor)
 
     async def portal():
         html = (PORTAL_UI_DIRECTORY / "index.html").read_text(encoding="utf8")
@@ -194,7 +178,11 @@ def create_demo_app(port=8446):
     @app.get("/demo/", response_class=HTMLResponse)
     @app.get("/demo/history", response_class=HTMLResponse)
     async def demo():
-        return HTMLResponse((ASSETS / "index.html").read_text(encoding="utf8"))
+        html = (ASSETS / "index.html").read_text(encoding="utf8")
+        if native:
+            html = html.replace("123456</dd>", "Authenticator-App (einmalig einrichten)</dd>")
+            html = html.replace("Alle Änderungen gelten nur bis zum Beenden dieser lokalen Demo.", "Daten liegen im isolierten lokalen PostgreSQL-Container, bis diese Vorführung beendet wird.")
+        return HTMLResponse(html)
 
     @app.get("/demo/api/history")
     async def history(request: Request):
@@ -203,6 +191,11 @@ def create_demo_app(port=8446):
             return context
         actor, service = context
         try:
+            if repository is None:
+                rows = await service.list_offers(actor=actor, coach_id=None, limit=100)
+                return JSONResponse({"items": [{"offer_id": str(d.offer.id), "title": d.current_revision.draft.title,
+                    "revision": d.current_revision.revision_number, "status": d.current_revision.workflow_status,
+                    "lifecycle": d.offer.lifecycle_status, "action": "Persistierter aktueller Stand (keine vollständige Verlaufsliste)"} for d in rows]})
             visible = {d.offer.id for d in repository._offers.values()
                        if await service.get_offer(actor=actor, offer_id=d.offer.id)}
         except CalendarAccessDeniedError:

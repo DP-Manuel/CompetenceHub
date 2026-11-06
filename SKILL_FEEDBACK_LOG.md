@@ -7,6 +7,16 @@ Updated: 2026-11-06. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+06.11 native pilot learning: prove persistence with a fresh application AND
+database restart on an explicitly owned test volume, then verify container/volume
+absence through a successful daemon listing, not any failed inspect. Wait for
+actual loaded list state before filter assertions; close owned browser contexts
+before server teardown so cleanup cannot hide the original assertion. ICS UID/
+SEQUENCE must follow the published revision, not private edits. RFC5545 TZID
+cannot encode the second occurrence of an ambiguous autumn hour: preserve those
+instants in UTC and regression-test the exact hour. [Evidence and scoped gates](docs/handoffs/2026-11-06-cal1-pilot-readiness.md).
+Captured locally; no global skill change or canonical proposal closure.
+
 06.11 integration learning: a renderer regression cannot prove retrieval of
 already-running events; test the actual bounded month HTTP query separately.
 Reuse the existing public DTO, not protected summaries. Auto-refresh must not

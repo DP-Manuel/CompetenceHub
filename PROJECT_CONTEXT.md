@@ -8,8 +8,8 @@ LATEST05.11 MANUEL DECISION: WEBSITE FIRST. Backup-key rebase/R2 is PAUSED by
 explicit user instruction. No key creation, passphrase dialog, GPG/USB operator
 resume or password workflow without a NEW explicit task. Preserve all existing
 keys/files/backups and automatic jobs. Website work is independent of those gates.
-Current slice: COACH-5 approved static offering finder plus a separate local
-synthetic CAL-1 demonstration for Janay, expected return week16.11.
+Current slice: native local CAL-1 pilot readiness (PostgreSQL, Portal UX,
+public month view, ICS snapshot and request draft) before Janay returns week16.11.
 No IONOS deployment, Registry source switch, Becker candidates or customer data.
 
 Website sprint locally complete: approved Gülcan3 families/5 formats, combined
@@ -47,7 +47,20 @@ five-second refresh, overlap-aware bounded Berlin months, no private revisions.
 390px/native200%, actual pre-month-start HTTP retrieval and publication/removal
 without reload. No Pages/IONOS/VPS/data activation. Native SQL month semantics
 remain a later real-operation gate. [Current demo/QA/Janay flow](docs/handoffs/2026-11-05-cal1-demo-readiness.md#gemeinsame-lokale-kalenderdemo-06112026).
-Next: Janay demonstrates the six steps, collect usability feedback; not GPG.
+New06.11 instruction: proceed independently before Janay returns; implemented
+native local PostgreSQL, Coach/Reviewer UX, public ICS and request draft.
+46 actual native SQL/browser checks plus3 PostgreSQL API tests PASS, including
+new application AND PostgreSQL restart on an owned persistent volume, MFA/session,
+revision/withdrawal, DST/month/year/half-open ranges,390px/native200%. Owned
+container/volume removed and zero residue verified.83 focused contracts PASS;
+aggregate1451 PASS/30 expected external skips,237 additional browser checks,
+26 JS/34 Website contracts and Astro82 zero diagnostics. Final72 focused tests
+also prove UTC preservation of repeated autumn-hour instants.52 Production files
+byte-identical; no local runtime in normal public builds. No invented business rules.
+[Active A-F execution](docs/exec-plans/active/cal1-pilot-readiness-2026-11-06.md).
+No existing Staging/VPS/Pages/IONOS, real accounts, GPG or mail activation.
+Next: scoped Staging acceptance package only, not server execution; concrete
+Outlook Desktop import/reimport and Janay usability acceptance remain OPEN.
 
 Post-Messe product consolidation is complete for the authorized scope: Context V2, official frontend preview and Analytics discovery.
 The 17.10 Messe succeeded per Manuel; the temporary Messe freeze is historical.

@@ -1098,3 +1098,6 @@ dialog::backdrop {
     transition-duration: 0.01ms !important;
   }
 }
+.calendar-list-filters {display: grid; grid-template-columns: minmax(110px, .4fr) minmax(0, 1fr); gap: 12px; align-items: center; margin-block: 20px;}
+.calendar-list-filters input, .calendar-list-filters select {width: 100%; min-width: 0; min-height: 44px;}
+@media (max-width: 600px) { .calendar-list-filters {grid-template-columns: minmax(0,1fr);} }

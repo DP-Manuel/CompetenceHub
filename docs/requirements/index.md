@@ -7,6 +7,7 @@
 | Coach Registry | [Accepted COACH-1 contract](../architecture/coach-registry-contract-v0.1.md) | Onboard/pause/offboard/reactivate, revision approval, per-environment publication and optional account/Calendar links |
 | CAL-0 / business rules | [Calendar decisions](calendar-stakeholder-decisions-2026-09-11.md) | Accepted behavior and .ics direction |
 | CAL-1 current accepted scope | [Browser handoff](../handoffs/2026-09-18-cal1-browser-acceptance-handoff.md) | Local acceptance and next synthetic Staging UI gate |
+| CAL-1 latest local pilot increment | [Native SQL/ICS/UX proof and start](../handoffs/2026-11-06-cal1-pilot-readiness.md) | Real isolated PostgreSQL restart, shared public calendar, export/request; current Staging/production activation not approved |
 | CAL-1 API/UI | [API contract](../architecture/calendar-cal1-api-contract-v0.1.md), [UI contract](../architecture/calendar-cal1-portal-ui-contract-v0.1.md) | Protected/public projection and capabilities |
 | CAL-2 | [ADR 0007](../decisions/0007-calendar-and-reservation-increments.md) | Later reservations, not authorized by preview work |
 | FIN-01 | [Invoice epic](fin-01-invoice-management-epic.md) | Bookkeeping discovery; no implementation |

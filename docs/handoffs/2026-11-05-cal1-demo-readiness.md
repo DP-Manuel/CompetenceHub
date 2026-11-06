@@ -1,5 +1,10 @@
 # CAL-1: lokale synthetische Kalender-Demo
 
+Neuester Ausbau06.11: [native PostgreSQL-Pilotvariante, ICS/Anfrage und aktuelle
+Gates](2026-11-06-cal1-pilot-readiness.md). Der Integrationsstand und die später
+genannten offenen SQL-Gates unten sind der erhaltene frühere Zwischenstand;
+native SQL-Prüfung inzwischen lokal erfolgt, nicht auf bestehendem Staging.
+
 Stand: 05.11.2026. Ziel: fachliche Vorführung für Janay ab Woche 16.11.2026.
 Eigenständiger lokaler Block neben COACH-5; kein Deployment, kein realer Betrieb.
 

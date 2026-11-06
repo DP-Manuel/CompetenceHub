@@ -231,6 +231,9 @@ function clearPortalClientState() {
   state.selectedCalendarOffer = null;
   state.selectedReviewOffer = null;
   state.activePortalArea = null;
+  restrictedCalendarNodes.coachWorkspace.querySelector("#calendar-offer-search").value = "";
+  restrictedCalendarNodes.coachWorkspace.querySelector("#calendar-offer-status").value = "";
+  restrictedCalendarNodes.coachWorkspace.querySelector("#calendar-filter-count").textContent = "";
   byId("company-list")?.replaceChildren();
   restrictedCalendarNodes.coachWorkspace
     .querySelector("#coach-calendar-list")
@@ -243,7 +246,11 @@ function clearPortalClientState() {
       if (dialog.open) {
         dialog.close();
       }
+      const form = dialog.querySelector("form");
+      form.reset(); calendarFormBaselines.delete(form);
     });
+  restrictedCalendarNodes.offerDialog.querySelector("#calendar-review-feedback-text").textContent = "";
+  restrictedCalendarNodes.reviewDialog.querySelector("#calendar-review-summary").replaceChildren();
   configureRestrictedCalendarNodes(false, false);
 }
 
@@ -725,6 +732,9 @@ function calendarCard(offer, review = false) {
   appendDefinition(meta, "Thema", offer.topic_name || "Nicht verfügbar");
   appendDefinition(meta, "Beginn", formatCalendarDate(offer.starts_at));
   appendDefinition(meta, "Ende", formatCalendarDate(offer.ends_at));
+  appendDefinition(meta, "Format", calendarFormatLabel(offer.format));
+  appendDefinition(meta, "Kapazität", `Höchstens ${offer.capacity} Teilnehmende`);
+  appendDefinition(meta, "Entscheidungsfrist", formatCalendarDate(offer.decision_deadline));
   const revision = document.createElement("p");
   revision.textContent = `Aktuelle Revision: ${offer.revision_number || 1}`;
   const actions = document.createElement("div");
@@ -747,7 +757,14 @@ function renderCoachOffers() {
   const list = byId("coach-calendar-list");
   list.replaceChildren();
   byId("coach-calendar-empty").hidden = state.coachOffers.length !== 0;
-  state.coachOffers.forEach((offer, index) => {
+  const term = byId("calendar-offer-search").value.trim().toLocaleLowerCase("de");
+  const status = byId("calendar-offer-status").value;
+  const items = state.coachOffers.map((offer, index) => ({offer, index})).filter(({offer}) =>
+    (!term || `${offer.title} ${offer.topic_name || ""}`.toLocaleLowerCase("de").includes(term)) &&
+    (!status || (status === "withdrawn" ? offer.lifecycle_status === "withdrawn" : offer.lifecycle_status === "active" && offer.workflow_status === status))
+  ).sort((a,b) => new Date(a.offer.starts_at)-new Date(b.offer.starts_at) || a.offer.title.localeCompare(b.offer.title, "de"));
+  byId("calendar-filter-count").textContent = `${items.length} von ${state.coachOffers.length} Angeboten · nach Beginn sortiert`;
+  items.forEach(({offer, index}) => {
     const card = calendarCard(offer);
     const editable = ["draft", "changes_requested", "published"].includes(offer.workflow_status)
       && offer.lifecycle_status === "active";
@@ -785,6 +802,7 @@ function fillCalendarOfferForm(detail = null) {
   byId("save-calendar-offer").textContent = draft ? "Entwurf speichern" : "Entwurf anlegen";
   renderCalendarTopicOptions(draft?.topic_id || "");
   if (!draft) {
+    rememberCalendarForm(form);
     return;
   }
   if (detail.review_decision?.outcome === "changes_requested") {
@@ -803,6 +821,22 @@ function fillCalendarOfferForm(detail = null) {
   byId("calendar-review-threshold").value = draft.review_threshold;
   byId("calendar-decision-deadline").value = toBerlinInputValue(draft.decision_deadline);
   byId("calendar-price").value = draft.price_display_text;
+  rememberCalendarForm(form);
+}
+
+const calendarFormBaselines = new WeakMap();
+function calendarFormSnapshot(form) {
+  return JSON.stringify([...form.elements].filter(e => e.name && (!['radio','checkbox'].includes(e.type) || e.checked)).map(e => [e.name,e.value]));
+}
+function rememberCalendarForm(form) { calendarFormBaselines.set(form, calendarFormSnapshot(form)); }
+function calendarFormDirty(dialog) {
+  const form = dialog.querySelector("form");
+  return dialog.open && calendarFormBaselines.has(form) && calendarFormSnapshot(form) !== calendarFormBaselines.get(form);
+}
+function calendarCanClose(dialog) {
+  if (!dialog.open || !["calendar-offer-dialog","calendar-review-dialog"].includes(dialog.id)) return true;
+  if (dialog.querySelector("form")?.getAttribute("aria-busy") === "true") return false;
+  return !calendarFormDirty(dialog) || window.confirm("Ungespeicherte Änderungen verwerfen?");
 }
 
 function openNewCalendarOffer() {
@@ -875,7 +909,9 @@ async function handleCalendarOfferSave(event) {
       body,
     });
     if (response.status === 409) {
-      showCalendarConflict("calendar-offer-error", "reload-calendar-offer");
+      const problem = await response.clone().json();
+      if (problem.code === "calendar_version_conflict") showCalendarConflict("calendar-offer-error", "reload-calendar-offer");
+      else setError("calendar-offer-error", await problemMessage(response, "Entwurf steht im Konflikt mit einem anderen Angebot."));
       return;
     }
     if (!response.ok) {
@@ -911,8 +947,11 @@ async function versionedCalendarAction(index, action, successMessage) {
       headers: { "If-Match": selected.etag },
     });
     if (response.status === 409) {
-      setError("coach-calendar-error", "Der Datenstand wurde inzwischen geändert. Die Liste wurde aktualisiert; bitte prüfen Sie den Status.");
-      await loadCoachOffers();
+      const problem = await response.clone().json();
+      if (problem.code === "calendar_version_conflict") {
+        await loadCoachOffers();
+        setError("coach-calendar-error", "Der Datenstand wurde inzwischen geändert. Die Liste wurde aktualisiert; bitte prüfen Sie den Status.");
+      } else setError("coach-calendar-error", await problemMessage(response, "Aktion steht im Konflikt mit einem anderen Angebot."));
       return;
     }
     if (!response.ok) {
@@ -997,6 +1036,7 @@ async function openCalendarReview(index) {
   setError("calendar-review-error");
   byId("reload-calendar-review").hidden = true;
   renderReviewSummary(selected.detail);
+  rememberCalendarForm(byId("calendar-review-form"));
   byId("calendar-review-dialog").showModal();
   byId("calendar-review-form").querySelector("input[name='outcome']").focus();
 }
@@ -1034,7 +1074,9 @@ async function handleCalendarReview(event) {
       },
     );
     if (response.status === 409) {
-      showCalendarConflict("calendar-review-error", "reload-calendar-review");
+      const problem = await response.clone().json();
+      if (problem.code === "calendar_version_conflict") showCalendarConflict("calendar-review-error", "reload-calendar-review");
+      else setError("calendar-review-error", await problemMessage(response, "Veröffentlichung steht im Konflikt mit einem anderen Angebot."));
       return;
     }
     if (!response.ok) {
@@ -1081,6 +1123,7 @@ async function reloadSelectedCalendarReview() {
     byId("reload-calendar-review").hidden = true;
     setError("calendar-review-error");
     renderReviewSummary(selected.detail);
+    rememberCalendarForm(byId("calendar-review-form"));
     announce("Der aktuelle Stand wurde geladen.");
   }
 }
@@ -1710,6 +1753,8 @@ function bindEvents() {
   byId("refresh-review-queue").addEventListener("click", loadReviewQueue);
   byId("reload-calendar-offer").addEventListener("click", reloadSelectedCalendarOffer);
   byId("reload-calendar-review").addEventListener("click", reloadSelectedCalendarReview);
+  byId("calendar-offer-search").addEventListener("input", renderCoachOffers);
+  byId("calendar-offer-status").addEventListener("change", renderCoachOffers);
 
   byId("company-search-form").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -1736,7 +1781,8 @@ function bindEvents() {
   });
   document.querySelectorAll("[data-dialog-close]").forEach((button) => {
     button.addEventListener("click", () => {
-      byId(button.dataset.dialogClose).close();
+      const dialog = byId(button.dataset.dialogClose);
+      if (calendarCanClose(dialog)) dialog.close();
     });
   });
 
@@ -1753,18 +1799,29 @@ function bindEvents() {
   document.querySelectorAll("dialog").forEach((dialog) => {
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) {
-        dialog.close();
+        if (calendarCanClose(dialog)) dialog.close();
       }
     });
+  });
+  [restrictedCalendarNodes.offerDialog, restrictedCalendarNodes.reviewDialog].forEach(dialog => {
+    dialog.addEventListener("cancel", event => { if (!calendarCanClose(dialog)) event.preventDefault(); });
   });
 }
 
 document.querySelectorAll(".brand, #logout-button").forEach((item) => {
   item.addEventListener("click", (event) => {
+    if ([restrictedCalendarNodes.offerDialog, restrictedCalendarNodes.reviewDialog].some(dialog => !calendarCanClose(dialog))) {
+      event.preventDefault(); event.stopImmediatePropagation(); return;
+    }
     if (state.activePortalArea === "coaches" && !coachManagement.canLeave()) {
       event.preventDefault(); event.stopImmediatePropagation();
     }
   }, true);
+});
+addEventListener("beforeunload", event => {
+  if ([restrictedCalendarNodes.offerDialog, restrictedCalendarNodes.reviewDialog].some(calendarFormDirty)) {
+    event.preventDefault(); event.returnValue = "";
+  }
 });
 bindEvents();
 configureRestrictedCalendarNodes(false, false);

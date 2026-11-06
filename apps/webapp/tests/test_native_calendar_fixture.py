@@ -8,8 +8,10 @@ from competence_hub_api.portal.calendar import validate_public_calendar_window
 @pytest.mark.parametrize("delay", [timedelta(milliseconds=101), timedelta(seconds=30)])
 def test_native_public_query_remains_valid_when_database_clock_advances(delay):
     sampled = datetime(2026, 10, 23, 10, tzinfo=UTC)
+    # Current-month reads now intentionally include earlier/ongoing events.
+    validate_public_calendar_window(from_at=sampled, to_at=sampled + timedelta(days=80), now=sampled + delay)
     with pytest.raises(ValueError):
-        validate_public_calendar_window(from_at=sampled, to_at=sampled + timedelta(days=80), now=sampled + delay)
+        validate_public_calendar_window(from_at=sampled.replace(day=1) - timedelta(days=1), to_at=sampled + timedelta(days=80), now=sampled + delay)
     window = public_query_window(sampled)
     validate_public_calendar_window(from_at=datetime.fromisoformat(window["from"]), to_at=datetime.fromisoformat(window["to"]), now=sampled + delay)
 

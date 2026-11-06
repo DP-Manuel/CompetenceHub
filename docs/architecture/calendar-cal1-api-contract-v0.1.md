@@ -2,6 +2,50 @@
 
 Stand: 18.09.2026
 
+Lokales additives Pilot-Inkrement06.11.2026: siehe den folgenden Abschnitt.
+Bestehende Staging-/Produktionsbereitstellungen wurden dadurch nicht geändert.
+
+## Native Monatsabfrage und ICS 06.11.2026
+
+- `GET /api/v1/calendar/months/{YYYY-MM}/offers` verwendet denselben
+  CalendarService, Public-DTO und signierten Cursor wie `/offers`. `topic_id`,
+  `limit` (1–100) und `cursor` bleiben unterstützt. Ungültiger Monat/Cursor:
+  generisches400, typisierte Queryverletzungen422.
+- Lesefenster beginnt frühestens am ersten Tag des aktuellen Berliner Monats.
+  Aktueller Monat plus drei Folgemonate sind auswählbar; die obere Grenze bleibt
+  die rollierende Dreimonats-Planungsgrenze. Die letzte Monatsscheibe wird dort
+  abgeschnitten, nicht um neue buchbare Zeiträume erweitert. `/offers?from&to`
+  darf ebenfalls bis zum aktuellen Monatsanfang zurückreichen. Schreibfristen
+  und Terminvalidierung bleiben unverändert.
+- SQL wertet echte Überschneidung `starts_at < to AND ends_at > from` aus.
+  Nur aktive Angebote, aktive Themen und die tatsächlich veröffentlichte
+  Revision erscheinen, jeweils einmal. Reihenfolge/Cursor: `(starts_at,id)`.
+  Der vorhandene partielle Index `calendar_offer_revisions_public_time_idx`
+  unterstützt die Abfrage; kein neuer Index oder Migration in diesem Inkrement.
+- `GET /api/v1/calendar/offers/{uuid}/calendar.ics` liefert nur dieselbe
+  öffentliche Veröffentlichung als `text/calendar; charset=utf-8`, Attachment
+  mit UUID-Dateiname, `no-store` und `nosniff`. Unbekannt/Entwurf/zurückgenommen
+  teilen sich404. Keine geschützten Entwürfe oder Reviewer-Metadaten.
+- RFC5545-Serialisierung durch `icalendar`, Berlin-TZID mit VTIMEZONE und
+  exklusivem Ende. Für die zweite Ausprägung einer doppelten Herbst-Uhrzeit
+  werden Beginn/Ende als UTC exportiert: TZID allein bezeichnet nach RFC nur
+  die erste Ausprägung und würde den gespeicherten Zeitpunkt verfälschen.
+  UID bleibt angebotsbezogen stabil; SEQUENCE und DTSTAMP/
+  LAST-MODIFIED beziehen sich auf die veröffentlichte Revision/Freigabezeit,
+  nicht auf spätere private Bearbeitungen. Diese Metadaten werden nicht zum
+  öffentlichen JSON-DTO hinzugefügt. Keine METHOD-, ORGANIZER-, ATTENDEE- oder
+  VALARM-Felder, keine Einladung oder Teilnahmebestätigung. Download ist ein
+  Snapshot: keine automatische Synchronisation oder Rücknahme bereits
+  importierter Dateien. Echte Absage-/Einladungszustellung bleibt eigenes Gate.
+- Protected summaries ergänzen Format, Kapazität, Prüfschwelle und Frist für
+  bereits autorisierte eigene/reviewbare Karten. Diese Felder ändern keine Rechte
+  und gelangen nicht automatisch in Public-DTO oder ICS.
+
+[Lokaler SQL-/Browsernachweis und Pilotmatrix](../handoffs/2026-11-06-cal1-pilot-readiness.md).
+Keine native Staging-Abnahme oder Outlook-Desktop-Freigabe daraus ableiten.
+Standardsbasis: [RFC5545](https://www.rfc-editor.org/rfc/rfc5545.html),
+[icalendar-Dokumentation](https://icalendar.readthedocs.io/en/stable/how-to/usage.html).
+
 Status: API and migrations are proven locally and on isolated Staging under
 accepted ADR 0007. The synthetic Portal UI is implemented and automatically
 verified locally on 18.09.2026; manual browser acceptance remains open. The

@@ -2,6 +2,27 @@
 
 Stand: 18.09.2026
 
+Lokales Pilot-Inkrement06.11: Coachliste nach Beginn sortiert, Suche und
+Statusfilter, sichtbare Kapazität/Entscheidungsfrist; ursprüngliche Indizes
+bleiben für Aktionen erhalten, auch bei gefilterter/umsortierter Darstellung.
+409-Zeitkonflikte werden nicht mehr als Versionsfehler umgedeutet. Reviewer-
+Änderungsnotizen und reale Revisions-/RBAC-Grenzen bleiben maßgeblich.
+
+Ungespeicherte Coach-/Reviewer-Formulare fragen vor Escape, Abbrechen,
+Hintergrundklick oder explizitem Verlassen nach. Laufende Übertragung wird nicht
+weggeklickt; erfolgreiche Speicherung schließt ohne zusätzliche Bestätigung.
+Browser-Verlassen nutzt den nativen `beforeunload`-Schutz. Filter und private
+Formular-/Feedback-Inhalte werden beim Sessionreset verworfen. Keine lokale
+Speicherung von Entwürfen, Tokens oder Notizen.
+
+Öffentliche lokale Ansichten teilen weiterhin dieselben Renderer/Controller.
+ICS-Download liest anonym und prüft Erfolg/MIME vor dem Blob-Download; bei Fehler
+keine JSON-Fehlerdatei. Anfrageentwurf enthält ausschließlich öffentliche
+Termindaten und gewünschte Platzanzahl, ohne Kundenspeicherung oder Versand.
+Kopieren ist ausdrücklich nutzerinitiiert. Bei neuer Veröffentlichung wird ein
+veralteter Anfrageentwurf zurückgesetzt. Keine Vormerkungs-/Verfügbarkeitszusage.
+[Aktueller Nachweis und Grenzen](../handoffs/2026-11-06-cal1-pilot-readiness.md).
+
 Status: lokal mit ausschließlich synthetischen Identitäten und In-Memory-Daten
 implementiert. Echte Browserabnahme, native Staging-UI-Abnahme, reale Rollen,
 reale Coachprofile und Deployment bleiben offen.

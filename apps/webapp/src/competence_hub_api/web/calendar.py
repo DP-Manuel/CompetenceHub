@@ -25,6 +25,7 @@ from competence_hub_api.portal.calendar import (
     PublicCalendarOffer,
 )
 from competence_hub_api.security.calendar_cursor import CalendarCursorCodec
+from competence_hub_api.portal.calendar_export import public_calendar_ics
 from competence_hub_api.security.cookies import SESSION_COOKIE_NAME
 from competence_hub_api.security.tokens import digest_token
 from competence_hub_api.web.problems import problem_response
@@ -120,6 +121,50 @@ async def get_public_offer(offer_id: UUID, request: Request) -> Response:
     if result is None:
         return _not_found()
     return JSONResponse(jsonable_encoder(_public_offer(result)))
+
+
+@public_router.get("/months/{month}/offers")
+async def list_public_month(
+    request: Request,
+    month: str,
+    topic_id: UUID | None = None,
+    limit: int = Query(default=50, ge=1, le=100),
+    cursor: str | None = Query(default=None, max_length=1024),
+) -> Response:
+    context = _public_context(request)
+    if isinstance(context, Response):
+        return context
+    service, codec = context
+    try:
+        after_at, after_id = codec.decode(cursor) if cursor else (None, None)
+        page = await service.list_public_month(
+            month=month, topic_id=topic_id, after_starts_at=after_at,
+            after_offer_id=after_id, limit=limit, now=request.app.state.clock(),
+        )
+        next_cursor = codec.encode(*page.next_position) if page.next_position else None
+    except (ValueError, OverflowError):
+        return _invalid_request()
+    return JSONResponse(jsonable_encoder({
+        "items": [_public_offer(item) for item in page.items], "next_cursor": next_cursor,
+    }))
+
+
+@public_router.get("/offers/{offer_id}/calendar.ics")
+async def download_public_calendar(offer_id: UUID, request: Request) -> Response:
+    context = _public_context(request)
+    if isinstance(context, Response):
+        return context
+    service, _ = context
+    offer = await service.get_public_offer(offer_id=offer_id)
+    if offer is None:
+        return _not_found()
+    return Response(
+        public_calendar_ics(offer), media_type="text/calendar; charset=utf-8",
+        headers={
+            "Content-Disposition": f'attachment; filename="competence-hub-{offer.id}.ics"',
+            "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
+        },
+    )
 
 
 @protected_router.get("/offers")
@@ -434,6 +479,10 @@ def _protected_summary(detail: CalendarOfferDetail) -> dict[str, object]:
         "topic_name": revision.topic_name,
         "starts_at": revision.draft.starts_at,
         "ends_at": revision.draft.ends_at,
+        "format": revision.draft.format_code,
+        "capacity": revision.draft.capacity,
+        "review_threshold": revision.draft.review_threshold,
+        "decision_deadline": revision.draft.decision_deadline,
         "updated_at": detail.offer.updated_at,
     }
 

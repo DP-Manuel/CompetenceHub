@@ -86,6 +86,8 @@ def public_row(profile_path=None):
         "decision_deadline": NOW + timedelta(days=7),
         "price_display_text": "Synthetic price",
         "updated_at": NOW,
+        "publication_sequence": 1,
+        "published_at": NOW,
     }
 
 
@@ -148,6 +150,9 @@ def test_projection_sql_is_fail_closed_and_audit_is_payload_free() -> None:
         assert "review_threshold" not in sql
         assert "reviewer_user_id" not in sql
         assert "client_request_id" not in sql
+    assert "revision.starts_at < :to_at" in public_list
+    assert "revision.ends_at > :from_at" in public_list
+    assert "revision.starts_at >= :from_at" not in public_list
     assert "coach.portal_user_id = :actor_user_id" in protected_list
     assert "coach.display_name AS coach_display_name" in protected_list
     assert "revision.workflow_status = 'in_review'" in review_queue

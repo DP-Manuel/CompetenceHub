@@ -94,6 +94,11 @@ fokussierte Python-/26 JS-/34 Website-Verträge PASS. Keine Pages-Anbindung.
 
 ## Rollender Horizont
 
+06.11: Die nächste freigegebene technische Arbeit wartet ausdrücklich nicht auf
+Janay. Der [aktive A–F-Pilotblock](cal1-pilot-readiness-2026-11-06.md) führt native
+lokale PostgreSQL-, UX-, ICS- und Anfrageprüfungen fort; keine Serveraktivierung.
+Die fachliche Demoabnahme unten bleibt ein separates späteres Gate.
+
 1. DONE: Finder visuell und mit Tastatur/Mobil/native200% abgenommen; tatsächliche
    Textrechtecke, Leermeldung und bestehende Coachsuche geprüft.
 2. DONE: lokale CAL-1-Demo über vorhandene Rollen/Revisionskontrollen zusammengeführt

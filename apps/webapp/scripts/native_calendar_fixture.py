@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, timedelta
 import os
 import secrets
+from dataclasses import replace
 from uuid import uuid4
 
 from sqlalchemy import text
@@ -118,16 +119,19 @@ class NativeCalendarFixture:
         self.provisioned = True
 
     def app(self, port):
-        settings = RuntimeSettings(
-            database_url=self.app_url, allowed_origin=f"https://127.0.0.1:{port}",
-            session_idle_timeout=timedelta(minutes=30), readiness_timeout_seconds=15,
-            rate_limit_hmac_key=self.rate_key, idempotency_hmac_key=secrets.token_bytes(32),
-            outbox_encryption_keys={"native-ui": secrets.token_bytes(32)}, outbox_active_key_version="native-ui",
-            compromised_password_fingerprints=frozenset({"0" * 64}),
-            totp_encryption_keys={"native-ui": secrets.token_bytes(32)}, totp_active_key_version="native-ui",
-            recovery_hmac_keys={"native-ui": secrets.token_bytes(32)}, recovery_hmac_active_key_version="native-ui",
-        )
-        app = create_runtime_app(settings)
+        settings = getattr(self, "_runtime_settings", None)
+        if settings is None:
+            # Fixture-only keys survive fresh app instances during restart tests.
+            settings = self._runtime_settings = RuntimeSettings(
+                database_url=self.app_url, allowed_origin=f"https://127.0.0.1:{port}",
+                session_idle_timeout=timedelta(minutes=30), readiness_timeout_seconds=15,
+                rate_limit_hmac_key=self.rate_key, idempotency_hmac_key=secrets.token_bytes(32),
+                outbox_encryption_keys={"native-ui": secrets.token_bytes(32)}, outbox_active_key_version="native-ui",
+                compromised_password_fingerprints=frozenset({"0" * 64}),
+                totp_encryption_keys={"native-ui": secrets.token_bytes(32)}, totp_active_key_version="native-ui",
+                recovery_hmac_keys={"native-ui": secrets.token_bytes(32)}, recovery_hmac_active_key_version="native-ui",
+            )
+        app = create_runtime_app(replace(settings, allowed_origin=f"https://127.0.0.1:{port}"))
         app.state.clock = lambda: self.now
         original_lifespan = app.router.lifespan_context
 

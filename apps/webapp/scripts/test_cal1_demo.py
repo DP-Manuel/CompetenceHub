@@ -201,16 +201,16 @@ async def test_month_adapter_uses_only_approved_projection_and_signed_pagination
             assert set(item) == {"id", "coach", "topic", "title", "summary", "starts_at", "ends_at", "time_zone", "format", "public_location", "capacity", "decision_deadline", "price_display_text", "updated_at"}
         assert "PRIVATE" not in response.text + str(second)
         assert (await client.post("/demo/api/public-calendar", json={})).status_code == 405
-        assert (await client.get("/demo/api/public-calendar", params={"month": month, "cursor": "tampered"})).status_code == 422
+        assert (await client.get("/demo/api/public-calendar", params={"month": month, "cursor": "tampered"})).status_code == 400
         assert (await client.get("/demo/api/public-calendar", params={"month": month, "topic_id": str(uuid4())})).json()["items"] == []
-        # Native public API's accepted future-only validation has NOT been widened.
-        assert (await client.get("/api/v1/calendar/offers", params={"from": (now - timedelta(days=1)).isoformat(), "to": (now + timedelta(days=20)).isoformat()})).status_code == 400
+        # Native API now accepts the bounded current month, not unbounded history.
+        assert (await client.get("/api/v1/calendar/offers", params={"from": (now - timedelta(days=1)).isoformat(), "to": (now + timedelta(days=20)).isoformat()})).status_code == 200
 
 
 @pytest.mark.parametrize("month", ["2026-00", "2026-13", "2020-01", "3000-01", "2026-1", "bad", "2026-11-01"])
 async def test_month_adapter_rejects_invalid_or_unbounded_window(month):
     async with AsyncClient(transport=ASGITransport(app=create_demo_app()), base_url="https://127.0.0.1:8446") as client:
-        assert (await client.get("/demo/api/public-calendar", params={"month": month})).status_code == 422
+        assert (await client.get("/demo/api/public-calendar", params={"month": month})).status_code == 400
 
 
 @pytest.mark.parametrize("start_delta,end_delta,visible", [(-10, 2, True), (-2, 0, False), (0, 2, True), (31, 32, False)])

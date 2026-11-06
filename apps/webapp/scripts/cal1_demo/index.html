@@ -43,12 +43,14 @@
       <h2 id="detail-title"></h2><p id="summary"></p>
       <dl id="meta"></dl>
       <p><a id="coach">Demo-Coachprofil</a></p>
+      <p><a id="ics" download>Kalendereintrag herunterladen (.ics)</a></p>
       <form id="request">
         <label for="seats">Gewünschte Plätze (Simulation)</label>
         <input id="seats" type="number" min="1" max="500" value="1" required>
         <button type="submit">Anfrage simulieren</button>
         <p>Keine Reservierung, keine Nachricht und keine Änderung verfügbarer Plätze.</p>
         <p id="request-status" role="status"></p>
+        <div id="request-draft-panel" hidden><label for="request-draft">Unverbindlicher Anfrageentwurf</label><textarea id="request-draft" readonly rows="9"></textarea><button id="copy-request" type="button">Anfragetext kopieren</button></div>
       </form>
     </section>
   </section>

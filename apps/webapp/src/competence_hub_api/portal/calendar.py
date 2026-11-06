@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Protocol
 from uuid import UUID
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -122,6 +122,8 @@ class PublicCalendarOffer:
     decision_deadline: datetime
     price_display_text: str
     updated_at: datetime
+    publication_sequence: int = 0
+    published_at: datetime | None = None
 
 
 @dataclass(frozen=True)
@@ -387,6 +389,26 @@ class CalendarService:
     async def get_public_offer(self, *, offer_id: UUID) -> PublicCalendarOffer | None:
         return await self._repository.get_public_offer(offer_id=offer_id)
 
+    async def list_public_month(
+        self,
+        *,
+        month: str,
+        topic_id: UUID | None,
+        after_starts_at: datetime | None,
+        after_offer_id: UUID | None,
+        limit: int,
+        now: datetime,
+    ) -> PublicCalendarPage:
+        start, end = public_calendar_month_window(month=month, now=now)
+        _validate_limit(limit)
+        if end <= start:
+            return PublicCalendarPage(items=(), next_position=None)
+        return await self.list_public_offers(
+            from_at=start, to_at=end, topic_id=topic_id,
+            after_starts_at=after_starts_at, after_offer_id=after_offer_id,
+            limit=limit, now=now,
+        )
+
     async def update_draft(
         self,
         *,
@@ -530,8 +552,23 @@ def validate_public_calendar_window(
     _validate_now(now)
     _validate_aware(from_at, "from")
     _validate_aware(to_at, "to")
-    if from_at < now or to_at <= from_at or to_at > _add_months(now, 3):
+    first = now.astimezone(ZoneInfo("Europe/Berlin")).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    if from_at < first or to_at <= from_at or to_at > _add_months(now, 3):
         raise ValueError("invalid public calendar window")
+
+
+def public_calendar_month_window(*, month: str, now: datetime) -> tuple[datetime, datetime]:
+    _validate_now(now)
+    year, number = (int(part) for part in month.split("-"))
+    start = datetime(year, number, 1, tzinfo=ZoneInfo("Europe/Berlin"))
+    local_now = now.astimezone(start.tzinfo)
+    if month != f"{year:04d}-{number:02d}" or not 0 <= (year - local_now.year) * 12 + number - local_now.month <= 3:
+        raise ValueError("invalid public calendar month")
+    end = datetime(year + (number == 12), number % 12 + 1, 1, tzinfo=start.tzinfo)
+    return (
+        start.astimezone(timezone.utc),
+        min(end.astimezone(timezone.utc), _add_months(now, 3)),
+    )
 
 
 def _require_owner(actor: SessionPrincipal) -> bool:

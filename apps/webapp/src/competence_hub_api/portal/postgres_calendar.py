@@ -328,7 +328,9 @@ _PUBLIC_COLUMNS = """
     revision.capacity,
     revision.decision_deadline,
     revision.price_display_text,
-    revision.updated_at
+    revision.updated_at,
+    revision.revision_number AS publication_sequence,
+    revision.published_at
 """
 
 _PUBLIC_FROM = """
@@ -346,8 +348,8 @@ _PUBLIC_OFFERS = text(
     WHERE offer.lifecycle_status = 'active'
       AND revision.workflow_status = 'published'
       AND topic.active
-      AND revision.starts_at >= :from_at
       AND revision.starts_at < :to_at
+      AND revision.ends_at > :from_at
       AND (CAST(:topic_id AS uuid) IS NULL OR topic.id = CAST(:topic_id AS uuid))
       AND (
           CAST(:after_starts_at AS timestamptz) IS NULL
@@ -1066,6 +1068,8 @@ def _public_offer(row: Mapping[str, object]) -> PublicCalendarOffer:
         decision_deadline=row["decision_deadline"],
         price_display_text=row["price_display_text"],
         updated_at=row["updated_at"],
+        publication_sequence=row["publication_sequence"],
+        published_at=row["published_at"],
     )
 
 
