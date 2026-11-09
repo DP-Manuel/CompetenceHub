@@ -64,13 +64,13 @@ def checked(*args, data=None, timeout=180):
 
 
 class RootSession:
-    def __init__(self):
+    def __init__(self, *, bootstrap_source=None, reviewed_sources=None):
         self.process = None
         require(sys.stdin.isatty(), 'PRIVATE_INTERACTIVE_TERMINAL_REQUIRED')
         checked(*SSH, 'true', timeout=20)
         available = subprocess.run([*SSH, 'sudo -n -- true'], capture_output=True, timeout=20).returncode == 0
         password = None if available else getpass.getpass('VPS sudo password for manuel (hidden; no GPG/USB password): ')
-        bootstrap = 'import base64;exec(base64.b64decode(' + repr(base64.b64encode(BOOTSTRAP.encode()).decode()) + '))'
+        bootstrap = 'import base64;exec(base64.b64decode(' + repr(base64.b64encode((bootstrap_source or BOOTSTRAP).encode()).decode()) + '))'
         sudo = 'sudo -n -- ' if available else 'sudo -S -p "" -- '
         try:
             self.process = subprocess.Popen([*SSH, sudo + 'python3 -I -c "' + bootstrap + '"'],
@@ -80,7 +80,7 @@ class RootSession:
                 self.process.stdin.flush()
             with self.deadline(30):
                 require(self.process.stdout.readline(64) == b'CH_ROOT_READY_1\n', 'SUDO_OR_PRIVATE_CHANNEL_FAILED_NO_RETRY')
-            protocol.write_frame(self.process.stdin, {
+            protocol.write_frame(self.process.stdin, reviewed_sources if reviewed_sources is not None else {
                 'preflight': (SCRIPTS / 'staging_readonly_preflight.py').read_text(encoding='utf8'),
                 'agent': (SCRIPTS / 'staging_snapshot_agent.py').read_text(encoding='utf8'),
             })
@@ -110,6 +110,10 @@ class RootSession:
         if result.get('ok') is not True:
             probe = result.get('owned_probe')
             self.last_failure = {'owned_probe': probe if isinstance(probe, str) and re.fullmatch('ch_restore_[a-f0-9]{32}', probe) else None}
+            rollback = result.get('rollback')
+            if isinstance(rollback, dict) and rollback.get('status') in ('PASS','REVIEW_REQUIRED','NO_MUTATION'):
+                self.last_failure['pilot_rollback'] = {
+                    key: rollback[key] for key in ('status','owned_files_retained','source_restore_performed','sequences_not_rewound') if key in rollback}
         require(result.get('ok') is True, code if isinstance(code, str) and re.fullmatch('[A-Z0-9_]+', code) else 'PRIVATE_REMOTE_BACKUP_RESTORE_STOP')
         return result['result']
 

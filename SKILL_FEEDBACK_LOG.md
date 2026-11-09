@@ -7,6 +7,19 @@ Updated: 2026-11-09. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+09.11 pilot execution learning: accepted backup/restore receipts must be reused,
+not reopened because a separate sudo input is needed. Provide one actual
+install+acceptance command, not successive preparation windows. Explicitly
+distinguish local process-shim/systemd syntax proof from real remote acceptance.
+Guard committed EOF from rollback, acknowledge scoped cleanup, independently
+attempt own service stops and never clean data while own processes may still
+write. Probe inherited umask0077: runtime/venv needs deliberate public-read modes,
+configuration stays private. Month-overlap tests must select the intended month,
+not stop at its previous month's first segment. Separate authenticated sessions
+for stale-edit tests: a second tab renews shared-session CSRF and is a different
+failure. Native zoom screenshots must show loaded events, not a loading state.
+Implemented/tested project-locally; no global skill or Wiki change.
+
 09.11 actual-operator learning: never accept a console PASS alone. Verify the
 actual sanitized receipt, bound source/run and exact current ciphertext hashes/
 ACLs, then CLOSE that gate without another password/backup loop. PowerShell

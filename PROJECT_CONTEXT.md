@@ -4,6 +4,16 @@ Updated: 2026-11-09.
 
 ## Current Milestone
 
+Latest09.11 VPS deployment request: scoped approval remains valid; current
+backup/restore is NOT reopened. One executing private operator entry prepared:
+run-vps-pilot.ps1, existing package0080195, exact current0006 baseline check,
+own loopback API/TLS/systemd namespaces, synthetic native workflow and restart.
+Local Ubuntu/Firefox61 checks PASS,1,580 suite PASS/30 skips,60 focused PASS;
+full row/schema cleanup and owned container removal. Actual VPS21:39 healthy,
+no Portal installed, sudo requires hidden operator input. NO VPS deployment,
+migration, real user, Website or GPG action claimed. [Single next operating
+block, command and evidence limits](docs/operations/integrated-staging-pilot-2026-11-09.md#vps-installation-und-native-abnahme-ein-privater-operatorlauf).
+
 Latest actual 09.11 20:48 UTC: REAL Staging backup+isolated restore PASS, report
 and exact external ciphertext hashes/private ACLs independently checked. All 27
 tables, rows/schema/rights/format/sequences equal; source unchanged, own probe

@@ -7,6 +7,113 @@ Betriebsnachweise. IONOS/Pages, Coachimport und R2/GPG bleiben unangetastet.
 
 ## Aktuelle Freigabe und tatsächlicher Ausführungsstand
 
+### VPS-Installation und native Abnahme: ein privater Operatorlauf
+
+Owner-Auftrag zur tatsächlichen Installation liegt vor. Kein erneutes
+Freigabegespräch und keine weitere Backup-/Restoreausführung nötig. **Noch keine
+VPS-Installation ausgeführt:** die gepinnte SSH-Verbindung funktioniert, aber
+`sudo -n -- true` verlangt tatsächlich ein Passwort. Dieses wird nicht aus alten
+Sitzungen ausgelesen. Letzte lesende Kontrolle **21:39:58 UTC**: vier fremde Dienste
+aktiv, PostgreSQL/Chatbot weiter Loopback, 8001/8443 frei, öffentliche Ports unverändert.
+
+Einziger ausführender Einstieg:
+[`run-vps-pilot.ps1`](../../deploy/scripts/run-vps-pilot.ps1) mit `-Execute`
+und `-ExpectedSourceCommit <vollständiger geprüfter HEAD>`. Ein frisches erhöhtes
+PowerShell-7-Fenster, derselbe Windows-Benutzer; Arbeitsverzeichnis beliebig, wenn
+der absolute Skriptpfad verwendet wird. Nur bestehendes PostgreSQL-App-Passwort
+und einmal VPS-sudo verdeckt eingeben, niemals im Chat oder in Aufzeichnungen.
+Keine Zwischenablagenbefehle, zweite Konsole, VERIFY- oder GPG-Abfrage.
+
+Der Lauf installiert und prüft zusammenhängend, statt nach Vorbereitung zu stoppen:
+
+1. Originalen akzeptierten Restorebeleg und beide vorhandenen Ciphertexte prüfen;
+   nur die geschützte Baseline im privaten Prozess lesen. Frische native
+   DB-Signatur muss vor Installation und unmittelbar vor Testkontenanlage passen.
+2. Exaktes Paket `0080195755e3`/SHA `f3478fc34de4647fd182a9c7262678b8de2e6b194428ec7dbcc0a116d9c51c41`
+   mit gebundenen Offline-Linux-Wheels installieren. **Keine Migration:** 0001–0006
+   genügen. Paket enthält weitere Migrationen, führt sie aber nicht aus.
+3. Nur vorhandene, validierte DPAPI-Anwendungsschlüssel verwenden und deren
+   Dateihash unverändert nachweisen; keine GPG-Metadatenabhängigkeit, Rotation
+   oder Neuanlage. Neue private Runtime-Kopie ausschließlich CurrentUser-DPAPI
+   auf erneut qualifiziertem C:, CreateNew/ACL/Hash/Fresh-Process-Rückleseprüfung.
+4. Eigene Namespaces `/opt/competence-hub-pilot`, `/etc/competence-hub-pilot`,
+   `competence-hub-pilot-api.service` und `competence-hub-pilot-proxy.service`.
+   API `127.0.0.1:8001`, separater Nginx-Prozess `127.0.0.1:8443`; kein globaler
+   Nginx-Reload, kein fremder Neustart, kein zusätzlicher öffentlicher Port.
+5. SSH-Tunnel `127.0.0.1:8447 -> VPS 127.0.0.1:8443`, exakter Origin
+   `https://localhost:8447`. Dedizierte kurzlebige TLS-CA nur im Erzeugungsprozess;
+   CA-Privatschlüssel nicht gespeichert. Localhost-Leaf 14 Tage, privater Schlüssel
+   root0600/systemd-Credential. CA-Vertrauen nur im isolierten Firefox-Profil,
+   kein Windows-Truststore-Eingriff und kein Zertifikats-/Hostnamen-Bypass.
+6. Vier zufällige synthetische Konten: Admin, Reviewer, zwei getrennte Coaches.
+   Keine echten Personen oder Rollen. Native Anmeldung/MFA/Recovery, RBAC,
+   Coach-Isolation, CSRF/Origin/Cookies, Revision/Freigabe/Monatsüberschneidung,
+   ICS/Anfrageentwurf, Paralleltermine, stale edit, Rücknahme und Sessionablauf.
+7. Nur eigenen API-Dienst neu starten; DB-Veröffentlichung und Sitzung müssen
+   erhalten bleiben. Fremde Dienste, sämtliche vorherigen Listener, DB-Rechte,
+   Eigentümer und Migrationen unverändert; eigene Logs ohne Geheimniswerte.
+8. Erst nach bestandener Abnahme eigene Dienste aktivieren. Explizit bestätigtes
+   Betriebsende darf keinen angenommenen Pilot zurückrollen. Bei Fehlern vor
+   Annahme eigene Dienste unabhängig stoppen und ihren Stillstand prüfen, danach
+   ausschließlich eigene synthetische IDs entfernen. Dateien behalten; keine
+   improvisierte DB-Restoreaktion, keine Zählerrücksetzung, kein automatischer Retry.
+
+Nach PASS bleibt das Terminal für den Tunnel offen. Separat angemeldete
+Coach-/Reviewer-/Admin-Fenster und öffentlicher Kalender werden automatisch
+geöffnet, soweit der grafische Browserstart gelingt. Keine Zugangsdaten im Chat;
+Logins/MFA/Recovery bleiben verschlüsselt im privaten Operator-Laufverzeichnis.
+Erst Enter schließt den lokalen Tunnel und die Vorführfenster; die privaten
+VPS-Dienste bleiben installiert. Bei STOP nur bereinigte Status-/REPORT-Ausgabe
+melden, nicht blind erneut starten oder vorhandene Dateien löschen.
+
+#### Tatsächliche lokale Prüfung dieses Betriebshelfers
+
+**1.580 Tests PASS, 30 erwartete externe Skips; 60 fokussierte Betriebs-/Transporttests
+PASS.** Aktuelle Ubuntu-Probe: **61 native Prüfungen PASS**, Firefox155, tatsächliches
+Paket, PostgreSQL0006, eigener TLS-Proxy, 390px, native Firefox-Vollzoom200% und
+Tastatur/Fokus. Zertifikat und Hostname geprüft; unbekannte CA und falscher Host
+werden abgewiesen. Vollständiger Workflow inklusive Änderungsanforderung,
+Revision3/ICS-UID-Stabilität, parallelen Coaches, abgewiesenem stale edit,
+eigenem API-Neustart und Recovery-Anmeldung. Alle Tabellenzeilen und Schemahash
+nach Cleanup identisch zur lokalen Baseline, Zähler bewusst nicht zurückgedreht;
+Container nachweislich entfernt. Restriktive Ausgangs-umask0077 geprüft;
+öffentliche Runtime-Dateien bleiben lesbar, private Konfiguration bleibt geschützt.
+
+**Abgrenzung:** systemd-Units wurden mit `systemd-analyze verify` geprüft; im
+Wegwerfcontainer ersetzt ein ausdrücklich lokaler Prozess-Shim den fehlenden
+systemd-PID1. Echte systemd-/DynamicUser-Ausführung und fremde VPS-Dienste sind
+erst im Operatorlauf abnehmbar. Zoom-Navigation wurde per Tastatur geprüft;
+keine Behauptung eines bestandenen automatisierten Maus-Koordinatentests im
+Firefox-Zoomprofil. Bildschirmleser/Outlook-Desktop wurden nicht vorgetäuscht.
+390px-Restbefund: lange Kalenderüberschrift bricht unschön am letzten Buchstaben
+um; keine Funktionsblockade, das gebundene Anwendungspaket bleibt unverändert.
+
+Private lokale Evidenz: `.tmp/ch-pilot-proof-accca8cbc1324e73b9e20b709451cd74/`.
+`result.json` SHA `891eb52aaf1708eb6cf8dc56a865a2d8d964aa051360c652279bd997000c8daf`;
+`mobile390.png` SHA `5416fe1ad7367b88f9808c8f4bc0aa8f172f9725c1ef9da5d649b0edb07b54a4`;
+`native200.png` SHA `840d1653604f1b8e8adde3750290f04149b0223758af73246ec1c47591a304ec`.
+Screenshots visuell geprüft; keine dieser Dateien wird versioniert.
+
+| Geforderter Abschluss | Tatsächlicher Status vor Operatorlauf |
+| --- | --- |
+| VPS-Deployment | NEIN, sudo-Interaktion ausstehend |
+| Geschützter Zugang | Vorbereitet: HTTPS localhost8447 über gepinntes SSH, noch nicht aktiv |
+| CAL-1 Ende-zu-Ende | Lokal PASS; VPS NOT_RUN |
+| MFA/RBAC | Lokal PASS; VPS NOT_RUN |
+| PostgreSQL-Persistenz | Lokal PASS; VPS NOT_RUN |
+| Backend-Neustart | Lokal PASS; VPS NOT_RUN |
+| Andere VPS-Dienste | Lesend unverändert/gesund21:39 UTC |
+| Restore/Rollback | Echter bestehender Restore PASS, wiederverwendet; eigener Rückbau lokal geprüft |
+| Ausgeführte VPS-Migrationen | Keine |
+| Persönliche Erstzugänge | Nicht aktiviert; separate Identitäts-/Recovery-/Betriebsfreigaben bleiben nötig |
+| Interaktive Benutzerführung | Admin/Coach/Reviewer-Touren lokal tatsächlich geprüft; VPS NOT_RUN |
+| Ein nächster Block | Den einen freigegebenen Installations-/Abnahmelauf im privaten Terminal ausführen |
+
+DoD des nächsten Blocks: tatsächlicher VPS-Beleg `VPS_PILOT=PASS CAL1=PASS
+MFA_RBAC=PASS PERSISTENCE=PASS RESTART=PASS FOREIGN_SERVICES=PASS`, geprüfter
+REPORT und nutzbare geschützte Vorführung. Kein persönlicher Coach-Pilot,
+COACH-3B REAL APPLY, Website-Deployment oder öffentlicher Zugang impliziert.
+
 ### Echter Sicherungs- und Restorenachweis akzeptiert
 
 **09.11., 20:48:37 UTC: echter VPS-Sicherungs-/Restoreblock PASS.** Manuels

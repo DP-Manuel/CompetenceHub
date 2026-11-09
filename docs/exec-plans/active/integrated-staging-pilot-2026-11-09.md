@@ -31,10 +31,14 @@ integrated preparation and conditional Staging pilot, not an unguarded rollout.
    Foreign services/loopback still healthy20:52. No need to repeat recovery or
    restart GPG. Temporary machine/user-bound rollback only; permanent independent
    recovery and real-user readiness are not implied.
-7. NEXT READY: own private pilot installation, retained runtime configuration,
-   strict SSH/HTTPS-origin and native synthetic end-to-end/restart acceptance.
-   Same scoped owner approval applies; no server install, real account, Coach
-   import, migration, mail or Website action performed by the proof acceptance.
+7. LOCAL INSTALLER/ACCEPTANCE READY: one private executable operator entry,
+   retained DPAPI runtime configuration, exact 0006 baseline reuse, separate
+   loopback API/TLS services and native synthetic acceptance.61 actual local
+   Ubuntu/Firefox checks PASS; restrictive umask, explicit committed-close and
+   scoped rollback failure regressions;1,580 tests PASS/30 expected skips,
+   60 focused tests PASS. Actual VPS21:39 healthy/unchanged, sudo needs private
+   authentication. No actual install or new backup/migration yet. Same owner
+   approval applies. [One executing command and precise evidence boundaries](../../operations/integrated-staging-pilot-2026-11-09.md#vps-installation-und-native-abnahme-ein-privater-operatorlauf).
 
 ## Gates And Evidence
 
