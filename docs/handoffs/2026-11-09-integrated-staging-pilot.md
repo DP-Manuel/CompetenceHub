@@ -98,6 +98,14 @@ remains the functional acceptance sequence. Tours are optional under Help.
 
 ## One Next Block
 
+Latest same-day reply resolves the prior input question: no external domain/TLS,
+network destination or current real restore proof exists. The subsequently
+verified [one private technical-pilot proposal](../operations/integrated-staging-pilot-2026-11-09.md#ein-vorschlag-begrenzter-privater-technischer-pilot)
+now owns the precise next scope. Local-only proof: 14 recovery + 5 SSH/TLS + 37 native
+checks and 159 targeted tests PASS; 40 tables/data/schema/effective rights match.
+No real backup target is qualified; DPAPI is only a temporary user/machine-bound
+candidate, not permanent independent recovery. Existing package remains unchanged.
+
 **Protected Staging operating window**, not another architecture/key sprint.
 Inputs: confirmed HTTPS/access path, current suitable protected snapshot and
 isolated restore path, safe retained application configuration and one private

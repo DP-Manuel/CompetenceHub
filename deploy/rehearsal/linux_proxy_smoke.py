@@ -43,7 +43,7 @@ class NoRedirect(HTTPRedirectHandler):
         return None
 
 
-def main(report):
+def main(report, *, on_verified=None):
     if not Path("/.dockerenv").exists() or not (ROOT / "LOCAL_REHEARSAL_ONLY").exists():
         raise RuntimeError("Local container guard missing")
     checks = report["checks"]
@@ -99,7 +99,8 @@ def main(report):
     nginx = subprocess.Popen(["nginx", "-c", "/work/nginx.conf", "-g", "daemon off;"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         jar = CookieJar()
-        opener = build_opener(HTTPCookieProcessor(jar), HTTPSHandler(context=ssl._create_unverified_context()), NoRedirect())
+        tls = ssl.create_default_context(cafile=str(ROOT / "localhost.crt"))
+        opener = build_opener(HTTPCookieProcessor(jar), HTTPSHandler(context=tls), NoRedirect())
         def request(path, method="GET", data=None, headers=None, origin=ORIGIN):
             all_headers = {"Accept": "application/json", **(headers or {})}
             payload = None if data is None else json.dumps(data).encode()
@@ -164,6 +165,8 @@ def main(report):
         forged = keyed_digest("login:ip:198.51.100.88", key).hex()
         check("Client X-Forwarded-For cannot create forged rate bucket", sql(f"SELECT count(*) FROM competence_hub.auth_rate_limit_buckets WHERE bucket_key_hash=decode('{forged}','hex');").strip() == "0")
         check("App and DB bound only to local addresses", all("127.0.0.1:" in line for line in command("ss", "-ltnH").splitlines() if ":8001 " in line or ":5432 " in line))
+        if on_verified is not None:
+            on_verified()
         ids = ",".join(f"'{user}'" for user in users.values())
         buckets = [keyed_digest(f"login:account:{user}@example.invalid", key) for user in users.values()]
         buckets += [keyed_digest(f"mfa:user:{user}", key) for user in users.values()]

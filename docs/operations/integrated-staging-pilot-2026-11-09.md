@@ -115,11 +115,92 @@ Origin/TLS, fremder Portbelegung, Berechtigungsleck oder Dienstverschlechterung.
 
 ## Eine konsolidierte MANUEL ACTION REQUIRED-Entscheidung
 
-Noch keine Passworteingabe: zuerst endgültigen Staging-Zugangsweg inklusive
-TLS/Zugriffsschutz und den bereits nutzbaren geschützten Snapshot-/Restoreweg
-bestätigen. Danach **ein** abgestimmtes sudo-/Konfigurations-/Releasefenster mit
-gebundenem Paket. Niemals Passwörter, Tokens, Schlüssel oder Recovery-Codes im
-Chat senden. Benannte Einladungen bleiben ohne bestätigten Zustellweg aus.
+Manuel hat am 09.11 geantwortet: keine bestätigte externe Domain/TLS-Konfiguration,
+kein aktueller realer Backup-/Restorenachweis und kein verfügbares Netzlaufwerk.
+GPG-/USB-Neuanlage bleibt pausiert. Private SSH-Zwischenlösung lokal prüfen,
+unabhängige Tests abschließen und **einen** Vorschlag vorlegen. Keine realen
+Migrationen oder Benutzeraktivierungen. Die frühere Rückfrage ist beantwortet;
+nicht erneut nach denselben noch nicht vorhandenen Inputs fragen.
+
+## Ein Vorschlag: begrenzter privater technischer Pilot
+
+Ein einziges **gesondert freizugebendes** Betriebsfenster, in dieser Reihenfolge:
+
+1. Einmal erhöht unter demselben Windows-Benutzer BitLocker-Schutz, Zielidentität,
+   Kapazität und exklusive ACLs prüfen. Vorgeschlagen, **nicht angelegt oder
+   freigegeben**: `%LOCALAPPDATA%\CompetenceHub\pilot-snapshots`. Kein USB-/SMB-
+   Fallback. Im selben privaten Ablauf per sudo aktuelle VPS-Schema-/Daten-/
+   Konfigurationsmetadaten prüfen; vorhandene Anwendungsschlüssel erhalten.
+2. PostgreSQL-Custom-Dump über SSH im Prozessspeicher übernehmen, vor jeder
+   Dateischreibung mit Windows-CurrentUser-DPAPI schützen. SHA-256 nach Schließen
+   und erneutem Einlesen vergleichen. Keine Klartextdumpdatei, PowerShell-
+   Textpipeline, Credential-Argumente, GPG-Abfrage oder neues Passwort. Die lokale
+   Probe ist auf 64 MiB begrenzt; größere reale Daten brauchen einen separat
+   geprüften Streamingweg, keinen unverschlüsselten Fallback.
+3. Genau die wieder eingelesene Kopie in frischem Prozess entschlüsseln und in
+   eine neue, nur für den Operator zugängliche Probe-DB restaurieren. Alle
+   Tabellen-/Datenhashes, Schema, Besitzer und effektiven Rechte vergleichen.
+   Quelle unverändert lassen und nur die eigene Probe-DB entfernen.
+4. **Erst nach akzeptierter echter Sicherung/Restoreprobe** den eigenen API-Dienst
+   auf erneut geprüftem 127.0.0.1:8001 und einen eigenen loopbackgebundenen TLS-
+   Proxy aktivieren. Fremde Nginx-Hosts nicht ändern; Syntaxcheck und gesondert
+   erlaubter Reload statt Dienstneustarts. Ausschließlich SSH-LocalForward zum
+   TLS-Endpunkt, exakter Origin einschließlich Clientport. Passendes Zertifikat
+   über den bestehenden host-key-geprüften SSH-Kanal binden; der technische
+   Client validiert Zertifikat **und** Hostname. Kein öffentliches HTTP,
+   `-k`/`verify=False` oder pauschaler Browser-Zertifikatsbypass.
+5. Nur synthetische Konten/Termine technisch auf dem Server abnehmen. Reale
+   Benutzer, Admin-Bootstrap, Coachzuordnungen und Versand bleiben gesperrt.
+   Der normale Browserzugang für echte Nutzer wartet weiterhin auf bestätigte
+   Domain/TLS und die langfristigen Recovery-/Betriebsgates. Janays bereits
+   vorführbare lokale Browserdemo ist davon unabhängig.
+
+**Begrenzung:** CurrentUser-DPAPI ist üblicherweise an Benutzer und Rechner
+gebunden. Diese Zwischenkopie wäre nur ein kurzfristiger Rückweg bei einem
+Deploymentfehler, kein alleiniger Geräteverlust-/Katastrophenschutz und keine
+portable Schlüsselsicherung. Rechnerverlust/Neuinstallation oder administrative
+Passwortrücksetzung können die Nutzbarkeit gefährden. Vor realen Konten ist ein
+unabhängig wiederherstellbarer, genehmigter und tatsächlich geprüfter Sicherungsweg
+erforderlich. Bestehende automatische Jobs, Schlüssel und Backups bleiben erhalten.
+
+## Lokaler Nachweis der Folgeentscheidung
+
+Bericht `release-artifacts/private-pilot-local-20261109/report.json`:
+**14 Sicherungs-/Restoreprüfungen + 5 SSH-/TLS-Prüfungen + 37 native Proxy-/MFA-
+Prüfungen PASS**. Echte OpenSSH-Verbindung innerhalb eines isolierten lokalen
+Containers, strikte Host-Key-Prüfung, falscher Host-Key abgewiesen. Native MFA,
+Cookie-/CSRF-/Session-/Logoutprüfung durch diesen Tunnel mit verifiziertem TLS.
+Unbekanntes Zertifikat und falscher Hostname werden abgewiesen. Dies beweist
+keinen ohne zusätzliche Vertrauenskonfiguration nutzbaren öffentlichen Browser-
+Zugang. Keine Windows-Vertrauensstelle installiert.
+
+Synthetischer 175418-Byte-Dump, 175638-Byte-DPAPI-Datei: exklusive Benutzer-ACL,
+erneutes Lesen, Fresh-Process-Entschlüsselung ohne Dialog, Manipulation abgewiesen;
+separate Restore-DB, alle 40 Tabellen/Zeilenhashes/Schema/Rechte geprüft. Gleiche
+Triggernamen auf verschiedenen Tabellen werden nach vollständiger Identität,
+Definition und Enabled-Status verglichen, nicht nach instabiler Katalogreihenfolge.
+ACLs werden strukturiert nach effektiven Grants verglichen. Quelle unverändert;
+Probe-DB, synthetische verschlüsselte Arbeitskopie und eigener Container entfernt.
+Kein Hostmount, veröffentlichter Port, echter Schlüsselzugriff oder VPS-Write.
+11 neue Tests und 159 fokussierte Regressionsprüfungen PASS. Das Anwendungsrelease
+0080195 und sein ZIP bleiben unverändert; keine unnötige Neuerstellung.
+
+Bericht-SHA-256:
+`b56ceb39d4ef5071b9b4c321775179f9e32708fe361cc3738f0eb0d0552dde6a`.
+Die neuen Skripte sind **synthetische Testwerkzeuge**, keine freigegebenen
+Operator-Werkzeuge für echte Backups oder Deployments.
+
+Speichermetadaten 09.11: C: NTFS/fest/Healthy, 467163213824 Bytes frei;
+BitLocker-Abfrage nicht erhöht verweigert, **kein qualifiziertes reales Ziel**.
+D: Removable/FAT32/Warning beobachtet, nicht als früherer Stick identifiziert,
+nicht verwendet; kein Entsperr-/Reparaturversuch. VPS-Postflight 18:49 UTC:
+vier Dienste weiter aktiv, PG 5432/Chatbot 8000 loopback, 8001 frei, kein Portal.
+
+Grundlagen: [Microsoft DPAPI](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata),
+[pg_dump](https://www.postgresql.org/docs/16/app-pgdump.html),
+[pg_restore](https://www.postgresql.org/docs/16/app-pgrestore.html),
+[OpenSSH](https://man.openbsd.org/ssh.1),
+[verifizierender TLS-Kontext](https://docs.python.org/3/library/ssl.html#ssl.create_default_context).
 
 ## Kurzanleitungen
 

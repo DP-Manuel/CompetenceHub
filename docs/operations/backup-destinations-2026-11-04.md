@@ -1,5 +1,11 @@
 # Backup Destinations
 
+Latest 09.11: network target still unavailable, GPG/USB rebase PAUSED. The
+[private pilot proposal and synthetic restore proof](integrated-staging-pilot-2026-11-09.md#ein-vorschlag-begrenzter-privater-technischer-pilot)
+supersedes the historical continuation horizon below. No real destination is
+currently qualified. CurrentUser-DPAPI is only a bounded machine/user-bound
+temporary rollback candidate, not durable portable recovery or real-data approval.
+
 Stand:04.11.2026. Manuel's addendum plans a possible internal network target;
 access is not configured. **No concrete share/path/identity or destination
 approval exists.** Do not guess paths or create credentials, drives or sessions.

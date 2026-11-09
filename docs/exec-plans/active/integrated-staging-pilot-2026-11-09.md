@@ -31,6 +31,17 @@ integrated preparation and conditional Staging pilot, not an unguarded rollout.
 
 ## Gates And Evidence
 
+09.11 follow-up decision/proof: no external domain/TLS or current real backup
+proof exists; consider ONLY an SSH-protected technical interim pilot. Reused
+exact 0080195 package. Local real OpenSSH, strict certificate/hostname validation,
+native 37 MFA/proxy checks, 5 transport and 14 snapshot/recovery checks PASS.
+Synthetic dump -> CurrentUser DPAPI file -> fresh process -> separate PG DB:
+40 tables/row hashes/schema/effective ACLs match, source unchanged, probe/file/
+container removed. 11 new/159 focused tests PASS. No new application build needed
+for test-only changes. Current C: BitLocker proof requires elevation, no real
+target qualified; DPAPI alone is not portable disaster recovery. Actual VPS
+operations, real users, SMTP and GPG remain held. [One ordered proposal](../../operations/integrated-staging-pilot-2026-11-09.md#ein-vorschlag-begrenzter-privater-technischer-pilot).
+
 Remote observations are dated, not installation or restore acceptance. Missing
 Coach rows block only the corresponding activation. Manuel is Admin-only;
 Janay is intended reviewer, not technical custodian. No new implicit mixed roles.

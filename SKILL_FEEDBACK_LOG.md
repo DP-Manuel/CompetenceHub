@@ -7,6 +7,18 @@ Updated: 2026-11-09. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+09.11 follow-up learning: a protected SSH path still needs independently checked
+TLS certificate AND hostname; test foreign certificate/host/SSH key negatives.
+Close a restore proof from the ciphertext actually reread from disk, not the
+original RAM dump. Distinguish synthetic cryptographic proof from real storage
+qualification and portable recovery. Windows identity may be Entra S-1-12,
+not only S-1-5; don't reject a real current user through an invented SID family
+assumption. Schema comparison must canonicalize catalog collections; trigger
+names alone aren't unique across tables, and ACL array order isn't permission
+meaning. Keep full identities/definitions/enabled state and effective grants.
+Observed, regression-tested locally; global skill changes remain a separate
+CodexSkills proposal. No new real password interaction or GPG process.
+
 09.11 integrated-pilot learning: distinguish source implementation, actual
 packaged public UI, private database acceptance and deployed Staging. Test the
 packaged Calendar endpoint, not only a demo wrapper. Reuse renderer assets in

@@ -4,6 +4,17 @@ Updated: 2026-11-09.
 
 ## Current Milestone
 
+Latest 09.11 follow-up: Manuel confirms no external Staging domain/TLS, no current
+real backup/restore proof and no network destination. GPG/USB rebase stays paused.
+SSH-only technical access and bounded CurrentUser-DPAPI snapshot/restore proven
+locally: 14 recovery + 5 transport + 37 native MFA/proxy checks, 40 tables identical,
+11 new/159 focused tests PASS, owned resources removed. TLS now actually checks
+certificate and hostname; no unverified context in Linux harness. C: protection
+not readable without elevation, so no real backup target is qualified. DPAPI is
+machine/user-bound, not permanent portable recovery; normal real-user browser
+access still needs trusted TLS/operations. [One concrete proposal; not execution](docs/operations/integrated-staging-pilot-2026-11-09.md#ein-vorschlag-begrenzter-privater-technischer-pilot).
+Package 0080195/hash stays unchanged. No real DB/account/server/key/Website action.
+
 09.11 INTEGRATED STAGING PILOT: new task conditionally authorizes a VPS pilot,
 not unguarded changes. Local role dashboards, bounded Admin account inventory,
 optional Coach/Reviewer/Admin tours, explicit pending invitations with stable

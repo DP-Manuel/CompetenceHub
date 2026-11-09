@@ -2,6 +2,17 @@
 
 Significant milestones only; newest first.
 
+09.11 follow-up decision: no confirmed external domain/TLS/current restore or
+network destination; examine private SSH technical pilot, preserve GPG pause.
+Actual isolated local OpenSSH/strict certificate+hostname/native MFA proof and
+pg_dump -> CurrentUser-DPAPI file -> fresh-process decrypt -> separate PG restore
+PASS. 14 recovery/5 transport/37 native checks, 40 complete table hashes/schema/
+effective rights equal; original unchanged, owned probe/file/container removed.
+11 new/159 targeted tests PASS. C: current BitLocker state needs elevation; no
+real destination qualified. DPAPI proposal explicitly not portable disaster
+recovery or real-user approval. Unchanged 0080195 release reused; VPS read-only
+postflight 18:49 UTC healthy, 8001 free, no installed Portal. [Single bounded proposal](docs/operations/integrated-staging-pilot-2026-11-09.md#ein-vorschlag-begrenzter-privater-technischer-pilot).
+
 09.11 integrated pilot increment: real SQL role dashboards, bounded Admin
 inventory, optional three-role tours, existing invitation lifecycle extended
 to pure Reviewer/explicit UUID-linked Coach, default-closed delivery and shared
