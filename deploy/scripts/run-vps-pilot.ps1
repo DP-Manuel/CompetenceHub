@@ -8,6 +8,17 @@ $entryCommit = $ExpectedSourceCommit
 . (Join-Path $PSScriptRoot 'run-protected-staging-preflight.ps1') -ExpectedSourceCommit $entryCommit
 . (Join-Path $PSScriptRoot 'initialize-staging-operator-config.ps1')
 
+function Invoke-VpsPilotProcess {
+    param([string]$Python, [string]$Script, [string]$Commit, [string]$Directory)
+    $previousEncoding = [Console]::OutputEncoding
+    try {
+        # Python -X utf8 emits UTF-8 into this native stdout pipe, not OEM text.
+        [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
+        & $Python -I -X utf8 $Script --execute --source $Commit --directory $Directory | Out-Host
+        if ($LASTEXITCODE -ne 0) { throw 'PRIVATE_PILOT_NOT_ACCEPTED' }
+    } finally { [Console]::OutputEncoding = $previousEncoding }
+}
+
 function Invoke-VpsPilot {
     if (-not $entryExecute) { Write-Host 'VPS_PILOT=NOT_EXECUTED'; return 0 }
     $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
@@ -42,9 +53,8 @@ try {
     Write-Host 'PLAN: verify accepted restore/current state; install own loopback API/TLS; synthetic browser acceptance and own restart.'
     Write-Host 'Existing application keys remain unchanged. Hidden inputs: PostgreSQL app password and VPS sudo only.'
     Write-Host 'Do not transcript, record or share passwords, MFA or recovery values. Leave this terminal open after PASS.'
-    & (Join-Path $root 'apps/webapp/.venv/Scripts/python.exe') -I -X utf8 `
-        (Join-Path $root 'apps/webapp/scripts/run_vps_pilot.py') --execute --source $entryCommit --directory $run | Out-Host
-    if ($LASTEXITCODE -ne 0) { throw 'PRIVATE_PILOT_NOT_ACCEPTED' }
+    Invoke-VpsPilotProcess (Join-Path $root 'apps/webapp/.venv/Scripts/python.exe') `
+        (Join-Path $root 'apps/webapp/scripts/run_vps_pilot.py') $entryCommit $run
     return 0
 }
 

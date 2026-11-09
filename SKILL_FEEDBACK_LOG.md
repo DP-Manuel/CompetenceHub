@@ -7,6 +7,15 @@ Updated: 2026-11-09. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+09.11 real-entry regression: a green native container probe bypassed the outer
+accepted-receipt loader. The actual immutable legacy receipt lacked a later
+baseline hash field, causing a local KeyError before authentication. Cover the
+entire boundary with the actual historical schema and separately accepted hashes;
+never rewrite the receipt or weaken verification to hide compatibility errors.
+Also test UTF-8 native output under inherited OEM850, restoring console encoding
+on success/failure.13 added cases/112 focused PASS; no new real operation.
+Project-local learning; no global skill changes.
+
 09.11 pilot execution learning: accepted backup/restore receipts must be reused,
 not reopened because a separate sudo input is needed. Provide one actual
 install+acceptance command, not successive preparation windows. Explicitly

@@ -42,6 +42,12 @@ acceptance = module('pilot_native_acceptance', Path(__file__).with_name('vps_pil
 require, sha, canonical = backup.require, backup.protocol.sha, backup.protocol.canonical
 RECEIPT = '6db91e37eaac4cc8a87c430d1ca7a462'
 RECEIPT_SHA = 'ffb7a809b25e3e4b72d8961e874d9d6de3fb5bff8d51e39c108cbecb35093710'
+# Exact hashes independently accepted with this immutable legacy receipt.
+# Its baseline hash was documented separately, before that field was added.
+ACCEPTED_CIPHERTEXTS = {
+    'database.dump.dpapi': '21a6c7f82b466beb5599bba534ee6669af55fcdc88693cc9ac431c6debf5a66e',
+    'baseline.json.dpapi': '8a37b094d1f7d8692680cd055878f648fca46ae6d9228a2e848cd9db57e18bb4',
+}
 PACKAGE = ROOT / 'release-artifacts/webapp/competence-hub-webapp-0.1.0-0080195755e3-20261109T182244Z.zip'
 PACKAGE_SHA = 'f3478fc34de4647fd182a9c7262678b8de2e6b194428ec7dbcc0a116d9c51c41'
 WHEELS = ROOT / 'release-artifacts/webapp-linux/20261109T182331Z-7c8e9560/wheelhouse'
@@ -100,8 +106,9 @@ try {
 
 def accepted_baseline():
     receipt = ROOT / ('release-artifacts/protected-staging-backup/' + RECEIPT + '.json')
-    require(sha(receipt.read_bytes()) == RECEIPT_SHA, 'BOUND_RESTORE_RECEIPT_REQUIRED')
-    record = json.loads(receipt.read_bytes())
+    raw = receipt.read_bytes()
+    require(sha(raw) == RECEIPT_SHA, 'BOUND_RESTORE_RECEIPT_REQUIRED')
+    record = json.loads(raw)
     require(all(record.get(name) == 'PASS' for name in ('status', 'backup', 'restore', 'postflight'))
             and record.get('source_unchanged') is True and record.get('own_probe_removed') is True,
             'COMPLETED_RESTORE_REQUIRED')
@@ -110,10 +117,15 @@ def accepted_baseline():
         path = directory / name
         script = ". '__ACL__'; $null=Assert-StagingExternalPath '__PATH__'; Assert-StagingPrivateAcl '__PATH__'"
         powershell(script.replace('__ACL__', str(SCRIPTS / 'initialize-staging-operator-config.ps1')).replace('__PATH__', str(path)))
-        require(sha(path.read_bytes()) == record[field], 'EXISTING_ROLLBACK_COPY_CHANGED')
+        expected = ACCEPTED_CIPHERTEXTS[name]
+        if field != 'baseline_ciphertext_sha256' or field in record:
+            require(record.get(field) == expected, 'BOUND_RESTORE_CIPHERTEXT_MISMATCH')
+        require(sha(path.read_bytes()) == expected, 'EXISTING_ROLLBACK_COPY_CHANGED')
     recovered = backup.checked(sys.executable, '-I', str(SCRIPTS / 'windows_dpapi.py'), '--decrypt-stdin',
                                data=(directory / 'baseline.json.dpapi').read_bytes())
-    return json.loads(recovered)['baseline']
+    recovered = json.loads(recovered)
+    require(isinstance(recovered, dict) and isinstance(recovered.get('baseline'), dict), 'BOUND_BASELINE_REQUIRED')
+    return recovered['baseline']
 
 
 def package_payload():
@@ -238,8 +250,11 @@ def main(options):
     receipt_dir.mkdir(exist_ok=True)
     try:
         qualify_directory(directory)
+        report['phase']='accepted_restore_validation'
         baseline = accepted_baseline()
+        report['phase']='package_validation'
         payload = package_payload()
+        report['phase']='existing_application_key_validation'
         keys = existing_keys()
         with socket.socket() as probe:
             probe.bind(('127.0.0.1',8447))

@@ -4,6 +4,14 @@ Updated: 2026-11-09.
 
 ## Current Milestone
 
+Latest actual operator attempt091afdb: local_preflight KeyError before passwords
+or SSH; deployment/acceptance NOT_RUN. Legacy accepted restore receipt lacks the
+later baseline_ciphertext_sha256 field. Locally reproduced/fixed using both
+already accepted exact ciphertext hashes behind immutable receipt SHA; no receipt
+rewrite/new backup/decrypt/server action.112 focused tests PASS incl13 new cases;
+native UTF-8 REPORT output also fixed. One next block unchanged: corrected private
+VPS install/acceptance command; no new owner/restore gate. [Current details](docs/operations/integrated-staging-pilot-2026-11-09.md#vps-installation-und-native-abnahme-ein-privater-operatorlauf).
+
 Latest09.11 VPS deployment request: scoped approval remains valid; current
 backup/restore is NOT reopened. One executing private operator entry prepared:
 run-vps-pilot.ps1, existing package0080195, exact current0006 baseline check,

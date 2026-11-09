@@ -9,6 +9,28 @@ Betriebsnachweise. IONOS/Pages, Coachimport und R2/GPG bleiben unangetastet.
 
 ### VPS-Installation und native Abnahme: ein privater Operatorlauf
 
+**Operator-STOP aus091afdb lokal behoben:** Bericht
+`release-artifacts/vps-pilot/6c756c8d8cec413eaf7a5f77fcbc31a7.json` bestätigt
+`phase=local_preflight`, `failure_type=KeyError`, Installation/Abnahme NOT_RUN.
+Reproduzierbare Ursache: der alte, unverändert akzeptierte Restorebericht enthält
+noch kein `baseline_ciphertext_sha256`; der Installer hatte dieses spätere Feld
+mit direktem Dictionary-Zugriff vorausgesetzt. Kein Passwortfehler, keine
+Serververbindung, Sicherungswiederholung oder verschlüsselte Neuanlage.
+
+Der Installer bindet jetzt beide Ciphertexte an die oben bereits unabhängig
+akzeptierten festen Hashes; die Ausnahme gilt nur nach Prüfung des exakten
+unveränderten Original-Receipthashes. Vorhandene Receipt-Hashfelder müssen dazu
+passen. Fehlende/falsche Pflichtfelder und veränderte Dateien stoppen mit einem
+bereinigten Fehlercode vor Entschlüsselung. Originalbericht und beide Ciphertexte
+erneut nur per SHA-256 geprüft: unverändert. Alte Laufverzeichnisse bleiben erhalten.
+Die lokale Phase unterscheidet nun Restore-, Paket- und Anwendungsschlüsselprüfung.
+UTF-8-Decodierung im PowerShell-Kindprozess korrigiert den verstümmelten REPORT-Pfad;
+vorherige Konsolencodierung wird auch bei Fehlern wiederhergestellt.
+**112 fokussierte Tests PASS**, einschließlich nachgewiesener Altformat-Reproduktion,
+13 zusätzlicher Regressionen, Manipulationsabwehr und OEM850/UTF-8-Erfolg/Fehler.
+Die bestehende Paket-/61-Browserprüfung bleibt datiert gültig; keine neue
+Backendfunktion, Migration, Browser-Neuabnahme oder Installation behauptet.
+
 Owner-Auftrag zur tatsächlichen Installation liegt vor. Kein erneutes
 Freigabegespräch und keine weitere Backup-/Restoreausführung nötig. **Noch keine
 VPS-Installation ausgeführt:** die gepinnte SSH-Verbindung funktioniert, aber

@@ -39,6 +39,11 @@ integrated preparation and conditional Staging pilot, not an unguarded rollout.
    60 focused tests PASS. Actual VPS21:39 healthy/unchanged, sudo needs private
    authentication. No actual install or new backup/migration yet. Same owner
    approval applies. [One executing command and precise evidence boundaries](../../operations/integrated-staging-pilot-2026-11-09.md#vps-installation-und-native-abnahme-ein-privater-operatorlauf).
+   Actual operator091afdb stopped locally before password/SSH: legacy receipt
+   omitted a later hash field. Reproduced and fixed without changing the receipt
+   or ciphertexts; immutable receipt + separately accepted hashes retained.
+   112 focused tests PASS incl13 new regression cases; UTF-8 REPORT fixed.
+   No repeat backup or server action; corrected install remains the next block.
 
 ## Gates And Evidence
 

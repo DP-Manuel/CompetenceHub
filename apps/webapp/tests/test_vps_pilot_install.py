@@ -36,6 +36,116 @@ def test_pilot_uses_existing_bound_release_and_recovery_no_backup_repeat():
     assert "sha(key_store.read_bytes())==key_hash" in source
 
 
+@pytest.fixture
+def legacy_store(tmp_path,monkeypatch):
+    root=tmp_path/'repository'
+    receipt=root/'release-artifacts/protected-staging-backup'/(client.RECEIPT+'.json')
+    receipt.parent.mkdir(parents=True)
+    storage=tmp_path/'local/CompetenceHub/pilot-snapshots'/client.RECEIPT
+    storage.mkdir(parents=True)
+    encrypted={'database.dump.dpapi':b'SYNTHETIC_ENCRYPTED_DUMP',
+               'baseline.json.dpapi':b'SYNTHETIC_ENCRYPTED_BASELINE'}
+    for name,data in encrypted.items():(storage/name).write_bytes(data)
+    # The original accepted receipt predates baseline_ciphertext_sha256.
+    record={'status':'PASS','backup':'PASS','restore':'PASS','postflight':'PASS',
+            'source_unchanged':True,'own_probe_removed':True,
+            'ciphertext_sha256':client.sha(encrypted['database.dump.dpapi'])}
+    receipt.write_bytes(client.canonical(record))
+    monkeypatch.setattr(client,'ROOT',root)
+    monkeypatch.setenv('LOCALAPPDATA',str(tmp_path/'local'))
+    monkeypatch.setattr(client,'RECEIPT_SHA',client.sha(receipt.read_bytes()))
+    monkeypatch.setattr(client,'ACCEPTED_CIPHERTEXTS',
+                        {name:client.sha(data) for name,data in encrypted.items()},raising=False)
+    calls=[]
+    monkeypatch.setattr(client,'powershell',lambda script:calls.append('acl') or b'')
+    def checked(*args,data=None):
+        calls.append('decrypt_baseline')
+        assert data==encrypted['baseline.json.dpapi']
+        return b'{"baseline":{"tables":{"synthetic":0},"schema_sha256":"synthetic"}}'
+    monkeypatch.setattr(client.backup,'checked',checked)
+    return receipt,storage,encrypted,calls
+
+
+def test_actual_legacy_receipt_shape_reuses_separately_bound_baseline_hash(legacy_store):
+    _,_,_,calls=legacy_store
+    assert client.accepted_baseline()=={'tables':{'synthetic':0},'schema_sha256':'synthetic'}
+    assert calls==['acl','acl','decrypt_baseline']
+
+
+@pytest.mark.parametrize('name',['database.dump.dpapi','baseline.json.dpapi'])
+def test_changed_legacy_ciphertext_is_rejected_before_any_decryption(legacy_store,name):
+    _,storage,_,calls=legacy_store
+    (storage/name).write_bytes(b'SYNTHETIC_CHANGED_CIPHERTEXT')
+    with pytest.raises(client.backup.protocol.SnapshotStop,match='EXISTING_ROLLBACK_COPY_CHANGED'):
+        client.accepted_baseline()
+    assert 'decrypt_baseline' not in calls
+
+
+def test_altered_legacy_receipt_is_not_a_generic_schema_bypass(legacy_store):
+    receipt,_,_,calls=legacy_store
+    receipt.write_bytes(receipt.read_bytes()+b' ')
+    with pytest.raises(client.backup.protocol.SnapshotStop,match='BOUND_RESTORE_RECEIPT_REQUIRED'):
+        client.accepted_baseline()
+    assert calls==[]
+
+
+@pytest.mark.parametrize('field',['ciphertext_sha256','baseline_ciphertext_sha256'])
+def test_receipt_hash_fields_cannot_override_independently_accepted_hashes(legacy_store,monkeypatch,field):
+    receipt,_,_,calls=legacy_store
+    record=json.loads(receipt.read_bytes());record[field]='0'*64
+    receipt.write_bytes(client.canonical(record))
+    monkeypatch.setattr(client,'RECEIPT_SHA',client.sha(receipt.read_bytes()))
+    with pytest.raises(client.backup.protocol.SnapshotStop,match='BOUND_RESTORE_CIPHERTEXT_MISMATCH'):
+        client.accepted_baseline()
+    assert 'decrypt_baseline' not in calls
+
+
+def test_missing_dump_hash_fails_with_sanitized_code_not_keyerror(legacy_store,monkeypatch):
+    receipt,_,_,calls=legacy_store
+    record=json.loads(receipt.read_bytes());del record['ciphertext_sha256']
+    receipt.write_bytes(client.canonical(record))
+    monkeypatch.setattr(client,'RECEIPT_SHA',client.sha(receipt.read_bytes()))
+    with pytest.raises(client.backup.protocol.SnapshotStop,match='BOUND_RESTORE_CIPHERTEXT_MISMATCH'):
+        client.accepted_baseline()
+    assert 'decrypt_baseline' not in calls
+
+
+@pytest.mark.parametrize('value',[{}, {'baseline':None}, {'baseline':[]}])
+def test_malformed_recovered_baseline_fails_without_unhandled_keyerror(legacy_store,monkeypatch,value):
+    monkeypatch.setattr(client.backup,'checked',lambda *args,**values:client.canonical(value))
+    with pytest.raises(client.backup.protocol.SnapshotStop,match='BOUND_BASELINE_REQUIRED'):
+        client.accepted_baseline()
+
+
+def test_immutable_restore_bindings_match_existing_canonical_operations_record():
+    record=(ROOT/'docs/operations/integrated-staging-pilot-2026-11-09.md').read_text(encoding='utf8')
+    assert client.RECEIPT_SHA in record
+    assert all(value in record for value in client.ACCEPTED_CIPHERTEXTS.values())
+
+
+@pytest.mark.parametrize('exit_code',[0,4])
+def test_operator_native_utf8_output_and_failure_preserve_console_encoding(tmp_path,exit_code):
+    import base64
+    import subprocess
+    import sys
+    child=tmp_path/'synthetic-child.py'
+    child.write_text("import sys\nprint('REPORT=C:/Users/RödelManuel/synthetic.json',flush=True)\nsys.exit("+str(exit_code)+")\n",encoding='utf8')
+    command="""$ErrorActionPreference='Stop'
+. '__ENTRY__'
+[Console]::OutputEncoding=[Text.Encoding]::GetEncoding(850)
+$failed=$false
+try { Invoke-VpsPilotProcess '__PYTHON__' '__CHILD__' 'synthetic' 'synthetic' }
+catch { if ($_.Exception.Message -cne 'PRIVATE_PILOT_NOT_ACCEPTED') {exit 9};$failed=$true }
+if ([Console]::OutputEncoding.CodePage -ne 850) {exit 8}
+if ($failed -ne __FAIL__) {exit 7}
+Write-Host 'ENCODING_RESTORED'
+""".replace('__ENTRY__',str(ROOT/'deploy/scripts/run-vps-pilot.ps1')).replace('__PYTHON__',sys.executable).replace('__CHILD__',str(child)).replace('__FAIL__','$true' if exit_code else '$false')
+    result=subprocess.run(['pwsh','-NoProfile','-EncodedCommand',base64.b64encode(command.encode('utf-16-le')).decode()],capture_output=True,timeout=30)
+    assert result.returncode==0
+    assert 'REPORT=C:/Users/RödelManuel/synthetic.json' in result.stdout.decode('utf8')
+    assert b'ENCODING_RESTORED' in result.stdout
+
+
 def test_private_tls_only_exact_host_no_global_nginx_or_public_listeners():
     value=agent.proxy_config()
     assert 'listen 127.0.0.1:8443 ssl;' in value
