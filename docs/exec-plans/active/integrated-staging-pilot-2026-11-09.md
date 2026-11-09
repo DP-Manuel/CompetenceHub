@@ -19,8 +19,12 @@ integrated preparation and conditional Staging pilot, not an unguarded rollout.
    by the full publication/ICS/revision/restart workflow.1476 suite tests/30 skips
    plus88 focused/1 occupied-local-port skip (owned fixture was running);5 final
    extra lifecycle cases included in focused proof.26 renderer/34 Website tests.
-   Clean package and current Linux proof are the remaining local delivery step.
+   Final clean source package0080195755e3:1481 PASS/30 skips; fresh wheel smoke
+   and37 actual Ubuntu/Nginx/HTTPS/Auth checks PASS. Source/hash/proof bound in
+   the [delivery record](../../handoffs/2026-11-09-integrated-staging-pilot.md).
 5. DONE: concise role/activation/support guides and bounded rollout/rollback record.
+   Janay PDF rendered and inspected: one tagged A4 page. Tours screenshot-verified
+   on390px and native200%. No real Screenreader or Outlook client claim.
 6. HELD: actual Staging mutation until current schema/config custody, protected
    snapshot plus isolated restore, final origin/TLS/access and sudo execution
    window are proven. No R2 restart, real import or unconfirmed identities.

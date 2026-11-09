@@ -17,6 +17,9 @@ disabled, NOT changed. Current protected snapshot/isolated restore/config custod
 and final HTTPS/access path remain unproven; affected server mutations stopped.
 No real account/invitation, VPS install, Pages/IONOS or R2/GPG action.
 [One consolidated operating gate and concise guides](docs/operations/integrated-staging-pilot-2026-11-09.md).
+Final local delivery: source0080195,1481 tests/30 skips,144 native SQL/browser
+checks+3 PostgreSQL API tests,37 current-package Linux/proxy checks PASS.
+[Bound package/hash, Janay PDF and open remote gates](docs/handoffs/2026-11-09-integrated-staging-pilot.md).
 
 LATEST05.11 MANUEL DECISION: WEBSITE FIRST. Backup-key rebase/R2 is PAUSED by
 explicit user instruction. No key creation, passphrase dialog, GPG/USB operator

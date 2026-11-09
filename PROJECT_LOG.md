@@ -11,6 +11,9 @@ services/PG loopback unchanged,8001 free; proposed domain NXDOMAIN and sudo DB
 inventory requires private interaction. Current protected snapshot/restore and
 final access/configuration gates remain held, not replaced by local evidence.
 [Current evidence/rollout and short role guides](docs/operations/integrated-staging-pilot-2026-11-09.md).
+Final source0080195 clean package:1481/30,144 native SQL/browser+3 API and37
+Linux/proxy checks PASS; own resources removed. Janay guide rendered as one-page
+tagged PDF. [Bound delivery record](docs/handoffs/2026-11-09-integrated-staging-pilot.md).
 06.11 native CAL-1 local pilot slice: actual PostgreSQL16.15 storage and overlap
 queries, persisted sessions/revisions after app AND DB restart, shared public
 view, ICS snapshot and request draft; improved existing Portal filters/dirty-

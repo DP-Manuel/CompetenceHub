@@ -59,6 +59,10 @@ def run(fixture, options, report, evidence):
             expect(page.locator("#tour-progress")).to_have_text(f"Schritt {i+1} von {count}")
             expect(page.locator("#tour-title")).to_be_focused()
             geometry(page,role+f" tour step{i+1}")
+            if i == 0:
+                name={"Admin":"admin","Coach":"coach","Prüfer":"reviewer"}[role]
+                label="native-200" if page.evaluate("devicePixelRatio===2") else "desktop"
+                demo.screenshot(page,evidence/f"tour-{name}-{page.viewport_size['width'] if page.viewport_size else 'native200'}.png",label)
             if i == 1:
                 page.locator("#tour-back").click()
                 expect(page.locator("#tour-progress")).to_have_text(f"Schritt 1 von {count}")
