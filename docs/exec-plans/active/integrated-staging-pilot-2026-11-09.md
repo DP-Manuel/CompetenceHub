@@ -25,9 +25,17 @@ integrated preparation and conditional Staging pilot, not an unguarded rollout.
 5. DONE: concise role/activation/support guides and bounded rollout/rollback record.
    Janay PDF rendered and inspected: one tagged A4 page. Tours screenshot-verified
    on390px and native200%. No real Screenreader or Outlook client claim.
-6. HELD: actual Staging mutation until current schema/config custody, protected
-   snapshot plus isolated restore, final origin/TLS/access and sudo execution
-   window are proven. No R2 restart, real import or unconfirmed identities.
+6. AUTHORIZED CONDITIONALLY, TECHNICAL PREFLIGHT HELD: Manuel approves the private
+   synthetic VPS window with backup/restore before mutation. Actual 19:59 UTC:
+   four services healthy, PG/Chatbot loopback, 8001 free, Portal absent. Current
+   Windows process not elevated; BitLocker proof unavailable. Sudo DB metadata
+   requires one private authentication. Prepared one exact-commit, read-only
+   PowerShell entry; 28 tests plus real isolated PG 0001-0008/40-table and
+   0001-0009/44-table metadata/denied-DDL proof PASS; container removed.
+   No server backup, installation or data/account mutation. Prove current
+   schema/config custody, protected snapshot plus isolated restore and final
+   origin/TLS/access before actual install. No new owner-approval loop, R2
+   restart, real import or unconfirmed identities.
 
 ## Gates And Evidence
 

@@ -2,6 +2,16 @@
 
 Significant milestones only; newest first.
 
+09.11 owner authorizes protected synthetic VPS window after actual prechange
+backup/isolated restore, no real accounts/GPG/IONOS/import. Read-only 19:59 UTC:
+four services healthy, Portal absent, 8001 free. Actual BitLocker query denied
+in non-elevated Windows process; sudo DB read requires private authentication.
+No server write. Prepared one sanitized metadata-only PowerShell entry for same
+user/elevated terminal, at most one hidden sudo prompt; source/pinned SSH/read-only
+transactions enforced. 28 new/187 focused tests and actual isolated PG schemas 0001-0008/40 tables
+and 0001-0009/44 tables PASS, actual DDL denied, container removed. Package scope
+explains table difference; no implicit VPS migration. [Current execution](docs/operations/integrated-staging-pilot-2026-11-09.md#aktuelle-freigabe-und-tatsächlicher-ausführungsstand).
+
 09.11 follow-up decision: no confirmed external domain/TLS/current restore or
 network destination; examine private SSH technical pilot, preserve GPG pause.
 Actual isolated local OpenSSH/strict certificate+hostname/native MFA proof and

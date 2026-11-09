@@ -5,6 +5,56 @@ abschließenden Release-Nachweis gebunden. **Nicht auf dem VPS installiert.**
 Der neue Auftrag erlaubt den bedingten Piloten, ersetzt aber keine fehlenden
 Betriebsnachweise. IONOS/Pages, Coachimport und R2/GPG bleiben unangetastet.
 
+## Aktuelle Freigabe und tatsächlicher Ausführungsstand
+
+Manuels anschließender Auftrag **„FREIGABE GESCHÜTZTES STAGING-BETRIEBSFENSTER“**
+genehmigt den technischen synthetischen VPS-Piloten bedingt: erst aktuelles
+geschütztes Ziel, konsistenter Dump, Integrität und isolierte Wiederherstellung;
+danach erforderliche geprüfte Migrationen/eigene Installation und Remote-Abnahme.
+Keine erneute Grundsatzfreigabe nötig. Reale Konten, Coachimport, öffentliche
+Freischaltung, IONOS und GPG bleiben ausgeschlossen. Fehlende technische
+Berechtigung ist nicht mit fehlender Owner-Freigabe zu verwechseln.
+
+Lesender Preflight am 09.11., **19:59 UTC**: vier bestehende Dienste aktiv;
+PG `127.0.0.1:5432`, Chatbot `127.0.0.1:8000`, Port 8001 weiterhin frei.
+Portal-Unit `not-found`, `/opt/competence-hub` nicht vorhanden; eigenes
+Konfigurationsverzeichnis `0750 root:postgres`. Kein Konfigurationsinhalt gelesen.
+Die tatsächliche DB-Inventur benötigt weiterhin `sudo`-Authentisierung.
+Lokales C: NTFS/Healthy, 464480960512 Bytes frei; aktuelle Sitzung nicht erhöht,
+BitLocker-Statusabfrage verweigert. **Speicherziel und echter DB-Zustand bleiben
+unqualifiziert; Sicherung, Restore, Migration und Installation nicht ausgeführt.**
+
+Einziger notwendiger Operator-Einstieg für diese noch fehlende lesende Prüfung:
+[`run-protected-staging-preflight.ps1`](../../deploy/scripts/run-protected-staging-preflight.ps1)
+mit exaktem geprüftem Commit in **PowerShell 7 als Administrator unter demselben
+Windows-Benutzer**. Kein zweites Terminal und kein Zwischenablageablauf nötig.
+Prüft Quellstand und C:-Schutz, dann gepinntes SSH und ausschließlich lesende
+PostgreSQL-Transaktionen. Nur falls erforderlich einmal verdeckt das VPS-sudo-
+Passwort abfragen; kein automatischer Passwortwiederholungsversuch. GPG, USB,
+DPAPI-Anwendungsschlüssel und fremde Dateien werden nicht geöffnet oder verändert.
+
+Der Lauf speichert ausschließlich bereinigte Metadaten als neue JSON-Datei unter
+`release-artifacts/protected-staging-preflight/`; bestehende Berichte bleiben
+erhalten. Die Ergebniszeile nennt ausdrücklich `BACKUP=NOT_RUN RESTORE=NOT_RUN
+PILOT=NOT_INSTALLED`. Auch ein `PREFLIGHT=PASS` ist **noch kein** Sicherungs- oder
+Installationsnachweis: exklusive Ziel-ACL, Konfigurationsverwahrung und die echte
+Restoreprobe müssen anschließend innerhalb der bereits erteilten Freigabe folgen.
+Bei STOP nur den betroffenen Betriebsweg anhalten, keine erneute Schlüsselrunde.
+
+Lokale Verifikation des neuen Lesewerkzeugs: 28 neue, insgesamt 187 fokussierte
+Regressionstests PASS; Kontext-/Linkprüfung ebenfalls PASS.
+Echtes isoliertes PostgreSQL 16 mit Paket-Schema 0001–0008/40 Tabellen und
+zusätzlich lokalem 0009-Schema/44 Tabellen geprüft. Ein tatsächlicher DDL-Versuch
+innerhalb der Read-only-Transaktion wurde abgewiesen; kein Restobjekt angelegt.
+Die unterschiedliche Tabellenzahl ist durch den geprüften Paketumfang erklärt,
+kein Anlass, Migration 0009 auf dem VPS auszuführen. systemd-Zustände sind in
+diesem Container simuliert, **kein zusätzlicher VPS-Dienstnachweis**. Container
+entfernt und Löschung geprüft. Synthetischer Bericht:
+`release-artifacts/protected-staging-preflight-local/report.json`, SHA-256
+`cd74f31232693a2c74c51ea2b4933f3dccae934650b9398cceb3ce004d1839a6`.
+Die folgenden früheren Vorschlagsabschnitte bleiben als Entscheidungsherkunft
+erhalten; ihr separates Freigabegate ist durch Manuels neuen Auftrag geschlossen.
+
 ## Tatsächliche lesende VPS-Prüfung
 
 09.11., 17:46 UTC: SSH mit vorhandenem Host-Key/Schlüssel erfolgreich.

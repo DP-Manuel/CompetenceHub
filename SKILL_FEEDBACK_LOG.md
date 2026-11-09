@@ -7,6 +7,15 @@ Updated: 2026-11-09. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+09.11 operating-window learning: distinguish owner authorization from missing
+local elevation/sudo authentication; don't ask for the same decision again.
+One read-only preflight must use the native Windows BitLocker host, never touch
+protectors or retry passwords, and report NOT_RUN for backup/restore/install.
+Pair PostgreSQL listen settings with actual sockets and indirect role membership.
+Do not hard-code table totals from an older package: current source includes
+0009, reviewed package ends at 0008; test both without promoting a migration.
+Observed and tested locally; no global skill modification or new GPG workflow.
+
 09.11 follow-up learning: a protected SSH path still needs independently checked
 TLS certificate AND hostname; test foreign certificate/host/SSH key negatives.
 Close a restore proof from the ciphertext actually reread from disk, not the
