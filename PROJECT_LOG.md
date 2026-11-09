@@ -2,6 +2,17 @@
 
 Significant milestones only; newest first.
 
+09.11 actual operator preflight 20:13 UTC PASS, independent receipt SHA verified:
+C: protected, actual Staging 0006/27 tables, dynamic data empty, minimal rights,
+four services healthy. Prepared one approved backup+restore batch, not a new
+GPG/password architecture. Exported MVCC binds source hashes and native dump;
+CreateNew private DPAPI copy, exact-file fresh-process recovery and restricted
+probe restore with source/data/schema/ACL/sequence/format comparisons. Actual
+local 27-table end-to-end PASS, owned resources removed, 26 new tests/213 final
+focused PASS, full run 1545 PASS/30 expected external skips. Ciphertext excluded
+from Git even on accidental local copy.
+No real backup, restore, migration, account or deployment performed. [Current gate](docs/operations/integrated-staging-pilot-2026-11-09.md#tatsächlicher-preflight-bestanden-sicherung-und-restore-vorbereitet).
+
 09.11 owner authorizes protected synthetic VPS window after actual prechange
 backup/isolated restore, no real accounts/GPG/IONOS/import. Read-only 19:59 UTC:
 four services healthy, Portal absent, 8001 free. Actual BitLocker query denied

@@ -7,6 +7,17 @@ Updated: 2026-11-09. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+09.11 backup continuation learning: keep one private authentication across dump
+and restore, never recover a password from a previous terminal. Bind native dump
+and reference hashes to one exported MVCC snapshot; identity sequences are not
+MVCC data and require quiet-source plus before/after state verification. Restore
+probe must deny app/migrator CONNECT even through inherited owner membership:
+use postgres ownership, no connections initially, revoke before opening and
+recheck after restore. Use existing private CreateNew ACL primitives with explicit
+operator ownership under elevation. Retain exact ciphertext and bound receipts,
+never treat a temporary same-machine DPAPI copy as independent disaster recovery.
+Locally implemented/tested; real operator outcome still pending, global proposal open.
+
 09.11 operating-window learning: distinguish owner authorization from missing
 local elevation/sudo authentication; don't ask for the same decision again.
 One read-only preflight must use the native Windows BitLocker host, never touch

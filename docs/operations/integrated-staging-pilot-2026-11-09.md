@@ -7,6 +7,70 @@ Betriebsnachweise. IONOS/Pages, Coachimport und R2/GPG bleiben unangetastet.
 
 ## Aktuelle Freigabe und tatsächlicher Ausführungsstand
 
+### Tatsächlicher Preflight bestanden, Sicherung und Restore vorbereitet
+
+**20:13 UTC: Operator-Preflight PASS.** Manuels Bericht
+`release-artifacts/protected-staging-preflight/20261109T2013097595103Z.json`
+wurde gelesen und unabhängig hashgeprüft:
+`1a939f60b7a0e9fd91d6a84e70072bfb5f2ca343de1858865903941a97e37124`.
+C: FullyEncrypted/On/Unlocked, XtsAes128, 464462270464 Bytes frei. Staging:
+PostgreSQL 16.15, 0001–0006, 27 Tabellen, fünf statische Rollen; alle dynamischen
+Tabellen leer, keine fremde DB-Session. Eigentümer und minimale App-Rechte korrekt,
+PG Loopback, Nginx-Syntax gültig, vier Dienste aktiv. Portal/Unit/Runtime-env fehlen.
+Keine Mutationen. Volume-/Inventurgate geschlossen, Ziel-ACL und echter Restore
+weiter **unbewiesen**. Ältere fehlende Preflight-Belege unten sind historisch.
+
+Einziger nächster Operatorlauf innerhalb der bestehenden Freigabe:
+[`run-protected-staging-backup.ps1`](../../deploy/scripts/run-protected-staging-backup.ps1)
+mit `-Execute -ExpectedSourceCommit <geprüfter Commit>` im bestehenden erhöhten
+PowerShell-7-Fenster, gleicher Benutzer. Sicherung und Restore zusammenhängend,
+bei Bedarf genau eine verdeckte VPS-sudo-Abfrage. Keine neue Owner-Freigabe,
+Zwischenablage, zweite Konsole oder GPG-Abfrage. Frühere Passworteingaben werden
+nicht gespeichert oder aus fremden Sitzungen ausgelesen.
+
+Der Lauf prüft Quelle, Volume und aktuelle DB erneut. Nur neue private Dateien
+unter `%LOCALAPPDATA%\CompetenceHub\pilot-snapshots\<eindeutige Lauf-ID>`, bestehende
+Benutzer-/SYSTEM-ACL-Primitiven, kein Überschreiben. Ein Root-Prozess im Speicher
+über gepinntes SSH erledigt die aktuelle Inventur und den gesamten Datenbankblock.
+Read-only-Transaktion mit exportiertem MVCC-Snapshot bindet Zeilen-/Schemahashes
+und `pg_dump -Fc --snapshot` an denselben Stand. Unbekannte Zustände oder mehr als
+die geprüfte 64-MiB-Grenze stoppen, kein unsicherer Fallback.
+
+Dump nur im RAM, vor Dateischreibung Windows-CurrentUser-DPAPI; auch Baseline
+verschlüsselt. CreateNew, exklusive Besitzer-/ACL-Prüfung, SHA-256 nach erneutem
+Lesen, Entschlüsselung genau dieser Kopie in frischem Prozess, Manipulationstest.
+Erst danach neue zufällig benannte Probe-DB im selben VPS-Cluster, zunächst ohne
+Verbindungen, danach PUBLIC/App/Migrator-CONNECT verweigert, Besitzer postgres.
+Native Restore ohne `--create`/`--clean`/globalen Rollen-Replay. Vergleich aller
+27 Tabellen/Zeilenhashes, Schema/Rechte, Funktionen/Trigger, Format und
+Identitätszähler; freie PG-Daten-/WAL-Kapazität vor der Probe prüfen, Quelle
+unverändert, nur eigene Probe entfernen und Löschung
+prüfen. Probe-DB-Rechte sind absichtlich enger; bestehende globale Rollen und
+Passwörter bleiben erhalten. Keine Migration, Konten- oder Dienständerung.
+
+Vorhandene Anwendungsschlüssel werden nicht geöffnet. Die Abwesenheit einer
+eigenen Unit/Runtime-Konfiguration und ursprüngliche DB-Eigenschaften werden
+festgehalten, nicht als portable Schlüssel-/Konfigurationssicherung ausgegeben.
+Bereinigter Betriebsbericht: `release-artifacts/protected-staging-backup/`.
+Bei Fehlern Dateien erhalten; nur konkrete eigene Probe-ID für Aufklärung,
+kein breites Cleanup. Bestehende Jobs, Backups, Schlüssel und Websites unverändert.
+
+**Begrenzung:** temporärer rechner-/benutzergebundener Rückfallstand für die
+Erstinstallation, keine unabhängige Dauersicherung und kein Maschinen-/Cluster-
+Recoverybeweis. Original-DB nie ersetzen. Pilot bleibt bis zur Prüfung des echten
+Sicherungs-/Restoreberichts uninstalliert; reale Konten weiterhin gesperrt.
+
+Lokaler Ende-zu-Ende-Beleg: echtes isoliertes PG 16/0006, echte Windows-DPAPI-,
+Datei-, ACL- und Fresh-Process-Kette sowie Restore PASS. Alle 27 Tabellen samt
+Rechten/Format/Zählern gleich, Quelle unverändert, Probe/Container/Testdateien
+entfernt. Systemd dabei simuliert, **kein** neuer VPS-Betriebsbeleg. Gesamtlauf
+1545 PASS/30 erwartete externe Skips; abschließend 213 fokussierte PASS,
+einschließlich 26 neuer Prüfungen und Git-Ausschluss von `.dpapi`-Dateien. Bericht
+`release-artifacts/protected-backup-restore-local/889832df7dbc449f989888bfbfd71c11.json`,
+SHA-256 `38977689877026d6b1c254ea1ff7d2abb0aa58b2009a95f83f04a60b569bc544`.
+
+### Vorangegangene Freigabe und Vorbereitung
+
 Manuels anschließender Auftrag **„FREIGABE GESCHÜTZTES STAGING-BETRIEBSFENSTER“**
 genehmigt den technischen synthetischen VPS-Piloten bedingt: erst aktuelles
 geschütztes Ziel, konsistenter Dump, Integrität und isolierte Wiederherstellung;

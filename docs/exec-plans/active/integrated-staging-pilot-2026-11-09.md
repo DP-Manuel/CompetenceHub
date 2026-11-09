@@ -39,6 +39,18 @@ integrated preparation and conditional Staging pilot, not an unguarded rollout.
 
 ## Gates And Evidence
 
+Latest actual operator receipt 20:13 UTC independently hash-verified: preflight
+PASS, C: encrypted/protected/unlocked, actual 0001-0006/27 owner-correct tables,
+dynamic rows zero, minimal app rights, four services healthy, no installed Portal.
+Next READY (not executed): one protected backup+restore entry, no new owner
+approval. Current volume/target ACL checks, native exported snapshot + pg_dump,
+RAM -> CurrentUser DPAPI CreateNew copy -> fresh-process exact-file recovery ->
+restricted own probe DB -> full rows/schema/rights/format/sequence comparison ->
+source unchanged/probe removed/postflight. Actual local end-to-end proof PASS;
+26 new/213 final targeted tests PASS, full run 1545 PASS/30 external skips.
+Real receipt required before install, real users held.
+Prior missing-preflight observations below are historical, not reopened blockers.
+
 09.11 follow-up decision/proof: no external domain/TLS or current real backup
 proof exists; consider ONLY an SSH-protected technical interim pilot. Reused
 exact 0080195 package. Local real OpenSSH, strict certificate/hostname validation,

@@ -4,13 +4,16 @@ Updated: 2026-11-09.
 
 ## Current Milestone
 
-Latest owner decision 09.11: protected synthetic VPS operating window approved
-conditionally; no public release or real accounts. Actual 19:59 UTC read-only
-checks: four foreign services healthy, PG/Chatbot loopback, 8001 free, Portal
-absent. Current local process lacks elevation/BitLocker evidence and VPS sudo
-requires private authentication; no real snapshot/restore/migration/install run.
-One read-only, exact-commit PowerShell preflight prepared and locally tested,
-including actual isolated PG metadata and rejected writes. [Current authorization,
+Latest actual 09.11 20:13 UTC: Manuel's operator preflight PASS, report hash
+independently verified. C: FullyEncrypted/On/Unlocked; actual Staging 0001-0006,
+27 owner-correct tables, all dynamic rows zero, app least privilege and four
+services healthy. Portal/own unit/env absent. Protected synthetic window remains
+approved; backup/restore runner now prepared with exported MVCC, private DPAPI
+disk copy and exact-file isolated restore. Actual 27-table local end-to-end and
+26 new tests/213 final focused PASS, full run 1545 PASS/30 skips; no real
+backup/restore/migration/install/account yet. One
+next private operator command performs backup+restore, no repeated owner gate.
+[Current authorization,
 operator step and remaining gates](docs/operations/integrated-staging-pilot-2026-11-09.md#aktuelle-freigabe-und-tatsächlicher-ausführungsstand).
 Owner approval is not missing; only those technical gates remain. Preserve GPG
 pause, existing files/keys/backups and all foreign services.
@@ -208,7 +211,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended block: resume the already authorized protected Staging operating window, starting with the single private read-only elevation/sudo preflight. Then prove the protected snapshot/restore/configuration/HTTPS gates before bounded installation and synthetic remote acceptance. Do not request the same owner approval again or infer remote success from local tests. [Ordered horizon and acceptance](docs/exec-plans/active/integrated-staging-pilot-2026-11-09.md). Existing shared Calendar/native SQL integration is complete locally.
+1. Exactly one recommended block: run the already authorized current Staging backup+isolated restore through the prepared elevated entry. Preflight has actually passed. Deliverable is the protected exact-file restore/cleanup/health receipt; only then own private pilot installation and synthetic remote acceptance. Do not request the same owner approval again or infer remote success from local tests. [Ordered horizon and acceptance](docs/exec-plans/active/integrated-staging-pilot-2026-11-09.md). Existing shared Calendar/native SQL integration is complete locally.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 

@@ -22,6 +22,7 @@ tools/*.zip
 *.gpg
 *.asc
 *.clixml
+*.dpapi
 *.dump
 *.dump.*
 pubring.kbx*
