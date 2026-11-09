@@ -7,6 +7,61 @@ Betriebsnachweise. IONOS/Pages, Coachimport und R2/GPG bleiben unangetastet.
 
 ## Aktuelle Freigabe und tatsächlicher Ausführungsstand
 
+### Echter Sicherungs- und Restorenachweis akzeptiert
+
+**09.11., 20:48:37 UTC: echter VPS-Sicherungs-/Restoreblock PASS.** Manuels
+Schlussmeldung wurde nicht allein als Beweis verwendet. Der tatsächlich erstellte
+bereinigte Bericht `release-artifacts/protected-staging-backup/6db91e37eaac4cc8a87c430d1ca7a462.json`
+wurde vollständig geprüft, SHA-256:
+`ffb7a809b25e3e4b72d8961e874d9d6de3fb5bff8d51e39c108cbecb35093710`.
+Gebundener Operator-Quellstand: `eee2523a0c2ad521fc0825b244448fd4cbc8cc3f`.
+
+Die vorhandenen Dateien unter dem freigegebenen externen Laufverzeichnis
+`%LOCALAPPDATA%\CompetenceHub\pilot-snapshots\6db91e37eaac4cc8a87c430d1ca7a462`
+wurden anschließend ausschließlich per ACL/Metadaten/SHA-256 nachgeprüft, nicht
+entschlüsselt oder ersetzt. Verzeichnis und Dateien: korrekter Operatorbesitz,
+vorgesehene Operator-/SYSTEM-Rechte. Tatsächliche Bindungen:
+
+| Artefakt | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Native Quellarchive im geschützten Prozess | 110885 | `f2210c314f3bf977700b030e679527823bfe4f9a6b398d8df669c1e37be67024` |
+| `database.dump.dpapi` | 111110 | `21a6c7f82b466beb5599bba534ee6669af55fcdc88693cc9ac431c6debf5a66e` |
+| `baseline.json.dpapi` | 9158 | `8a37b094d1f7d8692680cd055878f648fca46ae6d9228a2e848cd9db57e18bb4` |
+
+Der echte Bericht bestätigt Fresh-Process-Recovery, Manipulationsabwehr und
+Wiederherstellung genau dieser zurückgelesenen Kopie in einer eigenen gesperrten
+VPS-Probe-DB. Alle 27 Tabellen/Zeilenhashes, Schema/Rechte, Formate und Zähler
+identisch; App/Migrator ohne CONNECT, Quelle unverändert, Probe nachweislich
+entfernt, PostgreSQL-Daten-/WAL-Kapazität geprüft und Postflight PASS. Migrationen
+bleiben 0001–0006. Keine realen Konten, Anwendungsschlüsselzugriffe oder Installation.
+Zusätzlicher lesender SSH-Postflight **20:52:49 UTC**: vier bestehende Dienste
+aktiv, PG/Chatbot Loopback, 8001 weiter frei, keine neuen externen Ports.
+
+**Dieses konkrete temporäre Sicherungs-/Restore-Gate ist geschlossen.** Keine
+Wiederholung der Sicherung und kein neuer GPG-/Passwortprozess für diese Abnahme.
+Die Einschränkungen bleiben: CurrentUser-DPAPI an Rechner/Benutzer gebunden,
+Restore im selben Cluster, keine unabhängige Dauer-/Maschinenverlustsicherung,
+globale Rollenpasswörter nicht exportiert. Reale Benutzer weiterhin nicht freigegeben.
+Die folgenden vorherigen `NOT_RUN`-/fehlender-Beweis-Angaben sind historisch.
+
+Kleiner lokaler Operatorfix: `exit (Funktion)` hatte native Python-stdout-Zeilen
+einschließlich REPORT-Pfad eingesammelt, während Write-Host-Schlussmeldung sichtbar
+blieb. Mit synthetischem Kindprozess reproduziert und durch explizites Out-Host
+bei erhaltener Exitcode-Prüfung behoben. Künftiges Wrapper-PASS prüft zusätzlich
+den tatsächlichen JSON-Beleg gegen Lauf-ID, Commit, beide Datei-Hashes, Restore-
+und Cleanup-Flags. Neue Belege enthalten Lauf-ID und Baseline-Ciphertexthash;
+der obige alte Originalbeleg bleibt unverändert und wurde separat geprüft.
+224 fokussierte Tests PASS, darunter 11 neue Ausgabe-/Exitcode-/Receipt-Fälle.
+Kein neuer echter Backup-/Restorelauf durch diese Korrektur.
+
+**Ein nächster Block:** eigene private VPS-Pilotinstallation mit dem unveränderten
+gebundenen Paket 0080195755e3, vorhandenen Anwendungsschlüsseln und verifiziertem
+SSH-/HTTPS-Origin. Inputs sind dieser akzeptierte Rückfallstand, Paket/Hashes und
+geschützter Operatorzugriff für Runtime-Konfiguration. Ergebnis/DoD: eigener
+Loopback-Dienst, tatsächlich geprüfte TLS-/Cookie-/MFA-/RBAC-/CAL-1-Kette,
+Restart/Persistenz und unveränderte fremde Dienste; vorher kein Remote-UI-PASS
+behaupten. Kein neues Owner-Freigabegate, keine realen Konten oder Websiteänderung.
+
 ### Tatsächlicher Preflight bestanden, Sicherung und Restore vorbereitet
 
 **20:13 UTC: Operator-Preflight PASS.** Manuels Bericht

@@ -4,15 +4,16 @@ Updated: 2026-11-09.
 
 ## Current Milestone
 
-Latest actual 09.11 20:13 UTC: Manuel's operator preflight PASS, report hash
-independently verified. C: FullyEncrypted/On/Unlocked; actual Staging 0001-0006,
-27 owner-correct tables, all dynamic rows zero, app least privilege and four
-services healthy. Portal/own unit/env absent. Protected synthetic window remains
-approved; backup/restore runner now prepared with exported MVCC, private DPAPI
-disk copy and exact-file isolated restore. Actual 27-table local end-to-end and
-26 new tests/213 final focused PASS, full run 1545 PASS/30 skips; no real
-backup/restore/migration/install/account yet. One
-next private operator command performs backup+restore, no repeated owner gate.
+Latest actual 09.11 20:48 UTC: REAL Staging backup+isolated restore PASS, report
+and exact external ciphertext hashes/private ACLs independently checked. All 27
+tables, rows/schema/rights/format/sequences equal; source unchanged, own probe
+removed, postflight PASS. Source remains 0001-0006/empty dynamic data. Four foreign
+services still healthy at 20:52 UTC; Portal absent/8001 free. Temporary DPAPI
+rollback gate CLOSED, not portable disaster recovery or real-account approval.
+No repeat backup/GPG/password loop. Small local stdout/receipt-gate correction,
+224 focused tests PASS. No migration/install/real account or public deployment.
+One next block: own private VPS pilot installation + native synthetic acceptance
+with bound existing package/configuration; existing scoped owner approval applies.
 [Current authorization,
 operator step and remaining gates](docs/operations/integrated-staging-pilot-2026-11-09.md#aktuelle-freigabe-und-tatsächlicher-ausführungsstand).
 Owner approval is not missing; only those technical gates remain. Preserve GPG
@@ -211,7 +212,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended block: run the already authorized current Staging backup+isolated restore through the prepared elevated entry. Preflight has actually passed. Deliverable is the protected exact-file restore/cleanup/health receipt; only then own private pilot installation and synthetic remote acceptance. Do not request the same owner approval again or infer remote success from local tests. [Ordered horizon and acceptance](docs/exec-plans/active/integrated-staging-pilot-2026-11-09.md). Existing shared Calendar/native SQL integration is complete locally.
+1. Exactly one recommended block: own private VPS pilot installation and native synthetic acceptance using the existing bound package, preserved configuration and accepted actual temporary backup/restore. Deliverable is protected SSH/HTTPS/native CAL-1/MFA/RBAC/restart proof with healthy co-hosts; no real accounts. Do not repeat the passed backup gate or request the same owner approval again. [Ordered horizon and acceptance](docs/exec-plans/active/integrated-staging-pilot-2026-11-09.md). Existing shared Calendar/native SQL integration is complete locally.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 

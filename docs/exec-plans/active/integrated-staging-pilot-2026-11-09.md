@@ -25,19 +25,31 @@ integrated preparation and conditional Staging pilot, not an unguarded rollout.
 5. DONE: concise role/activation/support guides and bounded rollout/rollback record.
    Janay PDF rendered and inspected: one tagged A4 page. Tours screenshot-verified
    on390px and native200%. No real Screenreader or Outlook client claim.
-6. AUTHORIZED CONDITIONALLY, TECHNICAL PREFLIGHT HELD: Manuel approves the private
-   synthetic VPS window with backup/restore before mutation. Actual 19:59 UTC:
-   four services healthy, PG/Chatbot loopback, 8001 free, Portal absent. Current
-   Windows process not elevated; BitLocker proof unavailable. Sudo DB metadata
-   requires one private authentication. Prepared one exact-commit, read-only
-   PowerShell entry; 28 tests plus real isolated PG 0001-0008/40-table and
-   0001-0009/44-table metadata/denied-DDL proof PASS; container removed.
-   No server backup, installation or data/account mutation. Prove current
-   schema/config custody, protected snapshot plus isolated restore and final
-   origin/TLS/access before actual install. No new owner-approval loop, R2
-   restart, real import or unconfirmed identities.
+6. DONE ACTUALLY: owner-authorized private window preflight 20:13 and protected
+   current backup/exact-file isolated restore 20:48 UTC PASS. Actual 0006/27-table
+   source unchanged, private probe removed; report/two file hashes/ACLs verified.
+   Foreign services/loopback still healthy20:52. No need to repeat recovery or
+   restart GPG. Temporary machine/user-bound rollback only; permanent independent
+   recovery and real-user readiness are not implied.
+7. NEXT READY: own private pilot installation, retained runtime configuration,
+   strict SSH/HTTPS-origin and native synthetic end-to-end/restart acceptance.
+   Same scoped owner approval applies; no server install, real account, Coach
+   import, migration, mail or Website action performed by the proof acceptance.
 
 ## Gates And Evidence
+
+ACTUAL 20:48 UTC operating receipt accepted: current 0006 native dump protected
+on verified C:, exact ciphertext reread/fresh-process recovered and restored in
+restricted own VPS probe DB. All 27 complete table hashes/schema/rights/format/
+sequence state match; source unchanged, probe removed, postflight PASS. Report
+hash and both current external file hashes/ACLs independently verified; four
+foreign services/loopback still healthy20:52. Temporary recovery gate CLOSED;
+not portable disaster recovery or real-user approval. No repeat operation.
+Small local output-capture/strict future receipt fix, 224 focused tests PASS.
+Next READY: private own-service install/configuration/TLS + synthetic native
+acceptance; no install/real account/migration/public release performed yet.
+Existing source package remains unchanged; earlier pending-backup entries below
+are history, not new blocking gates. [Bound evidence and exact next scope](../../operations/integrated-staging-pilot-2026-11-09.md#echter-sicherungs-und-restorenachweis-akzeptiert).
 
 Latest actual operator receipt 20:13 UTC independently hash-verified: preflight
 PASS, C: encrypted/protected/unlocked, actual 0001-0006/27 owner-correct tables,
@@ -70,9 +82,10 @@ must stay off until that gate. No real activation token may be printed.
 
 ## Rolling Horizon
 
-Local feature/security acceptance -> clean source package -> one consolidated
-operator decision -> protected Staging preflight/restore -> exact approved pilot
-install -> synthetic remote acceptance -> approved named first activation ->
-Janay business acceptance. Later steps are conditional, not achieved evidence.
+Completed: local acceptance -> clean bound source package -> owner decision ->
+actual protected Staging preflight/restore. Next: exact private pilot install ->
+synthetic native remote acceptance/restart -> Janay usability acceptance ->
+separately approved named first activation after permanent recovery/mail/identity
+gates. Later steps are conditional, not achieved evidence.
 
 IONOS/Pages, COACH-3B REAL APPLY, CAL-2 and GPG remain outside this batch.

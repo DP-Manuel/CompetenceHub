@@ -1,10 +1,12 @@
 # Backup Destinations
 
-Latest 09.11: network target still unavailable, GPG/USB rebase PAUSED. The
-[private pilot proposal and synthetic restore proof](integrated-staging-pilot-2026-11-09.md#ein-vorschlag-begrenzter-privater-technischer-pilot)
-supersedes the historical continuation horizon below. No real destination is
-currently qualified. CurrentUser-DPAPI is only a bounded machine/user-bound
-temporary rollback candidate, not durable portable recovery or real-data approval.
+Latest 09.11 20:48 UTC: actual C: private DPAPI snapshot + exact-file isolated
+VPS restore PASS; ciphertext hashes and operator/SYSTEM ACLs independently
+verified. [Actual evidence/limitations](integrated-staging-pilot-2026-11-09.md#echter-sicherungs-und-restorenachweis-akzeptiert).
+This concrete temporary rollback target is qualified for the authorized initial
+synthetic pilot, NOT durable portable recovery or real-data approval. Network
+target still unavailable, GPG/USB rebase PAUSED. Earlier missing-proof planning
+below is historical and must not reopen the accepted temporary gate.
 
 Stand:04.11.2026. Manuel's addendum plans a possible internal network target;
 access is not configured. **No concrete share/path/identity or destination
@@ -17,9 +19,10 @@ This concerns encrypted PostgreSQL backups, not the independent approved local
 | Candidate | Evidence / status |
 | --- | --- |
 | Internal SMB/network drive | PLANNED / NOT APPROVED / NOT CONNECTED. Path, access, quotas, protection, owner and retention pending. No network I/O in this task. |
-| Local C: transition candidate | Fixed NTFS,479323578368 bytes free in04.11 metadata probe. Current BitLocker status unavailable without elevated same-user process. Not an approved/proven DB target; no destination folder created. |
+| Local C: temporary rollback target | Actual09.11 FullyEncrypted/On/Unlocked, XtsAes128; 464462270464 bytes free at preflight. Private operator/SYSTEM directory, current DPAPI dump/baseline retained; exact-file restore and cleanup PASS. Machine/user-bound, not independent long-term recovery. |
 | Existing D: key medium | FAT,2012151808 bytes free, known physically unlocked. Current BitLocker metadata also not readable from this non-elevated process. Approved for small protected key/recovery artifacts after the local runner's own current check; NOT PostgreSQL destination. |
 
+Historical04.11 assessment, superseded for the bounded temporary C: target above:
 No safe currently qualified DB destination was found from those known available
 volumes. Stop before a real DB backup. The local key runner can independently
 verify its own C:/D: protection in Manuel's private elevated PowerShell; that

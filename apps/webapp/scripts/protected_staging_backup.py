@@ -184,6 +184,7 @@ def main(options):
     require(stamp.tzinfo is not None and datetime.now(timezone.utc) >= stamp, 'PREFLIGHT_CLOCK_REJECTED')
     validate_target(options.directory)
     report = {'scope': 'STAGING_BACKUP_RESTORE_ONLY', 'status': 'STOP', 'phase': 'remote_preflight',
+              'run_id': options.directory.name,
               'source_commit': options.source, 'backup': 'NOT_RUN', 'restore': 'NOT_RUN',
               'deployment': 'NOT_RUN', 'migration': 'NOT_RUN', 'accounts': 'NOT_RUN',
               'protection': 'CURRENT_USER_DPAPI_ON_VERIFIED_BITLOCKER',
@@ -203,8 +204,9 @@ def main(options):
         report['phase'] = 'encrypted_external_copy'
         print('PASS | Current 0006 source captured using one exported PostgreSQL snapshot.', flush=True)
         stored = private_ciphertext_file(options.directory / 'database.dump.dpapi', dpapi.transform(dump))
-        private_ciphertext_file(options.directory / 'baseline.json.dpapi', dpapi.transform(protocol.canonical(capture)))
+        baseline_stored = private_ciphertext_file(options.directory / 'baseline.json.dpapi', dpapi.transform(protocol.canonical(capture)))
         report.update(backup='PASS', dump_sha256=protocol.sha(dump), ciphertext_sha256=protocol.sha(stored),
+                      baseline_ciphertext_sha256=protocol.sha(baseline_stored),
                       archive_bytes=len(dump), ciphertext_bytes=len(stored), table_count=len(capture['baseline']['tables']))
         recovered = checked(sys.executable, '-I', str(SCRIPTS / 'windows_dpapi.py'), '--decrypt-stdin', data=stored, timeout=30)
         require(protocol.sha(recovered) == capture['dump_sha256'], 'FRESH_PROCESS_RECOVERY_MISMATCH')

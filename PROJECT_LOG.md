@@ -2,6 +2,17 @@
 
 Significant milestones only; newest first.
 
+09.11 20:48 UTC REAL temporary Staging backup/isolated restore PASS. Actual report
+and retained external ciphertext hashes/operator-SYSTEM ACLs verified; 27 complete
+table/data/schema/rights/format/sequence comparisons equal, source unchanged,
+owned restricted probe removed, postflight PASS. Four services healthy20:52,
+8001 free. Gate closed, no permanent portability or real-user claim. No migration,
+install/keyfile action/real accounts/Website deployment. Also fixed reproducible
+PowerShell exit-expression native stdout capture; future PASS additionally binds
+the actual receipt to run/source/two file hashes and restore/cleanup flags.
+224 focused tests PASS. Existing copy/receipt untouched; no backup rerun needed.
+[Actual evidence and next private-pilot block](docs/operations/integrated-staging-pilot-2026-11-09.md#echter-sicherungs-und-restorenachweis-akzeptiert).
+
 09.11 actual operator preflight 20:13 UTC PASS, independent receipt SHA verified:
 C: protected, actual Staging 0006/27 tables, dynamic data empty, minimal rights,
 four services healthy. Prepared one approved backup+restore batch, not a new

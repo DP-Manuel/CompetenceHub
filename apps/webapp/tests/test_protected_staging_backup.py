@@ -194,3 +194,55 @@ def test_root_bootstrap_is_bounded_and_receives_code_only_after_authentication()
 def test_accidental_encrypted_backup_copy_is_excluded_from_git():
     result = subprocess.run(['git', '-C', str(ROOT), 'check-ignore', '--no-index', 'baseline.json.dpapi'], capture_output=True)
     assert result.returncode == 0 and result.stdout.strip() == b'baseline.json.dpapi'
+
+
+@pytest.mark.skipif(os.name != 'nt', reason='Actual PowerShell native-output regression')
+@pytest.mark.parametrize('exit_code', [0, 7])
+def test_child_progress_and_receipt_remain_visible_inside_outer_exit_expression(tmp_path, exit_code):
+    child = tmp_path / 'synthetic_child.py'
+    child.write_text(f"import sys\nprint('SYNTHETIC_PROGRESS')\nprint('REPORT=SYNTHETIC_ONLY')\nsys.exit({exit_code})\n", encoding='utf8')
+    entry = ROOT / 'deploy/scripts/run-protected-staging-backup.ps1'
+    script = (f". '{entry}'; function Test-Caller {{ "
+              f"try {{ Invoke-ProtectedBackupProcess '{os.sys.executable}' '{child}' synthetic synthetic; return 0 }} "
+              "catch { return 3 } }; exit (Test-Caller)")
+    result = subprocess.run(['pwsh', '-NoProfile', '-NonInteractive', '-Command', script], capture_output=True)
+    assert result.returncode == (0 if exit_code == 0 else 3)
+    assert b'SYNTHETIC_PROGRESS' in result.stdout and b'REPORT=SYNTHETIC_ONLY' in result.stdout
+    assert result.stderr == b''
+
+
+def receipt_fixture():
+    proof = {name: True for name in ('all_row_hashes_equal', 'schema_rights_equal', 'sequence_state_equal',
+             'database_format_equal', 'probe_app_migrator_connect_denied', 'probe_removed', 'source_unchanged')}
+    return {
+        'scope': 'STAGING_BACKUP_RESTORE_ONLY', 'status': 'PASS', 'backup': 'PASS', 'restore': 'PASS',
+        'postflight': 'PASS', 'phase': 'complete', 'source_commit': 'c' * 40, 'run_id': 'b' * 32,
+        'ciphertext_sha256': 'a' * 64, 'baseline_ciphertext_sha256': 'd' * 64, 'table_count': 27,
+        'migration': 'NOT_RUN', 'deployment': 'NOT_RUN', 'accounts': 'NOT_RUN',
+        'portable_recovery': False, 'application_keyfiles_touched': False,
+        'source_unchanged': True, 'own_probe_removed': True, 'ciphertext_tamper_rejected': True,
+        'restore_proof': {**proof, 'status': 'PASS', 'table_count': 27},
+        'migrations': [f'{i:04}' for i in range(1, 7)],
+    }
+
+
+@pytest.mark.skipif(os.name != 'nt', reason='Actual PowerShell receipt gate')
+@pytest.mark.parametrize('change', [None, 'hash', 'run', 'commit', 'cleanup', 'string_bool', 'key_rotation', 'tables', 'restore'])
+def test_zero_exit_and_private_files_alone_cannot_claim_restore_pass(change):
+    receipt = receipt_fixture()
+    if change == 'hash': receipt['ciphertext_sha256'] = 'f' * 64
+    if change == 'run': receipt['run_id'] = 'e' * 32
+    if change == 'commit': receipt['source_commit'] = 'f' * 40
+    if change == 'cleanup': receipt['restore_proof']['probe_removed'] = False
+    if change == 'string_bool': receipt['source_unchanged'] = 'true'
+    if change == 'key_rotation': receipt['application_keyfiles_touched'] = True
+    if change == 'tables': receipt['restore_proof']['table_count'] = 26
+    if change == 'restore': receipt['restore'] = 'NOT_RUN'
+    entry = ROOT / 'deploy/scripts/run-protected-staging-backup.ps1'
+    payload = json.dumps(receipt)
+    script = (f". '{entry}'; $r=ConvertFrom-Json -AsHashtable '{payload}'; "
+              f"try {{ Assert-ProtectedBackupReceipt $r '{'c' * 40}' '{'b' * 32}' '{'a' * 64}' '{'d' * 64}'; exit 0 }} "
+              "catch { exit 1 }")
+    result = subprocess.run(['pwsh', '-NoProfile', '-NonInteractive', '-Command', script], capture_output=True)
+    assert (result.returncode == 0) == (change is None)
+    assert result.stdout == b'' and result.stderr == b''

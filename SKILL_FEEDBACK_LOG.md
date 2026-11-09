@@ -7,6 +7,16 @@ Updated: 2026-11-09. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+09.11 actual-operator learning: never accept a console PASS alone. Verify the
+actual sanitized receipt, bound source/run and exact current ciphertext hashes/
+ACLs, then CLOSE that gate without another password/backup loop. PowerShell
+exit(function) captures native success-stream output: progress/REPORT disappeared
+although Write-Host PASS stayed visible. Reproduced and fixed with Out-Host plus
+preserved native exit checking; regression covers success/failure and mismatched
+receipt/hash/run/cleanup booleans. Prior valid legacy receipt remains untouched,
+explicitly accepted through independent verification, not silently rewritten.
+Implemented project-locally; no global skill change.
+
 09.11 backup continuation learning: keep one private authentication across dump
 and restore, never recover a password from a previous terminal. Bind native dump
 and reference hashes to one exported MVCC snapshot; identity sequences are not

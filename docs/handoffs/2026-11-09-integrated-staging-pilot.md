@@ -98,6 +98,15 @@ remains the functional acceptance sequence. Tours are optional under Help.
 
 ## One Next Block
 
+LATEST ACTUAL20:48 UTC: current temporary backup+exact-file isolated VPS restore
+accepted, report/ciphertext hashes and private ACLs independently verified;
+27 tables/schema/rights/data/sequences equal, source unchanged/probe removed.
+Four foreign services healthy20:52. **Do not repeat the backup or GPG workflow.**
+Next is own private pilot installation + native synthetic acceptance, using the
+same bound source package and retained configuration. Reals/IONOS/Pages held.
+The [actual evidence and precise next scope](../operations/integrated-staging-pilot-2026-11-09.md#echter-sicherungs-und-restorenachweis-akzeptiert)
+supersedes the same-day missing-real-restore observations immediately below.
+
 Latest same-day reply resolves the prior input question: no external domain/TLS,
 network destination or current real restore proof exists. The subsequently
 verified [one private technical-pilot proposal](../operations/integrated-staging-pilot-2026-11-09.md#ein-vorschlag-begrenzter-privater-technischer-pilot)
