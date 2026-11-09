@@ -182,14 +182,15 @@ def test_portal_consumes_account_tokens_from_fragment_without_persisting_them() 
     assert "window.location.searchParams" not in javascript
 
 
-def test_portal_admin_invitation_is_idempotent_and_internal_only() -> None:
+def test_portal_admin_invitation_is_idempotent_with_explicit_pilot_role() -> None:
     javascript = (
         files("competence_hub_api")
         .joinpath("portal_ui", "app.js")
         .read_text(encoding="utf-8")
     )
 
-    assert 'role_codes: ["internal"]' in javascript
+    assert 'role_codes: [data.get("role")]' in javascript
+    assert 'coach_id:data.get("coach_id").trim()' in javascript
     assert 'headers: { "Idempotency-Key": state.pendingInvitation.key }' in javascript
     assert 'roles.includes("admin")' in javascript
 

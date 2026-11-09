@@ -54,7 +54,9 @@ class LocalCalendarPostgres:
             if not re.fullmatch(r"[a-f0-9]{64}", self.container):
                 raise RuntimeError("Owned container identity was not confirmed")
             for _ in range(60):
-                if self.command("exec", self.container, "pg_isready", "-U", "postgres", allow_failure=True).returncode == 0:
+                # The image's temporary init server accepts Unix sockets before
+                # initialization finishes. Only the final server listens on TCP.
+                if self.command("exec", self.container, "pg_isready", "-h", "127.0.0.1", "-U", "postgres", allow_failure=True).returncode == 0:
                     break
                 time.sleep(.5)
             else:
@@ -93,7 +95,7 @@ class LocalCalendarPostgres:
             raise RuntimeError("Owned persistent fixture required")
         self.command("restart", self.container)
         for _ in range(60):
-            if self.command("exec", self.container, "pg_isready", "-U", "postgres", allow_failure=True).returncode == 0:
+            if self.command("exec", self.container, "pg_isready", "-h", "127.0.0.1", "-U", "postgres", allow_failure=True).returncode == 0:
                 return
             time.sleep(.5)
         raise RuntimeError("Owned PostgreSQL restart unconfirmed")

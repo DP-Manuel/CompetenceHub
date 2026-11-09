@@ -151,7 +151,10 @@ _FIND_INVITEE = text(
             SELECT 1
             FROM competence_hub.auth_password_credentials AS credential
             WHERE credential.portal_user_id = portal_user.id
-        ) AS has_credential
+        ) AS has_credential,
+        ARRAY(SELECT r.code FROM competence_hub.user_roles ur
+              JOIN competence_hub.roles r ON r.id=ur.role_id
+              WHERE ur.user_id=portal_user.id ORDER BY r.code) AS role_codes
     FROM competence_hub.portal_users AS portal_user
     WHERE lower(portal_user.email) = :normalized_email
     FOR UPDATE OF portal_user
@@ -304,7 +307,7 @@ _FIND_RESET_USER = text(
           JOIN competence_hub.roles AS role ON role.id = user_role.role_id
           WHERE user_role.user_id = portal_user.id
             AND role.active
-            AND role.code IN ('admin', 'internal')
+            AND role.code IN ('admin', 'internal', 'coach', 'calendar_reviewer')
       )
     FOR UPDATE OF portal_user
     """
@@ -332,7 +335,7 @@ _FIND_VALID_TOKEN = text(
                     ON role.id = user_role.role_id
                   WHERE user_role.user_id = portal_user.id
                     AND role.active
-                    AND role.code IN ('admin', 'internal')
+                    AND role.code IN ('admin', 'internal', 'coach', 'calendar_reviewer')
               )
           )
       )
@@ -534,6 +537,7 @@ class PostgresAccountLifecycleRepository:
         now: datetime,
         expires_at: datetime,
         idempotency_expires_at: datetime,
+        coach_id: UUID | None = None,
     ) -> InvitationIssueResult:
         async with self._engine.begin() as connection:
             idempotency_parameters = {
@@ -584,6 +588,8 @@ class PostgresAccountLifecycleRepository:
                 existing["active"] or existing["has_credential"]
             ):
                 raise InvitationConflictError("account already provisioned")
+            if existing is not None and existing.get("role_codes") is not None and set(existing["role_codes"]) != set(role_codes):
+                raise InvitationConflictError("pending role selection differs")
             if existing is None:
                 created = await connection.execute(
                     _CREATE_INACTIVE_USER,
@@ -600,6 +606,20 @@ class PostgresAccountLifecycleRepository:
                     _UPDATE_INACTIVE_USER,
                     {"user_id": user_id, "display_name": display_name, "now": now},
                 )
+
+            if ("coach" in role_codes) != (coach_id is not None):
+                raise InvitationConflictError("explicit Coach identity required")
+            if coach_id is not None:
+                # Exact stable identity only; lock before mapping to prevent two
+                # concurrent invitations claiming the same Coach.
+                row = (await connection.execute(text(
+                    "SELECT c.portal_user_id, COALESCE(to_jsonb(c)->>'lifecycle_status','active') AS lifecycle_status FROM competence_hub.coaches c WHERE c.id=:id FOR UPDATE"
+                ), {"id": coach_id})).mappings().one_or_none()
+                if row is None or row["lifecycle_status"] != "active" or row["portal_user_id"] not in (None, user_id):
+                    raise InvitationConflictError("Coach unavailable or already linked")
+                await connection.execute(text(
+                    "UPDATE competence_hub.coaches SET portal_user_id=:user WHERE id=:id"
+                ), {"id": coach_id, "user": user_id})
 
             roles_result = await connection.execute(
                 _FIND_ROLES,

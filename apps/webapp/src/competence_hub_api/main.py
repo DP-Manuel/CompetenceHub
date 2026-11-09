@@ -6,6 +6,7 @@ from typing import AsyncContextManager
 
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -29,6 +30,7 @@ from competence_hub_api.web.auth import (
 )
 from competence_hub_api.web.portal_access import router as portal_access_router
 from competence_hub_api.web.admin import router as admin_router
+from competence_hub_api.web.pilot import router as pilot_router
 from competence_hub_api.web.companies import router as companies_router
 from competence_hub_api.web.calendar import (
     protected_router as protected_calendar_router,
@@ -119,6 +121,7 @@ def create_app(
     app.include_router(auth_router)
     app.include_router(portal_access_router)
     app.include_router(admin_router)
+    app.include_router(pilot_router)
     app.include_router(coach_registry_router)
     app.include_router(coach_management_router)
     app.include_router(companies_router)
@@ -128,6 +131,10 @@ def create_app(
     @app.get("/", include_in_schema=False)
     async def portal_root() -> RedirectResponse:
         return RedirectResponse(url="/portal/", status_code=307)
+
+    @app.get("/portal/calendar-month.mjs", include_in_schema=False)
+    async def month_module():
+        return FileResponse(PORTAL_UI_DIRECTORY / "calendar-month.mjs", media_type="text/javascript")
 
     app.mount(
         "/portal",

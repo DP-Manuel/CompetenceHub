@@ -18,6 +18,11 @@
       </a>
       <div class="session-summary" id="session-summary" hidden>
         <span id="session-user"></span>
+        <details id="pilot-help">
+          <summary>Hilfe</summary>
+          <div id="tour-options"></div>
+          <p>Bei Zugangsproblemen wenden Sie sich an Ihre Portaladministration. Keine Passwörter oder Recovery-Codes mitsenden.</p>
+        </details>
         <button class="button button-quiet" id="logout-button" type="button">
           Abmelden
         </button>
@@ -219,6 +224,19 @@
         </header>
 
         <nav class="portal-navigation" id="portal-navigation" aria-label="Portalbereiche"></nav>
+        <section id="pilot-overview" class="pilot-overview" aria-labelledby="pilot-overview-title" hidden>
+          <h2 id="pilot-overview-title">Mein Arbeitsüberblick</h2>
+          <p id="pilot-overview-state" role="status"></p>
+          <dl id="pilot-metrics" class="pilot-metrics"></dl>
+          <p id="pilot-next-event"></p>
+          <a id="public-calendar-link" href="/portal/calendar-public.html" target="_blank" rel="noopener">Freigegebener Kalender</a>
+        </section>
+        <section id="pilot-accounts" aria-labelledby="pilot-accounts-title" hidden>
+          <h2 id="pilot-accounts-title">Benutzer und Erstzugänge</h2>
+          <p id="pilot-account-summary" role="status"></p>
+          <ul id="pilot-users" class="pilot-users"></ul>
+          <div class="button-row"><button id="users-previous" class="button button-secondary" type="button">Zurück</button><button id="users-next" class="button button-secondary" type="button">Weitere Zugänge</button></div>
+        </section>
         <p class="empty-state" id="portal-empty" hidden>Für dieses Konto ist aktuell kein Arbeitsbereich freigegeben.</p>
 
         <div class="notice" id="reauth-notice" role="status" hidden>
@@ -243,7 +261,7 @@
           <div>
             <p class="eyebrow">Interner Zugang</p>
             <h2 id="admin-invitation-title">Kollegin oder Kollegen einladen</h2>
-            <p>Die Einladung wird an die persönliche Arbeits-E-Mail gesendet. Der Zugang erhält zunächst die Rolle „Intern“.</p>
+            <p>Nur bestätigte Empfänger einladen. Die Zustellung muss separat freigegeben sein; es wird kein allgemeines Startpasswort erzeugt.</p>
           </div>
           <form id="admin-invitation-form" novalidate>
             <div class="form-grid">
@@ -255,9 +273,12 @@
                 <label for="invitation-email">Arbeits-E-Mail</label>
                 <input id="invitation-email" name="email" type="email" autocomplete="off" maxlength="254" required>
               </div>
+              <div class="field"><label for="invitation-role">Bestätigte Rolle</label><select id="invitation-role" name="role"><option value="internal">Intern</option><option value="calendar_reviewer">Kalenderprüfung</option><option value="coach">Coach</option></select></div>
+              <div class="field" id="invitation-coach-field" hidden><label for="invitation-coach-id">Bestätigte Coach-UUID</label><input id="invitation-coach-id" name="coach_id" maxlength="36" pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"></div>
             </div>
             <p class="form-error" id="admin-invitation-error" role="alert" hidden></p>
-            <button class="button button-secondary mutation-control" type="submit">Einladung senden</button>
+            <p id="invitation-delivery-state" role="status"></p>
+            <button class="button button-secondary mutation-control" type="submit">Einladung vormerken</button>
           </form>
           </section>
 
@@ -583,6 +604,12 @@
       </form>
     </dialog>
 
+    <dialog id="product-tour" aria-labelledby="tour-title" aria-describedby="tour-copy" class="product-tour">
+      <button id="tour-close" class="button button-quiet tour-close" type="button" aria-label="Einführung schließen" title="Einführung schließen">×</button>
+      <p id="tour-progress" class="eyebrow"></p>
+      <h2 id="tour-title" tabindex="-1"></h2><p id="tour-copy"></p>
+      <div class="button-row"><button id="tour-back" class="button button-secondary" type="button">Zurück</button><button id="tour-next" class="button button-primary" type="button">Weiter</button><button id="tour-skip" class="text-button" type="button">Überspringen</button></div>
+    </dialog>
     <script type="module" src="/portal/app.js"></script>
   </body>
 </html>

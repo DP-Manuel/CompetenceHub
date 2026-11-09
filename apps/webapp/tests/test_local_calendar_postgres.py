@@ -37,3 +37,14 @@ def test_cleanup_only_removes_confirmed_owned_container_identity(monkeypatch):
     monkeypatch.setattr(fixture,"command",lambda *args,**kwargs:pytest.fail("Unknown container must not be removed"))
     fixture.__exit__(None,None,None)
     assert not fixture.removed
+
+
+def test_restart_waits_for_tcp_not_the_images_temporary_unix_server(monkeypatch):
+    from types import SimpleNamespace
+    fixture=LocalCalendarPostgres(); fixture.container="a"*64; fixture.volume="owned"
+    calls=[]
+    def command(*args,**kwargs):
+        calls.append(args); return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(fixture,"command",command)
+    fixture.restart()
+    assert calls[1] == ("exec",fixture.container,"pg_isready","-h","127.0.0.1","-U","postgres")

@@ -303,6 +303,9 @@ async def login_response(request: Request, service: LoginService | None) -> Resp
 
 @router.post("/password-reset/request", status_code=202)
 async def request_password_reset(request: Request) -> Response:
+    if getattr(request.app.state, "invitation_delivery_enabled", True) is False:
+        return problem_response(status=503, code="invitation_delivery_unavailable",
+                                title="Zustellung noch nicht freigegeben")
     service = _account_lifecycle_service(request)
     if service is None:
         return problem_response(

@@ -213,7 +213,7 @@ def attach_demo_views(app, repository=None, native=False):
     @app.get("/demo-assets/calendar-month.mjs", response_class=FileResponse)
     async def calendar_month_module():
         # Windows MIME registry can label .mjs as text/plain; modules reject it.
-        return FileResponse(ASSETS / "calendar-month.mjs", media_type="text/javascript")
+        return FileResponse(PORTAL_UI_DIRECTORY / "calendar-month.mjs", media_type="text/javascript")
 
     app.mount("/demo-assets", StaticFiles(directory=ASSETS), name="demo-assets")
     app.mount("/demo/public/_astro", StaticFiles(directory=PUBLIC_BUILD / "_astro", check_dir=False), name="local-public-assets")

@@ -27,6 +27,8 @@ def test_release_denylist_is_not_a_recursive_copy(path):
 @pytest.mark.parametrize("path", [
     "apps/webapp/src/competence_hub_api/auth/admission.py",
     "apps/webapp/src/competence_hub_api/portal_ui/app.js",
+    "apps/webapp/src/competence_hub_api/portal_ui/calendar-month.mjs",
+    "apps/webapp/src/competence_hub_api/portal_ui/calendar-public.html",
     "apps/webapp/database/migrations/0006_coach_public_profile_path.sql",
     "apps/webapp/database/migrations/0007_coach_registry.sql",
     "apps/webapp/database/migrations/0008_coach_import_ledger.sql",

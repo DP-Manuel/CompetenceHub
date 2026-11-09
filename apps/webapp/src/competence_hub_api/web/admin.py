@@ -1,5 +1,6 @@
 import hmac
 from typing import Literal
+from uuid import UUID
 
 from fastapi import APIRouter, Request, Response
 from fastapi.responses import JSONResponse
@@ -28,7 +29,8 @@ class InvitationRequest(BaseModel):
 
     email: str = Field(min_length=3, max_length=254)
     display_name: str = Field(min_length=1, max_length=200)
-    role_codes: tuple[Literal["internal"], ...] = Field(min_length=1, max_length=1)
+    role_codes: tuple[Literal["internal", "coach", "calendar_reviewer"], ...] = Field(min_length=1, max_length=1)
+    coach_id: UUID | None = None
 
     @field_validator("email")
     @classmethod
@@ -123,6 +125,9 @@ async def _admin_principal(request: Request, *, require_csrf: bool = True) -> Se
 
 @router.post("/users/invitations")
 async def issue_user_invitation(request: Request) -> Response:
+    if getattr(request.app.state, "invitation_delivery_enabled", True) is False:
+        return problem_response(status=503, code="invitation_delivery_unavailable",
+                                title="Einladungszustellung noch nicht freigegeben")
     service: AccountLifecycleService | None = request.app.state.account_lifecycle_service
     if service is None:
         return problem_response(
@@ -148,6 +153,7 @@ async def issue_user_invitation(request: Request) -> Response:
             email=payload.email,
             display_name=payload.display_name,
             role_codes=payload.role_codes,
+            **({"coach_id": payload.coach_id} if payload.coach_id is not None else {}),
             idempotency_key=idempotency_key,
             client_ip=peer_ip,
             now=request.app.state.clock(),

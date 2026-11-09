@@ -1,6 +1,16 @@
 # Project Log
 
 Significant milestones only; newest first.
+
+09.11 integrated pilot increment: real SQL role dashboards, bounded Admin
+inventory, optional three-role tours, existing invitation lifecycle extended
+to pure Reviewer/explicit UUID-linked Coach, default-closed delivery and shared
+packaged public Calendar. Native local activation/MFA/ICS/revision/restart/browser
+acceptance passes; no real identities or server mutation. Read-only VPS: four
+services/PG loopback unchanged,8001 free; proposed domain NXDOMAIN and sudo DB
+inventory requires private interaction. Current protected snapshot/restore and
+final access/configuration gates remain held, not replaced by local evidence.
+[Current evidence/rollout and short role guides](docs/operations/integrated-staging-pilot-2026-11-09.md).
 06.11 native CAL-1 local pilot slice: actual PostgreSQL16.15 storage and overlap
 queries, persisted sessions/revisions after app AND DB restart, shared public
 view, ICS snapshot and request draft; improved existing Portal filters/dirty-

@@ -2,6 +2,25 @@
 
 Stand: 14.08.2026
 
+## Additiver Pilotvertrag 09.11.2026
+
+Admin-Einladungen erlauben nun genau eine explizite Rolle `internal`,
+`calendar_reviewer` oder `coach`. Für Coach ist `coach_id` als bestätigte,
+bestehende stabile UUID zwingend. Die gleiche Transaktion sperrt und prüft die
+Zuordnung; fehlende, fremde oder (bei Registry-Schema) nicht aktive Coaches
+werden nicht aktiviert. Keine Adminrolle, Mehrfachrolle oder Namenszuordnung.
+Bei erneuter Einladung darf die bereits vorhandene Rollenmenge nicht abweichen.
+Idempotenz bindet Rolle und Coach-UUID. Atomare Outbox,24h/Einmaligkeit,
+Tokenhashes, generischer400-Aktivierungsfehler und anschließende native MFA
+bleiben unverändert. Passwortreset umfasst auch reine Coach-/Reviewerrollen.
+Die Runtime hält Einladung und Reset-Anforderung standardmäßig serverseitig
+geschlossen (`COMPETENCE_HUB_INVITATION_DELIVERY_ENABLED=false`). Exakt`true`
+ist eine separate Zustellfreigabe, kein automatischer Workerstart. Vorliegende
+Token bleiben nach ihren bestehenden Ablauf-/Widerrufsregeln gültig; dieser
+Schalter ist kein allgemeiner Tokenwiderruf. Reale Erst-Admin-Aktivierung und
+Empfänger-/Kanal-/Versandfreigabe sind weiterhin eigene nachzuweisende Gates.
+[Aktueller Betriebsumfang](../operations/integrated-staging-pilot-2026-11-09.md).
+
 Status: Implementierungsvertrag auf Grundlage des freigegebenen ADR 0003.
 `POST /api/v1/auth/login`, `GET /api/v1/auth/session`,
 `POST /api/v1/auth/session/csrf` und `DELETE /api/v1/auth/session` sind lokal

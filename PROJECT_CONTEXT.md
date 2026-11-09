@@ -1,8 +1,22 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-06.
+Updated: 2026-11-09.
 
 ## Current Milestone
+
+09.11 INTEGRATED STAGING PILOT: new task conditionally authorizes a VPS pilot,
+not unguarded changes. Local role dashboards, bounded Admin account inventory,
+optional Coach/Reviewer/Admin tours, explicit pending invitations with stable
+Coach UUID and default-closed delivery, and packaged shared public Calendar are
+implemented. No new migration or Coach import. Native local SQL/MFA/browser proof
+and current release evidence: [execution plan](docs/exec-plans/active/integrated-staging-pilot-2026-11-09.md).
+Actual read-only VPS checks09.11: four services active, Chatbot8000/PG5432
+loopback,8001 free, no Portal API unit. sudo schema read needs private operator
+interaction; proposed app hostname NXDOMAIN. Existing backup units observed
+disabled, NOT changed. Current protected snapshot/isolated restore/config custody
+and final HTTPS/access path remain unproven; affected server mutations stopped.
+No real account/invitation, VPS install, Pages/IONOS or R2/GPG action.
+[One consolidated operating gate and concise guides](docs/operations/integrated-staging-pilot-2026-11-09.md).
 
 LATEST05.11 MANUEL DECISION: WEBSITE FIRST. Backup-key rebase/R2 is PAUSED by
 explicit user instruction. No key creation, passphrase dialog, GPG/USB operator
@@ -169,7 +183,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended CAL-1 block: shared LOCAL CAL-0.1 view / synthetic CAL-1 projection bridge. Inputs: existing static Calendar and the proven local demo. Deliverable: reusable public rendering without duplicated workflow logic. DoD: same six-step Janay flow,390px/native200%/roles/conflicts/privacy green,52 Production files unchanged, no real data/activation. [Current horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont). Current source/Git/Pages/public-smoke gates complete.
+1. Exactly one recommended block: protected Staging operating window after the consolidated HTTPS/access, current protected snapshot/restore and configuration gates close. Deliverable: bounded own-service installation plus actual synthetic remote acceptance, not inferred local success. [Ordered horizon and acceptance](docs/exec-plans/active/integrated-staging-pilot-2026-11-09.md). Existing shared Calendar/native SQL integration is complete locally.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 

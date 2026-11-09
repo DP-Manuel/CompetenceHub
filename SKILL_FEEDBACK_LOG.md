@@ -1,11 +1,25 @@
 # Skill Feedback Router
 
-Updated: 2026-11-06. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-09. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+09.11 integrated-pilot learning: distinguish source implementation, actual
+packaged public UI, private database acceptance and deployed Staging. Test the
+packaged Calendar endpoint, not only a demo wrapper. Reuse renderer assets in
+the wheel and allowlist .mjs with explicit MIME. Before lifecycle assertions,
+read the canonical generic error contract (invalid activation400; pure-role
+access to an internal-only session endpoint may401 rather than403). Optional
+tours must restore focus to a visible trigger, handle absent targets, and test
+closed details content and long mobile display names. PostgreSQL image readiness
+must await final TCP startup, not the temporary Unix-only initialization server.
+Keep failure cleanup in finally so it cannot hide the original assertion.
+Capture external sudo/DNS/restore gates once early; finish independent local
+work and request one operating decision. Local proposal only; no global skills
+or Wiki edits. [Evidence](docs/operations/integrated-staging-pilot-2026-11-09.md).
 
 06.11 native pilot learning: prove persistence with a fresh application AND
 database restart on an explicitly owned test volume, then verify container/volume

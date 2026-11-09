@@ -75,6 +75,7 @@ class RuntimeSettings:
         repr=False,
     )
     recovery_hmac_active_key_version: str = ""
+    invitation_delivery_enabled: bool = False
 
     def __post_init__(self) -> None:
         _validate_database_url(self.database_url)
@@ -237,6 +238,10 @@ class RuntimeSettings:
             RECOVERY_HMAC_ACTIVE_KEY_VERSION_ENV,
         )
 
+        delivery_flag = values.get("COMPETENCE_HUB_INVITATION_DELIVERY_ENABLED", "false")
+        if delivery_flag not in {"true", "false"}:
+            raise RuntimeConfigurationError("Invalid invitation delivery release flag")
+
         return cls(
             database_url=database_url,
             allowed_origin=allowed_origin,
@@ -251,6 +256,7 @@ class RuntimeSettings:
             totp_active_key_version=totp_active_key_version,
             recovery_hmac_keys=recovery_hmac_keys,
             recovery_hmac_active_key_version=recovery_hmac_active_key_version,
+            invitation_delivery_enabled=delivery_flag == "true",
         )
 
 

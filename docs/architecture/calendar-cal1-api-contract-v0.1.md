@@ -2,6 +2,18 @@
 
 Stand: 18.09.2026
 
+## Pilot-Arbeitsüberblick 09.11.2026
+
+`GET /api/v1/portal/pilot/overview`: native Kalendersitzung und serverseitig
+geprüfte Rolle Admin/Coach/Reviewer, Read-only-SQL, aktuelle Revisionsstatus.
+Coach nur eigene Datensätze; Reviewer nur Prüfung/Änderungsbedarf/Freigabe,
+keine fremden Entwürfe. Kein Buchungs-/Teilnehmerzähler. Keine Credentials.
+`GET /api/v1/admin/users?offset=0&limit=25`: ausschließlich Admin, Repeatable-
+Read/Read-only-Snapshot, maximal100 Einträge, total/next_offset, Gesamtstatus
+und offene Coachzuordnungen. Anzeigename/E-Mail/Rollen/UUID nur diesem Admin.
+Keine Tokens, Passwort-/MFA-Inhalte, Recoverydaten oder Auditpayloads.
+Beide Routen no-store und bestehende Session-/Fehler-/CSP-Grenzen.
+
 Lokales additives Pilot-Inkrement06.11.2026: siehe den folgenden Abschnitt.
 Bestehende Staging-/Produktionsbereitstellungen wurden dadurch nicht geändert.
 

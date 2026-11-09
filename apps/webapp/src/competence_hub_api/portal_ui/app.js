@@ -1,4 +1,5 @@
 import { createCoachManagement } from "./coach-management.js";
+import { createProductTour } from "./product-tour.js";
 
 const API = {
   session: "/api/v1/portal/access/session",
@@ -20,6 +21,8 @@ const API = {
 };
 
 const state = {
+  usersOffset: 0,
+  usersNext: null,
   challengeCsrf: null,
   sessionCsrf: null,
   session: null,
@@ -220,6 +223,17 @@ function showLogin(message = "") {
 }
 
 function clearPortalClientState() {
+  productTour.stop();
+  byId("pilot-overview").hidden = true;
+  byId("pilot-metrics").replaceChildren();
+  byId("pilot-users").replaceChildren();
+  byId("pilot-accounts").hidden = true;
+  byId("pilot-overview-state").textContent = "";
+  byId("pilot-next-event").textContent = "";
+  byId("pilot-account-summary").textContent = "";
+  byId("tour-options").replaceChildren();
+  byId("pilot-help").open = false;
+  state.usersOffset = 0;
   coachManagement.reset();
   coachManagement.root.remove();
   state.companies = [];
@@ -508,6 +522,88 @@ function berlinLocalToIso(value) {
   return new Date(guess.getTime() - (represented - guess.getTime())).toISOString();
 }
 
+const productTour = createProductTour({navigate:selectPortalArea,
+  canLeave:() => !document.querySelector("dialog[open]") && coachManagement.canLeave()});
+
+function configurePilotHelp(roles) {
+  const options = byId("tour-options"); options.replaceChildren();
+  for (const [role, key, label] of [["coach","coach","Coach-Einführung starten"],
+    ["calendar_reviewer","reviewer","Prüfer-Einführung starten"], ["admin","admin","Admin-Einführung starten"]]) {
+    if (!roles.has(role)) continue;
+    const button = document.createElement("button"); button.type = "button";
+    button.className = "text-button"; button.textContent = label;
+    button.addEventListener("click", () => { byId("pilot-help").open = false; productTour.start(key); });
+    options.append(button);
+  }
+}
+
+async function loadPilotOverview() {
+  if (!state.session?.user.roles.some(r => ["admin","coach","calendar_reviewer"].includes(r))) {
+    byId("pilot-overview").hidden = true; return;
+  }
+  byId("pilot-overview").hidden = false;
+  byId("pilot-metrics").replaceChildren();
+  byId("pilot-overview-state").textContent = "Übersicht wird geladen …";
+  const session = state.session;
+  try {
+    const response = await request("/api/v1/portal/pilot/overview");
+    if (session !== state.session) return;
+    if (!response.ok) throw new Error("unavailable");
+    const data = await response.json();
+    if (session !== state.session) return;
+    for (const status of ["draft", "in_review", "changes_requested", "published", "withdrawn"]) {
+      if (status === "draft" && !session.user.roles.some(r => ["coach","admin"].includes(r))) continue;
+      appendDefinition(byId("pilot-metrics"), status === "withdrawn" ? "Zurückgezogen" : calendarStatusLabel(status), String(data.calendar[status] || 0));
+    }
+    byId("pilot-overview-state").textContent = "Aktuelle Revisionen im eigenen Berechtigungsumfang · Datenbank erreichbar";
+    const next = state.coachOffers.filter(o => o.lifecycle_status === "active" && new Date(o.starts_at) > new Date())
+      .sort((a,b) => a.starts_at.localeCompare(b.starts_at))[0];
+    byId("pilot-next-event").textContent = next ? `Nächste Veranstaltung in der geladenen Liste: ${next.title} · ${formatCalendarDate(next.starts_at)}` : "";
+  } catch {
+    if (session === state.session) byId("pilot-overview-state").textContent = "Übersicht momentan nicht verfügbar. Die freigegebenen Arbeitsbereiche bleiben erreichbar.";
+  }
+}
+
+let invitationEnabled = true;
+function updateInvitationRole() {
+  const coach = byId("invitation-role").value === "coach";
+  byId("invitation-coach-field").hidden = !coach;
+  byId("invitation-coach-id").required = coach;
+}
+
+async function loadPilotUsers() {
+  const session = state.session;
+  byId("pilot-users").replaceChildren();
+  byId("pilot-account-summary").textContent = "Zugänge werden geladen …";
+  try {
+    const response = await request(`/api/v1/admin/users?offset=${state.usersOffset}&limit=25`);
+    if (!response.ok) throw new Error("unavailable");
+    const data = await response.json();
+    if (session !== state.session) return;
+    invitationEnabled = data.invitations_enabled;
+    byId("invitation-delivery-state").textContent = invitationEnabled
+      ? "Zustellung freigegeben. Vormerkung ist kein Empfangsnachweis."
+      : "Zustellung noch nicht freigegeben. Es werden keine Einladungen vorgemerkt oder versendet.";
+    byId("admin-invitation-form").querySelector("button[type='submit']").disabled = !invitationEnabled || !state.sessionCsrf;
+    byId("pilot-account-summary").textContent = `${data.total} Zugänge insgesamt · ${data.unmapped_coaches} Coachzugänge ohne aktive Zuordnung · Seite ${Math.floor(state.usersOffset / 25) + 1}`;
+    const labels = {active:"Aktiv", pending_activation:"Aktivierung ausstehend", inactive:"Deaktiviert", mfa_required:"MFA-Einrichtung erforderlich"};
+    byId("pilot-account-summary").textContent += ` · ${data.totals.active} aktiv · ${data.totals.pending_activation} Aktivierung ausstehend`;
+    for (const user of data.items) {
+      const row = document.createElement("li");
+      const name = document.createElement("strong"); name.textContent = user.display_name;
+      const description = document.createElement("p");
+      description.textContent = `${user.email} · ${labels[user.status]} · ${user.roles.join(", ")} · Coach-UUID: ${user.coach_id || "Keine Zuordnung"}`;
+      row.append(name,description); byId("pilot-users").append(row);
+    }
+    if (!data.items.length) byId("pilot-account-summary").textContent += " · Keine Einträge auf dieser Seite.";
+    state.usersNext = data.next_offset;
+    byId("users-previous").disabled = state.usersOffset === 0;
+    byId("users-next").disabled = data.next_offset === null;
+  } catch {
+    if (session === state.session) byId("pilot-account-summary").textContent = "Zugänge derzeit nicht verfügbar. Bitte später erneut öffnen.";
+  }
+}
+
 async function loadCalendarCapabilities() {
   try {
     const response = await request(API.calendarCapabilities);
@@ -556,6 +652,8 @@ async function configurePortalAreas() {
   if (canReviewCalendar) {
     areas.push({ id: "review-calendar", label: "Prüfliste" });
   }
+  if (roles.has("admin")) areas.push({id:"accounts", label:"Zugänge"});
+  configurePilotHelp(roles);
   renderPortalNavigation(areas);
   byId("portal-empty").hidden = areas.length !== 0;
   if (areas.length === 0) {
@@ -567,6 +665,8 @@ async function configurePortalAreas() {
     ? state.activePortalArea
     : areas[0].id;
   await selectPortalArea(selected);
+  await loadPilotOverview();
+  if (roles.has("admin")) await loadPilotUsers();
 }
 
 function configureRestrictedCalendarNodes(canManage, canReview) {
@@ -610,6 +710,7 @@ function renderPortalNavigation(areas) {
 }
 
 function switchPortalWorkspace(area) {
+  byId("pilot-accounts").hidden = area !== "accounts";
   coachManagement.root.hidden = area !== "coaches";
   byId("company-workspace").hidden = area !== "companies";
   restrictedCalendarNodes.coachWorkspace.hidden = area !== "coach-calendar";
@@ -620,7 +721,7 @@ async function selectPortalArea(area) {
   if (state.activePortalArea === "coaches" && area !== "coaches" && !coachManagement.canLeave()) return;
   state.activePortalArea = area;
   switchPortalWorkspace(area);
-  const selectedLabel = area === "coaches" ? "Coaches" : area === "companies"
+  const selectedLabel = area === "accounts" ? "Zugänge" : area === "coaches" ? "Coaches" : area === "companies"
     ? "Firmen"
     : area === "coach-calendar"
       ? "Kalenderangebote"
@@ -629,11 +730,15 @@ async function selectPortalArea(area) {
     button.setAttribute("aria-current", button.textContent === selectedLabel ? "page" : "false");
   });
   byId("admin-invitation-panel").hidden = !(
-    area === "companies" && state.session.user.roles.includes("admin")
+    ["companies", "accounts"].includes(area) && state.session.user.roles.includes("admin")
   );
-  if (area === "coaches") {
+  if (area === "accounts") {
+    byId("pilot-accounts").append(byId("admin-invitation-panel"));
+    await loadPilotUsers();
+  } else if (area === "coaches") {
     await coachManagement.index();
   } else if (area === "companies") {
+    byId("company-workspace").prepend(byId("admin-invitation-panel"));
     await loadCompanies();
   } else if (area === "coach-calendar") {
     await loadCalendarTopics();
@@ -698,6 +803,7 @@ async function loadCoachOffers() {
     }
     state.coachOffers = (await response.json()).items || [];
     renderCoachOffers();
+    await loadPilotOverview();
   } catch {
     setError("coach-calendar-error", "Angebote konnten nicht geladen werden.");
   } finally {
@@ -991,6 +1097,7 @@ async function loadReviewQueue() {
     }
     state.reviewOffers = (await response.json()).items || [];
     renderReviewQueue();
+    await loadPilotOverview();
   } catch {
     setError("review-calendar-error", "Prüfliste konnte nicht geladen werden.");
   } finally {
@@ -1132,6 +1239,9 @@ async function handleAdminInvitation(event) {
   event.preventDefault();
   const form = event.currentTarget;
   setError("admin-invitation-error");
+  if (!invitationEnabled) {
+    setError("admin-invitation-error", "Einladungszustellung noch nicht freigegeben."); return;
+  }
   if (!state.sessionCsrf) {
     setError("admin-invitation-error", "Bitte melden Sie sich für Einladungen erneut an.");
     return;
@@ -1143,7 +1253,8 @@ async function handleAdminInvitation(event) {
   const body = {
     display_name: data.get("display_name"),
     email: data.get("email"),
-    role_codes: ["internal"],
+    role_codes: [data.get("role")],
+    ...(data.get("role") === "coach" ? {coach_id:data.get("coach_id").trim()} : {}),
   };
   const fingerprint = JSON.stringify(body);
   if (!state.pendingInvitation || state.pendingInvitation.fingerprint !== fingerprint) {
@@ -1165,7 +1276,9 @@ async function handleAdminInvitation(event) {
     }
     form.reset();
     state.pendingInvitation = null;
-    announce("Die Einladung wurde zur Zustellung vorgemerkt.");
+    announce("Die Einladung wurde zur Zustellung vorgemerkt. Das ist noch kein Zustellnachweis.");
+    updateInvitationRole();
+    if (state.activePortalArea === "accounts") await loadPilotUsers();
   } catch {
     setError("admin-invitation-error", "Einladung konnte nicht erstellt werden.");
   } finally {
@@ -1703,6 +1816,9 @@ async function handleLogout() {
 }
 
 function bindEvents() {
+  byId("invitation-role").addEventListener("change", updateInvitationRole);
+  byId("users-next").addEventListener("click", () => { if (state.usersNext !== null) { state.usersOffset = state.usersNext; loadPilotUsers(); } });
+  byId("users-previous").addEventListener("click", () => { state.usersOffset = Math.max(0, state.usersOffset-25); loadPilotUsers(); });
   byId("login-form").addEventListener("submit", handleLogin);
   byId("password-reset-request-form").addEventListener("submit", handlePasswordResetRequest);
   byId("account-token-form").addEventListener("submit", handleAccountToken);

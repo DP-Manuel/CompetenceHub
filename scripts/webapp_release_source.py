@@ -23,6 +23,11 @@ DEPLOY_FILES = frozenset({
         "competence-hub-postgres-restore-check", "competence-hub-backup-notification-render")],
 })
 DOC_FILES = frozenset({
+    "docs/operations/integrated-staging-pilot-2026-11-09.md",
+    "docs/operations/pilot-admin-guide.md",
+    "docs/operations/pilot-janay-guide.md",
+    "docs/operations/pilot-coach-guide.md",
+    "docs/operations/pilot-first-activation.md",
     "docs/architecture/coach-registry-contract-v0.1.md",
     "docs/architecture/coach-import-contract-v0.1.md",
     "docs/operations/cryptography-maintenance-2026-10-23.md",
@@ -50,7 +55,7 @@ def destination(path):
     if path.startswith(source):
         relative = path.removeprefix(source)
         if (PurePosixPath(relative).suffix == ".py" or
-                re.fullmatch(r"portal_ui/[a-z0-9_-]+\.(html|css|js)", relative)):
+                re.fullmatch(r"portal_ui/[a-z0-9_-]+\.(html|css|js|mjs)", relative)):
             return "package-source/src/competence_hub_api/" + relative
     if (path in {base + "database/README.md", base + "database/bootstrap-staging.sql"}
             or re.fullmatch(base + r"database/(migrations|verification)/000[1-8]_[a-z0-9_]+\.sql", path)):

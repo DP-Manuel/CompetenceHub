@@ -1,5 +1,11 @@
 # Staging Admin: Sicheres Operatorfenster
 
+**Neueste Steuerung09.11:** R2/GPG bleibt pausiert. Der
+[integrierte Staging-Pilot](integrated-staging-pilot-2026-11-09.md) erlaubt einen
+gleichwertigen, bereits nutzbaren geschützten Snapshot-/Restoreweg, sofern er
+aktuell nachgewiesen ist. Keine stille Wiederaufnahme alter Execute-/Keybefehle.
+Der aktuelle Auftrag ist noch keine tatsächlich ausgeführte Admin-/Serveraktion.
+
 **Neueste Steuerung04.11:** [kontrollierter Backup-Key-Rebase](controlled-backup-key-rebase-2026-11-04.md).
 Nicht den August-Passphraseweg/alten Execute-Befehl fortsetzen. Neuer separater
 GPG-Key, vorhandene DPAPI-Anwendungsschluessel bytegleich, unabhaengige Recovery

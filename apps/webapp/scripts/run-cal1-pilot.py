@@ -35,16 +35,19 @@ class LocalPilotFixture(NativeCalendarFixture):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--acceptance", action="store_true")
+    parser.add_argument("--integrated-acceptance", action="store_true")
     parser.add_argument("--port", type=int, default=8447)
     parser.add_argument("--browser-executable", type=Path,
         default=Path(os.environ["LOCALAPPDATA"]) / "ms-playwright/chromium-1228/chrome-win64/chrome.exe")
     options = parser.parse_args()
+    if options.integrated_acceptance:
+        options.acceptance = True
     if not 1024 <= options.port <= 65535:
         parser.error("invalid loopback port")
     if options.acceptance and not options.browser_executable.is_file():
         parser.error("Existing local Chromium executable required; no browser download")
     build_public_calendar()
-    evidence = ROOT.parents[1] / "release-artifacts/cal1-pilot-20261106"
+    evidence = ROOT.parents[1] / ("release-artifacts/integrated-pilot-20261109" if options.integrated_acceptance else "release-artifacts/cal1-pilot-20261106")
     evidence.mkdir(parents=True, exist_ok=True)
     report_file = evidence / ("report.json" if options.acceptance else "demo-status.json")
     report = {"scope": "OWNED_LOCAL_POSTGRES_SYNTHETIC_ONLY", "status": "RUNNING"}
@@ -56,13 +59,17 @@ def main():
             for key in previous:
                 os.environ[key] = temp
             tempfile.tempdir = None
-            with LocalCalendarPostgres() as database:
+            database = LocalCalendarPostgres()
+            with database:
                 report["postgres_version"] = database.command("exec", database.container, "postgres", "--version").stdout.strip()
                 fixture = LocalPilotFixture()
                 fixture.prepare()
                 try:
                     if options.acceptance:
                         from scripts.cal1_pilot_acceptance import run
+                        if options.integrated_acceptance:
+                            from scripts.pilot_release_acceptance import run as release_acceptance
+                            release_acceptance(fixture, options, report, evidence)
                         run(fixture, database, options, report, evidence)
                     else:
                         cert, key = create_loopback_certificate(Path(temp))

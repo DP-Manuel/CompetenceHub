@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| Integrated pilot/onboarding | [09.11 scope and operating gates](../operations/integrated-staging-pilot-2026-11-09.md) | Optional three-role tours, scoped overview, pending activation, public runtime Calendar; real deployment/recipient gates remain separate |
 | Post-Messe product scope | [Accepted addendum](post-messe-product-2026-10-21.md) | Preview content/topics and Analytics scope |
 | Portal roles/gates | [RBAC](portal-rbac-matrix-v0.1.md), [Open gates](portal-open-gates-v0.1.md) | Role boundaries and activation blockers; historical test counts are dated |
 | Coach Registry | [Accepted COACH-1 contract](../architecture/coach-registry-contract-v0.1.md) | Onboard/pause/offboard/reactivate, revision approval, per-environment publication and optional account/Calendar links |

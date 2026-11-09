@@ -161,6 +161,9 @@ def create_runtime_app(
         lifespan=lifespan,
     )
     app.state.database_engine = engine
+    # Enabling dispatch is an explicit runtime release decision, not inferred
+    # from the presence of keys or an SMTP password.
+    app.state.invitation_delivery_enabled = settings.invitation_delivery_enabled
     app.state.totp_secret_cipher = totp_secret_cipher
     app.state.outbox_cipher = outbox_cipher
     app.state.recovery_hmac_active_key_version = (

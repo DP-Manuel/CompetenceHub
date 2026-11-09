@@ -75,6 +75,8 @@ def run(fixture, database, options, report, evidence):
     approved_id = None
     saved_cookies = None
     owned_contexts = []
+    public_path = "/portal/calendar-public.html" if getattr(options,"integrated_acceptance",False) else "/demo/public/"
+    request_label = "Anfrageentwurf vorbereiten" if getattr(options,"integrated_acceptance",False) else "Anfrage simulieren"
 
     @contextmanager
     def server():
@@ -135,7 +137,7 @@ def run(fixture, database, options, report, evidence):
         return new
 
     def month_page(page, base, month):
-        demo.public_load(page, base, "/demo/public/")
+        demo.public_load(page, base, public_path)
         for _ in range(3):
             if page.locator("#month-label").inner_text() == demo_month_label(month):
                 return
@@ -225,7 +227,7 @@ def run(fixture, database, options, report, evidence):
                 checks.check("Actual local browser downloads only public ICS", download.value.suggested_filename.endswith(".ics") and failure is None and Path(download.value.path()).read_bytes()==first_ics.body())
                 writes = []
                 public.on("request", lambda r: writes.append(r.method) if r.method not in {"GET","HEAD"} else None)
-                public.locator("#seats").fill("2"); public.get_by_role("button", name="Anfrage simulieren", exact=True).click()
+                public.locator("#seats").fill("2"); public.get_by_role("button", name=request_label, exact=True).click()
                 checks.check("Native public request draft contains approved event context, no customer record or send", title in public.locator("#request-draft").input_value() and "PRIVATE" not in public.locator("#request-draft").input_value() and writes == [])
                 demo.geometry(public, checks, "Native desktop public")
                 public.screenshot(path=str(evidence / "desktop-public.png"),full_page=True)
@@ -297,7 +299,7 @@ def run(fixture, database, options, report, evidence):
                 reviewer_context=new(); reviewer_context.add_cookies(saved_reviewer)
                 reviewer=reviewer_context.new_page(); reviewer.goto(base+"/portal/")
                 expect(qa.review_card(reviewer,revised)).to_be_visible()
-                public.get_by_role("button",name="Anfrage simulieren",exact=True).click()
+                public.get_by_role("button",name=request_label,exact=True).click()
                 demo.review(reviewer,revised,"published")
                 expect(public.locator("#detail-title")).to_have_text(revised,timeout=15000)
                 revised_ics=Calendar.from_ical(context.request.get(base+PUBLIC+"/"+approved_id+"/calendar.ics").body()).walk("VEVENT")[0]

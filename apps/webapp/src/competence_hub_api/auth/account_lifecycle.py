@@ -15,7 +15,7 @@ INVITATION_LIFETIME = timedelta(hours=24)
 PASSWORD_RESET_LIFETIME = timedelta(minutes=30)
 FRESH_ADMIN_AUTH_MAX_AGE = timedelta(minutes=15)
 IDEMPOTENCY_LIFETIME = timedelta(hours=24)
-INTERNAL_INVITATION_ROLES = frozenset({"internal"})
+PILOT_INVITATION_ROLE_SETS = frozenset({frozenset({"internal"}), frozenset({"calendar_reviewer"}), frozenset({"coach"})})
 
 
 class InvitationConflictError(RuntimeError):
@@ -107,6 +107,7 @@ class AccountLifecycleRepository(Protocol):
         now: datetime,
         expires_at: datetime,
         idempotency_expires_at: datetime,
+        coach_id: UUID | None = None,
     ) -> InvitationIssueResult: ...
 
     async def request_password_reset(
@@ -174,6 +175,7 @@ class AccountLifecycleService:
         email: str,
         display_name: str,
         role_codes: tuple[str, ...],
+        coach_id: UUID | None = None,
         idempotency_key: str,
         client_ip: str,
         now: datetime,
@@ -182,9 +184,8 @@ class AccountLifecycleService:
         _validate_email(normalized_email)
         normalized_display_name = _normalize_display_name(display_name)
         normalized_roles = tuple(sorted(set(role_codes)))
-        if not normalized_roles or not set(normalized_roles).issubset(
-            INTERNAL_INVITATION_ROLES
-        ):
+        if (frozenset(normalized_roles) not in PILOT_INVITATION_ROLE_SETS
+                or ("coach" in normalized_roles) != (coach_id is not None)):
             return LifecycleRejected()
         if (
             "admin" not in actor.roles
@@ -202,6 +203,7 @@ class AccountLifecycleService:
             normalized_display_name,
             normalized_roles,
             self._idempotency_hmac_key,
+            coach_id,
         )
         existing_result = await self._repository.find_invitation_idempotency(
             actor_user_id=actor.user_id,
@@ -233,6 +235,7 @@ class AccountLifecycleService:
             token.plaintext,
             subject_id=_outbox_subject("invitation", outbox_id),
         )
+        mapping = {"coach_id": coach_id} if coach_id is not None else {}
         result = await self._repository.issue_invitation(
             actor_user_id=actor.user_id,
             normalized_email=normalized_email,
@@ -247,6 +250,7 @@ class AccountLifecycleService:
             now=now,
             expires_at=expires_at,
             idempotency_expires_at=now + IDEMPOTENCY_LIFETIME,
+            **mapping,
         )
         return LifecycleQueued(
             recipient_user_id=result.user_id,
@@ -456,12 +460,14 @@ def _invitation_request_fingerprint(
     display_name: str,
     role_codes: tuple[str, ...],
     key: bytes,
+    coach_id: UUID | None = None,
 ) -> bytes:
     canonical_request = json.dumps(
         {
             "display_name": display_name,
             "email": normalized_email,
             "role_codes": list(role_codes),
+            **({"coach_id": str(coach_id)} if coach_id is not None else {}),
         },
         ensure_ascii=True,
         separators=(",", ":"),

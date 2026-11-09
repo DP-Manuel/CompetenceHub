@@ -2,6 +2,20 @@
 
 Stand: 18.09.2026
 
+## Additives integriertes Pilot-Inkrement 09.11.2026
+
+Rollenbegrenzter Arbeitsüberblick liest native SQL-Statuszähler, keine Buchungs-
+oder Teilnehmerstatistik. Admin erhält eine paginierte, tokenfreie Zugangsliste;
+Coach-/Reviewer-Views bekommen keine fremden Account-/Firmenangaben.
+Drei freiwillige Einführungen unter Hilfe, niemals automatisch angezeigt,
+ohne Web-Storage-/Trackingdaten. Native Dialogsemantik, Weiter/Zurück,
+Überspringen, Schließen/Escape, Fokus zurück zu Hilfe; fehlende Ziele bleiben
+kontrolliert überspringbar. Mobile, nativer200%-Zoom und Reduced Motion gehören
+zur Abnahme. Keine Mutation wird durch eine Tour ausgelöst.
+Die gebaute Runtime-Kalenderseite verwendet denselben Renderer wie die lokale
+CAL-0.1-Demo; sie enthält keine Testzugänge oder Dummy-MFA.
+[Betriebs-/Erstzugangsgrenzen und kurze Rollenleitfäden](../operations/integrated-staging-pilot-2026-11-09.md).
+
 Lokales Pilot-Inkrement06.11: Coachliste nach Beginn sortiert, Suche und
 Statusfilter, sichtbare Kapazität/Entscheidungsfrist; ursprüngliche Indizes
 bleiben für Aktionen erhalten, auch bei gefilterter/umsortierter Darstellung.
