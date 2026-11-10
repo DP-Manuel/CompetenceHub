@@ -1,8 +1,22 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-09.
+Updated: 2026-11-10.
 
 ## Current Milestone
+
+10.11 actual PRIVATE VPS PILOT ACCEPTED18:23 MEZ/17:23 UTC, source52d7ddb,
+unchanged package0080195.61 real remote checks PASS: native MFA/RBAC/CAL-1,
+multiday/month overlap, ICS/request draft, stale edit, withdrawal and own API
+restart with DB/session persistence. Receipt independently SHA-bound; private
+runtime ciphertext hash checked without decrypting. Read-only18:27 MEZ: two own
+services active/enabled, four co-host services healthy, only loopback8001/8443
+added. Fresh strict HTTPS200, served leaf matches receipt; expiry24.11 18:20 MEZ.
+No migration/backup repeat/GPG/real account/Website action. Four synthetic users
+and demo offers intentionally retained, role windows OPEN. Keep operator tunnel
+open; never rerun installer to reconnect. One next block: existing synthetic
+VPS demonstration/fachliche Abnahme with Manuel/Janay. [Actual receipt, access,
+limits and DoD](docs/operations/integrated-staging-pilot-2026-11-09.md#echter-vps-pilot-abgenommen-am-10112026).
+Earlier absent-Portal/next-install checkpoints below are dated history.
 
 Latest actual operator attempt091afdb: local_preflight KeyError before passwords
 or SSH; deployment/acceptance NOT_RUN. Legacy accepted restore receipt lacks the
@@ -157,7 +171,7 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 - 21.10 read-only checks before and after Pages publication: Mindforge HTML/CSS return 200 and match the September hashes; this is a spot-check, not a full production retest.
 - Official preview: https://dp-manuel.github.io/CompetenceHub/ is now published from `78c3470258ea` through successful Pages run42060354587 (05.11). Nine approved Coaches,27 grouped offers/29 formats;141 current public checks PASS. [Current evidence](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md); [earlier Website-first inventory](docs/content/website-first-2026-11-05.md) remains dated evidence. Local CAL demo is not hosted on Pages.
 - Preview-only isolation: production's entire 52-file build manifest remains byte-identical; no IONOS write or backend deployment.
-- Portal/backend is not productively activated; real accounts/mappings, reservations, SMTP and Analytics remain inactive.
+- Portal/backend is NOT public/productive, but the private synthetic VPS pilot is installed and accepted10.11; own API/TLS loopback only, access through the operator SSH tunnel. Real accounts/mappings, reservations, SMTP and Analytics remain inactive.
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.
 
 ## Current Evidence
@@ -230,7 +244,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended block: own private VPS pilot installation and native synthetic acceptance using the existing bound package, preserved configuration and accepted actual temporary backup/restore. Deliverable is protected SSH/HTTPS/native CAL-1/MFA/RBAC/restart proof with healthy co-hosts; no real accounts. Do not repeat the passed backup gate or request the same owner approval again. [Ordered horizon and acceptance](docs/exec-plans/active/integrated-staging-pilot-2026-11-09.md). Existing shared Calendar/native SQL integration is complete locally.
+1. Exactly one recommended block: fachliche Abnahme of the accepted private VPS pilot with Manuel/Janay, using the already open synthetic Coach/Reviewer/Admin windows and protected Calendar. Deliverable/DoD: confirmed business workflow or concrete UX findings for create/review/publish/ICS/request. No new accounts or infrastructure action. Keep tunnel open; no installer rerun or repeat backup. [Actual operating evidence and next scope](docs/operations/integrated-staging-pilot-2026-11-09.md#echter-vps-pilot-abgenommen-am-10112026).
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 
@@ -243,4 +257,4 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 IONOS release, public backend deployment, real-user activation, productive tracking,
 CAL-2, real reservations, FIN-01 implementation and PWA. The private synthetic
-Staging pilot is conditionally authorized, not installed.
+Staging pilot IS installed and technically accepted10.11, private/synthetic only.

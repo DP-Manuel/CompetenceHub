@@ -2,6 +2,19 @@
 
 Significant milestones only; newest first.
 
+10.11 18:23 MEZ FIRST ACTUAL PRIVATE VPS PILOT ACCEPTED. Operator52d7ddb,
+unchanged package0080195; accepted09.11 restore reused,0006 signature matched,
+no migration or backup rerun.61 real native checks PASS: role MFA/RBAC, Coach
+isolation, tours, multiday/month overlap/public privacy, revisions/stale edits,
+ICS/request draft, withdrawal, session expiry/logout/recovery and own API restart
+with DB/session persistence. Receipt independently SHA-bound, runtime ciphertext
+hash verified without decryption. Fresh18:27 MEZ SSH: own API/proxy active/enabled,
+four co-hosts healthy, public ports unchanged; strict tunnel HTTPS200 and exact
+leaf match. Four synthetic users/demo data intentionally retained, role windows
+open. No real activation/mail/import/Website/GPG. Next: fachliche Abnahme with
+existing synthetic role windows, not another installer or backup run.
+[Actual evidence/access/limits](docs/operations/integrated-staging-pilot-2026-11-09.md#echter-vps-pilot-abgenommen-am-10112026).
+
 09.11 20:48 UTC REAL temporary Staging backup/isolated restore PASS. Actual report
 and retained external ciphertext hashes/operator-SYSTEM ACLs verified; 27 complete
 table/data/schema/rights/format/sequence comparisons equal, source unchanged,

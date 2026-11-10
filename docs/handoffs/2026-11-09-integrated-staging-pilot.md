@@ -1,6 +1,8 @@
 # Integrated Staging Pilot: Delivery Record
 
-Date:09.11.2026. **LOCAL CANDIDATE VERIFIED; VPS ACTIVATION HELD.**
+Package date:09.11.2026; actual acceptance updated10.11.2026.
+**PRIVATE SYNTHETIC VPS PILOT INSTALLED AND ACCEPTED.** Real/public activation held.
+[Authoritative actual receipt/access/limits](../operations/integrated-staging-pilot-2026-11-09.md#echter-vps-pilot-abgenommen-am-10112026).
 
 ## Source And Package
 
@@ -10,7 +12,9 @@ Date:09.11.2026. **LOCAL CANDIDATE VERIFIED; VPS ACTIVATION HELD.**
 - Wheel SHA-256: `a614ff69100641419a47cc068543bd65c31ff20c56989adaadffe9460f0dd646`.
 -119 allowlisted committed Git inputs. No private sources, secrets, fixture
   scripts or unknown working-tree inputs. Manifest dirty=false and
-  deployment_authorized=false: the actual operating gates are not closed.
+  deployment_authorized=false describes build-time authority only. The later
+  scoped owner decision and actual10.11 operating proof, not edited package
+  metadata, close the private synthetic installation gate.
 - Later evidence-only commit adds this record and tour screenshot capture;
   it does not change the application source contained in the package.
 
@@ -18,14 +22,14 @@ Date:09.11.2026. **LOCAL CANDIDATE VERIFIED; VPS ACTIVATION HELD.**
 
 | Area | Actual result |
 | --- | --- |
-| Coach/Reviewer/Admin introductions | Three optional native modal tours, local SQL/browser PASS; no automatic startup or personal storage |
+| Coach/Reviewer/Admin introductions | Three optional native modal tours, actual VPS PASS10.11; no forced tour startup or personal storage |
 | Role dashboards | Scoped current-revision SQL counts; Admin paginated account/role/UUID/status list, not a complete audit viewer |
 | First access | Inactive invitations for exactly Intern/Reviewer/explicit UUID-linked Coach; one-time token, personal password, native MFA/recovery; default delivery hold |
 | First real Admin | Not created; existing protected CLI is not a newly implemented token-first Admin bootstrap. Reconcile actual first-Admin activation before live operation |
-| Full Calendar workflow | Real local SQL and packaged public page: create, review, publish, multiday/month overlap, ICS, request draft, revision, withdrawal, restart PASS |
-| VPS application / Staging URL | Not installed; no working Staging Portal URL claimed |
-| Existing VPS services | Read-only pre/post checks PASS, unchanged by this batch |
-| Current remote backup/restore | Not executed or proven; protected operating gate remains OPEN |
+| Full Calendar workflow | Actual VPS native SQL/packaged Calendar,61 remote checks PASS10.11 including create/review/publish/ICS/request/revision/withdrawal/restart |
+| VPS application / Staging URL | Installed, private tunnel only: `https://localhost:8447/portal/` and `/portal/calendar-public.html`; isolated trusted Firefox windows |
+| Existing VPS services | Actual10.11 postflight and independent18:27 MEZ SSH PASS, unchanged public ports |
+| Current remote backup/restore | Actual09.11 protected backup/exact-file isolated restore PASS, reused without rerun for10.11 install; not permanent independent recovery |
 | Real accounts / dispatch | None created/activated/sent; Janay recipient/channel and per-Coach UUID ownership still need confirmation |
 | IONOS / Pages / R2 / import | No deployment, key action, migration or real import |
 
@@ -97,6 +101,16 @@ The existing [six-step demonstration](2026-11-06-cal1-pilot-readiness.md#vorfüh
 remains the functional acceptance sequence. Tours are optional under Help.
 
 ## One Next Block
+
+LATEST ACTUAL10.11 18:23 MEZ: private own-service VPS pilot ACCEPTED,61 real
+remote checks; source52d7ddb, original package unchanged. Exact receipt SHA:
+`2becd577f08e3e13cb8e429ec2f8451f50bdabe479be33e4866950f1fd80b5fa`.
+Fresh SSH/strict HTTPS confirm healthy co-hosts and working protected access.
+**Next: fachliche Abnahme using existing synthetic role windows**, not installation,
+backup or personal activation. Inputs: accepted CAL contracts and opened role
+contexts; deliverable/DoD: documented confirmation of create/review/public/request
+flow or concrete UX findings. Keep tunnel open; never rerun installer to reconnect.
+All older next-install/held-runtime paragraphs below remain dated history.
 
 LATEST ACTUAL20:48 UTC: current temporary backup+exact-file isolated VPS restore
 accepted, report/ciphertext hashes and private ACLs independently verified;

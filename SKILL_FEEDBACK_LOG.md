@@ -1,11 +1,21 @@
 # Skill Feedback Router
 
-Updated: 2026-11-09. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-10. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+10.11 deployment closure learning: accept a real operator result only after
+reviewing its actual sanitized receipt, exact source/package and configuration
+ciphertext hash, then independently read service/enable/listener state and probe
+strict HTTPS with exact served certificate match. Close installation in context,
+roadmap, active plan and handoff together; don't leave next-install suggestions
+that invite an unsafe rerun. Distinguish deliberately retained synthetic pilot
+data from disposable-test zero residue; record tunnel lifetime/certificate expiry
+and keep real-user/import/public gates separate. Implemented project-locally;
+no global skills/Wiki change, no new backup/operator loop.
 
 09.11 real-entry regression: a green native container probe bypassed the outer
 accepted-receipt loader. The actual immutable legacy receipt lacked a later

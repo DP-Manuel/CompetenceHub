@@ -31,21 +31,28 @@ integrated preparation and conditional Staging pilot, not an unguarded rollout.
    Foreign services/loopback still healthy20:52. No need to repeat recovery or
    restart GPG. Temporary machine/user-bound rollback only; permanent independent
    recovery and real-user readiness are not implied.
-7. LOCAL INSTALLER/ACCEPTANCE READY: one private executable operator entry,
-   retained DPAPI runtime configuration, exact 0006 baseline reuse, separate
-   loopback API/TLS services and native synthetic acceptance.61 actual local
-   Ubuntu/Firefox checks PASS; restrictive umask, explicit committed-close and
-   scoped rollback failure regressions;1,580 tests PASS/30 expected skips,
-   60 focused tests PASS. Actual VPS21:39 healthy/unchanged, sudo needs private
-   authentication. No actual install or new backup/migration yet. Same owner
-   approval applies. [One executing command and precise evidence boundaries](../../operations/integrated-staging-pilot-2026-11-09.md#vps-installation-und-native-abnahme-ein-privater-operatorlauf).
-   Actual operator091afdb stopped locally before password/SSH: legacy receipt
-   omitted a later hash field. Reproduced and fixed without changing the receipt
-   or ciphertexts; immutable receipt + separately accepted hashes retained.
-   112 focused tests PASS incl13 new regression cases; UTF-8 REPORT fixed.
-   No repeat backup or server action; corrected install remains the next block.
+7. DONE ACTUALLY10.11 18:23 MEZ: source52d7ddb installed unchanged package0080195,
+   native0006 baseline matched, existing restore reused without rerun.61 remote
+   Firefox/MFA/RBAC/CAL/public/ICS/stale-edit/own-restart checks PASS. Runtime
+   protected, original keys unchanged, server commit/close acknowledged. Real
+   systemd API/proxy active/enabled; read-only18:27 MEZ confirms four healthy
+   co-hosts, unchanged public ports, only loopback8001/8443 added; strict HTTPS200
+   and actual leaf match. Four synthetic accounts/demo data retained intentionally;
+   no real users, migrations, import, mail, Website or GPG. [Bound actual evidence](../../operations/integrated-staging-pilot-2026-11-09.md#echter-vps-pilot-abgenommen-am-10112026).
+   Prior local proof1,580/30 and61 browser checks, then112 focused legacy-receipt/
+   UTF-8 tests remain dated implementation evidence, not remote substitutes.
+8. NEXT: fachliche Abnahme in existing synthetic role windows with Manuel/Janay.
+   No new infrastructure/identity decision needed for this existing demonstration.
+   Deliver documented accepted flow or concrete UX feedback; no real activation.
 
 ## Gates And Evidence
+
+LATEST10.11: private VPS install/native acceptance CLOSED PASS, actual bound
+receipt independently reviewed and fresh read-only SSH/strict HTTPS confirmed.
+The remaining earlier next-install/absent-service statements below are history.
+Do not rerun installer or backup. Existing tunnel/role windows support the next
+fachliche Abnahme. External permanent domain/TLS, portable recovery, real identity,
+delivery/first-Admin and Coach mappings stay separate future gates.
 
 ACTUAL 20:48 UTC operating receipt accepted: current 0006 native dump protected
 on verified C:, exact ciphertext reread/fresh-process recovered and restored in
@@ -91,10 +98,12 @@ must stay off until that gate. No real activation token may be printed.
 
 ## Rolling Horizon
 
-Completed: local acceptance -> clean bound source package -> owner decision ->
-actual protected Staging preflight/restore. Next: exact private pilot install ->
-synthetic native remote acceptance/restart -> Janay usability acceptance ->
-separately approved named first activation after permanent recovery/mail/identity
-gates. Later steps are conditional, not achieved evidence.
+Completed: local acceptance -> bound package -> owner decision -> actual private
+Staging preflight/restore -> own VPS install -> native remote acceptance/restart.
+Next ordered horizon: (1) fachliche Abnahme with existing synthetic windows;
+(2) reconcile named-access/operations inputs without activation; (3) separately
+approved real first-Admin/Reviewer after suitable recovery/delivery/TLS gates;
+(4) individually approved Coach mapping/onboarding and first real Coach pilot.
+Only step1 is ready now; later steps are conditional, no automatic COACH-3B apply.
 
 IONOS/Pages, COACH-3B REAL APPLY, CAL-2 and GPG remain outside this batch.

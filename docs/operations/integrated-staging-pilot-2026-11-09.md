@@ -1,11 +1,79 @@
 # Integrierter Staging-Pilot: Release und Betriebs-Gate
 
-Stand: 09.11.2026. Quelle vor diesem Batch: d8cd664. Aktueller Kandidat wird im
-abschließenden Release-Nachweis gebunden. **Nicht auf dem VPS installiert.**
-Der neue Auftrag erlaubt den bedingten Piloten, ersetzt aber keine fehlenden
-Betriebsnachweise. IONOS/Pages, Coachimport und R2/GPG bleiben unangetastet.
+Stand: 10.11.2026. Quelle vor diesem Batch: d8cd664. **Privater synthetischer
+VPS-Pilot installiert und tatsächlich abgenommen**, Operatorquelle52d7ddb und
+unverändertes Anwendungspaket0080195755e3. Keine öffentliche/Realnutzer-Freigabe.
+IONOS/Pages, Coachimport und R2/GPG bleiben unangetastet.
 
 ## Aktuelle Freigabe und tatsächlicher Ausführungsstand
+
+### Echter VPS-Pilot abgenommen am 10.11.2026
+
+**18:23:31 MEZ /17:23:31 UTC: Installation und native Abnahme PASS.**
+Der tatsächlich gespeicherte, bereinigte Bericht
+`release-artifacts/vps-pilot/e89ce1ef18b14ad38bff9fcbf0199854.json`
+wurde unabhängig gelesen und gegen Umfang, Gates und Originalartefakt geprüft.
+SHA-256: `2becd577f08e3e13cb8e429ec2f8451f50bdabe479be33e4866950f1fd80b5fa`.
+Operatorquelle: `52d7ddba19d300a3e8a14b601cfcdc2d84e3c00b`.
+Paket SHA-256 bleibt `f3478fc34de4647fd182a9c7262678b8de2e6b194428ec7dbcc0a116d9c51c41`;
+25 gebundene Offline-Abhängigkeiten. Alte STOP-/NOT_RUN-/Next-install-Einträge
+weiter unten sind datierte Vorgeschichte, keine erneut offenen Gates.
+
+| Abschluss | Tatsächlich nachgewiesen |
+| --- | --- |
+| VPS-Deployment | JA, eigene API-/TLS-Proxy-systemd-Dienste aktiv und enabled |
+| Geschützter Zugang | `https://localhost:8447/portal/`, öffentliche Ansicht im selben privaten Origin unter `/portal/calendar-public.html` |
+| CAL-1 Ende-zu-Ende | PASS: Entwurf, Einreichen, Änderungsanforderung, Revision, Freigabe, öffentliche Projektion, ICS und Anfrageentwurf |
+| MFA/RBAC | PASS: vier synthetische Konten, genaue Rollen, Coach-Isolation, CSRF/Origin, Cookies, Logout, Ablauf und Recovery |
+| PostgreSQL-Persistenz | PASS: Veröffentlichung und Sitzung nach eigenem API-Neustart erhalten |
+| Neustart | PASS, nur eigener API-Dienst; kein PostgreSQL-/fremder Neustart |
+| Andere VPS-Dienste | Unverändert aktiv: Chatbot, Nginx, Fail2ban, PostgreSQL; vorherige Listener erhalten |
+| Restore/Rollback | Echter09.11-Restore wiederverwendet, frische0006-Baseline vor Eingriff identisch, Runtime verschlüsselt rücklesbar; kein Restore/Rückbau während erfolgreicher Installation |
+| Migrationen | Keine, weiterhin0001–0006/27 Tabellen |
+| Persönliche Erstzugänge | Keine realen Konten/Einladungen; weiterhin eigener Freigabe- und Betriebsblock |
+| Interaktive Führung | Admin-, Coach- und Reviewer-Touren tatsächlich auf dem VPS geprüft; optionale Hilfe, keine automatische Zwangstour |
+| Nächster Block | Fachliche Abnahme/Vorführung mit Manuel und Janay in den bestehenden synthetischen Rollenfenstern |
+
+**61 tatsächliche Remoteprüfungen**, Firefox155: Mehrtage/Monatsüberschneidung,
+parallele Coaches, Konfliktvermeidung, stale edit in getrennten Sitzungen,
+Revision3 mit stabiler ICS-UID, öffentliche Datenschutzgrenze, echte Downloads,
+390px, native200%-Tastatur/Fokus und Rücknahme. Kein Screenreader-/Outlook-Desktop-
+Produktnachweis behauptet. Keine Buchung, Kundendaten, Mail, Registry-Migration,
+COACH-3B REAL APPLY oder Website-Aktion.
+
+Unabhängiger lesender SSH-Nachcheck **18:27 MEZ /17:27 UTC**: beide eigenen Dienste
+aktiv/enabled, vier fremde Dienste aktiv. Nur127.0.0.1:8001/8443 zusätzlich;
+PostgreSQL5432/Chatbot8000 weiterhin Loopback, öffentliche22/80/443 unverändert.
+Frische HTTPS-Readiness über den bestehenden Tunnel mit CA- UND Hostnamenprüfung:
+**200**, ausgeliefertes Leaf identisch zum Bericht. TLS-Leaf gültig bis
+**24.11.2026,18:20:45 MEZ /17:20:45 UTC**; kein dauerhaftes externes Domain-/TLS-Gate
+geschlossen, keine automatische Zertifikatserneuerung versprochen.
+
+Runtime-Ciphertext ausschließlich per Hash nachgeprüft, nicht entschlüsselt:
+`a13655ca3fff01cd967b6882d48aa576ed8306369b6c0ca8b7f6283c67392cbb`.
+CA SHA `14827c63424b87f7b40aa04019e720872e241e5a8f7a4a5b495cdcb3c89b302d`,
+Leaf SHA `aecd310881202f9438b14a9d57d7f3e033bf947416a460fa3263fa44cf71d27a`.
+Dateien unter dem bekannten privaten Laufverzeichnis werden nicht versioniert
+und bleiben erhalten. Original-Anwendungsschlüssel laut Operator unverändert;
+keine neue GPG-/Sicherungsaktion. Der bestätigte Server-Commit und geordnete
+Kanalschluss sind beide ACKNOWLEDGED; der Pilot wurde nicht zurückgerollt.
+
+Postflight vor Öffnung der Vorführfenster:4 synthetische Benutzer,4 Angebote,
+6 Revisionen,4 Entscheidungen. Diese Testdaten sind **bewusst erhalten**, nicht
+Nullrückstand oder echte Coaches. Die drei Rollenfenster und der Kalender wurden
+automatisch geöffnet (`interactive_role_windows=OPEN`). Nur diese isolierten
+Firefox-Kontexte verwenden, kein Zertifikatswarnungs-Bypass im normalen Browser.
+Terminal/Tunnel für die Vorführung offen lassen. Enter schließt lokale Fenster
+und Tunnel, nicht die serverseitigen Dienste; danach ist localhost8447 nicht
+erreichbar. **Installer nicht zum Wiederverbinden erneut ausführen.**
+
+DoD des jetzt geschlossenen Blocks: tatsächliche Installation,61 native Remote-
+Checks, Neustart/Persistenz, geschützter nutzbarer Zugang, gesicherte Runtime und
+unveränderte Co-Hosts mit bestätigtem Bericht. Ein nächster Block: vorhandene
+Vorführung fachlich abnehmen; Inputs sind Rollenfenster/accepted CAL-Verträge,
+Ergebnis ist nachvollziehbares Feedback zu Coach/Prüfer/öffentlichem Anfrageweg,
+DoD ist dokumentierte fachliche Abnahme oder konkrete Restbefunde. Keine neuen
+Accounts, Migration, Datenimporte, Sicherungsläufe oder Freigaben dabei auslösen.
 
 ### VPS-Installation und native Abnahme: ein privater Operatorlauf
 
