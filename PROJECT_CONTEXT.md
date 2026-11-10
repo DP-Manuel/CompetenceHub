@@ -14,6 +14,10 @@ Manuel confirms no EDV reply; send-ready DNS/SMTP mail and nine-profile OPEN
 mapping matrix prepared. Private TLS expiry24.11 18:20 MEZ remains a deadline.
 [Current implementation, update/recovery limits, guides and next gate](docs/operations/real-user-readiness-v1-2026-11-10.md).
 [Active execution plan](docs/exec-plans/active/real-user-readiness-2026-11-10.md).
+Sourcebc53775 pushed; full1,635/30 twice green,182 native browser/3 API checks,
+fresh packaged Linux/proxy37 checks PASS. Bound ZIP/hash in canonical result.
+No V1 VPS update: sudo read requires private interaction; reference-data recovery
+gate must match the actual current state, not the old empty database.
 One next block: protected, state-preserving V1 runtime update/acceptance once
 current privileged state/rollback evidence exists; never rerun the installer.
 Earlier next-install/acceptance checkpoints below are dated history.

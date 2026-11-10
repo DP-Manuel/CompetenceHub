@@ -11,6 +11,10 @@ identity, migration/mail/Website/key action. VPS reference preserved; read-only
 19:23 MEZ all six services active. DNS/SMTP reply absent, EDV mail/matrix/guides
 prepared. Current-data recovery/privilege gate remains for a technical update,
 not another installer/empty backup loop. [Canonical result/gates](docs/operations/real-user-readiness-v1-2026-11-10.md).
+Sourcebc53775 pushed; bound ZIP21849d1e… independently SHA-checked, full release
+rerun1,635/30 green, fresh Linux/offline install and37 proxy checks PASS; own
+container removed. Actual19:44 sudo read requires hidden operator input, no
+new password request or server mutation. V1 package prepared, not deployed.
 
 10.11 18:23 MEZ FIRST ACTUAL PRIVATE VPS PILOT ACCEPTED. Operator52d7ddb,
 unchanged package0080195; accepted09.11 restore reused,0006 signature matched,

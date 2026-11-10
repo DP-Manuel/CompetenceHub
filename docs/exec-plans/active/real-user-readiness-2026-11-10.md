@@ -38,10 +38,12 @@ Manual help/restart remains available; no cross-device progress claim.
    conflicting edits, revocation, role change, tours, CAL workflow and restart.
   136 onboarding/management +46 CAL checks,3 native API tests, full1,635/30 suite;
    controlled out-of-order inventory regression and actual native200 screenshots.
-5. IN PROGRESS: cohort9 mapping matrix without invented identities/UUIDs, short guides,
+5. DONE: cohort9 mapping matrix without invented identities/UUIDs, short guides,
    EDV mail, bound release/update candidate and risk-specific rollback evaluation.
-6. TODO: review, tests, logical commit/push; remote mutation only with current
-   state/recovery/privilege gates actually met. Report prepared vs deployed honestly.
+6. DONE LOCAL / REMOTE GATED: reviewed sourcebc53775 committed/pushed; exact
+   ZIP/hash and fresh Linux/proxy37 checks bound in canonical result. Release
+   rerun1,635/30 PASS. Final documentation is a separate commit. Remote update NOT
+   performed: current privileged state/rollback gate and preservation proof required.
 
 Canonical result/access/release boundary: [Readiness V1](../../operations/real-user-readiness-v1-2026-11-10.md).
 Read-only VPS19:23 MEZ: all six services active. No privilege input, installation,

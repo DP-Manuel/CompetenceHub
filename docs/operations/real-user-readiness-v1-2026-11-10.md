@@ -54,7 +54,25 @@ weiterhin keine Adminrolle. Alle geschützten Antworten bleiben `no-store`.
 Das Paket enthält Runtime, Portal und gemeinsame Kalenderansicht, exakte Locks,
 Manifest und SHA-256. Es ist ein Updatekandidat, **kein erneuter Installerlauf**.
 Keine Website-/Pages-Veröffentlichung und kein Kopieren privater Konfiguration.
-Konkrete Paketbindung und Testergebnisse werden im Abschluss ergänzt.
+Gebundener Quellstand: `bc53775b08dc6693bc9cf4780e026f4fdf2d1744`, gepusht.
+125 explizit erlaubte Git-Eingaben, keine privaten/unversionierten Dateien.
+
+| Nachweis | Tatsächlicher Stand |
+| --- | --- |
+| Paket | `release-artifacts/webapp/competence-hub-webapp-0.1.0-bc53775b08dc-20261110T184433Z.zip` |
+| Paket-SHA-256 | `21849d1e2f33b6044e6a93fdc27fb3ab39f5b5bd7bea047ba73fed99e8d5df97` |
+| Anwendungswheel-SHA-256 | `30b211b07a45ae99154808deb46092b19ddcc1caab22364d58fc6ac4eb299dcf` |
+| Wiederholte Releasegates |1.635 Tests bestanden/30 erwartete Skips,298,63 Sekunden; exakte Locks, `pip check`, Wheelinstallation/Imports/Fail-closed-Konfiguration bestanden |
+| Linux | `release-artifacts/webapp-linux/20261110T184522Z-4efed9db`, frische Ubuntu/Python3.12-Installation,25 exakte Linux-Abhängigkeiten, hashgebundene Offlineinstallation |
+| Linux/Proxy |37 tatsächliche Prüfungen bestanden, PostgreSQL/Auth/MFA/Cookies/CSRF/Origin/Logout/Loopback, Nullrückstand und eigener Container entfernt |
+| Linux-Summary-SHA-256 | `c72c68f76d71d2ef3a899493edd1373c8c251cdb220f74a333fa45070b1135ca` |
+| Proxyreport-SHA-256 | `ebbd1fff13a5312a2cdd14e630492da858e3cc433bd9b79c4dd97a16cf4e3530` |
+
+Linuxnachweis ist kein VPS-Systemd-/Update-Nachweis. Das Archiv enthält bereits
+vorher vorhandene Migrationsdateien; keine davon darf durch diesen Updateblock
+angewendet werden. Native V1-Browserabnahme lief ausdrücklich auf0001–0006.
+Das bisherige Paket0080195 bleibt unveränderte VPS-Referenz und möglicher
+Code-Rollback, erst nach bestätigtem tatsächlichem Runtimezustand.
 
 ## Tatsächliche Lokale Abnahme
 
@@ -111,6 +129,9 @@ Eine neue Runtime wird nicht allein deshalb installiert, weil lokal alles grün 
 privilegierte Zustands-/Rollbacknachweise im zusammenhängenden Updatefenster.
 Die lokale Prüfung ersetzt diese nicht. Read-only10.11 19:23 MEZ: beide eigenen
 und alle vier fremden VPS-Dienste `active`; kein Serverzustand geändert.
+Zusätzliche reine Leseprüfung19:44 MEZ: `sudo -n systemctl show` scheitert
+an erforderlicher interaktiver Berechtigung. Kein Passwortdialog gestartet,
+keine neue Owner-Freigabe für bereits autorisierte technische Schritte verlangt.
 
 ## Persönliche Aktivierung Bleibt Separat
 
