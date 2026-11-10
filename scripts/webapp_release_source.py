@@ -23,6 +23,9 @@ DEPLOY_FILES = frozenset({
         "competence-hub-postgres-restore-check", "competence-hub-backup-notification-render")],
 })
 DOC_FILES = frozenset({
+    "docs/operations/real-user-readiness-v1-2026-11-10.md",
+    "docs/operations/coach-account-mapping-v1-2026-11-10.md",
+    "docs/operations/edv-portal-dns-smtp-2026-11-10.md",
     "docs/operations/integrated-staging-pilot-2026-11-09.md",
     "docs/operations/pilot-admin-guide.md",
     "docs/operations/pilot-janay-guide.md",

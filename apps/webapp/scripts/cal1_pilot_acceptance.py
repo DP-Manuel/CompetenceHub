@@ -88,6 +88,7 @@ def run(fixture, database, options, report, evidence):
                     owned_contexts.pop().close()
 
     def login(page, base, key):
+        first_enrollment = key not in totps
         page.goto(base + "/portal/")
         page.locator("#login-email").fill(fixture.emails[key])
         page.locator("#login-password").fill(fixture.password)
@@ -107,6 +108,9 @@ def run(fixture, database, options, report, evidence):
             page.locator("#mfa-code").fill(recovery[key].pop())
             page.get_by_role("button", name="Bestätigen", exact=True).click()
         expect(page.locator("#portal-view")).to_be_visible()
+        if first_enrollment:
+            expect(page.locator('#product-tour')).to_be_visible()
+            page.locator('#tour-skip').click()
         expect(page.locator("#coach-calendar-loading" if key.startswith("coach") else "#review-calendar-loading")).to_be_hidden()
         if key.startswith("coach"):
             expect(page.locator("#calendar-filter-count")).not_to_have_text("")

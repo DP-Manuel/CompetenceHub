@@ -17,6 +17,10 @@ from competence_hub_api.auth.postgres_login_repository import (
     RATE_LIMIT_WINDOW,
 )
 
+# Same row lock as administrative access changes: an in-flight MFA completion
+# must finish before revocation, or observe the revoked challenge afterwards.
+_LOCK_USER_ACCESS = text('SELECT id FROM competence_hub.portal_users WHERE id=:user_id FOR UPDATE')
+
 _FIND_ACTIVE_CHALLENGE = text(
     """
     SELECT
@@ -455,6 +459,7 @@ class PostgresMfaRepository:
     ) -> bool:
         try:
             async with self._engine.begin() as connection:
+                await connection.execute(_LOCK_USER_ACCESS, {'user_id':user_id})
                 credential_result = await connection.execute(
                     _ENABLE_ENROLLED_TOTP if enrollment else _ACCEPT_TOTP_STEP,
                     {
@@ -513,6 +518,7 @@ class PostgresMfaRepository:
     ) -> bool:
         try:
             async with self._engine.begin() as connection:
+                await connection.execute(_LOCK_USER_ACCESS, {'user_id':user_id})
                 consumed = False
                 for candidate in candidate_digests:
                     result = await connection.execute(

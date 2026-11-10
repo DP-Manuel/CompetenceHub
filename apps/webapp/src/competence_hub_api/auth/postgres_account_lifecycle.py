@@ -540,6 +540,17 @@ class PostgresAccountLifecycleRepository:
         coach_id: UUID | None = None,
     ) -> InvitationIssueResult:
         async with self._engine.begin() as connection:
+            # Serialize against Admin role/suspension changes and recheck the actor
+            # inside the mutation, not only before awaiting this transaction.
+            current_admin = await connection.execute(text("""WITH locked AS (
+                SELECT pg_advisory_xact_lock(hashtext('competence_hub.admin_management')))
+                SELECT EXISTS(SELECT 1 FROM competence_hub.portal_users u
+                    JOIN competence_hub.user_roles ur ON ur.user_id=u.id
+                    JOIN competence_hub.roles r ON r.id=ur.role_id
+                    WHERE u.id=:actor AND u.active AND r.active AND r.code='admin')
+                FROM locked"""), {'actor': actor_user_id})
+            if current_admin.scalar_one() is not True:
+                raise InvitationConflictError('invitation actor no longer authorized')
             idempotency_parameters = {
                 "actor_user_id": actor_user_id,
                 "key_hash": idempotency_key_hash,

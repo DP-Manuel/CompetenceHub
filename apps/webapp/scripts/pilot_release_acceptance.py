@@ -49,6 +49,8 @@ def run(fixture, options, report, evidence):
         page.locator("#recovery-confirmed").check()
         page.get_by_role("button",name="Portal öffnen").click()
         expect(page.locator("#portal-view")).to_be_visible()
+        expect(page.locator("#product-tour")).to_be_visible()
+        page.locator("#tour-skip").click()
         return codes
 
     def tour(page, role, count):

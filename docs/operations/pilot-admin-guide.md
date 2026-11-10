@@ -1,6 +1,8 @@
 # Portaladministration für Manuel
 
-Stand: 09.11.2026. Lokaler Kandidat, noch kein freigegebener VPS-Betrieb.
+Stand: 10.11.2026. Der private synthetische VPS-Pilot ist abgenommen.
+Die folgenden erweiterten Verwaltungsaktionen gehören zum lokalen V1-Update;
+sie sind noch nicht auf dem VPS installiert. Keine echten Konten aktivieren.
 
 - **Zugänge:** Gesamtzahl, Aktivierungsstand, Rollen und stabile Coach-UUID
   kontrollieren. Aktiver Datensatz bedeutet nicht automatisch abgeschlossene MFA.
@@ -12,7 +14,21 @@ Stand: 09.11.2026. Lokaler Kandidat, noch kein freigegebener VPS-Betrieb.
 - Bereits aktive Konten werden nicht erneut eingeladen. Eine neue Einladung
   widerruft offene ältere Links; eine geänderte Rolle benötigt einen getrennten
   geprüften Verwaltungsvorgang, keine stille Neuzuordnung.
-- **Hilfe:** Admin-Einführung freiwillig starten; Escape beendet sie ohne Speichern.
+- **Verwalten:** Konto auswählen, Änderung und gegebenenfalls die bestätigte
+  Rolle/Coach-UUID wählen, prüfen und bestätigen. Sperren oder Rollenwechsel
+  beenden alle Sitzungen und offenen Zugangslinks. Wiederfreigeben erfordert
+  eine neue Anmeldung; eine Erstaktivierung wird dadurch nicht ersetzt.
+- **Schutz:** Der eigene Adminzugang bleibt unverändert. Der letzte aktive
+  Administrator darf nicht entfernt werden. Bei einem Konflikt aktuellen
+  Kontostand laden, bei abgelaufener Bestätigung erneut mit MFA anmelden.
+- **Einladung widerrufen:** Für noch nicht aktivierte Konten den offenen Link
+  ungültig machen. Neu vorbereiten übernimmt die bestätigten Angaben in das
+  Formular; Versand bleibt bis zur separaten Freigabe gesperrt.
+- **Nachvollziehen:** Im Verwaltungsdialog administrative Änderungen laden.
+  Gezeigt werden nur Zeitpunkt, Aktion und Ergebnis, keine Zugangsdaten.
+- **Hilfe:** Die erste Einführung startet nach abgeschlossener MFA-Einrichtung.
+  Überspringen und Neustart unter Hilfe sind jederzeit möglich. Fortschritt gilt
+  nur im selben Browser-Tab; Abmelden entfernt ihn. Kein Tracking.
 - Die Übersicht bestätigt nur die aktuelle Datenbankabfrage. Sie ist weder
   vollständiger Auditviewer noch Nachweis für TLS, Sicherung oder VPS-Gesundheit.
 - Der erste reale Admin bleibt ein gesonderter gesicherter Bootstrap-Schritt.

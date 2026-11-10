@@ -53,6 +53,8 @@ class FakeConnection:
 
     async def execute(self, statement, parameters=None):
         self.executed.append((statement, parameters))
+        if 'competence_hub.admin_management' in str(statement):
+            return FakeResult(scalar=getattr(self,'management_actor_authorized',True))
         return next(self.results, FakeResult())
 
 
@@ -165,7 +167,8 @@ async def test_new_invitation_creates_inactive_user_role_token_and_audit() -> No
 
     assert result.user_id == USER_ID
     assert result.replayed is False
-    calls = engine.connection.executed
+    assert 'competence_hub.admin_management' in str(engine.connection.executed[0][0])
+    calls = engine.connection.executed[1:]
     assert len(calls) == 13
     assert calls[5][1] == {
         "normalized_email": "person@example.invalid",
@@ -214,7 +217,7 @@ async def test_existing_provisioned_account_rejects_reinvitation_before_writes()
             idempotency_expires_at=NOW + timedelta(hours=24),
         )
 
-    assert len(engine.connection.executed) == 5
+    assert len(engine.connection.executed) == 6
 
 
 @pytest.mark.anyio
@@ -251,7 +254,7 @@ async def test_same_idempotency_request_replays_without_new_token_or_outbox() ->
 
     assert result.user_id == USER_ID
     assert result.replayed is True
-    assert len(engine.connection.executed) == 3
+    assert len(engine.connection.executed) == 4
 
 
 @pytest.mark.anyio
@@ -287,7 +290,7 @@ async def test_idempotency_key_reuse_with_other_request_is_rejected() -> None:
             idempotency_expires_at=NOW + timedelta(hours=24),
         )
 
-    assert len(engine.connection.executed) == 3
+    assert len(engine.connection.executed) == 4
 
 
 @pytest.mark.anyio

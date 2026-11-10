@@ -1,14 +1,18 @@
 # Janays Einstieg in die Kalenderprüfung
 
-Stand: 09.11.2026. Kurze fachliche Einführung für den vorbereiteten Piloten.
+Stand: 10.11.2026. Fachliche Einführung für den privaten synthetischen Piloten.
 Die persönliche Staging-Einladung ist noch nicht versendet.
+Automatischer Tourstart/Pfeile und erweiterte Übersicht sind im lokalen
+V1-Update geprüft, noch nicht auf dem VPS installiert.
 
 ## In sechs Schritten
 
 1. Persönlichen Einladungslink öffnen, eigenes Passwort vergeben und die
    Authenticator-App verbinden. Die zehn Notfallcodes sicher getrennt aufbewahren.
 2. Im Portal zeigt der Arbeitsüberblick die für Ihre Rolle sichtbaren Status.
-   Unter **Hilfe** lässt sich die freiwillige Prüfer-Einführung starten.
+   Nach der ersten MFA-Einrichtung startet die überspringbare Einführung.
+   Unter **Hilfe** lässt sie sich jederzeit neu starten. Die Übersicht nennt
+   auch erneute Einreichungen und die zuletzt freigegebenen Veranstaltungen.
 3. In der **Prüfliste** ein eingereichtes Angebot mit **Angebot prüfen** öffnen.
    Thema, Inhalt, Beginn/Ende, Format, Ort, Kapazität und Frist kontrollieren.
 4. Fehlt etwas, **Änderungen anfordern** wählen und einen konkreten Hinweis

@@ -31,6 +31,7 @@ from competence_hub_api.web.auth import (
 from competence_hub_api.web.portal_access import router as portal_access_router
 from competence_hub_api.web.admin import router as admin_router
 from competence_hub_api.web.pilot import router as pilot_router
+from competence_hub_api.web.user_management import router as user_management_router, mapping_router
 from competence_hub_api.web.companies import router as companies_router
 from competence_hub_api.web.calendar import (
     protected_router as protected_calendar_router,
@@ -122,6 +123,8 @@ def create_app(
     app.include_router(portal_access_router)
     app.include_router(admin_router)
     app.include_router(pilot_router)
+    app.include_router(user_management_router)
+    app.include_router(mapping_router)
     app.include_router(coach_registry_router)
     app.include_router(coach_management_router)
     app.include_router(companies_router)

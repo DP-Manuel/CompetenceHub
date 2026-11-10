@@ -1,6 +1,8 @@
 # Coach-Kalender: Kurzstart
 
-Stand: 09.11.2026. Der reale Zugang muss vorher ausdrücklich zugeordnet werden.
+Stand: 10.11.2026. Der reale Zugang muss vorher ausdrücklich zugeordnet werden.
+Die automatische Einführung und ergänzte Übersicht gehören zum lokalen
+V1-Update; auf dem VPS läuft noch der zuvor abgenommene synthetische Pilot.
 
 1. Persönliche Einladung annehmen, eigenes Passwort setzen, MFA einrichten und
    zehn Notfallcodes sicher getrennt verwahren.
@@ -17,6 +19,7 @@ Stand: 09.11.2026. Der reale Zugang muss vorher ausdrücklich zugeordnet werden.
    alle Tagessegmente öffnen dieselben Details. Ein Ende um 00:00 belegt nicht
    zusätzlich den Folgetag.
 
+Die erste Einführung startet nach der MFA-Einrichtung und lässt sich überspringen.
 **Hilfe → Coach-Einführung starten** ist freiwillig, mit Escape beendbar und
 jederzeit wiederholbar. Bei einem Speicherkonflikt Eingaben nicht blind erneut
 senden: aktuellen Stand laden und vergleichen. Ungespeicherte Änderungen werden

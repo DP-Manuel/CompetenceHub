@@ -2,6 +2,16 @@
 
 Significant milestones only; newest first.
 
+10.11 REAL USER READINESS V1 locally accepted. Atomic Admin lifecycle, explicit
+Coach mapping, bounded audit, invitation preparation/revoke/reissue and first-MFA
+role tours reuse0006. Native136 onboarding/Admin +46 CAL/ICS/restart checks and3
+API tests PASS; full1,635 PASS/30 skips. Actual keyboard found/fixed focus escape;
+deliberately reordered reads protect against duplicate account rows. No real
+identity, migration/mail/Website/key action. VPS reference preserved; read-only
+19:23 MEZ all six services active. DNS/SMTP reply absent, EDV mail/matrix/guides
+prepared. Current-data recovery/privilege gate remains for a technical update,
+not another installer/empty backup loop. [Canonical result/gates](docs/operations/real-user-readiness-v1-2026-11-10.md).
+
 10.11 18:23 MEZ FIRST ACTUAL PRIVATE VPS PILOT ACCEPTED. Operator52d7ddb,
 unchanged package0080195; accepted09.11 restore reused,0006 signature matched,
 no migration or backup rerun.61 real native checks PASS: role MFA/RBAC, Coach

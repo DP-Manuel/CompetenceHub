@@ -2,7 +2,8 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
-| Integrated Staging pilot | [09.11 release and gated rollout](integrated-staging-pilot-2026-11-09.md) | Current role/onboarding/public Calendar increment, read-only VPS findings, required protected operating window; no installed pilot |
+| Real-user readiness V1 | [10.11 local update and gates](real-user-readiness-v1-2026-11-10.md) | Admin management, native onboarding, mapping/EDV/guides; not installed, no real activation |
+| Integrated Staging pilot | [09.11 release and gated rollout](integrated-staging-pilot-2026-11-09.md) | Private synthetic VPS pilot installed/accepted10.11; preserve reference, no installer rerun |
 | Environment boundaries | [Environment policy](../architecture/environment-policy.md) | Preview does not authorize production |
 | Production checkpoint | [SB-54 handoff](../handoffs/2026-09-25-mindforge-notice-layout-p0-handoff.md) | Source/artifact/hash and rollback evidence |
 | Release/operating history | [Evidence index](go-live-evidence-index.md) | Dated proof, not current uptime |

@@ -4,6 +4,20 @@ Updated: 2026-11-10.
 
 ## Current Milestone
 
+10.11 REAL USER READINESS V1: local Admin lifecycle/mapping/audit, invitation
+preparation/revoke/reissue, role dashboards and first-MFA onboarding tours are
+implemented; native synthetic PostgreSQL/browser acceptance PASS incl390px,
+native200%, keyboard, stale edits and unchanged CAL/ICS/restart workflow.
+No migration/real identity/SMTP/Website/key action. Existing four-account VPS
+reference NOT updated/reset; read-only19:23 MEZ all six services active.
+Manuel confirms no EDV reply; send-ready DNS/SMTP mail and nine-profile OPEN
+mapping matrix prepared. Private TLS expiry24.11 18:20 MEZ remains a deadline.
+[Current implementation, update/recovery limits, guides and next gate](docs/operations/real-user-readiness-v1-2026-11-10.md).
+[Active execution plan](docs/exec-plans/active/real-user-readiness-2026-11-10.md).
+One next block: protected, state-preserving V1 runtime update/acceptance once
+current privileged state/rollback evidence exists; never rerun the installer.
+Earlier next-install/acceptance checkpoints below are dated history.
+
 10.11 actual PRIVATE VPS PILOT ACCEPTED18:23 MEZ/17:23 UTC, source52d7ddb,
 unchanged package0080195.61 real remote checks PASS: native MFA/RBAC/CAL-1,
 multiday/month overlap, ICS/request draft, stale edit, withdrawal and own API
@@ -244,7 +258,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended block: fachliche Abnahme of the accepted private VPS pilot with Manuel/Janay, using the already open synthetic Coach/Reviewer/Admin windows and protected Calendar. Deliverable/DoD: confirmed business workflow or concrete UX findings for create/review/publish/ICS/request. No new accounts or infrastructure action. Keep tunnel open; no installer rerun or repeat backup. [Actual operating evidence and next scope](docs/operations/integrated-staging-pilot-2026-11-09.md#echter-vps-pilot-abgenommen-am-10112026).
+1. Exactly one recommended block: protected V1 runtime update/acceptance preserving the accepted synthetic VPS reference, after current privilege/state/rollback gates. Deliverable/DoD: Admin lifecycle/tours/CAL and restart pass, retained reference/four foreign services preserved, no real account. [Current gate and limits](docs/operations/real-user-readiness-v1-2026-11-10.md#genau-nächster-block). No old installer or blind repeat backup; EDV mail is ready but not sent, Janay acceptance remains open.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 

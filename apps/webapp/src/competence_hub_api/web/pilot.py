@@ -12,28 +12,52 @@ router = APIRouter(tags=["pilot-overview"])
 
 _COUNTS = text("""
     SELECT CASE WHEN o.lifecycle_status='withdrawn' THEN 'withdrawn'
-                ELSE r.workflow_status END AS status, count(*) AS count
+                ELSE r.workflow_status END AS status, count(*) AS count,
+           count(*) FILTER (WHERE r.workflow_status='in_review' AND r.revision_number>1
+                           AND o.lifecycle_status='active') AS resubmitted
     FROM competence_hub.calendar_offers o
     JOIN competence_hub.coaches c ON c.id=o.coach_id
-    JOIN LATERAL (SELECT workflow_status FROM competence_hub.calendar_offer_revisions
+    JOIN LATERAL (SELECT workflow_status,revision_number FROM competence_hub.calendar_offer_revisions
                   WHERE offer_id=o.id ORDER BY revision_number DESC LIMIT 1) r ON true
     WHERE (:admin OR (:reviewer AND r.workflow_status IN
            ('in_review','changes_requested','published')) OR c.portal_user_id=:actor)
     GROUP BY 1
 """)
 _USERS = text("""
-    SELECT u.id, u.display_name, u.email,
+    SELECT u.id, u.display_name, u.email,u.updated_at AS version,
       CASE WHEN NOT u.active AND NOT EXISTS
         (SELECT 1 FROM competence_hub.auth_password_credentials p WHERE p.portal_user_id=u.id)
-        THEN 'pending_activation' WHEN NOT u.active THEN 'inactive'
+        THEN 'pending_activation' WHEN NOT u.active THEN CASE WHEN
+          (SELECT a.action FROM competence_hub.audit_events a WHERE a.entity_type='portal_user'
+           AND a.entity_id=u.id AND a.action IN ('auth.account.suspend','auth.account.deactivate','auth.account.enable')
+           ORDER BY a.occurred_at DESC,a.id DESC LIMIT 1)='auth.account.suspend'
+          THEN 'blocked' ELSE 'inactive' END
         WHEN NOT EXISTS (SELECT 1 FROM competence_hub.auth_totp_credentials t
                          WHERE t.portal_user_id=u.id AND t.enabled_at IS NOT NULL)
         THEN 'mfa_required' ELSE 'active' END AS status,
       ARRAY(SELECT r.code FROM competence_hub.user_roles ur JOIN competence_hub.roles r
             ON r.id=ur.role_id WHERE ur.user_id=u.id AND r.active ORDER BY r.code) AS roles,
-      (SELECT c.id FROM competence_hub.coaches c WHERE c.portal_user_id=u.id) AS coach_id
+      (SELECT c.id FROM competence_hub.coaches c WHERE c.portal_user_id=u.id) AS coach_id,
+      EXISTS(SELECT 1 FROM competence_hub.auth_totp_credentials t WHERE t.portal_user_id=u.id
+             AND t.enabled_at IS NOT NULL) AS mfa_enabled,
+      (SELECT max(s.authenticated_at) FROM competence_hub.auth_sessions s WHERE s.portal_user_id=u.id) AS last_authenticated_at,
+      (SELECT json_build_object('expires_at',t.expires_at,'status',
+           CASE WHEN t.revoked_at IS NOT NULL THEN 'revoked' WHEN t.consumed_at IS NOT NULL THEN 'consumed'
+                WHEN t.expires_at<=CURRENT_TIMESTAMP THEN 'expired' ELSE 'pending' END)
+       FROM competence_hub.auth_one_time_tokens t WHERE t.portal_user_id=u.id AND t.purpose='invitation'
+       ORDER BY t.created_at DESC,t.id DESC LIMIT 1) AS invitation
     FROM competence_hub.portal_users u ORDER BY u.created_at, u.id
     LIMIT :limit OFFSET :offset
+""")
+
+_RECENT_PUBLICATIONS = text("""
+    SELECT o.id,r.title,r.starts_at,r.published_at,c.display_name AS coach_name
+    FROM competence_hub.calendar_offers o
+    JOIN competence_hub.coaches c ON c.id=o.coach_id
+    JOIN competence_hub.calendar_offer_revisions r ON r.offer_id=o.id
+    WHERE o.lifecycle_status='active' AND r.workflow_status='published'
+      AND (:admin OR :reviewer OR c.portal_user_id=:actor)
+    ORDER BY r.published_at DESC,o.id LIMIT 5
 """)
 
 
@@ -53,13 +77,17 @@ async def overview(request: Request):
     if engine is None:
         return unavailable()
     async with engine.connect() as connection:
-        await connection.execute(text("SET TRANSACTION READ ONLY"))
-        rows = (await connection.execute(_COUNTS, {
+        await connection.execute(text("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY"))
+        parameters = {
             "admin": "admin" in actor.roles, "reviewer": "calendar_reviewer" in actor.roles,
             "actor": actor.user_id,
-        })).mappings().all()
-    return JSONResponse({"calendar": {r["status"]: r["count"] for r in rows},
-                         "database": "reachable", "scope": "authorized_current_revisions"})
+        }
+        rows = (await connection.execute(_COUNTS, parameters)).mappings().all()
+        recent = (await connection.execute(_RECENT_PUBLICATIONS, parameters)).mappings().all()
+    return JSONResponse(jsonable_encoder({"calendar": {r["status"]: r["count"] for r in rows},
+                         "resubmitted":sum(r['resubmitted'] for r in rows),
+                         "recent_publications":[dict(row) for row in recent],
+                         "database": "reachable", "scope": "authorized_current_revisions"}))
 
 
 @router.get("/api/v1/admin/users")

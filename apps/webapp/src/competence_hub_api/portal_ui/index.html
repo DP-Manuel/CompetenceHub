@@ -229,6 +229,9 @@
           <p id="pilot-overview-state" role="status"></p>
           <dl id="pilot-metrics" class="pilot-metrics"></dl>
           <p id="pilot-next-event"></p>
+          <p id="pilot-access-summary" hidden></p>
+          <div id="pilot-recent" hidden><h3>Zuletzt freigegeben</h3><ul id="pilot-recent-list"></ul></div>
+          <button id="overview-create-event" class="button button-primary" type="button" hidden>Neuen Termin erstellen</button>
           <a id="public-calendar-link" href="/portal/calendar-public.html" target="_blank" rel="noopener">Freigegebener Kalender</a>
         </section>
         <section id="pilot-accounts" aria-labelledby="pilot-accounts-title" hidden>
@@ -274,10 +277,12 @@
                 <input id="invitation-email" name="email" type="email" autocomplete="off" maxlength="254" required>
               </div>
               <div class="field"><label for="invitation-role">Bestätigte Rolle</label><select id="invitation-role" name="role"><option value="internal">Intern</option><option value="calendar_reviewer">Kalenderprüfung</option><option value="coach">Coach</option></select></div>
-              <div class="field" id="invitation-coach-field" hidden><label for="invitation-coach-id">Bestätigte Coach-UUID</label><input id="invitation-coach-id" name="coach_id" maxlength="36" pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"></div>
+              <div class="field" id="invitation-coach-field" hidden><label for="invitation-coach-id">Bestätigte Coach-UUID</label><input id="invitation-coach-id" name="coach_id" list="coach-mapping-options" maxlength="36" pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"></div>
             </div>
             <p class="form-error" id="admin-invitation-error" role="alert" hidden></p>
             <p id="invitation-delivery-state" role="status"></p>
+            <button id="prepare-invitation" class="button button-secondary" type="button">Einladung prüfen</button>
+            <p id="invitation-preview" role="status" hidden></p>
             <button class="button button-secondary mutation-control" type="submit">Einladung vormerken</button>
           </form>
           </section>
@@ -604,6 +609,7 @@
       </form>
     </dialog>
 
+    <datalist id="coach-mapping-options"></datalist>
     <dialog id="product-tour" aria-labelledby="tour-title" aria-describedby="tour-copy" class="product-tour">
       <button id="tour-close" class="button button-quiet tour-close" type="button" aria-label="Einführung schließen" title="Einführung schließen">×</button>
       <p id="tour-progress" class="eyebrow"></p>

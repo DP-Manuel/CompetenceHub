@@ -7,6 +7,23 @@ Updated: 2026-11-10. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+10.11 user-readiness learning: first-onboarding auto tours change existing browser
+harness contracts. Await the actually displayed tour/step before skipping or
+reloading; a momentary is_visible check races asynchronous workspace loads.
+For concurrent stale-edit tests capture the existing synthetic CSRF in memory,
+do not rotate it and accidentally test CSRF failure instead of a version conflict.
+Reuse the existing CDP native200 screenshot helper; CSS-sized Playwright captures
+can be clipped/blank even when DOM geometry passes. Actual Tab/Shift+Tab uncovered
+a management-dialog focus escape, fixed with bounded visible-control wrapping.
+Repeated native zoom navigation also exposed out-of-order account reads appending
+duplicate rows. Bind each bounded list/overview response to its current load
+generation as well as the session; prove with deliberately reordered responses,
+not an arbitrary sleep or a selector workaround.
+Finally, an accepted pre-pilot empty restore is not a current copy of deliberately
+retained pilot data. Distinguish source/package rollback from data recovery and
+do not restart backup/password workflows simply to close a delivery checkbox.
+Project-local implementation/tests; no global skill or Wiki change.
+
 10.11 deployment closure learning: accept a real operator result only after
 reviewing its actual sanitized receipt, exact source/package and configuration
 ciphertext hash, then independently read service/enable/listener state and probe

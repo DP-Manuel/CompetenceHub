@@ -43,6 +43,8 @@ class FakeConnection:
 
     async def execute(self, statement, parameters):
         self.executed.append((statement, parameters))
+        if 'FROM competence_hub.portal_users WHERE id=:user_id FOR UPDATE' in str(statement):
+            return FakeResult()
         return next(self.results, FakeResult())
 
 
@@ -202,7 +204,8 @@ async def test_totp_completion_rotates_session_and_stores_recovery_digests() -> 
     )
 
     assert completed is True
-    calls = engine.connection.executed
+    assert 'FOR UPDATE' in str(engine.connection.executed[0][0])
+    calls = engine.connection.executed[1:]
     assert len(calls) == 16
     assert calls[0][1]["accepted_time_step"] == 123456
     assert calls[1][1]["state"] == "mfa_enrollment_required"
@@ -230,7 +233,8 @@ async def test_replayed_totp_fails_before_session_creation() -> None:
     )
 
     assert completed is False
-    assert len(engine.connection.executed) == 1
+    assert len(engine.connection.executed) == 2
+    assert 'FOR UPDATE' in str(engine.connection.executed[0][0])
 
 
 @pytest.mark.anyio
@@ -259,7 +263,8 @@ async def test_recovery_completion_consumes_one_code_then_rotates_session() -> N
     )
 
     assert completed is True
-    calls = engine.connection.executed
+    assert 'FOR UPDATE' in str(engine.connection.executed[0][0])
+    calls = engine.connection.executed[1:]
     assert calls[0][1]["key_version"] == "recovery-v1"
     assert calls[1][1]["key_version"] == "recovery-v2"
     assert calls[2][1]["state"] == "mfa_required"

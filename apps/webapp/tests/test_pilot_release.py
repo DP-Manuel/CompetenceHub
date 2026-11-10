@@ -132,7 +132,7 @@ async def test_pending_invitation_cannot_accumulate_unapproved_roles():
             token_hash=b"t"*32,outbox_id=OUTBOX_ID,encrypted_payload=b"synthetic-envelope",payload_key_version="synthetic",
             idempotency_key_hash=b"i"*32,request_fingerprint=b"f"*32,now=NOW,
             expires_at=NOW, idempotency_expires_at=NOW)
-    assert len(engine.connection.executed)==5
+    assert len(engine.connection.executed)==6
 
 
 @pytest.mark.anyio

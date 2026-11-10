@@ -6,7 +6,7 @@ synthetic data only; this is not a general backend/real-account activation.
 Preserve existing jobs/artifacts, do not resume GPG or repeat accepted backups.
 IONOS retains its separate release approval; Preview stays public/approved.
 
-Updated: 2026-11-10. Current state belongs to [PROJECT_CONTEXT](PROJECT_CONTEXT.md); the active technical-pilot horizon belongs to the [integrated Staging plan](docs/exec-plans/active/integrated-staging-pilot-2026-11-09.md#rolling-horizon). The [Website horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont) remains separate; real-user activation/import are held.
+Updated: 2026-11-10. Current state belongs to [PROJECT_CONTEXT](PROJECT_CONTEXT.md); the current readiness/update horizon belongs to the [V1 plan](docs/exec-plans/active/real-user-readiness-2026-11-10.md#rolling-horizon). The [Website horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont) remains separate; real-user activation/import are held.
 
 ## Vision And Ownership
 
@@ -22,6 +22,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 | Website first | Approved static Preview offerings, Coach discovery and request UX;28 contracts/1377 local and171 public browser checks PASS | [Version inventory and sprint](docs/content/website-first-2026-11-05.md); Pages4daa9ad published05.11, IONOS unchanged | High |
 | Post-Messe consolidation: complete | Stable IONOS, published preview, Context V2 and Analytics discovery | Completed scope, build isolation, public smoke | High |
 | Private technical VPS pilot: accepted | Actual10.11 install,61 remote native MFA/RBAC/CAL/ICS/restart checks PASS; four synthetic users only | [Bound receipt/fresh SSH+HTTPS](docs/operations/integrated-staging-pilot-2026-11-09.md#echter-vps-pilot-abgenommen-am-10112026); no public ports/real accounts, fachliche Abnahme next | High |
+| Real-user readiness V1: local | Native-tested Admin lifecycle, mapping/audit, secure onboarding, tours and role dashboards; no migration | [Current update/gates](docs/operations/real-user-readiness-v1-2026-11-10.md); existing VPS reference preserved, DNS/SMTP and real activation still OPEN | High local / remote gated |
 | Coach Registry / lifecycle | COACH-1/2/3A/3C locally verified; COACH-3B review9 READY.30.10 approves Manuel as sole admin-only Staging operator; preparation locally verified, human window pending | [Current batch](docs/exec-plans/active/backend-sprint-2026-10-30.md); exact encrypted backup/restore before bootstrap, native MFA/recovery, actual target/topic gates before separate real APPLY; no real execution yet | Medium |
 | Portal operation | Named accounts, mail, monitored backups, operational handover | DNS/SMTP/runtime/data/privacy/Go-No-Go evidence | Medium |
 | Future calendar | CAL-2 reservations and provider-neutral .ics delivery | Business/concurrency/privacy/client-compatibility gates | Low |
@@ -31,7 +32,7 @@ Donner + Partner operates the public Website; Lars Donner is responsible; centra
 
 ## Execution Versus Product Backlog
 
-The [current pilot horizon](docs/exec-plans/active/integrated-staging-pilot-2026-11-09.md#rolling-horizon) selects fachliche Abnahme using the installed synthetic VPS pilot. The [Website horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont) and later [backend horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md) remain separate, not a reason to resume GPG work or real import.
+The [current V1 horizon](docs/exec-plans/active/real-user-readiness-2026-11-10.md#rolling-horizon) selects a state-preserving private runtime update, then Janay acceptance and separately gated real-user activation. The installed synthetic pilot remains reference, not a disposable fixture. The [Website horizon](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md#rollender-horizont) and later [backend horizon](docs/exec-plans/active/post-messe-backend-horizon-2026-10.md) remain separate, not a reason to resume GPG work or real import.
 [Future ideas](docs/requirements/future-system-ideas-backlog.md), [FIN-01](docs/requirements/fin-01-invoice-management-epic.md) and [PWA strategy](docs/architecture/pwa-app-distribution-strategy-2026-08-11.md) remain product backlog.
 First real coaching engagement:19.11.2026, business milestone only; no customer identity/data or invoice implementation. Manuel's Coach profile is a later standard post-migration onboarding case, not a tenth record in the reviewed batch. Janay unavailable approximately two weeks; prepare coherent blocks without new stakeholder decisions. Budget, broader pilot date and ongoing content ownership are not yet confirmed.
 

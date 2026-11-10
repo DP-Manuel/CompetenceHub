@@ -5,6 +5,7 @@ import os
 import re
 import subprocess
 from pathlib import Path
+from uuid import uuid4
 import sys
 import tempfile
 import traceback
@@ -36,10 +37,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--acceptance", action="store_true")
     parser.add_argument("--integrated-acceptance", action="store_true")
+    parser.add_argument("--onboarding-acceptance", action="store_true")
     parser.add_argument("--port", type=int, default=8447)
     parser.add_argument("--browser-executable", type=Path,
         default=Path(os.environ["LOCALAPPDATA"]) / "ms-playwright/chromium-1228/chrome-win64/chrome.exe")
     options = parser.parse_args()
+    if options.onboarding_acceptance:
+        options.integrated_acceptance=True
     if options.integrated_acceptance:
         options.acceptance = True
     if not 1024 <= options.port <= 65535:
@@ -48,6 +52,8 @@ def main():
         parser.error("Existing local Chromium executable required; no browser download")
     build_public_calendar()
     evidence = ROOT.parents[1] / ("release-artifacts/integrated-pilot-20261109" if options.integrated_acceptance else "release-artifacts/cal1-pilot-20261106")
+    if options.onboarding_acceptance:
+        evidence=ROOT.parents[1]/'release-artifacts/onboarding-v1-20261110'/uuid4().hex
     evidence.mkdir(parents=True, exist_ok=True)
     report_file = evidence / ("report.json" if options.acceptance else "demo-status.json")
     report = {"scope": "OWNED_LOCAL_POSTGRES_SYNTHETIC_ONLY", "status": "RUNNING"}
@@ -67,7 +73,10 @@ def main():
                 try:
                     if options.acceptance:
                         from scripts.cal1_pilot_acceptance import run
-                        if options.integrated_acceptance:
+                        if options.onboarding_acceptance:
+                            from scripts.onboarding_acceptance import run as onboarding_acceptance
+                            onboarding_acceptance(fixture,options,report,evidence)
+                        elif options.integrated_acceptance:
                             from scripts.pilot_release_acceptance import run as release_acceptance
                             release_acceptance(fixture, options, report, evidence)
                         run(fixture, database, options, report, evidence)
@@ -101,7 +110,14 @@ def main():
         status = "PASS" if options.acceptance else "STOPPED"
         print(f"LOCAL_CAL1={status} POSTGRES_REMOVED=PASS ZERO_RESIDUE=PASS TEMP_CLEANUP=PASS")
     except BaseException as failure:
+        categories = {
+            'strict mode violation':'AMBIGUOUS_BROWSER_SELECTOR',
+            'Target page, context or browser has been closed':'BROWSER_CLOSED',
+            'Element is not attached':'DETACHED_BROWSER_TARGET',
+            'Execution context was destroyed':'BROWSER_NAVIGATION_RACE',
+        }
         report.update(status="INCOMPLETE", failure_type=type(failure).__name__,
+            failure_category=next((value for key,value in categories.items() if key in str(failure)), 'OTHER'),
             container_removed=bool(database and database.removed),
             owned_volume_removed=bool(database and database.volume_removed),
             failure_locations=[{"file":Path(frame.filename).name,"line":frame.lineno}

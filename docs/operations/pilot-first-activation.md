@@ -1,6 +1,6 @@
 # Erster Zugang und Support
 
-Stand: 09.11.2026. Reale Zustellung bleibt bis zur Empfänger-/Kanalfreigabe aus.
+Stand: 10.11.2026. Reale Zustellung bleibt bis zur Empfänger-/Kanalfreigabe aus.
 
 1. Nur die vorab bestätigte Portaladresse und persönliche Einladung verwenden.
    Kein gemeinsames Startpasswort, keine öffentliche Registrierung.
@@ -12,6 +12,12 @@ Stand: 09.11.2026. Reale Zustellung bleibt bis zur Empfänger-/Kanalfreigabe aus
 5. Zehn Recovery-Codes sicher und getrennt ablegen. Jeder ersetzt den
    Authenticator im Notfall genau einmal; nicht bei jeder normalen Anmeldung.
 6. Portal öffnen und den eigenen Arbeitsbereich prüfen. Nach der Arbeit abmelden.
+
+Das lokale V1-Update startet nach diesem ersten MFA-Onboarding eine passende,
+überspringbare Einführung. Hilfe startet sie später erneut; im selben Tab lässt
+sich eine unterbrochene Tour nach Neuladen fortsetzen. Es werden keine
+personenbezogenen Tourdaten gespeichert. Auf dem VPS ist dieses Update noch
+nicht installiert.
 
 Ohne eingerichtete MFA entsteht keine normale nutzbare Portalsitzung. Ein aktiver
 Kontodatensatz allein beweist daher noch keinen abgeschlossenen Erstzugang.

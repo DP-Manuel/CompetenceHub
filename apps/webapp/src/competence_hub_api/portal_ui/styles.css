@@ -32,14 +32,18 @@
 #pilot-help:not([open]) > :not(summary) { display: none; }
 #pilot-help button { white-space: normal; overflow-wrap: anywhere; text-align: left; }
 #tour-options { display: grid; gap: 8px; }
-.tour-target { outline: 4px solid var(--color-brand); outline-offset: 5px; }
-.product-tour { position: fixed; inset: auto 20px 20px auto; margin: 0; width: min(430px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: 24px; border: 3px solid var(--color-brand); border-radius: 4px; overflow-y: auto; }
+.tour-target { outline: 4px solid var(--color-brand); outline-offset: 5px; scroll-margin-block: 24px; }
+.product-tour { position: fixed; inset: auto; margin: 0; width: min(360px, calc(100% - 24px)); max-height: calc(100dvh - 24px); padding: 32px 20px 20px; border: 3px solid var(--color-brand); border-radius: 4px; overflow-y: auto; }
+.tour-pointer { position: absolute; top: 0; left: 10px; color: var(--color-brand); font-size: 24px; line-height: 1.2; }
+.product-tour[data-placement="left"] .tour-pointer {left:auto;right:48px;}
+.user-management-dialog { width:min(680px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:0; }
+#user-management-identity {overflow-wrap:anywhere;}
+#pilot-accounts .button-row {flex-wrap:wrap;}
 .product-tour::backdrop { background: rgba(255,255,255,.45); }
 .product-tour h2 { font-size: 1.375rem; line-height: 1.4; padding-right: 32px; overflow-wrap: anywhere; }
 .product-tour .button-row { flex-wrap: wrap; gap: 8px; }
 .tour-close { position: absolute; right: 8px; top: 8px; min-width: 44px; min-height: 44px; font-size: 24px; }
 @media(max-width: 600px) {
-  .product-tour { right: 16px; bottom: 16px; }
   .pilot-metrics { display: grid; grid-template-columns: minmax(0,1fr) auto; }
   .app-header { flex-wrap: wrap; gap: 12px; }
   .app-header .brand { flex: 0 0 auto; white-space: nowrap; max-width: 100%; }
