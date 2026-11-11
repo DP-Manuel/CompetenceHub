@@ -4,6 +4,23 @@ Updated: 2026-11-11.
 
 ## Current Milestone
 
+11.11 V1 ACTUALLY ACCEPTED on private VPS, operator38bd4cd / packagebc53775.
+Resume receipt eed9aed9… PASS, independently SHA-bound; final server ACK,
+all27 tables unchanged across resume, original four users/two Coaches retained.
+Accepted current27-table backup/restore and real remote CAL61/V1 access33 reused,
+not repeated. Fresh SSH: V1 ExecStart active, six services healthy, PG/API/proxy
+loopback only. Fresh strict TLS/hostname/exact leaf, V1 asset and closed delivery
+confirmed. No migration, real account/import/mail/Website/GPG action.
+Current private tunnel is intentionally held after PASS; leave user's terminal
+open to use https://localhost:8447/portal/ . Enter closes local access only, not
+VPS services. Line-buffered PowerShell hid the old partial input prompt; visible
+flushed completion line fixed/tested locally. No operator rerun/deployment needed.
+[Actual acceptance and twelve-point closure](docs/operations/real-user-readiness-v1-2026-11-10.md#v1-tatsächlich-abgeschlossen).
+One next block: guided V1 usability demonstration with existing synthetic roles
+and Manuel/Janay; record findings, no real activation. DNS/SMTP, Janay approval,
+personal mappings and TLS expiry24.11 remain separate external gates.
+The preceding attempts below are historical, not current WAITING/STOP gates.
+
 11.11 actual run2b834613…: CURRENT protected backup/27-table isolated restore
 PASS, actual remote CAL61 + V1 access33 PASS. STOP only in compensation_postflight
 after own API restart: Type=simple active was mistaken for a bound listener.

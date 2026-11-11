@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import threading
 from types import SimpleNamespace
 
 import pytest
@@ -320,6 +321,30 @@ def test_resume_cannot_accept_a_database_delta(monkeypatch):
     with pytest.raises(protocol.SnapshotStop,match='RESUME_DATABASE_CHANGED'):
         value.finalize_resume({})
     assert not getattr(value,'postflight_passed',False)
+
+
+def test_tunnel_hold_message_reaches_piped_stdout_before_enter():
+    code="import sys;sys.path.insert(0,'scripts');import run_vps_update as c;c.hold_private_tunnel()"
+    process=subprocess.Popen([sys.executable,'-I','-X','utf8','-c',code],cwd=ROOT/'apps/webapp',
+                             stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    deadline=threading.Timer(15,process.kill);deadline.start()
+    try:
+        line=process.stdout.readline()
+        assert b'PILOT_TUNNEL=OPEN UPDATE=COMPLETE' in line and line.endswith(b'\n')
+        assert process.poll() is None
+        process.communicate(input=b'\n',timeout=10)
+        assert process.returncode==0
+    finally:
+        deadline.cancel()
+        if process.poll() is None:process.kill();process.communicate()
+
+
+@pytest.mark.parametrize('interruption',[EOFError,KeyboardInterrupt])
+def test_tunnel_hold_allows_safe_local_exit(monkeypatch,capsys,interruption):
+    def end():raise interruption()
+    monkeypatch.setattr('builtins.input',end)
+    client.hold_private_tunnel()
+    assert 'UPDATE=COMPLETE' in capsys.readouterr().out
 
 
 @pytest.mark.parametrize('arguments,expected',[

@@ -355,12 +355,57 @@ Eigener Container entfernt. Prozessmanager/AES ersetzen lokal weiterhin systemd/
 DPAPI; daraus keine tatsächliche VPS-Fortsetzung behaupten. Kein Code-/Daten-
 Commit im VPS, Website-/GPG-/persönlicher Aktivierungsblock bleibt ausgeschlossen.
 
+### V1 Tatsächlich Abgeschlossen
+
+Manuels Resume am11.11 mit Operator `38bd4cd2cfd224bdbd4e030394fd57d624eb1520`
+ist abgeschlossen. Tatsächliche Receipt
+`release-artifacts/vps-v1-update/eed9aed9a83c45fd948203e04a53c824.json`, SHA-256
+`d5f4847ebc852c19dcc8775f3e443a58ed32e67d794b431ff87452e1a25f11d0`.
+Zeitangabe offset-aware normalisiert:11.11 08:49 MEZ /07:49 UTC.
+
+| Abschlussfrage | Tatsächlicher Nachweis |
+| --- | --- |
+|1 V1 installiert | JA; finale Serverannahme `ACKNOWLEDGED`, `status=PASS`, `phase=complete` |
+|2 Paket |bc53775b08dc, unverändert SHA-256 `21849d1e2f33b6044e6a93fdc27fb3ab39f5b5bd7bea047ba73fed99e8d5df97` |
+|3 Datenbank |27 Tabellen,0001–0006; keine Migration angewendet |
+|4 Backup/Restore | Tatsächlicher aktueller Nachweis2b834613… samt Ciphertextprüfung wiederverwendet; keine Wiederholung |
+|5 MFA/RBAC/Einladungen | Reale native94 Prüfungen aus2b834613… SHA-gebunden wiederverwendet; nicht erneut ausgeführt |
+|6 Touren/Dashboards | Alle drei Rollen im nativen V1-Lauf bestanden; anonyme mobile Loginmaske zusätzlich beim Resume bestanden |
+|7 CAL-1 E2E |61 tatsächliche Kalenderprüfungen inklusive ICS/Anfrage, Mehrtag, Revisionen, Isolation und Rücknahme PASS |
+|8 Referenzdaten | Originale vier Nutzer/zwei Coaches erhalten; alle27 Tabellen und Sequenzen während Resume unverändert; alte26 Tabellen gegen Vorher-Backup geprüft, gemeinsame IP-Schutzwerte erhalten |
+|9 Andere Dienste | Beide eigenen und vier fremden Dienste aktiv; unabhängige frische SSH-Prüfung bestätigt, keine neuen öffentlichen Ports |
+|10 Rollback | Alte Runtime/Einheiten und geschützte aktuelle Rückfallkopien erhalten; kein Quell-DB-Restore und kein Reset; finaler V1-ExecStart unabhängig bestätigt |
+|11 Externe Gates | App-DNS/externes TLS/Zugriff, Zustellfreigabe/SMTP, Janays fachliche Abnahme und persönliche Zuordnungen bleiben offen; Zertifikatsfrist24.11 unverändert |
+|12 Weiter | Gemeinsame synthetische Bedienabnahme, keine reale Benutzeraktivierung |
+
+Zusätzliche unabhängige reine Leseprüfung nach Manuels PASS: tatsächlicher
+ExecStart unter `/opt/competence-hub-pilot/releases/bc53775b08dc/venv/bin/uvicorn`,
+alle sechs Dienste aktiv, PostgreSQL5432/API8001/Proxy8443 weiterhin loopback.
+Über den laufenden Benutzer-Tunnel: strikte ursprüngliche CA/Hostname/Leaf,
+Readiness200, tatsächliches V1-Asset und geschlossene Einladung503 bestätigt.
+Originalkonfiguration und private Logprüfung im tatsächlichen Postflight PASS.
+Kein IONOS/Pages-/GPG-/Import-/Realaccount-Eingriff.
+
+**Das wartende Terminal ist kein laufendes Update:** Nach geschriebenem PASS-
+Bericht hält nur noch der eigene SSH-Tunnel den lokalen Zugang offen. Sichtbarer
+Zugang `https://localhost:8447/portal/` und Kalender
+`https://localhost:8447/portal/calendar-public.html`. Für die Demo Fenster offen
+lassen. Einmal Enter beendet nur diesen lokalen Tunnel, nicht die VPS-Dienste
+oder deren Daten. Keine erneute Installation/Resume starten, um die Wartephase
+zu beenden oder einen Zugang wiederherzustellen.
+
+Der alte `input()`-Hinweis enthielt keinen Zeilenabschluss und wurde von
+PowerShells `Out-Host` bis zur Eingabe gepuffert. Künftig zuerst eine vollständig
+abgeschlossene, geflushte Zeile `PILOT_TUNNEL=OPEN UPDATE=COMPLETE`, dann getrennt
+auf Eingabe warten. Tatsächlicher Child-Prozesstest mit gepipetem stdout beweist,
+dass die Nachricht **vor** Enter sichtbar ist und der Prozess bis Enter wartet;
+EOF/Abbruch beenden die lokale Wartephase sicher. Keine weitere Serveraktion.
+
 ## Genau Nächster Block
 
-Gebundene Fortsetzung des tatsächlich bestandenen V1-Testlaufs: vorhandenes
-Backup/Restore und native Abnahme wiederverwenden, privilegiert aktuellen
-Referenz-/Paket-/Konfigurationszustand prüfen und identische vorhandene Runtime
-abschließend einschalten. DoD: tatsächliche finale Receipt/TLS/Asset/Dienste
-grün, alle27 Tabellen während Resume gleich, keine neuen Konten/DB-Writes,
-keine erneute Installation/Sicherung/Restoreprobe. Danach STOP vor echten Nutzern.
-DNS/SMTP-Rückmeldung parallel einholen; keine reale Aktivierung vor deren Gates.
+Geführte fachliche V1-Bedienabnahme mit Manuel/Janay und bestehenden synthetischen
+Rollen im geschützten Piloten. Inputs: bestätigter privater Zugang und die vier
+Kurzanleitungen. Ergebnis: kurze nachvollziehbare Rückmeldung zum Admin-, Coach-
+und Reviewerablauf. DoD: Arbeitswege nachvollziehbar geprüft/Feedback festgehalten,
+keine echten Konten, Rollen oder Einladungen aktiviert. DNS/SMTP-Rückmeldung
+parallel einholen; reale Aktivierung erst nach ihren separaten Gates.

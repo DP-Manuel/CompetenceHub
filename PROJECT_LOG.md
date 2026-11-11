@@ -2,6 +2,19 @@
 
 Significant milestones only; newest first.
 
+11.11 08:49 MEZ /07:49 UTC ACTUAL PRIVATE V1 ACCEPTED. Resume38bd4cd, unchanged
+packagebc53775/ZIP21849d1e; receipt eed9aed9… independently SHA-bound. Actual
+prior current27-table restore and native CAL61/V1 access33 reused, not rerun.
+Final server ACK,27 tables unchanged during resume, original four users retained,
+config/keys unchanged, closed delivery and private log scan PASS. Independent
+fresh SSH confirms V1 ExecStart, six active services and unchanged loopback ports;
+strict original TLS/hostname/leaf, exact V1 asset and dispatch closed confirmed.
+No migration/real activation/import/Website/GPG. User's terminal intentionally
+holds local tunnel after completed update; old non-newline input prompt was
+hidden by Out-Host. Visible flushed completion line and actual blocked-child pipe
+regression added; no repeated VPS operation. Next: synthetic guided usability
+review, then separately gated personal activation. [Actual closure](docs/operations/real-user-readiness-v1-2026-11-10.md#v1-tatsächlich-abgeschlossen).
+
 11.11 actual current-reference backup/isolated restore and remote native CAL61/
 V1 access33 PASS in run2b834613…. V1 installed/tested, not finally accepted:
 postflight Type=simple startup raced the listener check and code rolled back.

@@ -7,6 +7,15 @@ Updated: 2026-11-11. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+11.11 successful-operator handoff learning: a completed deployment that retains
+a private tunnel must not look like a hang. Native Python input prompts without
+newlines are buffered by PowerShell Out-Host. Emit a complete flushed status line
+before reading stdin; prove visibility before input with an actually blocked,
+piped child, not only captured final output. Explain Enter as local-access close,
+never suggest rerunning installation to end the wait. Independently verify the
+actual receipt/runtime/TLS/services and close old WAITING gates in memory before
+moving on. Project fix tested; no global skill change.
+
 11.11 real postflight learning: read the actual receipt before interpreting an
 early-sounding error name. Here61/33 remote checks and exact current restore had
 passed; Type=simple process-active did not mean its TCP listener was bound.

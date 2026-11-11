@@ -142,6 +142,13 @@ def verify_login_shell(directory):
         finally:browser.close()
 
 
+def hold_private_tunnel():
+    # PowerShell Out-Host forwards complete lines, not input()'s partial prompt.
+    print('PILOT_TUNNEL=OPEN UPDATE=COMPLETE. Keep this window open while viewing the pilot. Press Enter only to close this local access.',flush=True)
+    try:input()
+    except (EOFError,KeyboardInterrupt):pass
+
+
 def main(options):
     require(os.name=='nt' and options.execute and options.quiet and sys.stdin.isatty(),'PRIVATE_QUIET_WINDOWS_OPERATOR_REQUIRED')
     require(backup.checked('git','-C',str(ROOT),'rev-parse','HEAD').decode().strip()==options.source,'SOURCE_CHANGED')
@@ -247,8 +254,7 @@ def main(options):
         with path.open('xb') as stream:stream.write(canonical(report))
         print('REPORT='+str(path),flush=True)
         if report['status']=='PASS' and tunnel is not None:
-            try:input('Enter closes only this local tunnel; keep open while viewing the private pilot. ')
-            except (EOFError,KeyboardInterrupt):pass
+            hold_private_tunnel()
         if tunnel is not None:
             tunnel.terminate()
             try:tunnel.wait(timeout=10)

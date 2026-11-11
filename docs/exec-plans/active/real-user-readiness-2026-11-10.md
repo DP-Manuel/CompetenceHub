@@ -72,17 +72,17 @@ Current code/packagebc53775 stays bound; no migration is required or permitted.
    Separate actual scoped rollback PASS, old runtime/reference preserved, own
    container removed.103 focused checks PASS; full1,663/31 suite green (one extra
    protected-port skip). No real VPS/DPAPI/recovery acceptance inferred locally.
-4. WAITING CORRECTED PRIVATE OPERATOR: actualbb7794c attempt timed out before
+4. DONE ACTUAL11.11: actualbb7794c attempt timed out before
    Root agent dispatch; backup/restore/deployment NOT_RUN. Exact old SSH/sudo
    probe unknown, no password retry. Closed-stdin probes, distinct safe timeout/
    transport codes and report phases fixed;108 focused checks and actual read-only
    SSH/sudo/strict TLS proof PASS. One sudo input only after local gates; verified C:
    BitLocker/operator ACL and fresh-process DPAPI recovery before server update.
-5. GATED: separate additive synthetic cohort on the actual VPS; CAL/Admin/invite/
+5. DONE ACTUAL11.11, receipt2b834613…: separate additive synthetic cohort on the actual VPS; CAL/Admin/invite/
    MFA/tours/390px/native200 checks, then own-cohort cleanup, retained original
    row hashes, nonrewound sequences and retained shared synthetic-IP protection
    counters. Unknown changes cause review, never automatic source restoration.
-6. GATED: final strict HTTPS/runtime asset and six-service checks before commit;
+6. DONE ACTUAL11.11, resumeeed9aed9…: final strict HTTPS/runtime asset and six-service checks before commit;
    failure restores only the previous own runtime, not old user/security state.
 
 Actual update11.11, run2b834613…: steps4/5 executed. Current27-table recovery
@@ -91,13 +91,18 @@ STOP in collect after immediate systemd start; rollback REVIEW_REQUIRED. Origina
 ExecStart and six healthy services independently read; data reconciliation not
 assumed. Full installer/update must not be retried against retained release.
 
-Current narrow horizon: DONE bound listener-wait repair -> DONE117 targeted tests
-and native local rollback/resume/27-table proof -> WAITING private operator exact
-resume (`-ResumeRun 2b834613c4204c1d98a37cbd43134fa1`) -> verify actual receipt,
-current reference equality/TLS/closed delivery/services -> STOP before personal
-activation. Reuse accepted current backup and unchanged installed package/native
-evidence; no new backup/restore/installation/cohort/DB write. Unknown current data,
-configuration, ciphertext, foreign rate bucket or package causes STOP, not reset.
+Closed11.11: bound listener-wait repair ->117 targeted tests/local resume proof
+-> actual resume38bd4cd -> actual receipteed9aed9… PASS, independently bound,
+all27 tables unchanged, V1 ExecStart/TLS/asset/closed delivery/six services verified.
+No repeat backup/restore/install/cohort. Technical window DONE, not WAITING.
+Open terminal now only holds the private tunnel; never rerun to reconnect.
+
+Current narrow horizon: usability demonstration with existing synthetic roles
+(purpose: understandable Admin/Coach/Reviewer flow; inputs: guides/private V1;
+deliverable: short feedback and explicit usability result; DoD: workflows reviewed,
+no real activation) -> confirmed EDV DNS/TLS/delivery -> durable recovery/personal
+mapping decisions -> separately approved first real access. Later steps remain
+gated, no new public exposure or assumed roles. TLS expiry24.11 is unchanged.
 
 Use existing private tunnel if strict original CA/leaf/hostname proof passes.
 Never stop an unowned tunnel. Temporary synthetic outbox capture has no SMTP
