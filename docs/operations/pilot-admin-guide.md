@@ -1,8 +1,9 @@
 # Portaladministration für Manuel
 
-Stand: 10.11.2026. Der private synthetische VPS-Pilot ist abgenommen.
-Die folgenden erweiterten Verwaltungsaktionen gehören zum lokalen V1-Update;
-sie sind noch nicht auf dem VPS installiert. Keine echten Konten aktivieren.
+Stand: 11.11.2026. Der private synthetische V1-VPS-Pilot ist tatsächlich abgenommen.
+Die folgenden Verwaltungsaktionen sind installiert. Keine echten Konten aktivieren.
+Zum Wiederöffnen bestehender Rollenfenster den [Teststarter](pilot-test-access.md)
+nutzen, niemals den Installer oder ein Update erneut ausführen.
 
 - **Zugänge:** Gesamtzahl, Aktivierungsstand, Rollen und stabile Coach-UUID
   kontrollieren. Aktiver Datensatz bedeutet nicht automatisch abgeschlossene MFA.

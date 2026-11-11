@@ -7,6 +7,17 @@ Updated: 2026-11-11. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+11.11 usable-access learning: technical pilot acceptance plus encrypted login
+files is not a manual test handoff. Provide a standalone reconnect/test-window
+entry before asking a human to test; no installer rerun or decryption instructions
+as a substitute. Use existing credentials privately through native login/MFA,
+not fixed guessed accounts, password export or re-seeding. Map actual session
+UUIDs/roles to windows, never browser-context iteration order (native Firefox
+proved it is not creation order). Explain one-terminal sequencing and exit, bind
+certificate/runtime and distinguish auth/session changes from business writes.
+Provide all commands/roles/access addresses again when Manuel defers his test.
+Project implementation/evidence captured; global skill proposal remains open.
+
 11.11 successful-operator handoff learning: a completed deployment that retains
 a private tunnel must not look like a hang. Native Python input prompts without
 newlines are buffered by PowerShell Out-Host. Emit a complete flushed status line

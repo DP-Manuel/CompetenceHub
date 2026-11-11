@@ -2,6 +2,16 @@
 
 Significant milestones only; newest first.
 
+11.11 actual user-access gap corrected: encrypted credential paths did not let
+Manuel test the accepted V1. Separate local starter reuses existing password/TOTP
+browser flow for all four synthetic roles, exact actor/role mapping independent
+of context order, labels and public Calendar. No sudo/admin requirement, secret
+output, new account, installer, key/backup/Website action or Recovery consumption.
+Native local synthetic four-role login PASS,16 business tables unchanged, four
+users retained and container removed;133 targeted regressions green. Actual VPS
+credential copies not read by assistant; Manuel defers his own test until later.
+[Single-window operator/test handoff](docs/operations/pilot-test-access.md).
+
 11.11 08:49 MEZ /07:49 UTC ACTUAL PRIVATE V1 ACCEPTED. Resume38bd4cd, unchanged
 packagebc53775/ZIP21849d1e; receipt eed9aed9… independently SHA-bound. Actual
 prior current27-table restore and native CAL61/V1 access33 reused, not rerun.

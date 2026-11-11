@@ -18,7 +18,7 @@ spec=importlib.util.spec_from_file_location('pilot_operator',Path(__file__).with
 pilot=importlib.util.module_from_spec(spec);spec.loader.exec_module(pilot)
 
 
-def main(v1_update=False,rollback_probe=False,resume_probe=False):
+def main(v1_update=False,rollback_probe=False,resume_probe=False,access_probe=False):
     name='ch-pilot-proof-'+uuid4().hex
     directory=ROOT/'.tmp'/name;directory.mkdir()
     docker=['docker','--host','npipe:////./pipe/dockerDesktopLinuxEngine']
@@ -102,6 +102,7 @@ def main(v1_update=False,rollback_probe=False,resume_probe=False):
         else:raise AssertionError('Local native readiness')
         if not v1_update:pilot.tls_negatives(ca_path)
         private=pilot.acceptance.run(root,data,ca_path,directory,report)
+        reference_data,reference_private=data,private
         if not v1_update:
             demo=pilot.open_demo(data,private,root.request('clock')['server_time']-time.time(),headless=True)
             try:assert len(demo[1].contexts)==4
@@ -145,6 +146,21 @@ def main(v1_update=False,rollback_probe=False,resume_probe=False):
                     assert pilot.acceptance.HTTPS(ca_path).call('/api/v1/admin/users/invitations','POST',{})[0]==503
                     root.request('accept');root.request('close')
                     report.update(v1_resume=resumed,resume_postflight=finalized,resume_login_shell='PASS')
+                    if access_probe:
+                        access=pilot.module('owned_access_proof',Path(__file__).with_name('open_vps_pilot.py'))
+                        access.pilot.acceptance.ORIGIN=pilot.acceptance.ORIGIN
+                        access.validate_logins(reference_data,reference_private)
+                        opened=access.open_roles(reference_data,reference_private,ca_path,directory,headless=True)
+                        try:assert len(opened[1].contexts)==5
+                        finally:opened[1].close();opened[0].stop()
+                        current=json.loads(command(*docker,'exec',name,'python3','-c',code))
+                        business=('roles','user_roles','coaches','topics','coach_topics','calendar_offers',
+                                  'calendar_offer_revisions','calendar_review_decisions','companies','company_contacts',
+                                  'coaching_requests','request_services','request_topics','services','coach_services','schema_migrations')
+                        assert all(current['tables'][key]==capture['baseline']['tables'][key] for key in business)
+                        assert current['tables']['portal_users']['count']==4
+                        report.update(access_roles=4,access_automatic_login='PASS',access_business_rows_unchanged=True,
+                                      access_changes='EXPECTED_NATIVE_AUTH_SESSIONS_MFA_AUDIT_ONLY')
                 report.update(status='PASS',v1_rollback=rolled['rollback'],recovery_platform='SYNTHETIC_AES_NOT_DPAPI')
                 process.stdin.close();process.wait(timeout=30);process.stdout.close();process.stderr.close();process=None
                 return
@@ -187,5 +203,6 @@ def main(v1_update=False,rollback_probe=False,resume_probe=False):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--v1-update',action='store_true')
-    parser.add_argument('--v1-rollback',action='store_true');parser.add_argument('--v1-resume',action='store_true');args=parser.parse_args()
-    main(args.v1_update or args.v1_rollback or args.v1_resume,args.v1_rollback,args.v1_resume)
+    parser.add_argument('--v1-rollback',action='store_true');parser.add_argument('--v1-resume',action='store_true')
+    parser.add_argument('--access-proof',action='store_true');args=parser.parse_args()
+    main(args.v1_update or args.v1_rollback or args.v1_resume or args.access_proof,args.v1_rollback,args.v1_resume or args.access_proof,args.access_proof)

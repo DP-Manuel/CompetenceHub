@@ -4,6 +4,18 @@ Updated: 2026-11-11.
 
 ## Current Milestone
 
+11.11 usability handoff correction: technical V1 was accepted but manual access
+was missing; encrypted files alone are not a usable handoff. A separate local
+open-vps-pilot.ps1 starter now reopens existing Admin/Reviewer/two Coach windows
+with normal password/TOTP, exact UUID/role checks, original TLS and V1 pin. No
+sudo/admin privilege, installer, new account/key, secret output or recovery-code
+consumption. Native synthetic four-role login/unchanged business rows PASS,
+container removed;133 focused regressions green. Actual private copies NOT read
+by the assistant; only the operator starter handles them. Manuel explicitly
+defers his own test until later. [Complete access/test handoff](docs/operations/pilot-test-access.md).
+One next block: Manuel runs the bound starter later and records synthetic Admin/
+Coach/Reviewer/calendar usability feedback; real activation remains excluded.
+
 11.11 V1 ACTUALLY ACCEPTED on private VPS, operator38bd4cd / packagebc53775.
 Resume receipt eed9aed9… PASS, independently SHA-bound; final server ACK,
 all27 tables unchanged across resume, original four users/two Coaches retained.

@@ -104,6 +104,16 @@ no real activation) -> confirmed EDV DNS/TLS/delivery -> durable recovery/person
 mapping decisions -> separately approved first real access. Later steps remain
 gated, no new public exposure or assumed roles. TLS expiry24.11 is unchanged.
 
+11.11 usability prerequisite CLOSED LOCALLY: standalone access starter, not a
+redeployment or readable password file. Original protected copies -> normal
+password/TOTP -> isolated Admin/Reviewer/two Coaches/public Calendar; current
+strict TLS/V1 asset, exact actor UUID/role and private browser policy required.
+Native synthetic proof PASS (business rows unchanged),133 targeted tests green.
+No actual credential read or real VPS login by assistant. Manual run and usability
+acceptance explicitly deferred by Manuel until later; final handoff contains the
+single exact command, window/exit instructions and role overview. See
+[test access](../../operations/pilot-test-access.md). No further user action now.
+
 Use existing private tunnel if strict original CA/leaf/hostname proof passes.
 Never stop an unowned tunnel. Temporary synthetic outbox capture has no SMTP
 worker or real recipient, is removed before final acceptance; normal delivery

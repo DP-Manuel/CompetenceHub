@@ -195,15 +195,15 @@ def tls_negatives(ca):
         raise backup.protocol.SnapshotStop('TLS_NEGATIVE_CONTROL_FAILED')
 
 
-def open_demo(data, private, offset, *, headless=False):
-    """Three separate role contexts; no passwords or recovery values displayed."""
+def open_demo(data, private, offset, *, headless=False, roles=('coach','reviewer','admin')):
+    """Separate role contexts; no passwords or recovery values displayed."""
     import pyotp
     from playwright.sync_api import sync_playwright, expect
     driver=sync_playwright().start()
     browser=None
     try:
         browser=driver.firefox.launch(headless=headless)
-        for key in ('coach','reviewer','admin'):
+        for key in roles:
             context=browser.new_context(viewport={'width':1366,'height':900})
             page=context.new_page();page.goto(acceptance.ORIGIN+'/portal/')
             page.locator('#login-email').fill(data['accounts'][key]['email'])
