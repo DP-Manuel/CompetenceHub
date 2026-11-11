@@ -251,6 +251,40 @@ Persönliche Aktivierung, reale Coachzuordnungen und COACH-3B bleiben gesperrt.
   Eingabe, Änderung oder Wiederholung des ursprünglichen Installers. Pages-
   Workflow ausschließlich manuell; dieser Code-Push veröffentlicht keine Website.
 
+### Operator-STOP Vor Dem Betriebsblock
+
+Manuels tatsächlicher Lauf mit `bb7794c` endete am11.11 mit `TimeoutExpired`;
+Receipt `release-artifacts/vps-v1-update/da6b2342c1dd49ca91ceaadcd4c66c07.json`,
+SHA-256 `42b4df672e5ce1c7f9945c1b2da9a26e969ae2efacf0824040877a2763b564e4`.
+Phase `local_preflight`, Backup/Restore/Deployment jeweils `NOT_RUN`, keine
+Migration/Account-/Websiteaktion. Der Timeout liegt laut Codepfad in einem der
+beiden SSH-Unterprozesse vor dem privaten Root-Kanal; dort wird noch kein Agent
+übergeben. Welcher der beiden Aufrufe hing und weshalb, ist aus dem damaligen
+zu groben Bericht nicht nachträglich beweisbar. Kein Passwortproblem behaupten.
+
+Beide reinen Vorprüfungen bekommen jetzt geschlossenen leeren stdin, nie das
+interaktive Operator-Terminal. Zeitlimits bleiben20 Sekunden, keine stille
+Wiederholung. SSH-Timeout und sudo-Probe-Timeout haben getrennte feste Codes;
+SSH-Transportfehler der sudo-Probe führen nicht mehr zu einer Passwortabfrage.
+Optionaler Fortschrittscallback hält die genaue Phase im bereinigten Bericht
+fest. Der danach erforderliche private Passwort-/Bootstrapkanal behält seinen
+eigenen offenen Prozesspipe; Geheimnisse werden nicht protokolliert.
+
+108 fokussierte Regressionen bestanden einschließlich fünf neuer Fälle:
+beide Timeoutstellen, sudo-Transportfehler, gültiger privater Kanal jeweils mit
+und ohne erforderliche verdeckte Eingabe. Synthetische Werte, kein echtes sudo-
+Passwort. Tatsächliche reine Diagnose am11.11: SSH und nichtinteraktive sudo-
+Probe antworten; sudo verlangt erwartungsgemäß die lokale private Eingabe.
+Strikte CA-/Hostname-/Leafprüfung über einen eigenen temporären Tunnel PASS;
+dieser entfernt, alle sechs VPS-Dienste aktiv. Keine reale Servermutation oder
+Sicherung ausgeführt. Ein erneuter isolierter Linux-Kalenderlauf ist für diesen
+ausschließlich lokalen Verbindungsfix nicht erforderlich; Runtime, Paket, Agent,
+Sicherungs-/Restore- und Rückrollverfahren sind unverändert.
+
+Der korrigierte Operatorlauf benötigt einen neuen exakt gebundenen Code-Commit,
+keine neue Owner-Freigabe für den bereits genehmigten Umfang. Nicht den alten
+Installer und nicht den fehlgeschlagenen alten Befehl blind wiederholen.
+
 ## Genau Nächster Block
 
 Geschütztes V1-Updatefenster des bestehenden Piloten: mit gebundenem Paket,

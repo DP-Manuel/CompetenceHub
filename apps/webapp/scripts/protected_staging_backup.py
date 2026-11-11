@@ -64,15 +64,28 @@ def checked(*args, data=None, timeout=180):
 
 
 class RootSession:
-    def __init__(self, *, bootstrap_source=None, reviewed_sources=None):
+    def __init__(self, *, bootstrap_source=None, reviewed_sources=None, progress=None):
         self.process = None
         require(sys.stdin.isatty(), 'PRIVATE_INTERACTIVE_TERMINAL_REQUIRED')
-        checked(*SSH, 'true', timeout=20)
-        available = subprocess.run([*SSH, 'sudo -n -- true'], capture_output=True, timeout=20).returncode == 0
+        step=progress or (lambda phase:None)
+        step('ssh_connectivity')
+        try:
+            checked(*SSH, 'true', data=b'', timeout=20)
+        except subprocess.TimeoutExpired:
+            raise protocol.SnapshotStop('SSH_CONNECTIVITY_TIMEOUT_NO_MUTATION') from None
+        step('sudo_capability_probe')
+        try:
+            probe=subprocess.run([*SSH, 'sudo -n -- true'], input=b'', capture_output=True, timeout=20)
+        except subprocess.TimeoutExpired:
+            raise protocol.SnapshotStop('SUDO_CAPABILITY_TIMEOUT_NO_MUTATION') from None
+        require(probe.returncode in (0,1), 'SUDO_PROBE_TRANSPORT_UNAVAILABLE_NO_MUTATION')
+        available = probe.returncode == 0
+        step('private_sudo_input' if not available else 'private_root_channel')
         password = None if available else getpass.getpass('VPS sudo password for manuel (hidden; no GPG/USB password): ')
         bootstrap = 'import base64;exec(base64.b64decode(' + repr(base64.b64encode((bootstrap_source or BOOTSTRAP).encode()).decode()) + '))'
         sudo = 'sudo -n -- ' if available else 'sudo -S -p "" -- '
         try:
+            step('private_root_channel')
             self.process = subprocess.Popen([*SSH, sudo + 'python3 -I -c "' + bootstrap + '"'],
                                             stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
             if password is not None:

@@ -1,6 +1,8 @@
 import base64
+from contextlib import nullcontext
 from copy import deepcopy
 import importlib.util
+import io
 import json
 from pathlib import Path
 import subprocess
@@ -76,6 +78,66 @@ def test_readiness_has_total_deadline_and_short_individual_requests(monkeypatch)
     with pytest.raises(protocol.SnapshotStop,match='STRICT_TLS_READINESS_FAILED'):
         client.wait_ready(None)
     assert calls==[2]
+
+
+@pytest.mark.parametrize('phase,code',[
+    ('ssh_connectivity','SSH_CONNECTIVITY_TIMEOUT_NO_MUTATION'),
+    ('sudo_capability_probe','SUDO_CAPABILITY_TIMEOUT_NO_MUTATION'),
+])
+def test_connection_timeouts_are_distinct_and_never_prompt_or_start_root(monkeypatch,phase,code):
+    phases=[];module=client.backup
+    monkeypatch.setattr(module.sys.stdin,'isatty',lambda:True)
+    def checked(*args,**kwargs):
+        assert kwargs['data']==b'' and kwargs['timeout']==20
+        if phase=='ssh_connectivity':raise subprocess.TimeoutExpired('synthetic-sensitive-command',20)
+        return b''
+    def probe(*args,**kwargs):
+        assert kwargs['input']==b'' and kwargs['timeout']==20
+        raise subprocess.TimeoutExpired('synthetic-sensitive-command',20)
+    monkeypatch.setattr(module,'checked',checked)
+    monkeypatch.setattr(module.subprocess,'run',probe)
+    monkeypatch.setattr(module.getpass,'getpass',lambda *args:pytest.fail('No password on a transport timeout'))
+    monkeypatch.setattr(module.subprocess,'Popen',lambda *args,**kw:pytest.fail('No privileged channel on a timeout'))
+    with pytest.raises(protocol.SnapshotStop,match='^'+code+'$'):
+        module.RootSession(progress=phases.append)
+    assert phases[-1]==phase
+
+
+def test_sudo_probe_transport_failure_does_not_request_password(monkeypatch):
+    module=client.backup
+    monkeypatch.setattr(module.sys.stdin,'isatty',lambda:True)
+    monkeypatch.setattr(module,'checked',lambda *args,**kw:b'')
+    monkeypatch.setattr(module.subprocess,'run',lambda *args,**kw:SimpleNamespace(returncode=255))
+    monkeypatch.setattr(module.getpass,'getpass',lambda *args:pytest.fail('SSH failure is not a password request'))
+    with pytest.raises(protocol.SnapshotStop,match='SUDO_PROBE_TRANSPORT_UNAVAILABLE_NO_MUTATION'):
+        module.RootSession()
+
+
+@pytest.mark.parametrize('available',[True,False])
+def test_root_channel_keeps_its_private_pipe_after_stdin_free_probes(monkeypatch,available):
+    module=client.backup;phases=[];probes=[]
+    monkeypatch.setattr(module.sys.stdin,'isatty',lambda:True)
+    def checked(*args,**kw):probes.append(kw['data']);return b''
+    def probe(*args,**kw):probes.append(kw['input']);return SimpleNamespace(returncode=0 if available else 1)
+    monkeypatch.setattr(module,'checked',checked)
+    monkeypatch.setattr(module.subprocess,'run',probe)
+    prompts=[]
+    def prompt(*args):prompts.append(True);return 'SYNTHETIC-ONLY-NOT-A-REAL-PASSWORD'
+    monkeypatch.setattr(module.getpass,'getpass',prompt)
+    process=SimpleNamespace(stdin=io.BytesIO(),stdout=io.BytesIO(b'CH_ROOT_READY_1\n'))
+    def popen(*args,**kwargs):
+        assert kwargs['stdin'] is subprocess.PIPE and kwargs['stdout'] is subprocess.PIPE
+        return process
+    monkeypatch.setattr(module.subprocess,'Popen',popen)
+    monkeypatch.setattr(module.RootSession,'deadline',lambda self,seconds:nullcontext())
+    session=module.RootSession(bootstrap_source='SYNTHETIC',reviewed_sources={'synthetic':'only'},progress=phases.append)
+    assert session.process is process and probes==[b'',b''] and len(prompts)==(0 if available else 1)
+    assert phases[:2]==['ssh_connectivity','sudo_capability_probe'] and phases[-1]=='private_root_channel'
+    sent=process.stdin.getvalue()
+    if not available:
+        assert sent.startswith(b'SYNTHETIC-ONLY-NOT-A-REAL-PASSWORD\n')
+        sent=sent.partition(b'\n')[2]
+    assert protocol.read_frame(io.BytesIO(sent))=={'synthetic':'only'}
 
 
 def test_original_systemd_single_quoted_environment_is_read_without_shell():

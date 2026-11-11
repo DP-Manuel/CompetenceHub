@@ -7,6 +7,15 @@ Updated: 2026-11-11. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+11.11 private-operator timeout learning: a broad local_preflight phase is not
+enough to diagnose failed SSH/sudo checks. Record the exact fixed phase before
+each boundary, close stdin for probes that must never consume operator input,
+and preserve the later private password/bootstrap pipe separately. A failed SSH
+transport is not evidence that a password is needed. Do not log raw timeout
+exceptions/commands or claim a transient network cause from a successful later
+probe. Test both timeout locations and both valid private-channel paths with
+synthetic input. Project fix implemented; global skill proposal remains open.
+
 11.11 existing-pilot update learning: never reuse an empty-target installer to
 update a deliberately retained synthetic reference. Use a separate owned cohort,
 fresh current-state recovery and exact original-row comparison; retain shared IP

@@ -72,7 +72,11 @@ Current code/packagebc53775 stays bound; no migration is required or permitted.
    Separate actual scoped rollback PASS, old runtime/reference preserved, own
    container removed.103 focused checks PASS; full1,663/31 suite green (one extra
    protected-port skip). No real VPS/DPAPI/recovery acceptance inferred locally.
-4. WAITING PRIVATE OPERATOR: one sudo input only after local gates; verified C:
+4. WAITING CORRECTED PRIVATE OPERATOR: actualbb7794c attempt timed out before
+   Root agent dispatch; backup/restore/deployment NOT_RUN. Exact old SSH/sudo
+   probe unknown, no password retry. Closed-stdin probes, distinct safe timeout/
+   transport codes and report phases fixed;108 focused checks and actual read-only
+   SSH/sudo/strict TLS proof PASS. One sudo input only after local gates; verified C:
    BitLocker/operator ACL and fresh-process DPAPI recovery before server update.
 5. GATED: separate additive synthetic cohort on the actual VPS; CAL/Admin/invite/
    MFA/tours/390px/native200 checks, then own-cohort cleanup, retained original

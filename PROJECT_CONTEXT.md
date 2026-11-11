@@ -4,6 +4,17 @@ Updated: 2026-11-11.
 
 ## Current Milestone
 
+11.11 actual V1 operatorbb7794c STOP before privileged agent dispatch: sanitized
+receipt da6b2342… says local_preflight/TimeoutExpired, backup/restore/deployment
+NOT_RUN. Original report cannot distinguish SSH probe from sudo-capability probe;
+current read-only reproductions return normally. Fixed closed stdin for both
+noninteractive probes, distinct sanitized timeout/transport codes and fine phases;
+private password/bootstrap pipe unchanged.108 focused regressions PASS; fresh
+read-only SSH/sudo probe and exact strict TLS/hostname/leaf PASS, own diagnostic
+tunnel removed. All six VPS services active; no server mutation. Scoped corrected
+operator rerun is the single next block; no installer/GPG/backup reset or new
+Owner grant. [Incident and bounds](docs/operations/real-user-readiness-v1-2026-11-10.md#operator-stop-vor-dem-betriebsblock).
+
 11.11 V1 existing-pilot update: separate state-preserving operator prepared,
 not the original installer. Bound applicationbc53775/ZIP21849d1e stays unchanged;
 no migration, real identity, delivery, Website or GPG action. Fresh current-state

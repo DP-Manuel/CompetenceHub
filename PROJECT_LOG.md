@@ -2,6 +2,16 @@
 
 Significant milestones only; newest first.
 
+11.11 actual V1 attemptbb7794c STOP before Root agent dispatch; reportda6b2342…
+has local_preflight/TimeoutExpired and backup/restore/deployment NOT_RUN. Old
+phase cannot distinguish SSH from sudo-probe timeout; fresh probes respond.
+Closed stdin for noninteractive probes, separate sanitized timeout/transport
+codes, precise phases and no password request on SSH failure. Private root pipe
+unchanged.108 focused regressions PASS; actual read-only SSH/sudo/strict original
+TLS/hostname/leaf PASS via own removed diagnostic tunnel, six services active.
+No server/data mutation or blind retry. Corrected scoped operator remains the
+single next gate. [Diagnosis and limits](docs/operations/real-user-readiness-v1-2026-11-10.md#operator-stop-vor-dem-betriebsblock).
+
 11.11 existing-pilot V1 update operator locally accepted, actual VPS update still
 NOT_RUN. Current populated snapshot/isolated restore precedes own runtime change;
 original four identities/data/config/keys and old runtime retained. Native Ubuntu

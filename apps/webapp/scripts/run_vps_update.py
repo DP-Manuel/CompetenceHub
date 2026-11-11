@@ -110,14 +110,20 @@ def main(options):
             'backup':'NOT_RUN','restore':'NOT_RUN','deployment':'NOT_RUN'}
     root=tunnel=None
     try:
-        data=fixture();content=payload();ca=accepted_ca()
+        report['phase']='package_validation'
+        data=fixture();content=payload()
+        report['phase']='accepted_public_ca'
+        ca=accepted_ca()
+        report['phase']='private_tunnel'
         with socket.socket() as check:occupied=check.connect_ex(('127.0.0.1',8447))==0
         if not occupied:
             tunnel=subprocess.Popen([*backup.SSH[:-1],'-N','-o','ExitOnForwardFailure=yes','-L','127.0.0.1:8447:127.0.0.1:8443',backup.SSH[-1]],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-        wait_ready(ca);verify_leaf(ca);pilot.tls_negatives(ca)
+        report['phase']='strict_tls_readiness';wait_ready(ca)
+        report['phase']='strict_tls_leaf';verify_leaf(ca)
+        report['phase']='strict_tls_negative_controls';pilot.tls_negatives(ca)
         policy=directory/'firefox-policy.json';policy.write_bytes(canonical({'policies':{'Certificates':{'Install':[str(ca)]},'DisableTelemetry':True}}))
         os.environ['PLAYWRIGHT_FIREFOX_POLICIES_JSON']=str(policy)
-        root=backup.RootSession(bootstrap_source=BOOTSTRAP,reviewed_sources={
+        root=backup.RootSession(bootstrap_source=BOOTSTRAP,progress=lambda phase:report.update(phase=phase),reviewed_sources={
             'preflight':(SCRIPTS/'staging_readonly_preflight.py').read_text(encoding='utf8'),
             'agent':(SCRIPTS/'staging_snapshot_agent.py').read_text(encoding='utf8'),
             'legacy':(SCRIPTS/'vps_pilot_agent.py').read_text(encoding='utf8'),
