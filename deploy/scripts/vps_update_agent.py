@@ -7,6 +7,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import shlex
+import socket
 import stat
 import sys
 import time
@@ -27,6 +28,7 @@ CAPTURE_DROP = DROP / '21-v1-synthetic-capture.conf'
 CAPTURE_ENV = CONFIG / 'v1-synthetic-capture.env'
 LEAF_SHA = 'aecd310881202f9438b14a9d57d7f3e033bf947416a460fa3263fa44cf71d27a'
 OLD_WHEEL_SHA = 'a614ff69100641419a47cc068543bd65c31ff20c56989adaadffe9460f0dd646'
+RESUME_RUN = '2b834613c4204c1d98a37cbd43134fa1'
 
 
 def parse_environment(raw):
@@ -88,7 +90,11 @@ class UpdateAgent:
     def preflight(self, request):
         self.require(not self.ready, 'NO_AUTOMATIC_REPEAT')
         value=self.collect()
-        self.require(not RELEASE.exists() and not DROP.exists(), 'EXISTING_UPDATE_REQUIRES_REVIEW')
+        resume=request.get('resume_run')==RESUME_RUN
+        self.require(resume or not RELEASE.exists() and not DROP.exists(), 'EXISTING_UPDATE_REQUIRES_REVIEW')
+        if resume:
+            self.require(RELEASE.is_dir() and not RELEASE.is_symlink() and DROP.is_dir() and not DROP.is_symlink()
+                         and not any(DROP.iterdir()) and not CAPTURE_ENV.exists(), 'ROLLED_BACK_RUNTIME_REQUIRED')
         for name, expected in self.legacy.units().items():
             self.require((Path('/etc/systemd/system')/name).read_bytes()==expected.encode(), 'ORIGINAL_SERVICE_UNIT_CHANGED')
         self.require(self.s.sha((ROOT/'pilot.crt').read_bytes())==LEAF_SHA, 'ORIGINAL_TLS_CHANGED')
@@ -96,7 +102,7 @@ class UpdateAgent:
             self.require(not path.is_symlink() and path.is_dir(), 'ORIGINAL_DIRECTORY_REQUIRED')
         custody=CONFIG.stat()
         self.require(custody.st_uid==0 and stat.S_IMODE(custody.st_mode)==0o700,'ORIGINAL_CONFIG_DIRECTORY_CUSTODY_REQUIRED')
-        for path in (ROOT,ROOT/'releases',DROP.parent):
+        for path in (ROOT,ROOT/'releases',DROP.parent,*((RELEASE,) if resume else ())):
             if path.exists():
                 info=path.lstat()
                 self.require(stat.S_ISDIR(info.st_mode) and info.st_uid==0 and not stat.S_IMODE(info.st_mode)&0o022,
@@ -220,6 +226,83 @@ class UpdateAgent:
         for path,flag in ((CAPTURE_DROP,'capture_drop_owned'),(CAPTURE_ENV,'capture_env_owned')):
             if getattr(self,flag):path.unlink();setattr(self,flag,False)
 
+    def start_api(self):
+        self.s.run('systemctl','start',API)
+        deadline=time.monotonic()+45
+        while True:
+            try:
+                with socket.create_connection(('127.0.0.1',8001),timeout=.5):return
+            except OSError:
+                self.require(time.monotonic()<deadline,'PILOT_API_LISTENER_NOT_READY')
+                time.sleep(.2)
+
+    def resume(self, request):
+        self.require(request.get('resume_run')==RESUME_RUN,'EXACT_ACCEPTED_RESUME_REQUIRED')
+        result=self.preflight(request)
+        self.require(result['configuration_hashes']==request['configuration_hashes'],'RESUME_CONFIGURATION_CHANGED')
+        expected=request['baseline']
+        self.require(len(expected['tables'])==27 and expected['tables']['auth_rate_limit_buckets']['count']==0,
+                     'RESUME_EMPTY_FOREIGN_RATE_BASELINE_REQUIRED')
+        with self.s.snapshot_connection(self.s.DATABASE) as c:current=self.s.signature(c)
+        without_rates=lambda tables:{k:v for k,v in tables.items() if k!='auth_rate_limit_buckets'}
+        self.require(current['schema_sha256']==expected['schema_sha256']
+                     and current['database_format']==expected['database_format']
+                     and without_rates(current['tables'])==without_rates(expected['tables']), 'RESUME_REFERENCE_CHANGED')
+        self.require(all(current['sequence_state'][k]['last_value']>=v['last_value']
+                         for k,v in expected['sequence_state'].items()),'SEQUENCE_REWIND_REJECTED')
+        package=base64.b64decode(request['package'],validate=True)
+        self.require(self.s.sha(package)==PACKAGE_SHA,'EXACT_V1_PACKAGE_REQUIRED')
+        with zipfile.ZipFile(io.BytesIO(package)) as archive:
+            manifest=json.loads(archive.read('MANIFEST.json').decode('utf-8-sig'))
+            self.require(manifest['commit']==SOURCE and not manifest['dirty'],'EXACT_V1_SOURCE_REQUIRED')
+            for row in manifest['files']:
+                name=PurePosixPath(row['path'])
+                self.require(not name.is_absolute() and '..' not in name.parts and '\\' not in row['path'],'PACKAGE_PATH_REJECTED')
+                path=RELEASE/'bundle'/row['path']
+                self.require(not any(p.is_symlink() for p in (path,*path.parents)),'STAGED_LINK_REJECTED')
+                self.require(self.s.sha(path.read_bytes())==row['sha256'],'STAGED_RELEASE_CHANGED')
+        wheels=list((RELEASE/'bundle/packages').glob('*.whl'))
+        self.require(len(wheels)==1,'ONE_APPLICATION_WHEEL_REQUIRED')
+        with zipfile.ZipFile(wheels[0]) as wheel:
+            for name in wheel.namelist():
+                if name.startswith('competence_hub_api/') and not name.endswith('/'):
+                    path=RELEASE/'venv/lib/python3.12/site-packages'/name
+                    self.require(not any(p.is_symlink() for p in (path,*path.parents))
+                                 and self.s.sha(path.read_bytes())==self.s.sha(wheel.read(name)),'STAGED_APPLICATION_CHANGED')
+        self.s.run(str(RELEASE/'venv/bin/python'),'-m','pip','check')
+        self.worker=request['worker'];self.fixture=request['fixture'];self.baseline=current
+        self.resume_log_since=request['previous_start']
+        self.require(isinstance(self.resume_log_since,(int,float)) and time.time()-7*86400<=self.resume_log_since<=time.time(),
+                     'RESUME_LOG_WINDOW_REJECTED')
+        self.rate_reference=self.worker_action('reference_rates')['sha256']
+        self.require(self.rate_reference==hashlib.sha256(b'[]').hexdigest(),'RESUME_FOREIGN_RATE_BUCKET_CHANGED')
+        self.changed=True;self.resume_mode=True
+        self.write_new(RUNTIME_DROP,('[Service]\nExecStart=\nExecStart='+str(RELEASE/'venv/bin/uvicorn')+
+            ' competence_hub_api.runtime:create_runtime_app_from_environment --factory --host 127.0.0.1 --port 8001 --proxy-headers --forwarded-allow-ips=127.0.0.1 --no-access-log\n').encode())
+        self.s.run('systemd-analyze','verify',str(Path('/etc/systemd/system')/API))
+        self.s.run('systemctl','daemon-reload');self.s.run('systemctl','restart',API)
+        return {'status':'PASS','reference':'VERIFIED','installation':'REUSED_UNCHANGED','database_writes':'NONE',
+                'backup_restore':'REUSED_ACCEPTED','original_configuration':'UNCHANGED'}
+
+    def finalize_resume(self, request):
+        self.require(self.changed and getattr(self,'resume_mode',False),'ACTIVE_RESUME_REQUIRED')
+        with self.s.snapshot_connection(self.s.DATABASE) as c:
+            self.require(self.s.signature(c)==self.baseline,'RESUME_DATABASE_CHANGED')
+        inventory=self.collect()
+        self.require(set(inventory['listeners'])==set(self.before['listeners']),'UNEXPECTED_LISTENER_CHANGE')
+        for name,digest in self.original_config.items():
+            self.require(self.s.sha(self.private_file(CONFIG/name))==digest,'ORIGINAL_CONFIGURATION_CHANGED')
+        self.check_logs(request.get('secret_needles',[]),self.resume_log_since)
+        self.postflight_passed=True
+        return {'status':'PASS','database_unchanged':True,'reference':'PASS','services':'PASS','configuration':'UNCHANGED',
+                'invitation_delivery':'CLOSED','logs_secret_scan':'PASS','migrations':[],'inventory':inventory}
+
+    def check_logs(self, needles, since):
+        journal=self.s.run('journalctl','-q','-u',API,'-u',PROXY,'--since','@'+str(int(since)),'-n','1000','-o','cat')
+        environment=parse_environment(self.private_file(CONFIG/'runtime.env'))
+        self.require(not any(x.encode() in journal for x in list(environment.values())+needles
+                             if isinstance(x,str) and len(x)>=16),'SECRET_IN_OWN_LOG')
+
     def reference_check(self):
         with self.s.snapshot_connection(self.s.DATABASE) as c:after=self.s.signature(c)
         self.require(after['schema_sha256']==self.baseline['schema_sha256'],'SCHEMA_CHANGED')
@@ -237,15 +320,12 @@ class UpdateAgent:
         self.seeded=False
         preserved=self.reference_check()
         self.disable_capture()
-        self.s.run('systemctl','daemon-reload');self.s.run('systemctl','start',API)
+        self.s.run('systemctl','daemon-reload');self.start_api()
         inventory=self.collect()
         self.require(set(inventory['listeners'])==set(self.before['listeners']),'UNEXPECTED_LISTENER_CHANGE')
         for name in self.original_config:
             self.require(self.s.sha(self.private_file(CONFIG/name))==self.original_config[name], 'ORIGINAL_CONFIGURATION_CHANGED')
-        journal=self.s.run('journalctl','-q','-u',API,'-u',PROXY,'--since','@'+str(int(self.started)),'-n','1000','-o','cat')
-        environment=parse_environment(self.private_file(CONFIG/'runtime.env'))
-        needles=list(environment.values())+request.get('secret_needles',[])
-        self.require(not any(x.encode() in journal for x in needles if isinstance(x,str) and len(x)>=16),'SECRET_IN_OWN_LOG')
+        self.check_logs(request.get('secret_needles',[]),self.started)
         self.postflight_passed=True
         return {'status':'PASS','reference':preserved,'services':'PASS','configuration':'UNCHANGED','migrations':[],
                 'listeners_unchanged':True,'logs_secret_scan':'PASS','invitation_delivery':'CLOSED'}
@@ -263,7 +343,7 @@ class UpdateAgent:
         try:
             self.disable_capture()
             if self.runtime_drop_owned:RUNTIME_DROP.unlink();self.runtime_drop_owned=False
-            self.s.run('systemctl','daemon-reload');self.s.run('systemctl','start',API)
+            self.s.run('systemctl','daemon-reload');self.start_api()
             self.collect()
         except Exception:failures.append('CODE_ROLLBACK_REVIEW_REQUIRED')
         return {'status':'REVIEW_REQUIRED' if failures else 'PASS','failures':failures,
@@ -276,7 +356,7 @@ def serve(preflight,snapshot,legacy):
     try:
         while True:
             request=snapshot.read_frame(sys.stdin.buffer);action=request.get('action')
-            if action in ('preflight','capture','restore','stage','commit'):
+            if action in ('preflight','capture','restore','stage','commit','resume','finalize_resume'):
                 result=getattr(agent,action)(request)
             elif action=='clock':result={'server_time':time.time()}
             elif action=='restart':

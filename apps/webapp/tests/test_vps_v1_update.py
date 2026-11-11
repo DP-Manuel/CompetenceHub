@@ -203,15 +203,16 @@ def test_partial_capture_write_is_owned_for_compensation(tmp_path,monkeypatch):
     assert value.capture_env_owned and path.read_bytes()==b'SYNTHETIC'
 
 
-def test_actual_powershell_child_forwards_quiet_and_preserves_utf8(tmp_path):
+@pytest.mark.parametrize('resume',['',client.RESUME_RUN])
+def test_actual_powershell_child_forwards_quiet_and_preserves_utf8(tmp_path,resume):
     script=tmp_path/'synthetic.py'
     script.write_text('import json,sys\nprint(json.dumps(sys.argv[1:]))\nprint("Pr\\u00fcfung")\n',encoding='utf8')
     def quoted(value):return "'"+str(value).replace("'","''")+"'"
-    command='. '+quoted(ROOT/'deploy/scripts/run-vps-v1-update.ps1')+'; Invoke-V1UpdateProcess '+quoted(sys.executable)+' '+quoted(script)+" '"+'a'*40+"' 'synthetic-only'"
+    command='. '+quoted(ROOT/'deploy/scripts/run-vps-v1-update.ps1')+'; Invoke-V1UpdateProcess '+quoted(sys.executable)+' '+quoted(script)+" '"+'a'*40+"' 'synthetic-only' "+quoted(resume)
     result=subprocess.run(['pwsh','-NoProfile','-Command',command],capture_output=True,timeout=30)
     assert result.returncode==0
     lines=result.stdout.decode('utf8').splitlines()
-    assert json.loads(lines[0])==['--execute','--quiet','--source','a'*40,'--directory','synthetic-only']
+    assert json.loads(lines[0])==['--execute','--quiet','--source','a'*40,'--directory','synthetic-only']+(['--resume',resume] if resume else [])
     assert lines[1]=='Pr\u00fcfung'
 
 
@@ -220,6 +221,7 @@ def test_failed_unacknowledged_seed_never_deletes_reference(monkeypatch):
     monkeypatch.setattr(protocol,'run',lambda *args,**kw:b'inactive' if 'show' in args else b'')
     value.worker_action=lambda action,**kw:calls.append(action)
     value.collect=lambda:{}
+    value.start_api=lambda:None
     value.rollback()
     assert not calls
 
@@ -230,9 +232,94 @@ def test_postflight_does_not_commit_before_final_https_check(monkeypatch):
     value.worker_action=lambda *args,**kw:{'status':'PASS'}
     value.reference_check=lambda:{'status':'PASS'}
     value.collect=lambda:{'listeners':[]}
+    value.start_api=lambda:None
     value.private_file=lambda path:b"COMPETENCE_HUB_FLAG='false'\n"
     result=value.commit({})
     assert result['status']=='PASS' and value.postflight_passed and not value.committed
+
+
+def test_systemd_start_waits_for_actual_api_listener(monkeypatch):
+    calls=[];attempts=iter((False,False,True));clock=iter((0,1,2))
+    monkeypatch.setattr(protocol,'run',lambda *args,**kw:calls.append(args))
+    monkeypatch.setattr(agent.time,'monotonic',lambda:next(clock))
+    monkeypatch.setattr(agent.time,'sleep',lambda duration:calls.append(('wait',duration)))
+    def connect(address,timeout):
+        assert address==('127.0.0.1',8001) and timeout==.5
+        if not next(attempts):raise OSError('synthetic delayed bind')
+        return nullcontext()
+    monkeypatch.setattr(agent.socket,'create_connection',connect)
+    instance().start_api()
+    assert calls==[('systemctl','start',agent.API),('wait',.2),('wait',.2)]
+
+
+def test_actual_listener_deadline_never_silently_passes(monkeypatch):
+    monkeypatch.setattr(protocol,'run',lambda *args,**kw:b'')
+    clock=iter((0,46));monkeypatch.setattr(agent.time,'monotonic',lambda:next(clock))
+    def absent(*args,**kw):raise OSError('synthetic absent listener')
+    monkeypatch.setattr(agent.socket,'create_connection',absent)
+    with pytest.raises(protocol.SnapshotStop,match='PILOT_API_LISTENER_NOT_READY'):
+        instance().start_api()
+
+
+@pytest.mark.parametrize('run',['','other-run','0'*32])
+def test_resume_rejects_unbound_run_before_private_files_or_server(run,monkeypatch):
+    monkeypatch.setattr(client.pilot,'qualify_directory',lambda *args:pytest.fail('No private files'))
+    with pytest.raises(protocol.SnapshotStop,match='EXACT_ACCEPTED_RESUME_REQUIRED'):
+        client.resume_material(run)
+    with pytest.raises(protocol.SnapshotStop,match='EXACT_ACCEPTED_RESUME_REQUIRED'):
+        instance().resume({'resume_run':run})
+
+
+def test_resume_receipt_changed_stops_before_private_recovery(monkeypatch):
+    monkeypatch.setattr(Path,'read_bytes',lambda self:b'SYNTHETIC MODIFICATION')
+    monkeypatch.setattr(client.pilot,'qualify_directory',lambda *args:pytest.fail('No private recovery'))
+    with pytest.raises(protocol.SnapshotStop,match='ACCEPTED_RESUME_RECEIPT_CHANGED'):
+        client.resume_material(client.RESUME_RUN)
+
+
+def test_resume_private_recovery_uses_retained_copies_without_overwrite(tmp_path,monkeypatch):
+    previous=json.loads((ROOT/'release-artifacts/vps-v1-update'/(client.RESUME_RUN+'.json')).read_bytes())
+    external=tmp_path/'local/CompetenceHub/pilot-updates'/client.RESUME_RUN
+    external.mkdir(parents=True)
+    dump=b'SYNTHETIC-POSTGRES-ARCHIVE'
+    configuration={'runtime.env':base64.b64encode(b'SYNTHETIC-NOT-A-REAL-KEY').decode()}
+    hashes={k:client.sha(base64.b64decode(v)) for k,v in configuration.items()}
+    capture={'dump_sha256':client.sha(dump),'baseline':{'synthetic':'only'}}
+    login=client.fixture()
+    recovery={'synthetic':{'totp':'SYNTHETIC-ONLY','recovery':['NOT-A-REAL-CODE']}}
+    content={'database.dump.dpapi':dump,'baseline.json.dpapi':client.canonical(capture),
+             'original-configuration.json.dpapi':client.canonical(configuration),
+             'owned-synthetic-logins.json.dpapi':client.canonical(login),
+             'owned-synthetic-recovery.json.dpapi':client.canonical(recovery)}
+    for name,data in content.items():(external/name).write_bytes(b'SYNTHETIC-SEAL'+data)
+    previous['preflight']['configuration_hashes']=hashes
+    for field,name in [('ciphertext_sha256','database.dump.dpapi'),('baseline_ciphertext_sha256','baseline.json.dpapi'),
+                       ('configuration_ciphertext_sha256','original-configuration.json.dpapi')]:
+        previous[field]=client.sha((external/name).read_bytes())
+    receipt=tmp_path/'release-artifacts/vps-v1-update'/(client.RESUME_RUN+'.json')
+    receipt.parent.mkdir(parents=True);receipt.write_bytes(client.canonical(previous))
+    monkeypatch.setattr(client,'ROOT',tmp_path);monkeypatch.setattr(client,'RESUME_SHA',client.sha(receipt.read_bytes()))
+    monkeypatch.setenv('LOCALAPPDATA',str(tmp_path/'local'))
+    qualified=[];monkeypatch.setattr(client.pilot,'qualify_directory',lambda p:qualified.append(p))
+    def decrypt(*args,**kw):
+        assert '--decrypt-stdin' in args and kw['timeout']==30
+        assert kw['data'].startswith(b'SYNTHETIC-SEAL')
+        return kw['data'][len(b'SYNTHETIC-SEAL'):]
+    monkeypatch.setattr(client.backup,'checked',decrypt)
+    before={p.name:p.read_bytes() for p in external.iterdir()}
+    proof,values,needles=client.resume_material(client.RESUME_RUN)
+    assert proof['restore']=='PASS' and values['baseline']==capture['baseline'] and values['configuration_hashes']==hashes
+    assert qualified==[external] and 'NOT-A-REAL-CODE' in needles
+    assert before=={p.name:p.read_bytes() for p in external.iterdir()}
+
+
+def test_resume_cannot_accept_a_database_delta(monkeypatch):
+    value=instance();value.changed=value.resume_mode=True;value.baseline={'synthetic':'before'}
+    monkeypatch.setattr(protocol,'snapshot_connection',lambda database:nullcontext(None))
+    monkeypatch.setattr(protocol,'signature',lambda c:{'synthetic':'after'})
+    with pytest.raises(protocol.SnapshotStop,match='RESUME_DATABASE_CHANGED'):
+        value.finalize_resume({})
+    assert not getattr(value,'postflight_passed',False)
 
 
 @pytest.mark.parametrize('arguments,expected',[

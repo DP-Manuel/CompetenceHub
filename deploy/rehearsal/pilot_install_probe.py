@@ -105,6 +105,7 @@ def main():
         if update:
             u.LEAF_SHA=s.sha((v.ROOT/'pilot.crt').read_bytes())
             u.serve(p,s,v)
+            if (ROOT/'UPDATE_RESUME_REHEARSAL').exists():u.serve(p,s,v)
             # Real systemd services outlive the operator channel. Keep this local
             # process shim alive until the client finishes its final HTTPS probe.
             sys.stdin.buffer.read(1)

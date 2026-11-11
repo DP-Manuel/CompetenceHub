@@ -285,11 +285,82 @@ Der korrigierte Operatorlauf benötigt einen neuen exakt gebundenen Code-Commit,
 keine neue Owner-Freigabe für den bereits genehmigten Umfang. Nicht den alten
 Installer und nicht den fehlgeschlagenen alten Befehl blind wiederholen.
 
+### Postflight-Neustart Und Gebundene Fortsetzung
+
+**Tatsächlicher Lauf11.11:**
+`release-artifacts/vps-v1-update/2b834613c4204c1d98a37cbd43134fa1.json`, SHA-256
+`822c5ddba0163be88327ec160c0544994e63494b4d21626dc16243092f6737d4`.
+Aktuelles Backup und echte isolierte Restoreprobe PASS:27 Tabellen/Daten/Schema/
+Rechte/Zähler identisch, Quelle unverändert, private Probe entfernt. Native VPS-
+Abnahme61 CAL- und33 V1-Zugangsprüfungen einschließlich MFA/Recovery/RBAC/Coach-
+Isolation/Einladung/Touren/Dashboards/Neustart/390px/native200 tatsächlich PASS.
+Keine Migration oder reale Identität. Dies war **kein früher Preflight-STOP**.
+
+Der Fehler `EXISTING_LOOPBACK_PILOT_REQUIRED` kam in `compensation_postflight`:
+eigene Testdaten wurden kompensiert und der eigene Dienst gestartet, danach
+wurde unmittelbar ein Listener erwartet. `Type=simple` meldet schon den Prozess
+als aktiv, bevor Uvicorn fertig gestartet und8001 gebunden ist. Derselbe Fehler
+konnte die unmittelbar folgende Rückrollprüfung treffen. Rollbackstatus deshalb
+`REVIEW_REQUIRED`, nicht still als PASS umdeuten. Frische reine SSH-Prüfung:
+originaler API-ExecStart `/opt/competence-hub-pilot/venv/bin/uvicorn`, Ports8001/
+8443 nur loopback, beide eigenen und vier fremden Dienste aktiv. Die genaue
+privilegierte Datenprüfung bleibt bis zur Fortsetzung offen.
+
+Korrektur: Nach Start des eigenen API-Dienstes tatsächlichen lokalen Listener
+begrenzt abwarten, nicht bloß den systemd-Prozessstatus. Ohne Listener nach45
+Sekunden STOP; striktes finales HTTPS/CA/Hostname/Leaf, V1-Asset, Listenerbestand
+und sechs Dienste bleiben zwingend. Kein pauschales Sleep oder Netzwerk-Bypass.
+
+**Einmalige Fortsetzung statt neuer Installation:** derselbe geprüfte Operator
+mit `-ResumeRun 2b834613c4204c1d98a37cbd43134fa1`, an neuen geprüften Commit
+gebunden. Genau dieser Report ist SHA-gepinnt, kein beliebiger Resume-Beleg.
+
+- Bestehende private C:-Kopien nicht überschreiben: frischen BitLocker-/ACL-
+  Schutz prüfen, Ciphertext-SHA von Dump/Baseline/Originalkonfiguration vergleichen
+  und im privaten Prozess erneut lesbar nachweisen. Keine erneute Sicherung oder
+  Probe-DB: die gerade bestandene tatsächliche Restoreprobe bleibt gültiger Beleg.
+- Aktuell originale vier synthetische Nutzer/zwei Coaches,0001–0006, alte
+  Runtime/Einheiten/Schlüsselkonfiguration und leerer eigener Drop-in-Ordner nötig.
+  Alle26 nicht-Rate-Limit-Tabellen, Schema/Format gegen die geschützte Vorher-
+  Baseline exakt vergleichen. Sequenzen dürfen nicht zurückgedreht sein. Alte
+  Rate-Baseline muss für diesen konkreten Lauf leer sein; aktuell nur die exakt
+  bekannten vier gemeinsamen synthetischen IP-Buckets ausnehmen. Fremde Buckets
+  oder sonstige Änderungen stoppen die Fortsetzung, keine automatische Reparatur.
+- Bestehenden Releaseinhalt gegen unverändertes Paketbc53775/SHA21849d1e prüfen,
+  installierte Anwendungsdateien gegen dessen Wheel, keine Links/überschriebenen
+  Dateien/Neuinstallation. Nur vorhandene identische Runtime wieder einschalten;
+  keine neue synthetische Kohorte, Einladung oder erneute Browser-Testserie.
+- Bisherige61/33 echte Prüfungen ausdrücklich mit Quellreceipt wiederverwenden,
+  nicht als erneut ausgeführt ausgeben. Neu prüfen: striktes HTTPS, ausgeliefertes
+  Asset, anonyme mobile Anmeldemaske, geschlossene Zustellung und alle Dienste.
+  Eigenes API-/Proxyjournal seit dem vorigen Lauf privat auf Originalkonfiguration
+  und nur dessen synthetische Geheimwerte prüfen; keine Rohlogs/Secrets ausgeben.
+- Über die gesamte Fortsetzung alle27 Tabellen einschließlich Rate-Limits und
+  Zähler unverändert verlangen. Keine SQL-Schreibaktionen, Quell-DB-Restores,
+  Capture-Umgebung, realen Zugänge oder Eingriffe in fremde Dienste. Fehler nimmt
+  nur den selbst erstellten Runtime-Drop-in zurück, erhält vorhandene Dateien.
+- Erst nach neuen finalen Prüfungen tatsächliches Accept-Acknowledge. Neue
+  bereinigte Receipt hält `backup_restore_reused`, `acceptance_reused_from` und
+  `native_checks_repeated=false` fest. Aktuell noch kein Resume ausgeführt.
+
+117 gezielte Regressionstests grün: verzögerter echter Listener versus aktiver
+Prozess, Deadline, unveränderte Fortsetzungsdaten, manipulierte/fremde Belege,
+vorhandene private Kopien ohne Überschreiben und echte PowerShell-Weitergabe des
+Resume-Schalters. Native Ubuntu/PostgreSQL-/TLS-/Firefox-Fortsetzungsprobe:
+Rollback -> gleiche vorhandene Installation verifizieren/wiederverwenden -> alle
+27 Tabellen unverändert -> gesperrte Zustellung/finales Asset -> Accept PASS.
+Report `.tmp/ch-pilot-proof-a8ca95e996cd42a9af66772d73f766ac/result.json`, SHA-256
+`4032da1eef8dbab367af3e551e9ae98e4b474adce8f3f17ce2c3c878118b4302`.
+Eigener Container entfernt. Prozessmanager/AES ersetzen lokal weiterhin systemd/
+DPAPI; daraus keine tatsächliche VPS-Fortsetzung behaupten. Kein Code-/Daten-
+Commit im VPS, Website-/GPG-/persönlicher Aktivierungsblock bleibt ausgeschlossen.
+
 ## Genau Nächster Block
 
-Geschütztes V1-Updatefenster des bestehenden Piloten: mit gebundenem Paket,
-aktuellem privilegiertem Zustands-/Rollbacknachweis und geeigneter Erhaltung der
-Referenzdaten ausschließlich die eigene Runtime aktualisieren und synthetisch
-abnehmen. DoD: native Zugangs-/Tour-/Kalenderprüfungen und Neustart/Persistenz
-grün, Referenzdaten erhalten, fremde Dienste gesund, keine echten Konten.
+Gebundene Fortsetzung des tatsächlich bestandenen V1-Testlaufs: vorhandenes
+Backup/Restore und native Abnahme wiederverwenden, privilegiert aktuellen
+Referenz-/Paket-/Konfigurationszustand prüfen und identische vorhandene Runtime
+abschließend einschalten. DoD: tatsächliche finale Receipt/TLS/Asset/Dienste
+grün, alle27 Tabellen während Resume gleich, keine neuen Konten/DB-Writes,
+keine erneute Installation/Sicherung/Restoreprobe. Danach STOP vor echten Nutzern.
 DNS/SMTP-Rückmeldung parallel einholen; keine reale Aktivierung vor deren Gates.

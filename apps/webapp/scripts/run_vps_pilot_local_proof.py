@@ -18,7 +18,7 @@ spec=importlib.util.spec_from_file_location('pilot_operator',Path(__file__).with
 pilot=importlib.util.module_from_spec(spec);spec.loader.exec_module(pilot)
 
 
-def main(v1_update=False,rollback_probe=False):
+def main(v1_update=False,rollback_probe=False,resume_probe=False):
     name='ch-pilot-proof-'+uuid4().hex
     directory=ROOT/'.tmp'/name;directory.mkdir()
     docker=['docker','--host','npipe:////./pipe/dockerDesktopLinuxEngine']
@@ -38,6 +38,7 @@ def main(v1_update=False,rollback_probe=False):
             update_source=(ROOT/'deploy/scripts/vps_update_agent.py').read_text(encoding='utf8').replace('8447','18447')
             command(*docker,'exec','-i',name,'python3','-c',"import sys;from pathlib import Path;Path('/work/vps_update_agent.py').write_bytes(sys.stdin.buffer.read())",data=update_source.encode())
             command(*docker,'exec',name,'touch','/work/UPDATE_REHEARSAL_ONLY')
+            if resume_probe:command(*docker,'exec',name,'touch','/work/UPDATE_RESUME_REHEARSAL')
         command(*docker,'cp',str(ROOT/'deploy/rehearsal/pilot_install_probe.py'),name+':/work/probe.py')
         command(*docker,'exec',name,'touch','/work/LOCAL_REHEARSAL_ONLY')
         command(*docker,'exec',name,'pg_ctlcluster','16','main','start','-o','-c listen_addresses=127.0.0.1')
@@ -127,11 +128,23 @@ def main(v1_update=False,rollback_probe=False):
             data=updater.fixture();payload=updater.payload()
             root.request('stage',**payload,fixture=data,protected_configuration_sha256=pilot.sha(pilot.canonical(old['configuration'])))
             updater.wait_ready(ca_path)
-            if rollback_probe:
+            if rollback_probe or resume_probe:
                 rolled=root.request('close')
                 assert rolled['rollback']['status']=='PASS'
                 updater.wait_ready(ca_path)
                 assert pilot.acceptance.HTTPS(ca_path).call('/portal/user-management.js')[0]==404
+                if resume_probe:
+                    resumed=root.request('resume',**payload,fixture=updater.fixture(),resume_run=updater.RESUME_RUN,
+                        baseline=capture['baseline'],configuration_hashes=old['configuration_hashes'],previous_start=old['server_time'])
+                    assert resumed['database_writes']=='NONE' and resumed['installation']=='REUSED_UNCHANGED'
+                    updater.wait_ready(ca_path)
+                    updater.verify_login_shell(directory)
+                    finalized=root.request('finalize_resume',secret_needles=[])
+                    assert finalized['database_unchanged'] and finalized['logs_secret_scan']=='PASS'
+                    assert b'createUserManagement' in pilot.acceptance.HTTPS(ca_path).call('/portal/user-management.js')[2]
+                    assert pilot.acceptance.HTTPS(ca_path).call('/api/v1/admin/users/invitations','POST',{})[0]==503
+                    root.request('accept');root.request('close')
+                    report.update(v1_resume=resumed,resume_postflight=finalized,resume_login_shell='PASS')
                 report.update(status='PASS',v1_rollback=rolled['rollback'],recovery_platform='SYNTHETIC_AES_NOT_DPAPI')
                 process.stdin.close();process.wait(timeout=30);process.stdout.close();process.stderr.close();process=None
                 return
@@ -174,5 +187,5 @@ def main(v1_update=False,rollback_probe=False):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--v1-update',action='store_true')
-    parser.add_argument('--v1-rollback',action='store_true');args=parser.parse_args()
-    main(args.v1_update or args.v1_rollback,args.v1_rollback)
+    parser.add_argument('--v1-rollback',action='store_true');parser.add_argument('--v1-resume',action='store_true');args=parser.parse_args()
+    main(args.v1_update or args.v1_rollback or args.v1_resume,args.v1_rollback,args.v1_resume)

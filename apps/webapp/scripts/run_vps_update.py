@@ -36,6 +36,8 @@ ACCEPTED_RUN='e89ce1ef18b14ad38bff9fcbf0199854'
 ACCEPTED_SHA='2becd577f08e3e13cb8e429ec2f8451f50bdabe479be33e4866950f1fd80b5fa'
 CA_SHA='14827c63424b87f7b40aa04019e720872e241e5a8f7a4a5b495cdcb3c89b302d'
 LEAF_SHA='aecd310881202f9438b14a9d57d7f3e033bf947416a460fa3263fa44cf71d27a'
+RESUME_RUN='2b834613c4204c1d98a37cbd43134fa1'
+RESUME_SHA='822c5ddba0163be88327ec160c0544994e63494b4d21626dc16243092f6737d4'
 BOOTSTRAP=backup.BOOTSTRAP.replace('131072','262144').replace("a['serve'](types.SimpleNamespace(**p))", """v={'__name__':'legacy_service_contract'}
 exec(compile(s['legacy'],'<reviewed-service-contract>','exec'),v)
 u={'__name__':'v1_update_agent'}
@@ -97,6 +99,49 @@ def private_recovery(directory,name,data):
     return digest,recovered
 
 
+def resume_material(run):
+    require(run==RESUME_RUN,'EXACT_ACCEPTED_RESUME_REQUIRED')
+    raw=(ROOT/'release-artifacts/vps-v1-update'/(run+'.json')).read_bytes()
+    require(sha(raw)==RESUME_SHA,'ACCEPTED_RESUME_RECEIPT_CHANGED')
+    previous=json.loads(raw)
+    require(previous['package_sha256']==PACKAGE_SHA and previous['backup']==previous['restore']=='PASS'
+            and previous['cal1']==previous['mfa_rbac']==previous['user_management']==previous['invitation_workflow']=='PASS'
+            and previous['restore_proof']['source_unchanged'] and previous['restore_proof']['probe_removed']
+            and previous['failure_code']=='EXISTING_LOOPBACK_PILOT_REQUIRED','ACCEPTED_RESUME_GATES_REQUIRED')
+    directory=Path(os.environ['LOCALAPPDATA'])/'CompetenceHub/pilot-updates'/run
+    pilot.qualify_directory(directory)
+    def read_existing(name,digest=None):
+        path=directory/name
+        require(path.is_file() and not path.is_symlink(),'EXISTING_PRIVATE_COPY_REQUIRED')
+        sealed=path.read_bytes()
+        if digest:require(sha(sealed)==digest,'EXISTING_CIPHERTEXT_CHANGED')
+        return backup.checked(sys.executable,'-I',str(SCRIPTS/'windows_dpapi.py'),'--decrypt-stdin',data=sealed,timeout=30)
+    capture=json.loads(read_existing('baseline.json.dpapi',previous['baseline_ciphertext_sha256']))
+    dump=read_existing('database.dump.dpapi',previous['ciphertext_sha256'])
+    require(sha(dump)==capture['dump_sha256'],'EXISTING_RECOVERY_COPY_CHANGED');del dump
+    configuration=json.loads(read_existing('original-configuration.json.dpapi',previous['configuration_ciphertext_sha256']))
+    hashes={name:sha(base64.b64decode(value,validate=True)) for name,value in configuration.items()}
+    require(hashes==previous['preflight']['configuration_hashes'],'EXISTING_CONFIGURATION_COPY_CHANGED')
+    data=json.loads(read_existing('owned-synthetic-logins.json.dpapi'))
+    private=json.loads(read_existing('owned-synthetic-recovery.json.dpapi'))
+    needles=[x['password'] for x in data['accounts'].values()]+[x['password'] for x in data['invites'].values()]
+    needles += [v['totp'] for v in private.values()]+[code for v in private.values() for code in v['recovery']]
+    return previous,{'resume_run':run,'baseline':capture['baseline'],'configuration_hashes':hashes,
+                     'previous_start':previous['preflight']['server_time']},needles
+
+
+def verify_login_shell(directory):
+    with v1.sync_playwright() as pw:
+        browser=pw.firefox.launch(headless=True)
+        try:
+            page=browser.new_page(viewport={'width':390,'height':844});errors=[]
+            page.on('pageerror',lambda error:errors.append(error.name))
+            page.goto(pilot.acceptance.ORIGIN+'/portal/');v1.expect(page.locator('#login-view')).to_be_visible()
+            require(not errors and page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'RESUME_LOGIN_SHELL_FAILED')
+            page.screenshot(path=str(directory/'resume-login-390.png'),full_page=True)
+        finally:browser.close()
+
+
 def main(options):
     require(os.name=='nt' and options.execute and options.quiet and sys.stdin.isatty(),'PRIVATE_QUIET_WINDOWS_OPERATOR_REQUIRED')
     require(backup.checked('git','-C',str(ROOT),'rev-parse','HEAD').decode().strip()==options.source,'SOURCE_CHANGED')
@@ -111,7 +156,15 @@ def main(options):
     root=tunnel=None
     try:
         report['phase']='package_validation'
-        data=fixture();content=payload()
+        data=fixture();content=payload();resume=None
+        if options.resume:
+            report['phase']='accepted_resume_recovery'
+            previous,resume,needles=resume_material(options.resume)
+            report.update(backup='PASS',restore='PASS',backup_restore_reused=True,acceptance_reused_from=options.resume,
+                          acceptance_receipt_sha256=RESUME_SHA,cal1='PASS',mfa_rbac='PASS',
+                          checks=previous['checks'],v1_checks=previous['v1_checks'],native_checks_repeated=False,
+                          user_management=previous['user_management'],invitation_workflow=previous['invitation_workflow'],
+                          onboarding=previous['onboarding'],postgres_persistence=previous['postgres_persistence'],restart=previous['restart'])
         report['phase']='accepted_public_ca'
         ca=accepted_ca()
         report['phase']='private_tunnel'
@@ -129,34 +182,42 @@ def main(options):
             'legacy':(SCRIPTS/'vps_pilot_agent.py').read_text(encoding='utf8'),
             'update':(SCRIPTS/'vps_update_agent.py').read_text(encoding='utf8')})
         report['phase']='current_remote_preflight'
-        current=root.request('preflight');configuration=current.pop('configuration')
-        report['preflight']=current
-        config_sha,config_copy=private_recovery(directory,'original-configuration.json.dpapi',canonical(configuration));del config_copy,configuration
-        report['configuration_ciphertext_sha256']=config_sha
-        report['phase']='current_backup_restore'
-        capture=root.request('capture');dump=base64.b64decode(capture.pop('dump'),validate=True)
-        require(sha(dump)==capture['dump_sha256'],'CURRENT_DUMP_TRANSFER_HASH')
-        dump_sha,recovered=private_recovery(directory,'database.dump.dpapi',dump);del dump
-        baseline_sha,_=private_recovery(directory,'baseline.json.dpapi',canonical(capture))
-        report.update(backup='PASS',ciphertext_sha256=dump_sha,baseline_ciphertext_sha256=baseline_sha)
-        altered=bytearray((directory/'database.dump.dpapi').read_bytes());altered[-1]^=1
-        rejected=subprocess.run([sys.executable,'-I',str(SCRIPTS/'windows_dpapi.py'),'--decrypt-stdin'],input=altered,capture_output=True,timeout=30)
-        require(rejected.returncode!=0 and not rejected.stdout,'DPAPI_TAMPER_MUST_FAIL')
-        result=root.request('restore',dump=base64.b64encode(recovered).decode(),encrypted_copy_verified=True,ciphertext_sha256=dump_sha)
-        del recovered
-        require(result['status']=='PASS' and result['probe_removed'],'CURRENT_RESTORE_REQUIRED')
-        report.update(restore='PASS',restore_proof=result)
-        print('PASS | Current populated reference backup and exact isolated restore; original data unchanged.',flush=True)
-        pilot.protected_copy(directory,'owned-synthetic-logins.json.dpapi',canonical(data))
-        report['phase']='v1_installation';report['stage']=root.request('stage',**content,fixture=data,protected_configuration_sha256=config_sha)
-        report['deployment']='INSTALLED_PENDING_ACCEPTANCE';wait_ready(ca)
-        report['phase']='native_acceptance'
-        private=pilot.acceptance.run(root,data,ca,directory,report)
-        private=v1.run(root,data,ca,directory,report,private,pilot.acceptance)
-        pilot.protected_copy(directory,'owned-synthetic-recovery.json.dpapi',canonical(private))
-        needles=[x['password'] for x in data['accounts'].values()]+[x['password'] for x in data['invites'].values()]
-        needles += [v['totp'] for v in private.values()]+[code for v in private.values() for code in v['recovery']]
-        report['phase']='compensation_postflight';report['postflight']=root.request('commit',secret_needles=needles)
+        if resume:
+            report['phase']='resume_verification_and_runtime_switch';report['deployment']='RESUME_REQUESTED'
+            report['stage']=root.request('resume',**content,fixture=data,**resume)
+            print('PASS | Accepted current backup/restore and native checks reused; original rows and staged package verified.',flush=True)
+            report['deployment']='REUSED_PENDING_FINAL_ACCEPTANCE';wait_ready(ca)
+            verify_login_shell(directory);report['resume_login_shell']='PASS'
+            report['phase']='resume_postflight';report['postflight']=root.request('finalize_resume',secret_needles=needles)
+        else:
+            current=root.request('preflight');configuration=current.pop('configuration')
+            report['preflight']=current
+            config_sha,config_copy=private_recovery(directory,'original-configuration.json.dpapi',canonical(configuration));del config_copy,configuration
+            report['configuration_ciphertext_sha256']=config_sha
+            report['phase']='current_backup_restore'
+            capture=root.request('capture');dump=base64.b64decode(capture.pop('dump'),validate=True)
+            require(sha(dump)==capture['dump_sha256'],'CURRENT_DUMP_TRANSFER_HASH')
+            dump_sha,recovered=private_recovery(directory,'database.dump.dpapi',dump);del dump
+            baseline_sha,_=private_recovery(directory,'baseline.json.dpapi',canonical(capture))
+            report.update(backup='PASS',ciphertext_sha256=dump_sha,baseline_ciphertext_sha256=baseline_sha)
+            altered=bytearray((directory/'database.dump.dpapi').read_bytes());altered[-1]^=1
+            rejected=subprocess.run([sys.executable,'-I',str(SCRIPTS/'windows_dpapi.py'),'--decrypt-stdin'],input=altered,capture_output=True,timeout=30)
+            require(rejected.returncode!=0 and not rejected.stdout,'DPAPI_TAMPER_MUST_FAIL')
+            result=root.request('restore',dump=base64.b64encode(recovered).decode(),encrypted_copy_verified=True,ciphertext_sha256=dump_sha)
+            del recovered
+            require(result['status']=='PASS' and result['probe_removed'],'CURRENT_RESTORE_REQUIRED')
+            report.update(restore='PASS',restore_proof=result)
+            print('PASS | Current populated reference backup and exact isolated restore; original data unchanged.',flush=True)
+            pilot.protected_copy(directory,'owned-synthetic-logins.json.dpapi',canonical(data))
+            report['phase']='v1_installation';report['stage']=root.request('stage',**content,fixture=data,protected_configuration_sha256=config_sha)
+            report['deployment']='INSTALLED_PENDING_ACCEPTANCE';wait_ready(ca)
+            report['phase']='native_acceptance'
+            private=pilot.acceptance.run(root,data,ca,directory,report)
+            private=v1.run(root,data,ca,directory,report,private,pilot.acceptance)
+            pilot.protected_copy(directory,'owned-synthetic-recovery.json.dpapi',canonical(private))
+            needles=[x['password'] for x in data['accounts'].values()]+[x['password'] for x in data['invites'].values()]
+            needles += [v['totp'] for v in private.values()]+[code for v in private.values() for code in v['recovery']]
+            report['phase']='compensation_postflight';report['postflight']=root.request('commit',secret_needles=needles)
         wait_ready(ca);verify_leaf(ca)
         import io,zipfile
         with zipfile.ZipFile(PACKAGE) as archive:
@@ -198,6 +259,7 @@ def main(options):
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--execute',action='store_true');parser.add_argument('--quiet',action='store_true')
     parser.add_argument('--source',required=True);parser.add_argument('--directory',type=Path,required=True)
+    parser.add_argument('--resume',default='')
     try:main(parser.parse_args())
     except BaseException as error:
         code=str(error) if isinstance(error,backup.protocol.SnapshotStop) and re.fullmatch('[A-Z0-9_]+',str(error)) else type(error).__name__

@@ -2,6 +2,20 @@
 
 Significant milestones only; newest first.
 
+11.11 actual current-reference backup/isolated restore and remote native CAL61/
+V1 access33 PASS in run2b834613…. V1 installed/tested, not finally accepted:
+postflight Type=simple startup raced the listener check and code rolled back.
+Fresh SSH confirms original ExecStart, loopback8001/8443 and six healthy services;
+exact privileged reference reconciliation remains pending. Bounded actual socket
+wait fixes postflight/rollback without weakening strict final TLS/asset checks.
+Single exact-receipt resume prepared: hash-check retained ciphertext, verify
+original26 rows/config plus known shared-IP counter delta, reuse identical staged
+V1 and accepted native evidence, require all27 tables unchanged across resume.
+No reinstallation/repeated backup/restore/seed, migration or source restoration.
+117 focused checks and native synthetic rollback/resume proof PASS; container
+removed. Actual resume waits one private sudo input; real activation blocked.
+[Receipt, reuse guards and current gate](docs/operations/real-user-readiness-v1-2026-11-10.md#postflight-neustart-und-gebundene-fortsetzung).
+
 11.11 actual V1 attemptbb7794c STOP before Root agent dispatch; reportda6b2342…
 has local_preflight/TimeoutExpired and backup/restore/deployment NOT_RUN. Old
 phase cannot distinguish SSH from sudo-probe timeout; fresh probes respond.

@@ -85,6 +85,20 @@ Current code/packagebc53775 stays bound; no migration is required or permitted.
 6. GATED: final strict HTTPS/runtime asset and six-service checks before commit;
    failure restores only the previous own runtime, not old user/security state.
 
+Actual update11.11, run2b834613…: steps4/5 executed. Current27-table recovery
+PASS, remote native CAL61/V1 access33 PASS and own cohort cleanup reached. Step6
+STOP in collect after immediate systemd start; rollback REVIEW_REQUIRED. Original
+ExecStart and six healthy services independently read; data reconciliation not
+assumed. Full installer/update must not be retried against retained release.
+
+Current narrow horizon: DONE bound listener-wait repair -> DONE117 targeted tests
+and native local rollback/resume/27-table proof -> WAITING private operator exact
+resume (`-ResumeRun 2b834613c4204c1d98a37cbd43134fa1`) -> verify actual receipt,
+current reference equality/TLS/closed delivery/services -> STOP before personal
+activation. Reuse accepted current backup and unchanged installed package/native
+evidence; no new backup/restore/installation/cohort/DB write. Unknown current data,
+configuration, ciphertext, foreign rate bucket or package causes STOP, not reset.
+
 Use existing private tunnel if strict original CA/leaf/hostname proof passes.
 Never stop an unowned tunnel. Temporary synthetic outbox capture has no SMTP
 worker or real recipient, is removed before final acceptance; normal delivery

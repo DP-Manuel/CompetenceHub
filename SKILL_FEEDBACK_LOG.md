@@ -7,6 +7,17 @@ Updated: 2026-11-11. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+11.11 real postflight learning: read the actual receipt before interpreting an
+early-sounding error name. Here61/33 remote checks and exact current restore had
+passed; Type=simple process-active did not mean its TCP listener was bound.
+Await bounded real readiness after own start and after rollback, not a fixed
+sleep. Do not replay an installer against a retained release or repeat accepted
+native evidence/backup by default. A narrow resume must pin the actual receipt,
+revalidate ciphertext/config/package/reference rows, preserve shared security
+counters, prove no new DB writes and distinguish reused from fresh evidence.
+Native local rollback/resume and117 focused regressions implemented; canonical
+skills unchanged. Privileged actual reconciliation remains an operator gate.
+
 11.11 private-operator timeout learning: a broad local_preflight phase is not
 enough to diagnose failed SSH/sudo checks. Record the exact fixed phase before
 each boundary, close stdin for probes that must never consume operator input,

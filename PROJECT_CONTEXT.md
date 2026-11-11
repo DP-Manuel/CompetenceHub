@@ -4,6 +4,22 @@ Updated: 2026-11-11.
 
 ## Current Milestone
 
+11.11 actual run2b834613…: CURRENT protected backup/27-table isolated restore
+PASS, actual remote CAL61 + V1 access33 PASS. STOP only in compensation_postflight
+after own API restart: Type=simple active was mistaken for a bound listener.
+Rollback marked REVIEW_REQUIRED; fresh SSH confirms ORIGINAL API ExecStart,
+loopback8001/8443 and six active services. Exact data reconciliation still gated,
+not a claimed final V1 acceptance. Bound listener wait fixed;117 focused tests
+and native local rollback->reuse-existing-release->resume proof PASS, container
+removed. One scoped resume for this exact receipt/preserved ciphertext: verify
+current original rows/config/old runtime, reuse identical staged V1 and accepted
+backup/restore/native evidence, no new accounts/backup/restore/install or SQL
+writes. Full27-table equality required across resume; no source restoration.
+Actual resume NOT_RUN; private sudo input required. [Current incident/resume
+gate](docs/operations/real-user-readiness-v1-2026-11-10.md#postflight-neustart-und-gebundene-fortsetzung).
+Only next block: execute the bound resume/final acceptance, STOP before real users.
+Earlier11.11 NOT_RUN statements refer to the attempts before this actual run.
+
 11.11 actual V1 operatorbb7794c STOP before privileged agent dispatch: sanitized
 receipt da6b2342… says local_preflight/TimeoutExpired, backup/restore/deployment
 NOT_RUN. Original report cannot distinguish SSH probe from sudo-capability probe;
