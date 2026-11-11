@@ -24,8 +24,9 @@ OFFERS = '/api/v1/portal/calendar/offers'
 
 
 class HTTPS:
-    def __init__(self, ca, context=None):
+    def __init__(self, ca, context=None, timeout=30):
         self.context = context
+        self.timeout = timeout
         self.opener = build_opener(HTTPSHandler(context=ssl.create_default_context(cafile=str(ca))), HTTPCookieProcessor(CookieJar()))
 
     def call(self, path, method='GET', data=None, headers=None):
@@ -38,7 +39,7 @@ class HTTPS:
         if payload is not None:
             values['Content-Type'] = 'application/json'
         try:
-            response = self.opener.open(Request(ORIGIN + path, data=payload, method=method, headers=values), timeout=30)
+            response = self.opener.open(Request(ORIGIN + path, data=payload, method=method, headers=values), timeout=self.timeout)
         except HTTPError as error:
             response = error
         return response.status, response.headers, response.read()
@@ -101,6 +102,9 @@ def run(root, fixture, ca, directory, report):
             private[key] = {'totp': secret, 'recovery': codes}
             page.locator('#recovery-confirmed').check()
             page.get_by_role('button', name='Portal öffnen').click()
+            if fixture.get('automatic_onboarding'):
+                expect(page.locator('#product-tour')).to_be_visible()
+                page.locator('#tour-skip').click()
         else:
             page.get_by_text('Recovery-Code', exact=True).click()
             page.locator('#mfa-code').fill(private[key]['recovery'].pop())
@@ -171,6 +175,13 @@ def run(root, fixture, ca, directory, report):
                 if key in ('admin', 'coach', 'reviewer'):
                     tour(page, {'admin':'Admin','coach':'Coach','reviewer':'Prüfer'}[key], 6 if key == 'admin' else 7)
             coach, reviewer = contexts['coach'].pages[0], contexts['reviewer'].pages[0]
+            if fixture.get('reference_seed_only'):
+                start=datetime.fromtimestamp(now(),ZoneInfo('Europe/Berlin'))+timedelta(days=10)
+                start=start.replace(second=0,microsecond=0)
+                reference=create(coach,'DEMO preserved reference',start,start+timedelta(hours=2))
+                submit(coach,'DEMO preserved reference');review(reviewer,'DEMO preserved reference','published')
+                check('Existing reference has native MFA sessions and published event',api.call('/api/v1/calendar/offers/'+reference)[0]==200)
+                return private
             start = datetime.fromtimestamp(now(), ZoneInfo('Europe/Berlin')).replace(day=1, hour=17, minute=18, second=0, microsecond=0)
             first = (start+timedelta(days=40)).replace(day=1)
             start, end = first-timedelta(days=1), first+timedelta(days=1)
@@ -220,7 +231,9 @@ def run(root, fixture, ca, directory, report):
             other=contexts['coach_two'].pages[0]
             parallel=create(other,'DEMO VPS Paralleltermin',start,end)
             submit(other,'DEMO VPS Paralleltermin');review(reviewer,'DEMO VPS Paralleltermin','published')
-            check('Parallel Coaches remain distinct native rows',len(json.loads(api.call('/api/v1/calendar/months/'+first.strftime('%Y-%m')+'/offers')[2])['items'])==2)
+            parallel_rows=json.loads(api.call('/api/v1/calendar/months/'+first.strftime('%Y-%m')+'/offers')[2])['items']
+            check('Parallel Coaches remain distinct native rows', {offer,parallel}<={row['id'] for row in parallel_rows}
+                  and (fixture.get('preserve_reference') or len(parallel_rows)==2))
             stale_title='DEMO VPS Versionsstand'
             create(coach,stale_title,end+timedelta(days=1),end+timedelta(days=1,hours=2))
             stale_context=browser.new_context(viewport={'width':1440,'height':1000})

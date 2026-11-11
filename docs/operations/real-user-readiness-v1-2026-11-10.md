@@ -153,6 +153,104 @@ Kurzanleitungen: [Manuel](pilot-admin-guide.md), [Janay](pilot-janay-guide.md),
 Janays fachliche Abnahme und ausdrückliche personenbezogene Aktivierungsfreigabe
 bleiben offen. Keine reale Mail, Rolle, Benutzeranlage oder COACH-3B REAL APPLY.
 
+## Geschütztes V1-Updatefenster 11.11
+
+Der Owner-Auftrag genehmigt das technische Update innerhalb der nachstehenden
+Grenzen. Keine erneute pauschale Freigabe und kein Wiederholen des Installers.
+V1 ist bis zum tatsächlichen PASS des neuen Operatorlaufs **nicht installiert**.
+
+Einstieg: `deploy/scripts/run-vps-v1-update.ps1`, gebunden an einen geprüften
+vollen Operator-Commit. Das unveränderte Anwendungspaket bleibt `bc53775b08dc`
+mit dem oben genannten ZIP-Hash. Keine Migration: weiterhin0001–0006.
+
+1. Ein privates, erhöhtes PowerShell7-Fenster unter demselben Windows-Benutzer.
+   Bestehender Tunnel darf offen bleiben; vorhandene Pilotfenster während des
+   Updates nicht bedienen. Kein Protokollieren oder Aufzeichnen der Sitzung.
+   Nur das VPS-sudo-Passwort wird verdeckt abgefragt, kein DB-/GPG-/USB-Passwort.
+2. Aktueller BitLocker-C-Schutz, freie Kapazität und private Operator-/SYSTEM-ACL
+   müssen nachweisbar sein. Neuer eindeutiger externer Laufordner, CreateNew,
+   keine bestehende Datei überschreiben. Kein unverschlüsselter Dump auf Platte.
+3. Exakte ursprüngliche Einheiten/Runtime/Leaf/Origin und vier synthetische
+   Referenzkonten prüfen; alle sechs Dienste und minimale DB-Rechte gesund.
+   Der vorhandene Lauf `e89ce1ef…` bindet CA/Leaf und Ausgangspaket, ersetzt aber
+   keine Sicherung der inzwischen gefüllten Datenbank.
+4. Aktuelle27 Tabellen unter exportiertem Read-only-Snapshot sichern. Dump,
+   Baseline und die vier exakt erlaubten ursprünglichen Konfigurationsdateien
+   ausschließlich über den privaten Prozesskanal DPAPI-geschützt ablegen.
+   SHA-256, erneutes Lesen, Entschlüsselung im frischen Prozess und abgewiesene
+   Manipulation prüfen. Exakt diese wieder gelesene Dumpkopie in einer eigenen
+   gesperrten Probe-DB restaurieren; Schema/Daten/Rechte/Zähler vergleichen,
+   Probe entfernen und unveränderte Quelle bestätigen. Maschinen-/benutzer-
+   gebundene Übergangssicherung, kein portabler Disaster-Recovery-Nachweis.
+5. V1 getrennt unter `/opt/competence-hub-pilot/releases/bc53775b08dc` offline
+   installieren. Alten Runtimepfad, originale Einheiten, Schlüssel, TLS und
+   Konfiguration unverändert erhalten; nur eigener API-ExecStart-Drop-in.
+   Vor Umschalten tatsächliche systemd-Konfiguration prüfen.
+6. Eigene additive synthetische Kohorte, niemals die alten Konten übernehmen.
+   Für native Einladungsabnahme kurzzeitig ausschließlich Outbox-Erfassung mit
+   `example.invalid`, ohne SMTP-Konfiguration oder Zustellworker. Tokens bleiben
+   im privaten Prüfprozess; keine Admin-UI-Ausgabe/Versand. Danach eigene Kohorte
+   exakt entfernen und temporären Capture-Drop-in entfernen. Zustellung wieder
+   geschlossen, Port/Proxy/TLS unverändert.
+7. Referenzvergleich:26 Tabellen zeilenidentisch; fremde Rate-Limit-Buckets
+   identisch. Gemeinsam genutzte synthetische IP-Schutzwerte bleiben erhalten,
+   nicht zurückgesetzt; Sequenzen niemals zurückdrehen. Unbekannte Änderungen
+   führen zu STOP/Review, nicht zu einem automatischen Quell-DB-Restore.
+8. Native Abnahme, eigener Neustart, sechs Dienste, unveränderte Listener und
+   Originalkonfiguration, bereinigte Logprüfung, striktes HTTPS/Hostname/Leaf,
+   exakt ausgeliefertes V1-Asset sowie geschlossene Zustellung vor endgültigem
+   Commit-Acknowledge. Bei Fehlern nur eigene Testdaten kompensieren und den
+   eigenen Runtime-Drop-in zurücknehmen. Staged Dateien zur Diagnose erhalten.
+
+Lokale Update- und Rückrollprobe sind am11.11 grün; der vollständige Operatorbefehl
+wird mit dem endgültigen geprüften Commit übergeben. Reales Resultat unter
+`release-artifacts/vps-v1-update/<lauf>.json`; vor dessen Prüfung keine Remote-
+Abnahme behaupten. Bei STOP nicht automatisch wiederholen, sondern den konkreten
+Phase-/Fehlercode prüfen. Originale/private Artefakte bleiben außerhalb von Git.
+
+DNS/externes TLS/SMTP bleiben offen, Zertifikatsfrist24.11 unverändert. Der
+vorbereitete [EDV-Text](edv-portal-dns-smtp-2026-11-10.md) ist noch nicht versendet.
+Persönliche Aktivierung, reale Coachzuordnungen und COACH-3B bleiben gesperrt.
+
+### Lokale Betriebsnachweise 11.11
+
+- Ubuntu/Python3.12/PostgreSQL16, exaktes altes und V1-Wheel, striktes privates
+  HTTPS/Firefox:61 CAL-Prüfungen und33 V1-Zugangsprüfungen bestanden. Zusätzlich41
+  Prüfungen beim Aufbau der absichtlich erhaltenen Vier-Konten-Referenz.
+  Native MFA/Session/Role/RBAC, Einladungswiderruf/Neuausstellung/persönliches
+  Passwort, Sperre/Rollenwechsel/Audit, drei Touren/Dashboards, fremde Coaches,
+  echter Versionskonflikt mit bewusstem Neuladen, ICS/Kalender/Neustart grün.
+- Aktuelle gefüllte DB aus exportiertem Snapshot gesichert und exakt isoliert
+  restauriert, eigene Probe entfernt. Nach Update/Cleanup26 Tabellen identisch,
+  fremde Rate-Limits gleich, gemeinsame IP-Schutzwerte erhalten, Sequenzen nicht
+  zurückgedreht. Abschließendes V1-Asset und geschlossene Zustellung bestätigt.
+  Report `.tmp/ch-pilot-proof-0a260e22565e43839479cb78c8772f77/result.json`, SHA-256
+  `fac7eee10877bf6927d4500abd1379b65ead7ebe15ffc63c52c069a3fec0e751`.
+- Separater Rückrolllauf: alter Code wieder erreichbar, originale Referenzdaten
+  erhalten, keine Quell-DB restauriert. Report
+  `.tmp/ch-pilot-proof-e5231ba121d94801a8830785e55521e2/result.json`, SHA-256
+  `ee6b54fbeb30658d8cba9c21651c4a121b117620e87612db2f3e015d039a56f1`.
+  Beide eigenen Container nachweislich entfernt; keine VPS-Aktion.
+- Grenze: Container ersetzt systemd durch einen eigenen Prozessmanager und
+  Windows-DPAPI durch synthetisches AES-GCM. Dies ist ausdrücklich **kein echter
+  VPS-/DPAPI-/Sechs-Dienste-Nachweis**. Diese Gates laufen privat im Operatorlauf.
+- Gesamtsuite1.663 bestanden/31 ausgelassen,314,27 Sekunden.30 bekannte Opt-in-/
+  Umgebungs-Skips plus ein nicht übernommener belegter lokaler Testport55433.
+  JUnit `.tmp/vps-v1-update-final-tests.xml`, SHA-256
+  `667f180f872903b0d95403f3142d365ca7730b918574529c3774ed26acaad4a4`.
+  Danach103 gezielte Betriebs-/Sicherungs-/Installerregressionen grün, darunter
+  PowerShell-Argumente/UTF-8, bestehende Daten/Dateien schützen, aktuelle Restore-
+  Pflicht, Rate-Limit-Namespace und zeitlich begrenzte Bereitschaftsprüfung.
+- Screenshotprüfung390px und native200: keine Text-/Tabüberlagerung, Dialog und
+  Aktionen durch Fokus/Scroll erreichbar. Firefox/Playwright-Mauskoordinaten
+  drifteten bei nativen200%; stattdessen echte Tastatur plus DOM-Textrange/
+  Trefferflächenprüfung, niemals Force-Click. Viewportaufnahmen statt irreführender
+  Full-page-Aufnahme des nativen Dialogs. Frühere abgebrochene lokale Läufe sind
+  keine Abnahme; eigene Ressourcen jeweils entfernt, Originaldateien unberührt.
+- Frische reine SSH-Leseprüfung11.11: alle sechs VPS-Dienste aktiv. Keine sudo-
+  Eingabe, Änderung oder Wiederholung des ursprünglichen Installers. Pages-
+  Workflow ausschließlich manuell; dieser Code-Push veröffentlicht keine Website.
+
 ## Genau Nächster Block
 
 Geschütztes V1-Updatefenster des bestehenden Piloten: mit gebundenem Paket,

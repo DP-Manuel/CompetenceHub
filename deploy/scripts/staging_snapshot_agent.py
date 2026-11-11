@@ -230,8 +230,9 @@ def validate_inventory(inventory):
 
 
 class BackupAgent:
-    def __init__(self, preflight):
+    def __init__(self, preflight, *, inventory_validator=None):
         self.preflight = preflight
+        self.inventory_validator = inventory_validator or validate_inventory
         self.baseline = None
         self.dump_sha256 = None
         self.probe = None
@@ -240,7 +241,7 @@ class BackupAgent:
     def capture(self):
         require(self.baseline is None, 'NO_AUTOMATIC_REPEAT')
         inventory = self.preflight.collect()
-        validate_inventory(inventory)
+        self.inventory_validator(inventory)
         with snapshot_connection(DATABASE) as connection:
             exported = connection.query('SELECT pg_export_snapshot()').decode()
             require(re.fullmatch('[0-9A-Fa-f-]+', exported), 'EXPORTED_SNAPSHOT_REQUIRED')

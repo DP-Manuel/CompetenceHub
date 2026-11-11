@@ -27,6 +27,8 @@ def main():
     if not Path('/.dockerenv').exists() or not (ROOT/'LOCAL_REHEARSAL_ONLY').exists():
         raise SystemExit(2)
     p,s,v=load('staging_readonly_preflight'),load('staging_snapshot_agent'),load('vps_pilot_agent')
+    update=(ROOT/'UPDATE_REHEARSAL_ONLY').exists()
+    u=load('vps_update_agent') if update else None
     original=s.run
     processes={}
     def run(*args,data=None):
@@ -35,8 +37,11 @@ def main():
         if args[0]!='systemctl':return original(*args,data=data)
         operation=args[1]
         if operation=='show':
-            process=processes.get(args[-1])
-            return b'active' if process is not None and process.poll() is None else b'inactive'
+            name=next((value for value in args if value.endswith('.service') or value.endswith('.timer')),None)
+            process=processes.get(name)
+            state=b'active' if process is not None and process.poll() is None else b'inactive'
+            if '--value' in args:return state
+            return b'LoadState=loaded\nActiveState='+state+b'\nSubState=running\n'
         for name in args[2:]:
             if name not in (v.API,v.PROXY):raise RuntimeError('Only own service shim')
             if operation in ('stop','restart') and name in processes:
@@ -46,7 +51,10 @@ def main():
                     env=dict(os.environ)
                     for line in (v.CONFIG/'runtime.env').read_text().splitlines():
                         key,value=line.split('=',1);env[key]=shlex.split(value)[0]
-                    command=[str(v.ROOT/'venv/bin/uvicorn'),'competence_hub_api.runtime:create_runtime_app_from_environment',
+                    runtime=v.ROOT/'venv/bin/uvicorn'
+                    if update and u.RUNTIME_DROP.exists():runtime=u.RELEASE/'venv/bin/uvicorn'
+                    if update and u.CAPTURE_ENV.exists():env['COMPETENCE_HUB_INVITATION_DELIVERY_ENABLED']='true'
+                    command=[str(runtime),'competence_hub_api.runtime:create_runtime_app_from_environment',
                              '--factory','--host','127.0.0.1','--port','8001','--proxy-headers','--forwarded-allow-ips=127.0.0.1','--no-access-log']
                 else:
                     credentials=Path('/run/credentials')/v.PROXY
@@ -59,6 +67,11 @@ def main():
                 raise RuntimeError('Own local process not healthy')
         return b'active\n'
     s.run=run
+    original_command=p.command
+    def metadata_command(*args,**kwargs):
+        if args[0]=='systemctl':return run(*args).decode()
+        return original_command(*args,**kwargs)
+    if update:p.command=metadata_command
     def collect():
         listeners=['127.0.0.1:5432']
         for name,port in ((v.API,8001),(v.PROXY,8443)):
@@ -87,7 +100,14 @@ def main():
     server=Server(('0.0.0.0',18443),Forward)
     threading.Thread(target=server.serve_forever,daemon=True).start()
     sys.stdout.buffer.write(b'LOCAL_PROBE_READY\n');sys.stdout.buffer.flush()
-    try:v.serve(p,s)
+    try:
+        v.serve(p,s)
+        if update:
+            u.LEAF_SHA=s.sha((v.ROOT/'pilot.crt').read_bytes())
+            u.serve(p,s,v)
+            # Real systemd services outlive the operator channel. Keep this local
+            # process shim alive until the client finishes its final HTTPS probe.
+            sys.stdin.buffer.read(1)
     finally:
         for process in processes.values():
             process.terminate();process.wait(timeout=15)

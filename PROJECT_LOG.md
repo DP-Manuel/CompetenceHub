@@ -2,6 +2,19 @@
 
 Significant milestones only; newest first.
 
+11.11 existing-pilot V1 update operator locally accepted, actual VPS update still
+NOT_RUN. Current populated snapshot/isolated restore precedes own runtime change;
+original four identities/data/config/keys and old runtime retained. Native Ubuntu
+CAL61 + V1 Admin/invitation/MFA/tour/dashboard33 and final asset/closed-delivery
+checks PASS; independent old-runtime rollback PASS, both containers removed.
+Full1,663/31 suite and103 focused checks green. Native200 text hit regions prove
+Firefox mouse drift is not real layout overlap; actual keyboard/actions and390px
+screenshots verified. Fixed owned invitation-rate cleanup, private quoted-env
+parsing, PS parameter forwarding, bounded readiness and harness service lifetime.
+No new application package, migration, real identity/mail/Website/GPG action.
+Actual read-only SSH: six services active. One private sudo operator window still
+required; no new Owner grant requested. [Evidence, exact bounds and next gate](docs/operations/real-user-readiness-v1-2026-11-10.md#geschütztes-v1-updatefenster-1111).
+
 10.11 REAL USER READINESS V1 locally accepted. Atomic Admin lifecycle, explicit
 Coach mapping, bounded audit, invitation preparation/revoke/reissue and first-MFA
 role tours reuse0006. Native136 onboarding/Admin +46 CAL/ICS/restart checks and3

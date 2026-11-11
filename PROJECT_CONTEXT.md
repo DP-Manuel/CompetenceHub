@@ -1,8 +1,25 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-10.
+Updated: 2026-11-11.
 
 ## Current Milestone
+
+11.11 V1 existing-pilot update: separate state-preserving operator prepared,
+not the original installer. Bound applicationbc53775/ZIP21849d1e stays unchanged;
+no migration, real identity, delivery, Website or GPG action. Fresh current-state
+snapshot/DPAPI/isolated restore precedes own runtime drop-in; original four users,
+keys/config and old runtime retained. Local native CAL61 + V1 access/browser33
+checks and full update completion PASS. Separate
+rollback PASS, old runtime/reference preserved, own container removed. Full1,663
+PASS/31 skips (one occupied protected-port skip),103 focused PASS. Actual V1 VPS
+update NOT RUN: one hidden sudo input is still required in the consolidated
+private operator window. Read-only11.11 all six VPS services active. DNS/SMTP and
+personal activation remain separate; TLS expiry24.11 unchanged.
+[Current operator/recovery boundaries](docs/operations/real-user-readiness-v1-2026-11-10.md#geschütztes-v1-updatefenster-1111)
+and [execution plan](docs/exec-plans/active/real-user-readiness-2026-11-10.md).
+One next block: execute the protected V1 update/acceptance window,
+review its actual receipt, then STOP before personal activation.
+The10.11 checkpoints below are historical; do not rerun their installer commands.
 
 10.11 REAL USER READINESS V1: local Admin lifecycle/mapping/audit, invitation
 preparation/revoke/reissue, role dashboards and first-MFA onboarding tours are

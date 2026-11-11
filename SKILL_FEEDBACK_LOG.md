@@ -1,11 +1,26 @@
 # Skill Feedback Router
 
-Updated: 2026-11-10. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-11. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+11.11 existing-pilot update learning: never reuse an empty-target installer to
+update a deliberately retained synthetic reference. Use a separate owned cohort,
+fresh current-state recovery and exact original-row comparison; retain shared IP
+security counters and never rewind sequences. Derive cleanup hashes from the
+actual service bucket namespace, not its public action name (invitation_issue
+versus invitation). Prove cleanup and old-runtime recovery in native PostgreSQL.
+Do not consider postflight committed until final strict HTTPS/runtime/delivery
+checks acknowledge acceptance. Preserve partial-write ownership for compensation.
+Test the real PowerShell child forwarding and UTF-8 path, not just script text;
+dot-sourced parameter blocks can silently replace the caller's values. Original
+systemd quoted environment values require structured parsing, never shell eval.
+For native Firefox200 pointer drift, test actual text hit regions and keyboard
+activation without force-clicks; do not hide a possible visual defect with sleeps.
+Project-local regressions only; no global skill or Wiki change.
 
 10.11 user-readiness learning: first-onboarding auto tours change existing browser
 harness contracts. Await the actually displayed tour/step before skipping or

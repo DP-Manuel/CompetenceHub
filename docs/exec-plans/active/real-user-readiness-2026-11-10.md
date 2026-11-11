@@ -57,3 +57,31 @@ acceptance if recovery/privilege gates close -> Janay usability acceptance ->
 confirmed domain/TLS/delivery and durable recovery -> separately approved personal
 Admin/Reviewer/Coach activation. Only local readiness is in immediate execution;
 later gates cannot be inferred from technical pilot approval.
+
+## Existing VPS Update Window
+
+New10.11 owner task: perform the scoped existing-pilot V1 update, not an installer.
+Current code/packagebc53775 stays bound; no migration is required or permitted.
+
+1. DONE: local package/source binding and fresh read-only six-service health.
+2. DONE LOCAL: one private operator entry; current populated snapshot/isolated
+   restore, unchanged original code/config, own runtime drop-in and compensation.
+3. DONE LOCAL11.11: native Ubuntu process-shim rehearsal. Full CAL61
+   and V1 browser33 checks plus final update acceptance PASS; harness lifetime,
+   readiness deadline and final probe order corrected without runtime changes.
+   Separate actual scoped rollback PASS, old runtime/reference preserved, own
+   container removed.103 focused checks PASS; full1,663/31 suite green (one extra
+   protected-port skip). No real VPS/DPAPI/recovery acceptance inferred locally.
+4. WAITING PRIVATE OPERATOR: one sudo input only after local gates; verified C:
+   BitLocker/operator ACL and fresh-process DPAPI recovery before server update.
+5. GATED: separate additive synthetic cohort on the actual VPS; CAL/Admin/invite/
+   MFA/tours/390px/native200 checks, then own-cohort cleanup, retained original
+   row hashes, nonrewound sequences and retained shared synthetic-IP protection
+   counters. Unknown changes cause review, never automatic source restoration.
+6. GATED: final strict HTTPS/runtime asset and six-service checks before commit;
+   failure restores only the previous own runtime, not old user/security state.
+
+Use existing private tunnel if strict original CA/leaf/hostname proof passes.
+Never stop an unowned tunnel. Temporary synthetic outbox capture has no SMTP
+worker or real recipient, is removed before final acceptance; normal delivery
+remains closed. GPG, public hosting and real activation stay excluded.
