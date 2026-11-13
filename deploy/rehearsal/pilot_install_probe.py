@@ -37,6 +37,8 @@ def main():
         if args[0]!='systemctl':return original(*args,data=data)
         operation=args[1]
         if operation=='show':
+            if 'DropInPaths' in args:
+                return (' '.join(str(path) for path in sorted(u.DROP.glob('*.conf')))+'\n').encode()
             name=next((value for value in args if value.endswith('.service') or value.endswith('.timer')),None)
             process=processes.get(name)
             state=b'active' if process is not None and process.poll() is None else b'inactive'
@@ -52,7 +54,15 @@ def main():
                     for line in (v.CONFIG/'runtime.env').read_text().splitlines():
                         key,value=line.split('=',1);env[key]=shlex.split(value)[0]
                     runtime=v.ROOT/'venv/bin/uvicorn'
-                    if update and u.RUNTIME_DROP.exists():runtime=u.RELEASE/'venv/bin/uvicorn'
+                    if update:
+                        # Match systemd's ordered overrides, including the retained
+                        # V1 runtime when the V1.1 drop-in is compensated.
+                        for drop in sorted(u.DROP.glob('*-runtime.conf')):
+                            lines=drop.read_text().splitlines()
+                            command_line=next(line for line in lines if line.startswith('ExecStart=') and line!='ExecStart=')
+                            runtime=Path(shlex.split(command_line.split('=',1)[1])[0])
+                            if runtime not in (v.ROOT/'venv/bin/uvicorn',v.ROOT/'releases/bc53775b08dc/venv/bin/uvicorn',v.ROOT/'releases/38153c12159e/venv/bin/uvicorn'):
+                                raise RuntimeError('Unknown rehearsal runtime')
                     if update and u.CAPTURE_ENV.exists():env['COMPETENCE_HUB_INVITATION_DELIVERY_ENABLED']='true'
                     command=[str(runtime),'competence_hub_api.runtime:create_runtime_app_from_environment',
                              '--factory','--host','127.0.0.1','--port','8001','--proxy-headers','--forwarded-allow-ips=127.0.0.1','--no-access-log']
@@ -106,6 +116,10 @@ def main():
             u.LEAF_SHA=s.sha((v.ROOT/'pilot.crt').read_bytes())
             u.serve(p,s,v)
             if (ROOT/'UPDATE_RESUME_REHEARSAL').exists():u.serve(p,s,v)
+            if (ROOT/'UPDATE_V11_REHEARSAL').exists():
+                u.configure_v11()
+                u.LEAF_SHA=s.sha((v.ROOT/'pilot.crt').read_bytes())
+                u.serve(p,s,v)
             # Real systemd services outlive the operator channel. Keep this local
             # process shim alive until the client finishes its final HTTPS probe.
             sys.stdin.buffer.read(1)

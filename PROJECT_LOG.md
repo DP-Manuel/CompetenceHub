@@ -2,6 +2,17 @@
 
 Significant milestones only; newest first.
 
+13.11 V1.1 existing-pilot update explicitly authorized. Read-only SSH confirms
+V1 runtime/six active services and actual hidden sudo need. Incremental operator
+pins V1 predecessor/receipt and38153c1 ZIP; preserves20-v1 drop-in beneath its
+new22-v11 override. Current recovery/isolated restore before stage, delivery
+closed throughout, native CAL61+V1.1 UX17 and original four-role normal MFA access
+PASS in owned Linux/PostgreSQL/TLS proof; separate rollback preserves all27
+reference tables and starts actual V1. Both containers removed. Full1739/30 skips,
+final86 targeted regressions PASS. Actual VPS write/remote acceptance NOT_RUN,
+blocked only on necessary hidden sudo, not implied by Owner approval
+or local proof. [Authorized window/evidence](docs/operations/portal-v11-ux-2026-11-13.md#freigegebenes-updatefenster).
+
 13.11 V1.1 local UX correction: explicit German24-hour fields, quarter choices
 without rounding legacy minutes/seconds, optional summary and allowlisted field
 errors/focus/input preservation; clear public ICS and shared voluntary tours.

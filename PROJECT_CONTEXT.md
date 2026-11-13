@@ -11,11 +11,17 @@ optional summary, preserved minutes/seconds/DST, ICS/tours and fixed test guide
 implemented. Native one/multiday PostgreSQL/browser workflow and logout/startup
 race proof pass; owned resources removed. Bound source38153c1 package complete:
 1718 PASS/30 expected skips, native40 and Linux/proxy37 PASS. ZIP/hash and one
-remote update gate in canonical result; no install/update execution inferred.
-No VPS/Website/GPG/real identity/migration action. [Current V1.1 scope/evidence](docs/operations/portal-v11-ux-2026-11-13.md)
+remote update gate in canonical result. Manuel explicitly approves V1.1 private
+update13.11; current read-only SSH confirms V1/six active services and actual
+hidden sudo need. Bound incremental operator and local update61+17/original-role
+MFA access/separate rollback PASS; all27 reference tables identical on rollback,
+containers removed. Full1739 PASS/30 skips, final86 focused green. One protected
+operator command requires hidden sudo; server write/installation still NOT_RUN. Existing users/offers and V1
+rollback preserved, delivery closed, no migration/Website/GPG/real identity.
+[Current V1.1 scope/evidence](docs/operations/portal-v11-ux-2026-11-13.md)
 and [fixed test entry](docs/handoffs/PORTAL_TESTZUGAENGE.md).
-One next block after local delivery: separately scoped private V1.1 update gate,
-preserving current synthetic users and Manuels saved test data, not reinstall.
+One next block: execute the authorized private V1.1 update window with necessary
+hidden sudo input, then actual receipt verification and Manuel's usability test.
 
 13.11 manual access starter STOP/TimeoutError after reaching browser phase.
 Exact old role/step unknown; no actual login repeated by assistant. Fresh strict

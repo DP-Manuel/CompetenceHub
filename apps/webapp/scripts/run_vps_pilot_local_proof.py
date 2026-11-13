@@ -18,7 +18,7 @@ spec=importlib.util.spec_from_file_location('pilot_operator',Path(__file__).with
 pilot=importlib.util.module_from_spec(spec);spec.loader.exec_module(pilot)
 
 
-def main(v1_update=False,rollback_probe=False,resume_probe=False,access_probe=False):
+def main(v1_update=False,rollback_probe=False,resume_probe=False,access_probe=False,v11_update=False,v11_rollback=False):
     name='ch-pilot-proof-'+uuid4().hex
     directory=ROOT/'.tmp'/name;directory.mkdir()
     docker=['docker','--host','npipe:////./pipe/dockerDesktopLinuxEngine']
@@ -39,6 +39,7 @@ def main(v1_update=False,rollback_probe=False,resume_probe=False,access_probe=Fa
             command(*docker,'exec','-i',name,'python3','-c',"import sys;from pathlib import Path;Path('/work/vps_update_agent.py').write_bytes(sys.stdin.buffer.read())",data=update_source.encode())
             command(*docker,'exec',name,'touch','/work/UPDATE_REHEARSAL_ONLY')
             if resume_probe:command(*docker,'exec',name,'touch','/work/UPDATE_RESUME_REHEARSAL')
+            if v11_update:command(*docker,'exec',name,'touch','/work/UPDATE_V11_REHEARSAL')
         command(*docker,'cp',str(ROOT/'deploy/rehearsal/pilot_install_probe.py'),name+':/work/probe.py')
         command(*docker,'exec',name,'touch','/work/LOCAL_REHEARSAL_ONLY')
         command(*docker,'exec',name,'pg_ctlcluster','16','main','start','-o','-c listen_addresses=127.0.0.1')
@@ -164,8 +165,9 @@ def main(v1_update=False,rollback_probe=False,resume_probe=False,access_probe=Fa
                 report.update(status='PASS',v1_rollback=rolled['rollback'],recovery_platform='SYNTHETIC_AES_NOT_DPAPI')
                 process.stdin.close();process.wait(timeout=30);process.stdout.close();process.stderr.close();process=None
                 return
-            private=pilot.acceptance.run(root,data,ca_path,directory,report)
-            private=updater.v1.run(root,data,ca_path,directory,report,private,pilot.acceptance)
+            if not v11_update:
+                private=pilot.acceptance.run(root,data,ca_path,directory,report)
+                private=updater.v1.run(root,data,ca_path,directory,report,private,pilot.acceptance)
             report['v1_postflight']=root.request('commit',secret_needles=[v['totp'] for v in private.values()])
             assert report['v1_postflight']['reference']['status']=='PASS'
             # Final code is V1, source reference rows survived native MFA/CAL/Admin tests.
@@ -175,6 +177,44 @@ def main(v1_update=False,rollback_probe=False,resume_probe=False,access_probe=Fa
             assert closed[0]==503 and json.loads(closed[2])['code']=='invitation_delivery_unavailable'
             root.request('accept');root.request('close')
             report['v1_update']='PASS'
+            if v11_update:
+                updater.configure_v11()
+                old=root.request('preflight')
+                capture=root.request('capture');dump=base64.b64decode(capture.pop('dump'))
+                nonce=secrets.token_bytes(12);encrypted=nonce+cipher.encrypt(nonce,dump,b'local-v11-only')
+                path=directory/'synthetic-v11-probe.aes';path.write_bytes(encrypted)
+                reread=path.read_bytes();recovered=cipher.decrypt(reread[:12],reread[12:],b'local-v11-only')
+                assert recovered==dump
+                restored=root.request('restore',dump=base64.b64encode(recovered).decode(),encrypted_copy_verified=True,ciphertext_sha256=pilot.sha(reread))
+                assert restored['status']=='PASS' and restored['probe_removed']
+                data=updater.fixture()
+                root.request('stage',**updater.payload(),fixture=data,protected_configuration_sha256=pilot.sha(pilot.canonical(old['configuration'])))
+                updater.wait_ready(ca_path)
+                if v11_rollback:
+                    rolled=root.request('close')
+                    assert rolled['rollback']['status']=='PASS'
+                    updater.wait_ready(ca_path)
+                    asset=pilot.acceptance.HTTPS(ca_path).call('/portal/calendar-form.mjs')
+                    assert asset[0]==404
+                    assert b'createUserManagement' in pilot.acceptance.HTTPS(ca_path).call('/portal/user-management.js')[2]
+                    current=json.loads(command(*docker,'exec',name,'python3','-c',code))
+                    assert current['schema_sha256']==capture['baseline']['schema_sha256'] and current['tables']==capture['baseline']['tables']
+                    report['v11_rollback']={'status':'PASS','v1_runtime_restored':True,'all_27_reference_tables_identical':True}
+                else:
+                    private=updater.native_acceptance(root,data,ca_path,directory,report)
+                    report['v11_postflight']=root.request('commit',secret_needles=[v['totp'] for v in private.values()])
+                    assert report['v11_postflight']['reference']['status']=='PASS'
+                    updater.wait_ready(ca_path);updater.verify_final_assets(ca_path)
+                    assert pilot.acceptance.HTTPS(ca_path).call('/api/v1/admin/users/invitations','POST',{})[0]==503
+                    root.request('accept');root.request('close');report['v11_update']='PASS'
+                    access=pilot.module('v11_local_manual_access',Path(__file__).with_name('open_vps_pilot.py'))
+                    access.pilot.acceptance.ORIGIN=pilot.acceptance.ORIGIN
+                    access.validate_logins(reference_data,reference_private)
+                    opened=access.open_roles(reference_data,reference_private,ca_path,directory,headless=True)
+                    try:assert len(opened[1].contexts)==5
+                    finally:opened[1].close();opened[0].stop()
+                    report['v11_original_role_access']='PASS_NATIVE_MFA_NO_RESET'
+                report['v11_current_restore']=restored
             process.stdin.close();process.wait(timeout=30);process.stdout.close();process.stderr.close();process=None
             report.update(status='PASS',exact_fixture_cleanup='OWNED_V1_ONLY_REFERENCE_RETAINED',recovery_platform='SYNTHETIC_AES_NOT_DPAPI')
             return
@@ -204,5 +244,7 @@ def main(v1_update=False,rollback_probe=False,resume_probe=False,access_probe=Fa
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--v1-update',action='store_true')
     parser.add_argument('--v1-rollback',action='store_true');parser.add_argument('--v1-resume',action='store_true')
-    parser.add_argument('--access-proof',action='store_true');args=parser.parse_args()
-    main(args.v1_update or args.v1_rollback or args.v1_resume or args.access_proof,args.v1_rollback,args.v1_resume or args.access_proof,args.access_proof)
+    parser.add_argument('--access-proof',action='store_true')
+    parser.add_argument('--v11-update',action='store_true');parser.add_argument('--v11-rollback',action='store_true');args=parser.parse_args()
+    main(args.v1_update or args.v1_rollback or args.v1_resume or args.access_proof or args.v11_update or args.v11_rollback,
+         args.v1_rollback,args.v1_resume or args.access_proof,args.access_proof,args.v11_update or args.v11_rollback,args.v11_rollback)

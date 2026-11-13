@@ -56,7 +56,7 @@ def zoom_profile(pw, directory):
         database.commit()
 
 
-def run(root, fixture, ca, directory, report):
+def run(root, fixture, ca, directory, report, tour_counts=None):
     checks, private, contexts, errors = [], {}, {}, []
     report['checks'] = checks
     def check(name, value):
@@ -140,6 +140,8 @@ def run(root, fixture, ca, directory, report):
         row = page.locator('#review-calendar-list .calendar-card').filter(has=page.get_by_role('heading', name=title, exact=True))
         expect(row).to_be_visible()
         row.get_by_role('button', name='Angebot prüfen').click()
+        expect(page.locator('#calendar-review-dialog')).to_be_visible()
+        expect(page.locator('#calendar-review-summary')).to_contain_text(title)
         page.get_by_label('Änderungen anfordern' if outcome == 'changes_requested' else 'Veröffentlichen', exact=True).check()
         if outcome == 'changes_requested':
             page.locator('#calendar-review-note').fill('PRIVATE REVIEW: Demo-Ort genauer')
@@ -173,7 +175,7 @@ def run(root, fixture, ca, directory, report):
                 check(key + ' wrong Origin rejected', actor.call(ACCESS + '/session/csrf', 'POST', headers={'Origin':'https://wrong.invalid'})[0] == 403)
                 check(key + ' wrong CSRF rejected', actor.call(ACCESS + '/session', 'DELETE', headers={'X-CSRF-Token':'wrong'})[0] == 403)
                 if key in ('admin', 'coach', 'reviewer'):
-                    tour(page, {'admin':'Admin','coach':'Coach','reviewer':'Prüfer'}[key], 6 if key == 'admin' else 7)
+                    tour(page, {'admin':'Admin','coach':'Coach','reviewer':'Prüfer'}[key], (tour_counts or {}).get(key,6 if key == 'admin' else 7))
             coach, reviewer = contexts['coach'].pages[0], contexts['reviewer'].pages[0]
             if fixture.get('reference_seed_only'):
                 start=datetime.fromtimestamp(now(),ZoneInfo('Europe/Berlin'))+timedelta(days=10)

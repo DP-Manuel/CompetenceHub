@@ -7,6 +7,16 @@ Updated: 2026-11-13. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+13.11 V1.1 update learning: increment an accepted runtime, never reuse the original
+installer or a historical failed-run resume for a new feature release. Bind the
+exact previous drop-in/wheel and receipt, preserve it beneath a new override,
+and test rollback to that actual predecessor. Keep invitation capture disabled
+when not required. Separate deployment acceptance from subsequent manual-access
+failure; after the preservation gate, normal logins legitimately change auth/
+audit rows but not business rows. Wait for initial Calendar loading/auto-selection
+before month navigation, using month identity rather than transient event count.
+No global skill changes.
+
 13.11 V1.1 learning: derive form requirements from contracts, never guess a
 missing optional summary as root cause. Translate only allowlisted field/error
 codes; deny non-owner mutations before exposing diagnostics. Preserve legacy

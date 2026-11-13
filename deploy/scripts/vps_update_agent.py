@@ -29,6 +29,30 @@ CAPTURE_ENV = CONFIG / 'v1-synthetic-capture.env'
 LEAF_SHA = 'aecd310881202f9438b14a9d57d7f3e033bf947416a460fa3263fa44cf71d27a'
 OLD_WHEEL_SHA = 'a614ff69100641419a47cc068543bd65c31ff20c56989adaadffe9460f0dd646'
 RESUME_RUN = '2b834613c4204c1d98a37cbd43134fa1'
+PREVIOUS_RELEASE = ROOT
+PREVIOUS_RUNTIME_DROP = None
+SYNTHETIC_INVITATION_CAPTURE = True
+
+
+def configure_v11():
+    """Only the explicitly approved immutable V1 -> V1.1 transition."""
+    global SOURCE, PACKAGE_SHA, RELEASE, RUNTIME_DROP, CAPTURE_DROP, CAPTURE_ENV
+    global OLD_WHEEL_SHA, PREVIOUS_RELEASE, PREVIOUS_RUNTIME_DROP, SYNTHETIC_INVITATION_CAPTURE
+    SOURCE='38153c12159e'
+    PACKAGE_SHA='2a1a7c6109fb2011411297b91a4ff673ac312a561cb847963357df08b80b8ab5'
+    RELEASE=ROOT/'releases'/SOURCE
+    PREVIOUS_RELEASE=ROOT/'releases'/'bc53775b08dc'
+    PREVIOUS_RUNTIME_DROP=DROP/'20-v1-runtime.conf'
+    RUNTIME_DROP=DROP/'22-v11-runtime.conf'
+    CAPTURE_DROP=DROP/'23-v11-synthetic-capture.conf'
+    CAPTURE_ENV=CONFIG/'v11-synthetic-capture.env'
+    OLD_WHEEL_SHA='30b211b07a45ae99154808deb46092b19ddcc1caab22364d58fc6ac4eb299dcf'
+    SYNTHETIC_INVITATION_CAPTURE=False
+
+
+def runtime_override(release):
+    return ('[Service]\nExecStart=\nExecStart='+str(release/'venv/bin/uvicorn')+
+            ' competence_hub_api.runtime:create_runtime_app_from_environment --factory --host 127.0.0.1 --port 8001 --proxy-headers --forwarded-allow-ips=127.0.0.1 --no-access-log\n').encode()
 
 
 def parse_environment(raw):
@@ -91,7 +115,19 @@ class UpdateAgent:
         self.require(not self.ready, 'NO_AUTOMATIC_REPEAT')
         value=self.collect()
         resume=request.get('resume_run')==RESUME_RUN
-        self.require(resume or not RELEASE.exists() and not DROP.exists(), 'EXISTING_UPDATE_REQUIRES_REVIEW')
+        if PREVIOUS_RUNTIME_DROP is not None:
+            self.require(not request.get('resume_run') and not RELEASE.exists() and DROP.is_dir() and not DROP.is_symlink()
+                         and set(DROP.iterdir())=={PREVIOUS_RUNTIME_DROP},'EXACT_PREVIOUS_V1_RUNTIME_REQUIRED')
+            info=PREVIOUS_RUNTIME_DROP.lstat()
+            self.require(stat.S_ISREG(info.st_mode) and info.st_uid==0 and stat.S_IMODE(info.st_mode)==0o644,
+                         'PREVIOUS_V1_OVERRIDE_CUSTODY_REQUIRED')
+            self.require(PREVIOUS_RUNTIME_DROP.read_bytes()==runtime_override(PREVIOUS_RELEASE), 'PREVIOUS_V1_OVERRIDE_CHANGED')
+            self.require(not (CONFIG/'v1-synthetic-capture.env').exists() and not CAPTURE_ENV.exists(), 'DELIVERY_CAPTURE_MUST_BE_ABSENT')
+            self.require(not PREVIOUS_RELEASE.is_symlink() and PREVIOUS_RELEASE.is_dir(), 'PREVIOUS_V1_RELEASE_REQUIRED')
+            active=self.p.command('systemctl','show',API,'-p','DropInPaths','--value').strip()
+            self.require(active==str(PREVIOUS_RUNTIME_DROP),'PREVIOUS_V1_ACTIVE_OVERRIDE_REQUIRED')
+        else:
+            self.require(resume or not RELEASE.exists() and not DROP.exists(), 'EXISTING_UPDATE_REQUIRES_REVIEW')
         if resume:
             self.require(RELEASE.is_dir() and not RELEASE.is_symlink() and DROP.is_dir() and not DROP.is_symlink()
                          and not any(DROP.iterdir()) and not CAPTURE_ENV.exists(), 'ROLLED_BACK_RUNTIME_REQUIRED')
@@ -102,7 +138,7 @@ class UpdateAgent:
             self.require(not path.is_symlink() and path.is_dir(), 'ORIGINAL_DIRECTORY_REQUIRED')
         custody=CONFIG.stat()
         self.require(custody.st_uid==0 and stat.S_IMODE(custody.st_mode)==0o700,'ORIGINAL_CONFIG_DIRECTORY_CUSTODY_REQUIRED')
-        for path in (ROOT,ROOT/'releases',DROP.parent,*((RELEASE,) if resume else ())):
+        for path in (ROOT,ROOT/'releases',DROP.parent,PREVIOUS_RELEASE,*((DROP,) if PREVIOUS_RUNTIME_DROP else ()),*((RELEASE,) if resume else ())):
             if path.exists():
                 info=path.lstat()
                 self.require(stat.S_ISDIR(info.st_mode) and info.st_uid==0 and not stat.S_IMODE(info.st_mode)&0o022,
@@ -120,13 +156,13 @@ class UpdateAgent:
         ids=','.join("'"+str(__import__('uuid').UUID(x))+"'" for x in owned['users'].values())
         count=self.p.sql("SELECT count(*) FROM competence_hub.portal_users WHERE id IN ("+ids+") AND email ~ '^synthetic-vps-[a-f0-9]{32}@example[.]invalid$'")
         self.require(count=='4', 'NON_SYNTHETIC_REFERENCE_REJECTED')
-        wheels=list((ROOT/'bundle/packages').glob('*.whl'))
+        wheels=list((PREVIOUS_RELEASE/'bundle/packages').glob('*.whl'))
         self.require(len(wheels)==1 and self.s.sha(wheels[0].read_bytes())==OLD_WHEEL_SHA,'ORIGINAL_ROLLBACK_WHEEL_REQUIRED')
         self.require(sys.version_info[:2]==(3,12),'ORIGINAL_PYTHON_RUNTIME_REQUIRED')
         with zipfile.ZipFile(wheels[0]) as wheel:
             for name in wheel.namelist():
                 if name.startswith('competence_hub_api/') and not name.endswith('/'):
-                    installed=ROOT/'venv/lib/python3.12/site-packages'/name
+                    installed=PREVIOUS_RELEASE/'venv/lib/python3.12/site-packages'/name
                     self.require(not installed.is_symlink() and self.s.sha(installed.read_bytes())==self.s.sha(wheel.read(name)), 'ORIGINAL_ROLLBACK_CODE_CHANGED')
         self.before=value
         self.ready=True
@@ -202,11 +238,11 @@ class UpdateAgent:
         self.fixture=request['fixture']
         self.rate_reference=self.worker_action('reference_rates')['sha256']
         self.changed=True
-        self.write_new(RUNTIME_DROP,('[Service]\nExecStart=\nExecStart='+str(RELEASE/'venv/bin/uvicorn')+
-            ' competence_hub_api.runtime:create_runtime_app_from_environment --factory --host 127.0.0.1 --port 8001 --proxy-headers --forwarded-allow-ips=127.0.0.1 --no-access-log\n').encode())
+        self.write_new(RUNTIME_DROP,runtime_override(RELEASE))
         self.runtime_drop_owned=True
-        self.write_new(CAPTURE_ENV,b'COMPETENCE_HUB_INVITATION_DELIVERY_ENABLED=true\n',0o600);self.capture_env_owned=True
-        self.write_new(CAPTURE_DROP,('[Service]\nEnvironmentFile='+str(CAPTURE_ENV)+'\n').encode());self.capture_drop_owned=True
+        if SYNTHETIC_INVITATION_CAPTURE:
+            self.write_new(CAPTURE_ENV,b'COMPETENCE_HUB_INVITATION_DELIVERY_ENABLED=true\n',0o600);self.capture_env_owned=True
+            self.write_new(CAPTURE_DROP,('[Service]\nEnvironmentFile='+str(CAPTURE_ENV)+'\n').encode());self.capture_drop_owned=True
         self.s.run('systemd-analyze','verify',str(Path('/etc/systemd/system')/API))
         self.worker_action('seed')
         self.seeded=True

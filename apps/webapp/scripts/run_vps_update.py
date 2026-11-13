@@ -38,11 +38,46 @@ CA_SHA='14827c63424b87f7b40aa04019e720872e241e5a8f7a4a5b495cdcb3c89b302d'
 LEAF_SHA='aecd310881202f9438b14a9d57d7f3e033bf947416a460fa3263fa44cf71d27a'
 RESUME_RUN='2b834613c4204c1d98a37cbd43134fa1'
 RESUME_SHA='822c5ddba0163be88327ec160c0544994e63494b4d21626dc16243092f6737d4'
+PROFILE='V1'
+PACKAGE_COMMIT='bc53775b08dc'
+REPORT_DIRECTORY='vps-v1-update'
+V1_RECEIPT_RUN='eed9aed9a83c45fd948203e04a53c824'
+V1_RECEIPT_SHA='d5f4847ebc852c19dcc8775f3e443a58ed32e67d794b431ff87452e1a25f11d0'
 BOOTSTRAP=backup.BOOTSTRAP.replace('131072','262144').replace("a['serve'](types.SimpleNamespace(**p))", """v={'__name__':'legacy_service_contract'}
 exec(compile(s['legacy'],'<reviewed-service-contract>','exec'),v)
 u={'__name__':'v1_update_agent'}
 exec(compile(s['update'],'<reviewed-v1-update>','exec'),u)
 u['serve'](types.SimpleNamespace(**p),types.SimpleNamespace(**a),types.SimpleNamespace(**v))""")
+
+
+def configure_v11():
+    global PACKAGE,PACKAGE_SHA,WHEELS,PROFILE,PACKAGE_COMMIT,REPORT_DIRECTORY,BOOTSTRAP
+    PACKAGE=ROOT/'release-artifacts/webapp/competence-hub-webapp-0.1.0-38153c12159e-20261113T125945Z.zip'
+    PACKAGE_SHA='2a1a7c6109fb2011411297b91a4ff673ac312a561cb847963357df08b80b8ab5'
+    WHEELS=ROOT/'release-artifacts/webapp-linux/20261113T130013Z-1f0bf10c/wheelhouse'
+    PROFILE,PACKAGE_COMMIT,REPORT_DIRECTORY='V11','38153c12159e','vps-v11-update'
+    BOOTSTRAP=BOOTSTRAP.replace("u['serve'](","u['configure_v11']()\nu['serve'](")
+
+
+def native_acceptance(root,data,ca,directory,report):
+    if PROFILE=='V11':
+        private=pilot.acceptance.run(root,data,ca,directory,report,tour_counts={'coach':9,'reviewer':7,'admin':6})
+        ux=module('v11_remote_ux',Path(__file__).with_name('vps_v11_acceptance.py'))
+        return ux.run(root,data,ca,directory,report,private,pilot.acceptance)
+    private=pilot.acceptance.run(root,data,ca,directory,report)
+    return v1.run(root,data,ca,directory,report,private,pilot.acceptance)
+
+
+def verify_final_assets(ca):
+    import io,zipfile
+    names=['user-management.js']
+    if PROFILE=='V11':names+=['app.js','calendar-form.mjs','calendar-public.html','product-tour.js','product-tour.css','styles.css']
+    with zipfile.ZipFile(PACKAGE) as archive:
+        wheel=next(n for n in archive.namelist() if n.endswith('.whl'))
+        with zipfile.ZipFile(io.BytesIO(archive.read(wheel))) as application:
+            for name in names:
+                expected=application.read('competence_hub_api/portal_ui/'+name)
+                require(pilot.acceptance.HTTPS(ca).call('/portal/'+name)[2]==expected,'FINAL_RUNTIME_ASSET_MISMATCH')
 
 
 def fixture():
@@ -65,6 +100,12 @@ def payload():
 
 
 def accepted_ca():
+    if PROFILE=='V11':
+        receipt=(ROOT/'release-artifacts/vps-v1-update'/(V1_RECEIPT_RUN+'.json')).read_bytes()
+        require(sha(receipt)==V1_RECEIPT_SHA,'ACCEPTED_PREVIOUS_V1_RECEIPT_REQUIRED')
+        record=json.loads(receipt)
+        require(record['status']==record['deployment']=='PASS' and record['server_commit']=='ACKNOWLEDGED'
+                and record['package_commit']=='bc53775b08dc','ACCEPTED_PREVIOUS_V1_REQUIRED')
     raw=(ROOT/'release-artifacts/vps-pilot'/(ACCEPTED_RUN+'.json')).read_bytes()
     require(sha(raw)==ACCEPTED_SHA and json.loads(raw)['status']=='PASS','ACCEPTED_PILOT_RECEIPT_REQUIRED')
     path=Path(os.environ['LOCALAPPDATA'])/'CompetenceHub/pilot-runs'/ACCEPTED_RUN/'pilot-ca.pem'
@@ -149,18 +190,41 @@ def hold_private_tunnel():
     except (EOFError,KeyboardInterrupt):pass
 
 
+def open_manual_access(ca,directory,report):
+    """After server acceptance only: existing roles, normal MFA, no reset."""
+    access=module('v11_existing_manual_access',Path(__file__).with_name('open_vps_pilot.py'))
+    demo=None
+    try:
+        data,private=access.read_existing_logins()
+        demo=access.open_roles(data,private,ca,directory)
+        guide=access.private_role_guide(data,directory)
+        report['manual_access']='PASS'
+        report['manual_access_changes']='EXPECTED_AUTH_SESSIONS_MFA_AUDIT_ONLY_AFTER_REFERENCE_GATE'
+        print('PILOT_ACCESS=PASS ADMIN=OPEN REVIEWER=OPEN COACH_1=OPEN COACH_2=OPEN PUBLIC_CALENDAR=OPEN',flush=True)
+        print('PRIVATE_ACCESS_GUIDE='+str(guide),flush=True)
+        return demo
+    except (Exception,KeyboardInterrupt) as error:
+        if demo is not None:demo[1].close();demo[0].stop()
+        code=str(error) if isinstance(error,backup.protocol.SnapshotStop) and re.fullmatch('[A-Z0-9_]+',str(error)) else type(error).__name__
+        report.update(manual_access='STOP',manual_access_code=code)
+        print('PILOT_ACCESS=STOP CODE='+code+' DEPLOYMENT=PASS NO_AUTOMATIC_RETRY=TRUE',flush=True)
+        return None
+
+
 def main(options):
     require(os.name=='nt' and options.execute and options.quiet and sys.stdin.isatty(),'PRIVATE_QUIET_WINDOWS_OPERATOR_REQUIRED')
+    require(PROFILE=='V1' or not options.resume,'V11_RESUME_REQUIRES_SEPARATE_EVIDENCE')
     require(backup.checked('git','-C',str(ROOT),'rev-parse','HEAD').decode().strip()==options.source,'SOURCE_CHANGED')
     directory=options.directory
     require(directory.parent.resolve()==(Path(os.environ['LOCALAPPDATA'])/'CompetenceHub/pilot-updates').resolve()
             and re.fullmatch('[a-f0-9]{32}',directory.name) and directory.is_dir() and not any(directory.iterdir()),'OWN_EMPTY_PRIVATE_DIRECTORY_REQUIRED')
     pilot.qualify_directory(directory)
-    report={'scope':'PRIVATE_EXISTING_VPS_V1_UPDATE','status':'STOP','phase':'local_preflight','source_commit':options.source,
-            'package_sha256':PACKAGE_SHA,'package_commit':'bc53775b08dc','migrations':[],'real_accounts':'NONE',
+    report={'scope':'PRIVATE_EXISTING_VPS_'+PROFILE+'_UPDATE','status':'STOP','phase':'local_preflight','source_commit':options.source,
+            'package_sha256':PACKAGE_SHA,'package_commit':PACKAGE_COMMIT,'migrations':[],'real_accounts':'NONE',
             'ionos':'UNCHANGED','pages':'UNCHANGED','gpg':'NOT_USED','mail':'NOT_SENT',
             'backup':'NOT_RUN','restore':'NOT_RUN','deployment':'NOT_RUN'}
-    root=tunnel=None
+    root=tunnel=demo=None
+    temp_previous={name:os.environ.get(name) for name in ('TMP','TEMP')}
     try:
         report['phase']='package_validation'
         data=fixture();content=payload();resume=None
@@ -216,29 +280,26 @@ def main(options):
             report.update(restore='PASS',restore_proof=result)
             print('PASS | Current populated reference backup and exact isolated restore; original data unchanged.',flush=True)
             pilot.protected_copy(directory,'owned-synthetic-logins.json.dpapi',canonical(data))
-            report['phase']='v1_installation';report['stage']=root.request('stage',**content,fixture=data,protected_configuration_sha256=config_sha)
+            report['phase']=PROFILE.lower()+'_installation';report['stage']=root.request('stage',**content,fixture=data,protected_configuration_sha256=config_sha)
             report['deployment']='INSTALLED_PENDING_ACCEPTANCE';wait_ready(ca)
             report['phase']='native_acceptance'
-            private=pilot.acceptance.run(root,data,ca,directory,report)
-            private=v1.run(root,data,ca,directory,report,private,pilot.acceptance)
+            private=native_acceptance(root,data,ca,directory,report)
             pilot.protected_copy(directory,'owned-synthetic-recovery.json.dpapi',canonical(private))
             needles=[x['password'] for x in data['accounts'].values()]+[x['password'] for x in data['invites'].values()]
             needles += [v['totp'] for v in private.values()]+[code for v in private.values() for code in v['recovery']]
             report['phase']='compensation_postflight';report['postflight']=root.request('commit',secret_needles=needles)
         wait_ready(ca);verify_leaf(ca)
-        import io,zipfile
-        with zipfile.ZipFile(PACKAGE) as archive:
-            wheel=next(n for n in archive.namelist() if n.endswith('.whl'))
-            with zipfile.ZipFile(io.BytesIO(archive.read(wheel))) as application:
-                expected=application.read('competence_hub_api/portal_ui/user-management.js')
-        require(pilot.acceptance.HTTPS(ca).call('/portal/user-management.js')[2]==expected,'V1_FINAL_RUNTIME_ASSET_MISMATCH')
+        verify_final_assets(ca)
         closed=pilot.acceptance.HTTPS(ca).call('/api/v1/admin/users/invitations','POST',{})
         require(closed[0]==503 and json.loads(closed[2]).get('code')=='invitation_delivery_unavailable','FINAL_DELIVERY_MUST_BE_CLOSED')
         root.request('accept');report['server_commit']='ACKNOWLEDGED'
         root.request('close');root.close();root=None
         report.update(status='PASS',phase='complete',deployment='PASS',tls='PASS',completed_at_utc=datetime.now(timezone.utc).isoformat())
-        print('VPS_V1_UPDATE=PASS BACKUP_RESTORE=PASS MFA_RBAC=PASS CAL1=PASS REFERENCE=PASS SERVICES=PASS',flush=True)
+        print('VPS_'+PROFILE+'_UPDATE=PASS BACKUP_RESTORE=PASS MFA_RBAC=PASS CAL1=PASS REFERENCE=PASS SERVICES=PASS',flush=True)
         print('Protected access: https://localhost:8447/portal/ . Existing reference accounts preserved; no real invitations.',flush=True)
+        if PROFILE=='V11':
+            os.environ.update(TMP=str(directory),TEMP=str(directory))
+            demo=open_manual_access(ca,directory,report)
     except BaseException as error:
         report['failure_type']=type(error).__name__
         if isinstance(error,backup.protocol.SnapshotStop) and re.fullmatch('[A-Z0-9_]+',str(error)):report['failure_code']=str(error)
@@ -249,17 +310,21 @@ def main(options):
             try:report['close']=root.request('close')
             except Exception:report['remote_failure']=getattr(root,'last_failure',None)
             finally:root.close()
-        output=ROOT/'release-artifacts/vps-v1-update';output.mkdir(exist_ok=True)
+        output=ROOT/'release-artifacts'/REPORT_DIRECTORY;output.mkdir(exist_ok=True)
         path=output/(directory.name+'.json')
         with path.open('xb') as stream:stream.write(canonical(report))
         print('REPORT='+str(path),flush=True)
-        if report['status']=='PASS' and tunnel is not None:
+        if report['status']=='PASS' and (tunnel is not None or demo is not None):
             hold_private_tunnel()
+        if demo is not None:demo[1].close();demo[0].stop()
         if tunnel is not None:
             tunnel.terminate()
             try:tunnel.wait(timeout=10)
             except subprocess.TimeoutExpired:tunnel.kill();tunnel.wait()
         os.environ.pop('PLAYWRIGHT_FIREFOX_POLICIES_JSON',None)
+        for name,value in temp_previous.items():
+            if value is None:os.environ.pop(name,None)
+            else:os.environ[name]=value
 
 
 if __name__=='__main__':
