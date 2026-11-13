@@ -5,16 +5,16 @@ Passwörter, MFA-Seeds, Recovery-Codes und Tokens gehören niemals in diese Date
 
 ## Stand Und Adresse
 
-Privater VPS: V1 abgenommen. V1.1-Update durch Manuel am13.11 ausdrücklich
-freigegeben, Installation/Remote-Abnahme noch nicht nachgewiesen. Erst nach
-`VPS_V11_UPDATE=PASS` ist die verbesserte Oberfläche auf dem VPS verfügbar.
+Privater VPS: **V1.1 am13.11 tatsächlich installiert und abgenommen**,
+Paket38153c1. `VPS_V11_UPDATE=PASS` und `PILOT_ACCESS=PASS` bestätigt.
 
 Im freigegebenen Updatefenster genügt ein gebundener Befehl: Nach technischer
 Abnahme öffnet es die vorhandenen Coach-/Prüfer-/Admin-Fenster bereits angemeldet.
-Erwartet zusätzlich `PILOT_ACCESS=PASS`; Terminal offen lassen. Keine Zugangsdaten
-suchen, keine Konten neu anlegen. Die nachfolgenden Starterangaben betreffen die
-getrennte Wiederöffnung; deren V1.1-Receiptbindung erst nach tatsächlichem PASS
-aktualisieren. Ein Update nicht bloß zum Wiederöffnen erneut ausführen.
+Terminal offen lassen. Jetzt zu **Coach1** oder **Prüfer** wechseln; keine
+Zugangsdaten suchen, keine Konten neu anlegen. Die nachfolgenden Starterangaben
+betreffen ausschließlich spätere Wiederöffnung und sind auf die tatsächliche
+V1.1-Receipt und neue Datumsoberfläche gebunden. Ein Update nicht bloß zum
+Wiederöffnen erneut ausführen.
 
 - Portal: `https://localhost:8447/portal/`
 - Freigegebener Kalender: `https://localhost:8447/portal/calendar-public.html`

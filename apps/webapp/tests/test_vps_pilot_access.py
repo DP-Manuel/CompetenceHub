@@ -97,15 +97,33 @@ def test_access_does_not_call_installer_root_or_recovery_consumption():
 def test_current_runtime_pin_matches_accepted_wheel(monkeypatch):
     with zipfile.ZipFile(access.update.PACKAGE) as z:
         with zipfile.ZipFile(io.BytesIO(z.read(next(n for n in z.namelist() if n.endswith('.whl'))))) as wheel:
-            raw=wheel.read('competence_hub_api/portal_ui/user-management.js')
-    assert access.update.sha(raw)==access.V1_ASSET_SHA
+            raw=wheel.read('competence_hub_api/portal_ui/calendar-form.mjs')
+    assert access.update.sha(raw)==access.RUNTIME_ASSET_SHA
     monkeypatch.setattr(access.pilot.acceptance,'HTTPS',lambda ca:SimpleNamespace(call=lambda path:(200,{},raw)))
     access.verify_access_runtime(None)
 
 
 def test_wrong_current_runtime_is_rejected_before_login(monkeypatch):
     monkeypatch.setattr(access.pilot.acceptance,'HTTPS',lambda ca:SimpleNamespace(call=lambda path:(404,{},b'NOT V1')))
-    with pytest.raises(Stop,match='ACCEPTED_V1_RUNTIME_REQUIRED'):access.verify_access_runtime(None)
+    with pytest.raises(Stop,match='ACCEPTED_V11_RUNTIME_REQUIRED'):access.verify_access_runtime(None)
+
+
+def test_v11_actual_receipt_hash_is_bound_before_private_access(monkeypatch):
+    monkeypatch.setattr(Path,'read_bytes',lambda path:b'changed-public-receipt')
+    with pytest.raises(Stop,match='ACCEPTED_V11_RECEIPT_CHANGED'):access.accepted_access()
+
+
+@pytest.mark.parametrize('field',['status','deployment','cal1','v11_ux','server_commit','package_sha256','package_commit',None])
+def test_v11_receipt_rejects_wrong_acceptance_or_release(monkeypatch,field):
+    record={'status':'PASS','deployment':'PASS','cal1':'PASS','v11_ux':'PASS','server_commit':'ACKNOWLEDGED',
+            'package_sha256':access.update.PACKAGE_SHA,'package_commit':access.update.PACKAGE_COMMIT}
+    if field:record[field]='WRONG'
+    raw=json.dumps(record).encode()
+    monkeypatch.setattr(Path,'read_bytes',lambda path:raw);monkeypatch.setattr(access,'FINAL_SHA',access.update.sha(raw))
+    monkeypatch.setattr(access.update,'accepted_ca',lambda:'public-ca-only')
+    if field:
+        with pytest.raises(Stop,match='ACCEPTED_V11_REQUIRED'):access.accepted_access()
+    else:assert access.accepted_access()=='public-ca-only'
 
 
 def test_browser_timeout_has_safe_step_without_exception_or_secret_output(monkeypatch,capsys):

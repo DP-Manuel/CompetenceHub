@@ -2,15 +2,27 @@
 
 Significant milestones only; newest first.
 
+13.11 14:52 MEZ ACTUAL V1.1 VPS ACCEPTANCE. Operator53c044e/package38153c1,
+receipt6554531a…/SHAd25223b0… independently verified. Current27-table protected
+backup/exact isolated restore and remote CAL61+UX16 PASS, source unchanged/probe
+removed; own cohort cleanup and original users/offers preserved. MFA/RBAC,
+PostgreSQL persistence/restart, original configuration/keys, private log scan,
+closed delivery, exact UI assets/TLS/hostname/leaf and six services PASS. V1
+rollback retained, not used. Original four role windows opened normally after
+preservation gate, no credential search/reset. No migration/real account/mail/
+Website/GPG action. Actual receipt/date module bound into reconnect starter;
+95 focused tests PASS. Next: Manuel's usability feedback, no deployment rerun.
+[Actual evidence](docs/operations/portal-v11-ux-2026-11-13.md#v11-tatsächlich-abgenommen).
+
 13.11 V1.1 existing-pilot update explicitly authorized. Read-only SSH confirms
 V1 runtime/six active services and actual hidden sudo need. Incremental operator
 pins V1 predecessor/receipt and38153c1 ZIP; preserves20-v1 drop-in beneath its
 new22-v11 override. Current recovery/isolated restore before stage, delivery
-closed throughout, native CAL61+V1.1 UX17 and original four-role normal MFA access
+closed throughout, native CAL61+V1.1 UX16 and original four-role normal MFA access
 PASS in owned Linux/PostgreSQL/TLS proof; separate rollback preserves all27
 reference tables and starts actual V1. Both containers removed. Full1739/30 skips,
 final86 targeted regressions PASS. Actual VPS write/remote acceptance NOT_RUN,
-blocked only on necessary hidden sudo, not implied by Owner approval
+then blocked only on necessary hidden sudo, not implied by Owner approval
 or local proof. [Authorized window/evidence](docs/operations/portal-v11-ux-2026-11-13.md#freigegebenes-updatefenster).
 
 13.11 V1.1 local UX correction: explicit German24-hour fields, quarter choices

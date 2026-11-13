@@ -15,14 +15,16 @@ from uuid import UUID
 ROOT=Path(__file__).resolve().parents[3]
 spec=importlib.util.spec_from_file_location('existing_pilot_access',Path(__file__).with_name('run_vps_update.py'))
 update=importlib.util.module_from_spec(spec);spec.loader.exec_module(update)
+update.configure_v11()
 pilot=update.pilot
 require=update.require
 ROLES=('admin','reviewer','coach','coach_two')
 EXPECTED={'admin':'admin','reviewer':'calendar_reviewer','coach':'coach','coach_two':'coach'}
 TITLES={'admin':'Admin','reviewer':'Pr\u00fcfer','coach':'Coach 1','coach_two':'Coach 2'}
-FINAL_RUN='eed9aed9a83c45fd948203e04a53c824'
-FINAL_SHA='d5f4847ebc852c19dcc8775f3e443a58ed32e67d794b431ff87452e1a25f11d0'
-V1_ASSET_SHA='e75971a7bd3cdd97459b72ad78605a8b6342b41a8886a6a4a1186ae7405737ab'
+FINAL_RUN='6554531a2c0f486c99b1fd88bb06d870'
+FINAL_SHA='d25223b076554329c92bcb27d4dbc1b9a105bd9da5e673230cdaae47942c88a4'
+RUNTIME_ASSET='/portal/calendar-form.mjs'
+RUNTIME_ASSET_SHA='51b456ddf3296e3999b34b5b8c3a480bbb46f4aa0c4e272e970d47d1e07c1f29'
 
 
 def validate_logins(data,private):
@@ -64,17 +66,18 @@ def read_existing_logins():
 
 
 def accepted_access():
-    raw=(ROOT/'release-artifacts/vps-v1-update'/(FINAL_RUN+'.json')).read_bytes()
-    require(update.sha(raw)==FINAL_SHA,'ACCEPTED_V1_RECEIPT_CHANGED')
+    raw=(ROOT/'release-artifacts/vps-v11-update'/(FINAL_RUN+'.json')).read_bytes()
+    require(update.sha(raw)==FINAL_SHA,'ACCEPTED_V11_RECEIPT_CHANGED')
     record=json.loads(raw)
-    require(record['status']==record['deployment']=='PASS' and record['server_commit']=='ACKNOWLEDGED',
-            'ACCEPTED_V1_REQUIRED')
+    require(record['status']==record['deployment']==record['cal1']==record['v11_ux']=='PASS'
+            and record['server_commit']=='ACKNOWLEDGED' and record['package_sha256']==update.PACKAGE_SHA
+            and record['package_commit']==update.PACKAGE_COMMIT,'ACCEPTED_V11_REQUIRED')
     return update.accepted_ca()
 
 
 def verify_access_runtime(ca):
-    status,_,raw=pilot.acceptance.HTTPS(ca).call('/portal/user-management.js')
-    require(status==200 and update.sha(raw)==V1_ASSET_SHA,'ACCEPTED_V1_RUNTIME_REQUIRED')
+    status,_,raw=pilot.acceptance.HTTPS(ca).call(RUNTIME_ASSET)
+    require(status==200 and update.sha(raw)==RUNTIME_ASSET_SHA,'ACCEPTED_V11_RUNTIME_REQUIRED')
 
 
 def private_role_guide(data,directory):

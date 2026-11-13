@@ -1,9 +1,16 @@
-# Testzugang Zum Privaten V1-Piloten
+# Testzugang Zum Privaten V1.1-Piloten
 
 Stand:13.11.2026. Technischer VPS-Pilot abgenommen. Manuel hat Admin und wesentliche
-Coachfunktionen positiv geprüft; die vollständige erneute Bedienabnahme folgt
-nach dem gesonderten V1.1-Update. [Fester Einstieg für alle künftigen Tests](../handoffs/PORTAL_TESTZUGAENGE.md).
+Coachfunktionen auf V1 positiv geprüft; V1.1 ist jetzt tatsächlich installiert,
+technisch abgenommen und vier Rollenfenster sind bereits angemeldet geöffnet.
+Manuels erneute Bedienabnahme ist der nächste Block.
+[Fester Einstieg für alle künftigen Tests](../handoffs/PORTAL_TESTZUGAENGE.md).
 Keine echten Zugänge, neuen Rollen, Installation oder Datenübernahme.
+
+Wiederöffner bindet tatsächliche V1.1-Receipt6554531a…/SHAd25223b0… und
+`calendar-form.mjs`/SHA51b456dd…; vollständige Werte im Code und
+[V1.1-Abschluss](portal-v11-ux-2026-11-13.md#v11-tatsächlich-abgenommen).
+Frühere V1-Pins/Timeouts unten sind historische Befunde. Kein erneutes Update.
 
 ## Für Manuel
 

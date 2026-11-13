@@ -4,24 +4,27 @@ Updated: 2026-11-13.
 
 ## Current Milestone
 
-13.11 V1.1 UX: Manuel positively tested V1 Admin/essential Coach functions and
-reported form/date/access/Calendar discoverability findings; terminal is closed,
-VPS remains running on accepted V1. Local explicit German controls/field errors,
-optional summary, preserved minutes/seconds/DST, ICS/tours and fixed test guide
-implemented. Native one/multiday PostgreSQL/browser workflow and logout/startup
-race proof pass; owned resources removed. Bound source38153c1 package complete:
-1718 PASS/30 expected skips, native40 and Linux/proxy37 PASS. ZIP/hash and one
-remote update gate in canonical result. Manuel explicitly approves V1.1 private
-update13.11; current read-only SSH confirms V1/six active services and actual
-hidden sudo need. Bound incremental operator and local update61+17/original-role
-MFA access/separate rollback PASS; all27 reference tables identical on rollback,
-containers removed. Full1739 PASS/30 skips, final86 focused green. One protected
-operator command requires hidden sudo; server write/installation still NOT_RUN. Existing users/offers and V1
-rollback preserved, delivery closed, no migration/Website/GPG/real identity.
-[Current V1.1 scope/evidence](docs/operations/portal-v11-ux-2026-11-13.md)
+13.11 V1.1 ACTUALLY INSTALLED/ACCEPTED14:52 MEZ, source38153c1/operator53c044e.
+Receipt6554531a…/SHAd25223b0… independently bound. Current27-table protected
+backup/exact isolated restore PASS, probe removed/source unchanged. Native remote
+CAL61+V1.1 UX16 PASS: German dates/24h/quarters/minute18, field errors, one-day
+course, revision/review/publish, ICS/request, tours,390px/native200, MFA/RBAC,
+logout/session/recovery, own restart and PostgreSQL persistence. Exact test-cohort
+cleanup and existing users/offers preserved; shared-IP security counters retained,
+sequences not rewound. Four ORIGINAL role windows now open via normal password/
+TOTP after preservation gate, expected auth/audit changes only. Independent strict
+TLS/hostname/leaf/negative controls, seven exact UI assets, anonymous401, closed
+delivery503 and six active VPS services PASS; own API/PG/proxy loopback unchanged.
+V1bc53775 retained beneath22-v11 drop-in, rollback not needed. Local rollback
+proved all27 reference tables equal and actual V1 restored, containers removed.
+Full1739 PASS/30 expected skips, final95 focused PASS. No migration, real account,
+import, mail, Website/Pages/GPG change. Existing terminal intentionally remains
+open; Enter closes its role windows/tunnel, not VPS services. Do NOT rerun update.
+[Actual V1.1 evidence](docs/operations/portal-v11-ux-2026-11-13.md#v11-tatsächlich-abgenommen)
 and [fixed test entry](docs/handoffs/PORTAL_TESTZUGAENGE.md).
-One next block: execute the authorized private V1.1 update window with necessary
-hidden sudo input, then actual receipt verification and Manuel's usability test.
+One next block: Manuel's synthetic Coach/Reviewer/calendar usability recheck in
+the opened windows. Reconnect starter now pins actual V1.1 receipt/date asset;
+normal same-user PowerShell, no sudo/credential search. TLS expires24.11.
 
 13.11 manual access starter STOP/TimeoutError after reaching browser phase.
 Exact old role/step unknown; no actual login repeated by assistant. Fresh strict
@@ -365,7 +368,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended block after local V1.1 delivery: scoped private V1.1 runtime update/acceptance. Inputs: bound correction package, current VPS/data/config and matching current restore/rollback evidence; preserve every existing synthetic user/test offer. Deliverable/DoD:15-case workflow passes on the actual protected VPS, current data/services unchanged except approved own runtime/cohort actions, access receipt updated. [Single consolidated gate](docs/operations/portal-v11-ux-2026-11-13.md#ein-konsolidiertes-remote-gate). No old installer or blind update. Real activation and EDV remain separate.
+1. Exactly one recommended block: Manuel's V1.1 Coach/Reviewer/calendar usability recheck. Inputs: actually accepted38153c1 VPS and already authenticated original synthetic role windows. Deliverable/DoD: one-day course draft/save/submit/change/revision/publication and ICS/tours understandable, or precise reproducible feedback. [Fixed handoff](docs/handoffs/PORTAL_TESTZUGAENGE.md). No update/installer rerun; real activation and EDV remain separate.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 
