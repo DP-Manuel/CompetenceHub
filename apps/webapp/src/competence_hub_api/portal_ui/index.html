@@ -7,6 +7,7 @@
     <meta name="color-scheme" content="light">
     <title>Portal | Competence Hub</title>
     <link rel="stylesheet" href="/portal/styles.css">
+    <link rel="stylesheet" href="/portal/product-tour.css">
   </head>
   <body>
     <a class="skip-link" href="#main-content">Zum Inhalt</a>
@@ -522,16 +523,16 @@
             <select id="calendar-topic" name="topic_id" required></select>
           </div>
           <div class="field field-wide">
-            <label for="calendar-summary">Öffentliche Kurzbeschreibung</label>
+            <label for="calendar-summary">Öffentliche Kurzbeschreibung (optional)</label>
             <textarea id="calendar-summary" name="summary" maxlength="1200" rows="4"></textarea>
           </div>
           <div class="field">
             <label for="calendar-starts-at">Beginn <span aria-hidden="true">*</span></label>
-            <input id="calendar-starts-at" name="starts_at" type="datetime-local" required>
+            <input id="calendar-starts-at" name="starts_at" placeholder="TT.MM.JJJJ HH:mm" required>
           </div>
           <div class="field">
             <label for="calendar-ends-at">Ende <span aria-hidden="true">*</span></label>
-            <input id="calendar-ends-at" name="ends_at" type="datetime-local" required>
+            <input id="calendar-ends-at" name="ends_at" placeholder="TT.MM.JJJJ HH:mm" required>
           </div>
           <div class="field">
             <label for="calendar-time-zone">Zeitzone <span aria-hidden="true">*</span></label>
@@ -562,7 +563,7 @@
           </div>
           <div class="field">
             <label for="calendar-decision-deadline">Entscheidungsfrist <span aria-hidden="true">*</span></label>
-            <input id="calendar-decision-deadline" name="decision_deadline" type="datetime-local" required>
+            <input id="calendar-decision-deadline" name="decision_deadline" placeholder="TT.MM.JJJJ HH:mm" required>
           </div>
           <div class="field">
             <label for="calendar-price">Preishinweis <span aria-hidden="true">*</span></label>

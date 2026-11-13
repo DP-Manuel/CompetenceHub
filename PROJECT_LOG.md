@@ -2,6 +2,16 @@
 
 Significant milestones only; newest first.
 
+13.11 V1.1 local UX correction: explicit German24-hour fields, quarter choices
+without rounding legacy minutes/seconds, optional summary and allowlisted field
+errors/focus/input preservation; clear public ICS and shared voluntary tours.
+Fixed test handoff reuses existing roles, private ACL identifier-only guide, no
+secret export. Native local PG one/multiday/revision/public ICS/request/390px/
+native200/relogin checks pass. Found/fixed stale startup after logout; delayed
+native response regression prevents private DOM restoration. Package gate follows;
+actual VPS remains V1, no remote/Website/key/real-account/migration action.
+[Canonical result and one remote gate](docs/operations/portal-v11-ux-2026-11-13.md).
+
 13.11 synthetic access starter TimeoutError: anonymous actual TLS/V1/Firefox
 checks PASS, no repeated real login. Local packaged browser reproduces a late
 startup401 hiding an issued MFA challenge. Starter waits for initial session/focus,

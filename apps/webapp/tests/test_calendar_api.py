@@ -473,3 +473,59 @@ async def test_public_unknown_offer_is_generic_not_found() -> None:
 
     assert response.status_code == 404
     assert response.json()["code"] == "calendar_offer_not_found"
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("changes,field,code", [
+    ({"review_threshold":31},"review_threshold","threshold"),
+    ({"public_location":None},"public_location","required"),
+    ({"ends_at":NOW.isoformat()},"ends_at","end_after_start"),
+    ({"decision_deadline":NOW.isoformat().replace("10:00", "09:00")},"decision_deadline","deadline"),
+    ({"capacity":0},"capacity","invalid"),
+    ({"starts_at":"SYNTHETIC-INPUT-MUST-NOT-LEAK"},"starts_at","invalid"),
+])
+async def test_draft_field_errors_are_allowlisted_and_do_not_echo_inputs(changes,field,code):
+    repository=FakeCalendarRepository()
+    async with api(("coach",),repository) as client:
+        client.cookies.set(SESSION_COOKIE_NAME,SESSION_TOKEN)
+        result=await client.post("/api/v1/portal/calendar/offers",headers=mutation_headers(),
+            json={"client_request_id":str(REQUEST_ID),"draft":{**draft_payload(),**changes}})
+    assert result.status_code==400
+    assert {"field":field,"code":code} in result.json()["field_errors"]
+    assert "SYNTHETIC-INPUT-MUST-NOT-LEAK" not in result.text
+    assert result.headers['cache-control']=='no-store'
+    assert not any(name=='create_offer' for name,_ in repository.calls)
+
+
+@pytest.mark.anyio
+async def test_empty_summary_is_optional_for_a_valid_draft():
+    async with api(("coach",),FakeCalendarRepository()) as client:
+        client.cookies.set(SESSION_COOKIE_NAME,SESSION_TOKEN)
+        result=await client.post("/api/v1/portal/calendar/offers",headers=mutation_headers(),
+            json={"client_request_id":str(REQUEST_ID),"draft":{**draft_payload(),"summary":None}})
+    assert result.status_code==201
+
+
+@pytest.mark.anyio
+async def test_patch_schema_errors_also_retain_field_names_without_private_values():
+    async with api(("coach",),FakeCalendarRepository()) as client:
+        client.cookies.set(SESSION_COOKIE_NAME,SESSION_TOKEN)
+        result=await client.patch(f"/api/v1/portal/calendar/offers/{OFFER_ID}/draft",headers={**mutation_headers(),"If-Match":'"v1"'},
+            json={**draft_payload(),"capacity":501})
+    assert result.status_code==400 and result.json()['field_errors']==[{"field":"capacity","code":"invalid"}]
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize('roles',[None,('internal',),('company_contact',),('calendar_reviewer',)])
+async def test_field_diagnostics_do_not_bypass_calendar_authorization(roles):
+    async with api(roles,FakeCalendarRepository()) as client:
+        client.cookies.set(SESSION_COOKIE_NAME,SESSION_TOKEN)
+        result=await client.post('/api/v1/portal/calendar/offers',headers=mutation_headers(),json={'draft':{'capacity':0}})
+    assert result.status_code in (401,403)
+    assert 'field_errors' not in result.json()
+
+
+def test_unknown_domain_failure_never_echoes_exception_text():
+    from competence_hub_api.web.calendar import _calendar_error
+    result=_calendar_error(ValueError('SYNTHETIC-PRIVATE-DETAIL'))
+    assert result.status_code==400 and b'SYNTHETIC-PRIVATE-DETAIL' not in result.body

@@ -1,5 +1,6 @@
 "use strict";
 import { monthKeys, calendarInstantLabel, calendarMonthLabel, buildMonthLayout, renderMonth } from "./calendar-month.mjs";
+import { createProductTour } from "./product-tour.js";
 const $ = id => document.getElementById(id);
 const text = (tag, value) => { const element = document.createElement(tag); element.textContent = value; return element; };
 const formats = { online: "Online", praesenz: "Präsenz", hybrid: "Hybrid" };
@@ -7,6 +8,10 @@ const isDemo = location.pathname.startsWith("/demo/");
 const months = monthKeys();
 let month = 0, offers = [], selected = null, loaded = false, loading = false, downloading = false;
 const date = calendarInstantLabel;
+if (document.getElementById("calendar-help")) {
+  const tour = createProductTour({navigate:async () => {},canLeave:() => true,originSelector:"#calendar-help"});
+  $("calendar-help").addEventListener("click",() => tour.start("calendar"));
+}
 
 function hideDetail() { selected = null; $("detail").hidden = true; $("request-status").textContent = ""; $("request-draft-panel").hidden = true; $("request-draft").value = ""; }
 function render(keepDetail = false) {

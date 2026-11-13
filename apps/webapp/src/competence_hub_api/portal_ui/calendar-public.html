@@ -4,11 +4,12 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive"><title>Kalender | Competence Hub Pilot</title>
   <link rel="stylesheet" href="/portal/public-calendar.css"><link rel="stylesheet" href="/portal/calendar-month.css">
+  <link rel="stylesheet" href="/portal/product-tour.css">
   <script type="module" src="/portal/public-calendar.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#content">Zum Inhalt</a>
-<nav class="demo-banner" aria-label="Staging-Pilot"><strong>Competence Hub · Staging-Pilot</strong><a href="/portal/">Zum Portal</a></nav>
+<nav class="demo-banner" aria-label="Staging-Pilot"><strong>Competence Hub · Staging-Pilot</strong><a href="/portal/">Zum Portal</a><button id="calendar-help" type="button">Kalender-Einführung starten</button></nav>
 <main id="content">
   <header><p class="eyebrow">Freigegebene Gruppenangebote</p><h1>Veranstaltungskalender</h1><p>Pilotbetrieb. Keine verbindliche Buchung und kein Versand von Anfragen.</p></header>
   <section id="calendar" aria-labelledby="calendar-heading">
@@ -20,7 +21,7 @@
     <div id="grid" class="month-grid" aria-label="Monatskalender"></div>
     <section id="detail" tabindex="-1" aria-labelledby="detail-title" hidden>
       <p class="eyebrow">Freigegeben</p><h2 id="detail-title"></h2><p id="summary"></p><dl id="meta"></dl>
-      <p><a id="coach">Coachprofil</a></p><p><a id="ics" download>Kalendereintrag herunterladen (.ics)</a></p>
+      <p><a id="coach">Coachprofil</a></p><p><a id="ics" download>Zum Kalender hinzufügen (.ics)</a></p><p>Termin für Outlook oder andere Kalender herunterladen.</p>
       <form id="request"><label for="seats">Gewünschte Plätze (unverbindlich)</label><input id="seats" type="number" min="1" max="500" value="1" required>
         <button type="submit">Anfrageentwurf vorbereiten</button><p>Keine Reservierung und kein Versand. Es werden keine Kundendaten gespeichert.</p><p id="request-status" role="status"></p>
         <div id="request-draft-panel" hidden><label for="request-draft">Unverbindlicher Anfrageentwurf</label><textarea id="request-draft" readonly rows="9"></textarea><button id="copy-request" type="button">Anfragetext kopieren</button></div>
@@ -29,4 +30,9 @@
   </section>
   <noscript>Der Kalender benötigt JavaScript. Es wurde keine Anfrage gesendet.</noscript>
 </main>
+<dialog id="product-tour" aria-labelledby="tour-title" aria-describedby="tour-copy" class="product-tour">
+  <button id="tour-close" class="tour-close" type="button" aria-label="Einführung schließen" title="Einführung schließen">×</button>
+  <p id="tour-progress" class="eyebrow"></p><h2 id="tour-title" tabindex="-1"></h2><p id="tour-copy"></p>
+  <div class="button-row"><button id="tour-back" type="button">Zurück</button><button id="tour-next" type="button">Weiter</button><button id="tour-skip" type="button">Überspringen</button></div>
+</dialog>
 </body></html>

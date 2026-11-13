@@ -168,15 +168,15 @@ def run(fixture,options,report,evidence):
                     page.locator('#account-token-password').fill(fixture.password);page.locator('#account-token-password-confirm').fill(fixture.password)
                     page.locator('#account-token-submit').click();finish_enrollment(page,key)
                     checks.check(role+' exact role after activation',page.request.get(base+'/api/v1/portal/access/session').json()['user']['roles']==[role])
-                    tour(page,'Coach' if role=='coach' else 'Prüfer',7)
+                    tour(page,'Coach' if role=='coach' else 'Prüfer',9 if role=='coach' else 7)
                     page.screenshot(path=str(evidence/(role+'-390.png')),full_page=True)
                     consumed=ctx.request.post(base+'/api/v1/auth/invitations/accept',data={'token':token,'password':fixture.password},headers={'Origin':base})
                     checks.check('Consumed invitation stays one-time, including rate-limit denial',consumed.status in (400,429))
                     del token
                 coach=pages['onboarding-coach'];key='onboarding-coach'
                 coach.locator('#pilot-help summary').click();coach.locator('#tour-options button').filter(has_text='Coach').click()
-                coach.locator('#tour-next').click();expect(coach.locator('#tour-progress')).to_have_text('Schritt 2 von 7')
-                coach.reload();expect(coach.locator('#tour-progress')).to_have_text('Schritt 2 von 7')
+                coach.locator('#tour-next').click();expect(coach.locator('#tour-progress')).to_have_text('Schritt 2 von 9')
+                coach.reload();expect(coach.locator('#tour-progress')).to_have_text('Schritt 2 von 9')
                 coach.keyboard.press('Escape');checks.check('Tab-local progress resumes and Escape closes',coach.locator('#product-tour').is_hidden())
                 admin.get_by_role('button',name='Zugänge',exact=True).click()
                 manage(admin,key,'suspend');checks.check('Suspension immediately denies existing native session',coach.request.get(base+'/api/v1/portal/access/session').status==401)

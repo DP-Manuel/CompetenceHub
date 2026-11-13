@@ -4,6 +4,17 @@ Updated: 2026-11-13.
 
 ## Current Milestone
 
+13.11 V1.1 UX: Manuel positively tested V1 Admin/essential Coach functions and
+reported form/date/access/Calendar discoverability findings; terminal is closed,
+VPS remains running on accepted V1. Local explicit German controls/field errors,
+optional summary, preserved minutes/seconds/DST, ICS/tours and fixed test guide
+implemented. Native one/multiday PostgreSQL/browser workflow and logout/startup
+race proof pass; owned resources removed. Final bound packaging is in progress.
+No VPS/Website/GPG/real identity/migration action. [Current V1.1 scope/evidence](docs/operations/portal-v11-ux-2026-11-13.md)
+and [fixed test entry](docs/handoffs/PORTAL_TESTZUGAENGE.md).
+One next block after local delivery: separately scoped private V1.1 update gate,
+preserving current synthetic users and Manuels saved test data, not reinstall.
+
 13.11 manual access starter STOP/TimeoutError after reaching browser phase.
 Exact old role/step unknown; no actual login repeated by assistant. Fresh strict
 TLS/leaf/V1 and anonymous Firefox login/session401/zero JS errors PASS. Packaged
@@ -346,7 +357,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended block: corrected standalone starter and Manuel's synthetic V1 usability test. Inputs: accepted existing VPS reference and [test access guide](docs/operations/pilot-test-access.md). Deliverable/DoD: four isolated authenticated roles/public Calendar opened and concrete usability result recorded; if STOP, safe role/step identifies the remaining blocker without automatic retries. Actual V1 deployment is accepted, not pending. No old installer/update or repeated backup. EDV/Janay and real activation remain separate gates.
+1. Exactly one recommended block after local V1.1 delivery: scoped private V1.1 runtime update/acceptance. Inputs: bound correction package, current VPS/data/config and matching current restore/rollback evidence; preserve every existing synthetic user/test offer. Deliverable/DoD:15-case workflow passes on the actual protected VPS, current data/services unchanged except approved own runtime/cohort actions, access receipt updated. [Single consolidated gate](docs/operations/portal-v11-ux-2026-11-13.md#ein-konsolidiertes-remote-gate). No old installer or blind update. Real activation and EDV remain separate.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 

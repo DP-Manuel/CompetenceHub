@@ -140,11 +140,12 @@ async def test_public_calendar_and_tours_are_packaged_without_demo_access():
     from competence_hub_api.main import create_app
     from httpx import AsyncClient, ASGITransport
     async with AsyncClient(transport=ASGITransport(app=create_app()),base_url="https://test.invalid") as client:
-        for asset in ("calendar-public.html","public-calendar.js","calendar-month.mjs","product-tour.js"):
+        for asset in ("calendar-public.html","public-calendar.js","calendar-month.mjs","calendar-form.mjs","product-tour.js","product-tour.css"):
             response = await client.get("/portal/"+asset)
             assert response.status_code == 200
             assert response.headers["cache-control"] == "no-store"
         assert "javascript" in (await client.get("/portal/calendar-month.mjs")).headers["content-type"]
+        assert "javascript" in (await client.get("/portal/calendar-form.mjs")).headers["content-type"]
     package = files("competence_hub_api").joinpath("portal_ui")
     markup = package.joinpath("calendar-public.html").read_text(encoding="utf8")
     assert "synthetic." not in markup and "123456" not in markup and "Testzugänge" not in markup

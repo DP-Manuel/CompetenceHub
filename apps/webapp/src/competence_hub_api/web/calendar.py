@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from competence_hub_api.auth.session_repository import SessionPrincipal
 from competence_hub_api.portal.calendar import (
+    CALENDAR_OWNER_ROLES,
     CalendarAccessDeniedError,
     CalendarDraft,
     CalendarIdempotencyConflictError,
@@ -220,9 +221,11 @@ async def create_offer(request: Request) -> Response:
     if isinstance(context, Response):
         return context
     actor, service = context
+    if not set(actor.roles).intersection(CALENDAR_OWNER_ROLES):
+        return _authorization_failed()
     payload = await _read_json(request, CalendarCreateRequest)
     if payload is None:
-        return _invalid_request()
+        return _invalid_request(getattr(request.state, "calendar_field_errors", None))
     try:
         result = await service.create_offer(
             actor=actor,
@@ -257,12 +260,14 @@ async def update_draft(offer_id: UUID, request: Request) -> Response:
     if isinstance(context, Response):
         return context
     actor, service = context
+    if not set(actor.roles).intersection(CALENDAR_OWNER_ROLES):
+        return _authorization_failed()
     version = _expected_version(request)
     if version is None:
         return _version_conflict()
     payload = await _read_json(request, CalendarDraftRequest)
     if payload is None:
-        return _invalid_request()
+        return _invalid_request(getattr(request.state, "calendar_field_errors", None))
     try:
         result = await service.update_draft(
             actor=actor,
@@ -429,7 +434,13 @@ async def _read_json(request: Request, model: type[RequestModel]) -> RequestMode
         body.extend(chunk)
     try:
         return model.model_validate_json(bytes(body))
-    except ValidationError:
+    except ValidationError as error:
+        if model in (CalendarDraftRequest, CalendarCreateRequest):
+            request.state.calendar_field_errors = [
+                {"field": str(item["loc"][-1]), "code": "invalid"}
+                for item in error.errors(include_input=False)
+                if item["loc"] and item["loc"][-1] in CalendarDraftRequest.model_fields
+            ][:13]
         return None
 
 
@@ -588,8 +599,23 @@ def _calendar_error(exc: Exception) -> Response:
         return _conflict(
             "calendar_transition_conflict", "Statuswechsel ist nicht moeglich"
         )
-    if isinstance(exc, (CalendarTopicUnavailableError, ValueError)):
-        return _invalid_request()
+    if isinstance(exc, CalendarTopicUnavailableError):
+        return _invalid_request([{"field": "topic_id", "code": "required"}])
+    if isinstance(exc, ValueError):
+        # Translate only fixed domain failures. Never echo values or exception text.
+        known = {
+            "ends_at must be after starts_at": ("ends_at", "end_after_start"),
+            "invalid decision_deadline": ("decision_deadline", "deadline"),
+            "offer must be inside the rolling three-month window": ("starts_at", "planning_window"),
+            "public_location is required for this format": ("public_location", "required"),
+            "invalid review_threshold": ("review_threshold", "threshold"),
+            "invalid capacity": ("capacity", "integer_range"),
+            **{f"invalid {field}": (field, "invalid") for field in ("title", "summary", "price_display_text", "public_location", "time_zone")},
+            "invalid format_code": ("format", "invalid"),
+            **{f"{field} must be timezone-aware": (field, "date_format") for field in ("starts_at", "ends_at", "decision_deadline")},
+        }
+        match = known.get(str(exc))
+        return _invalid_request([{"field": match[0], "code": match[1]}] if match else None)
     raise exc
 
 
@@ -617,9 +643,9 @@ def _request_verification_failed() -> Response:
     )
 
 
-def _invalid_request() -> Response:
+def _invalid_request(field_errors: list[dict[str, str]] | None = None) -> Response:
     return problem_response(
-        status=400, code="invalid_request", title="Anfrage ist ungueltig"
+        status=400, code="invalid_request", title="Anfrage ist ungueltig", field_errors=field_errors,
     )
 
 

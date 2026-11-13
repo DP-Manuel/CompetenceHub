@@ -139,6 +139,10 @@ def create_app(
     async def month_module():
         return FileResponse(PORTAL_UI_DIRECTORY / "calendar-month.mjs", media_type="text/javascript")
 
+    @app.get("/portal/calendar-form.mjs", include_in_schema=False)
+    async def calendar_form_module():
+        return FileResponse(PORTAL_UI_DIRECTORY / "calendar-form.mjs", media_type="text/javascript")
+
     app.mount(
         "/portal",
         StaticFiles(directory=PORTAL_UI_DIRECTORY, html=True),

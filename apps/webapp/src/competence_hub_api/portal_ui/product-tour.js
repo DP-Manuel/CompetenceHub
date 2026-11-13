@@ -1,7 +1,7 @@
 "use strict";
 
 // Bounded tab-history progress only: no user IDs, credentials or Web Storage.
-export function createProductTour({ navigate, canLeave }) {
+export function createProductTour({ navigate, canLeave, originSelector = "#pilot-help summary" }) {
   const dialog = document.getElementById("product-tour");
   const title = document.getElementById("tour-title"), copy = document.getElementById("tour-copy");
   const progress = document.getElementById("tour-progress");
@@ -20,6 +20,8 @@ export function createProductTour({ navigate, canLeave }) {
       step("Willkommen im Coach-Portal", "Hier sehen Sie ausschließlich Ihre eigenen Veranstaltungen und deren aktuellen Bearbeitungsstand.", "#pilot-overview"),
       step("Meine Veranstaltungen", "Die Liste enthält Ihre Entwürfe, Einreichungen und veröffentlichten Angebote. Mit den Filtern finden Sie einen Termin wieder.", "#calendar-offer-search", "coach-calendar"),
       step("Neuen Termin erstellen", "Beginnen Sie mit einem Entwurf. Erst eine gesonderte fachliche Freigabe macht einen Termin öffentlich.", "#open-calendar-offer-dialog", "coach-calendar"),
+      step("Datum und Uhrzeit", "Geben Sie TT.MM.JJJJ HH:mm ein. Die Stundenwahl reicht von 00 bis 23, die Minutenauswahl bietet Viertelstunden. Andere Minuten können Sie direkt eingeben. Es gilt Europe/Berlin.", "#open-calendar-offer-dialog", "coach-calendar"),
+      step("Feldfehler korrigieren", "Ein Fehler erscheint direkt am betroffenen Feld mit einem Beispiel. Ihre Eingaben bleiben erhalten. Die Kurzbeschreibung ist optional; Zeitraum, Thema und Preishinweis sind auch im Entwurf nötig.", "#open-calendar-offer-dialog", "coach-calendar"),
       step("Pflichtangaben und Teilnehmerzahl", "Geben Sie Beginn und Ende, Format, Ort und Kapazität an. Die Prüfschwelle ist ein interner Prüfwert, keine Buchung oder Mindestbelegung.", "#coach-calendar-workspace", "coach-calendar"),
       step("Speichern und einreichen", "Speichern Sie zunächst den Entwurf und reichen Sie ihn anschließend zur Prüfung ein. Das allein veröffentlicht noch nichts.", "#coach-calendar-list", "coach-calendar"),
       step("Rückmeldung und Revision", "Bei Änderungsbedarf oder einem veröffentlichten Termin beginnen Sie eine neue Revision. Die letzte Freigabe bleibt bis zur neuen Entscheidung bestehen.", "#coach-calendar-workspace", "coach-calendar"),
@@ -33,6 +35,11 @@ export function createProductTour({ navigate, canLeave }) {
       step("Veranstaltung freigeben", "Mit Veröffentlichen geben Sie genau die geprüfte Revision frei. Bei einem veralteten Datenstand müssen Sie erneut prüfen.", "#review-calendar-workspace", "review-calendar"),
       step("Öffentlicher Kalender", "Nur die freigegebene Revision ist dort sichtbar. Interne Hinweise und persönliche Verfügbarkeiten bleiben geschützt.", "#public-calendar-link"),
       step("Statusübersicht", "Die Übersicht zählt die für Ihre Rolle sichtbaren aktuellen Revisionen. Sie ist keine Teilnehmer- oder Buchungsstatistik.", "#pilot-overview"),
+    ],
+    calendar: [
+      step("Veranstaltung öffnen", "Wählen Sie einen freigegebenen Termin im Monatskalender. Alle Tagessegmente eines mehrtägigen Termins öffnen dieselben Details.", "#grid"),
+      step("Zum Kalender hinzufügen", "Öffnen Sie zuerst einen Termin. Mit Zum Kalender hinzufügen (.ics) laden Sie eine Datei für Outlook oder einen anderen Kalender herunter. Es entsteht keine automatische Synchronisierung.", "#ics"),
+      step("Anfrage vorbereiten", "Wählen Sie die gewünschte Platzzahl und bereiten Sie einen Anfrageentwurf vor. Nichts wird gesendet oder verbindlich gebucht.", "#request"),
     ],
     admin: [
       step("Administrationsübersicht", "Sie verwalten den technischen Zugang. Die fachliche Prüfung kann eine separat zugewiesene Prüferrolle übernehmen.", "#pilot-overview"),
@@ -82,7 +89,7 @@ export function createProductTour({ navigate, canLeave }) {
     if (dialog.open) remember(status);
     serial++; clear(); if (dialog.open) dialog.close();
     if (origin?.isConnected && origin.getClientRects().length) origin.focus();
-    else document.querySelector("#pilot-help summary")?.focus();
+    else document.querySelector(originSelector)?.focus();
   }
   document.getElementById("tour-next").addEventListener("click", () => {
     if (index + 1 === steps.length) stop("completed"); else { index++; show(); }
@@ -97,7 +104,7 @@ export function createProductTour({ navigate, canLeave }) {
     if (!definitions[nextRole] || !canLeave() || document.querySelector("dialog[open]")) return;
     const prior=saved();
     if (automatic && prior?.role===nextRole && prior.status!=="active") return;
-    role=nextRole;origin = document.querySelector("#pilot-help summary"); steps = definitions[role]; index = resume && prior?.role===role ? prior.index : 0;
+    role=nextRole;origin = document.querySelector(originSelector); steps = definitions[role]; index = resume && prior?.role===role ? prior.index : 0;
     dialog.showModal(); show();
   }
   return {stop,start,

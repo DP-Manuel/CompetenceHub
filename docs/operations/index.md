@@ -2,6 +2,8 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| V1.1 UX candidate | [Correction, acceptance and one update gate](portal-v11-ux-2026-11-13.md) | German form/error/ICS/tours; existing VPS V1 unchanged until scoped update |
+| Permanent test entry | [PORTAL_TESTZUGAENGE](../handoffs/PORTAL_TESTZUGAENGE.md) | Fixed user-facing entry, role windows and protected local identifiers; no Git secrets |
 | Real-user readiness V1 | [Actual V1 acceptance and gates](real-user-readiness-v1-2026-11-10.md) | Private VPS V1 accepted11.11; Admin/onboarding and retained synthetic reference, no real activation |
 | Existing synthetic test access | [Test-window starter](pilot-test-access.md) | Reopen four authenticated roles without installer, sudo, password export or new accounts; Manuel tests later |
 | Integrated Staging pilot | [09.11 release and gated rollout](integrated-staging-pilot-2026-11-09.md) | Private synthetic VPS pilot installed/accepted10.11; preserve reference, no installer rerun |

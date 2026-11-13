@@ -123,3 +123,16 @@ def test_browser_timeout_has_safe_step_without_exception_or_secret_output(monkey
     output=capsys.readouterr().out
     assert 'ROLE=reviewer STEP=mfa' in output
     assert 'SENSITIVE' not in output and private['reviewer']['totp'] not in output
+
+
+def test_private_role_guide_contains_confirmed_identifiers_but_no_credentials(tmp_path,monkeypatch,capsys):
+    data,private=synthetic();calls=[]
+    monkeypatch.setattr(access.pilot,'powershell',lambda script,**options:calls.append((script,options['data'])))
+    path=access.private_role_guide(data,tmp_path)
+    script,raw=calls[0];text=raw.decode('utf8')
+    assert path.name=='PORTAL_TESTZUGAENGE.local.md'
+    assert 'New-StagingPrivateFileStream' in script and 'Assert-StagingPrivateAcl' in script
+    for role in access.ROLES:
+        assert data['accounts'][role]['email'] in text
+        assert data['accounts'][role]['password'] not in text and private[role]['totp'] not in text
+    assert not capsys.readouterr().out

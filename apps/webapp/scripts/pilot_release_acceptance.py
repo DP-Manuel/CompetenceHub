@@ -157,7 +157,7 @@ def run(fixture, options, report, evidence):
                     checks.check(role+" cannot read Admin inventory",page.request.get(base+"/api/v1/admin/users").status in {401,403})
                     checks.check(role+" cannot read company workspace",page.request.get(base+"/api/v1/portal/companies").status in {401,403})
                     geometry(page,role+" mobile dashboard")
-                    tour(page,selector,7)
+                    tour(page,selector,9 if role=='coach' else 7)
                     page.screenshot(path=str(evidence/(role+"-mobile390.png")),full_page=True)
                     used=page.request.post(base+"/api/v1/auth/invitations/accept",data={"token":token,"password":fixture.password},headers={"Origin":base})
                     checks.check("Native consumed activation token cannot be reused",used.status==400 and used.json()["code"]=="request_not_accepted")

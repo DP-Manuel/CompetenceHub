@@ -2,6 +2,24 @@
 
 Stand: 18.09.2026
 
+## V1.1 UX-Korrektur 13.11.2026
+
+Kalendereingaben verwenden ausdrücklich `TT.MM.JJJJ HH:mm`, Europe/Berlin und
+24-Stunden-Zeit, nicht das Browser-Locale. Viertelstunden sind Auswahlangebote,
+keine Rundungsregel; direkte eindeutige Minuten und vorhandene Sekunden bleiben
+erhalten. Neue DST-Lücken/doppelte Uhrzeiten werden erklärt statt still verschoben.
+Kurzbeschreibung bleibt optional. Strukturell unvollständige Entwürfe sind nach
+bestehendem Fachvertrag nicht zulässig; kein neues Partial-Draft-Modell.
+
+Client- und allowlistbasierte API-Feldfehler werden unter dem Feld mit Beispiel,
+`aria-invalid`/Beschreibung und Fokus in visueller Reihenfolge dargestellt;
+Werte bleiben erhalten. Verspätete Portalstart-/Kalenderantworten werden nach
+Sessionwechsel verworfen; Logout darf keine privaten Ansichten wiederherstellen.
+Coach-Tour umfasst jetzt9 Schritte, Reviewer7; öffentlicher Kalender3. Dieselbe
+freiwillige Tour-Komponente, keine Mutation/Tracking. Öffentlicher ICS-Link heißt
+„Zum Kalender hinzufügen (.ics)“. Private Zugänge bleiben getrennt von Git.
+[Aktuelle Abnahme, Paket und Remote-Gate](../operations/portal-v11-ux-2026-11-13.md).
+
 ## Additives integriertes Pilot-Inkrement 09.11.2026
 
 Rollenbegrenzter Arbeitsüberblick liest native SQL-Statuszähler, keine Buchungs-

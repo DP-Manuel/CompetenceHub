@@ -77,6 +77,29 @@ def verify_access_runtime(ca):
     require(status==200 and update.sha(raw)==V1_ASSET_SHA,'ACCEPTED_V1_RUNTIME_REQUIRED')
 
 
+def private_role_guide(data,directory):
+    """Only confirmed identifiers, never passwords, TOTP, recovery or cookies."""
+    path=directory/'PORTAL_TESTZUGAENGE.local.md'
+    lines=['# Privater synthetischer Testzugang','',
+           'Portal: https://localhost:8447/portal/',
+           'Kalender: https://localhost:8447/portal/calendar-public.html','',
+           'Die geöffneten Rollenfenster sind bereits angemeldet. Keine Werte hieraus in Chat oder Git kopieren.','',
+           '| Fenster | Bestätigte Login-Adresse |','| --- | --- |']
+    for role in ROLES:lines.append('| '+TITLES[role]+' | '+data['accounts'][role]['email']+' |')
+    lines+=['','Anmeldung und MFA übernimmt ausschließlich der geprüfte lokale Starter.',
+            'Fenster zur gewünschten Rolle wechseln. Abmelden im Portal; erneute Anmeldung über denselben Starter.',
+            'Hilfe öffnet die erneut startbare Einführung. Terminal offen lassen; Enter beendet nur lokalen Zugang.',
+            'Keine Konten zurücksetzen oder neu anlegen. Bei STOP nur sichere Schritt-/STOP-Zeilen melden.']
+    script="""$ErrorActionPreference='Stop';try {
+ . '__ACL__'
+ $stream=New-StagingPrivateFileStream '__PATH__'
+ try {[Console]::OpenStandardInput().CopyTo($stream);$stream.Flush($true)}finally{$stream.Dispose()}
+ Assert-StagingPrivateAcl '__PATH__'
+}catch{exit 1}""".replace('__ACL__',str(pilot.SCRIPTS/'initialize-staging-operator-config.ps1').replace("'","''"))
+    pilot.powershell(script.replace('__PATH__',str(path).replace("'","''")),data=('\n'.join(lines)+'\n').encode('utf8'))
+    return path
+
+
 def open_roles(data,private,ca,directory,*,headless=False):
     status,headers,_=pilot.acceptance.HTTPS(ca).call('/health/ready')
     require(status==200,'PRIVATE_PILOT_NOT_READY')
@@ -137,7 +160,9 @@ def main(options):
         policy.write_bytes(update.canonical({'policies':{'Certificates':{'Install':[str(ca)]},'DisableTelemetry':True}}))
         os.environ.update(PLAYWRIGHT_FIREFOX_POLICIES_JSON=str(policy),TMP=str(directory),TEMP=str(directory))
         demo=open_roles(data,private,ca,directory)
+        guide=private_role_guide(data,directory)
         print('PILOT_ACCESS=PASS ADMIN=OPEN REVIEWER=OPEN COACH_1=OPEN COACH_2=OPEN PUBLIC_CALENDAR=OPEN',flush=True)
+        print('PRIVATE_ACCESS_GUIDE='+str(guide),flush=True)
         print('Keep this terminal open. Enter closes these test windows and only a tunnel created by this starter. VPS services stay running.',flush=True)
         try:input()
         except (EOFError,KeyboardInterrupt):pass

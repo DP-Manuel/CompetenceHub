@@ -7,6 +7,20 @@ Updated: 2026-11-13. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+13.11 V1.1 learning: derive form requirements from contracts, never guess a
+missing optional summary as root cause. Translate only allowlisted field/error
+codes; deny non-owner mutations before exposing diagnostics. Preserve legacy
+minutes/seconds and DST instants when adding convenient quarter-hour controls.
+Keep a fixed human-facing test guide, with actual identifiers only in private
+ACL-controlled operator output and no plaintext credential export. Native browser
+tests must await the new dialog's identity before checking reused radio controls;
+an already checked hidden old radio can make Playwright check() return early.
+Read textarea.value, not textContent; await submit completion before reviewer
+refresh. A copied zoom session rotates CSRF, so resume the original before logout.
+Force delayed startup responses across logout and assert no JS error/private DOM
+return. Capture viewport (not full-page) screenshots for scrollable modal focus.
+Project fixes and evidence captured; no global skill or ManuWiki change.
+
 13.11 operator-browser learning: a generic TimeoutError after credential loading
 is not sufficient evidence to retry logins or claim a root cause. Emit fixed safe
 role/step diagnostics, never raw Playwright exceptions/traces containing form

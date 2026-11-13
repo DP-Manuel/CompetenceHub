@@ -159,6 +159,14 @@ a `draft` object. Draft fields are `topic_id`, `title`, optional `summary`,
 `capacity`, internal `review_threshold`, `decision_deadline` and
 `price_display_text`. Unknown fields fail closed.
 
+V1.1 (13.11.2026): structural draft requirements remain unchanged; `summary`
+remains optional. Invalid create/PATCH bodies may add `field_errors` to the
+existing400 problem: an allowlisted array of `{field, code}` pairs for Calendar
+draft fields. No submitted values, Pydantic diagnostics, SQL or exception text
+are returned. The UI translates fixed codes to local examples, retains inputs
+and focuses the first invalid field in visual order. CSRF/Origin/role checks
+precede validation; this is not a new endpoint or permission bypass.
+
 Returns `201`, protected detail and `ETag: "v1"`.
 
 ### `GET /api/v1/portal/calendar/offers/{offer_id}`
