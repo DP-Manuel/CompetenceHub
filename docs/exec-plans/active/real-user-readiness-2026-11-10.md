@@ -118,3 +118,15 @@ Use existing private tunnel if strict original CA/leaf/hostname proof passes.
 Never stop an unowned tunnel. Temporary synthetic outbox capture has no SMTP
 worker or real recipient, is removed before final acceptance; normal delivery
 remains closed. GPG, public hosting and real activation stay excluded.
+
+13.11 manual starter1842d5c reached browser stage but TimeoutError has no exact
+step. No repeated real authentication. Anonymous actual TLS/V1/Firefox checks
+PASS. Synthetic packaged-UI browser reproduces startup-session401/MFA race;
+local starter waits for initial401/focus before credentials, checks HTTP outcomes
+without retries and prints only fixed role/step progress. Actual old timeout
+cause remains unproven until a safely instrumented manual run. Website, accepted
+VPS runtime/reference, keys and backup unchanged. The single next block remains
+Manuel's corrected manual starter/usability run, not redeployment or real access.
+Completion:140 targeted tests PASS; new native four-role PostgreSQL/TLS/Firefox
+proof PASS,16 business tables unchanged/four users retained, owned container
+removed. Exact report/hash and anonymous actual checks in the test access guide.

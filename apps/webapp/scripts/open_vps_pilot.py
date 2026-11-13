@@ -84,7 +84,19 @@ def open_roles(data,private,ca,directory,*,headless=False):
     offset=server-time.time()
     print('Opening four existing synthetic roles. Waiting at most 31 seconds for a fresh MFA window; no password input needed.',flush=True)
     time.sleep(31-(server%30))
-    demo=pilot.open_demo(data,private,offset,headless=headless,roles=ROLES)
+    phase=['browser','launch']
+    def progress(role,step):
+        require(role in (*ROLES,'browser','calendar') and step in
+                ('launch','initial_session','password','mfa','portal','public_view'),'INVALID_ACCESS_STEP')
+        phase[:]=[role,step]
+        print('PILOT_ACCESS_STEP ROLE='+role+' STEP='+step,flush=True)
+    try:
+        demo=pilot.open_demo(data,private,offset,headless=headless,roles=ROLES,progress=progress)
+    except BaseException as error:
+        from playwright.sync_api import TimeoutError as BrowserTimeout
+        if isinstance(error,BrowserTimeout):
+            raise update.backup.protocol.SnapshotStop('BROWSER_TIMEOUT_'+phase[0].upper()+'_'+phase[1].upper()) from None
+        raise
     try:
         require(len(demo[1].contexts)==len(ROLES)+1,'FOUR_ISOLATED_WINDOWS_REQUIRED')
         expected={data['accounts'][key]['id']:key for key in ROLES};seen=set()

@@ -1,6 +1,6 @@
 # Testzugang Zum Privaten V1-Piloten
 
-Stand:11.11.2026. Technischer VPS-Pilot abgenommen; Manuels Bedienabnahme folgt
+Stand:13.11.2026. Technischer VPS-Pilot abgenommen; Manuels Bedienabnahme folgt
 später. Keine echten Zugänge, neuen Rollen, Installation oder Datenübernahme.
 
 ## Für Manuel
@@ -85,3 +85,43 @@ behauptet. Eigener Container vollständig entfernt. Report
 `982241442bba790d7463f3af63d6240c4ed1e420381390f153d101db957a1948`.
 Die tatsächlichen VPS-Zugangskopien wurden dafür nicht entschlüsselt. Manuels
 Starterlauf/Bedienabnahme ist noch offen; technische V1-Abnahme bleibt gültig.
+
+## Starter-Timeout Am 13.11.
+
+Manuels erster gemeldeter Starterlauf erreichte die Browserphase und stoppte mit
+`TimeoutError`. Die alte Meldung enthält weder Rolle noch Einzelschritt; daraus
+lässt sich nicht bestimmen, ob und welche Anmeldung bereits abgeschlossen war.
+Keine erneute Anmeldung durch den Assistenten, kein Reset oder Recovery-Versuch.
+Frische Prüfung ohne Anmeldung: ursprüngliche CA/Hostname/Leaf, V1-Asset und
+Firefox-Loginseite PASS; initiale Sitzung401, keine JavaScript-Fehler.
+
+Ein konkreter Starterfehler ist mit der unveränderten paketierten V1-Oberfläche
+und einem rein synthetischen lokalen HTTP-Server reproduziert: Die statische
+Loginmaske ist schon sichtbar, während die initiale Sitzungsabfrage noch läuft.
+Eine späte401 nach erfolgreichem Passwortschritt schließt die MFA-Maske wieder.
+Dies erklärt einen möglichen Timeout, beweist aber nicht den genauen Schritt des
+alten uninstrumentierten Benutzerlaufs.
+
+Korrektur nur im lokalen Browserstarter: erst initiale GET-Sitzungsantwort401 und
+die anschließende Fokussierung der Loginmaske abwarten, dann einmal Passwort und
+einmal TOTP senden (vertragsgemäß HTTP202/204). Codes erst nach sichtbarer MFA-Eingabe erzeugen. HTTP-Fehler
+stoppen sofort ohne Wiederholung. Feste Meldungen `PILOT_ACCESS_STEP ROLE=... STEP=...`
+benennen Start, Sitzungsprüfung, Passwort, MFA, Portal und öffentlichen Kalender.
+Browser-Timeouts nennen Rolle/Schritt statt vertraulicher Browser-Fehlerdetails.
+Keine Screenshots, Traces, Zugangswerte oder Response-Inhalte protokollieren.
+
+Die neue lokale Browserregression prüft den verspäteten401-Rücksprung sowie
+Passwort-/MFA-401/429 und Session503; keine Verbindung zur echten Datenbank und
+keine echten Zugangskopien. Ein korrigierter manueller Starterlauf bleibt der
+nächste Prüfblock, nicht eine bereits behauptete Bedienabnahme.
+
+Abschluss13.11:140 gezielte Regressionen PASS. Erneute native lokale
+PostgreSQL-/TLS-/Firefox-Probe PASS: vier echte synthetische Passwort202-/
+TOTP204-Logins, genaue UUID/Rolle, öffentlicher Kalender,16 fachliche Tabellen
+unverändert, vier Konten erhalten. Normale Auth-/Sitzungs-/Auditänderungen,
+keine ursprünglichen privaten Schlüssel-/Login-Dateien gelesen, kein VPS-Eingriff.
+Eigener Container entfernt und unabhängig nicht mehr vorhanden. Report
+`.tmp/ch-pilot-proof-cba4ffac48044e82bfec77abe0d01632/result.json`, SHA-256
+`982241442bba790d7463f3af63d6240c4ed1e420381390f153d101db957a1948`.
+Kontext-/Linkprüfung und `git diff --check` PASS. Pages wird nur manuell
+veröffentlicht; ein Push dieser lokalen Korrektur löst kein Deployment aus.

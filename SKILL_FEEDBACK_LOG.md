@@ -1,11 +1,23 @@
 # Skill Feedback Router
 
-Updated: 2026-11-11. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-13. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+13.11 operator-browser learning: a generic TimeoutError after credential loading
+is not sufficient evidence to retry logins or claim a root cause. Emit fixed safe
+role/step diagnostics, never raw Playwright exceptions/traces containing form
+values. Static form visibility is not initialization readiness: finish the first
+session response and its UI transition before submitting login. Reproduce delayed
+initial401 against the unchanged packaged UI; test rejected password/MFA and rate
+limits with one-shot synthetic requests. Distinguish the proven race from the
+unlocated old operator failure; no blind real-authentication loops. Project-local
+fix, global skill proposal remains open. Derive success statuses from the actual
+API contract (password202, MFA204), not a generic200 mock; the native PostgreSQL
+probe caught that test-fixture assumption before operator delivery.
 
 11.11 usable-access learning: technical pilot acceptance plus encrypted login
 files is not a manual test handoff. Provide a standalone reconnect/test-window

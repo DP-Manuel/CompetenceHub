@@ -2,6 +2,15 @@
 
 Significant milestones only; newest first.
 
+13.11 synthetic access starter TimeoutError: anonymous actual TLS/V1/Firefox
+checks PASS, no repeated real login. Local packaged browser reproduces a late
+startup401 hiding an issued MFA challenge. Starter waits for initial session/focus,
+checks one-shot password/MFA HTTP outcomes and reports fixed safe role/step
+diagnostics. Exact old operator step not inferable; manual retest remains OPEN.
+140 focused tests and new native four-role PostgreSQL/TLS/Firefox proof PASS;
+business rows preserved, owned container removed. No server/runtime/data/Website/key change.
+[Incident and scoped correction](docs/operations/pilot-test-access.md#starter-timeout-am-1311).
+
 11.11 actual user-access gap corrected: encrypted credential paths did not let
 Manuel test the accepted V1. Separate local starter reuses existing password/TOTP
 browser flow for all four synthetic roles, exact actor/role mapping independent

@@ -195,23 +195,43 @@ def tls_negatives(ca):
         raise backup.protocol.SnapshotStop('TLS_NEGATIVE_CONTROL_FAILED')
 
 
-def open_demo(data, private, offset, *, headless=False, roles=('coach','reviewer','admin')):
+def open_demo(data, private, offset, *, headless=False, roles=('coach','reviewer','admin'), progress=None):
     """Separate role contexts; no passwords or recovery values displayed."""
     import pyotp
     from playwright.sync_api import sync_playwright, expect
     driver=sync_playwright().start()
     browser=None
     try:
+        if progress:progress('browser','launch')
         browser=driver.firefox.launch(headless=headless)
         for key in roles:
+            if progress:progress(key,'initial_session')
             context=browser.new_context(viewport={'width':1366,'height':900})
-            page=context.new_page();page.goto(acceptance.ORIGIN+'/portal/')
+            page=context.new_page()
+            # The static login form is visible before restoreSession finishes.
+            # A late initial 401 can otherwise clear an already issued MFA challenge.
+            with page.expect_response(lambda r:r.url==acceptance.ORIGIN+acceptance.ACCESS+'/session'
+                                      and r.request.method=='GET') as initial:
+                page.goto(acceptance.ORIGIN+'/portal/',wait_until='domcontentloaded')
+            require(initial.value.status==401,'INITIAL_SESSION_NOT_ANONYMOUS')
+            expect(page.locator('#login-email')).to_be_focused(timeout=30000)
+            if progress:progress(key,'password')
             page.locator('#login-email').fill(data['accounts'][key]['email'])
             page.locator('#login-password').fill(data['accounts'][key]['password'])
-            page.get_by_role('button',name='Anmelden',exact=True).click()
+            with page.expect_response(lambda r:r.url==acceptance.ORIGIN+acceptance.ACCESS+'/login'
+                                      and r.request.method=='POST') as password:
+                page.get_by_role('button',name='Anmelden',exact=True).click()
+            require(password.value.status==202,'PASSWORD_LOGIN_HTTP_'+str(password.value.status))
+            if progress:progress(key,'mfa')
+            expect(page.locator('#mfa-code')).to_be_visible(timeout=30000)
             page.locator('#mfa-code').fill(pyotp.TOTP(private[key]['totp']).at(time.time()+offset))
-            page.get_by_role('button',name='Bestätigen',exact=True).click()
-            expect(page.locator('#portal-view')).to_be_visible()
+            with page.expect_response(lambda r:r.url==acceptance.ORIGIN+acceptance.ACCESS+'/mfa/totp/verify'
+                                      and r.request.method=='POST') as mfa:
+                page.get_by_role('button',name='Bestätigen',exact=True).click()
+            require(mfa.value.status==204,'MFA_LOGIN_HTTP_'+str(mfa.value.status))
+            if progress:progress(key,'portal')
+            expect(page.locator('#portal-view')).to_be_visible(timeout=30000)
+        if progress:progress('calendar','public_view')
         page=browser.new_page();page.goto(acceptance.ORIGIN+'/portal/calendar-public.html')
         return driver,browser
     except BaseException:

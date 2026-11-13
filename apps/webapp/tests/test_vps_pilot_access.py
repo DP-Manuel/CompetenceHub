@@ -66,6 +66,7 @@ def test_auto_login_uses_fresh_mfa_and_exact_isolated_roles(monkeypatch,wrong_ro
     monkeypatch.setattr(access.time,'time',lambda:1794398400)
     def open_demo(*args,**kwargs):
         assert args[:2]==(data,private) and kwargs['roles']==access.ROLES and kwargs['headless']
+        kwargs['progress']('admin','password')
         return demo
     monkeypatch.setattr(access.pilot,'open_demo',open_demo)
     if wrong_role:
@@ -105,3 +106,20 @@ def test_current_runtime_pin_matches_accepted_wheel(monkeypatch):
 def test_wrong_current_runtime_is_rejected_before_login(monkeypatch):
     monkeypatch.setattr(access.pilot.acceptance,'HTTPS',lambda ca:SimpleNamespace(call=lambda path:(404,{},b'NOT V1')))
     with pytest.raises(Stop,match='ACCEPTED_V1_RUNTIME_REQUIRED'):access.verify_access_runtime(None)
+
+
+def test_browser_timeout_has_safe_step_without_exception_or_secret_output(monkeypatch,capsys):
+    from playwright.sync_api import TimeoutError as BrowserTimeout
+    data,private=synthetic()
+    monkeypatch.setattr(access.pilot.acceptance,'HTTPS',lambda ca:SimpleNamespace(
+        call=lambda path:(200,{'Date':'Wed, 11 Nov 2026 12:00:00 GMT'},b'')))
+    monkeypatch.setattr(access.time,'sleep',lambda seconds:None)
+    def fail(*args,**kwargs):
+        kwargs['progress']('reviewer','mfa')
+        raise BrowserTimeout('SYNTHETIC-SENSITIVE-EXCEPTION-MUST-NOT-PRINT')
+    monkeypatch.setattr(access.pilot,'open_demo',fail)
+    with pytest.raises(Stop,match='^BROWSER_TIMEOUT_REVIEWER_MFA$'):
+        access.open_roles(data,private,None,None,headless=True)
+    output=capsys.readouterr().out
+    assert 'ROLE=reviewer STEP=mfa' in output
+    assert 'SENSITIVE' not in output and private['reviewer']['totp'] not in output

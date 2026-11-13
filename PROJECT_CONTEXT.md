@@ -1,8 +1,19 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-11.
+Updated: 2026-11-13.
 
 ## Current Milestone
+
+13.11 manual access starter STOP/TimeoutError after reaching browser phase.
+Exact old role/step unknown; no actual login repeated by assistant. Fresh strict
+TLS/leaf/V1 and anonymous Firefox login/session401/zero JS errors PASS. Packaged
+UI synthetic browser proof reproduces late initial401 hiding MFA; starter now
+waits for session completion/focus and checks password/MFA HTTP status once.
+Safe per-role/step diagnostics replace undifferentiated browser timeouts; no
+runtime/deployment/data/key change.140 focused tests and new native synthetic
+four-role PostgreSQL/TLS/Firefox proof PASS; business rows unchanged, owned
+container removed. [Evidence and limits](docs/operations/pilot-test-access.md#starter-timeout-am-1311).
+One next block: corrected starter/manual synthetic usability test; no installer.
 
 11.11 usability handoff correction: technical V1 was accepted but manual access
 was missing; encrypted files alone are not a usable handoff. A separate local
@@ -335,7 +346,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended block: protected V1 runtime update/acceptance preserving the accepted synthetic VPS reference, after current privilege/state/rollback gates. Deliverable/DoD: Admin lifecycle/tours/CAL and restart pass, retained reference/four foreign services preserved, no real account. [Current gate and limits](docs/operations/real-user-readiness-v1-2026-11-10.md#genau-nächster-block). No old installer or blind repeat backup; EDV mail is ready but not sent, Janay acceptance remains open.
+1. Exactly one recommended block: corrected standalone starter and Manuel's synthetic V1 usability test. Inputs: accepted existing VPS reference and [test access guide](docs/operations/pilot-test-access.md). Deliverable/DoD: four isolated authenticated roles/public Calendar opened and concrete usability result recorded; if STOP, safe role/step identifies the remaining blocker without automatic retries. Actual V1 deployment is accepted, not pending. No old installer/update or repeated backup. EDV/Janay and real activation remain separate gates.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 
