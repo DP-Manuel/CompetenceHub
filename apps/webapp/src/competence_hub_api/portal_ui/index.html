@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="color-scheme" content="light">
     <title>Portal | Competence Hub</title>
+    <link rel="stylesheet" href="/portal/datepicker-v134.css">
     <link rel="stylesheet" href="/portal/styles.css">
     <link rel="stylesheet" href="/portal/product-tour.css">
   </head>
@@ -527,13 +528,23 @@
             <textarea id="calendar-summary" name="summary" maxlength="1200" rows="4"></textarea>
           </div>
           <div class="field">
-            <label for="calendar-starts-at">Beginn <span aria-hidden="true">*</span></label>
-            <input id="calendar-starts-at" name="starts_at" placeholder="TT.MM.JJJJ HH:mm" required>
+            <label for="calendar-starts-at">Startdatum <span aria-hidden="true">*</span></label>
+            <div class="calendar-date-entry"><input id="calendar-starts-at" name="starts_at" placeholder="TT.MM.JJJJ" inputmode="numeric" maxlength="10" required>
+              <button type="button" class="calendar-picker-toggle" data-pick-date="starts_at" aria-label="Startdatum im Kalender auswählen" aria-controls="calendar-date-panel" aria-expanded="false">Kalender</button></div>
           </div>
           <div class="field">
-            <label for="calendar-ends-at">Ende <span aria-hidden="true">*</span></label>
-            <input id="calendar-ends-at" name="ends_at" placeholder="TT.MM.JJJJ HH:mm" required>
+            <label for="calendar-ends-at">Enddatum <span aria-hidden="true">*</span></label>
+            <div class="calendar-date-entry"><input id="calendar-ends-at" name="ends_at" placeholder="TT.MM.JJJJ" inputmode="numeric" maxlength="10" required>
+              <button type="button" class="calendar-picker-toggle" data-pick-date="ends_at" aria-label="Enddatum im Kalender auswählen" aria-controls="calendar-date-panel" aria-expanded="false">Kalender</button></div>
           </div>
+          <section id="calendar-date-panel" class="field-wide calendar-date-panel" aria-labelledby="calendar-picker-heading" hidden>
+            <div class="calendar-picker-heading"><h3 id="calendar-picker-heading" data-picker-heading>Datum wählen</h3>
+              <button type="button" class="calendar-picker-toggle" data-close-picker>Fertig</button></div>
+            <div data-datepicker role="group" aria-label="Kalenderauswahl"></div>
+            <p class="field-hint calendar-selection" data-picker-selection aria-live="polite"></p>
+          </section>
+          <fieldset class="field calendar-clock" data-clock="starts_at"><legend>Beginn <span aria-hidden="true">*</span></legend></fieldset>
+          <fieldset class="field calendar-clock" data-clock="ends_at"><legend>Ende <span aria-hidden="true">*</span></legend></fieldset>
           <div class="field">
             <label for="calendar-time-zone">Zeitzone <span aria-hidden="true">*</span></label>
             <select id="calendar-time-zone" name="time_zone" required>
@@ -549,8 +560,10 @@
             </select>
           </div>
           <div class="field field-wide">
-            <label for="calendar-location">Öffentlicher Ort oder Zugangshinweis</label>
-            <input id="calendar-location" name="public_location" maxlength="200">
+            <label for="calendar-location" id="calendar-location-label">Öffentlicher Hinweis (optional)</label>
+            <p id="calendar-location-hint" class="field-hint">Nur öffentliche Angaben, keine privaten Zugangsdaten.</p>
+            <input id="calendar-location" name="public_location" maxlength="200" aria-describedby="calendar-location-hint calendar-location-count">
+            <span id="calendar-location-count" class="field-hint">0 / 200 Zeichen</span>
           </div>
           <div class="field">
             <label for="calendar-capacity">Kapazität <span aria-hidden="true">*</span></label>
@@ -559,11 +572,13 @@
           <div class="field">
             <label for="calendar-review-threshold">Prüfschwelle <span aria-hidden="true">*</span></label>
             <input id="calendar-review-threshold" name="review_threshold" type="number" min="1" max="500" value="5" required>
-            <p>Interner Prüfschwellenwert, keine Mindestbuchung. Darf die Kapazität nicht überschreiten.</p>
+            <details class="field-help"><summary>Was bedeutet die Prüfschwelle?</summary><p>Interner Prüfschwellenwert, keine Mindestbuchung. Darf die Kapazität nicht überschreiten.</p></details>
           </div>
           <div class="field">
             <label for="calendar-decision-deadline">Entscheidungsfrist <span aria-hidden="true">*</span></label>
-            <input id="calendar-decision-deadline" name="decision_deadline" placeholder="TT.MM.JJJJ HH:mm" required>
+            <div class="calendar-date-entry"><input id="calendar-decision-deadline" name="decision_deadline" placeholder="TT.MM.JJJJ" inputmode="numeric" maxlength="10" required>
+              <button type="button" class="calendar-picker-toggle" data-pick-date="decision_deadline" aria-label="Entscheidungsfrist im Kalender auswählen" aria-controls="calendar-date-panel" aria-expanded="false">Kalender</button></div>
+            <div class="calendar-clock" data-clock="decision_deadline"></div>
           </div>
           <div class="field">
             <label for="calendar-price">Preishinweis <span aria-hidden="true">*</span></label>
@@ -577,6 +592,16 @@
           <button class="button button-secondary" data-dialog-close="calendar-offer-dialog" type="button">Abbrechen</button>
         </div>
       </form>
+    </dialog>
+
+    <dialog id="calendar-discard-dialog" class="calendar-discard-dialog" role="alertdialog" aria-modal="true" aria-labelledby="calendar-discard-title" aria-describedby="calendar-discard-copy">
+      <div class="dialog-form">
+        <h2 id="calendar-discard-title">Änderungen verwerfen?</h2>
+        <p id="calendar-discard-copy">Ungespeicherte Eingaben gehen verloren. Bereits gespeicherte Entwürfe bleiben erhalten.</p>
+        <p class="field-hint" data-saving-note hidden>Eine Speicherung läuft möglicherweise bereits. Prüfen Sie danach die Terminübersicht; gespeicherte Entwürfe werden nicht gelöscht.</p>
+        <div class="button-row"><button type="button" class="button button-secondary" data-keep-editing>Weiter bearbeiten</button>
+          <button type="button" class="button button-primary" data-discard-changes>Änderungen verwerfen</button></div>
+      </div>
     </dialog>
 
     <dialog id="calendar-review-dialog" aria-labelledby="calendar-review-dialog-title">
@@ -617,6 +642,8 @@
       <h2 id="tour-title" tabindex="-1"></h2><p id="tour-copy"></p>
       <div class="button-row"><button id="tour-back" class="button button-secondary" type="button">Zurück</button><button id="tour-next" class="button button-primary" type="button">Weiter</button><button id="tour-skip" class="text-button" type="button">Überspringen</button></div>
     </dialog>
+    <script src="/portal/datepicker-v134.js"></script>
+    <script src="/portal/datepicker-de-v134.js"></script>
     <script type="module" src="/portal/app.js"></script>
   </body>
 </html>

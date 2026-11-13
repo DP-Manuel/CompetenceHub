@@ -736,6 +736,7 @@ class InMemoryCalendarRepository:
             decision_deadline=draft.decision_deadline,
             price_display_text=draft.price_display_text,
             updated_at=detail.offer.updated_at,
+            publication_sequence=detail.current_revision.revision_number,
         )
 
 

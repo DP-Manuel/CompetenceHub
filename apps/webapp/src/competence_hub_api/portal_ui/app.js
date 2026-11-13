@@ -2,6 +2,7 @@ import { createCoachManagement } from "./coach-management.js";
 import { createProductTour } from "./product-tour.js";
 import { createUserManagement } from "./user-management.js";
 import { createCalendarForm, germanDateTime } from "./calendar-form.mjs";
+import { createCalendarDialogs } from "./calendar-dialogs.js";
 
 const API = {
   session: "/api/v1/portal/access/session",
@@ -60,6 +61,20 @@ const restrictedCalendarNodes = {
   reviewDialog: document.querySelector("#calendar-review-dialog"),
 };
 const calendarForm = createCalendarForm(document.querySelector("#calendar-offer-form"));
+const calendarRequests=new WeakMap();
+const calendarDialogs=createCalendarDialogs({
+  dialogs:[restrictedCalendarNodes.offerDialog,restrictedCalendarNodes.reviewDialog],
+  confirmation:document.querySelector('#calendar-discard-dialog'),
+  discard(dialog) {
+    const form=dialog.querySelector('form'),pending=calendarRequests.get(form);
+    if(pending){pending.controller.abort();clearTimeout(pending.timer);calendarRequests.delete(form);setBusy(form,false);
+      announce('Formular geschlossen. Laufende Speicherung bitte in der Übersicht prüfen.');}
+    calendarForm.hidePicker();
+    if(dialog===restrictedCalendarNodes.offerDialog){state.selectedCalendarOffer=null;void loadCoachOffers();}
+    else {state.selectedReviewOffer=null;void loadReviewQueue();}
+  },
+  closed(){calendarForm.hidePicker();},
+});
 
 const coachManagement = createCoachManagement({
   request,
@@ -163,6 +178,7 @@ function setBusy(form, busy) {
     state.submitting.delete(key);
   }
   form.querySelectorAll("button, input, textarea, select").forEach((control) => {
+    if(form.matches('#calendar-offer-form, #calendar-review-form') && control.hasAttribute('data-dialog-close'))return;
     control.disabled = busy;
   });
   form.setAttribute("aria-busy", String(busy));
@@ -221,6 +237,7 @@ async function request(path, options = {}) {
     credentials: "same-origin",
     headers,
     body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    signal: options.signal,
   });
 }
 
@@ -283,7 +300,9 @@ function clearPortalClientState() {
         dialog.close();
       }
       const form = dialog.querySelector("form");
-      form.reset(); calendarFormBaselines.delete(form);
+      const pending=calendarRequests.get(form);
+      if(pending){pending.controller.abort();clearTimeout(pending.timer);calendarRequests.delete(form);setBusy(form,false);}
+      form.reset(); calendarDialogs.forget(form);
     });
   calendarForm.reset();
   restrictedCalendarNodes.offerDialog.querySelector("#calendar-review-feedback-text").textContent = "";
@@ -960,29 +979,26 @@ function fillCalendarOfferForm(detail = null) {
   byId("calendar-capacity").value = draft.capacity;
   byId("calendar-review-threshold").value = draft.review_threshold;
   byId("calendar-price").value = draft.price_display_text;
+  calendarForm.refresh();
   rememberCalendarForm(form);
 }
 
-const calendarFormBaselines = new WeakMap();
-function calendarFormSnapshot(form) {
-  return JSON.stringify([...form.elements].filter(e => e.name && (!['radio','checkbox'].includes(e.type) || e.checked)).map(e => [e.name,e.value]));
+function rememberCalendarForm(form) {calendarDialogs.remember(form);}
+function beginCalendarRequest(form) {
+  const operation={controller:new AbortController(),timer:null};
+  operation.timer=setTimeout(()=>operation.controller.abort(),30000);
+  calendarRequests.set(form,operation);return operation;
 }
-function rememberCalendarForm(form) { calendarFormBaselines.set(form, calendarFormSnapshot(form)); }
-function calendarFormDirty(dialog) {
-  const form = dialog.querySelector("form");
-  return dialog.open && calendarFormBaselines.has(form) && calendarFormSnapshot(form) !== calendarFormBaselines.get(form);
-}
-function calendarCanClose(dialog) {
-  if (!dialog.open || !["calendar-offer-dialog","calendar-review-dialog"].includes(dialog.id)) return true;
-  if (dialog.querySelector("form")?.getAttribute("aria-busy") === "true") return false;
-  return !calendarFormDirty(dialog) || window.confirm("Ungespeicherte Änderungen verwerfen?");
+const currentCalendarRequest=(form,operation)=>calendarRequests.get(form)===operation;
+function endCalendarRequest(form,operation) {
+  clearTimeout(operation.timer);
+  if(currentCalendarRequest(form,operation)){calendarRequests.delete(form);setBusy(form,false);}
 }
 
 function openNewCalendarOffer() {
   state.selectedCalendarOffer = null;
   fillCalendarOfferForm();
-  byId("calendar-offer-dialog").showModal();
-  byId("calendar-title").focus();
+  void calendarDialogs.open(byId("calendar-offer-dialog"),byId("calendar-title"));
 }
 
 async function openCalendarOffer(index) {
@@ -993,8 +1009,7 @@ async function openCalendarOffer(index) {
   }
   state.selectedCalendarOffer = selected;
   fillCalendarOfferForm(selected.detail);
-  byId("calendar-offer-dialog").showModal();
-  byId("calendar-title").focus();
+  await calendarDialogs.open(byId("calendar-offer-dialog"),byId("calendar-title"));
 }
 
 function showCalendarConflict(errorId, reloadId) {
@@ -1015,8 +1030,6 @@ async function handleCalendarOfferSave(event) {
   calendarForm.clear();
   const validated = calendarForm.validate();
   if (validated.errors.length) {
-    byId("calendar-offer-error").textContent = "Bitte korrigieren Sie die markierten Angaben. Ihre Eingaben bleiben erhalten.";
-    byId("calendar-offer-error").hidden = false;
     calendarForm.show(validated.errors);
     return;
   }
@@ -1032,15 +1045,19 @@ async function handleCalendarOfferSave(event) {
     ? validated.payload
     : { client_request_id: window.crypto.randomUUID(), draft: validated.payload };
   const headers = editing?.etag ? { "If-Match": editing.etag } : {};
+  const operation=beginCalendarRequest(form);
   try {
     const response = await request(path, {
       method: editing ? "PATCH" : "POST",
       csrf: "session",
       headers,
       body,
+      signal: operation.controller.signal,
     });
+    if(!currentCalendarRequest(form,operation))return;
     if (response.status === 409) {
       const problem = await response.clone().json();
+      if(!currentCalendarRequest(form,operation))return;
       if (problem.code === "calendar_version_conflict") showCalendarConflict("calendar-offer-error", "reload-calendar-offer");
       else setError("calendar-offer-error", await problemMessage(response, "Entwurf steht im Konflikt mit einem anderen Angebot."));
       return;
@@ -1048,12 +1065,11 @@ async function handleCalendarOfferSave(event) {
     if (!response.ok) {
       if (response.status === 400) {
         const problem = await response.json();
+        if(!currentCalendarRequest(form,operation))return;
         // Only allowlisted field/code pairs are translated; never display API input.
         setBusy(form, false);
-        byId("calendar-offer-error").textContent = "Speichern nicht möglich. Bitte prüfen Sie die markierten Angaben. Ihre Eingaben bleiben erhalten.";
-        byId("calendar-offer-error").hidden = false;
         if (!calendarForm.show(Array.isArray(problem.field_errors) ? problem.field_errors : [])) {
-          setError("calendar-offer-error", "Die Angaben konnten nicht geprüft werden. Ihre Eingaben bleiben erhalten. Bitte aktualisieren Sie die Seite erst, nachdem Sie Ihre Angaben notiert haben.");
+          setError("calendar-offer-error", "Speichern derzeit nicht möglich. Ihre Eingaben bleiben erhalten.");
         }
       } else setError("calendar-offer-error", await problemMessage(response, "Entwurf konnte nicht gespeichert werden."));
       return;
@@ -1063,9 +1079,10 @@ async function handleCalendarOfferSave(event) {
     await loadCoachOffers();
     announce("Der Entwurf wurde gespeichert.");
   } catch {
-    setError("calendar-offer-error", "Entwurf konnte nicht gespeichert werden.");
+    if(currentCalendarRequest(form,operation))setError("calendar-offer-error", operation.controller.signal.aborted
+      ?"Speicherung dauert zu lange. Bitte Übersicht prüfen; Ihre Eingaben bleiben erhalten.":"Entwurf konnte nicht gespeichert werden.");
   } finally {
-    setBusy(form, false);
+    endCalendarRequest(form,operation);
   }
 }
 
@@ -1183,8 +1200,7 @@ async function openCalendarReview(index) {
   byId("reload-calendar-review").hidden = true;
   renderReviewSummary(selected.detail);
   rememberCalendarForm(byId("calendar-review-form"));
-  byId("calendar-review-dialog").showModal();
-  byId("calendar-review-form").querySelector("input[name='outcome']").focus();
+  await calendarDialogs.open(byId("calendar-review-dialog"),byId("calendar-review-form").querySelector("input[name='outcome']"));
 }
 
 async function handleCalendarReview(event) {
@@ -1208,6 +1224,7 @@ async function handleCalendarReview(event) {
     byId("calendar-review-note").focus();
     return;
   }
+  const operation=beginCalendarRequest(form);
   try {
     const selected = state.selectedReviewOffer;
     const response = await request(
@@ -1217,10 +1234,13 @@ async function handleCalendarReview(event) {
         csrf: "session",
         headers: { "If-Match": selected.etag },
         body: { outcome, note },
+        signal: operation.controller.signal,
       },
     );
+    if(!currentCalendarRequest(form,operation))return;
     if (response.status === 409) {
       const problem = await response.clone().json();
+      if(!currentCalendarRequest(form,operation))return;
       if (problem.code === "calendar_version_conflict") showCalendarConflict("calendar-review-error", "reload-calendar-review");
       else setError("calendar-review-error", await problemMessage(response, "Veröffentlichung steht im Konflikt mit einem anderen Angebot."));
       return;
@@ -1234,9 +1254,9 @@ async function handleCalendarReview(event) {
     await loadReviewQueue();
     announce(outcome === "published" ? "Das Angebot wurde veröffentlicht." : "Die Änderung wurde angefordert.");
   } catch {
-    setError("calendar-review-error", "Entscheidung konnte nicht gespeichert werden.");
+    if(currentCalendarRequest(form,operation))setError("calendar-review-error", "Entscheidung konnte nicht gespeichert werden.");
   } finally {
-    setBusy(form, false);
+    endCalendarRequest(form,operation);
   }
 }
 
@@ -1944,7 +1964,8 @@ function bindEvents() {
   document.querySelectorAll("[data-dialog-close]").forEach((button) => {
     button.addEventListener("click", () => {
       const dialog = byId(button.dataset.dialogClose);
-      if (calendarCanClose(dialog)) dialog.close();
+      if([restrictedCalendarNodes.offerDialog,restrictedCalendarNodes.reviewDialog].includes(dialog))void calendarDialogs.close(dialog);
+      else dialog.close();
     });
   });
 
@@ -1961,29 +1982,27 @@ function bindEvents() {
   document.querySelectorAll("dialog").forEach((dialog) => {
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) {
-        if (calendarCanClose(dialog)) dialog.close();
+        if([restrictedCalendarNodes.offerDialog,restrictedCalendarNodes.reviewDialog].includes(dialog))void calendarDialogs.close(dialog);
+        else if(dialog.id!=='calendar-discard-dialog')dialog.close();
       }
     });
-  });
-  [restrictedCalendarNodes.offerDialog, restrictedCalendarNodes.reviewDialog].forEach(dialog => {
-    dialog.addEventListener("cancel", event => { if (!calendarCanClose(dialog)) event.preventDefault(); });
   });
 }
 
 document.querySelectorAll(".brand, #logout-button").forEach((item) => {
-  item.addEventListener("click", (event) => {
-    if ([restrictedCalendarNodes.offerDialog, restrictedCalendarNodes.reviewDialog].some(dialog => !calendarCanClose(dialog))) {
-      event.preventDefault(); event.stopImmediatePropagation(); return;
+  item.addEventListener("click", async (event) => {
+    const dialog=[restrictedCalendarNodes.offerDialog,restrictedCalendarNodes.reviewDialog].find(candidate=>candidate.open);
+    if(dialog){
+      event.preventDefault();event.stopImmediatePropagation();
+      if(await calendarDialogs.close(dialog)) {
+        if(item.id==='logout-button')void handleLogout();else location.assign(item.href);
+      }
+      return;
     }
     if (state.activePortalArea === "coaches" && !coachManagement.canLeave()) {
       event.preventDefault(); event.stopImmediatePropagation();
     }
   }, true);
-});
-addEventListener("beforeunload", event => {
-  if ([restrictedCalendarNodes.offerDialog, restrictedCalendarNodes.reviewDialog].some(calendarFormDirty)) {
-    event.preventDefault(); event.returnValue = "";
-  }
 });
 bindEvents();
 configureRestrictedCalendarNodes(false, false);

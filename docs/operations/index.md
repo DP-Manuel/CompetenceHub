@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| V1.2 local Calendar UX | [Local correction,13 PASS/drag N/A and one gate](portal-v12-calendar-ux-2026-11-13.md) | Date/range/clock/errors/cancel; candidate only, actual private VPS remains V1.1 |
 | V1.1 actual VPS acceptance | [Correction, deployed proof and manual handoff](portal-v11-ux-2026-11-13.md) | V1.1 installed13.11; current restore, CAL61+UX16, preserved reference, four-role access PASS |
 | Permanent test entry | [PORTAL_TESTZUGAENGE](../handoffs/PORTAL_TESTZUGAENGE.md) | Fixed user-facing entry, role windows and protected local identifiers; no Git secrets |
 | Real-user readiness V1 | [Actual V1 acceptance and gates](real-user-readiness-v1-2026-11-10.md) | Private VPS V1 accepted11.11; Admin/onboarding and retained synthetic reference, no real activation |

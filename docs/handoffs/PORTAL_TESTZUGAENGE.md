@@ -8,6 +8,10 @@ Passwörter, MFA-Seeds, Recovery-Codes und Tokens gehören niemals in diese Date
 Privater VPS: **V1.1 am13.11 tatsächlich installiert und abgenommen**,
 Paket38153c1. `VPS_V11_UPDATE=PASS` und `PILOT_ACCESS=PASS` bestätigt.
 
+V1.2 mit vereinfachter Datumsauswahl wird lokal vorbereitet; noch nicht auf dem
+VPS. Der offene Tunnel und die vorhandenen Fenster zeigen deshalb weiter V1.1.
+Keinen alten Updatebefehl starten. V1.2 benötigt ihr eigenes gebundenes Update-Gate.
+
 Im freigegebenen Updatefenster genügt ein gebundener Befehl: Nach technischer
 Abnahme öffnet es die vorhandenen Coach-/Prüfer-/Admin-Fenster bereits angemeldet.
 Terminal offen lassen. Jetzt zu **Coach1** oder **Prüfer** wechseln; keine

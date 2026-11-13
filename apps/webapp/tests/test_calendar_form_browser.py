@@ -16,13 +16,14 @@ def test_field_error_keeps_visual_marking_on_focus_and_explains_optional_summary
             page=browser.new_page(viewport={'width':width,'height':900},locale='en-US')
             def asset(route):
                 name=urlsplit(route.request.url).path.removeprefix('/portal/') or 'index.html'
-                if name not in ('index.html','styles.css','product-tour.css','calendar-form.mjs'):
+                if name not in ('index.html','styles.css','product-tour.css','calendar-form.mjs','calendar-picker.js',
+                                'datepicker-v134.js','datepicker-v134.css','datepicker-de-v134.js'):
                     route.abort();return
                 raw=(ASSETS/name).read_text(encoding='utf8')
                 if name=='index.html':
                     raw=raw.replace('<script type="module" src="/portal/app.js"></script>',
                         '<script type="module">import {createCalendarForm} from "./calendar-form.mjs";window.formFixture=createCalendarForm(document.querySelector("#calendar-offer-form"));</script>')
-                route.fulfill(status=200,body=raw,content_type='text/javascript' if name.endswith('.mjs') else 'text/css' if name.endswith('.css') else 'text/html')
+                route.fulfill(status=200,body=raw,content_type='text/javascript' if name.endswith(('.mjs','.js')) else 'text/css' if name.endswith('.css') else 'text/html')
             page.route('**/*',asset);page.goto('https://calendar-ui.example.invalid/portal/')
             page.wait_for_function('Boolean(window.formFixture)')
             page.evaluate('''()=>{document.querySelector('#calendar-offer-dialog').showModal();

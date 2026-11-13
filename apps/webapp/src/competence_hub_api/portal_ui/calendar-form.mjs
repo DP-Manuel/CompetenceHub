@@ -1,3 +1,4 @@
+import {createCalendarPicker,dateOnly} from './calendar-picker.js';
 const pad = value => String(value).padStart(2, "0");
 const formatter = new Intl.DateTimeFormat("de-DE", {timeZone:"Europe/Berlin", year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
 export function germanDateTime(value) {
@@ -106,68 +107,121 @@ export function fieldMessage(field, code, data, now = new Date()) {
 }
 export function createCalendarForm(form) {
   let originals = {};
-  const controls = {};
-  function sync(field) {
-    const {input,hours,minutes} = controls[field], p = localParts(input.value);
-    minutes.querySelectorAll('[data-existing]').forEach(option => option.remove());
-    if (p && ![0,15,30,45].includes(p.minute)) {
-      const option = new Option(pad(p.minute),pad(p.minute));option.dataset.existing = "true";minutes.add(option);
-    }
-    hours.value = p ? pad(p.hour) : "";minutes.value = p ? pad(p.minute) : "";
-  }
+  const controls = {};let shown=[],rendered='';
   for (const field of dates) {
     const input = form.querySelector('#'+fields[field]);
-    input.type = "text";input.placeholder = "TT.MM.JJJJ HH:mm";input.maxLength = 16;
-    const hint = document.createElement("p");hint.className = "field-hint";hint.id = input.id+"-hint";
-    hint.textContent = "TT.MM.JJJJ HH:mm · 24 Stunden · Europe/Berlin";input.setAttribute("aria-describedby",hint.id);
+    input.type = "text";
     const choices = document.createElement("div");choices.className = "calendar-clock-choices";
-    const label = form.querySelector(`label[for="${input.id}"]`).textContent.replace("*", "").trim();
+    const label = {starts_at:'Beginn',ends_at:'Ende',decision_deadline:'Entscheidungsfrist'}[field];
     const make = (name,values) => {
-      const select = document.createElement("select");select.id = input.id+"-"+name;
-      select.setAttribute("aria-label",`${label}: ${name === "hour" ? "Stunde" : "Minute"}`);
+      const wrapper=document.createElement('div');wrapper.className='field calendar-clock-part';
+      const select = document.createElement("select");select.id = input.id+"-"+name;select.name=field+'_'+name;select.required=true;
+      const caption=document.createElement('label');caption.htmlFor=select.id;caption.textContent=name==='hour'?'Stunde':'Minute';
+      select.setAttribute("aria-label",`${label}: ${caption.textContent}`);
       select.add(new Option(name === "hour" ? "Stunde" : "Minute",""));
-      values.forEach(value => select.add(new Option(pad(value),pad(value))));choices.append(select);return select;
+      values.forEach(value => select.add(new Option(pad(value),pad(value))));wrapper.append(caption,select);choices.append(wrapper);return select;
     };
     const hours = make("hour",Array.from({length:24},(_,index) => index)), minutes = make("minute",[0,15,30,45]);
-    input.after(choices,hint);controls[field] = {input,hours,minutes};
-    input.addEventListener("change",() => {const p = localParts(input.value);if(p) input.value = p.label;sync(field);});
-    input.addEventListener("input",() => sync(field));
-    [hours,minutes].forEach(select => select.addEventListener("change",() => {
-      const p = localParts(input.value);
-      if (!p) {input.focus();return;}
-      input.value = `${pad(p.day)}.${pad(p.month)}.${p.year} ${hours.value || pad(p.hour)}:${minutes.value || pad(p.minute)}`;
-      sync(field);input.dispatchEvent(new Event("input",{bubbles:true}));
-    }));
+    form.querySelector(`[data-clock="${field}"]`).append(choices);controls[field] = {input,hours,minutes};
   }
-  function clear() {
-    form.querySelectorAll('[data-calendar-field-error]').forEach(element => element.remove());
-    for (const id of Object.values(fields)) {
-      const input = form.querySelector('#'+id);input.removeAttribute("aria-invalid");
+  const picker=createCalendarPicker(form,Object.fromEntries(dates.map(field=>[field,controls[field].input])));
+  function values() {
+    const data=new FormData(form);
+    for(const field of dates) {
+      const {input,hours,minutes}=controls[field];data.set(field,`${input.value.trim()} ${hours.value}:${minutes.value}`);
+    }
+    return data;
+  }
+  function validate() {
+    const result=draftValues(values(),originals),parts=[];
+    for(const field of dates) {
+      const {input,hours,minutes}=controls[field];
+      if(!dateOnly(input.value))parts.push({field,code:'date_format',part:'date'});
+      if(!hours.value)parts.push({field,code:'required_hour',part:'hour'});
+      if(!minutes.value)parts.push({field,code:'required_minute',part:'minute'});
+    }
+    result.errors=result.errors.filter(error=>!parts.some(part=>part.field===error.field));
+    return {...result,errors:[...result.errors,...parts]};
+  }
+  function control(error) {
+    const choice=controls[error.field];
+    if(choice && error.part==='hour')return choice.hours;
+    if(choice && error.part==='minute')return choice.minutes;
+    if(choice && ['date_gap','date_ambiguous'].includes(error.code))return choice.hours;
+    if(error.field==='ends_at' && error.code==='end_after_start' && controls.starts_at.input.value===choice.input.value) return choice.hours;
+    return form.querySelector('#'+fields[error.field]);
+  }
+  function shortMessage({field,code,part}) {
+    if(part==='hour')return 'Bitte Stunde wählen.';
+    if(part==='minute')return 'Bitte Minute wählen.';
+    if(code==='date_format')return 'Bitte ein gültiges Datum wählen.';
+    if(code==='date_gap')return 'Diese Uhrzeit entfällt bei der Zeitumstellung.';
+    if(code==='date_ambiguous')return 'Diese Uhrzeit ist wegen der Zeitumstellung uneindeutig.';
+    if(code==='end_after_start')return 'Das Ende muss nach dem Beginn liegen.';
+    if(code==='planning_window')return 'Bitte innerhalb der nächsten drei Monate planen.';
+    if(code==='deadline')return 'Die Frist muss noch bevorstehen und vor Beginn liegen.';
+    if(code==='threshold')return `Höchstens ${form.querySelector('#calendar-capacity').value||500} Teilnehmende.`;
+    const messages={title:'Bitte Titel angeben (höchstens 160 Zeichen).',topic_id:'Bitte freigegebenes Thema wählen.',
+      summary:'Höchstens 1200 Zeichen.',public_location:code==='too_long'?'Höchstens 200 Zeichen.':'Bitte Veranstaltungsort angeben.',
+      capacity:'Bitte ganze Zahl von 1 bis 500 angeben.',review_threshold:'Bitte ganze Zahl von 1 bis zur Kapazität angeben.',
+      price_display_text:'Bitte Preishinweis angeben (höchstens 200 Zeichen).',format:'Bitte Format wählen.',time_zone:'Bitte Europe/Berlin verwenden.'};
+    return messages[field]||'Bitte Angabe prüfen.';
+  }
+  function clearDOM() {
+    form.querySelectorAll('[data-calendar-field-error]').forEach(element=>element.remove());
+    form.querySelectorAll('[aria-invalid]').forEach(input=>{
+      const id=input.id;input.removeAttribute("aria-invalid");
       const ids = (input.getAttribute("aria-describedby") || "").split(" ").filter(value => value && value !== id+"-error");
       if (ids.length) input.setAttribute("aria-describedby",ids.join(" "));else input.removeAttribute("aria-describedby");
-    }
+    });
   }
-  function show(errors) {
-    clear();const data = new FormData(form);let first = null;
-    const order = Object.keys(fields);
-    const known = errors.filter(error => error && Object.hasOwn(fields,error.field))
-      .sort((left,right) => order.indexOf(left.field)-order.indexOf(right.field));
-    for (const {field,code} of known) {
-      const input = form.querySelector('#'+fields[field]);
+  const errorSignature=errors=>JSON.stringify(errors.map(error=>[error.field,error.code,error.part||'',shortMessage(error)]));
+  function show(errors,focus=true) {
+    clearDOM();shown=errors.filter(error=>error && Object.hasOwn(fields,error.field));rendered=errorSignature(shown);const data=values();
+    for (const error of shown) {
+      const {field,code}=error,input=control(error);
       if (input.getAttribute("aria-invalid") === "true") continue;
       const message = document.createElement("p");message.id = input.id+"-error";
       message.className = "field-error";message.dataset.calendarFieldError = "true";
-      message.textContent = fieldMessage(field,code,data);input.closest(".field").append(message);
+      message.textContent=shortMessage(error);input.closest('.field').append(message);
       input.setAttribute("aria-invalid","true");input.setAttribute("aria-describedby",[input.getAttribute("aria-describedby"),message.id].filter(Boolean).join(" "));
-      first ||= input;
+      if(!['required_hour','required_minute','required','required_text'].includes(code)) {
+        const help=document.createElement('details');help.className='field-help';help.dataset.calendarFieldError='true';
+        const summary=document.createElement('summary');summary.textContent='Beispiel';const text=document.createElement('p');text.textContent=fieldMessage(field,code,data);
+        help.append(summary,text);input.closest('.field').append(help);
+      }
     }
-    if (first) {first.scrollIntoView({block:"center"});first.focus({preventScroll:true});}
+    const first=form.querySelector('[aria-invalid="true"]');
+    const summary=form.querySelector('#calendar-offer-error');summary.dataset.calendarValidation='true';
+    summary.textContent=first?'Bitte markierte Angaben prüfen.':'';summary.hidden=!first;
+    if(first && focus){first.scrollIntoView({block:'center'});first.focus({preventScroll:true});}
     return Boolean(first);
   }
-  return {clear,show,
-    reset(draft = {}) {clear();originals = {};
-      for (const field of dates) {originals[field] = draft[field];controls[field].input.value = draft[field] ? germanDateTime(draft[field]) : "";sync(field);}
+  function locationHint() {
+    const required=form.querySelector('#calendar-format').value!=='online',input=form.querySelector('#calendar-location');
+    input.required=required;
+    form.querySelector('#calendar-location-label').textContent=required?'Veranstaltungsort *':'Öffentlicher Hinweis (optional)';
+    form.querySelector('#calendar-location-hint').textContent=required?'Bitte Veranstaltungsort angeben, z. B. Würzburg, Seminarraum.':'Nur öffentliche Angaben, keine privaten Zugangsdaten.';
+    form.querySelector('#calendar-location-count').textContent=`${input.value.length} / 200 Zeichen`;
+  }
+  function edited() {
+    locationHint();picker.refresh();
+    if(shown.length){const known=new Set(shown.map(error=>error.field)),next=validate().errors.filter(error=>known.has(error.field));
+      if(errorSignature(next)!==rendered)show(next,false);}
+  }
+  form.addEventListener('input',edited);form.addEventListener('change',edited);
+  return {show,hidePicker:picker.hide,refresh:locationHint,values,
+    clear(){shown=[];rendered='';clearDOM();const summary=form.querySelector('#calendar-offer-error');if(summary.dataset.calendarValidation){summary.hidden=true;summary.textContent='';delete summary.dataset.calendarValidation;}},
+    reset(draft = {}) {this.clear();originals={};picker.hide();
+      for (const field of dates) {
+        const choice=controls[field],text=draft[field]?germanDateTime(draft[field]):'',p=localParts(text);
+        originals[field]=draft[field];choice.input.value=text.slice(0,10);
+        choice.minutes.querySelectorAll('[data-existing]').forEach(option=>option.remove());
+        if(p && ![0,15,30,45].includes(p.minute)){const option=new Option(pad(p.minute),pad(p.minute));option.dataset.existing='true';choice.minutes.add(option);}
+        choice.hours.value=p?pad(p.hour):field==='starts_at'?'09':field==='ends_at'?'10':'12';choice.minutes.value=p?pad(p.minute):'00';
+      }
+      locationHint();picker.refresh();
     },
-    validate() {const result = draftValues(new FormData(form),originals);return result;},
+    validate,
   };
 }

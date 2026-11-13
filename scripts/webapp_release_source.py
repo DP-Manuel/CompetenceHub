@@ -23,6 +23,8 @@ DEPLOY_FILES = frozenset({
         "competence-hub-postgres-restore-check", "competence-hub-backup-notification-render")],
 })
 DOC_FILES = frozenset({
+    "docs/operations/portal-v12-calendar-ux-2026-11-13.md",
+    "docs/operations/portal-datepicker-dependency.md",
     "docs/operations/real-user-readiness-v1-2026-11-10.md",
     "docs/operations/coach-account-mapping-v1-2026-11-10.md",
     "docs/operations/edv-portal-dns-smtp-2026-11-10.md",
@@ -58,7 +60,8 @@ def destination(path):
     if path.startswith(source):
         relative = path.removeprefix(source)
         if (PurePosixPath(relative).suffix == ".py" or
-                re.fullmatch(r"portal_ui/[a-z0-9_-]+\.(html|css|js|mjs)", relative)):
+                re.fullmatch(r"portal_ui/[a-z0-9_-]+\.(html|css|js|mjs)", relative)
+                or relative == "portal_ui/datepicker-license.txt"):
             return "package-source/src/competence_hub_api/" + relative
     if (path in {base + "database/README.md", base + "database/bootstrap-staging.sql"}
             or re.fullmatch(base + r"database/(migrations|verification)/000[1-8]_[a-z0-9_]+\.sql", path)):

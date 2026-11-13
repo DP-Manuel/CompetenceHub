@@ -7,6 +7,17 @@ Updated: 2026-11-13. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+13.11 V1.2 UX learning: preserving business rules does not require showing every
+format/example twice. Separate date from clock, mark missing components only,
+and show conditional requirements before submission. Reproduce cancellation
+against the unchanged previous wheel with a held real request. Never disable
+all exits while awaiting fetch; aborting client wait does not undo a committed
+write, so retain saved drafts and guard late replies by request generation.
+Test history/ESC/nested confirmations and explicit focus. Pinned UI dependencies
+must match committed-export basename/extension allowlists and ship their license;
+test packaged assets, not only the dev tree. Optional omitted drag is N/A, not
+another claimed browser PASS. Project evidence captured; global skills unchanged.
+
 13.11 V1.1 update learning: increment an accepted runtime, never reuse the original
 installer or a historical failed-run resume for a new feature release. Bind the
 exact previous drop-in/wheel and receipt, preserve it beneath a new override,

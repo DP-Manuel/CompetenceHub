@@ -6,3 +6,7 @@ deploy/scripts/competence-hub-postgres-restore-check text eol=lf
 deploy/systemd/*.example text eol=lf
 deploy/nginx/*.example text eol=lf
 deploy/postgresql/*.example text eol=lf
+apps/webapp/src/competence_hub_api/portal_ui/datepicker-v134.js text eol=lf
+apps/webapp/src/competence_hub_api/portal_ui/datepicker-de-v134.js text eol=lf
+apps/webapp/src/competence_hub_api/portal_ui/datepicker-v134.css text eol=lf
+apps/webapp/src/competence_hub_api/portal_ui/datepicker-license.txt text eol=lf

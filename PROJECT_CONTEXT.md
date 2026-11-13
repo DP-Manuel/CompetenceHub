@@ -4,6 +4,20 @@ Updated: 2026-11-13.
 
 ## Current Milestone
 
+13.11 V1.2 Calendar UX local block: busy-save lock-in reproduced against unchanged
+V1.1 wheel. Single discard confirmation, safe cancel/timeout/late reply, ESC/back/
+logout; German date-only Calendar/range plus one24h clock, compact part errors and
+advance venue requirements implemented. Native owned PostgreSQL13/14 cases PASS,
+optional drag N/A; Coach isolation, MFA/logout/Recovery, actual ICS/revision2,
+390px/touch/keyboard/semantics/native200 and retained arbitrary seconds/minutes.
+Own container/volume removed. Pinned local Datepicker/library license reviewed;
+OSV snapshot no advisories. Full suite/package still in progress; candidate only,
+NO V1.2 VPS approval/execution inferred. Existing38153c1/V1.1 tunnel/windows stay
+untouched. [Current V1.2 scope/gate](docs/operations/portal-v12-calendar-ux-2026-11-13.md)
+and [active plan](docs/exec-plans/active/portal-v12-calendar-ux-2026-11-13.md).
+Teams report26.10–13.11 drafted under the binding standard. One next block after
+green immutable candidate: separately granted state-preserving V1.1→V1.2 window.
+
 13.11 V1.1 ACTUALLY INSTALLED/ACCEPTED14:52 MEZ, source38153c1/operator53c044e.
 Receipt6554531a…/SHAd25223b0… independently bound. Current27-table protected
 backup/exact isolated restore PASS, probe removed/source unchanged. Native remote
@@ -22,8 +36,8 @@ import, mail, Website/Pages/GPG change. Existing terminal intentionally remains
 open; Enter closes its role windows/tunnel, not VPS services. Do NOT rerun update.
 [Actual V1.1 evidence](docs/operations/portal-v11-ux-2026-11-13.md#v11-tatsächlich-abgenommen)
 and [fixed test entry](docs/handoffs/PORTAL_TESTZUGAENGE.md).
-One next block: Manuel's synthetic Coach/Reviewer/calendar usability recheck in
-the opened windows. Reconnect starter now pins actual V1.1 receipt/date asset;
+That usability recheck produced the V1.2 request above. Reconnect still pins the
+actual V1.1 receipt/date asset, not the local candidate;
 normal same-user PowerShell, no sudo/credential search. TLS expires24.11.
 
 13.11 manual access starter STOP/TimeoutError after reaching browser phase.
@@ -368,7 +382,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended block: Manuel's V1.1 Coach/Reviewer/calendar usability recheck. Inputs: actually accepted38153c1 VPS and already authenticated original synthetic role windows. Deliverable/DoD: one-day course draft/save/submit/change/revision/publication and ICS/tours understandable, or precise reproducible feedback. [Fixed handoff](docs/handoffs/PORTAL_TESTZUGAENGE.md). No update/installer rerun; real activation and EDV remain separate.
+1. Exactly one recommended block after the green V1.2 candidate: a newly granted state-preserving private V1.1→V1.2 update window. Inputs: exact candidate/hash, current accepted38153c1 predecessor, suitable current restore proof and original TLS. Deliverable/DoD: preserve original users/offers, isolated synthetic UX13 PASS/drag N/A, MFA/RBAC/ICS/restart/six services/TLS and direct manual access. [One gate](docs/operations/portal-v12-calendar-ux-2026-11-13.md#one-deployment-gate). Open tunnel is not approval; no installer, real activation or EDV bypass.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
 
