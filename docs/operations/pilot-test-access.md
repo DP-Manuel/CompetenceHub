@@ -1,7 +1,9 @@
 # Testzugang Zum Privaten V1-Piloten
 
-Stand:13.11.2026. Technischer VPS-Pilot abgenommen; Manuels Bedienabnahme folgt
-später. Keine echten Zugänge, neuen Rollen, Installation oder Datenübernahme.
+Stand:13.11.2026. Technischer VPS-Pilot abgenommen. Manuel hat Admin und wesentliche
+Coachfunktionen positiv geprüft; die vollständige erneute Bedienabnahme folgt
+nach dem gesonderten V1.1-Update. [Fester Einstieg für alle künftigen Tests](../handoffs/PORTAL_TESTZUGAENGE.md).
+Keine echten Zugänge, neuen Rollen, Installation oder Datenübernahme.
 
 ## Für Manuel
 

@@ -9,7 +9,9 @@ reported form/date/access/Calendar discoverability findings; terminal is closed,
 VPS remains running on accepted V1. Local explicit German controls/field errors,
 optional summary, preserved minutes/seconds/DST, ICS/tours and fixed test guide
 implemented. Native one/multiday PostgreSQL/browser workflow and logout/startup
-race proof pass; owned resources removed. Final bound packaging is in progress.
+race proof pass; owned resources removed. Bound source38153c1 package complete:
+1718 PASS/30 expected skips, native40 and Linux/proxy37 PASS. ZIP/hash and one
+remote update gate in canonical result; no install/update execution inferred.
 No VPS/Website/GPG/real identity/migration action. [Current V1.1 scope/evidence](docs/operations/portal-v11-ux-2026-11-13.md)
 and [fixed test entry](docs/handoffs/PORTAL_TESTZUGAENGE.md).
 One next block after local delivery: separately scoped private V1.1 update gate,

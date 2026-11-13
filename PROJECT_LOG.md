@@ -8,7 +8,8 @@ errors/focus/input preservation; clear public ICS and shared voluntary tours.
 Fixed test handoff reuses existing roles, private ACL identifier-only guide, no
 secret export. Native local PG one/multiday/revision/public ICS/request/390px/
 native200/relogin checks pass. Found/fixed stale startup after logout; delayed
-native response regression prevents private DOM restoration. Package gate follows;
+native response regression prevents private DOM restoration. Bound38153c1 package,
+1718 PASS/30 expected skips, native40/LINUX37 PASS; owned resources removed;
 actual VPS remains V1, no remote/Website/key/real-account/migration action.
 [Canonical result and one remote gate](docs/operations/portal-v11-ux-2026-11-13.md).
 
