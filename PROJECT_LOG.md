@@ -7,8 +7,11 @@ One explicit discard dialog, abort/deadline/late-response guard, no saved-draft
 deletion, date-only German picker/range, one24h clock, part-specific compact live
 errors and advance venue requirement implemented. Native owned PG13 cases PASS/
 drag N/A, source touch/year/legacy-microseconds/cancel/timeout/demo checks PASS;
-container/volume removed. Immutable candidate/full package gate pending; actual
-VPS38153c1/V1.1 and its open tunnel untouched. Weekly26.10–13.11 prepared and
+container/volume removed. Source5a555e9 full1763 PASS/30 expected skips, immutable
+candidateZIP SHA754322cd…/wheelSHAdfe5b94e…; ten packaged UI assets exact. Local
+Ubuntu37 proxy/security checks and committed-source native browser rerun PASS,
+owned cleanup verified. Actual VPS38153c1/V1.1 and its open tunnel untouched.
+Separate in-memory synthetic local preview open. Weekly26.10–13.11 completed and
 standard checked. [V1.2 evidence and one gate](docs/operations/portal-v12-calendar-ux-2026-11-13.md).
 
 13.11 14:52 MEZ ACTUAL V1.1 VPS ACCEPTANCE. Operator53c044e/package38153c1,

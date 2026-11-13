@@ -17,9 +17,12 @@ VPS grant inferred from the earlier V1.1 grant or an open tunnel.
    accessible/responsive form layout and reachable actions.
 5. DONE:14 browser cases(13 PASS, optional drag N/A) plus native PostgreSQL Coach/reviewer/ICS/MFA/RBAC,
    390px/touch/keyboard/native200, before/after screenshots; own cleanup.
-6. IN PROGRESS: green scoped Git delivery, immutable source-bound V1.2 package, Linux
-   validation and exactly one state-preserving VPS update gate; no server writes.
-7. DRAFT VERIFIED: Teams report26.10–13.11 per weekly standard, then Manuel's V1.2 gate.
+6. DONE: source5a555e9, full1763 PASS/30 expected skips, source-bound V1.2 package,
+   exact10 UI assets, Linux37 proxy/security checks and repeated native browser
+   run PASS; own container/volume cleanup. Exactly one state-preserving VPS gate,
+   no server writes. Final evidence closure/Git push follows these green gates.
+7. DONE: Teams report26.10–13.11 per weekly standard; separate local synthetic
+   Coach/Reviewer preview opened, existing VPS tunnel/windows untouched.
 
 Definition of Done: all14 cases actually checked or honestly open, local package
 integrity and preserved contracts; no IONOS/Pages/real account/DB/GPG/USB action.

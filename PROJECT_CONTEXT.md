@@ -11,12 +11,17 @@ advance venue requirements implemented. Native owned PostgreSQL13/14 cases PASS,
 optional drag N/A; Coach isolation, MFA/logout/Recovery, actual ICS/revision2,
 390px/touch/keyboard/semantics/native200 and retained arbitrary seconds/minutes.
 Own container/volume removed. Pinned local Datepicker/library license reviewed;
-OSV snapshot no advisories. Full suite/package still in progress; candidate only,
-NO V1.2 VPS approval/execution inferred. Existing38153c1/V1.1 tunnel/windows stay
+OSV snapshot no advisories. Final full suite1763 PASS/30 expected skips; committed
+5a555e9 immutable package SHA754322cd…/wheelSHAdfe5b94e…, all10 UI assets exact.
+Local packaged Linux37 proxy/security checks and repeated native PG run PASS;
+own containers/volume removed. Candidate only, NO V1.2 VPS approval/execution
+inferred. Separate local synthetic Coach/Reviewer preview open; not the VPS.
+Existing38153c1/V1.1 tunnel/windows stay
 untouched. [Current V1.2 scope/gate](docs/operations/portal-v12-calendar-ux-2026-11-13.md)
 and [active plan](docs/exec-plans/active/portal-v12-calendar-ux-2026-11-13.md).
-Teams report26.10–13.11 drafted under the binding standard. One next block after
-green immutable candidate: separately granted state-preserving V1.1→V1.2 window.
+Teams report26.10–13.11 completed under the binding standard. Exactly one next
+block: separately granted state-preserving V1.1→V1.2 window with current suitable
+restore proof and strict TLS; do not reuse a mismatching older data snapshot.
 
 13.11 V1.1 ACTUALLY INSTALLED/ACCEPTED14:52 MEZ, source38153c1/operator53c044e.
 Receipt6554531a…/SHAd25223b0… independently bound. Current27-table protected

@@ -63,8 +63,13 @@ entire page retains the browser's native unsaved-page protection.
 | 14 | 390px, touch, keyboard, semantic names/errors, Reduced Motion, native200% | PASS |
 
 Native PostgreSQL run:
-`release-artifacts/portal-v12-ux/2246e29cf00b4c0d8af7720065480b12/report.json`.
+`release-artifacts/portal-v12-ux/8f9948ab68d348d8bdff5943af14c899/report.json`.
 SHA-256 `063704d4ee830aafd902491406c4ba0052c32fc4c20128c1c74ab35b3d7a2b5f`.
+Repeated on committed source5a555e9; the deterministic sanitized report matches
+the preceding run byte for byte. Screenshots in that same directory:
+`desktop-validation.png`, `desktop-range.png`, `mobile-validation.png` and
+`native200-picker.png`. Mobile and native200 images visually reviewed; at200%
+the form/picker scrolls, its reachable action footer does not cover focused days.
 Exact own fixture cleanup, container and volume removed. Includes native Coach
 isolation404, logout401 and one-time Recovery resume only in the owned fixture.
 This local proof's ephemeral self-signed TLS allowance is not remote TLS evidence.
@@ -83,8 +88,36 @@ Targeted source/browser/export checks PASS(46,44 and final5-case runs), Node
 German/DST/seconds regression and JavaScript syntax PASS. First full suite:
 1761 PASS/30 expected skips, one pre-existing offline fake-process timeout test
 failed before its PID marker was written within2seconds. The exact isolated
-rerun PASS; no real GPG/USB/server process was involved or changed. Final
-immutable-package full gate remains pending, not reported as green yet.
+rerun PASS; no real GPG/USB/server process was involved or changed. The final
+committed-source immutable-package full gate PASS:1763 tests,30 expected skips
+in414.14seconds. Exact production/build dependency versions, pip check, compile
+and fresh isolated wheel install PASS. No unrelated timeout assertion changed.
+
+## Bound Local Release
+
+Source commit `5a555e9a9aaeecd03ccfa0645929b58d95801488`, clean tracked inputs,
+committed-only135-file export. Release candidate only; metadata explicitly says
+`deployment_authorized=false`. Python package version remains0.1.0; V1.2 names
+the Calendar UX feature, not a separate runtime/dependency version.
+
+- ZIP: `release-artifacts/webapp/competence-hub-webapp-0.1.0-5a555e9a9aae-20261113T151526Z.zip`.
+- ZIP SHA-256: `754322cd57ab0f121a85f1625c1681fd271ec9049fa5beda9024437e77bdea58`.
+- Wheel SHA-256: `dfe5b94ef14895f45b16b1e6502688fff5e65a340d8766c97ec7fd57ef3c1714`.
+- All ten changed/new public UI assets, including license, compared byte for byte
+  between actual wheel and source: PASS. No credentials/private artifacts bundled.
+- Linux evidence: `release-artifacts/webapp-linux/20261113T151559Z-1a2ef9ab/local-summary.json`.
+- Linux summary SHA-256: `5ddf14544645b490f71b01cc74472cb39b12c4e011f75f2855fe80a9a7fdb55f`.
+
+Actual packaged Ubuntu runtime, locked Linux wheels/published hashes/advisory
+snapshot, offline venv/pip and37 Nginx/HTTPS/Auth/CSRF/RBAC/logout/PG cleanup
+checks PASS. Own Linux container removed; separate native PostgreSQL container
+and volume removed, labeled inventory independently empty. No VPS action.
+
+A separate local in-memory synthetic Firefox preview opens Coach/Reviewer views
+with its own ephemeral trusted certificate/profile. It is not the existing VPS
+pilot and does not import its private credentials. Its live address/status are
+ephemeral under ignored `.tmp/v12-local-preview`; closing its own windows stops
+its local server and discards synthetic state. Existing VPS windows stay intact.
 
 ## One Deployment Gate
 
