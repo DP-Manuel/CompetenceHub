@@ -2,6 +2,17 @@
 
 Significant milestones only; newest first.
 
+15.11 22:52 MEZ ACTUAL V1.2 private VPS acceptance. Operator efc3508/application
+5a555e9/SHA754322cd…, receipt ab60077b…/SHA0a034aae… bound. Current27-table
+protected backup/exact isolated restore and remote CAL61+UX13/drag N/A/touch/
+native200/MFA/RBAC/ICS/restart/persistence/reference cleanup PASS. Config/keys/
+original users/offers preserved; shared IP security counters retained. Independent
+TLS/leaf/negative controls,13 wheel-exact UI assets, closed delivery and six
+services/loopback PASS. V1/V1.1 remain, only24-v12 added, rollback not required.
+Original four role windows plus Calendar opened via normal TOTP; expected auth/
+audit only. Fixed opener/guide now actual V1.2; no migrations, real accounts,
+mail/public/Website/GPG changes. [Actual closure](docs/operations/portal-v12-calendar-ux-2026-11-13.md#v12-tatsächlich-abgenommen).
+
 15.11 explicit V1.2 private-update grant recorded; fresh read-only SSH confirms
 V1.1/exact20+22 overrides/six services/loopback. Bound V12 operator preserves V1
 and V1.1, no installer or historical resume.165 focused tests and actual local

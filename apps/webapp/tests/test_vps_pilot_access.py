@@ -105,24 +105,24 @@ def test_current_runtime_pin_matches_accepted_wheel(monkeypatch):
 
 def test_wrong_current_runtime_is_rejected_before_login(monkeypatch):
     monkeypatch.setattr(access.pilot.acceptance,'HTTPS',lambda ca:SimpleNamespace(call=lambda path:(404,{},b'NOT V1')))
-    with pytest.raises(Stop,match='ACCEPTED_V11_RUNTIME_REQUIRED'):access.verify_access_runtime(None)
+    with pytest.raises(Stop,match='ACCEPTED_V12_RUNTIME_REQUIRED'):access.verify_access_runtime(None)
 
 
-def test_v11_actual_receipt_hash_is_bound_before_private_access(monkeypatch):
+def test_v12_actual_receipt_hash_is_bound_before_private_access(monkeypatch):
     monkeypatch.setattr(Path,'read_bytes',lambda path:b'changed-public-receipt')
-    with pytest.raises(Stop,match='ACCEPTED_V11_RECEIPT_CHANGED'):access.accepted_access()
+    with pytest.raises(Stop,match='ACCEPTED_V12_RECEIPT_CHANGED'):access.accepted_access()
 
 
-@pytest.mark.parametrize('field',['status','deployment','cal1','v11_ux','server_commit','package_sha256','package_commit',None])
-def test_v11_receipt_rejects_wrong_acceptance_or_release(monkeypatch,field):
-    record={'status':'PASS','deployment':'PASS','cal1':'PASS','v11_ux':'PASS','server_commit':'ACKNOWLEDGED',
+@pytest.mark.parametrize('field',['status','deployment','cal1','v12_ux','server_commit','package_sha256','package_commit',None])
+def test_v12_receipt_rejects_wrong_acceptance_or_release(monkeypatch,field):
+    record={'status':'PASS','deployment':'PASS','cal1':'PASS','v12_ux':'PASS','server_commit':'ACKNOWLEDGED',
             'package_sha256':access.update.PACKAGE_SHA,'package_commit':access.update.PACKAGE_COMMIT}
     if field:record[field]='WRONG'
     raw=json.dumps(record).encode()
     monkeypatch.setattr(Path,'read_bytes',lambda path:raw);monkeypatch.setattr(access,'FINAL_SHA',access.update.sha(raw))
     monkeypatch.setattr(access.update,'accepted_ca',lambda:'public-ca-only')
     if field:
-        with pytest.raises(Stop,match='ACCEPTED_V11_REQUIRED'):access.accepted_access()
+        with pytest.raises(Stop,match='ACCEPTED_V12_REQUIRED'):access.accepted_access()
     else:assert access.accepted_access()=='public-ca-only'
 
 

@@ -5,19 +5,19 @@ Passwörter, MFA-Seeds, Recovery-Codes und Tokens gehören niemals in diese Date
 
 ## Stand Und Adresse
 
-Privater VPS: **V1.1 am13.11 tatsächlich installiert und abgenommen**,
-Paket38153c1. `VPS_V11_UPDATE=PASS` und `PILOT_ACCESS=PASS` bestätigt.
-
-V1.2 mit vereinfachter Datumsauswahl wird lokal vorbereitet; noch nicht auf dem
-VPS. Der offene Tunnel und die vorhandenen Fenster zeigen deshalb weiter V1.1.
-Keinen alten Updatebefehl starten. V1.2 benötigt ihr eigenes gebundenes Update-Gate.
+Privater VPS: **V1.2 am15.11 tatsächlich installiert und abgenommen**,
+Paket5a555e9. `VPS_V12_UPDATE=PASS` und `PILOT_ACCESS=PASS` bestätigt.
+Deutsche Kalenderauswahl, getrennte Uhrzeit, kompakte Feldfehler und kontrolliertes
+Abbrechen sind jetzt auf dem VPS verfügbar. Die neu geöffneten Coach-/Prüfer-/
+Admin-Fenster verwenden die vorhandenen Konten, kein Reset oder neues Setup.
+Keinen Updatebefehl zum bloßen Wiederöffnen starten; V1 und V1.1 sind Rückfallstände.
 
 Im freigegebenen Updatefenster genügt ein gebundener Befehl: Nach technischer
 Abnahme öffnet es die vorhandenen Coach-/Prüfer-/Admin-Fenster bereits angemeldet.
 Terminal offen lassen. Jetzt zu **Coach1** oder **Prüfer** wechseln; keine
 Zugangsdaten suchen, keine Konten neu anlegen. Die nachfolgenden Starterangaben
 betreffen ausschließlich spätere Wiederöffnung und sind auf die tatsächliche
-V1.1-Receipt und neue Datumsoberfläche gebunden. Ein Update nicht bloß zum
+V1.2-Receipt und neue Datumsoberfläche gebunden. Ein Update nicht bloß zum
 Wiederöffnen erneut ausführen.
 
 - Portal: `https://localhost:8447/portal/`
@@ -32,7 +32,7 @@ Wiederöffnen erneut ausführen.
    Arbeitsverzeichnis beliebig. Ein altes wartendes Starterterminal zuvor mit
    Enter beenden; bereits geschlossene Terminals nicht wiederherstellen.
 2. Den vollständig gebundenen Befehl in
-   `release-artifacts/portal-v11-ux/START-TEST.txt` verwenden. Fehlt diese Datei,
+   `release-artifacts/portal-v12-ux/START-TEST.txt` verwenden. Fehlt diese Datei,
    keinen alten Installer oder geratenen Commit starten, sondern den zuletzt
    geprüften vollständigen Befehl aus dem Projektabschluss anfordern.
 3. Der Starter prüft Quellstand, ursprüngliches TLS und akzeptierte VPS-Version.
@@ -78,13 +78,16 @@ Kein automatischer Passwortversuch, Recoveryverbrauch, neuer Benutzer oder Reset
 Eine Erneuerung synthetischer Zugänge ist ein gesondert geprüfter Betriebsblock;
 aktuell sind die vorhandenen Kopien wiederverwendbar, kein Reset erforderlich.
 
-## Vollständiger Test Nach V1.1-Update
+## Vollständiger Test Nach V1.2-Update
 
 1. Coach1: Kalenderangebote öffnen und einen Entwurf mit Thema/Titel anlegen.
    Beispiel20.11.2026 09:00–16:00, Europe/Berlin, Kapazität10, Prüfschwelle5,
    Entscheidungsfrist19.11.2026 12:00, Preishinweis „Preis nach Abstimmung“.
    Nur verwenden, solange Datum/Frist noch künftig sind; sonst neu wählen.
-   Kurzbeschreibung optional; bei Präsenz/Hybrid einen öffentlichen Ort angeben.
+   Datum im deutschen Kalender wählen, Uhrzeit getrennt auf09:00/16:00 setzen.
+   Kurzbeschreibung optional; bei Präsenz/Hybrid erscheint der Ortshinweis vorher.
+   Auch fehlende Minute und Abbrechen testen: einmal Weiter bearbeiten oder
+   Änderungen verwerfen; gespeicherte Entwürfe bleiben erhalten.
 2. **Entwurf speichern**, danach **Zur Prüfung einreichen**.
 3. Im Prüferfenster Prüfliste aktualisieren, **Angebot prüfen**, Änderungen mit
    Hinweis anfordern. Coach aktualisiert und bearbeitet eine **Neue Revision**.

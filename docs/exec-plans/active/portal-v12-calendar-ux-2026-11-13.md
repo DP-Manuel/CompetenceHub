@@ -37,14 +37,20 @@ use reproducible source UI before/after evidence, not an invented original image
 2. DONE: bound V12 incremental operator, strict shared browser cases,
    two-predecessor preservation; actual Linux update and rollback PASS, owned
    containers removed.165 focused regressions PASS;1763+30 application proof reused.
-3. IN PROGRESS: commit/push reviewed operating code after green scoped tests;
+3. DONE: operating commit efc3508 pushed after green scoped tests;
    immutable application package5a555e9 stays unchanged.
-4. READY: same-user protected terminal; original CA/leaf/current inventory,
-   suitable current DPAPI/BitLocker backup and isolated exact restore before switch.
-5. PENDING: activate only24-v12 override; separate native synthetic CAL/security/
-   UX13 cases plus drag N/A, restart and exact reference cleanup/health acceptance.
-6. PENDING: bind actual receipt/runtime and reopen original four role windows;
-   update fixed guide, STOP before real activation/public access.
+4. DONE: protected window, original CA/leaf/current inventory, current27-table
+   DPAPI/BitLocker backup and isolated exact restore, source unchanged/probe removed.
+5. DONE: only24-v12 override, actual CAL61+UX13/drag N/A/touch/native200,
+   MFA/RBAC/ICS/restart/persistence/reference/health PASS. Independent13 assets,
+   TLS negative controls, closed delivery and six services PASS; V1/V1.1 retained.
+6. DONE: actual receipt ab60077b…/SHA0a034aae…, original four roles plus Calendar
+   opened, fixed guide/local opener pinned to V1.2; final access regression green.
+
+Next single block: Manuel's own V1.2 usability acceptance in already open roles,
+one-/multi-day/error/discard/review/revision/publication/ICS. Record concrete
+finding or acceptance. STOP before real activation/public access; TLS24.11 and
+EDV DNS/SMTP remain external gates. No second installation to reopen windows.
 
 DoD: installed candidate matches exact hash, data/config and V1/V1.1 retained,
 six actual services healthy, strict HTTPS and Manuel's ready-to-use role windows.

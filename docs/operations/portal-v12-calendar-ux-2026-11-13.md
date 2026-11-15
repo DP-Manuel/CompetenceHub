@@ -122,7 +122,8 @@ its local server and discards synthetic state. Existing VPS windows stay intact.
 
 ## One Deployment Gate
 
-V1.2 server update AUTHORIZED15.11/NOT_RUN at preparation. Exactly one controlled
+V1.2 server update AUTHORIZED15.11 and now actually accepted below. At preparation
+it was NOT_RUN; local proofs alone were not deployment. Exactly one controlled
 V1.1→V1.2 private pilot window. Inputs: explicit new Owner grant, verified
 candidate/hash, current accepted predecessor38153c1 and
 receipt6554531a…/SHAd25223b0…, original CA/leaf, current suitable protected restore
@@ -189,4 +190,58 @@ SHA-256 `783b52f65c58248c59a67a8c33eff303589162a76b89ed209582702be4ba0ff9`.
 Both own containers removed and independently absent. These local proofs use a
 process-service shim and synthetic AES instead of actual systemd/Windows DPAPI;
 not claimed as real VPS/BitLocker/Owner-secret evidence. Actual operating window
-remains NOT_RUN until its own receipt and server ACK establish acceptance.
+was NOT_RUN at this checkpoint; the following is its separate real receipt/ACK.
+
+## V1.2 Tatsächlich Abgenommen
+
+15.11.2026,22:52 MEZ. Actual receipt
+`release-artifacts/vps-v12-update/ab60077be6fb41cebce020168c2eff89.json`,
+SHA-256 `0a034aae3d1e351f4a5a9868592beda933acbb580658b14863f4362014190a4e`.
+Operator `efc3508b606a02913e940a86c63c6cfe61196bd3`, application5a555e9 and exact
+ZIP SHA754322cd… as fully recorded above. `VPS_V12_UPDATE=PASS`, server ACK and
+`PILOT_ACCESS=PASS`; no repeat installation or extra Owner/password dialog.
+
+- Current27-table protected DPAPI/BitLocker backup and isolated exact restore
+  PASS: all row hashes, schema/rights, format and sequence state equal; source
+  unchanged and private probe removed. No source-database restoration.
+- Actual native remote61 CAL/security checks and13 V1.2 cases PASS, optional
+  drag N/A. German pointer/range dates, one-/multi-day,24h/quarters, targeted
+  compact errors/venue hints, cancel/keep/discard/ESC/back after errors, reopen,
+  changes-requested/revision/Reviewer/publication/ICS,390px/touch/keyboard/
+  semantic checks/Reduced Motion and native200% all exercised on the VPS.
+- MFA, exact RBAC/Coach isolation, CSRF/Origin, sessions/logout/one-time recovery,
+  actual backend restart and PostgreSQL publication/session persistence PASS.
+  Recovery used only on the owned temporary cohort, never original access copies.
+- Scoped cohort cleanup/reference gate PASS:26 tables' original rows preserved,
+  shared synthetic-IP security counters retained, sequences not rewound. Original
+  four users/two Coaches and saved manual offers preserved. Configuration and
+  application keys unchanged; own log secret scan PASS. No migrations.
+- Independent post-receipt strict CA/hostname/leaf and negative certificate
+  controls, all13 served UI assets byte-equal to exact wheel, anonymous session401
+  and closed invitation503 PASS. No certificate bypass or global trust install.
+- Independent SSH confirms six active services, actual5a555e9 ExecStart, retained
+ 20-v1/22-v11 beneath24-v12, unchanged listeners and loopback API8001/proxy8443/
+  PG5432. Chatbot8000 and external existing web/SSH services unaffected.
+- V1.1 is immediate code rollback, reviewed V1 remains deeper retained fallback;
+  neither removed or overwritten. No real rollback required; local rollback
+  above proves all27 original tables equal and actual V1.1 restarted.
+- Original Admin/Reviewer/two Coach windows plus public Calendar opened normally
+  via existing password/TOTP after the preservation gate. Expected new auth/MFA/
+  audit activity only, no reset/new account/recovery consumption. Terminal34100
+  intentionally held; Enter closes only this local access, not VPS services.
+
+Fixed [test entry](../handoffs/PORTAL_TESTZUGAENGE.md) and later opener now bind
+this actual receipt and V1.2 Calendar asset, not a candidate or V1.1. No further
+installation needed for manual testing. Final115 access/operator/startup
+regressions PASS; actual public receipt/runtime pin independently verified
+without credential access. Actual owned remote mobile/native200 screenshots
+visually reviewed: compact minute-only error, scrollable picker, reachable footer.
+No full NVDA/screenreader-product certification claimed.
+No real identity/import, invitations,
+public activation, IONOS/Pages, GPG/USB or backup-job change. TLS expiry24.11 and
+EDV app-domain/SMTP remain explicit external gates, not waived by private access.
+
+Exactly next block: Manuel's manual V1.2 Coach→Reviewer usability acceptance,
+using the already open original roles. DoD: one-/multi-day offer, targeted error,
+controlled discard, review/revision/publication and ICS are understandable or a
+concrete finding is recorded. STOP before real users/public activation.

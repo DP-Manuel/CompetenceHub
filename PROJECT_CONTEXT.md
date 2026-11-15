@@ -4,17 +4,25 @@ Updated: 2026-11-15.
 
 ## Current Milestone
 
-15.11 V1.2 private pilot update explicitly GRANTED by Manuel: exact5a555e9
-candidate/SHA754322cd…, current protected backup/isolated restore if required,
-own synthetic remote acceptance and original manual role access. Read-only SSH
-confirms actual V1.1, exact20-v1/22-v11 predecessors and six active services,
-loopback-only Portal/PG. Bound incremental V12 operator:165 focused regressions,
-actual Linux update61 CAL/security+13 UX/drag N/A/touch/native200 and separate
-rollback/all27-table equality PASS; owned containers removed. Committing bound
-operating code before protected execution; NO server mutation yet. No real users/mail/public
-access/Website/GPG/USB. [Granted scope and actual evidence](docs/operations/portal-v12-calendar-ux-2026-11-13.md#granted-window1511)
+15.11 V1.2 ACTUALLY INSTALLED/ACCEPTED22:52 MEZ, application5a555e9/
+SHA754322cd…, operator efc3508. Receipt ab60077b…/SHA0a034aae… bound. Current
+27-table protected DPAPI/BitLocker backup/exact isolated restore PASS, source
+unchanged/probe removed. Actual remote CAL61+UX13 PASS/drag N/A/touch/native200,
+MFA/RBAC/ICS/revision/restart/persistence and scoped reference cleanup PASS.
+Original four users/two Coaches/manual offers/config/keys retained; shared IP
+security counters not reset, sequences not rewound. Independent strict TLS/leaf/
+negative controls,13 exact UI assets, anonymous401/closed invitation503 and SSH
+six active services/loopback PASS.20-v1/22-v11 retained beneath own24-v12;
+no real rollback needed, local rollback/all27 tables equality PASS. No migration,
+real users/mail/public access/Website/GPG/USB. Original role windows plus Calendar
+already opened via normal password/TOTP after preservation; expected auth/audit
+changes only. Terminal34100 intentionally held; Enter closes local access only.
+[Actual V1.2 evidence](docs/operations/portal-v12-calendar-ux-2026-11-13.md#v12-tatsächlich-abgenommen)
 and [execution horizon](docs/exec-plans/active/portal-v12-calendar-ux-2026-11-13.md).
-One next block is this already granted protected V1.2 window, not another grant.
+Fixed test guide/opener bind actual V1.2. Exactly next: Manuel's manual V1.2
+Coach→Reviewer usability test, no installer. TLS expires24.11; EDV DNS/SMTP and
+real activation remain separate gates. Earlier13.11 candidate statements below
+are historical, superseded by this actual accepted operating window.
 
 13.11 V1.2 Calendar UX local block: busy-save lock-in reproduced against unchanged
 V1.1 wheel. Single discard confirmation, safe cancel/timeout/late reply, ESC/back/

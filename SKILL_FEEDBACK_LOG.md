@@ -12,6 +12,8 @@ not only its latest file; V1.2 preserves both20-v1 and22-v11. Reuse a shared UX
 case catalog, but make TLS scope explicit: fixture self-signed allowances must
 never silently travel into remote browser contexts/API reads. Preserve existing
 role access and update its receipt/runtime pin only after real server acceptance.
+Exercise actual isolated Python flags in an import smoke: development sys.path
+can hide missing helper imports that would otherwise stop a privileged window.
 Project-local tests/operating profile; no new global skill or password workflow.
 
 13.11 V1.2 UX learning: preserving business rules does not require showing every
