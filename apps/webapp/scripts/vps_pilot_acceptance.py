@@ -56,7 +56,7 @@ def zoom_profile(pw, directory):
         database.commit()
 
 
-def run(root, fixture, ca, directory, report, tour_counts=None):
+def run(root, fixture, ca, directory, report, tour_counts=None, datetime_fill=None):
     checks, private, contexts, errors = [], {}, {}, []
     report['checks'] = checks
     def check(name, value):
@@ -125,7 +125,9 @@ def run(root, fixture, ca, directory, report, tour_counts=None):
                             'starts-at': start.strftime('%Y-%m-%dT%H:%M'), 'ends-at': end.strftime('%Y-%m-%dT%H:%M'),
                             'decision-deadline': (start-timedelta(days=3)).strftime('%Y-%m-%dT%H:%M'),
                             'location': 'DEMO Raum', 'price': 'DEMO Keine Buchung'}.items():
-            page.locator('#calendar-' + name).fill(value)
+            if datetime_fill is not None and name in ('starts-at','ends-at','decision-deadline'):
+                datetime_fill(page,name,datetime.fromisoformat(value))
+            else:page.locator('#calendar-' + name).fill(value)
         page.locator('#calendar-topic').select_option(fixture['topic'])
         page.locator('#save-calendar-offer').click()
         expect(page.locator('#calendar-offer-dialog')).to_be_hidden()
@@ -184,7 +186,7 @@ def run(root, fixture, ca, directory, report, tour_counts=None):
                 submit(coach,'DEMO preserved reference');review(reviewer,'DEMO preserved reference','published')
                 check('Existing reference has native MFA sessions and published event',api.call('/api/v1/calendar/offers/'+reference)[0]==200)
                 return private
-            start = datetime.fromtimestamp(now(), ZoneInfo('Europe/Berlin')).replace(day=1, hour=17, minute=18, second=0, microsecond=0)
+            start = datetime.fromtimestamp(now(), ZoneInfo('Europe/Berlin')).replace(day=1, hour=17, minute=15 if datetime_fill else 18, second=0, microsecond=0)
             first = (start+timedelta(days=40)).replace(day=1)
             start, end = first-timedelta(days=1), first+timedelta(days=1)
             if start <= datetime.fromtimestamp(now(), ZoneInfo('Europe/Berlin'))+timedelta(days=5):

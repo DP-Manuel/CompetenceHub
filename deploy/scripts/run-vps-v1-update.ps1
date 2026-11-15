@@ -2,7 +2,7 @@
 <# One existing-pilot update window. No installer, real identities or GPG. #>
 [CmdletBinding()]
 param([switch]$Execute,[switch]$AcknowledgeQuietPilot,[string]$ExpectedSourceCommit,[string]$ResumeRun,
-    [ValidateSet('V1','V11')][string]$ReleaseProfile='V1')
+    [ValidateSet('V1','V11','V12')][string]$ReleaseProfile='V1')
 $ErrorActionPreference='Stop'
 $v1Execute=$Execute
 $v1Quiet=$AcknowledgeQuietPilot
@@ -27,7 +27,7 @@ function Invoke-V1UpdateProcess {
 function Invoke-ExistingPilotV1Update {
     if (-not $v1Execute) {Write-Host ('VPS_'+$updateProfile+'_UPDATE=NOT_EXECUTED');return 0}
     if (-not $v1Quiet) {throw 'QUIET_REFERENCE_WINDOW_REQUIRED'}
-    if ($updateProfile -eq 'V11' -and $v1Resume) {throw 'EXACT_ACCEPTED_RESUME_REQUIRED'}
+    if ($updateProfile -ne 'V1' -and $v1Resume) {throw 'EXACT_ACCEPTED_RESUME_REQUIRED'}
     if ($v1Resume -and $v1Resume -cne '2b834613c4204c1d98a37cbd43134fa1') {throw 'EXACT_ACCEPTED_RESUME_REQUIRED'}
     $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
     if ($v1Source -cnotmatch '^[a-f0-9]{40}$') {throw 'EXACT_REVIEWED_COMMIT_REQUIRED'}
@@ -55,7 +55,7 @@ function Invoke-ExistingPilotV1Update {
     Write-Host 'No migration, real identity, mail dispatch, public port, GPG or Website change.'
     Write-Host 'Do not use the existing pilot windows during this operation. Existing tunnel may remain open.'
     Write-Host 'Only VPS sudo may be requested, hidden here. Never enter passwords, MFA or recovery in chat.'
-    $entry=if($updateProfile -eq 'V11'){'run_vps_v11_update.py'}else{'run_vps_update.py'}
+    $entry=switch($updateProfile) {'V12' {'run_vps_v12_update.py'} 'V11' {'run_vps_v11_update.py'} default {'run_vps_update.py'}}
     Invoke-V1UpdateProcess (Join-Path $root 'apps/webapp/.venv/Scripts/python.exe') `
         (Join-Path $root ('apps/webapp/scripts/'+$entry)) $v1Source $directory $v1Resume
     return 0

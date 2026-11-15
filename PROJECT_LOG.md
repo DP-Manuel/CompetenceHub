@@ -2,6 +2,15 @@
 
 Significant milestones only; newest first.
 
+15.11 explicit V1.2 private-update grant recorded; fresh read-only SSH confirms
+V1.1/exact20+22 overrides/six services/loopback. Bound V12 operator preserves V1
+and V1.1, no installer or historical resume.165 focused tests and actual local
+Linux/native PG/TLS update61+13 UX/touch/native200/original-role access PASS;
+separate V1.1 rollback/all27 reference tables identical, both containers removed.
+Application5a555e9/SHA754322cd unchanged;1763+30 evidence reused. Real operating
+window not yet run; no migration/real identity/mail/public/Website/GPG change.
+[Single granted window](docs/operations/portal-v12-calendar-ux-2026-11-13.md#granted-window1511).
+
 13.11 V1.2 local Calendar UX: old38153c1 wheel proves busy-save Cancel/ESC lock-in.
 One explicit discard dialog, abort/deadline/late-response guard, no saved-draft
 deletion, date-only German picker/range, one24h clock, part-specific compact live

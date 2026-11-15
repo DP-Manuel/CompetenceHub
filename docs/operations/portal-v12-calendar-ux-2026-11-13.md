@@ -1,9 +1,10 @@
 # CAL-1 V1.2 Calendar UX
 
 Owner Manuel,13.11.2026. Local implementation/test/Git/package authorized. The
-existing private VPS remains on accepted38153c1/V1.1, tunnel and four original
-role windows untouched. The old V1.1 grant does not authorize this new release.
-No real account, migration, Website/Pages, GPG/USB or remote database action.
+existing private VPS initially remains on accepted38153c1/V1.1. The old V1.1
+grant did not authorize this new release. On15.11 Manuel explicitly granted
+the single V1.2 window below. No real account, migration, Website/Pages or
+GPG/USB action; actual deployment status is recorded separately from preparation.
 
 ## Proven Cancellation Failure
 
@@ -121,9 +122,9 @@ its local server and discards synthetic state. Existing VPS windows stay intact.
 
 ## One Deployment Gate
 
-V1.2 server update NOT AUTHORIZED/NOT_RUN. After bound package and Linux evidence,
-recommend exactly one controlled V1.1→V1.2 private pilot window. Inputs: explicit
-new Owner grant, verified candidate/hash, current accepted predecessor38153c1 and
+V1.2 server update AUTHORIZED15.11/NOT_RUN at preparation. Exactly one controlled
+V1.1→V1.2 private pilot window. Inputs: explicit new Owner grant, verified
+candidate/hash, current accepted predecessor38153c1 and
 receipt6554531a…/SHAd25223b0…, original CA/leaf, current suitable protected restore
 proof. Manual tests may have changed data; do not reuse an older mismatching dump.
 
@@ -131,4 +132,61 @@ Deliverables/DoD: retain V1.1 as code rollback, preserve all original users/offe
 configuration/keys, separate synthetic acceptance/cohort cleanup, all14 cases
 with drag N/A, MFA/RBAC/ICS/restart, six services and strict HTTPS. No installer,
 new DB, migration, real identity, delivery, public port or Website action. No
-new operating command before this gate; an open tunnel is availability, not grant.
+operating command without the bound preflight; an open tunnel alone is not grant.
+
+## Granted Window15.11
+
+Manuel explicitly approved target `competence_hub_staging`, candidate ZIP/SHA
+above, suitable current DPAPI/BitLocker backup with isolated exact restore if
+needed, incremental runtime activation, own synthetic acceptance/cleanup and
+original manual-access windows. No repeat Owner grant for those exact steps.
+
+Read-only actual SSH15.11: V1.1 ExecStart, precisely20-v1 and22-v11 overrides,
+six services active; API8001/proxy8443/PG5432 loopback only. Package and Linux
+wheelhouse inventory hashes agree. Existing V1.1 evidence includes subsequent
+normal role logins/manual testing, so do not treat its earlier pre-update data
+snapshot as a current rollback baseline. The operating window obtains/proves the
+current baseline without restoring or changing source data.
+
+The existing update operator gains a bound V12 profile, not a new installer.
+Only24-v12-runtime.conf is added;20-v1,22-v11 and both old installed/wheel copies
+must validate exactly and remain retained. Unknown drops, already staged V1.2,
+changed predecessors/identity/configuration or wrong target stop before writes.
+On a failed acceptance, remove only the owned24-v12 override and own test cohort,
+restart the previous V1.1 runtime and verify reference/health; never automatically
+restore an older source database. Retain the deeper reviewed V1 as requested.
+
+Remote Calendar acceptance reuses the existing61-check native security/CAL suite
+through a date-only input adapter, then the same14 V1.2 cases with strict browser
+CA/hostname checking, actual touch and native200%. Local ephemeral TLS bypasses
+are not used on the VPS. Invitations remain closed throughout. Only a successful
+server ACK and reference/health gate permit opening the original four logins;
+those normal MFA/session/audit updates are expected, business rows are unchanged.
+
+Entry: `deploy/scripts/run-vps-v12-update.ps1`, same-user elevated PowerShell7,
+exact committed operator HEAD and quiet original pilot. One existing VPS sudo
+prompt if required; no application/database/GPG password or login reset. Manual
+starter receipt/runtime pin is updated only after actual accepted V1.2 evidence.
+
+### Verified Operating Preparation
+
+15.11 focused operating/access/browser/dependency regressions:85+68+12 PASS;
+compilation, context/archive/link and diff checks PASS. Actual isolated Python
+`-I -X utf8` import checked, so shared browser cases do not rely on a development
+`sys.path`. Immutable application package/full1763+30 evidence above reused;
+no application rebuild or unneeded repeat full suite. Initial local rehearsal
+could not start with Docker Desktop stopped; engine started, no VPS mutation.
+
+Actual local V1.1→V1.2 update, native PostgreSQL/strict TLS61 security/CAL checks,
+shared13 UX PASS/drag N/A, actual390 touch/native200, current exact restore,
+reference cleanup and normal original four-role access PASS.
+Report `.tmp/ch-pilot-proof-ea3e832cd1ad47d1b230971a4930cb1e/result.json`,
+SHA-256 `2cfa5afccf1e55041c9ad6d41e95481f18ceda3f777cd170e2ed277ca9b6f296`.
+
+Separate actual rollback restores V1.1, all27 reference tables identical:
+`.tmp/ch-pilot-proof-c739d45f26664220b668650f8163e48b/result.json`,
+SHA-256 `783b52f65c58248c59a67a8c33eff303589162a76b89ed209582702be4ba0ff9`.
+Both own containers removed and independently absent. These local proofs use a
+process-service shim and synthetic AES instead of actual systemd/Windows DPAPI;
+not claimed as real VPS/BitLocker/Owner-secret evidence. Actual operating window
+remains NOT_RUN until its own receipt and server ACK establish acceptance.

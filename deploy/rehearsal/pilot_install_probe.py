@@ -61,7 +61,7 @@ def main():
                             lines=drop.read_text().splitlines()
                             command_line=next(line for line in lines if line.startswith('ExecStart=') and line!='ExecStart=')
                             runtime=Path(shlex.split(command_line.split('=',1)[1])[0])
-                            if runtime not in (v.ROOT/'venv/bin/uvicorn',v.ROOT/'releases/bc53775b08dc/venv/bin/uvicorn',v.ROOT/'releases/38153c12159e/venv/bin/uvicorn'):
+                            if runtime not in (v.ROOT/'venv/bin/uvicorn',v.ROOT/'releases/bc53775b08dc/venv/bin/uvicorn',v.ROOT/'releases/38153c12159e/venv/bin/uvicorn',v.ROOT/'releases/5a555e9a9aae/venv/bin/uvicorn'):
                                 raise RuntimeError('Unknown rehearsal runtime')
                     if update and u.CAPTURE_ENV.exists():env['COMPETENCE_HUB_INVITATION_DELIVERY_ENABLED']='true'
                     command=[str(runtime),'competence_hub_api.runtime:create_runtime_app_from_environment',
@@ -118,6 +118,10 @@ def main():
             if (ROOT/'UPDATE_RESUME_REHEARSAL').exists():u.serve(p,s,v)
             if (ROOT/'UPDATE_V11_REHEARSAL').exists():
                 u.configure_v11()
+                u.LEAF_SHA=s.sha((v.ROOT/'pilot.crt').read_bytes())
+                u.serve(p,s,v)
+            if (ROOT/'UPDATE_V12_REHEARSAL').exists():
+                u.configure_v12()
                 u.LEAF_SHA=s.sha((v.ROOT/'pilot.crt').read_bytes())
                 u.serve(p,s,v)
             # Real systemd services outlive the operator channel. Keep this local

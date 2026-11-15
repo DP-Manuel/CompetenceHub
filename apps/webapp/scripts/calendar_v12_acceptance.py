@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import time
+from types import SimpleNamespace
 from uuid import uuid4
 
 from icalendar import Calendar
@@ -30,11 +31,18 @@ def select_date(page,field,value):
     expect(page.locator('#calendar-'+{'starts_at':'starts-at','ends_at':'ends-at','decision_deadline':'decision-deadline'}[field])).to_have_value(value.strftime('%d.%m.%Y'))
 
 
-def exercise(page,base,pw,login,now,report,evidence,zoom_profile):
+def exercise(page,base,pw,login,now,report,evidence,zoom_profile,*,strict_tls=False):
     evidence.mkdir(parents=True,exist_ok=True);cases={};report['cases_14']=cases;errors=[]
     page.on('pageerror',lambda error:errors.append(error.name))
     start=(now+timedelta(days=7)).replace(hour=9,minute=0,second=0,microsecond=0)
     title='DEMO V12 '+uuid4().hex[:8]
+    tls_options={} if strict_tls else {'ignore_https_errors':True}
+    def get(actor,path):
+        if not strict_tls:return actor.request.get(base+path)
+        # Use the browser's explicitly installed CA, never a Node TLS bypass.
+        response=actor.evaluate('''async path=>{const r=await fetch(path,{cache:'no-store'});
+          return {status:r.status,body:await r.json()};}''',path)
+        return SimpleNamespace(status=response['status'],json=lambda:response['body'])
     def case(number,label,condition=True,result='PASS'):
         report['last_case']=number
         if not condition:raise AssertionError(label)
@@ -98,8 +106,8 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile):
     case(9,'Cancel still works after validation failure without deleting drafts')
     open_form(title);select_date(page,'starts_at',start);select_date(page,'ends_at',start);page.locator('[data-close-picker]').click()
     save();expect(card(title)).to_be_visible()
-    rows=page.request.get(base+'/api/v1/portal/calendar/offers').json()['items'];offer=next(row for row in rows if row['title']==title)
-    offer_id=offer['id'];saved=page.request.get(base+'/api/v1/portal/calendar/offers/'+offer_id).json()['current_revision']
+    rows=get(page,'/api/v1/portal/calendar/offers').json()['items'];offer=next(row for row in rows if row['title']==title)
+    offer_id=offer['id'];saved=get(page,'/api/v1/portal/calendar/offers/'+offer_id).json()['current_revision']
     case(1,'One-day workshop selected in Calendar and saved09-16 with optional summary',
          saved['summary'] is None and saved['starts_at']!=saved['ends_at'])
     # Multi-day range, explicit endpoints and intermediate highlight.
@@ -131,7 +139,7 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile):
     with page.expect_response(lambda response:response.request.method=='POST' and response.url.endswith('/submit')) as sent:
         card(title).get_by_role('button',name='Zur Prüfung einreichen',exact=True).click()
     assert sent.value.status==200
-    reviewer_context=page.context.browser.new_context(ignore_https_errors=True,viewport={'width':1440,'height':1000})
+    reviewer_context=page.context.browser.new_context(**tls_options,viewport={'width':1440,'height':1000})
     try:
         reviewer=reviewer_context.new_page();reviewer.on('pageerror',lambda error:errors.append(error.name));login(reviewer,'reviewer')
         def review(outcome):
@@ -148,8 +156,8 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile):
         with page.expect_response(lambda response:response.request.method=='POST' and response.url.endswith('/submit')):
             card(title).get_by_role('button',name='Zur Prüfung einreichen',exact=True).click()
         review('published')
-        assert page.request.get(base+'/api/v1/calendar/offers/'+offer_id).status==200
-        public=page.context.browser.new_page(ignore_https_errors=True,viewport={'width':390,'height':844})
+        assert get(page,'/api/v1/calendar/offers/'+offer_id).status==200
+        public=page.context.browser.new_page(**tls_options,viewport={'width':390,'height':844})
         try:
             public.goto(base+'/portal/calendar-public.html');expect(public.locator('#loading')).to_be_hidden()
             expected=public.evaluate('([y,m])=>new Intl.DateTimeFormat("de-DE",{month:"long",year:"numeric"}).format(new Date(y,m-1,1))',[start.year,start.month])
@@ -161,12 +169,12 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile):
             event=Calendar.from_ical(Path(download.value.path()).read_bytes()).walk('VEVENT')[0]
             assert int(event['SEQUENCE'])==2
             case(12,'Native changes-requested/revision2/Reviewer publication visible in Calendar')
-            report['denied_statuses']=[page.request.get(base+'/api/v1/admin/users').status,
-                                       reviewer.request.get(base+'/api/v1/portal/companies').status]
+            report['denied_statuses']=[get(page,'/api/v1/admin/users').status,
+                                       get(reviewer,'/api/v1/portal/companies').status]
             # Internal-only endpoints may reject a pure Calendar principal at
             # admission(401) or authorization(403); both are the existing contract.
             assert all(status in (401,403) for status in report['denied_statuses'])
-            assert page.request.get(base+'/api/v1/portal/access/session').status==200
+            assert get(page,'/api/v1/portal/access/session').status==200
             case(13,'ICS actual download/sequence, native role/session checks and MFA logins preserved')
         finally:public.close()
     finally:reviewer_context.close()
@@ -182,7 +190,7 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile):
     page.keyboard.press('Escape');assert layout(page)
     discard();page.set_viewport_size({'width':1440,'height':1000})
     with tempfile.TemporaryDirectory(dir=evidence) as profile:
-        zoom_profile(pw,Path(profile));zoom=pw.firefox.launch_persistent_context(profile,headless=True,ignore_https_errors=True,no_viewport=True)
+        zoom_profile(pw,Path(profile));zoom=pw.firefox.launch_persistent_context(profile,headless=True,**tls_options,no_viewport=True)
         try:
             zoom.add_cookies(page.context.cookies());z=zoom.pages[0];z.goto(base+'/portal/');expect(z.locator('#portal-view')).to_be_visible()
             z.locator('#open-calendar-offer-dialog').focus();z.keyboard.press('Enter')
@@ -195,5 +203,5 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile):
     assert not errors and page.evaluate('matchMedia("(prefers-reduced-motion: reduce)").matches')
     case(14,'390px, day-arrow keyboard/semantics, Reduced Motion, real200% zoom; no JavaScript errors')
     report['javascript_errors']=errors
-    report['tls_scope']='EPHEMERAL_LOCAL_FIXTURE_ONLY'
+    report['tls_scope']='STRICT_ORIGINAL_CA_HOSTNAME_AND_LEAF' if strict_tls else 'EPHEMERAL_LOCAL_FIXTURE_ONLY'
     return {'offer_id':offer_id,'title':title,'start':start}

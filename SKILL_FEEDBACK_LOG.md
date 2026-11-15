@@ -1,11 +1,18 @@
 # Skill Feedback Router
 
-Updated: 2026-11-13. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-15. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+15.11 incremental-release learning: validate the entire retained override chain,
+not only its latest file; V1.2 preserves both20-v1 and22-v11. Reuse a shared UX
+case catalog, but make TLS scope explicit: fixture self-signed allowances must
+never silently travel into remote browser contexts/API reads. Preserve existing
+role access and update its receipt/runtime pin only after real server acceptance.
+Project-local tests/operating profile; no new global skill or password workflow.
 
 13.11 V1.2 UX learning: preserving business rules does not require showing every
 format/example twice. Separate date from clock, mark missing components only,

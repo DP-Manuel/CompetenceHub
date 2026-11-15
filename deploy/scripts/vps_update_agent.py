@@ -31,6 +31,8 @@ OLD_WHEEL_SHA = 'a614ff69100641419a47cc068543bd65c31ff20c56989adaadffe9460f0dd64
 RESUME_RUN = '2b834613c4204c1d98a37cbd43134fa1'
 PREVIOUS_RELEASE = ROOT
 PREVIOUS_RUNTIME_DROP = None
+EXTRA_PREVIOUS_DROPS = {}
+RETAINED_RELEASES = ()
 SYNTHETIC_INVITATION_CAPTURE = True
 
 
@@ -48,6 +50,26 @@ def configure_v11():
     CAPTURE_ENV=CONFIG/'v11-synthetic-capture.env'
     OLD_WHEEL_SHA='30b211b07a45ae99154808deb46092b19ddcc1caab22364d58fc6ac4eb299dcf'
     SYNTHETIC_INVITATION_CAPTURE=False
+
+
+def configure_v12():
+    """Approved incremental V1.1 -> V1.2; both historical runtimes retained."""
+    global SOURCE, PACKAGE_SHA, RELEASE, RUNTIME_DROP, CAPTURE_DROP, CAPTURE_ENV
+    global OLD_WHEEL_SHA, PREVIOUS_RELEASE, PREVIOUS_RUNTIME_DROP
+    global EXTRA_PREVIOUS_DROPS, RETAINED_RELEASES
+    configure_v11()
+    SOURCE='5a555e9a9aae'
+    PACKAGE_SHA='754322cd57ab0f121a85f1625c1681fd271ec9049fa5beda9024437e77bdea58'
+    RELEASE=ROOT/'releases'/SOURCE
+    PREVIOUS_RELEASE=ROOT/'releases'/'38153c12159e'
+    PREVIOUS_RUNTIME_DROP=DROP/'22-v11-runtime.conf'
+    EXTRA_PREVIOUS_DROPS={DROP/'20-v1-runtime.conf':ROOT/'releases'/'bc53775b08dc'}
+    RETAINED_RELEASES=((ROOT/'releases'/'bc53775b08dc',
+        '30b211b07a45ae99154808deb46092b19ddcc1caab22364d58fc6ac4eb299dcf'),)
+    RUNTIME_DROP=DROP/'24-v12-runtime.conf'
+    CAPTURE_DROP=DROP/'25-v12-synthetic-capture.conf'
+    CAPTURE_ENV=CONFIG/'v12-synthetic-capture.env'
+    OLD_WHEEL_SHA='25d6da586d1900396471ef4d08b5a4226447ace9ce372d676b7e4bdad6b195f4'
 
 
 def runtime_override(release):
@@ -116,16 +138,18 @@ class UpdateAgent:
         value=self.collect()
         resume=request.get('resume_run')==RESUME_RUN
         if PREVIOUS_RUNTIME_DROP is not None:
+            previous_drops={PREVIOUS_RUNTIME_DROP:PREVIOUS_RELEASE,**EXTRA_PREVIOUS_DROPS}
             self.require(not request.get('resume_run') and not RELEASE.exists() and DROP.is_dir() and not DROP.is_symlink()
-                         and set(DROP.iterdir())=={PREVIOUS_RUNTIME_DROP},'EXACT_PREVIOUS_V1_RUNTIME_REQUIRED')
-            info=PREVIOUS_RUNTIME_DROP.lstat()
-            self.require(stat.S_ISREG(info.st_mode) and info.st_uid==0 and stat.S_IMODE(info.st_mode)==0o644,
-                         'PREVIOUS_V1_OVERRIDE_CUSTODY_REQUIRED')
-            self.require(PREVIOUS_RUNTIME_DROP.read_bytes()==runtime_override(PREVIOUS_RELEASE), 'PREVIOUS_V1_OVERRIDE_CHANGED')
+                         and set(DROP.iterdir())==set(previous_drops),'EXACT_PREVIOUS_V1_RUNTIME_REQUIRED')
+            for drop,release in previous_drops.items():
+                info=drop.lstat()
+                self.require(stat.S_ISREG(info.st_mode) and info.st_uid==0 and stat.S_IMODE(info.st_mode)==0o644,
+                             'PREVIOUS_V1_OVERRIDE_CUSTODY_REQUIRED')
+                self.require(drop.read_bytes()==runtime_override(release), 'PREVIOUS_V1_OVERRIDE_CHANGED')
             self.require(not (CONFIG/'v1-synthetic-capture.env').exists() and not CAPTURE_ENV.exists(), 'DELIVERY_CAPTURE_MUST_BE_ABSENT')
             self.require(not PREVIOUS_RELEASE.is_symlink() and PREVIOUS_RELEASE.is_dir(), 'PREVIOUS_V1_RELEASE_REQUIRED')
             active=self.p.command('systemctl','show',API,'-p','DropInPaths','--value').strip()
-            self.require(active==str(PREVIOUS_RUNTIME_DROP),'PREVIOUS_V1_ACTIVE_OVERRIDE_REQUIRED')
+            self.require(active==' '.join(str(path) for path in sorted(previous_drops)),'PREVIOUS_V1_ACTIVE_OVERRIDE_REQUIRED')
         else:
             self.require(resume or not RELEASE.exists() and not DROP.exists(), 'EXISTING_UPDATE_REQUIRES_REVIEW')
         if resume:
@@ -138,7 +162,7 @@ class UpdateAgent:
             self.require(not path.is_symlink() and path.is_dir(), 'ORIGINAL_DIRECTORY_REQUIRED')
         custody=CONFIG.stat()
         self.require(custody.st_uid==0 and stat.S_IMODE(custody.st_mode)==0o700,'ORIGINAL_CONFIG_DIRECTORY_CUSTODY_REQUIRED')
-        for path in (ROOT,ROOT/'releases',DROP.parent,PREVIOUS_RELEASE,*((DROP,) if PREVIOUS_RUNTIME_DROP else ()),*((RELEASE,) if resume else ())):
+        for path in (ROOT,ROOT/'releases',DROP.parent,PREVIOUS_RELEASE,*(p for p,_ in RETAINED_RELEASES),*((DROP,) if PREVIOUS_RUNTIME_DROP else ()),*((RELEASE,) if resume else ())):
             if path.exists():
                 info=path.lstat()
                 self.require(stat.S_ISDIR(info.st_mode) and info.st_uid==0 and not stat.S_IMODE(info.st_mode)&0o022,
@@ -156,14 +180,16 @@ class UpdateAgent:
         ids=','.join("'"+str(__import__('uuid').UUID(x))+"'" for x in owned['users'].values())
         count=self.p.sql("SELECT count(*) FROM competence_hub.portal_users WHERE id IN ("+ids+") AND email ~ '^synthetic-vps-[a-f0-9]{32}@example[.]invalid$'")
         self.require(count=='4', 'NON_SYNTHETIC_REFERENCE_REJECTED')
-        wheels=list((PREVIOUS_RELEASE/'bundle/packages').glob('*.whl'))
-        self.require(len(wheels)==1 and self.s.sha(wheels[0].read_bytes())==OLD_WHEEL_SHA,'ORIGINAL_ROLLBACK_WHEEL_REQUIRED')
         self.require(sys.version_info[:2]==(3,12),'ORIGINAL_PYTHON_RUNTIME_REQUIRED')
-        with zipfile.ZipFile(wheels[0]) as wheel:
-            for name in wheel.namelist():
-                if name.startswith('competence_hub_api/') and not name.endswith('/'):
-                    installed=PREVIOUS_RELEASE/'venv/lib/python3.12/site-packages'/name
-                    self.require(not installed.is_symlink() and self.s.sha(installed.read_bytes())==self.s.sha(wheel.read(name)), 'ORIGINAL_ROLLBACK_CODE_CHANGED')
+        for release,digest in ((PREVIOUS_RELEASE,OLD_WHEEL_SHA),*RETAINED_RELEASES):
+            self.require(release.is_dir() and not release.is_symlink(),'ORIGINAL_ROLLBACK_DIRECTORY_REQUIRED')
+            wheels=list((release/'bundle/packages').glob('*.whl'))
+            self.require(len(wheels)==1 and not wheels[0].is_symlink() and self.s.sha(wheels[0].read_bytes())==digest,'ORIGINAL_ROLLBACK_WHEEL_REQUIRED')
+            with zipfile.ZipFile(wheels[0]) as wheel:
+                for name in wheel.namelist():
+                    if name.startswith('competence_hub_api/') and not name.endswith('/'):
+                        installed=release/'venv/lib/python3.12/site-packages'/name
+                        self.require(not any(p.is_symlink() for p in (installed,*installed.parents)) and self.s.sha(installed.read_bytes())==self.s.sha(wheel.read(name)), 'ORIGINAL_ROLLBACK_CODE_CHANGED')
         self.before=value
         self.ready=True
         # This opaque copy goes only through the protected operator pipe/DPAPI.

@@ -43,6 +43,8 @@ PACKAGE_COMMIT='bc53775b08dc'
 REPORT_DIRECTORY='vps-v1-update'
 V1_RECEIPT_RUN='eed9aed9a83c45fd948203e04a53c824'
 V1_RECEIPT_SHA='d5f4847ebc852c19dcc8775f3e443a58ed32e67d794b431ff87452e1a25f11d0'
+V11_RECEIPT_RUN='6554531a2c0f486c99b1fd88bb06d870'
+V11_RECEIPT_SHA='d25223b076554329c92bcb27d4dbc1b9a105bd9da5e673230cdaae47942c88a4'
 BOOTSTRAP=backup.BOOTSTRAP.replace('131072','262144').replace("a['serve'](types.SimpleNamespace(**p))", """v={'__name__':'legacy_service_contract'}
 exec(compile(s['legacy'],'<reviewed-service-contract>','exec'),v)
 u={'__name__':'v1_update_agent'}
@@ -59,7 +61,21 @@ def configure_v11():
     BOOTSTRAP=BOOTSTRAP.replace("u['serve'](","u['configure_v11']()\nu['serve'](")
 
 
+def configure_v12():
+    global PACKAGE,PACKAGE_SHA,WHEELS,PROFILE,PACKAGE_COMMIT,REPORT_DIRECTORY,BOOTSTRAP
+    PACKAGE=ROOT/'release-artifacts/webapp/competence-hub-webapp-0.1.0-5a555e9a9aae-20261113T151526Z.zip'
+    PACKAGE_SHA='754322cd57ab0f121a85f1625c1681fd271ec9049fa5beda9024437e77bdea58'
+    WHEELS=ROOT/'release-artifacts/webapp-linux/20261113T151559Z-1a2ef9ab/wheelhouse'
+    PROFILE,PACKAGE_COMMIT,REPORT_DIRECTORY='V12','5a555e9a9aae','vps-v12-update'
+    BOOTSTRAP=BOOTSTRAP.replace("u['serve'](","u['configure_v12']()\nu['serve'](")
+
+
 def native_acceptance(root,data,ca,directory,report):
+    if PROFILE=='V12':
+        ux=module('v12_remote_ux',Path(__file__).with_name('vps_v12_acceptance.py'))
+        private=pilot.acceptance.run(root,data,ca,directory,report,
+            tour_counts={'coach':9,'reviewer':7,'admin':6},datetime_fill=ux.fill_legacy_datetime)
+        return ux.run(root,data,ca,directory,report,private,pilot.acceptance)
     if PROFILE=='V11':
         private=pilot.acceptance.run(root,data,ca,directory,report,tour_counts={'coach':9,'reviewer':7,'admin':6})
         ux=module('v11_remote_ux',Path(__file__).with_name('vps_v11_acceptance.py'))
@@ -72,6 +88,9 @@ def verify_final_assets(ca):
     import io,zipfile
     names=['user-management.js']
     if PROFILE=='V11':names+=['app.js','calendar-form.mjs','calendar-public.html','product-tour.js','product-tour.css','styles.css']
+    if PROFILE=='V12':names+=['index.html','app.js','calendar-form.mjs','calendar-picker.js','calendar-dialogs.js',
+        'datepicker-v134.js','datepicker-de-v134.js','datepicker-v134.css','calendar-public.html',
+        'product-tour.js','product-tour.css','styles.css']
     with zipfile.ZipFile(PACKAGE) as archive:
         wheel=next(n for n in archive.namelist() if n.endswith('.whl'))
         with zipfile.ZipFile(io.BytesIO(archive.read(wheel))) as application:
@@ -100,6 +119,13 @@ def payload():
 
 
 def accepted_ca():
+    if PROFILE=='V12':
+        receipt=(ROOT/'release-artifacts/vps-v11-update'/(V11_RECEIPT_RUN+'.json')).read_bytes()
+        require(sha(receipt)==V11_RECEIPT_SHA,'ACCEPTED_PREVIOUS_V11_RECEIPT_REQUIRED')
+        record=json.loads(receipt)
+        require(record['status']==record['deployment']==record['v11_ux']==record['cal1']=='PASS'
+                and record['server_commit']=='ACKNOWLEDGED' and record['package_commit']=='38153c12159e',
+                'ACCEPTED_PREVIOUS_V11_REQUIRED')
     if PROFILE=='V11':
         receipt=(ROOT/'release-artifacts/vps-v1-update'/(V1_RECEIPT_RUN+'.json')).read_bytes()
         require(sha(receipt)==V1_RECEIPT_SHA,'ACCEPTED_PREVIOUS_V1_RECEIPT_REQUIRED')
@@ -297,7 +323,7 @@ def main(options):
         report.update(status='PASS',phase='complete',deployment='PASS',tls='PASS',completed_at_utc=datetime.now(timezone.utc).isoformat())
         print('VPS_'+PROFILE+'_UPDATE=PASS BACKUP_RESTORE=PASS MFA_RBAC=PASS CAL1=PASS REFERENCE=PASS SERVICES=PASS',flush=True)
         print('Protected access: https://localhost:8447/portal/ . Existing reference accounts preserved; no real invitations.',flush=True)
-        if PROFILE=='V11':
+        if PROFILE in ('V11','V12'):
             os.environ.update(TMP=str(directory),TEMP=str(directory))
             demo=open_manual_access(ca,directory,report)
     except BaseException as error:

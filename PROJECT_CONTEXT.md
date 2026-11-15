@@ -1,8 +1,20 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-13.
+Updated: 2026-11-15.
 
 ## Current Milestone
+
+15.11 V1.2 private pilot update explicitly GRANTED by Manuel: exact5a555e9
+candidate/SHA754322cd…, current protected backup/isolated restore if required,
+own synthetic remote acceptance and original manual role access. Read-only SSH
+confirms actual V1.1, exact20-v1/22-v11 predecessors and six active services,
+loopback-only Portal/PG. Bound incremental V12 operator:165 focused regressions,
+actual Linux update61 CAL/security+13 UX/drag N/A/touch/native200 and separate
+rollback/all27-table equality PASS; owned containers removed. Committing bound
+operating code before protected execution; NO server mutation yet. No real users/mail/public
+access/Website/GPG/USB. [Granted scope and actual evidence](docs/operations/portal-v12-calendar-ux-2026-11-13.md#granted-window1511)
+and [execution horizon](docs/exec-plans/active/portal-v12-calendar-ux-2026-11-13.md).
+One next block is this already granted protected V1.2 window, not another grant.
 
 13.11 V1.2 Calendar UX local block: busy-save lock-in reproduced against unchanged
 V1.1 wheel. Single discard confirmation, safe cancel/timeout/late reply, ESC/back/
