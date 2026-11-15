@@ -7,6 +7,16 @@ Updated: 2026-11-15. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+15.11 Owner correction: reduce repeated acceptance work, not safety. Reuse
+source/artifact-bound evidence; choose changed paths and compact integration/
+remote smoke, not full suite plus repeated equivalent browsers by habit. Explain
+any wider run by actual blast radius or concrete suspicion. Date matrices depend
+on date-logic changes; preserve current recovery/data/service gates without
+repeating proven restores or authorization. Implemented in the project
+[quality plan](docs/requirements/calendar-quality-plan-v0.1.md#risk-based-evidence-reuse)
+and AGENTS; proposal for coordinate/write-tests/prepare-release skills remains
+open, no global skill edits or new test infrastructure.
+
 15.11 incremental-release learning: validate the entire retained override chain,
 not only its latest file; V1.2 preserves both20-v1 and22-v11. Reuse a shared UX
 case catalog, but make TLS scope explicit: fixture self-signed allowances must

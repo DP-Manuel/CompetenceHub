@@ -2,6 +2,12 @@
 
 Significant milestones only; newest first.
 
+15.11 Manuel simplifies testing: reuse matching1763/13 V1.2 development proofs,
+focused changed paths and compact remote smoke; date matrices only on affected
+logic or concrete suspicion, recovery/data/service checks remain risk-appropriate.
+Canonical quality plan and AGENTS routing updated, skill feedback captured.
+Documentation-only validation; no new tests, infrastructure, approvals or VPS action.
+
 15.11 22:52 MEZ ACTUAL V1.2 private VPS acceptance. Operator efc3508/application
 5a555e9/SHA754322cd…, receipt ab60077b…/SHA0a034aae… bound. Current27-table
 protected backup/exact isolated restore and remote CAL61+UX13/drag N/A/touch/

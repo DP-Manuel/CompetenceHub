@@ -4,6 +4,12 @@ Updated: 2026-11-15.
 
 ## Current Milestone
 
+15.11 binding test-strategy decision: risk-based evidence reuse, focused changed
+paths and compact VPS smoke; no routine full-suite/date-matrix replay or new
+test infrastructure/approval loop. V1.2's1763 local passes/13 browser cases and
+actual remote acceptance remain valid; no new runtime test/operation for this
+docs-only decision. [Canonical selection rules](docs/requirements/calendar-quality-plan-v0.1.md#risk-based-evidence-reuse).
+
 15.11 V1.2 ACTUALLY INSTALLED/ACCEPTED22:52 MEZ, application5a555e9/
 SHA754322cd…, operator efc3508. Receipt ab60077b…/SHA0a034aae… bound. Current
 27-table protected DPAPI/BitLocker backup/exact isolated restore PASS, source

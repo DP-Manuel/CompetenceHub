@@ -52,6 +52,7 @@ Do not routinely read full PLAN, STATUS, LOG, all ADRs or QA history.
 - On workstation `Z:/IT Development Manuel/Firmendingsbums/Website`, first read [second-workstation setup](docs/architecture/second-workstation-setup.md).
 - Website Node before npm: `$env:PATH = "..\..\tools\node-v22.16.0-win-x64;$env:PATH"`.
 - Run risk-appropriate checks; for docs validate links, integrity and diff rather than the entire app suite.
+- Follow the [risk-based test/evidence rules](docs/requirements/calendar-quality-plan-v0.1.md#risk-based-evidence-reuse): reuse matching proofs, test changed paths plus compact remote smoke, expand only for concrete risk; no routine full-suite/date-matrix replay or extra test-only approval loops.
 - Astro telemetry/AppData or spawn EPERM can be environmental; diagnose before judging code and document skipped evidence.
 - Corporate identity, legal, rights, privacy, API and deployment contracts override discretionary styling.
 
