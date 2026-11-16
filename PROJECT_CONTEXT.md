@@ -4,6 +4,13 @@ Updated: 2026-11-16.
 
 ## Current Milestone
 
+16.11 TLS-only operating grant confirmed: new temporary localhost chain, retained
+protected TLS pairs, own proxy restart and paired strict client pins. Guarded
+operator prepared;19 focused TLS cases plus38 existing access/V1.2 cases green,
+actual synthetic Linux/OpenSSL switch/rollback PASS, own container removed.
+Actual server switch NOT YET RUN. No app/data/account release implied.
+[Single granted TLS window](docs/operations/pilot-tls-renewal-2026-11-16.md).
+
 16.11 finishing CLOSED LOCAL: read-only SSH confirms installed V1.2 application
 5a555e9 and six active services; original package/receipt hashes verified, no
 reinstallation. Local8447 tunnel closed, not a VPS outage. Nine-profile activation

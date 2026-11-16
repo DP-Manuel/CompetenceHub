@@ -84,8 +84,9 @@ is needed now; EDV reconciliation still requires actual confirmed inputs.
    V1.2 tour text aligned to date-only form/cancel help. No production change.
 4. DONE LOCAL:8 model+8 browser/TLS/onboarding cases,390/native200/keyboard,
    Astro/links and all52 production files byte-identical; reuse unchanged proofs.
-5. PREPARED/GATED: one temporary TLS rollover before24.11 if EDV still absent;
-   existing builder/proxy/strict client pins, no DB operation/new GPG or public port.
+5. GRANTED/IN PROGRESS16.11: one temporary TLS rollover before24.11;
+   existing builder/proxy/strict client pins, no DB mutation/new GPG or public port.
+   [Single operating window](../../operations/pilot-tls-renewal-2026-11-16.md).
 6. WAITING EDV/OWNER: confirmed infrastructure, suitable recovery and personal
    identities/roles before real access; COACH-3B APPLY remains its own gate.
 

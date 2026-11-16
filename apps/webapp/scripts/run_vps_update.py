@@ -25,6 +25,7 @@ def module(name,path):
 
 
 pilot=module('v1_private_pilot',Path(__file__).with_name('run_vps_pilot.py'))
+tls_state=module('accepted_pilot_tls',Path(__file__).with_name('pilot_tls_state.py'))
 backup=pilot.backup
 v1=module('v1_remote_acceptance',Path(__file__).with_name('vps_user_readiness_acceptance.py'))
 require,sha,canonical=pilot.require,pilot.sha,pilot.canonical
@@ -50,6 +51,7 @@ exec(compile(s['legacy'],'<reviewed-service-contract>','exec'),v)
 u={'__name__':'v1_update_agent'}
 exec(compile(s['update'],'<reviewed-v1-update>','exec'),u)
 u['serve'](types.SimpleNamespace(**p),types.SimpleNamespace(**a),types.SimpleNamespace(**v))""")
+BOOTSTRAP=tls_state.bind_agent(BOOTSTRAP)
 
 
 def configure_v11():
@@ -136,7 +138,7 @@ def accepted_ca():
     require(sha(raw)==ACCEPTED_SHA and json.loads(raw)['status']=='PASS','ACCEPTED_PILOT_RECEIPT_REQUIRED')
     path=Path(os.environ['LOCALAPPDATA'])/'CompetenceHub/pilot-runs'/ACCEPTED_RUN/'pilot-ca.pem'
     require(sha(path.read_bytes())==CA_SHA,'ORIGINAL_PUBLIC_CA_REQUIRED')
-    return path
+    return tls_state.current_ca(ROOT,path,require,sha)
 
 
 def wait_ready(ca):
@@ -155,7 +157,8 @@ def verify_leaf(ca):
     with socket.create_connection(('127.0.0.1',8447),timeout=5) as sock:
         with context.wrap_socket(sock,server_hostname='localhost') as tls:
             # Accepted leaf hash was recorded over PEM bytes; normalize to PEM.
-            require(sha(ssl.DER_cert_to_PEM_cert(tls.getpeercert(binary_form=True)).encode())==LEAF_SHA,'ORIGINAL_SERVED_CERTIFICATE_REQUIRED')
+            expected=tls_state.LEAF_SHA if tls_state.ACCEPTED_RUN else LEAF_SHA
+            require(sha(ssl.DER_cert_to_PEM_cert(tls.getpeercert(binary_form=True)).encode())==expected,'ORIGINAL_SERVED_CERTIFICATE_REQUIRED')
 
 
 def private_recovery(directory,name,data):
