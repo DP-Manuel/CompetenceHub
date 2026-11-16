@@ -1,16 +1,20 @@
 # Coach-Kalender: Kurzstart
 
-Stand: 10.11.2026. Der reale Zugang muss vorher ausdrücklich zugeordnet werden.
-Die automatische Einführung und ergänzte Übersicht gehören zum lokalen
-V1-Update; auf dem VPS läuft noch der zuvor abgenommene synthetische Pilot.
+Stand: 16.11.2026. V1.2 mit Kalenderauswahl und Einführung ist im privaten
+synthetischen VPS-Piloten installiert und fachlich freigegeben. Reale Zugänge
+benötigen weiterhin eine ausdrücklich bestätigte persönliche Identität und
+Coachzuordnung. Die Schritte ab persönlicher Einladung gelten erst nach ihrer
+Aktivierung; bis dahin den [Testzugang](../handoffs/PORTAL_TESTZUGAENGE.md) verwenden.
 
 1. Persönliche Einladung annehmen, eigenes Passwort setzen, MFA einrichten und
    zehn Notfallcodes sicher getrennt verwahren.
 2. **Kalenderangebote** enthält ausschließlich eigene Angebote. Bei einer leeren
    Ansicht keine zweite Identität anlegen; Zuordnung durch die Administration prüfen.
-3. **Neuen Termin** öffnen: Thema, Titel, Beginn/Ende, Format, Ort, Kapazität,
-   Prüfschwelle und Entscheidungsfrist ausfüllen. Die Dauer ergibt sich aus
-   Beginn und Ende. Die Prüfschwelle ist keine Mindestbuchung.
+3. **Neuer Entwurf** öffnen: Titel und Thema wählen, Start-/Enddatum im deutschen
+   Kalender auswählen und Beginn/Ende getrennt in den 24-Stunden-Feldern setzen.
+   Format, Ort, Kapazität, Prüfschwelle, Frist und Preishinweis ausfüllen. Bei
+   Präsenz/Hybrid erscheint der Ortshinweis vorher. Die Dauer ergibt sich aus
+   Beginn und Ende; die Prüfschwelle ist keine Mindestbuchung.
 4. Entwurf speichern, kontrollieren und **Zur Prüfung einreichen** wählen.
 5. Bei Änderungsbedarf den Hinweis lesen und eine neue Revision erstellen.
    Veröffentlichte Angebote nicht direkt überschreiben. Eingereichte Angebote
@@ -23,5 +27,7 @@ Die erste Einführung startet nach der MFA-Einrichtung und lässt sich überspri
 **Hilfe → Coach-Einführung starten** ist freiwillig, mit Escape beendbar und
 jederzeit wiederholbar. Bei einem Speicherkonflikt Eingaben nicht blind erneut
 senden: aktuellen Stand laden und vergleichen. Ungespeicherte Änderungen werden
-vor dem Verwerfen abgefragt. Keine verbindliche Buchung oder E-Mail-Zustellung
+vor dem Verwerfen einmal mit **Weiter bearbeiten** oder **Änderungen verwerfen**
+abgefragt; gespeicherte Entwürfe werden dadurch nicht gelöscht.
+Keine verbindliche Buchung oder E-Mail-Zustellung
 wird durch einen Kalender- oder Anfrageentwurf ausgelöst.

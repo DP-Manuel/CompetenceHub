@@ -1,6 +1,7 @@
 # Portaladministration für Manuel
 
-Stand: 11.11.2026. Der private synthetische V1-VPS-Pilot ist tatsächlich abgenommen.
+Stand: 16.11.2026. Der private synthetische V1.2-VPS-Pilot ist technisch und
+laut Manuels Rückmeldung auch durch Janay fachlich abgenommen.
 Die folgenden Verwaltungsaktionen sind installiert. Keine echten Konten aktivieren.
 Zum Wiederöffnen bestehender Rollenfenster den [Teststarter](pilot-test-access.md)
 nutzen, niemals den Installer oder ein Update erneut ausführen.

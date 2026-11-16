@@ -47,10 +47,15 @@ use reproducible source UI before/after evidence, not an invented original image
 6. DONE: actual receipt ab60077b…/SHA0a034aae…, original four roles plus Calendar
    opened, fixed guide/local opener pinned to V1.2; final access regression green.
 
-Next single block: Manuel's own V1.2 usability acceptance in already open roles,
-one-/multi-day/error/discard/review/revision/publication/ICS. Record concrete
-finding or acceptance. STOP before real activation/public access; TLS24.11 and
-EDV DNS/SMTP remain external gates. No second installation to reopen windows.
+16.11 CLOSED: Manuel reports Janay approved the demonstrated V1.2 workflow;
+his own positive visual feedback15.11 also retained. No new per-case execution
+claimed, no re-run of accepted tests. EDV confirmation explicitly still absent;
+the earlier affirmative selection was corrected as a misclick.
+
+Next single block: confirmed EDV input reconciliation under the
+[real-user readiness horizon](real-user-readiness-2026-11-10.md#next-activation-horizon1611).
+STOP before personal activation/public access; TLS24.11 and EDV DNS/SMTP remain
+external gates. No second installation to reopen windows or repeat Janay approval.
 
 DoD: installed candidate matches exact hash, data/config and V1/V1.1 retained,
 six actual services healthy, strict HTTPS and Manuel's ready-to-use role windows.

@@ -2,6 +2,14 @@
 
 Significant milestones only; newest first.
 
+16.11 Manuel reports Janay approved the demonstrated V1.2 Calendar/Portal flow;
+functional gate closed, no new per-case technical result inferred. EDV remains
+absent: affirmative answer explicitly corrected as a misclick. Existing accepted
+evidence reused; no app/remote tests, password dialogue, server or real-user action.
+Entry guides now reflect installed V1.2, EDV follow-up draft refreshed and
+next activation horizon reconciled; private TLS24.11 remains the external deadline.
+[Canonical closure](docs/operations/portal-v12-calendar-ux-2026-11-13.md#fachliche-abnahme1611).
+
 15.11 Manuel simplifies testing: reuse matching1763/13 V1.2 development proofs,
 focused changed paths and compact remote smoke; date matrices only on affected
 logic or concrete suspicion, recovery/data/service checks remain risk-appropriate.

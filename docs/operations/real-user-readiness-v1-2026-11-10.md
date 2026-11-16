@@ -3,6 +3,14 @@
 Stand: 10.11.2026. Owner: Manuel. Lokales synthetisches Update, keine echte
 Benutzeraktivierung. Der zuvor abgenommene private VPS-Pilot bleibt Referenz.
 
+Aktualisierung16.11: V1.2 ist seit15.11 technisch abgenommen; Manuel meldet nun
+Janays fachliche Freigabe. Keine weitere fachliche Wiederholungsabnahme nötig.
+Von der EDV liegt laut seiner korrigierten Rückmeldung noch nichts vor; die
+positive Auswahl war ein Verklicken. Persönliche Aktivierung bleibt gesperrt,
+privates TLS läuft24.11 ab. [Aktueller Aktivierungshorizont](../exec-plans/active/real-user-readiness-2026-11-10.md#next-activation-horizon1611).
+Die älteren V1-Installations-/Warteangaben unten sind datierte Historie, kein
+Auftrag zum Wiederholen. [Aktuelle V1.2-Abnahme](portal-v12-calendar-ux-2026-11-13.md#fachliche-abnahme1611).
+
 ## Umsetzung
 
 - Adminliste: Aktivierung, MFA, letzte Anmeldung, offene/verbrauchte/widerrufene/
@@ -150,8 +158,9 @@ ist vorbereitet, nicht versendet. Aktuelles privates Pilotzertifikat:
 
 Kurzanleitungen: [Manuel](pilot-admin-guide.md), [Janay](pilot-janay-guide.md),
 [Coaches](pilot-coach-guide.md), [Erstaktivierung](pilot-first-activation.md).
-Janays fachliche Abnahme und ausdrückliche personenbezogene Aktivierungsfreigabe
-bleiben offen. Keine reale Mail, Rolle, Benutzeranlage oder COACH-3B REAL APPLY.
+Janays fachliche Abnahme ist seit16.11 geschlossen; die ausdrückliche
+personenbezogene Aktivierungsfreigabe bleibt offen. Keine reale Mail, Rolle,
+Benutzeranlage oder COACH-3B REAL APPLY.
 
 ## Geschütztes V1-Updatefenster 11.11
 

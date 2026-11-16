@@ -1,7 +1,8 @@
 # Real User Readiness V1
 
 Owner: Manuel. Started10.11.2026 from3fd7c24 after accepted private VPS pilot
-and Manuel's explicit manual approval of function/layout. Janay acceptance OPEN.
+and Manuel's explicit manual approval of function/layout. Janay acceptance CLOSED
+16.11 per Manuel; current private runtime is accepted V1.2, not the old V1 below.
 
 ## Scope And Contract
 
@@ -9,7 +10,9 @@ Synthetic local implementation/acceptance only, then a consolidated private-pilo
 update candidate. No real identity/account/role/invitation, Coach import, Website
 deployment, GPG, installer rerun or baseline reset. Preserve active four-account
 VPS reference. External access/SMTP still unconfirmed per Manuel's reply10.11;
-prepare send-ready EDV request early, pilot TLS expires24.11 18:20 MEZ.
+EDV still absent per Manuel's corrected16.11 reply; the affirmative selection
+was accidental, not approval evidence. Existing request updated for follow-up;
+pilot TLS expires24.11 18:20 MEZ. Earlier dated execution notes are historical.
 
 Reuse0001–0006 tables, sessions, encrypted outbox, activation/MFA/recovery and
 append-only audit. Admin V1 actions require fresh MFA session, exact target UUID,
@@ -40,17 +43,46 @@ Manual help/restart remains available; no cross-device progress claim.
    controlled out-of-order inventory regression and actual native200 screenshots.
 5. DONE: cohort9 mapping matrix without invented identities/UUIDs, short guides,
    EDV mail, bound release/update candidate and risk-specific rollback evaluation.
-6. DONE LOCAL / REMOTE GATED: reviewed sourcebc53775 committed/pushed; exact
+6. DONE ACTUAL: V1 accepted11.11 and V1.2 accepted15.11; reviewed sourcebc53775,
+   then5a555e9, exact package/restore/reference/service evidence in linked reports.
+   Original local packaging checkpoint follows for history: exact
    ZIP/hash and fresh Linux/proxy37 checks bound in canonical result. Release
-   rerun1,635/30 PASS. Final documentation is a separate commit. Remote update NOT
-   performed: current privileged state/rollback gate and preservation proof required.
+   rerun1,635/30 PASS. Final documentation is a separate commit. Its original
+   remote gate is superseded by actual V1/V1.2 acceptance, not still waiting.
+
+## Next Activation Horizon16.11
+
+1. DONE: technical V1.2 acceptance and Janay functional approval reported by
+   Manuel; reuse bound development/operating evidence, no repeated test cycle.
+2. WAITING EDV: confirmed App-FQDN/DNS target, TLS/renewal/access restrictions,
+   SMTP/TLS/sender/send-permission and secure external credential handover.
+   Draft ready, no automated send; private TLS24.11 is the near-term dependency.
+3. READY AFTER INPUTS: reconcile those facts with existing configuration/templates,
+   identify only the necessary diff and compact smoke; no speculative hostname,
+   alternative mail channel, new harness or server change while inputs are absent.
+4. GATED: durable recovery, exact personal identities/roles and explicit target
+   window for the first real Admin/Reviewer; synthetic accounts never renamed.
+   Existing personal-Admin bootstrap restrictions remain, no bypass.
+5. GATED: one scoped infrastructure/configuration window after suitable approval
+   and current rollback proof; strict TLS, closed-by-default delivery, scoped
+   MFA/RBAC/Calendar/data/service smoke under the risk-based policy.
+6. GATED: individually approved first invitations and personal MFA/onboarding;
+   genuine receive/access proof, stable real Coach mapping only after its own
+   data/import gate. No COACH-3B APPLY or public Website activation by implication.
+
+Immediate single block is2/3, not more feature work or another demonstration.
+DoD: confirmed non-secret input matrix and exact next configuration scope, or
+specific external omissions. Later real-account decisions need not be collected
+again before EDV data arrive; no unnecessary approval/password dialogue now.
 
 Canonical result/access/release boundary: [Readiness V1](../../operations/real-user-readiness-v1-2026-11-10.md).
 Read-only VPS19:23 MEZ: all six services active. No privilege input, installation,
 DB mutation or new backup attempted. The old empty snapshot is not a snapshot of
 the deliberately retained reference dataset; do not run the old installer.
 
-## Rolling Horizon
+## Historical10.11 Rolling Horizon
+
+Superseded by the16.11 activation horizon above; retained as dated history.
 
 Complete local readiness -> bound reversible update candidate -> protected update
 acceptance if recovery/privilege gates close -> Janay usability acceptance ->
@@ -97,7 +129,7 @@ all27 tables unchanged, V1 ExecStart/TLS/asset/closed delivery/six services veri
 No repeat backup/restore/install/cohort. Technical window DONE, not WAITING.
 Open terminal now only holds the private tunnel; never rerun to reconnect.
 
-Current narrow horizon: usability demonstration with existing synthetic roles
+Historical11.11 narrow horizon: usability demonstration with existing synthetic roles
 (purpose: understandable Admin/Coach/Reviewer flow; inputs: guides/private V1;
 deliverable: short feedback and explicit usability result; DoD: workflows reviewed,
 no real activation) -> confirmed EDV DNS/TLS/delivery -> durable recovery/personal

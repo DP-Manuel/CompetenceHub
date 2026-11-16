@@ -1,11 +1,17 @@
 # Skill Feedback Router
 
-Updated: 2026-11-15. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-16. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
+
+16.11 gate-reconciliation learning: a corrected/misclicked option is not external
+approval; latest explicit correction wins. Close a reported functional review
+without fabricating new case results or real-account/publication permission.
+After acceptance refresh existing user guides and ordered inputs, not a repeated
+demo/test campaign. Existing project policy suffices; no new global skill needed.
 
 15.11 Owner correction: reduce repeated acceptance work, not safety. Reuse
 source/artifact-bound evidence; choose changed paths and compact integration/

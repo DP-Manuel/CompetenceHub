@@ -1,8 +1,19 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-15.
+Updated: 2026-11-16.
 
 ## Current Milestone
+
+16.11 Janay functional V1.2 approval CLOSED per Manuel; his15.11 positive visual
+feedback retained. No further demo/review or test replay required. EDV response
+still ABSENT: Manuel explicitly corrects the accidental positive selection.
+No confirmed App-FQDN/TLS/access/SMTP and no personal activation by implication.
+Existing entry guides reconciled with installed V1.2 and future invitation gates;
+EDV follow-up draft refreshed, not sent. Private TLS expires24.11.2026 18:20 MEZ.
+[Acceptance and next scope](docs/operations/portal-v12-calendar-ux-2026-11-13.md#fachliche-abnahme1611),
+[activation horizon](docs/exec-plans/active/real-user-readiness-2026-11-10.md#next-activation-horizon1611).
+One next block: confirmed EDV input reconciliation with existing templates;
+until actual response no configuration, account, mail, server or Website action.
 
 15.11 binding test-strategy decision: risk-based evidence reuse, focused changed
 paths and compact VPS smoke; no routine full-suite/date-matrix replay or new
@@ -25,8 +36,8 @@ already opened via normal password/TOTP after preservation; expected auth/audit
 changes only. Terminal34100 intentionally held; Enter closes local access only.
 [Actual V1.2 evidence](docs/operations/portal-v12-calendar-ux-2026-11-13.md#v12-tatsächlich-abgenommen)
 and [execution horizon](docs/exec-plans/active/portal-v12-calendar-ux-2026-11-13.md).
-Fixed test guide/opener bind actual V1.2. Exactly next: Manuel's manual V1.2
-Coach→Reviewer usability test, no installer. TLS expires24.11; EDV DNS/SMTP and
+Fixed test guide/opener bind actual V1.2. Its manual/Janay usability gate is now
+closed per16.11 update above, no installer/retest. TLS expires24.11; EDV DNS/SMTP and
 real activation remain separate gates. Earlier13.11 candidate statements below
 are historical, superseded by this actual accepted operating window.
 

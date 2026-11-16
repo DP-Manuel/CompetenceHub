@@ -241,7 +241,24 @@ No real identity/import, invitations,
 public activation, IONOS/Pages, GPG/USB or backup-job change. TLS expiry24.11 and
 EDV app-domain/SMTP remain explicit external gates, not waived by private access.
 
-Exactly next block: Manuel's manual V1.2 Coach→Reviewer usability acceptance,
-using the already open original roles. DoD: one-/multi-day offer, targeted error,
-controlled discard, review/revision/publication and ICS are understandable or a
-concrete finding is recorded. STOP before real users/public activation.
+## Fachliche Abnahme16.11
+
+Manuel berichtet am16.11: Janay hat den vorgeführten Kalender-/Portalablauf
+abgesegnet. Fachliche V1.2-Abnahme damit geschlossen; Manuels positive optische
+Rückmeldung vom15.11 bleibt zusätzlich dokumentiert. Dies ist eine gemeldete
+Stakeholderfreigabe, kein neuer technischer Einzeltest oder weiterer Testlauf.
+Bestehende1763 lokale Tests/13 Bedienfälle und die tatsächliche VPS-Abnahme
+werden gemäß [Teststrategie](../requirements/calendar-quality-plan-v0.1.md#risk-based-evidence-reuse)
+wiederverwendet; keine erneute Demo-/Abnahmefreigabeschleife erforderlich.
+
+EDV weiterhin offen: Manuel korrigiert am16.11 die versehentlich ausgewählte
+Antwort ausdrücklich; es liegt noch keine EDV-Bestätigung vor. Kein Hostname,
+TLS-/Zugriffskonzept oder SMTP-Verfahren gilt dadurch als bestätigt. Private
+TLS-Frist24.11 bleibt sichtbar. Keine Serveraktion, neue Rolle oder Einladung.
+
+Genau nächster Block: die bestätigten nicht geheimen EDV-Eingaben mit dem
+vorhandenen [Aktivierungsvertrag](../requirements/activation-input-contract-2026-08-24.md)
+abgleichen. Input: App-FQDN/DNS-Ziel, TLS/Zugriffsschutz und SMTP-/Absendervertrag,
+Secrets nur extern. Ergebnis/DoD: vollständige Inputmatrix und gezielter
+Konfigurations-/Smoke-Plan im bestehenden Verfahren, oder exakt fehlende Angaben.
+Bis dahin persönliche Aktivierung, Coachzuordnungen und öffentliche Freigabe aus.

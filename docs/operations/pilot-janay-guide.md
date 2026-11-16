@@ -1,11 +1,12 @@
 # Janays Einstieg in die Kalenderprüfung
 
-Stand: 10.11.2026. Fachliche Einführung für den privaten synthetischen Piloten.
-Die persönliche Staging-Einladung ist noch nicht versendet.
-Automatischer Tourstart/Pfeile und erweiterte Übersicht sind im lokalen
-V1-Update geprüft, noch nicht auf dem VPS installiert.
+Stand: 16.11.2026. Janays fachliche Freigabe des vorgeführten V1.2-Ablaufs ist
+durch Manuel bestätigt. Die Funktionen sind im privaten VPS-Piloten installiert;
+keine weitere fachliche Freigabeschleife erforderlich. Eine persönliche
+Staging-Einladung ist weiterhin nicht versendet. Bis zur gesonderten Aktivierung
+gilt der [synthetische Testzugang](../handoffs/PORTAL_TESTZUGAENGE.md), kein neuer Login.
 
-## In sechs Schritten
+## Nach Persönlicher Aktivierung In Sechs Schritten
 
 1. Persönlichen Einladungslink öffnen, eigenes Passwort vergeben und die
    Authenticator-App verbinden. Die zehn Notfallcodes sicher getrennt aufbewahren.
@@ -26,12 +27,14 @@ Ein Anfrageentwurf wird **nicht versendet**, reserviert keine Plätze und speich
 keine Kundendaten. Die Kapazität ist keine Anzeige bereits freier Plätze.
 Eine ICS-Datei ist kein automatisch aktualisiertes Outlook-Abonnement.
 
-## Bitte fachlich prüfen
+## Fachlich Freigegebener Prüfbereich
 
-- Sind Status, Rückmeldungen und die Trennung von Entwurf und Freigabe verständlich?
-- Sind Zeitraum, mehrtägige Darstellung und Teilnehmerangaben eindeutig?
-- Ist klar, dass eine Anfrage noch keine Buchung ist?
-- Lassen sich Prüfung und Hilfe auch am Smartphone gut bedienen?
+Der vorgeführte Ablauf ist fachlich freigegeben. Dazu gehören:
+
+- Verständliche Status, Rückmeldungen und Trennung von Entwurf und Freigabe.
+- Eindeutige Zeiträume, mehrtägige Darstellung und Teilnehmerangaben.
+- Klare Unterscheidung zwischen unverbindlicher Anfrage und Buchung.
+- Bedienbare Prüfung und Hilfe auch am Smartphone.
 
 Bei einem veralteten Datenstand erneut laden und prüfen, nicht dieselbe
 Entscheidung blind wiederholen. Für technische Probleme Zeitpunkt und

@@ -1,8 +1,9 @@
 # Versandfertige EDV-Anfrage
 
-Status10.11.2026: vorbereitet, nicht durch die KI versendet. Manuel bestätigt,
-dass keine neue EDV-Rückmeldung vorliegt. Hostname unten ist ein bestehender
-Vorschlag, keine bereits freigegebene Domain. DNS-A-Abfrage10.11: Name nicht vorhanden.
+Status16.11.2026: zum Nachfassen aktualisiert, nicht durch die KI versendet.
+Manuel bestätigt ausdrücklich: noch keine EDV-Rückmeldung; die gegenteilige
+Auswahl war ein Verklicken. Hostname unten bleibt ein Vorschlag, keine Freigabe.
+DNS-A-Abfrage10.11 war negativ; heute wurde keine neue DNS-Abfrage ausgeführt.
 
 ## Betreff
 
@@ -12,10 +13,9 @@ Competence Hub: Portaladresse und Einladungsversand für den Benutzerstart
 
 Hallo Herr Roß,
 
-unser geschützter technischer Competence-Hub-Pilot läuft inzwischen erfolgreich
-auf dem VPS. Anmeldung, Zwei-Faktor-Schutz, Rollen und der vollständige
-Kalenderablauf sind mit Testkonten geprüft. Die öffentliche Website bleibt
-unverändert auf dem IONOS-Webspace.
+unser geschützter Competence-Hub-Pilot läuft erfolgreich auf dem VPS und Janay
+hat den Kalenderablauf inzwischen fachlich freigegeben. Anmeldung und Rollen
+sind mit Testkonten geprüft. Die öffentliche Website bleibt unverändert bei IONOS.
 
 Für die ersten persönlichen Zugänge fehlen uns noch zwei Punkte:
 
@@ -42,11 +42,10 @@ Ein SMTP-Passwort bitte nicht per normaler E-Mail senden; dafür stimmen wir ein
 separaten sicheren Übergabeweg ab. Solange das nicht geklärt ist, versenden wir
 keine echten Einladungen und verwenden keinen Ersatzversand.
 
-Janay kehrt voraussichtlich in der Woche ab dem 16.11. zurück. Unser aktuelles,
-nur für den geschützten Testzugang verwendetes Zertifikat gilt bis zum
-**24.11.2026**. Eine Rückmeldung möglichst vor ihrer Rückkehr würde helfen,
-fehlende Angaben rechtzeitig zu klären. Falls die Einrichtung länger dauert,
-hilft uns bereits ein verbindlicher Ansprechpartner mit einem realistischen Termin.
+Unser aktuelles Zertifikat für den geschützten Testzugang gilt nur bis zum
+**24.11.2026**. Können Sie uns bitte zeitnah den Stand beziehungsweise die noch
+fehlenden Angaben mitteilen? Falls die Einrichtung länger dauert, hilft uns
+bereits ein verbindlicher Ansprechpartner mit einem realistischen Termin.
 
 Vielen Dank und viele Grüße
 
