@@ -4,12 +4,17 @@ Updated: 2026-11-16.
 
 ## Current Milestone
 
-16.11 TLS-only operating grant confirmed: new temporary localhost chain, retained
-protected TLS pairs, own proxy restart and paired strict client pins. Guarded
-operator prepared;19 focused TLS cases plus38 existing access/V1.2 cases green,
-actual synthetic Linux/OpenSSL switch/rollback PASS, own container removed.
-Actual server switch NOT YET RUN. No app/data/account release implied.
-[Single granted TLS window](docs/operations/pilot-tls-renewal-2026-11-16.md).
+16.11 TLS ACTUALLY ACCEPTED19:22 MEZ: runf87c37d2…/receiptSHAe6b80664…,
+operator5c9fa4f, runtime still5a555e9. Same pair from8c05c255… reused after
+successful real rollback; no extra generation. Localhost leaf valid until
+30.11.2026 19:09:39 MEZ. Strict new trust/hostname/leaf, negative old-root/wrong-host,
+retained session, four-role MFA/cookies, Calendar, preservation and six services
+PASS. All27 exact at switch; later normal auth/audit only. Current starter and
+future agent pins bound together;68 focused tests PASS, Linux probe removed.
+Original role windows/tunnel OPEN; Enter closes local access only. No app update,
+migration, real account/mail/Website/GPG action. One next block: confirmed EDV
+DNS/TLS/access/SMTP reconciliation, before30.11; personal activation still gated.
+[Actual TLS acceptance](docs/operations/pilot-tls-renewal-2026-11-16.md#actual-acceptance).
 
 16.11 finishing CLOSED LOCAL: read-only SSH confirms installed V1.2 application
 5a555e9 and six active services; original package/receipt hashes verified, no
@@ -19,16 +24,16 @@ Calendar-demo/contact navigation and corrected V1.2 Coach-tour copy tested:8 mod
 8 local browser/TLS/onboarding cases PASS;390/native200/keyboard, Astro/links and
 all52 production files byte-identical. No Pages dispatch/IONOS/VPS/data change.
 [Actual result and next TLS gate](docs/operations/pilot-finishing-2026-11-16.md).
-One next block: scoped temporary localhost certificate rollover before24.11,
-if EDV remains absent; actual generation/server/client-trust change needs its own
-grant. Existing approved runtime and synthetic users stay unchanged.
+That prepared TLS gate is now closed by the separately granted actual window
+above. Existing approved runtime and synthetic identities stay unchanged.
 
 16.11 Janay functional V1.2 approval CLOSED per Manuel; his15.11 positive visual
 feedback retained. No further demo/review or test replay required. EDV response
 still ABSENT: Manuel explicitly corrects the accidental positive selection.
 No confirmed App-FQDN/TLS/access/SMTP and no personal activation by implication.
 Existing entry guides reconciled with installed V1.2 and future invitation gates;
-EDV follow-up draft refreshed, not sent. Private TLS expires24.11.2026 18:20 MEZ.
+EDV follow-up draft refreshed, not sent. The original24.11 TLS deadline from this
+earlier check is superseded by the actual renewal above (30.11).
 [Acceptance and next scope](docs/operations/portal-v12-calendar-ux-2026-11-13.md#fachliche-abnahme1611),
 [activation horizon](docs/exec-plans/active/real-user-readiness-2026-11-10.md#next-activation-horizon1611).
 EDV input reconciliation remains required for personal access. The later finishing
@@ -57,7 +62,7 @@ changes only. Terminal34100 intentionally held; Enter closes local access only.
 [Actual V1.2 evidence](docs/operations/portal-v12-calendar-ux-2026-11-13.md#v12-tatsächlich-abgenommen)
 and [execution horizon](docs/exec-plans/active/portal-v12-calendar-ux-2026-11-13.md).
 Fixed test guide/opener bind actual V1.2. Its manual/Janay usability gate is now
-closed per16.11 update above, no installer/retest. TLS expires24.11; EDV DNS/SMTP and
+closed per16.11 update above, no installer/retest. TLS now30.11 after renewal; EDV DNS/SMTP and
 real activation remain separate gates. Earlier13.11 candidate statements below
 are historical, superseded by this actual accepted operating window.
 

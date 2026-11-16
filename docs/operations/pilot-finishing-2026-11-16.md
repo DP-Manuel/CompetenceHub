@@ -1,5 +1,9 @@
 # Pilot Finishing16.11
 
+Follow-up: the subsequently granted [TLS-only window](pilot-tls-renewal-2026-11-16.md#actual-acceptance)
+is now actually accepted; expiry30.11 19:09:39 MEZ. The closed-tunnel/24.11 values
+below describe this earlier read-only finishing inventory, not current access.
+
 Owner Manuel. Local finishing, read-only operating inventory and scoped tests/
 Git authorized. Janay functional approval closed. No real accounts, import,
 certificate switch, VPS application update, IONOS deployment or mail dispatch.

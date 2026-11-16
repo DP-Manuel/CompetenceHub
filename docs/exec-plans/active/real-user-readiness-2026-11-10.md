@@ -12,7 +12,8 @@ deployment, GPG, installer rerun or baseline reset. Preserve active four-account
 VPS reference. External access/SMTP still unconfirmed per Manuel's reply10.11;
 EDV still absent per Manuel's corrected16.11 reply; the affirmative selection
 was accidental, not approval evidence. Existing request updated for follow-up;
-pilot TLS expires24.11 18:20 MEZ. Earlier dated execution notes are historical.
+original pilot TLS24.11 was superseded by the renewal below, now30.11 19:09 MEZ.
+Earlier dated execution notes are historical.
 
 Reuse0001–0006 tables, sessions, encrypted outbox, activation/MFA/recovery and
 append-only audit. Admin V1 actions require fresh MFA session, exact target UUID,
@@ -56,7 +57,7 @@ Manual help/restart remains available; no cross-device progress claim.
    Manuel; reuse bound development/operating evidence, no repeated test cycle.
 2. WAITING EDV: confirmed App-FQDN/DNS target, TLS/renewal/access restrictions,
    SMTP/TLS/sender/send-permission and secure external credential handover.
-   Draft ready, no automated send; private TLS24.11 is the near-term dependency.
+   Draft ready, no automated send; renewed private TLS30.11 is the next deadline.
 3. READY AFTER INPUTS: reconcile those facts with existing configuration/templates,
    identify only the necessary diff and compact smoke; no speculative hostname,
    alternative mail channel, new harness or server change while inputs are absent.
@@ -84,17 +85,17 @@ is needed now; EDV reconciliation still requires actual confirmed inputs.
    V1.2 tour text aligned to date-only form/cancel help. No production change.
 4. DONE LOCAL:8 model+8 browser/TLS/onboarding cases,390/native200/keyboard,
    Astro/links and all52 production files byte-identical; reuse unchanged proofs.
-5. GRANTED/IN PROGRESS16.11: one temporary TLS rollover before24.11;
-   existing builder/proxy/strict client pins, no DB mutation/new GPG or public port.
+5. DONE ACTUAL16.11: temporary TLS rollover accepted, expiry30.11 19:09:39 MEZ;
+   own proxy/strict client pins, retained session/MFA/Calendar/six services PASS.
+   No app/business mutation/new GPG/public port; normal auth/audit only.
    [Single operating window](../../operations/pilot-tls-renewal-2026-11-16.md).
 6. WAITING EDV/OWNER: confirmed infrastructure, suitable recovery and personal
    identities/roles before real access; COACH-3B APPLY remains its own gate.
 
-Exactly one recommended next block is5: preserve strict private HTTPS before
-expiry. Inputs: accepted private pilot plus scoped certificate operating grant;
-deliverable: verified replacement chain and bound reopen path; DoD: strict
-hostname/trust, unchanged runtime/data/listeners and six healthy services.
-Actual guarded rollover implementation/execution is not claimed complete.
+Exactly one recommended next block is6: reconcile confirmed EDV inputs before
+the new30.11 certificate deadline. Deliverable: exact scoped configuration
+handoff; DoD: confirmed non-secret DNS/TLS/access/SMTP and verification scope.
+No personal activation or import without its own identity/role/data gates.
 [Canonical finishing evidence](../../operations/pilot-finishing-2026-11-16.md).
 
 Canonical result/access/release boundary: [Readiness V1](../../operations/real-user-readiness-v1-2026-11-10.md).

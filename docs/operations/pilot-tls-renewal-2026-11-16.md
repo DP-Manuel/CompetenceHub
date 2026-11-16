@@ -16,12 +16,12 @@ GPG, database dump/restore, public listener, Pages or IONOS action.
    existing Coach session across proxy restart and fresh four-role MFA smoke.
 3. DONE LOCAL: focused synthetic TLS tests and existing access/V1.2 regressions;
    real Linux/OpenSSL file-mode/switch/rollback probe, own container removed.
-4. READY FOR OPERATOR: source-bound single private window; only hidden sudo input
-   if needed. Actual TLS generation, server switch and acceptance not yet run.
-5. GATED BY ACTUAL PASS: pin the resulting public receipt/hash/CA/leaf in
+4. DONE ACTUAL19:22:33 MEZ: runf87c37d2…, operator5c9fa4f, same TLS pair from
+   the rolled-back8c05c255… window reused. No further key generation. All gates PASS.
+5. DONE: pin the resulting public receipt/hash/CA/leaf in
    `pilot_tls_state.py`; access starter and future reviewed update-agent bootstrap
    then use the same accepted TLS state. Never edit historical operating receipts.
-6. AFTER CLOSURE: existing role windows may stay open; Enter closes local access
+6. CURRENT: existing role windows may stay open; Enter closes local access
    only. EDV infrastructure/personal activation remain separate gates.
 
 ## One Operating Window
@@ -74,14 +74,56 @@ trusting an unbound replacement. The original receipts and CA copies stay intact
 
 ## Focused Evidence
 
-Initial54 targeted tests PASS; final TLS additions19 cases PASS, existing38 access/
-V1.2 cases reused. Coverage includes real local TLS handshake, wrong trust/name/
+Final68 targeted tests PASS:30 TLS cases plus38 existing access/V1.2 regressions.
+Coverage includes real local TLS handshake, wrong trust/name/
 leaf, mismatched keys, immutable receipt/CA pins, unauthorized entry, lost pipe,
 sanitized activation error/rollback and preservation rejects. Linux synthetic
 OpenSSL chain/key matching, secure file modes, no overwrite, TLS switch and exact
 old-pair rollback PASS; temporary container removed. No full Calendar/date suite.
+The accepted-window guard prevents another generation/private-pair read on rerun.
 
-Actual public receipt and completion results will be linked only after execution.
+## Actual Acceptance
+
+Public receipt `release-artifacts/pilot-tls/f87c37d267614cce989ccbe5650214d9.json`,
+SHA-256 `e6b80664b761c5223bdc561524f8b086e3d246684d8ec3aafd710ed11b22e36d`.
+Actual source5c9fa4f434f6b83fb892cae7fb140149de7ff457; V1.2 runtime remains
+5a555e9a9aae. HTTPS, MFA/session, preservation and six services PASS.
+
+New localhost leaf expires **30.11.2026 19:09:39 MEZ** (18:09:39 UTC); private CA
+expires16.12 18:09:39 UTC. PEM leaf SHA-256
+`c37975978dc9fbf2836fadb8000bccd51a73c0c21e72d6708fe77fce73d72f87`,
+public CA SHA-256 `4b1c2ddd2b46329531fb8966f0c9d6ff34edcf15bdc7a1f6b894cb8ec8448cae`.
+Current public CA is in the same-user private `CompetenceHub/pilot-tls/<accepted-run>/`
+directory; actual private keys/ciphertexts remain outside Git.
+
+All27 tables/schema/rights/sequences exact immediately after the TLS switch.
+Existing Coach session survives own proxy restart; fresh normal MFA for all four
+retained synthetic roles, exact UUID/role, Secure/HttpOnly/host-only/SameSite=Lax,
+no Web Storage, no-store, Portal and rendered Calendar PASS. Final identity/role/
+Coach/business/calendar/password/Recovery/outbox/schema state and existing audit
+prefix preserved; normal authentication and appended audit records explicitly
+allowed, not reset or described as byte-identical after logins.
+
+Independent nonprivileged postflight through the accepted-state resolver PASS:
+strict hostname/CA/leaf/readiness, rejected default-root/wrong-host/old-root,
+immutable V1.2 asset, Portal/Calendar200, anonymous session401 and six active
+services. Future reviewed update-agent bootstrap also binds the accepted leaf.
+No disabled verification, global trust import, public port or API restart.
+
+Actual rollback was exercised successfully in8c05c255…: exact old pair and strict
+old HTTPS restored, all six services healthy. Final accepted run needs no rollback;
+both protected TLS pairs remain. Old-certificate rollback is valid only before
+24.11 18:20:45 MEZ; do not use an expired certificate as a later recovery shortcut.
+
+Do not rerun the renewal entry after acceptance. Existing role windows are open
+over the protected tunnel; Enter closes only that local access. Reopening later
+uses the fixed test guide and accepted-state starter, never an installer/renewal.
+No additional command is needed now. No automatic renewal job was installed.
+
+Exactly one next block: reconcile confirmed EDV App-DNS/TLS/access/SMTP inputs
+with existing templates before the new30.11 deadline. Deliverable: exact scoped
+configuration handoff; DoD: confirmed non-secret inputs and suitable access/
+renewal/delivery verification scope. No personal activation or Coach import implied.
 
 ## Preflight Stops16.11
 

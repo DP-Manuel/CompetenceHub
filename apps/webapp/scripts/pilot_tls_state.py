@@ -5,10 +5,10 @@ import os
 import re
 
 # Filled only from a successful independently checked operating receipt.
-ACCEPTED_RUN = ''
-RECEIPT_SHA = ''
-CA_SHA = ''
-LEAF_SHA = ''
+ACCEPTED_RUN = 'f87c37d267614cce989ccbe5650214d9'
+RECEIPT_SHA = 'e6b80664b761c5223bdc561524f8b086e3d246684d8ec3aafd710ed11b22e36d'
+CA_SHA = '4b1c2ddd2b46329531fb8966f0c9d6ff34edcf15bdc7a1f6b894cb8ec8448cae'
+LEAF_SHA = 'c37975978dc9fbf2836fadb8000bccd51a73c0c21e72d6708fe77fce73d72f87'
 
 
 def bind_agent(bootstrap):

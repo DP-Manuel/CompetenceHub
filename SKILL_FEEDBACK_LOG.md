@@ -7,6 +7,17 @@ Updated: 2026-11-16. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+16.11 actual TLS learning: complex systemd D-Bus properties can print
+`[unprintable]`; bind exact accepted unit hash/FragmentPath/no drop-ins instead.
+Never select Playwright contexts by array position (actual Firefox reverses it);
+reuse URL/identity selection. Test the existing shared Calendar renderer, whose
+grid children are week bands, not days. Move nonprivileged UI checks before sudo.
+Do not pipe Windows getpass through line-buffered Out-Host; flush an explicit
+ready line before hidden input. Reuse the exact protected TLS pair after an
+actual rollback, never generate another pair to repair an assertion. Each issue
+has a focused regression in [TLS acceptance](docs/operations/pilot-tls-renewal-2026-11-16.md).
+Implemented project-local; global skills unchanged, ecosystem proposal remains open.
+
 16.11 finishing learning: check help/tour copy against the actual accepted form;
 a date-only control can be correct while an older tour still demands combined
 date/time input. Local-only conditional markup can still change production HTML

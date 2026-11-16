@@ -1,4 +1,10 @@
-# Testzugang Zum Privaten V1.1-Piloten
+# Testzugang Zum Privaten Piloten
+
+Aktuell16.11: V1.2 bleibt installiert; der TLS-Wechsel ist tatsächlich abgenommen,
+Zertifikat bis30.11 19:09:39 MEZ. Starter bindet die aktuelle TLS-Receipt, nicht
+mehr die ursprüngliche CA. [Aktueller Einstieg](../handoffs/PORTAL_TESTZUGAENGE.md),
+[TLS-Nachweis](pilot-tls-renewal-2026-11-16.md#actual-acceptance).
+Die folgenden datierten V1/V1.1-Abschnitte sind historische Betriebsnachweise.
 
 Stand:13.11.2026. Technischer VPS-Pilot abgenommen. Manuel hat Admin und wesentliche
 Coachfunktionen auf V1 positiv geprüft; V1.1 ist jetzt tatsächlich installiert,

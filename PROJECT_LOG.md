@@ -2,6 +2,17 @@
 
 Significant milestones only; newest first.
 
+16.11 actual private TLS rollover PASS19:22 MEZ, runf87c37d2…/SHAe6b80664…,
+operator5c9fa4f, same protected pair from rolled-back8c05c255… reused. New localhost
+expiry30.11 19:09:39 MEZ; application remains5a555e9. Strict trust/hostname/leaf and
+negative controls, retained session, four-role MFA/cookies/Calendar, all27 exact at
+switch and later identity/business/schema/audit-prefix preservation PASS. Only
+normal auth/audit changed. Independent strict HTTPS/asset/401/six services PASS.
+Actual earlier rollback restored old pair; protected copies retained. Starter/
+future agent pins bound to immutable public receipt;68 focused tests and Linux
+probe PASS, container removed. Role windows/tunnel open; no app/DB migration,
+real account/import/mail, Website or GPG action. [Evidence and follow-up](docs/operations/pilot-tls-renewal-2026-11-16.md#actual-acceptance).
+
 16.11 pilot finishing: read-only SSH confirms V1.2/six active services and
 localhost certificate expiry24.11 18:20:45 MEZ; local tunnel closed. No reinstall.
 Existing nine-Coach matrix extended without real mappings; Preview-only Coach

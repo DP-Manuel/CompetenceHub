@@ -12,12 +12,13 @@ Abbrechen sind jetzt auf dem VPS verfügbar. Die Coach-/Prüfer-/Admin-Fenster
 verwenden die vorhandenen Konten, kein Reset oder neues Setup.
 Keinen Updatebefehl zum bloßen Wiederöffnen starten; V1 und V1.1 sind Rückfallstände.
 
-Lesender Stand16.11: sechs VPS-Dienste aktiv; lokaler Tunnel8447 geschlossen.
-Die alten Testfenster sind damit nicht als noch geöffnet anzusehen. Zum späteren
-Testen nur den Starter unten verwenden. Janays fachliche Abnahme ist abgeschlossen;
-kein erneuter vollständiger Abnahmelauf nötig. Lokale Tour-Textkorrekturen vom16.11
-sind noch nicht auf dem VPS installiert. Zertifikat gilt bis24.11 18:20:45 MEZ;
-danach nicht über Warnungen hinweg fortfahren.
+Aktueller Stand16.11 nach TLS-Wechsel: sechs VPS-Dienste aktiv, vier vorhandene
+Rollenfenster und Kalender über den geschützten Tunnel geöffnet. Zertifikat und
+isoliertes Vertrauen sind gemeinsam abgenommen; gültig bis **30.11.2026 19:09:39 MEZ**.
+Terminal offen lassen. Zum späteren Wiederöffnen nur den Starter unten verwenden.
+Janays fachliche Abnahme ist abgeschlossen; kein erneuter vollständiger Lauf nötig.
+Lokale Tour-Textkorrekturen vom16.11 sind nicht auf dem VPS installiert.
+[Gebundener Zertifikatsnachweis](../operations/pilot-tls-renewal-2026-11-16.md#actual-acceptance).
 
 Im freigegebenen Updatefenster genügt ein gebundener Befehl: Nach technischer
 Abnahme öffnet es die vorhandenen Coach-/Prüfer-/Admin-Fenster bereits angemeldet.
@@ -31,7 +32,7 @@ Wiederöffnen erneut ausführen.
 - Freigegebener Kalender: `https://localhost:8447/portal/calendar-public.html`
 - Nur auf Manuels bisherigem Windows-Rechner/-Benutzer über den SSH-Tunnel.
 - Die automatisch geöffneten Firefox-Fenster nutzen. Keine Zertifikatswarnung
-  wegklicken, kein globales Zertifikat installieren. TLS gültig bis24.11.2026.
+  wegklicken, kein globales Zertifikat installieren. TLS gültig bis30.11.2026.
 
 ## Einmal Starten
 
@@ -42,7 +43,7 @@ Wiederöffnen erneut ausführen.
    `release-artifacts/portal-v12-ux/START-TEST.txt` verwenden. Fehlt diese Datei,
    keinen alten Installer oder geratenen Commit starten, sondern den zuletzt
    geprüften vollständigen Befehl aus dem Projektabschluss anfordern.
-3. Der Starter prüft Quellstand, ursprüngliches TLS und akzeptierte VPS-Version.
+3. Der Starter prüft Quellstand, aktuell gebundenes TLS und akzeptierte VPS-Version.
    Anschließend öffnet er vier bereits angemeldete Rollen und den Kalender.
    Für MFA wartet er gegebenenfalls bis zu31 Sekunden. Kein Passwort eingeben.
 4. Erwartet: `PILOT_ACCESS=PASS ...` und `PRIVATE_ACCESS_GUIDE=...`.

@@ -1,5 +1,9 @@
 # CAL-1 V1.2 Calendar UX
 
+Current16.11 operating follow-up: application5a555e9 remains unchanged; the
+[TLS-only renewal](pilot-tls-renewal-2026-11-16.md#actual-acceptance) is accepted,
+localhost leaf expires30.11 19:09:39 MEZ. Earlier24.11 TLS values below are historical.
+
 Owner Manuel,13.11.2026. Local implementation/test/Git/package authorized. The
 existing private VPS initially remains on accepted38153c1/V1.1. The old V1.1
 grant did not authorize this new release. On15.11 Manuel explicitly granted

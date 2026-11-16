@@ -251,3 +251,12 @@ def test_actual_isolated_operator_import_and_no_tls_bypass():
     code = "import runpy;v=runpy.run_path(" + repr(str(path)) + ");assert callable(v['main'])"
     result = subprocess.run([sys.executable, '-I', '-X', 'utf8', '-c', code], capture_output=True, timeout=30)
     assert result.returncode == 0
+
+
+def test_accepted_window_cannot_generate_or_read_another_pair(monkeypatch):
+    monkeypatch.setattr(client, 'os', SimpleNamespace(name='nt'))
+    monkeypatch.setattr(client.sys, 'stdin', SimpleNamespace(isatty=lambda: True))
+    monkeypatch.setattr(client.backup, 'checked', lambda *args, **kwargs: b'e' * 40)
+    monkeypatch.setattr(client.state, 'ACCEPTED_RUN', 'already-accepted')
+    with pytest.raises(protocol.SnapshotStop, match='TLS_ALREADY_ROLLED_NO_AUTOMATIC_REPEAT'):
+        client.main(SimpleNamespace(execute=True, quiet=True, source='e' * 40))

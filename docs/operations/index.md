@@ -2,7 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
-| Private TLS rollover | [16.11 scoped certificate window](pilot-tls-renewal-2026-11-16.md) | Owner grant confirmed; TLS-only operator and compensating rollback, no app update |
+| Private TLS rollover | [16.11 actual certificate acceptance](pilot-tls-renewal-2026-11-16.md#actual-acceptance) | Expiry30.11, strict new trust/retained session/MFA/six services PASS; actual rollback proven, no app update |
 | Pilot finishing16.11 | [Actual V1.2, TLS renewal gate and local UX](pilot-finishing-2026-11-16.md) | Six services active; nine-profile activation matrix; Preview navigation and tour copy local only, no deployment |
 | V1.2 actual private VPS | [Installed15.11, acceptance and fixed access](portal-v12-calendar-ux-2026-11-13.md#v12-tatsächlich-abgenommen) | Current restore, native CAL61+UX13/drag N/A/touch, original reference and manual role access PASS; V1/V1.1 retained |
 | V1.1 actual VPS acceptance | [Correction, deployed proof and manual handoff](portal-v11-ux-2026-11-13.md) | V1.1 installed13.11; current restore, CAL61+UX16, preserved reference, four-role access PASS |
