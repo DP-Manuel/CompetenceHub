@@ -23,6 +23,8 @@ import pilot_tls_state as state
 
 update, pilot = access.update, access.pilot
 backup, require, sha = update.backup, update.require, update.sha
+RESUME_RUN = '8c05c255269b4e5d994ef3053cdafc4f'
+RESUME_SHA = 'e69c475a472cfdfda084983df6d3af180954b4e2441e94daef6f90968eaa7a79'
 BOOTSTRAP = backup.BOOTSTRAP.replace("a['serve'](types.SimpleNamespace(**p))", """t={'__name__':'private_tls_agent'}
 exec(compile(s['tls'],'<reviewed-tls-agent>','exec'),t)
 t['serve'](types.SimpleNamespace(**a))""")
@@ -77,6 +79,47 @@ def portal_context(browser):
     return matches[0]
 
 
+def check_calendar(page):
+    from playwright.sync_api import expect
+    expect(page.locator('#month-label')).not_to_be_empty()
+    expect(page.locator('#loading')).to_be_hidden()
+    expect(page.locator('#error')).to_be_hidden()
+    # Direct children are week bands, not days in the shared multi-day view.
+    days = page.locator('#grid .day[data-date]').evaluate_all('nodes=>nodes.map(e=>e.dataset.date)')
+    require(28 <= len(days) <= 31 and len(set(days)) == len(days), 'TLS_CALENDAR_RENDER_REQUIRED')
+
+
+def root_progress(record, phase):
+    record['phase'] = phase
+    if phase == 'private_sudo_input':
+        print('VPS_SUDO_INPUT=READY. Enter the existing VPS sudo password below; input stays hidden. No GPG/DB password.', flush=True)
+
+
+def resume_tls_material():
+    raw = (ROOT / 'release-artifacts/pilot-tls' / (RESUME_RUN + '.json')).read_bytes()
+    require(sha(raw) == RESUME_SHA, 'TLS_EXACT_RESUME_RECEIPT_REQUIRED')
+    previous = json.loads(raw)
+    require(previous['status'] == 'STOP' and previous['code'] == 'TLS_CALENDAR_RENDER_REQUIRED'
+            and previous['rollback'] == previous['rollback_https'] == 'PASS'
+            and previous['all_27_exact_immediately_after_switch'] and previous['session_survives_proxy_restart'],
+            'TLS_EXACT_ROLLED_BACK_WINDOW_REQUIRED')
+    directory = Path(os.environ['LOCALAPPDATA']) / 'CompetenceHub/pilot-tls' / RESUME_RUN
+    path = directory / 'new-tls.json.dpapi'
+    script = ". '__ACL__';$null=Assert-StagingExternalPath '__DIR__';Assert-StagingPrivateAcl '__DIR__' -Directory;Assert-StagingPrivateAcl '__FILE__'"
+    for marker, value in {'__ACL__': pilot.SCRIPTS / 'initialize-staging-operator-config.ps1', '__DIR__': directory, '__FILE__': path}.items():
+        script = script.replace(marker, str(value).replace("'", "''"))
+    pilot.powershell(script)
+    require(path.is_file() and not path.is_symlink(), 'TLS_EXISTING_PAIR_REQUIRED')
+    sealed = path.read_bytes()
+    require(sha(sealed) == previous['new_tls_ciphertext_sha256'], 'TLS_EXISTING_PAIR_CIPHERTEXT_CHANGED')
+    values = json.loads(backup.checked(sys.executable, '-I', str(pilot.SCRIPTS / 'windows_dpapi.py'), '--decrypt-stdin', data=sealed, timeout=30))
+    require(set(values) == {'ca', 'certificate', 'key'} and sha(path.read_bytes()) == sha(sealed), 'TLS_EXISTING_PAIR_CHANGED')
+    material = tuple(base64.b64decode(values[name], validate=True) for name in ('ca', 'certificate', 'key'))
+    metadata = validate_pair(*material)
+    require(metadata['ca_sha256'] == previous['ca_sha256'] and metadata['certificate_sha256'] == previous['certificate_sha256'], 'TLS_EXISTING_PUBLIC_IDENTITY_CHANGED')
+    return material
+
+
 def main(options):
     require(os.name == 'nt' and options.execute and options.quiet and sys.stdin.isatty(), 'PRIVATE_TLS_WINDOWS_WINDOW_REQUIRED')
     require(backup.checked('git', '-C', str(ROOT), 'rev-parse', 'HEAD').decode().strip() == options.source, 'SOURCE_CHANGED')
@@ -102,6 +145,7 @@ def main(options):
     try:
         os.environ.update(TMP=str(directory), TEMP=str(directory))
         old_ca = access.accepted_access()
+        material = resume_tls_material() if RESUME_RUN else None
         with socket.socket() as check: occupied = check.connect_ex(('127.0.0.1', 8447)) == 0
         if not occupied:
             tunnel = subprocess.Popen([*backup.SSH[:-1], '-N', '-o', 'ExitOnForwardFailure=yes', '-L',
@@ -109,6 +153,7 @@ def main(options):
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         update.wait_ready(old_ca); update.verify_leaf(old_ca); access.verify_access_runtime(old_ca)
         record['phase'] = 'existing_coach_session'
+        print('PILOT_TLS_PHASE=existing_coach_session. Checking the retained Coach login; MFA may wait up to 31 seconds. No input yet.', flush=True)
         policy(directory, old_ca, 'old-firefox-policy.json')
         data, private = access.read_existing_logins()
         status, headers, _ = pilot.acceptance.HTTPS(old_ca).call('/health/ready')
@@ -121,15 +166,18 @@ def main(options):
         coach_context = portal_context(before_demo[1])
         coach_context.pages[0].wait_for_load_state('networkidle')
         check_context(old_ca, coach_context)
+        print('PILOT_TLS_PHASE=existing_coach_session PASS. Opening the protected server channel next.', flush=True)
         record['phase'] = 'protected_root_channel'
         root = backup.RootSession(bootstrap_source=BOOTSTRAP, reviewed_sources={
             'preflight': (pilot.SCRIPTS / 'staging_readonly_preflight.py').read_text(encoding='utf8'),
             'agent': (pilot.SCRIPTS / 'staging_snapshot_agent.py').read_text(encoding='utf8'),
-            'tls': (pilot.SCRIPTS / 'pilot_tls_agent.py').read_text(encoding='utf8')})
+            'tls': (pilot.SCRIPTS / 'pilot_tls_agent.py').read_text(encoding='utf8')},
+            progress=lambda phase: root_progress(record, phase))
         old = root.request('inspect', run=directory.name)['old_tls']
         record['old_tls_ciphertext_sha256'] = pilot.protected_copy(directory, 'previous-tls.json.dpapi', update.canonical(old))
         record['phase'] = 'new_tls_material'
-        ca_raw, leaf_raw, key_raw = pilot.certificates()
+        ca_raw, leaf_raw, key_raw = material if material is not None else pilot.certificates()
+        if material is not None: record['reused_tls_run'] = RESUME_RUN
         record.update(validate_pair(ca_raw, leaf_raw, key_raw))
         ca = directory / 'pilot-ca.pem'; ca.write_bytes(ca_raw)
         new = {'ca': base64.b64encode(ca_raw).decode(), 'certificate': base64.b64encode(leaf_raw).decode(),
@@ -148,14 +196,9 @@ def main(options):
         before_demo[1].close(); before_demo[0].stop(); before_demo = None
         policy(directory, ca, 'new-firefox-policy.json')
         demo = access.open_roles(data, private, ca, directory)
-        from playwright.sync_api import expect
         for context in demo[1].contexts:
             if any('/calendar-public.html' in page.url for page in context.pages):
-                page = context.pages[0]
-                expect(page.locator('#month-label')).not_to_be_empty()
-                expect(page.locator('#loading')).to_be_hidden()
-                expect(page.locator('#error')).to_be_hidden()
-                require(page.locator('#grid > *').count() >= 28, 'TLS_CALENDAR_RENDER_REQUIRED')
+                check_calendar(context.pages[0])
             else: check_context(ca, context)
         access.verify_access_runtime(ca)
         require(pilot.acceptance.HTTPS(ca).call(pilot.acceptance.ACCESS + '/session')[0] == 401, 'TLS_ANONYMOUS_SESSION_DENIED')

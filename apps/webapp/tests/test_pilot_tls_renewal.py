@@ -80,6 +80,56 @@ def test_actual_firefox_context_order_never_selects_anonymous_calendar(monkeypat
         finally: browser.close()
 
 
+def test_actual_shared_calendar_renders_days_inside_week_bands():
+    from playwright.sync_api import sync_playwright
+    qa = load('tls_calendar_synthetic', 'apps/webapp/scripts/run-cal1-browser-acceptance.py')
+    with qa.synthetic_server() as origin, sync_playwright() as pw:
+        browser = pw.firefox.launch(headless=True)
+        try:
+            page = browser.new_page(ignore_https_errors=True)
+            page.route('**/api/v1/calendar/months/*/offers?*', lambda route: route.fulfill(json={'items': [], 'next_cursor': None}))
+            page.goto(origin + '/portal/calendar-public.html')
+            client.check_calendar(page)
+            assert page.locator('#grid > *').count() < 28
+        finally: browser.close()
+
+
+def test_sudo_prompt_has_complete_visible_line_before_hidden_input(capsys):
+    record = {}
+    client.root_progress(record, 'private_sudo_input')
+    assert record['phase'] == 'private_sudo_input'
+    assert capsys.readouterr().out.endswith('\n')
+    assert '| Out-Host' not in (ROOT / 'deploy/scripts/run-pilot-tls-renewal.ps1').read_text(encoding='utf8')
+
+
+@pytest.mark.parametrize('mutation', [None, 'receipt', 'ciphertext'])
+def test_resume_reuses_exact_retained_pair_without_generation(tmp_path, monkeypatch, material, mutation):
+    run = 'c' * 32
+    values = {name: __import__('base64').b64encode(raw).decode() for name, raw in zip(('ca', 'certificate', 'key'), material[0])}
+    sealed = b'SYNTHETIC-SEALED-ONLY'
+    previous = {'status': 'STOP', 'code': 'TLS_CALENDAR_RENDER_REQUIRED', 'rollback': 'PASS', 'rollback_https': 'PASS',
+                'all_27_exact_immediately_after_switch': True, 'session_survives_proxy_restart': True,
+                'new_tls_ciphertext_sha256': client.sha(sealed), **client.validate_pair(*material[0])}
+    public = tmp_path / 'release-artifacts/pilot-tls'; public.mkdir(parents=True)
+    receipt = public / (run + '.json'); receipt.write_bytes(client.update.canonical(previous))
+    private = tmp_path / 'CompetenceHub/pilot-tls' / run; private.mkdir(parents=True)
+    path = private / 'new-tls.json.dpapi'; path.write_bytes(sealed)
+    monkeypatch.setattr(client, 'ROOT', tmp_path); monkeypatch.setattr(client, 'RESUME_RUN', run)
+    monkeypatch.setattr(client, 'RESUME_SHA', client.sha(receipt.read_bytes())); monkeypatch.setenv('LOCALAPPDATA', str(tmp_path))
+    monkeypatch.setattr(client.pilot, 'powershell', lambda script: None)
+    def decrypt(*args, **kw):
+        assert '--decrypt-stdin' in args and kw['data'] == sealed
+        return client.update.canonical(values)
+    monkeypatch.setattr(client.backup, 'checked', decrypt)
+    if mutation == 'receipt': receipt.write_bytes(b'changed')
+    if mutation == 'ciphertext': path.write_bytes(b'changed')
+    if mutation:
+        with pytest.raises(protocol.SnapshotStop): client.resume_tls_material()
+    else:
+        assert client.resume_tls_material() == material[0]
+        assert path.read_bytes() == sealed
+
+
 def test_actual_tls_handshake_enforces_chain_hostname_and_leaf(tmp_path, monkeypatch, material):
     ca, leaf, key = material[0]
     paths = [tmp_path / name for name in ('ca.pem', 'leaf.pem', 'key.pem', 'other-ca.pem')]

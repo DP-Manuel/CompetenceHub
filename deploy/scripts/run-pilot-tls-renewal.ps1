@@ -27,7 +27,7 @@ try {
     try {
         [Console]::OutputEncoding=[Text.UTF8Encoding]::new($false)
         & (Join-Path $root 'apps/webapp/.venv/Scripts/python.exe') -I -X utf8 `
-            (Join-Path $root 'apps/webapp/scripts/run_pilot_tls_renewal.py') --execute --quiet --source $tlsSource --directory $directory | Out-Host
+            (Join-Path $root 'apps/webapp/scripts/run_pilot_tls_renewal.py') --execute --quiet --source $tlsSource --directory $directory
         if($LASTEXITCODE -ne 0){throw 'PRIVATE_TLS_NOT_ACCEPTED'}
     }finally{[Console]::OutputEncoding=$old}
 }catch{

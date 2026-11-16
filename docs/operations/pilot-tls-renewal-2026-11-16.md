@@ -103,3 +103,21 @@ reproduction confirms reversed order. The fix selects the unique Portal URL,
 not an array position; a real Firefox regression checks the authenticated and
 anonymous contexts separately. This check now precedes sudo/root capture.
 The protected prior TLS copy is retained; no application key was read or changed.
+
+Run8c05c255… did switch TLS. Strict new-chain/hostname/leaf and negative controls,
+all27 exact immediately after switch and retained Coach session passed. The later
+Calendar guard incorrectly counted direct grid children as days; they are week
+bands in the existing shared renderer. It stopped and actually restored the old
+pair/proxy; independent old HTTPS/leaf PASS. All role windows closed as cleanup,
+not because application data were lost. Fixed day selector and actual local shared
+renderer regression cover the correct layout. No Calendar application change.
+
+The next run reuses this exact already-generated new TLS pair, never generates
+another. Its failed public receipt SHA-256e69c475a… and retained DPAPI ciphertext
+hash bind the resume; ACL, fresh-process decrypt and chain/key/identity checks
+remain required. The original protected file is read-only. A missing/changed copy
+stops, with no generation fallback. New run directories do not overwrite prior files.
+
+The invisible Windows getpass prompt is also addressed: native Python is no
+longer routed through line-buffered Out-Host, and a complete flushed
+`VPS_SUDO_INPUT=READY` line precedes the hidden input. No blind password typing.
