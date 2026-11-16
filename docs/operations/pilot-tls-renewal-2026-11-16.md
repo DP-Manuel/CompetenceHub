@@ -95,3 +95,11 @@ proxy unit SHA-256bf4f5616… plus exact FragmentPath and no drop-ins. The actua
 unit hash independently matches the original reviewed builder. Four regression
 variants cover correct metadata and rejected fragment/override/unit changes.
 Neither stopped run requires restoration; the original pair remains active.
+
+Run7b0a7393… stopped at the pre-switch session-cookie check, still before TLS
+generation/staging/server writes. It selected `browser.contexts[0]`, which actual
+Firefox returns as the newer anonymous Calendar context. Actual local Firefox
+reproduction confirms reversed order. The fix selects the unique Portal URL,
+not an array position; a real Firefox regression checks the authenticated and
+anonymous contexts separately. This check now precedes sudo/root capture.
+The protected prior TLS copy is retained; no application key was read or changed.

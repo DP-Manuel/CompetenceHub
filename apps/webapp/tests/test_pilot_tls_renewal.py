@@ -56,6 +56,30 @@ def test_matching_chain_hostname_validity_and_independent_identity(material):
     assert old['ca_sha256'] != new['ca_sha256'] and old['certificate_sha256'] != new['certificate_sha256']
 
 
+def test_actual_firefox_context_order_never_selects_anonymous_calendar(monkeypatch):
+    from playwright.sync_api import sync_playwright
+    class HTTPS:
+        def __init__(self, ca, context): self.context = context
+        def call(self, path): return 200, {'Cache-Control': 'no-store'}, b'{}'
+    monkeypatch.setattr(client.pilot.acceptance, 'HTTPS', HTTPS)
+    with sync_playwright() as pw:
+        browser = pw.firefox.launch(headless=True)
+        try:
+            coach = browser.new_context()
+            coach.route('**/*', lambda route: route.fulfill(content_type='text/html', body='<title>synthetic Coach</title>'))
+            coach.new_page().goto(client.pilot.acceptance.ORIGIN + '/portal/')
+            coach.add_cookies([{'name':'__Host-synthetic-session','value':'SYNTHETIC-ONLY','domain':'localhost',
+                               'path':'/','secure':True,'httpOnly':True,'sameSite':'Lax'}])
+            calendar = browser.new_context()
+            calendar.route('**/*', lambda route: route.fulfill(content_type='text/html', body='<title>synthetic Calendar</title>'))
+            calendar.new_page().goto(client.pilot.acceptance.ORIGIN + '/portal/calendar-public.html')
+            assert client.portal_context(browser) == coach
+            client.check_context('synthetic-public-CA', client.portal_context(browser))
+            with pytest.raises(protocol.SnapshotStop, match='TLS_SECURE_HOST_ONLY_COOKIE_REQUIRED'):
+                client.check_context('synthetic-public-CA', calendar)
+        finally: browser.close()
+
+
 def test_actual_tls_handshake_enforces_chain_hostname_and_leaf(tmp_path, monkeypatch, material):
     ca, leaf, key = material[0]
     paths = [tmp_path / name for name in ('ca.pem', 'leaf.pem', 'key.pem', 'other-ca.pem')]

@@ -70,6 +70,13 @@ def check_context(ca, context):
         require(page.evaluate('localStorage.length===0 && sessionStorage.length===0'), 'TLS_NO_WEB_STORAGE_TOKENS_REQUIRED')
 
 
+def portal_context(browser):
+    matches = [context for context in browser.contexts if any(
+        page.url.split('#', 1)[0].rstrip('/') == pilot.acceptance.ORIGIN + '/portal' for page in context.pages)]
+    require(len(matches) == 1, 'TLS_EXACT_PRESWITCH_COACH_CONTEXT_REQUIRED')
+    return matches[0]
+
+
 def main(options):
     require(os.name == 'nt' and options.execute and options.quiet and sys.stdin.isatty(), 'PRIVATE_TLS_WINDOWS_WINDOW_REQUIRED')
     require(backup.checked('git', '-C', str(ROOT), 'rev-parse', 'HEAD').decode().strip() == options.source, 'SOURCE_CHANGED')
@@ -101,13 +108,7 @@ def main(options):
                 '127.0.0.1:8447:127.0.0.1:8443', backup.SSH[-1]], stdin=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         update.wait_ready(old_ca); update.verify_leaf(old_ca); access.verify_access_runtime(old_ca)
-        record['phase'] = 'protected_root_channel'
-        root = backup.RootSession(bootstrap_source=BOOTSTRAP, reviewed_sources={
-            'preflight': (pilot.SCRIPTS / 'staging_readonly_preflight.py').read_text(encoding='utf8'),
-            'agent': (pilot.SCRIPTS / 'staging_snapshot_agent.py').read_text(encoding='utf8'),
-            'tls': (pilot.SCRIPTS / 'pilot_tls_agent.py').read_text(encoding='utf8')})
-        old = root.request('inspect', run=directory.name)['old_tls']
-        record['old_tls_ciphertext_sha256'] = pilot.protected_copy(directory, 'previous-tls.json.dpapi', update.canonical(old))
+        record['phase'] = 'existing_coach_session'
         policy(directory, old_ca, 'old-firefox-policy.json')
         data, private = access.read_existing_logins()
         status, headers, _ = pilot.acceptance.HTTPS(old_ca).call('/health/ready')
@@ -117,9 +118,16 @@ def main(options):
         offset = server_time - time.time()
         time.sleep(31 - server_time % 30)
         before_demo = pilot.open_demo(data, private, offset, headless=True, roles=('coach',))
-        coach_context = before_demo[1].contexts[0]
+        coach_context = portal_context(before_demo[1])
         coach_context.pages[0].wait_for_load_state('networkidle')
         check_context(old_ca, coach_context)
+        record['phase'] = 'protected_root_channel'
+        root = backup.RootSession(bootstrap_source=BOOTSTRAP, reviewed_sources={
+            'preflight': (pilot.SCRIPTS / 'staging_readonly_preflight.py').read_text(encoding='utf8'),
+            'agent': (pilot.SCRIPTS / 'staging_snapshot_agent.py').read_text(encoding='utf8'),
+            'tls': (pilot.SCRIPTS / 'pilot_tls_agent.py').read_text(encoding='utf8')})
+        old = root.request('inspect', run=directory.name)['old_tls']
+        record['old_tls_ciphertext_sha256'] = pilot.protected_copy(directory, 'previous-tls.json.dpapi', update.canonical(old))
         record['phase'] = 'new_tls_material'
         ca_raw, leaf_raw, key_raw = pilot.certificates()
         record.update(validate_pair(ca_raw, leaf_raw, key_raw))
