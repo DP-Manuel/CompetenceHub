@@ -82,3 +82,16 @@ OpenSSL chain/key matching, secure file modes, no overwrite, TLS switch and exac
 old-pair rollback PASS; temporary container removed. No full Calendar/date suite.
 
 Actual public receipt and completion results will be linked only after execution.
+
+## Preflight Stops16.11
+
+Run7441ece7… stopped before the root handshake. Sanitized journal classification
+confirmed rejected sudo authentication/no root session; no automatic password
+retry. Manuel then explicitly confirmed the correct VPS credential was available.
+Run48836ead… reached root but stopped at credential metadata before TLS capture,
+generation or server writes. Actual `systemctl show LoadCredential` is
+`[unprintable]`, not the unit's scalar path. Corrected by binding exact accepted
+proxy unit SHA-256bf4f5616… plus exact FragmentPath and no drop-ins. The actual
+unit hash independently matches the original reviewed builder. Four regression
+variants cover correct metadata and rejected fragment/override/unit changes.
+Neither stopped run requires restoration; the original pair remains active.

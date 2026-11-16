@@ -26,6 +26,24 @@ agent = load('tls_renewal_test_agent', 'deploy/scripts/pilot_tls_agent.py')
 protocol = client.backup.protocol
 
 
+@pytest.mark.parametrize('change', [None, 'fragment', 'override', 'unit'])
+def test_exact_credential_unit_handles_unprintable_systemd_property(change):
+    legacy = load('tls_original_proxy_unit', 'deploy/scripts/vps_pilot_agent.py')
+    value = agent.TLSAgent(protocol)
+    metadata = 'FragmentPath=/etc/systemd/system/' + agent.PROXY + '\nDropInPaths=\n'
+    unit = legacy.units()[legacy.PROXY].encode()
+    if change == 'fragment': metadata = metadata.replace('/etc/systemd/system/', '/unreviewed/')
+    if change == 'override': metadata = metadata.replace('DropInPaths=', 'DropInPaths=/unreviewed.conf')
+    if change == 'unit': unit += b'\nLoadCredential=tls.key:/wrong\n'
+    def command(*args, **kwargs):
+        assert 'LoadCredential' not in args  # Not a printable scalar on actual systemd.
+        return metadata.encode()
+    value.run = command; value.file = lambda path, mode: unit
+    if change:
+        with pytest.raises(protocol.SnapshotStop, match='TLS_EXISTING_CREDENTIAL_REQUIRED'): value.credential_binding()
+    else: value.credential_binding()
+
+
 @pytest.fixture(scope='module')
 def material():
     return client.pilot.certificates(), client.pilot.certificates()

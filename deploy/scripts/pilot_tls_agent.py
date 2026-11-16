@@ -17,6 +17,7 @@ PROXY = 'competence-hub-pilot-proxy.service'
 SERVICES = (API, PROXY, 'dp-chatbot.service', 'nginx.service', 'fail2ban.service', 'postgresql.service')
 OLD_LEAF = 'aecd310881202f9438b14a9d57d7f3e033bf947416a460fa3263fa44cf71d27a'
 OLD_CA = '14827c63424b87f7b40aa04019e720872e241e5a8f7a4a5b495cdcb3c89b302d'
+PROXY_UNIT_SHA = 'bf4f56169ef745cd50c22a70788c5615cd58cd083b1336ad8aaacab0967d151f'
 AUTH_CHANGES = {'auth_sessions', 'auth_login_challenges', 'auth_totp_credentials',
                 'auth_rate_limit_buckets', 'auth_idempotency_records', 'audit_events'}
 
@@ -54,6 +55,15 @@ class TLSAgent:
         self.write_new(temporary, data, mode)
         os.replace(temporary, path)
 
+    def credential_binding(self):
+        # LoadCredential is a complex D-Bus property rendered as [unprintable].
+        # Bind the exact accepted unit instead; reject every override/drop-in.
+        path = Path('/etc/systemd/system') / PROXY
+        raw = self.run('systemctl', 'show', PROXY, '-p', 'FragmentPath', '-p', 'DropInPaths').decode()
+        metadata = dict(line.split('=', 1) for line in raw.splitlines() if '=' in line)
+        self.s.require(metadata == {'FragmentPath': path.as_posix(), 'DropInPaths': ''}
+                       and self.s.sha(self.file(path, 0o644)) == PROXY_UNIT_SHA, 'TLS_EXISTING_CREDENTIAL_REQUIRED')
+
     def guard(self):
         services = {}
         for name in SERVICES:
@@ -64,8 +74,7 @@ class TLSAgent:
         runtime = self.run('systemctl', 'show', API, '-p', 'ExecStart', '--value').decode()
         self.s.require(str(ROOT / 'releases/5a555e9a9aae/venv/bin/uvicorn') in runtime
                        and '--host 127.0.0.1 --port 8001' in runtime, 'TLS_EXISTING_V12_REQUIRED')
-        proxy = self.run('systemctl', 'show', PROXY, '-p', 'LoadCredential', '--value').decode()
-        self.s.require('tls.key:' + str(CONFIG / 'tls.key') in proxy, 'TLS_EXISTING_CREDENTIAL_REQUIRED')
+        self.credential_binding()
         listeners = sorted(line.split()[3] for line in self.run('ss', '-ltnH').decode().splitlines())
         self.s.require({'127.0.0.1:8001', '127.0.0.1:8443'} <= set(listeners)
                        and all(x.startswith('127.0.0.1:') for x in listeners if x.endswith((':8001', ':8443'))),
