@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| Current Preview finishing | [16.11 navigation and operating boundaries](../operations/pilot-finishing-2026-11-16.md) | Coach-filtered Finder, Calendar-demo/contact paths; production byte-identical, no Pages/IONOS deployment |
 | Current COACH-5 sprint | [Finder and local demo acceptance](../exec-plans/active/coach5-offering-finder-2026-11-05.md) | Approved27 grouped offers/29 formats, filters, local CAL demo and separate release boundaries |
 | Website-first checkpoint | [05.11 inventory and sprint](website-first-2026-11-05.md) | Known versions, simple static return, approved Preview UX and actual tests; key rebase paused |
 | Environment and publishing | [Environment policy](../architecture/environment-policy.md) | Production stable, preview development, separate releases |

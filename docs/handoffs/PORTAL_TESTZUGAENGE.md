@@ -8,13 +8,20 @@ Passwörter, MFA-Seeds, Recovery-Codes und Tokens gehören niemals in diese Date
 Privater VPS: **V1.2 am15.11 tatsächlich installiert und abgenommen**,
 Paket5a555e9. `VPS_V12_UPDATE=PASS` und `PILOT_ACCESS=PASS` bestätigt.
 Deutsche Kalenderauswahl, getrennte Uhrzeit, kompakte Feldfehler und kontrolliertes
-Abbrechen sind jetzt auf dem VPS verfügbar. Die neu geöffneten Coach-/Prüfer-/
-Admin-Fenster verwenden die vorhandenen Konten, kein Reset oder neues Setup.
+Abbrechen sind jetzt auf dem VPS verfügbar. Die Coach-/Prüfer-/Admin-Fenster
+verwenden die vorhandenen Konten, kein Reset oder neues Setup.
 Keinen Updatebefehl zum bloßen Wiederöffnen starten; V1 und V1.1 sind Rückfallstände.
+
+Lesender Stand16.11: sechs VPS-Dienste aktiv; lokaler Tunnel8447 geschlossen.
+Die alten Testfenster sind damit nicht als noch geöffnet anzusehen. Zum späteren
+Testen nur den Starter unten verwenden. Janays fachliche Abnahme ist abgeschlossen;
+kein erneuter vollständiger Abnahmelauf nötig. Lokale Tour-Textkorrekturen vom16.11
+sind noch nicht auf dem VPS installiert. Zertifikat gilt bis24.11 18:20:45 MEZ;
+danach nicht über Warnungen hinweg fortfahren.
 
 Im freigegebenen Updatefenster genügt ein gebundener Befehl: Nach technischer
 Abnahme öffnet es die vorhandenen Coach-/Prüfer-/Admin-Fenster bereits angemeldet.
-Terminal offen lassen. Jetzt zu **Coach1** oder **Prüfer** wechseln; keine
+Terminal während einer geöffneten Sitzung offen lassen. Dann zu **Coach1** oder **Prüfer** wechseln; keine
 Zugangsdaten suchen, keine Konten neu anlegen. Die nachfolgenden Starterangaben
 betreffen ausschließlich spätere Wiederöffnung und sind auf die tatsächliche
 V1.2-Receipt und neue Datumsoberfläche gebunden. Ein Update nicht bloß zum

@@ -4,6 +4,18 @@ Updated: 2026-11-16.
 
 ## Current Milestone
 
+16.11 finishing CLOSED LOCAL: read-only SSH confirms installed V1.2 application
+5a555e9 and six active services; original package/receipt hashes verified, no
+reinstallation. Local8447 tunnel closed, not a VPS outage. Nine-profile activation
+matrix extended without UUID/login guesses. Preview-only Coach→filtered Finder→
+Calendar-demo/contact navigation and corrected V1.2 Coach-tour copy tested:8 model+
+8 local browser/TLS/onboarding cases PASS;390/native200/keyboard, Astro/links and
+all52 production files byte-identical. No Pages dispatch/IONOS/VPS/data change.
+[Actual result and next TLS gate](docs/operations/pilot-finishing-2026-11-16.md).
+One next block: scoped temporary localhost certificate rollover before24.11,
+if EDV remains absent; actual generation/server/client-trust change needs its own
+grant. Existing approved runtime and synthetic users stay unchanged.
+
 16.11 Janay functional V1.2 approval CLOSED per Manuel; his15.11 positive visual
 feedback retained. No further demo/review or test replay required. EDV response
 still ABSENT: Manuel explicitly corrects the accidental positive selection.
@@ -12,8 +24,9 @@ Existing entry guides reconciled with installed V1.2 and future invitation gates
 EDV follow-up draft refreshed, not sent. Private TLS expires24.11.2026 18:20 MEZ.
 [Acceptance and next scope](docs/operations/portal-v12-calendar-ux-2026-11-13.md#fachliche-abnahme1611),
 [activation horizon](docs/exec-plans/active/real-user-readiness-2026-11-10.md#next-activation-horizon1611).
-One next block: confirmed EDV input reconciliation with existing templates;
-until actual response no configuration, account, mail, server or Website action.
+EDV input reconciliation remains required for personal access. The later finishing
+task above separately authorizes local Website work, not real configuration,
+accounts, mail, server actions or production publication while EDV is absent.
 
 15.11 binding test-strategy decision: risk-based evidence reuse, focused changed
 paths and compact VPS smoke; no routine full-suite/date-matrix replay or new

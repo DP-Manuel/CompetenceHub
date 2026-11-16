@@ -1,6 +1,7 @@
 ---
 import Icon from "../components/Icon.astro";
 import HubClearance from "../preview/HubClearance.astro";
+import { publicOfferKeywords } from "../preview/coach-discovery";
 
 interface Props {
   title: string;
@@ -53,6 +54,12 @@ const isCurrent = (path = "") =>
 const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching", "businesscoaching"].some(
   (path) => isCurrent(path),
 );
+const profilePath = canonicalPath.replace(/^\//, "").replace(/\/$/, "");
+const profileHasOffers = reviewMode && publicOfferKeywords(profilePath).length > 0;
+const journeyVisible = reviewMode && (/^coaches\/[^/]+$/.test(profilePath) || isCurrent("kalender"));
+const finderHref = profileHasOffers
+  ? url(`leistungen?coach=${encodeURIComponent(profilePath.split("/")[1])}#angebotsfinder`)
+  : url("leistungen#angebotsfinder");
 ---
 
 <!doctype html>
@@ -137,7 +144,18 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
       </div>
     </header>
-    <slot />
+    {journeyVisible && <Fragment>
+      <nav class="preview-journey-links" aria-label="Passendes Angebot und nächster Schritt">
+        <a href={finderHref}>{profileHasOffers ? "Angebote dieses Coaches" : "Angebotsfinder"}</a>
+        {isCurrent("kalender") ? <a href={url("coaches")}>Coachprofile ansehen</a> : <a href={url("kalender")}>Kalender-Vorschau</a>}
+        <a href={url("kontakt")}>Bedarf besprechen</a>
+      </nav>
+      <style is:inline>
+        .preview-journey-links { display:flex; flex-wrap:wrap; gap:8px 28px; max-width:1440px; margin:0 auto; padding:16px 24px; border-bottom:1px solid var(--color-line); }
+        .preview-journey-links a { display:inline-flex; align-items:center; min-height:44px; color:var(--color-pantone-deep); font-weight:750; overflow-wrap:anywhere; }
+        .preview-journey-links a:focus-visible { outline:3px solid var(--color-dark); outline-offset:4px; }
+      </style>
+    </Fragment>}<slot />
     <footer class="site-footer">
       <div>
         <strong>Competence Hub</strong>

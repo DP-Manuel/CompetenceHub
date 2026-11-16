@@ -21,7 +21,7 @@ const { guelcanOfferFamilies } = await vite.ssrLoadModule("/src/preview/guelcan-
 const { publicOfferKeywords } = await vite.ssrLoadModule("/src/preview/coach-discovery.ts");
 const { coachRequestMailto } = await vite.ssrLoadModule("/src/preview/request-links.ts");
 const { finderEntries } = await vite.ssrLoadModule("/src/preview/offering-finder-data.ts");
-const { filterFinder, emptyFinderSelection, finderFormats, finderAudiences, finderDuration } = await vite.ssrLoadModule("/src/preview/offering-finder-model.ts");
+const { filterFinder, finderCoachFromQuery, emptyFinderSelection, finderFormats, finderAudiences, finderDuration } = await vite.ssrLoadModule("/src/preview/offering-finder-model.ts");
 const slugs = ["carolin-hupp", "elisabeth-schwabauer", "goran-celic",
   "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm"];
 
@@ -204,6 +204,23 @@ test("finder never cross-matches different sibling formats and returns only matc
   assert.equal(mismatch.length, 0);
   const program = filterFinder(finderEntries, { ...emptyFinderSelection(), format: "program" });
   assert.deepEqual(program[0].formats.map((format) => format.id), ["business-balance/six-weeks"]);
+});
+
+test("finder Coach selection intersects other filters and preserves the public catalogue", () => {
+  const selected = { ...emptyFinderSelection(), coach: "coaches/susanne-klemm" };
+  assert.equal(filterFinder(finderEntries, selected).length, 8);
+  assert.ok(filterFinder(finderEntries, selected).every(({ entry }) => entry.coach.profilePath === selected.coach));
+  assert.equal(filterFinder(finderEntries, { ...selected, query: "Gülcan" }).length, 0);
+  assert.equal(filterFinder(finderEntries, { ...selected, coach: "coaches/unknown" }).length, 0);
+  assert.equal(filterFinder(finderEntries, emptyFinderSelection()).length, 27);
+});
+
+test("finder navigation accepts public Coach slugs only, not injected or unknown query text", () => {
+  assert.equal(finderCoachFromQuery(finderEntries, "?coach=susanne-klemm"), "coaches/susanne-klemm");
+  assert.equal(finderCoachFromQuery(finderEntries, "?coach=elisabeth-schwabauer"), "coaches/elisabeth-schwabauer");
+  for (const search of ["", "?coach=unknown", "?coach=stefanie-becker", "?coach=../../portal", "?coach=%3Cscript%3E", "?query=private-customer"]) {
+    assert.equal(finderCoachFromQuery(finderEntries, search), "all");
+  }
 });
 
 test("finder exposes only public fields and preserves unknown duration and clinical boundaries", () => {

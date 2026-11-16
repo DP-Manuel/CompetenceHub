@@ -7,6 +7,16 @@ Updated: 2026-11-16. This file is on-demand, not part of routine boot context.
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.
 
+16.11 finishing learning: check help/tour copy against the actual accepted form;
+a date-only control can be correct while an older tour still demands combined
+date/time input. Local-only conditional markup can still change production HTML
+whitespace, so verify exact stable artifact parity instead of assuming no effect.
+Keep closed local tunnels distinct from unhealthy remote services. Temporary TLS
+rollover must update server credentials and pinned client access together; no
+silent trust bypass, retained CA signer assumption or unrelated DB restore replay.
+Evidence: [finishing report](docs/operations/pilot-finishing-2026-11-16.md).
+Project-local rules/tests, no new global skill or operator/password script.
+
 16.11 gate-reconciliation learning: a corrected/misclicked option is not external
 approval; latest explicit correction wins. Close a reported functional review
 without fabricating new case results or real-account/publication permission.

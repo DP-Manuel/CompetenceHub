@@ -70,10 +70,31 @@ Manual help/restart remains available; no cross-device progress claim.
    genuine receive/access proof, stable real Coach mapping only after its own
    data/import gate. No COACH-3B APPLY or public Website activation by implication.
 
-Immediate single block is2/3, not more feature work or another demonstration.
-DoD: confirmed non-secret input matrix and exact next configuration scope, or
-specific external omissions. Later real-account decisions need not be collected
-again before EDV data arrive; no unnecessary approval/password dialogue now.
+The later finishing task below authorizes bounded local UX work independently
+of waiting2/3. No further demonstration or personal-account decision collection
+is needed now; EDV reconciliation still requires actual confirmed inputs.
+
+## Finishing Horizon16.11
+
+1. DONE READ-ONLY: actual V1.2/path, package/receipt SHA-256, six services and
+   localhost expiry24.11 18:20:45 MEZ confirmed; local tunnel closed, no reinstall.
+2. DONE LOCAL: nine-profile activation matrix/five-step Admin procedure clarified;
+   existing invitation preview checked synthetically, zero writes/mail.
+3. DONE LOCAL: Preview Coach→filtered Finder→Calendar-demo/contact paths and
+   V1.2 tour text aligned to date-only form/cancel help. No production change.
+4. DONE LOCAL:8 model+8 browser/TLS/onboarding cases,390/native200/keyboard,
+   Astro/links and all52 production files byte-identical; reuse unchanged proofs.
+5. PREPARED/GATED: one temporary TLS rollover before24.11 if EDV still absent;
+   existing builder/proxy/strict client pins, no DB operation/new GPG or public port.
+6. WAITING EDV/OWNER: confirmed infrastructure, suitable recovery and personal
+   identities/roles before real access; COACH-3B APPLY remains its own gate.
+
+Exactly one recommended next block is5: preserve strict private HTTPS before
+expiry. Inputs: accepted private pilot plus scoped certificate operating grant;
+deliverable: verified replacement chain and bound reopen path; DoD: strict
+hostname/trust, unchanged runtime/data/listeners and six healthy services.
+Actual guarded rollover implementation/execution is not claimed complete.
+[Canonical finishing evidence](../../operations/pilot-finishing-2026-11-16.md).
 
 Canonical result/access/release boundary: [Readiness V1](../../operations/real-user-readiness-v1-2026-11-10.md).
 Read-only VPS19:23 MEZ: all six services active. No privilege input, installation,

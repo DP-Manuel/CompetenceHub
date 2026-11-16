@@ -7,6 +7,7 @@ interface Props { entries: readonly FinderEntry[] }
 const { entries } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const url = (path: string) => `${base}/${path}`;
+const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePath, entry.coach])).values()];
 ---
 <section class="offering-finder" id="angebotsfinder" aria-labelledby="finder-title" data-offering-finder>
   <header class="finder-heading">
@@ -18,6 +19,7 @@ const url = (path: string) => `${base}/${path}`;
       <div><label for="finder-query">Angebot oder Coach</label><input id="finder-query" type="search" name="query" maxlength="80" autocomplete="off" placeholder="Zum Beispiel Stress oder Führung" aria-controls="finder-results" /></div>
       <div><label for="finder-audience">Zielgruppe</label><select id="finder-audience" name="audience" aria-controls="finder-results"><option value="all">Alle Zielgruppen</option>{finderAudiences.map((audience) => <option value={audience.id}>{audience.label}</option>)}</select></div>
       <div><label for="finder-format">Format</label><select id="finder-format" name="format" aria-controls="finder-results"><option value="all">Alle Formate</option>{finderFormats.map((format) => <option value={format.id}>{format.label}</option>)}</select></div>
+      <div><label for="finder-coach">Coach</label><select id="finder-coach" name="coach" aria-controls="finder-results"><option value="all">Alle Coaches</option>{finderCoaches.map((coach) => <option value={coach.profilePath}>{coach.name}</option>)}</select></div>
     </div>
     <div class="finder-filter-actions">
       <details class="finder-topics">
@@ -32,7 +34,7 @@ const url = (path: string) => `${base}/${path}`;
       <button class="finder-reset" type="reset">Filter zurücksetzen</button>
     </div>
   </form>
-  <div class="finder-result-heading"><p data-finder-status role="status" aria-live="polite" aria-atomic="true">{entries.length} Angebote</p><a href={url("coaches")}>Zum Coach-Netzwerk <Icon name="arrow-right" size={18} /></a></div>
+  <div class="finder-result-heading"><p data-finder-status role="status" aria-live="polite" aria-atomic="true">{entries.length} Angebote</p><nav aria-label="Weitere Wege zum passenden Angebot"><a href={url("coaches")}>Zum Coach-Netzwerk <Icon name="arrow-right" size={18} /></a><a href={url("kalender")}>Kalender-Vorschau <Icon name="arrow-right" size={18} /></a></nav></div>
   <ul class="finder-results" id="finder-results">
     {entries.map((entry) => (
       <li data-finder-entry={entry.id}>
@@ -79,7 +81,7 @@ const url = (path: string) => `${base}/${path}`;
   .finder-heading h2 { font-size: 2rem; line-height: 1.25; margin: 10px 0 0; }
   .finder-heading p { margin-bottom: 0; }
   .finder-filters { background: var(--color-soft); padding: 24px; border-block: 1px solid var(--color-line); }
-  .finder-filter-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 20px; }
+  .finder-filter-row { display: grid; grid-template-columns: minmax(0,1.3fr) repeat(3,minmax(0,1fr)); gap: 20px; }
   .finder-filters label { display: block; font-weight: 750; min-width: 0; }
   .finder-filters input[type="search"], .finder-filters select { display: block; width: 100%; min-width: 0; min-height: 48px; margin-top: 8px; border: 2px solid var(--color-line); background: white; color: var(--color-dark); padding: 10px 12px; border-radius: 4px; font: inherit; font-weight: 400; }
   .finder-filter-actions { display: flex; justify-content: space-between; align-items: start; gap: 24px; margin-top: 18px; }
@@ -94,6 +96,7 @@ const url = (path: string) => `${base}/${path}`;
   .finder-reset { border: 0; background: transparent; color: var(--color-pantone-deep); font: inherit; font-weight: 750; text-decoration: underline; padding: 10px 0; min-height: 44px; cursor: pointer; }
   .finder-result-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px 24px; align-items: center; padding-block: 24px 16px; }
   .finder-result-heading p { font-weight: 750; margin: 0; }
+  .finder-result-heading nav { display: flex; flex-wrap: wrap; gap: 12px 24px; }
   .finder-result-heading a, .offering-finder .text-link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; }
   .finder-results { list-style: none; padding: 0; margin: 0; }
   .finder-results > li { border-top: 1px solid var(--color-line); }
@@ -121,11 +124,12 @@ const url = (path: string) => `${base}/${path}`;
   .finder-more { margin-top: 20px; }
   .offering-finder :is(p,span,strong,h2,h3,h4,dd,a) { overflow-wrap: anywhere; min-width: 0; }
   .offering-finder :is(input,select,summary,button,a):focus-visible { outline: 3px solid var(--color-dark); outline-offset: 4px; }
+  @media (min-width: 901px) and (max-width: 1200px) { .finder-filter-row { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } }
   @media (max-width: 900px) { .finder-heading, .finder-filter-row { grid-template-columns: minmax(0,1fr); } .finder-offer > summary { grid-template-columns: minmax(0,1fr) 24px; gap: 12px 16px; } .finder-coach { grid-row: 2; } .finder-offer > summary::after { grid-column: 2; grid-row: 1 / span 2; } }
   @media (max-width: 520px) { .finder-filters { padding: 18px 14px; } .finder-filter-actions { flex-direction: column; gap: 8px; } .finder-topics { width: 100%; } .finder-topic-checks { grid-template-columns: minmax(0,1fr); } .finder-formats dl > div { grid-template-columns: minmax(0,1fr); gap: 2px; } }
 </style>
 <script>
-  import { filterFinder, finderFormats, emptyFinderSelection, type FinderEntry, type FinderSelection } from "./offering-finder-model";
+  import { filterFinder, finderFormats, finderCoachFromQuery, emptyFinderSelection, type FinderEntry, type FinderSelection } from "./offering-finder-model";
   document.querySelectorAll<HTMLElement>("[data-offering-finder]").forEach((root) => {
     const form = root.querySelector<HTMLFormElement>("[data-finder-form]")!;
     const entries: FinderEntry[] = JSON.parse(root.querySelector("[data-finder-data]")!.textContent!);
@@ -137,7 +141,7 @@ const url = (path: string) => `${base}/${path}`;
       const values = new FormData(form);
       const selection: FinderSelection = { ...emptyFinderSelection(), query: String(values.get("query") ?? ""),
         audience: String(values.get("audience")), format: String(values.get("format")),
-        category: values.get("category") as FinderSelection["category"], topics: values.getAll("topic").map(String) };
+        category: values.get("category") as FinderSelection["category"], topics: values.getAll("topic").map(String), coach: String(values.get("coach")) };
       const matches = filterFinder(entries, selection);
       const visible = new Map(matches.slice(0, limit).map((match) => [match.entry.id, match.formats.map((format) => format.id)]));
       rows.forEach((row) => {
@@ -167,6 +171,7 @@ const url = (path: string) => `${base}/${path}`;
       limit += 8; render();
       rows.filter((row) => !row.hidden)[count]?.querySelector("summary")?.focus();
     });
+    form.querySelector<HTMLSelectElement>("#finder-coach")!.value = finderCoachFromQuery(entries, location.search);
     form.hidden = false;
     render();
   });

@@ -2,6 +2,16 @@
 
 Significant milestones only; newest first.
 
+16.11 pilot finishing: read-only SSH confirms V1.2/six active services and
+localhost certificate expiry24.11 18:20:45 MEZ; local tunnel closed. No reinstall.
+Existing nine-Coach matrix extended without real mappings; Preview-only Coach
+filter/navigation and V1.2 tour wording corrected.8 model+8 targeted local cases
+PASS incl390/native200/keyboard/closed invitation preview; Astro/links PASS and
+all52 production files byte-identical. Prior1763/13/native proofs reused.
+TLS rollover procedure prepared/gated, no real key or server/client-trust change.
+No Pages dispatch, IONOS, database/account/import/mail or private-key access.
+[Result and next gate](docs/operations/pilot-finishing-2026-11-16.md).
+
 16.11 Manuel reports Janay approved the demonstrated V1.2 Calendar/Portal flow;
 functional gate closed, no new per-case technical result inferred. EDV remains
 absent: affirmative answer explicitly corrected as a misclick. Existing accepted

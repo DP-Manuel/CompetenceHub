@@ -27,11 +27,17 @@ export interface FinderEntry {
 }
 export interface FinderSelection {
   query: string; audience: string; category: CategoryId | "all";
-  topics: string[]; format: string;
+  topics: string[]; format: string; coach?: string;
 }
 export const emptyFinderSelection = (): FinderSelection => ({
-  query: "", audience: "all", category: "all", topics: [], format: "all",
+  query: "", audience: "all", category: "all", topics: [], format: "all", coach: "all",
 });
+
+// Navigation accepts only an existing public catalogue slug, never free text.
+export function finderCoachFromQuery(entries: readonly FinderEntry[], search: string): string {
+  const slug = new URLSearchParams(search).get("coach");
+  return entries.find((entry) => entry.coach.profilePath === `coaches/${slug}`)?.coach.profilePath ?? "all";
+}
 export const normalizeFinderText = (value: string) => value.normalize("NFD")
   .replace(/\p{Diacritic}/gu, "").toLocaleLowerCase("de-DE").replace(/ß/g, "ss");
 
@@ -40,6 +46,7 @@ export function filterFinder(entries: readonly FinderEntry[], selection: FinderS
   const available = new Set(topicsForCategory(selection.category).map((topic) => topic.id));
   const terms = normalizeFinderText(selection.query.trim().slice(0, 80)).split(/\s+/).filter(Boolean);
   return entries.flatMap((entry) => {
+    if (selection.coach && selection.coach !== "all" && selection.coach !== entry.coach.profilePath) return [];
     const formats = entry.formats.filter((format) => {
       const search = normalizeFinderText([entry.title, entry.description, entry.coach.name,
         format.title, format.description,
