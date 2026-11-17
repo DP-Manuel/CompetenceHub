@@ -96,7 +96,7 @@ ausgeführt oder im aktuellen Vorbereitungsslice freigegeben.
 
 ## Aktueller Veröffentlichungsumfang17.11
 
-| Personengruppe | Öffentliche Preview | IONOS-Kandidat | Benutzeraktivierung |
+| Personengruppe | Öffentliche Preview | IONOS ab17.11 | Benutzeraktivierung |
 | --- | --- | --- | --- |
 | Christian Galvano, Manuela Rodríguez | APPROVED | bestehender freigegebener Umfang | Separat gated |
 | Gülcan Elmas-Brandes | APPROVED | Profil, genaues vorhandenes Porträt, drei kurze Familien/fünf Formate gemäß29.10 | Separat gated |
@@ -109,9 +109,11 @@ Identität, kein neuer Ersatzdatensatz und kein personenbezogener Redirect.
 Interne Gründe erscheinen nicht auf der Website. Die ursprüngliche Neuner-
 Reviewmatrix ist ein historischer Fachnachweis, keine aktuelle Veröffentlichungsliste.
 
-Ergebnis: acht aktive reale Preview-Profile; Kandidat mit drei echten Profilen
-und den sechs unverändert fiktiven Demo-Profilen. Produktions-Finder verwendet
+Ergebnis: acht aktive reale Preview-Profile; Produktion seit17.11 mit drei echten
+Profilen und den sechs unverändert fiktiven Demo-Profilen. Produktions-Finder verwendet
 ausschließlich Gülcans drei freigegebene Familien/fünf Formate. Der allgemeine
 Finder und seine Navigation ändern keine inhaltlichen Rechte. Die übrigen24
 Finder-Einträge bleiben Preview-only. Kein privates Registry-/Kalender-API.
-Separate Releasefreigabe ist weiterhin vor jedem IONOS-Upload erforderlich.
+Die separate11cb1ea-Freigabe und tatsächliche Veröffentlichung sind im
+[Betriebsrecord](../operations/website-ionos-release-2026-11-17.md) geschlossen.
+Jeder spätere neue Release braucht weiterhin seine eigene konkrete Freigabe.

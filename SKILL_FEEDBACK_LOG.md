@@ -4,6 +4,16 @@ Updated: 2026-11-17. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
+17.11 actual IONOS learning: a closed SFTP connection is not proof of a wrong
+password or IPv6 failure. Keep host pinning, prove handshake stage without secret
+attempts, then one scoped manual diagnostic login; retain the same session for
+backup/upload/readback. Actual protected52/52 backup/restore and55/55 readback
+beat a guessed full sync; write only37 changed/added paths and preserve18 others.
+Local-speed image assertions can race on real production: explicitly await a
+loaded valid portrait; delayed-valid and broken synthetic cases now tested.
+No app change/blind reupload/whole-suite replay/global skill edit. Existing SFTP
+two-terminal/clipboard lessons reused; [actual evidence](docs/operations/website-ionos-release-2026-11-17.md).
+
 17.11 release learning: compare actual published Pages commit, source HEAD and
 production artifact separately; a green local change may never have been Pages
 dispatched. Promote an explicit content allowlist, not the entire Preview dataset.

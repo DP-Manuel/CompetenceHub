@@ -1,7 +1,10 @@
 # Website-Release und Coachstart
 
-Stand17.11.2026. Website-Sprint mit freigegebener Pages-Veröffentlichung; IONOS
-bleibt unverändert. Keine Server-, Datenbank-, Schlüssel-, Benutzer- oder Mailaktion.
+Stand17.11.2026. Website-Sprint und anschließend separat freigegebener IONOS-
+Produktionsrelease **PASS**. Quelle11cb1ea/Paket c3169746… tatsächlich veröffentlicht;
+frische geschützte Sicherung, Rückfallprobe, SFTP55/55 und öffentliches HTTP54/54
+sowie Desktop-/Smartphone-Browserwege bestanden. Keine VPS-, Datenbank-, Schlüssel-,
+Benutzer- oder Mailaktion. Die Vorher-/Kandidaten-Tabelle bleibt als Vergleich erhalten.
 
 ## Tatsächlicher Umgebungsvergleich
 
@@ -138,3 +141,21 @@ Gülcan/Finder/Coachlinks, Mailto/Telefon, Mobile/Keyboard, zentrale Rechtslinks
 Canonical/Robots/Sitemap und P0-Mindforge-Abschnitt visuell korrekt; belegter
 Rückfallweg. Kein Coachkonto, SMTP-Testversand, VPS-, Datenbank- oder CAL-2-Eingriff.
 Bis zu dieser einen Entscheidung bleibt IONOS beim akzeptierten Septemberstand.
+
+## Owner-Freigabe Erteilt17.11
+
+Manuel hat den genau gebundenen IONOS-Release einschließlich frischer Inventur,
+geschützter Webrootsicherung, Rückfallnachweis, Upload und Produktionsprüfung
+ausdrücklich freigegeben. Keine neue Ownerentscheidung für diesen Umfang nötig.
+Die Freigabe ist noch kein Uploadnachweis. Tatsächliche Ausführung, lokale
+Anmeldeinteraktion und Ergebnis gehören in den
+[Betriebsrecord](../operations/website-ionos-release-2026-11-17.md).
+
+## Tatsächliche Veröffentlichung Abgeschlossen
+
+Der anschließend ausgeführte Betriebsblock ist PASS; der Betriebsrecord bindet
+frischen Webroot-Rückfallstand, lokalen52/52-Restorenachweis,37 gezielte Uploads,
+SFTP55/55, HTTP54/54 und tatsächliche1440/390px-Browserabnahme. Die oben formulierte
+Ownerentscheidung ist damit geschlossen, kein erneuter Uploadauftrag. Der genaue
+Paket-/Quellhash bleibt unverändert. Fünf andere reale Profile bleiben Preview-only,
+Hupp pausiert; keine neue Pages-Veröffentlichung oder Portalaktivierung.

@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| Current IONOS release | [17.11 actual PASS](website-ionos-release-2026-11-17.md) | Live11cb1ea/c3169746, fresh52-file protected backup/restore, SFTP55/55, HTTP54/54, actual browser and rollback record |
 | Private TLS rollover | [16.11 actual certificate acceptance](pilot-tls-renewal-2026-11-16.md#actual-acceptance) | Expiry30.11, strict new trust/retained session/MFA/six services PASS; actual rollback proven, no app update |
 | Pilot finishing16.11 | [Actual V1.2, TLS renewal gate and local UX](pilot-finishing-2026-11-16.md) | Six services active; nine-profile activation matrix; Preview navigation and tour copy local only, no deployment |
 | V1.2 actual private VPS | [Installed15.11, acceptance and fixed access](portal-v12-calendar-ux-2026-11-13.md#v12-tatsächlich-abgenommen) | Current restore, native CAL61+UX13/drag N/A/touch, original reference and manual role access PASS; V1/V1.1 retained |
@@ -11,7 +12,7 @@
 | Existing synthetic test access | [Test-window starter](pilot-test-access.md) | Reopen four authenticated roles without installer, sudo, password export or new accounts; Manuel tests later |
 | Integrated Staging pilot | [09.11 release and gated rollout](integrated-staging-pilot-2026-11-09.md) | Private synthetic VPS pilot installed/accepted10.11; preserve reference, no installer rerun |
 | Environment boundaries | [Environment policy](../architecture/environment-policy.md) | Preview does not authorize production |
-| Production checkpoint | [SB-54 handoff](../handoffs/2026-09-25-mindforge-notice-layout-p0-handoff.md) | Source/artifact/hash and rollback evidence |
+| Production predecessor | [SB-54 handoff](../handoffs/2026-09-25-mindforge-notice-layout-p0-handoff.md) | Previous P0-fixed1b4e33e; fresh copy retained by17.11 release, not current production |
 | Release/operating history | [Evidence index](go-live-evidence-index.md) | Dated proof, not current uptime |
 | Website SFTP | [SFTP runbook](../architecture/website-sftp-release-rehearsal-runbook.md) | Backup, two-terminal workflow, upload/rollback |
 | Backend packaging | [Webapp rehearsal](../architecture/webapp-release-rehearsal-runbook.md) | Synthetic installation/health/rollback |

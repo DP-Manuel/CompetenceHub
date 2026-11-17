@@ -37,6 +37,13 @@ def mailto(link, expected):
     assert expected in query['subject'][0] and expected in query['body'][0]
 
 
+def wait_for_portrait(page, timeout=15000):
+    page.wait_for_function('''() => {
+        const image = document.querySelector('.coach-profile-portrait img');
+        return image?.complete && image.naturalWidth > 0;
+    }''', timeout=timeout)
+
+
 def journey(context, base, mode, label, page=None):
     page = page if page is not None else context.new_page()
     errors = []; external = []; writes = []
@@ -61,7 +68,7 @@ def journey(context, base, mode, label, page=None):
     expect(page.locator('h1')).to_have_text('Frau Gülcan Elmas-Brandes')
     expect(page.locator('[data-offer-family]')).to_have_count(3)
     expect(page.locator('[data-offer-format]')).to_have_count(5)
-    assert page.locator('.coach-profile-portrait img').evaluate('e=>e.complete && e.naturalWidth>0')
+    wait_for_portrait(page)
     fit(page); page.screenshot(path=str(EVIDENCE / (label + '-guelcan.png')))
     page.get_by_role('navigation', name='Passendes Angebot und nächster Schritt').get_by_role('link', name='Angebote dieses Coaches').focus()
     page.keyboard.press('Enter')

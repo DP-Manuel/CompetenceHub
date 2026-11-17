@@ -4,6 +4,21 @@ Updated: 2026-11-17.
 
 ## Current Milestone
 
+17.11 IONOS ACTUALLY RELEASED/PASS under exact Owner grant: source11cb1ea,
+ZIP SHA c3169746…. Fresh protected BitLocker-C: Webroot52/52 exact, new archive/
+isolated local restore52/52, restrictive ACL; original copy retained. Operator's
+same-session SFTP upload37 changes/additions only,18 unchanged not written; assets
+first/index last, no deletion. SFTP readback55/55 and strict public HTTP54/54 exact,
+domains/redirects, real1440/390 keyboard/Finder/five-format/mail-draft/profile/
+legal/Calendar-demo/P0 text-range checks PASS. Six held person routes404. Release
+receipt SHA9c258b6f… retained privately; actual backups remain excluded from Git. No rollback
+needed. Test-only portrait-load wait fixed with2 synthetic regressions, no new
+Website bytes/second upload. IONOS now3 real+6 existing fictitious demos, Preview8
+active/Hupp paused unchanged. VPS/Pages/DB/users/Calendar/GPG/USB unchanged.
+[Actual operating record](docs/operations/website-ionos-release-2026-11-17.md).
+Exactly one next block: confirmed EDV App-DNS/HTTPS/access/SMTP input reconciliation;
+real personal activation remains separately gated, no automatic account/import.
+
 17.11 Website/onboarding sprint: actual public IONOS51/51 readable files match
 accepted1b4e33e ZIP (52nd .htaccess requires SFTP). Previous Pages78c3470 is older
 than local finishing. Prepare clean candidate: Guelcan's explicitly approved
@@ -15,9 +30,9 @@ without source/identity deletion. No real UUID/login/role guesses or imports.
 both modes green. Clean55-file candidate11cb1ea/SHA c3169746… bound to tested
 bytes; delta3 added/34 changed/0 removed/18 unchanged. Pages44149446991 actually
 published11cb1ea, four live journeys PASS/Hupp404; IONOS51/51 unchanged. Final
-docs-only HEAD may be newer than this explicit Website source. Exactly one next
-block: scoped IONOS release approval with fresh SFTP inventory/rollback and smokes;
-no upload was performed or authorized by the preparation/Pages grant.
+docs-only HEAD may be newer than this explicit Website source. That preparation
+did not authorize IONOS; the subsequent separate Owner grant and actual release
+are closed above. Do not replay upload or ask for the same release approval.
 [Current result](docs/content/website-release-2026-11-17.md),
 [execution horizon](docs/exec-plans/active/website-release-onboarding-2026-11-17.md).
 Nine-row onboarding matrix retains Hupp ON_HOLD; real activation still requires
@@ -469,9 +484,9 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Current Website horizon: candidate/hash/delta and actual Pages publication closed; exactly one scoped IONOS release decision next. Inputs/deliverables/DoD in the [17.11 plan](docs/exec-plans/active/website-release-onboarding-2026-11-17.md). Existing V1.2 and TLS are accepted; do not repeat installation or backup gates for this Website-only task.
+1. Website17.11 production release is accepted; exactly one next block is EDV App-DNS/HTTPS/access/SMTP reconciliation. Inputs/deliverables/DoD in the [17.11 operating record](docs/operations/website-ionos-release-2026-11-17.md). Existing V1.2 and TLS are accepted; do not repeat installation/Website upload/backup gates or assume real personal activation.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
-3. Any later IONOS promotion needs its own exact artifact approval and fresh inventory/rollback. Latest public Preview evidence belongs to the17.11 release report, not the earlier05.11 source.
+3. This exact IONOS promotion and its fresh inventory/rollback/smokes are closed. Any later content/release needs a new scoped approval. Preview still runs11cb1ea; no second Pages dispatch from the operations record.
 
 ## Domain References
 

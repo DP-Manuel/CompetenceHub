@@ -2,6 +2,19 @@
 
 Significant milestones only; newest first.
 
+17.11 actual IONOS release PASS, exact Owner-approved11cb1ea/ZIP SHA c3169746….
+Fresh full52-file/11,759,090-byte Webroot copy on confirmed BitLocker-C: with
+private ACL, archive SHA83afc743… and isolated52/52 restore PASS.37 changed/new
+files uploaded,18 untouched; assets first/index last, no normal deletion. Actual
+SFTP55/55, strict public HTTP54/54, five domain/TLS/redirect cases,1440/390 keyboard/
+Finder/five public formats/mail drafts/profile/legal/demo/P0 text ranges PASS.
+Six held person routes404; no private API or real data. Receipt SHA9c258b6f…,
+rollback retained/not needed. First SFTP drop not blamed on password/IPv6;
+one diagnostic manual login succeeded. Test-only loaded-image wait+2 synthetic
+regressions, no app bytes changed/reupload/backend replay. Website now3 real+6
+existing demos; Preview8/Hupp paused, VPS/data/accounts/Calendar/GPG unchanged.
+[Release and next EDV block](docs/operations/website-ionos-release-2026-11-17.md).
+
 17.11 local Website release/onboarding: production51/51 HTTP bytes match the
 accepted P0 ZIP; .htaccess awaits future SFTP. Guelcan-only production candidate,
 shared Finder3/5 versus Preview27/29, contextual nav/mail drafts. Owner pauses Hupp:
