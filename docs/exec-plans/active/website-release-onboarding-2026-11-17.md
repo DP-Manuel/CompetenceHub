@@ -33,6 +33,12 @@ Evidence and next release decision: [canonical report](../../content/website-rel
 
 ## Ordered Next Horizon
 
+17.11 local Portal-entry preparation CLOSED:41 Node/14 browser proofs, dev-only
+header view, Production55/Preview59 exact parity, one future confirmed URL. No
+publication; dedicated commit/push authorized after manual-only Pages trigger
+check. Existing production unchanged. STOP until EDV response; no further work.
+[Local entry and gates](../../architecture/website-portal-login-2026-11-17.md).
+
 Website release DONE17.11: Owner approved exact11cb1ea/c3169746…; protected
 52-file backup and isolated52/52 restore,37 scoped writes/18 untouched, SFTP55/55,
 HTTP54/54, desktop/390 keyboard/Finder/five formats/P0 and strict domain/TLS PASS.

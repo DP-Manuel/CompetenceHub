@@ -4,6 +4,15 @@ Updated: 2026-11-17. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
+17.11 local-only UI learning: public GitHub Preview is not a local sandbox. Bind
+design-only rendering to actual dev mode, not the Preview environment, and prove
+absence/byte parity even with the design flag set at build time. Keep shared Login
+as a native link to the existing backend, never a second auth/role implementation.
+Firefox may give overflowing menu scroll regions an extra native Tab stop; inspect
+actual focus instead of assuming one keypress equals a particular control.
+Implemented locally with targeted configuration/browser/build proofs; no global
+skill changes. [Evidence](docs/architecture/website-portal-login-2026-11-17.md).
+
 17.11 actual IONOS learning: a closed SFTP connection is not proof of a wrong
 password or IPv6 failure. Keep host pinning, prove handshake stage without secret
 attempts, then one scoped manual diagnostic login; retain the same session for

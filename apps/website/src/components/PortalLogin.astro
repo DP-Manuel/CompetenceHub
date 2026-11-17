@@ -1,0 +1,59 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  href: string | null;
+  placement: "desktop" | "mobile";
+}
+const { href, placement } = Astro.props;
+const classes = `portal-login portal-login--${placement}`;
+const descriptionId = `portal-login-${placement}-note`;
+---
+{href ? (
+  <a class={classes} href={href} data-portal-login="enabled">
+    <Icon name="log-in" size={20} /><span>Portal-Login</span>
+  </a>
+) : (
+  <Fragment>
+    <button class={classes} type="button" aria-disabled="true" aria-describedby={descriptionId}
+      title="Lokale Designvorschau – Portaladresse noch nicht bestätigt" data-portal-login="design">
+      <Icon name="log-in" size={20} /><span>Portal-Login</span>
+    </button>
+    <span class="visually-hidden" id={descriptionId}>Nur lokale Designvorschau. Die Portaladresse ist noch nicht bestätigt; Anmeldung noch nicht verfügbar.</span>
+  </Fragment>
+)}
+{placement === "desktop" && <style is:inline>
+  .portal-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 46px;
+    padding: 0 16px;
+    border: 2px solid var(--color-pantone-deep);
+    border-radius: 4px;
+    background: var(--color-pantone-deep);
+    color: var(--color-white);
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .portal-login:hover { background: var(--color-dark); border-color: var(--color-dark); }
+  .portal-login:focus-visible { outline: 3px solid var(--color-dark); outline-offset: 3px; }
+  .portal-login[aria-disabled="true"] { cursor: not-allowed; }
+  .portal-login--mobile { display: none; }
+  .site-header:has([data-portal-login]) .header-actions { flex-wrap: nowrap; gap: 12px; }
+  @media (max-width: 1240px) {
+    .site-header:has([data-portal-login]) .nav--desktop { display: none; }
+    .site-header:has([data-portal-login]) .nav-menu { display: block; z-index: 2; }
+    .site-header:has([data-portal-login]) .nav-menu .nav {
+      max-height: calc(100dvh - 112px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .portal-login--desktop { display: none; }
+    .portal-login--mobile { display: inline-flex; width: 100%; margin-bottom: 8px; }
+    .site-header .nav-menu .portal-login { color: var(--color-white); padding: 0 16px; font-size: 0.88rem; }
+  }
+</style>}

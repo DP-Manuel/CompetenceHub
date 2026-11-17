@@ -3,6 +3,8 @@ import Icon from "../components/Icon.astro";
 import HubClearance from "../preview/HubClearance.astro";
 import { publicOfferKeywords } from "../preview/coach-discovery";
 import { coaches as productionCoaches } from "../data/coaches";
+import PortalLogin from "../components/PortalLogin.astro";
+import { portalLoginConfiguration } from "../../config/environment.mjs";
 
 interface Props {
   title: string;
@@ -21,6 +23,7 @@ const {
 } = Astro.props;
 
 const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
+const portalLogin = portalLoginConfiguration(undefined, { development: import.meta.env.DEV });
 const canonicalSite = new URL("https://competencehub.donner-partner.de");
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -121,7 +124,7 @@ const finderHref = profileHasOffers
       </nav>
       <details class="nav-menu">
         <summary>Menü</summary>
-        <nav class="nav" aria-label="Mobile Hauptnavigation">
+        <nav class="nav" aria-label="Mobile Hauptnavigation">{portalLogin.visible && <PortalLogin href={portalLogin.href} placement="mobile" />}
           <a href={url()} aria-current={isCurrent() ? "page" : undefined}>Start</a>
           {serviceNavigation.map((item) => (
             <a
@@ -143,7 +146,7 @@ const finderHref = profileHasOffers
         </nav>
       </details>
       <div class="header-actions">
-        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>{portalLogin.visible && <PortalLogin href={portalLogin.href} placement="desktop" />}
       </div>
     </header>
     {journeyVisible && <Fragment>

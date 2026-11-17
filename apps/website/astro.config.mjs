@@ -16,6 +16,7 @@ export default defineConfig({
   site: environment.site,
   base: environment.base,
   outDir: projection ? `./.tmp/coach4/site-${environment.mode}` : environment.outDir,
+  devToolbar: { enabled: process.env.WEBSITE_PORTAL_DESIGN_PREVIEW !== "true" },
   vite: {
     envDir: false,
     define: {

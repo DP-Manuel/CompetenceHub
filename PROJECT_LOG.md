@@ -2,6 +2,16 @@
 
 Significant milestones only; newest first.
 
+17.11 local Portal header prepared: shared existing backend entry, D+P Login icon,
+desktop-right/mobile-first placement, central optional URL/dev-only design. No
+guessed domain, login form, role/cookie/auth implementation, account or deployment.
+41 Node/14 local Firefox+Edge cases PASS, native200/390/320/no-JS/keyboard/contrast;
+synthetic target intercepted, configured static branch34 pages verified locally.
+Both public default artifacts exactly unchanged55/59 despite design flag. Local
+4327/4328 stopped. Subsequent Owner grant: dedicated commit/push after review;
+Pages workflow/manual trigger verified, no publication. STOP until EDV response.
+[One URL and subsequent EDV/release gate](docs/architecture/website-portal-login-2026-11-17.md).
+
 17.11 actual IONOS release PASS, exact Owner-approved11cb1ea/ZIP SHA c3169746….
 Fresh full52-file/11,759,090-byte Webroot copy on confirmed BitLocker-C: with
 private ACL, archive SHA83afc743… and isolated52/52 restore PASS.37 changed/new

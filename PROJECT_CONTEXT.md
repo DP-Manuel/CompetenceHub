@@ -4,6 +4,18 @@ Updated: 2026-11-17.
 
 ## Current Milestone
 
+17.11 Portal-Login header LOCAL_READY, dedicated Git closure authorized, no deployment. Existing
+Icon/CD, desktop-right/mobile-first/native menu, shared backend /portal/ link only.
+Central WEBSITE_PORTAL_URL still empty; exactly one confirmed future URL activates
+it. Dev-only design flag cannot render in public builds: Production55/55 and
+Preview59/59 byte-identical.41 Node tests/14 local Firefox+Edge cases PASS incl
+390/320/native200/keyboard/no-JS/contrast and synthetic intercepted link activation.
+No Astro auth, role code, secret, backend/account action or fake actual domain.
+Both own local test servers4327/4328 stopped. Public Pages manual-only workflow
+verified; source push does not deploy. STOP until confirmed EDV address.
+[Configuration, tests and next EDV/controlled-publication gate](docs/architecture/website-portal-login-2026-11-17.md).
+Actual IONOS11cb1ea and Pages remain unchanged by this local task.
+
 17.11 IONOS ACTUALLY RELEASED/PASS under exact Owner grant: source11cb1ea,
 ZIP SHA c3169746…. Fresh protected BitLocker-C: Webroot52/52 exact, new archive/
 isolated local restore52/52, restrictive ACL; original copy retained. Operator's

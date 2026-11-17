@@ -56,6 +56,10 @@ http://127.0.0.1:4321/
 
 ## Deployment
 
+The prepared header Portal entry is off until `WEBSITE_PORTAL_URL` holds the
+confirmed HTTPS `/portal/` address. Local design mode is dev-only and cannot
+appear in a public build. See [local design, single setting and evidence](../../docs/architecture/website-portal-login-2026-11-17.md).
+
 The repository contains a manual GitHub Pages review workflow at
 `.github/workflows/pages-review.yml`. It has no `push` trigger and cannot
 publish automatically. The review build uses `/CompetenceHub` as its base path,

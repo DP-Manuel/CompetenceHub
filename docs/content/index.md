@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| Prepared Portal header | [Local design / one confirmed URL](../architecture/website-portal-login-2026-11-17.md) | Desktop/mobile shared entry, dev-only inert design; public artifacts unchanged, no auth duplication/publication |
 | Current Website release | [17.11 comparison and release](website-release-2026-11-17.md), [actual IONOS PASS](../operations/website-ionos-release-2026-11-17.md) | Live3 real/6 demos, Gülcan Finder3/5; Preview8/Hupp paused, onboarding and CAL-2 proposal only |
 | Current COACH-5 sprint | [Finder and local demo acceptance](../exec-plans/active/coach5-offering-finder-2026-11-05.md) | Approved27 grouped offers/29 formats, filters, local CAL demo and separate release boundaries |
 | Website-first checkpoint | [05.11 inventory and sprint](website-first-2026-11-05.md) | Known versions, simple static return, approved Preview UX and actual tests; key rebase paused |

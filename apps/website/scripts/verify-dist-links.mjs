@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { extname, join, relative, resolve, sep } from "node:path";
 import assert from "node:assert/strict";
-import { websiteEnvironment } from "../config/environment.mjs";
+import { websiteEnvironment, portalLoginConfiguration } from "../config/environment.mjs";
 
 const environment = websiteEnvironment();
+const portalLogin = portalLoginConfiguration();
 const dist = resolve(environment.outDir);
 const base = environment.preview ? environment.base : "";
 const canonicalHost = "competencehub.donner-partner.de";
@@ -123,6 +124,9 @@ for (const file of allFiles) {
 
   if (!textExtensions.has(extname(file).toLowerCase())) continue;
   const content = readFileSync(file, "utf8").toLocaleLowerCase("de-DE");
+  if (/data-portal-login="design"/.test(content) || (!portalLogin.href && content.includes("data-portal-login"))) {
+    failures.push({ source: publicPath, reason: "Unconfirmed or local-design Portal entry in public artifact" });
+  }
   if (/carolin hupp|carolin-hupp|localhost:8447|217\.160\.255\.86|\/api\/v1\/portal|source_path|\.docx/.test(content)) {
     failures.push({ source: publicPath, reason: "Paused identity or internal data in public artifact" });
   }

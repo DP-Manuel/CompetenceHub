@@ -17,3 +17,21 @@ export function websiteEnvironment(env = process.env) {
     outDir: preview ? "./dist-preview" : "./dist",
   });
 }
+
+export function portalLoginConfiguration(env = process.env, { development = false } = {}) {
+  const value = env.WEBSITE_PORTAL_URL?.trim();
+  let href = null;
+  if (value) {
+    let target;
+    try { target = new URL(value); } catch { /* Report only the configuration field, not its contents. */ }
+    if (!target || target.protocol !== "https:" || target.username || target.password
+      || target.search || target.hash || target.pathname !== "/portal/"
+      || !target.hostname.includes(".") || /^[\d.]+$/.test(target.hostname) || target.hostname.startsWith("[")
+      || target.hostname.endsWith(".localhost") || target.hostname.endsWith(".local")) {
+      throw new Error("WEBSITE_PORTAL_URL requires a confirmed HTTPS /portal/ address without credentials, query or fragment.");
+    }
+    href = target.href;
+  }
+  const design = !href && development && env.WEBSITE_PORTAL_DESIGN_PREVIEW === "true";
+  return Object.freeze({ href, design, visible: Boolean(href) || design });
+}
