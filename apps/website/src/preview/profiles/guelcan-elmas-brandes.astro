@@ -26,7 +26,7 @@ const topics = [
 ---
 
 <BaseLayout
-  canonical={false}
+  canonical={import.meta.env.PUBLIC_REVIEW_MODE !== "true"}
   title="Frau Gülcan Elmas-Brandes | Coaches | Competence Hub"
   description="Frau Gülcan Elmas-Brandes verbindet Karriere- und Gesundheitscoaching mit Training sowie Erfahrung in Projekt- und Qualitätsmanagement."
 >

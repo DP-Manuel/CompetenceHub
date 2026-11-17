@@ -311,7 +311,9 @@ $inventoryPath = Join-Path $packageRoot "release-files.sha256"
 $inventory | Set-Content -LiteralPath $inventoryPath -Encoding ascii
 
 $localReleasePath = ConvertTo-SftpLocalPath -Path $releaseRootFull
-$topLevelDirectories = @(Get-ChildItem -LiteralPath $releaseRoot -Directory | Sort-Object Name)
+$topLevelDirectories = @(Get-ChildItem -LiteralPath $releaseRoot -Directory | Sort-Object @{
+    Expression = { if ($_.Name -in @("_astro", "assets", "images")) { 0 } else { 1 } }
+}, Name)
 $allDirectories = @(Get-ChildItem -LiteralPath $releaseRoot -Directory -Recurse | Sort-Object FullName)
 $rootFiles = @(Get-ChildItem -LiteralPath $releaseRoot -File | Where-Object Name -cne "index.html" | Sort-Object Name)
 $allFilesBeforeIndex = @(Get-ChildItem -LiteralPath $releaseRoot -File -Recurse |
@@ -333,11 +335,11 @@ $permissionAndActivationCommands.Add("ls -la")
 
 $commonUploadCommands = [System.Collections.Generic.List[string]]::new()
 $commonUploadCommands.Add("lcd `"$localReleasePath`"")
-foreach ($file in $rootFiles) {
-    $commonUploadCommands.Add("put $($file.Name)")
-}
 foreach ($directory in $topLevelDirectories) {
     $commonUploadCommands.Add("put -r $($directory.Name)")
+}
+foreach ($file in $rootFiles) {
+    $commonUploadCommands.Add("put $($file.Name)")
 }
 foreach ($command in $permissionAndActivationCommands) {
     $commonUploadCommands.Add($command)
@@ -345,12 +347,12 @@ foreach ($command in $permissionAndActivationCommands) {
 
 $firstDeployCommands = [System.Collections.Generic.List[string]]::new()
 $firstDeployCommands.Add("lcd `"$localReleasePath`"")
-foreach ($file in $rootFiles) {
-    $firstDeployCommands.Add("put $($file.Name)")
-}
 foreach ($directory in $topLevelDirectories) {
     $firstDeployCommands.Add("mkdir $($directory.Name)")
     $firstDeployCommands.Add("put -r $($directory.Name)")
+}
+foreach ($file in $rootFiles) {
+    $firstDeployCommands.Add("put $($file.Name)")
 }
 foreach ($command in $permissionAndActivationCommands) {
     $firstDeployCommands.Add($command)

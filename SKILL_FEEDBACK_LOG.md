@@ -1,8 +1,17 @@
 # Skill Feedback Router
 
-Updated: 2026-11-16. This file is on-demand, not part of routine boot context.
+Updated: 2026-11-17. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
+
+17.11 release learning: compare actual published Pages commit, source HEAD and
+production artifact separately; a green local change may never have been Pages
+dispatched. Promote an explicit content allowlist, not the entire Preview dataset.
+A paused person leaves active portfolio/direct routes/invitations without deleting
+history or changing real DB mappings. Keep private pause reasons out of public Git.
+Source-bound ZIP/File-SHA comparison and per-environment rights/browser checks
+implemented locally; [evidence](docs/content/website-release-2026-11-17.md).
+Global skills unchanged; no new password/operator process or architecture sprint.
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.

@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
 import OfferingFinder from "@website-offer-finder";
-import { finderEntries } from "../preview/offering-finder-data";
+import { finderEntries, productionFinderEntries } from "../preview/offering-finder-data";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -40,7 +40,7 @@ const services = [
     eyebrow: "Workshops & Vorträge",
     title: "Wissen gemeinsam weitergeben",
     text: "Für Wissenstransfer, Lernimpulse und konkrete Themen in Gruppen.",
-    href: "kontakt",
+    href: "leistungen#angebotsfinder",
     id: "gruppenformate",
     icon: "users" as const,
   },
@@ -116,13 +116,13 @@ const faqs = [
       ]}
     >
       <div slot="actions" class="actions">
-        <a class="button" href={import.meta.env.PUBLIC_REVIEW_MODE === "true" ? "#angebotsfinder" : url("kontakt")}>{import.meta.env.PUBLIC_REVIEW_MODE === "true" ? "Angebote finden" : "Anfrage stellen"}</a>
+        <a class="button" href="#angebotsfinder">Angebote finden</a>
         <a class="button button--ghost" href={url("mindforge")}>Mindforge entdecken</a>
         <a class="button button--ghost" href={url("unternehmen")}>Für Unternehmen</a>
       </div>
     </ConnectedPageHero>
 
-    {import.meta.env.PUBLIC_REVIEW_MODE === "true" && <OfferingFinder entries={finderEntries} />}<section class="offer-grid offer-grid--services" id="angebote" aria-label="Angebotsübersicht">
+    <OfferingFinder entries={import.meta.env.PUBLIC_REVIEW_MODE === "true" ? finderEntries : productionFinderEntries} /><section class="offer-grid offer-grid--services" id="angebote" aria-label="Angebotsübersicht">
       {services.map((service) => (
         <article class="offer-card" id={service.id}>
           <span class="offer-card__icon"><Icon name={service.icon} size={30} /></span>

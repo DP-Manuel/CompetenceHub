@@ -122,6 +122,22 @@ def run_preparer(tmp_path: Path, **fixture_options: object) -> subprocess.Comple
     )
 
 
+def test_upload_commands_stage_assets_before_dependent_pages(tmp_path: Path) -> None:
+    result = run_preparer(tmp_path, archive_entries={
+        ".htaccess": b"DirectoryIndex index.html", "index.html": b"home",
+        "404.html": b"missing", "_astro/site.css": b"css",
+        "images/portrait.png": b"synthetic", "coaches/example/index.html": b"profile",
+    })
+    assert result.returncode == 0, result.stderr
+    package, = (tmp_path / "output").iterdir()
+    for name in ("SFTP-FIRST-DEPLOY-COMMANDS.txt", "SFTP-UPDATE-COMMANDS.txt"):
+        commands = (package / name).read_text(encoding="utf-8-sig").splitlines()
+        assert commands.index("put -r _astro") < commands.index("put -r coaches")
+        assert commands.index("put -r images") < commands.index("put -r coaches")
+        assert commands.index("put -r coaches") < commands.index("put 404.html") < commands.index("put index.html")
+        assert commands.count("put index.html") == 1
+
+
 def test_sftp_rehearsal_contract_is_secret_free_and_non_executing() -> None:
     script = SCRIPT.read_text(encoding="utf-8")
     target = json.loads(TARGET_EXAMPLE.read_text(encoding="utf-8"))

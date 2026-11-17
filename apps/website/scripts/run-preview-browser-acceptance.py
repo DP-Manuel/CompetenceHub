@@ -24,7 +24,7 @@ if not re.fullmatch(r"[a-z0-9-]{1,70}", label):
 EVIDENCE = ROOT / "release-artifacts" / label
 BROWSER_OPTIONS = ({"executable_path": os.environ["WEBSITE_QA_BROWSER_EXECUTABLE"]}
                    if os.environ.get("WEBSITE_QA_BROWSER_EXECUTABLE") else {"channel": "msedge"})
-RESTORED = ("carolin-hupp", "elisabeth-schwabauer", "goran-celic",
+RESTORED = ("elisabeth-schwabauer", "goran-celic",
             "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm")
 count = 0
 
@@ -321,8 +321,8 @@ def main():
                 page.keyboard.press("Space")
                 first = page.locator("[data-preview-coach]:visible h2").all_text_contents()
                 check(f"{name} sourced health coaches", first == [
-                    "Herr Christian Galvano", "Frau Elisabeth Schwabauer",
-                    "Frau Carolin Hupp", "Frau Gülcan Elmas-Brandes",
+                    "Herr Christian Galvano", "Frau Gülcan Elmas-Brandes",
+                    "Frau Elisabeth Schwabauer",
                     "Frau Susanne Klemm",
                 ])
                 page.locator('[data-category="persoenlichkeitsentwicklung"]').click()
@@ -360,7 +360,7 @@ def main():
                     check(f"{name} profile prefix", link.startswith(base + "/coaches/"))
                     check(f"{name} profile link resolves", context.request.get(link).status == 200)
                 carolin = page.locator('[data-preview-coach]').filter(has=page.get_by_role("heading", name="Frau Carolin Hupp", exact=True))
-                check(f"{name} Carolin has no portrait", carolin.locator("img").count() == 0)
+                check(f"{name} paused Carolin absent", carolin.count() == 0)
 
                 page.goto(base + "/coaches/elisabeth-schwabauer/", wait_until="networkidle")
                 check(f"{name} Elisabeth spelling", page.locator("h1").inner_text() == "Frau Elisabeth Schwabauer")

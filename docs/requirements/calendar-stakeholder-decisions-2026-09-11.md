@@ -37,8 +37,9 @@ Echtdaten, Konten, Nachrichtenversand noch Produktion.
 
 ## Verbleibende Gates
 
-- ADR 0007 benötigt Manuels ausdrückliche Architekturfreigabe.
-- Thema, Statusmodell, Rechte, API und Datenmodell benötigen technischen Review.
+- ADR 0007 ist seit11.09 von Manuel angenommen; keine erneute Architekturfreigabe nötig.
+- CAL-1 ist technisch/fachlich abgenommen. Reservierungsstatus, Rechte, API und
+  Datenmodell von CAL-2 benötigen vor ihrer Umsetzung einen begrenzten Review.
 - Migration auf Staging benötigt eine separate Freigabe und Rollback-Smoke.
 - Mailzustellung benötigt EDV-/SMTP-Vertrag, Absender und Testzustellung.
 - Datenschutz, Aufbewahrung und Löschweg müssen vor echten Vormerkungen

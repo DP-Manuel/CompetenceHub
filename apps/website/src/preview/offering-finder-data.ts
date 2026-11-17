@@ -65,3 +65,5 @@ const guelcan: FinderEntry[] = guelcanOfferFamilies.map((family, index) => ({
 // Public static adapter only. The UI accepts this view model as props; a later
 // validated COACH-4 adapter can supply it without changing the component.
 export const finderEntries: readonly FinderEntry[] = [...guelcan, ...elisabeth, ...susanne];
+// Explicit 29.10 Production rights: Guelcan short scope only, never all Preview data.
+export const productionFinderEntries: readonly FinderEntry[] = guelcan;

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { coachRequestMailto } from "../../preview/request-links";
 import "../../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -43,7 +44,7 @@ const topics = [
           Veränderung und gesundes Arbeiten.
         </p>
         <div class="coach-profile-actions">
-          <a class="button" href={url("kontakt")}>Coaching-Anfrage stellen</a>
+          <a class="button" href={coachRequestMailto("Herr Christian Galvano")}>Coaching per E-Mail anfragen</a>
           <a
             class="button button--ghost"
             href="https://changes-galvano.de/"

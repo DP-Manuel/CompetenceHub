@@ -2,6 +2,7 @@
 import Icon from "../components/Icon.astro";
 import HubClearance from "../preview/HubClearance.astro";
 import { publicOfferKeywords } from "../preview/coach-discovery";
+import { coaches as productionCoaches } from "../data/coaches";
 
 interface Props {
   title: string;
@@ -41,7 +42,7 @@ const navigation = [
 
 const serviceNavigation = [
   { label: "Alle Leistungen", href: "leistungen", icon: "compass" as const },
-  ...(reviewMode ? [{ label: "Angebotsfinder", href: "leistungen#angebotsfinder", icon: "compass" as const }] : []),
+  { label: "Angebotsfinder", href: "leistungen#angebotsfinder", icon: "compass" as const },
   { label: "Mindforge · Coaching & Beratung", href: "mindforge", icon: "sparkles" as const },
   { label: "Recruiting", href: "leistungen#recruiting", icon: "user-round" as const },
   { label: "Personalentwicklung", href: "leistungen#personalentwicklung", icon: "users" as const },
@@ -55,8 +56,9 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
   (path) => isCurrent(path),
 );
 const profilePath = canonicalPath.replace(/^\//, "").replace(/\/$/, "");
-const profileHasOffers = reviewMode && publicOfferKeywords(profilePath).length > 0;
-const journeyVisible = reviewMode && (/^coaches\/[^/]+$/.test(profilePath) || isCurrent("kalender"));
+const approvedProfile = productionCoaches.some((coach) => coach.kind === "approved" && coach.profilePath === profilePath);
+const profileHasOffers = (reviewMode || approvedProfile) && publicOfferKeywords(profilePath).length > 0;
+const journeyVisible = (reviewMode && /^coaches\/[^/]+$/.test(profilePath)) || approvedProfile || isCurrent("kalender");
 const finderHref = profileHasOffers
   ? url(`leistungen?coach=${encodeURIComponent(profilePath.split("/")[1])}#angebotsfinder`)
   : url("leistungen#angebotsfinder");

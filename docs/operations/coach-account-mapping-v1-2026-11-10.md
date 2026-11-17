@@ -1,6 +1,6 @@
 # Coachprofile und persönliche Portalzugänge
 
-Stand16.11.2026. Keine personenbezogenen Daten aus privaten Quelldokumenten neu
+Stand17.11.2026. Keine personenbezogenen Daten aus privaten Quelldokumenten neu
 gelesen. Grundlage ist die abgeschlossene kanonische9er-Reviewmatrix im
 [Importvertrag](../architecture/coach3-existing-content-migration-plan-2026-10-23.md#exakte-dry-mapping-zahlen).
 Fachliche READY-Freigabe ist weder Registry-Import noch Benutzeraktivierung.
@@ -14,7 +14,7 @@ Portal-Login dürfen aus Namen, Website-Slugs oder E-Mail-Konventionen abgeleite
 | Christian Galvano | Nicht zugeteilt/importiert | Nicht bestätigt | coach, vorgesehen | Nicht angelegt | Profilreview READY; persönliche Aktivierung offen | A–D |
 | Manuela Rodríguez, M.A. | Nicht zugeteilt/importiert | Nicht bestätigt | coach, vorgesehen | Nicht angelegt | Profilreview READY; persönliche Aktivierung offen | A–D |
 | Elisabeth Schwabauer | Nicht zugeteilt/importiert | Nicht bestätigt | coach, vorgesehen | Nicht angelegt | Profilreview READY; persönliche Aktivierung offen | A–D |
-| Carolin Hupp | Nicht zugeteilt/importiert | Nicht bestätigt | coach, vorgesehen | Nicht angelegt | Profilreview READY; persönliche Aktivierung offen | A–D |
+| Carolin Hupp | Nicht zugeteilt/importiert | Nicht bestätigt | Keine Rolle zuweisen | PAUSIERT; kein Konto | Owner-Pause17.11; Preview ausgesetzt, keine IONOS-Freigabe | A–D und neue Wiederaufnahmefreigabe |
 | Gülcan Elmas-Brandes | Nicht zugeteilt/importiert | Nicht bestätigt | coach, vorgesehen | Nicht angelegt | Profilreview READY; persönliche Aktivierung offen | A–D |
 | T. Wegner-Ney | Nicht zugeteilt/importiert | Nicht bestätigt | coach, vorgesehen | Nicht angelegt | Profilreview READY; persönliche Aktivierung offen | A–D |
 | Goran Celic | Nicht zugeteilt/importiert | Nicht bestätigt | coach, vorgesehen | Nicht angelegt | Profilreview READY; persönliche Aktivierung offen | A–D |
@@ -32,6 +32,21 @@ Die neun READY-Profile sind keine neun Portalbenutzer. Die Freigabespalte betrif
 den bereits dokumentierten Profilreview, nicht pauschale Veröffentlichungsrechte;
 deren jeweilige Umgebungsgrenze bleibt in der Publikationsmatrix. Bei Becker
 werden insbesondere keine neuen ungeklärten Angebotskandidaten freigegeben.
+
+Aktuelle Priorisierung17.11: acht Profile für einen späteren persönlichen Start
+vorbereiten; Hupp bleibt in derselben Matrix, aber außerhalb des aktiven Portfolios
+und der Einladungsliste. Auch für die acht sind A–D weiterhin offen. Öffentliche
+Profilnamen sind keine bestätigten Loginidentitäten. Eine vorhandene UUID wäre
+bei späterer Rückkehr wiederzuverwenden; aktuell ist für Hupp keine reale vergeben.
+Kein Importmanifest oder tatsächlicher Datenbankstatus wurde geändert.
+
+Veröffentlichungsrechte je Person sind in der
+[Publikationsmatrix](../content/coach-publication-matrix-2026-09-24.md#aktueller-veröffentlichungsumfang1711)
+belegt: drei produktionsfähige Profile, fünf weitere nur Preview, eines pausiert.
+Einladungsfähigkeit technisch vorbereitet, tatsächlicher Versand geschlossen;
+EDV/DNS/TLS/SMTP, persönlicher Admin und reale Zuordnung sind getrennte Gates.
+Der [Sechs-Schritte-Kurzstart](pilot-coach-guide.md) verwendet die vorhandene Tour
+und endet zunächst mit einer Einreichung, nicht mit öffentlicher Veröffentlichung.
 
 ## Getrennte Zugänge
 

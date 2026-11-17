@@ -16,14 +16,11 @@ const forbiddenPublicIdentityFragments = [
   "Carolin Hupp",
   "Elisabeth Schwabauer",
   "Goran Celic",
-  "Gülcan Elmas",
-  "Guelcan Elmas",
   "Stefanie Becker",
   "Wegner-Ney",
   "carolin-hupp",
   "elisabeth-schwabauer",
   "goran-celic",
-  "guelcan-elmas-brandes",
   "stefanie-becker",
   "wegner-ney",
 ];
@@ -115,8 +112,8 @@ for (const sourceFile of htmlFiles) {
 for (const file of allFiles) {
   const publicPath = relative(dist, file).split(sep).join("/");
   const pathLower = publicPath.toLocaleLowerCase("de-DE");
-  if (!environment.preview && /offeringfinder/i.test(publicPath)) {
-    failures.push({ source: publicPath, reason: "Preview-only offering finder bundle in Production" });
+  if (/carolin-hupp/i.test(publicPath)) {
+    failures.push({ source: publicPath, reason: "Paused Coach route/asset in public artifact" });
   }
   for (const fragment of environment.preview ? [] : forbiddenPublicIdentityFragments) {
     if (pathLower.includes(fragment.toLocaleLowerCase("de-DE"))) {
@@ -126,8 +123,8 @@ for (const file of allFiles) {
 
   if (!textExtensions.has(extname(file).toLowerCase())) continue;
   const content = readFileSync(file, "utf8").toLocaleLowerCase("de-DE");
-  if (!environment.preview && /data-offering-finder|data-finder-entry|angebotsfinder/.test(content)) {
-    failures.push({ source: publicPath, reason: "Preview-only offering finder content in Production" });
+  if (/carolin hupp|carolin-hupp|localhost:8447|217\.160\.255\.86|\/api\/v1\/portal|source_path|\.docx/.test(content)) {
+    failures.push({ source: publicPath, reason: "Paused identity or internal data in public artifact" });
   }
   for (const fragment of environment.preview ? [] : forbiddenPublicIdentityFragments) {
     if (content.includes(fragment.toLocaleLowerCase("de-DE"))) {
@@ -139,7 +136,7 @@ for (const file of allFiles) {
 if (environment.preview) {
   assert.equal(readFileSync(join(dist, "robots.txt"), "utf8"), "User-agent: *\nDisallow: /\n");
   assert.doesNotMatch(readFileSync(join(dist, "sitemap.xml"), "utf8"), /<url>/);
-  for (const slug of ["carolin-hupp", "elisabeth-schwabauer", "goran-celic",
+  for (const slug of ["elisabeth-schwabauer", "goran-celic",
     "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm"]) {
     const html = readFileSync(join(dist, "coaches", slug, "index.html"), "utf8");
     assert.doesNotMatch(html, /rel="canonical"|property="og:url"/, slug);
@@ -148,6 +145,15 @@ if (environment.preview) {
   assert.doesNotMatch(readFileSync(join(dist, "coaches/manuela-rodriguez/index.html"), "utf8"), /firmenseminare/);
   assert.match(readFileSync(join(dist, "coaches/manuela-rodriguez/index.html"), "utf8"), /href="https:\/\/advisory\.donner-partner\.de\/"/);
 } else {
+  const offers = readFileSync(join(dist, "leistungen/index.html"), "utf8");
+  const payload = offers.match(/<script[^>]+data-finder-data[^>]*>(.*?)<\/script>/s);
+  assert.ok(payload, "Production Finder must contain its allowlisted public data");
+  const entries = JSON.parse(payload[1]);
+  assert.equal(entries.length, 3);
+  assert.equal(entries.flatMap((entry) => entry.formats).length, 5);
+  assert.ok(entries.every((entry) => entry.coach.profilePath === "coaches/guelcan-elmas-brandes"));
+  assert.match(readFileSync(join(dist, "sitemap.xml"), "utf8"), /coaches\/guelcan-elmas-brandes/);
+  assert.match(readFileSync(join(dist, "coaches/guelcan-elmas-brandes/index.html"), "utf8"), /rel="canonical"/);
   const manuela = readFileSync(join(dist, "coaches/manuela-rodriguez/index.html"), "utf8");
   assert.match(manuela, /href="https:\/\/donner-partner\.de\/dp\/fuer-unternehmen\/firmenseminare\/"/);
   assert.doesNotMatch(manuela, /href="https:\/\/advisory\.donner-partner\.de\/"/);

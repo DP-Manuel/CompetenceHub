@@ -20,9 +20,9 @@ const { susanneKlemm, workshops, qualifications } = await vite.ssrLoadModule("/s
 const { guelcanOfferFamilies } = await vite.ssrLoadModule("/src/preview/guelcan-offers.ts");
 const { publicOfferKeywords } = await vite.ssrLoadModule("/src/preview/coach-discovery.ts");
 const { coachRequestMailto } = await vite.ssrLoadModule("/src/preview/request-links.ts");
-const { finderEntries } = await vite.ssrLoadModule("/src/preview/offering-finder-data.ts");
+const { finderEntries, productionFinderEntries } = await vite.ssrLoadModule("/src/preview/offering-finder-data.ts");
 const { filterFinder, finderCoachFromQuery, emptyFinderSelection, finderFormats, finderAudiences, finderDuration } = await vite.ssrLoadModule("/src/preview/offering-finder-model.ts");
-const slugs = ["carolin-hupp", "elisabeth-schwabauer", "goran-celic",
+const slugs = ["elisabeth-schwabauer", "goran-celic",
   "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm"];
 
 test("one validated mode controls host, base and artifact, rejecting legacy drift", () => {
@@ -35,13 +35,15 @@ test("one validated mode controls host, base and artifact, rejecting legacy drif
   assert.throws(() => websiteEnvironment({ WEBSITE_ENV: "preview", GITHUB_PAGES_REVIEW: "false" }));
   assert.throws(() => websiteEnvironment({ WEBSITE_ENV: "preview", PUBLIC_REVIEW_MODE: "false" }));
 });
-test("preview real Coach records and detail templates agree; production remains unchanged", () => {
+test("environment rights include only three Production Coaches; paused Hupp stays out of Preview", () => {
   assert.deepEqual(new Set(coaches.map((coach) => coach.profilePath)),
     new Set([...production.filter((coach) => coach.kind === "approved").map((coach) => coach.profilePath), ...slugs.map((slug) => `coaches/${slug}`)]));
   assert.equal(new Set(coaches.map((coach) => coach.profilePath)).size, coaches.length);
   assert.ok(coaches.every((coach) => coach.kind === "approved"));
-  assert.equal(production.filter((coach) => coach.kind === "approved").length, 2);
+  assert.equal(production.filter((coach) => coach.kind === "approved").length, 3);
   assert.equal(production.filter((coach) => coach.kind === "demo").length, 6);
+  assert.equal(coaches.length, 8);
+  assert.ok(!coaches.some((coach) => coach.profilePath === "coaches/carolin-hupp"));
 });
 
 test("Susanne uses approved workshops and qualification scope, not inferred academic or mediation credentials", () => {
@@ -57,7 +59,7 @@ test("latest explicit spelling preserves the historical route; Carolin has no in
   const elisabeth = coaches.find((coach) => coach.profilePath === "coaches/elisabeth-schwabauer");
   assert.equal(elisabeth.name, "Frau Elisabeth Schwabauer");
   assert.ok(!JSON.stringify(coaches).includes("Schabbauer"));
-  assert.equal(coaches.find((coach) => coach.profilePath === "coaches/carolin-hupp").image, undefined);
+  assert.ok(!coaches.some((coach) => coach.profilePath === "coaches/carolin-hupp"));
 });
 test("three real categories, unique canonical topics, computed All and many-to-many membership", () => {
   assert.deepEqual(categories.map((category) => category.id),
@@ -101,7 +103,7 @@ test("all five restored portrait bytes match approved Git snapshot 53a89a8", () 
 test("restored templates are outside production pages and suppress non-existent canonicals", () => {
   for (const slug of slugs) {
     const source = readFileSync(new URL(`../src/preview/profiles/${slug}.astro`, import.meta.url), "utf8");
-    assert.match(source, /canonical=\{false\}/);
+    assert.match(source, slug === "guelcan-elmas-brandes" ? /canonical=\{import.meta.env.PUBLIC_REVIEW_MODE !== "true"\}/ : /canonical=\{false\}/);
   }
 });
 
@@ -119,7 +121,14 @@ test("Guelcan approved short copy keeps three families, five formats and five no
   assert.equal(series.title, "Reflexionsreihe");
   assert.ok(!/\d/.test(series.detail), "unknown duration/frequency must not be invented");
   assert.ok(!JSON.stringify(guelcanOfferFamilies).match(/https?:|€|\bEUR\b|2026-|bookable/));
-  assert.ok(!production.some((coach) => coach.profilePath === "coaches/guelcan-elmas-brandes"));
+  assert.ok(production.some((coach) => coach.profilePath === "coaches/guelcan-elmas-brandes" && coach.kind === "approved"));
+});
+
+test("Production Finder carries only explicitly approved Guelcan families, never all Preview Coaches", () => {
+  assert.equal(productionFinderEntries.length, 3);
+  assert.equal(productionFinderEntries.flatMap((entry) => entry.formats).length, 5);
+  assert.ok(productionFinderEntries.every((entry) => entry.coach.profilePath === "coaches/guelcan-elmas-brandes"));
+  assert.doesNotMatch(JSON.stringify(productionFinderEntries), /Schwabauer|Klemm|Becker|Hupp|\.docx|source_path/);
 });
 
 test("discovery uses only approved public active offers, never the held Becker or psychotherapy candidates", () => {

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { coachRequestMailto } from "../../preview/request-links";
 import "../../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -43,7 +44,7 @@ const topics = [
           stärkt, statt sie zu ersetzen.
         </p>
         <div class="coach-profile-actions">
-          <a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a>
+          <a class="button" href={coachRequestMailto("Manuela Rodríguez, M.A.")}>Anfrage per E-Mail</a>
           <a
             class="button button--ghost"
             href={import.meta.env.PUBLIC_REVIEW_MODE === "true"

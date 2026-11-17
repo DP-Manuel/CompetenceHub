@@ -1,6 +1,8 @@
 # Coach-Veröffentlichungsmatrix
 
-Stand: 29.10.2026. Historische Production-Regel vom24.09 und Preview-Freigabe bleiben dokumentiert; neue Gülcan-Freigabe siehe unten, noch kein Release.
+Stand: 17.11.2026. Historische Freigaben bleiben dokumentiert. Gülcans bestehende
+IONOS-Rechte werden im lokalen Releasekandidaten berücksichtigt, noch kein Upload.
+Neueste Owner-Entscheidung: Carolin Hupp pausiert; siehe unten.
 
 Die folgende historische Production-Matrix begrenzt den öffentlichen Messeauftritt. Sie ersetzt frühere
 Einzelfreigaben, soweit sie mehr als die beiden unten genannten echten Profile
@@ -91,3 +93,25 @@ Für die spätere Registry konkrete Revision/Assethash/Angebotsinhalt und Umgebu
 gesondert binden; unbekannte ursprüngliche Einwilligungszeitpunkte nicht erfinden.
 Keine Accounts, echten DB-Imports, Migrationen, Pages- oder IONOS-Uploads dadurch
 ausgeführt oder im aktuellen Vorbereitungsslice freigegeben.
+
+## Aktueller Veröffentlichungsumfang17.11
+
+| Personengruppe | Öffentliche Preview | IONOS-Kandidat | Benutzeraktivierung |
+| --- | --- | --- | --- |
+| Christian Galvano, Manuela Rodríguez | APPROVED | bestehender freigegebener Umfang | Separat gated |
+| Gülcan Elmas-Brandes | APPROVED | Profil, genaues vorhandenes Porträt, drei kurze Familien/fünf Formate gemäß29.10 | Separat gated |
+| Elisabeth Schwabauer, Susanne Klemm, Goran Celic, T. Wegner-Ney, Dr. Stefanie Becker | bestehender APPROVED-Umfang, keine neuen Becker-Angebote | NOT_APPROVED | Separat gated |
+| Carolin Hupp | PAUSED per Manuel17.11; keine Karte, Route, Suchtreffer oder öffentlichen Profildaten | NOT_APPROVED / PAUSED | ON_HOLD; kein Konto angelegt |
+
+Hupps vorhandene Quellen/Profiltexte bleiben unverändert für eine spätere
+ausdrücklich freigegebene Rückkehr erhalten. Kein Löschen einer fachlichen
+Identität, kein neuer Ersatzdatensatz und kein personenbezogener Redirect.
+Interne Gründe erscheinen nicht auf der Website. Die ursprüngliche Neuner-
+Reviewmatrix ist ein historischer Fachnachweis, keine aktuelle Veröffentlichungsliste.
+
+Ergebnis: acht aktive reale Preview-Profile; Kandidat mit drei echten Profilen
+und den sechs unverändert fiktiven Demo-Profilen. Produktions-Finder verwendet
+ausschließlich Gülcans drei freigegebene Familien/fünf Formate. Der allgemeine
+Finder und seine Navigation ändern keine inhaltlichen Rechte. Die übrigen24
+Finder-Einträge bleiben Preview-only. Kein privates Registry-/Kalender-API.
+Separate Releasefreigabe ist weiterhin vor jedem IONOS-Upload erforderlich.

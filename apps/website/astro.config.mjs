@@ -7,7 +7,7 @@ import { coachProjectionIntegration } from "./config/coach-projection.mjs";
 const environment = websiteEnvironment();
 const projection = coachProjectionIntegration(environment);
 const restoredSlugs = [
-  "carolin-hupp", "elisabeth-schwabauer", "goran-celic",
+  "elisabeth-schwabauer", "goran-celic",
   "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney",
   "susanne-klemm",
 ];
@@ -23,7 +23,7 @@ export default defineConfig({
     },
     resolve: { alias: {
       "@website-offer-finder": fileURLToPath(new URL(
-        environment.preview ? "./src/preview/OfferingFinder.astro" : "./src/preview/NoOfferingFinder.astro",
+        "./src/preview/OfferingFinder.astro",
         import.meta.url,
       )),
       "@website-coaches": fileURLToPath(new URL(
@@ -49,5 +49,19 @@ export default defineConfig({
         await cp(new URL("./src/preview/portraits/", import.meta.url), target, { recursive: true });
       },
     },
-  }] : [])],
+  }] : [{
+    name: "approved-production-guelcan",
+    hooks: {
+      "astro:config:setup": ({ injectRoute }) => injectRoute({
+        pattern: "/coaches/guelcan-elmas-brandes",
+        entrypoint: fileURLToPath(new URL("./src/preview/profiles/guelcan-elmas-brandes.astro", import.meta.url)),
+      }),
+      "astro:build:done": async ({ dir }) => {
+        const target = new URL("images/coaches/", dir);
+        await mkdir(target, { recursive: true });
+        await cp(new URL("./src/preview/portraits/guelcan-elmas-brandes.png", import.meta.url),
+          new URL("guelcan-elmas-brandes.png", target));
+      },
+    },
+  }])],
 });

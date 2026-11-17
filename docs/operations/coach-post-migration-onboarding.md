@@ -1,8 +1,11 @@
 # Coach-Onboarding Nach Der Bestandsmigration
 
-Stand: 02.11.2026. Kanonischer Bedienablauf fuer autorisierte Admins **nach**
-abgenommener real9-Migration, keine Aussage ueber deren Vollzug. Aktuell bleiben
-reale Key-/Backup-/Restore-/Admin- und Importnachweise offen. Dieses Dokument
+Stand: 17.11.2026. Kanonischer Bedienablauf fuer autorisierte Admins **nach**
+separat abgenommener Registry-Aktivierung/Bestandsmigration, keine Aussage ueber deren Vollzug.
+Der private synthetische V1.2-Pilot und sein geschuetzter Restore-Nachweis sind
+inzwischen abgenommen; das startet keine neue GPG-/USB-Arbeit. Persoenlicher Admin,
+echte Coachzuordnungen und Import bleiben separat gated. Hupp ist aktuell pausiert.
+Aktuelle [Aktivierungsmatrix](coach-account-mapping-v1-2026-11-10.md). Dieses Dokument
 erteilt keine Daten-, Quellen-, Runtime- oder Releasefreigabe und enthaelt keine
 jetzt auszufuehrenden Befehle.
 
@@ -14,9 +17,9 @@ im eingefrorenen Neuner-Manifest, kein Sonderimport, keine persoenlichen
 Vorbelegungen und keine aus seinem Adminstatus abgeleiteten Qualifikationen,
 Coachrechte oder Calendar-Zuordnungen.
 
-- Vorherige Betriebsfenster nach [Stick-Checkliste](staging-stick-resume-checklist.md)
-  und [Admin-Runbook](staging-admin-bootstrap-2026-10-30.md) tatsaechlich abschliessen;
-  den real9-Import separat freigeben, ausfuehren und abnehmen. Die unveraenderte
+- Geeignete aktuelle Betriebs-/Recovery-Nachweise fuer den konkreten Eingriff
+  pruefen, bestehende passende Belege wiederverwenden. Den realen Import separat
+  freigeben, ausfuehren und abnehmen; pausierte Publikationsrechte beachten. Die unveraenderte
   [Importplanung](../architecture/coach3-existing-content-migration-plan-2026-10-23.md#backend-sprint-addendum-3010-neuer-aktueller-stand)
   besitzt dessen Nachweise. Kein Importer-Rerun als normales Onboarding.
 - Fuer das konkrete neue Profil muessen Identitaet, erlaubter Datenumfang und

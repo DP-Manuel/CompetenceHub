@@ -2,6 +2,16 @@
 
 Significant milestones only; newest first.
 
+17.11 local Website release/onboarding: production51/51 HTTP bytes match the
+accepted P0 ZIP; .htaccess awaits future SFTP. Guelcan-only production candidate,
+shared Finder3/5 versus Preview27/29, contextual nav/mail drafts. Owner pauses Hupp:
+Preview8, direct route404, source/identity retained, nine-row matrix ON_HOLD.
+37 model/projection+15 release checks+8 local actual browser journeys PASS,
+390/native200/keyboard/no-JS; Astro/links green. Six-step onboarding and bounded
+CAL-2 proposal, no new user/data/server/mail/source access. Candidate packaging
+and authorized Pages publication follow; no IONOS execution.
+[Canonical result](docs/content/website-release-2026-11-17.md).
+
 16.11 actual private TLS rollover PASS19:22 MEZ, runf87c37d2…/SHAe6b80664…,
 operator5c9fa4f, same protected pair from rolled-back8c05c255… reused. New localhost
 expiry30.11 19:09:39 MEZ; application remains5a555e9. Strict trust/hostname/leaf and

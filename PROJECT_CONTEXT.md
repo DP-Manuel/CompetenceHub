@@ -1,8 +1,23 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-16.
+Updated: 2026-11-17.
 
 ## Current Milestone
+
+17.11 Website/onboarding sprint: actual public IONOS51/51 readable files match
+accepted1b4e33e ZIP (52nd .htaccess requires SFTP). Previous Pages78c3470 is older
+than local finishing. Prepare clean candidate: Guelcan's explicitly approved
+profile/portrait/3 families/5 formats plus scoped Finder/nav/mail drafts; preserve
+all prior Production demo routes. Preview8 active real profiles, Hupp Owner-paused
+without source/identity deletion. No real UUID/login/role guesses or imports.
+37 model/projection+15 focused release checks and8 local browser journeys PASS,
+390/native200/keyboard/no-JS; Astro/links both modes green. Packaging/Pages publish
+being closed under existing grant; IONOS upload remains separately gated.
+[Current result](docs/content/website-release-2026-11-17.md),
+[execution horizon](docs/exec-plans/active/website-release-onboarding-2026-11-17.md).
+Nine-row onboarding matrix retains Hupp ON_HOLD; real activation still requires
+EDV and personal identity/UUID/role/import gates. CAL-2 is a small proposal only.
+Private accepted V1.2/TLS30.11 state and all protected data stay unchanged.
 
 16.11 TLS ACTUALLY ACCEPTED19:22 MEZ: runf87c37d2…/receiptSHAe6b80664…,
 operator5c9fa4f, runtime still5a555e9. Same pair from8c05c255… reused after
@@ -449,9 +464,9 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Exactly one recommended block after the green V1.2 candidate: a newly granted state-preserving private V1.1→V1.2 update window. Inputs: exact candidate/hash, current accepted38153c1 predecessor, suitable current restore proof and original TLS. Deliverable/DoD: preserve original users/offers, isolated synthetic UX13 PASS/drag N/A, MFA/RBAC/ICS/restart/six services/TLS and direct manual access. [One gate](docs/operations/portal-v12-calendar-ux-2026-11-13.md#one-deployment-gate). Open tunnel is not approval; no installer, real activation or EDV bypass.
+1. Current Website horizon: finish clean candidate/hash/delta and authorized Pages publication, then exactly one scoped IONOS release decision. Inputs/deliverables/DoD in the [17.11 plan](docs/exec-plans/active/website-release-onboarding-2026-11-17.md). Existing V1.2 and TLS are accepted; do not repeat installation or backup gates for this Website-only task.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
-3. Any later IONOS promotion needs its own bundled review and production approval. Pages publication and actual public smoke for this Website-first source are complete.
+3. Any later IONOS promotion needs its own exact artifact approval and fresh inventory/rollback. Latest public Preview evidence belongs to the17.11 release report, not the earlier05.11 source.
 
 ## Domain References
 
