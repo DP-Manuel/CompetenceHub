@@ -12,6 +12,10 @@ history or changing real DB mappings. Keep private pause reasons out of public G
 Source-bound ZIP/File-SHA comparison and per-environment rights/browser checks
 implemented locally; [evidence](docs/content/website-release-2026-11-17.md).
 Global skills unchanged; no new password/operator process or architecture sprint.
+For source-bound static artifacts, pin LF in the isolated checkout from the start;
+an otherwise clean Windows checkout can change .htaccess/favicon bytes via CRLF.
+Verify extracted candidate against actually browser-tested files, not just its ZIP
+hash. Final55/55 parity proven; earlier trial ZIPs not release targets.
 
 [Full prior feedback](docs/history/context-migration-2026-10-21/SKILL_FEEDBACK_LOG.md) retains every proposal and its recorded status.
 Project-local implementation does not mean a canonical CodexSkills proposal is closed.

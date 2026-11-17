@@ -7,9 +7,12 @@ accepted P0 ZIP; .htaccess awaits future SFTP. Guelcan-only production candidate
 shared Finder3/5 versus Preview27/29, contextual nav/mail drafts. Owner pauses Hupp:
 Preview8, direct route404, source/identity retained, nine-row matrix ON_HOLD.
 37 model/projection+15 release checks+8 local actual browser journeys PASS,
-390/native200/keyboard/no-JS; Astro/links green. Six-step onboarding and bounded
-CAL-2 proposal, no new user/data/server/mail/source access. Candidate packaging
-and authorized Pages publication follow; no IONOS execution.
+390/native200/keyboard/no-JS and targeted Edge native200 pointer PASS; Astro/links
+green. Six-step onboarding and bounded CAL-2 proposal. Clean source11cb1ea,
+55-file ZIP SHA c3169746…/delta3 added34 changed0 removed18 unchanged;55/55 tested
+bytes equal. Pages44149446991 success on11cb1ea, four actual live browser cases
+PASS, Hupp404. Fresh public audit IONOS51/51 unchanged. No user/data/server/mail/
+source access or IONOS execution. One next exact Owner release decision.
 [Canonical result](docs/content/website-release-2026-11-17.md).
 
 16.11 actual private TLS rollover PASS19:22 MEZ, runf87c37d2…/SHAe6b80664…,

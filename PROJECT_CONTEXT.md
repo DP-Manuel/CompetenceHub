@@ -11,8 +11,13 @@ profile/portrait/3 families/5 formats plus scoped Finder/nav/mail drafts; preser
 all prior Production demo routes. Preview8 active real profiles, Hupp Owner-paused
 without source/identity deletion. No real UUID/login/role guesses or imports.
 37 model/projection+15 focused release checks and8 local browser journeys PASS,
-390/native200/keyboard/no-JS; Astro/links both modes green. Packaging/Pages publish
-being closed under existing grant; IONOS upload remains separately gated.
+390/native200/keyboard/no-JS plus targeted Edge native200 pointer PASS; Astro/links
+both modes green. Clean55-file candidate11cb1ea/SHA c3169746… bound to tested
+bytes; delta3 added/34 changed/0 removed/18 unchanged. Pages44149446991 actually
+published11cb1ea, four live journeys PASS/Hupp404; IONOS51/51 unchanged. Final
+docs-only HEAD may be newer than this explicit Website source. Exactly one next
+block: scoped IONOS release approval with fresh SFTP inventory/rollback and smokes;
+no upload was performed or authorized by the preparation/Pages grant.
 [Current result](docs/content/website-release-2026-11-17.md),
 [execution horizon](docs/exec-plans/active/website-release-onboarding-2026-11-17.md).
 Nine-row onboarding matrix retains Hupp ON_HOLD; real activation still requires
@@ -464,7 +469,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Current Website horizon: finish clean candidate/hash/delta and authorized Pages publication, then exactly one scoped IONOS release decision. Inputs/deliverables/DoD in the [17.11 plan](docs/exec-plans/active/website-release-onboarding-2026-11-17.md). Existing V1.2 and TLS are accepted; do not repeat installation or backup gates for this Website-only task.
+1. Current Website horizon: candidate/hash/delta and actual Pages publication closed; exactly one scoped IONOS release decision next. Inputs/deliverables/DoD in the [17.11 plan](docs/exec-plans/active/website-release-onboarding-2026-11-17.md). Existing V1.2 and TLS are accepted; do not repeat installation or backup gates for this Website-only task.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. Any later IONOS promotion needs its own exact artifact approval and fresh inventory/rollback. Latest public Preview evidence belongs to the17.11 release report, not the earlier05.11 source.
 
