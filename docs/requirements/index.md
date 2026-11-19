@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| Integrated V2 local platform | [Joint acceptance](../handoffs/2026-11-19-v2-platform-acceptance.md) | One website, calendar and reservation session, four roles and shared decisions; no staging/activation implied |
 | Risk-based verification | [Quality plan / evidence reuse](calendar-quality-plan-v0.1.md#risk-based-evidence-reuse) | Reuse matching proof; focused changed paths and compact VPS smoke, not routine exhaustive reruns |
 | Integrated pilot/onboarding | [09.11 scope and operating gates](../operations/integrated-staging-pilot-2026-11-09.md) | Optional three-role tours, scoped overview, pending activation, public runtime Calendar; real deployment/recipient gates remain separate |
 | Post-Messe product scope | [Accepted addendum](post-messe-product-2026-10-21.md) | Preview content/topics and Analytics scope |

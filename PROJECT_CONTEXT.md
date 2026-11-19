@@ -7,7 +7,8 @@ Updated: 2026-11-19.
 19.11 V2 INTEGRATED LOCAL: one synthetic Astro/Portal/PostgreSQL session, one
 CAL-1/CAL-2 workflow, four role areas and two company perspectives. Website
 offer-to-calendar-to-reservation handoff and role summaries verified locally;
-public build bytes unchanged. See [joint V2 acceptance](docs/handoffs/2026-11-19-v2-platform-acceptance.md),
+public build bytes unchanged. 29 native checks and exact-source Linux package
+from `9c20c3a` PASS. See [joint V2 acceptance](docs/handoffs/2026-11-19-v2-platform-acceptance.md),
 [execution horizon](docs/exec-plans/active/v2-platform-2026-11-19.md) and
 [private package gates](docs/operations/portal-v2-private-staging.md). No VPS,
 live data or publication change. Next: one Manuel/Janay product acceptance.

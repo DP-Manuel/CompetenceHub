@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| V2 private candidate | [Offline package and operating gates](portal-v2-private-staging.md) | Tested source, separate synthetic clone and original V1.2 rollback; no VPS action authorized |
 | Current IONOS release | [17.11 actual PASS](website-ionos-release-2026-11-17.md) | Live11cb1ea/c3169746, fresh52-file protected backup/restore, SFTP55/55, HTTP54/54, actual browser and rollback record |
 | Private TLS rollover | [16.11 actual certificate acceptance](pilot-tls-renewal-2026-11-16.md#actual-acceptance) | Expiry30.11, strict new trust/retained session/MFA/six services PASS; actual rollback proven, no app update |
 | Pilot finishing16.11 | [Actual V1.2, TLS renewal gate and local UX](pilot-finishing-2026-11-16.md) | Six services active; nine-profile activation matrix; Preview navigation and tour copy local only, no deployment |

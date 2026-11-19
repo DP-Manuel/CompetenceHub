@@ -73,15 +73,35 @@ beendet die Sitzung; erwartet: `CAL2_CLEANUP=PASS`.
 
 ## Testnachweise
 
-Der zusammenhängende Prüflauf (`--verify`) verwendet echtes isoliertes
-PostgreSQL und Firefox. Er deckt Website-Übergabe und Rücklink, CAL-1-Freigabe,
+Der zusammenhängende Prüflauf (`--verify`) bestand **29 Nachweise** mit echtem
+isoliertem PostgreSQL und Firefox. Er deckt Website-Übergabe und Rücklink, CAL-1-Freigabe,
 zwei Firmen, parallele Anfragen auf den letzten Platz, Idempotenz, Rechte,
 Revisionen, Datenschutz und Persistenz nach einem unterbrochenen Schreibzugriff
 ab. 390 px, nativer 200-%-Zoom, Tastatur, Fokus und zugängliche Namen wurden
 geprüft; kein separater NVDA-/JAWS-Lauf. Für die öffentlichen Astro-Builds
-wurden Byte-Parität zur Ausgangsbasis (Produktion 55/55; Preview 59/59), Links
-und lokale Browser-Smokes nachgewiesen. Der versionsgebundene Nachweis liegt
-beim Releasepaket unter `release-artifacts/v2-platform/`.
+wurden Byte-Parität zur Ausgangsbasis (Produktion 55/55; Preview 59/59), Links,
+41 Node-Tests und lokale Browser-Smokes nachgewiesen. 100 gezielte Portaltests
+und sechs Release-Tooling-Tests sind grün. Der getrennte manuelle Demo-Start,
+Neustart und das Entfernen der Demo-Container und Volumes wurden ebenfalls
+geprüft.
+
+**Quellstand:** Plattformimplementierung `6cc96d8`, finaler getesteter
+Release-Quellstand `9c20c3a8dc444d1c9492b5b12d01b1766942794c`.
+
+**Lokales Release:** `competence-hub-private-v2-9c20c3a8dc444d1c9492b5b12d01b1766942794c.zip`
+unter `release-artifacts/v2-platform/9c20c3a8dc444d1c9492b5b12d01b1766942794c/package/`.
+
+| Nachweis | SHA-256 |
+| --- | --- |
+| Release-ZIP | `458675e0e77fa314952aa089e2eab0f58ff654f9d49b4b83381ada1a2f6f7cc7` |
+| `tested-source.json` | `2f57341ba53a0356c7a52ccb7a724d4cac8bcd2f7a07bdbae9a1f7f1cf3c3add` |
+| `integration-report.txt` | `b0cbd29066b28cfbb9d64f6dd17e2fdd39b11613c241b3066639aaae53311f78` |
+
+Manifest, installierte Bytes, 25 gepinnte Linux-Abhängigkeiten und
+systemd-Unit-Syntax am exakten ZIP offline geprüft. Kein Dienst gestartet.
+Separate lokale PostgreSQL-Probe: `0007` bis `0011` in Reihenfolge,
+Rollback bei absichtlich ausgelöstem Fehler in `0009`, ursprüngliche
+`0006`-Referenz unverändert.
 
 ## Entscheidungen Für Janay Und Manuel
 

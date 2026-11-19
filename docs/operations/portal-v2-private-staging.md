@@ -1,7 +1,8 @@
 # Portal V2 Private Staging
 
-**Local preparation only.** No release built from interim code, no VPS probe,
-no deployment, no migration of the original database and no real Coach import.
+**Local preparation only.** Exact-source ZIP and Linux proof:
+[consolidated V2 report](../handoffs/2026-11-19-v2-platform-acceptance.md#testnachweise).
+No VPS probe, deployment, migration of the original database or real Coach import.
 The only candidate scope is the synthetic private pilot. `deployment_authorized`
 is always `false` in package/preflight metadata, not a release approval.
 
@@ -224,9 +225,8 @@ or port 55433 is used. Reusable pattern: treat rollback to an unchanged original
 and preservation of an additive clone as separate proofs, and bind both to the
 exact verified bytes before handling operator approval.
 
-**Next block:** obtain the tested integration SHA and its nonsecret evidence
-digest, build the one final offline archive, and prove its fresh Linux install
-and gated runtime in an owned local environment. Done means the package hash,
-wheel contents, 25 pinned dependencies, and target contract are verified on
-those exact bytes; any VPS, durable clone, schema or activation scope still
-waits for explicit grants.
+The final archive was built from the exact tested Git object and passed the
+independent offline Linux install check. The consolidated report pins the byte
+hashes and identifies the source. The joint product acceptance is next;
+any VPS preflight, durable clone, schema or activation scope still waits for
+explicit grants and current evidence.
