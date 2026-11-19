@@ -5,6 +5,8 @@ const STATUS = {
   pending: "Eingereicht", clarification: "Klärung nötig", approved: "Positiv geprüft",
   rejected: "Abgelehnt", withdrawn: "Zurückgenommen", cancelled: "Veranstaltung abgesagt",
 };
+const linkedOffer = new URLSearchParams(location.search).get("offer");
+const initialOffer = linkedOffer && /^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(linkedOffer) ? linkedOffer : "";
 const EVENT = {
   submitted: "Eingereicht", seats_changed: "Platzzahl geändert",
   clarification_requested: "Rückfrage gestellt", clarification_answered: "Rückfrage beantwortet",
@@ -94,9 +96,9 @@ export function createReservations({ root, request, hasCsrf, expired }) {
   const notice = root.querySelector("[role=alert]");
   const content = root.querySelector("[data-cal2-content]");
   const initialReview = { status: "open", offer: "", coach: "", day: "", deadline: "" };
-  const initialCatalogue = { search: "", day: "" };
+  const initialCatalogue = { search: "", day: "", offer_id: "" };
   let caps = {}, controller, currentForm, isReview = false;
-  let reviewFilters = { ...initialReview }, catalogueFilters = { ...initialCatalogue };
+  let reviewFilters = { ...initialReview }, catalogueFilters = { ...initialCatalogue, offer_id: initialOffer };
   const dirty = new Set();
   const hasDraft = () => Array.from(dirty).some(changed => changed());
 
@@ -265,16 +267,28 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     apply.type = "submit";
     actions.append(apply, button("Zurücksetzen", () => {
       if (review) reviewFilters = { ...initialReview };
-      else catalogueFilters = { ...initialCatalogue };
+      else clearCatalogueLink();
       void show(review);
     }));
     form.append(actions);
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       for (const [key, input] of Object.entries(fields)) values[key] = input.value.trim();
+      if (!review && catalogueFilters.offer_id) {
+        const updated = { ...catalogueFilters, offer_id: "" };
+        clearCatalogueLink();
+        catalogueFilters = updated;
+      }
       void show(review);
     });
     return form;
+  }
+
+  function clearCatalogueLink() {
+    catalogueFilters = { ...initialCatalogue };
+    const url = new URL(location.href);
+    url.searchParams.delete("offer");
+    history.replaceState(history.state, "", url);
   }
 
   async function activity(review, signal) {
@@ -338,9 +352,15 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     }
     const own = listSection("Vormerkungen Ihrer Firma", API, reservationCard,
       "Noch keine Vormerkungen.", signal, "reservation-own");
+    if (catalogueFilters.offer_id) {
+      const clear = button("Alle Veranstaltungen", () => { clearCatalogueLink(); void show(false); });
+      content.append(clear);
+    }
     content.append(control);
-    await Promise.all([own, listSection("Veröffentlichte Gruppenangebote", query(API + "/catalogue", catalogueFilters),
-      catalogueCard, "Keine passenden Angebote für Vormerkungen gefunden.", signal, "reservation-catalogue")]);
+    await Promise.all([own, listSection(catalogueFilters.offer_id ? "Ausgewählte Veranstaltung" : "Veröffentlichte Gruppenangebote",
+      query(API + "/catalogue", catalogueFilters), catalogueCard, catalogueFilters.offer_id
+        ? "Für diese Veranstaltung sind keine neuen Vormerkungen möglich." : "Keine passenden Angebote für Vormerkungen gefunden.",
+      signal, "reservation-catalogue")]);
   }
 
   function openPanel(title) {
@@ -568,10 +588,10 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     content.append(form.node);
   }
 
-  return { available, show, leave, canLeave, reset() {
+  return { available, show, leave, canLeave, linkedOffer: () => Boolean(catalogueFilters.offer_id), reset() {
     leave();
     caps = {};
     reviewFilters = { ...initialReview };
-    catalogueFilters = { ...initialCatalogue };
+    catalogueFilters = { ...initialCatalogue, offer_id: new URLSearchParams(location.search).has("offer") ? initialOffer : "" };
   } };
 }

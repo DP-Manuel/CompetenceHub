@@ -1,0 +1,29 @@
+[Unit]
+Description=Competence Hub V2 private synthetic clone API
+After=postgresql.service
+ConditionPathExists=/opt/competence-hub-v2/runtime/V2-INSTALL.json
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=competencehub-v2
+DynamicUser=yes
+WorkingDirectory=/opt/competence-hub-v2
+EnvironmentFile=/etc/competence-hub-v2/runtime.env
+ExecStart=/usr/bin/env COMPETENCE_HUB_CAL2_MODE=synthetic-pilot COMPETENCE_HUB_ALLOWED_ORIGIN=https://localhost:8447 COMPETENCE_HUB_INVITATION_DELIVERY_ENABLED=false PYTHONDONTWRITEBYTECODE=1 /opt/competence-hub-v2/runtime/bin/uvicorn competence_hub_api.runtime:create_runtime_app_from_environment --factory --host 127.0.0.1 --port 8002 --proxy-headers --forwarded-allow-ips=127.0.0.1 --no-access-log
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+UMask=0077
+MemoryMax=384M
+CPUQuota=50%

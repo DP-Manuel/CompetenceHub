@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
 import OfferingFinder from "@website-offer-finder";
+import DemoOffer from "../v2-local/DemoOffer.astro";
 import { finderEntries, productionFinderEntries } from "../preview/offering-finder-data";
 import "../styles/global.css";
 
@@ -122,7 +123,7 @@ const faqs = [
       </div>
     </ConnectedPageHero>
 
-    <OfferingFinder entries={import.meta.env.PUBLIC_REVIEW_MODE === "true" ? finderEntries : productionFinderEntries} /><section class="offer-grid offer-grid--services" id="angebote" aria-label="Angebotsübersicht">
+    <OfferingFinder entries={import.meta.env.PUBLIC_REVIEW_MODE === "true" ? finderEntries : productionFinderEntries}><Fragment slot="local-demo">{__WEBSITE_V2_LOCAL__ && <DemoOffer />}</Fragment></OfferingFinder><section class="offer-grid offer-grid--services" id="angebote" aria-label="Angebotsübersicht">
       {services.map((service) => (
         <article class="offer-card" id={service.id}>
           <span class="offer-card__icon"><Icon name={service.icon} size={30} /></span>

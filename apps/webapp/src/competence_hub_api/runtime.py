@@ -23,7 +23,7 @@ from competence_hub_api.auth.postgres_mfa_repository import PostgresMfaRepositor
 from competence_hub_api.auth.postgres_session_repository import (
     PostgresSessionRepository,
 )
-from competence_hub_api.config import RuntimeSettings
+from competence_hub_api.config import CAL2_PILOT_DATABASE, RuntimeSettings
 from competence_hub_api.main import create_app
 from competence_hub_api.portal.companies import CompanyService
 from competence_hub_api.portal.calendar import CalendarService
@@ -37,6 +37,21 @@ EngineFactory = Callable[[str], AsyncEngine]
 CALENDAR_SESSION_ROLES = frozenset(
     {"admin", "calendar_reviewer", "coach", "company_contact", "internal"}
 )
+
+
+async def _verify_cal2_pilot(engine: AsyncEngine) -> None:
+    async with engine.connect() as connection:
+        verified = await connection.scalar(text("""
+            SELECT current_database() = :database
+                AND to_regclass('competence_hub.calendar_reservations') IS NOT NULL
+                AND to_regclass('competence_hub.calendar_reservation_events_activity_idx') IS NOT NULL
+                AND NOT EXISTS (
+                    SELECT 1 FROM competence_hub.portal_users
+                    WHERE email NOT ILIKE '%@example.invalid'
+                )
+        """), {"database": CAL2_PILOT_DATABASE})
+    if not verified:
+        raise RuntimeError("CAL-2 pilot database, schema or synthetic cohort did not pass")
 
 
 def create_database_engine(database_url: str) -> AsyncEngine:
@@ -73,9 +88,11 @@ def create_runtime_app(
             "127.0.0.1", 55433, "competence_hub_staging"
         ) or not settings.allowed_origin.startswith("https://127.0.0.1:") or settings.invitation_delivery_enabled:
             raise ValueError("CAL-2 is restricted to the owned local synthetic fixture")
+    pilot_reservations = settings.cal2_mode == "synthetic-pilot"
+    reservations_enabled = local_reservations or pilot_reservations
     portal_admission = (
         AdmissionPolicy(PORTAL_ADMISSION.roles | {"company_contact"})
-        if local_reservations else PORTAL_ADMISSION
+        if reservations_enabled else PORTAL_ADMISSION
     )
     engine = engine_factory(settings.database_url)
     session_repository = PostgresSessionRepository(engine)
@@ -122,7 +139,7 @@ def create_runtime_app(
         session_idle_timeout=settings.session_idle_timeout,
     )
     company_service = CompanyService(PostgresCompanyRepository(engine))
-    calendar_service = CalendarService(PostgresCalendarRepository(engine, reservation_checks=local_reservations))
+    calendar_service = CalendarService(PostgresCalendarRepository(engine, reservation_checks=reservations_enabled))
     calendar_cursor_hmac_key = hmac.new(
         settings.idempotency_hmac_key,
         b"competence-hub:calendar-public-cursor:v1",
@@ -150,6 +167,11 @@ def create_runtime_app(
     @asynccontextmanager
     async def lifespan(_: FastAPI):
         try:
+            if pilot_reservations:
+                try:
+                    await _verify_cal2_pilot(engine)
+                except (SQLAlchemyError, OSError):
+                    raise RuntimeError("CAL-2 pilot database verification failed") from None
             yield
         finally:
             await engine.dispose()
@@ -168,7 +190,7 @@ def create_runtime_app(
         account_lifecycle_service=account_lifecycle_service,
         company_service=company_service,
         calendar_service=calendar_service,
-        reservation_repository=ReservationRepository(engine, settings.idempotency_hmac_key) if local_reservations else None,
+        reservation_repository=ReservationRepository(engine, settings.idempotency_hmac_key) if reservations_enabled else None,
         calendar_cursor_hmac_key=calendar_cursor_hmac_key,
         allowed_origin=settings.allowed_origin,
         session_idle_timeout=settings.session_idle_timeout,

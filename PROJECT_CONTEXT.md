@@ -4,6 +4,14 @@ Updated: 2026-11-19.
 
 ## Current Milestone
 
+19.11 V2 INTEGRATED LOCAL: one synthetic Astro/Portal/PostgreSQL session, one
+CAL-1/CAL-2 workflow, four role areas and two company perspectives. Website
+offer-to-calendar-to-reservation handoff and role summaries verified locally;
+public build bytes unchanged. See [joint V2 acceptance](docs/handoffs/2026-11-19-v2-platform-acceptance.md),
+[execution horizon](docs/exec-plans/active/v2-platform-2026-11-19.md) and
+[private package gates](docs/operations/portal-v2-private-staging.md). No VPS,
+live data or publication change. Next: one Manuel/Janay product acceptance.
+
 19.11 CAL-2 LOCAL PILOT COMPLETION: Owner batches all independent work before
 one joint Manuel/Janay acceptance. Company search/details, replies and discard
 protection; reviewer filters, revision conflicts and scoped internal tasks;
@@ -518,7 +526,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Website17.11 production release is accepted; exactly one next block is EDV App-DNS/HTTPS/access/SMTP reconciliation. Inputs/deliverables/DoD in the [17.11 operating record](docs/operations/website-ionos-release-2026-11-17.md). Existing V1.2 and TLS are accepted; do not repeat installation/Website upload/backup gates or assume real personal activation.
+1. Next block: one [V2 platform acceptance with Manuel and Janay](docs/handoffs/2026-11-19-v2-platform-acceptance.md). EDV App-DNS/HTTPS/access/SMTP remains an external gate for real access. Existing V1.2 and TLS evidence is historical; do not infer a V2 installation or real personal activation.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. This exact IONOS promotion and its fresh inventory/rollback/smokes are closed. Any later content/release needs a new scoped approval. Preview still runs11cb1ea; no second Pages dispatch from the operations record.
 
@@ -530,5 +538,5 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 ## Explicitly Not Active
 
 IONOS release, public backend deployment, real-user activation, productive tracking,
-CAL-2, real reservations, FIN-01 implementation and PWA. The private synthetic
+V2/CAL-2 on VPS, real reservations, FIN-01 implementation and PWA. The private synthetic
 Staging pilot IS installed and technically accepted10.11, private/synthetic only.

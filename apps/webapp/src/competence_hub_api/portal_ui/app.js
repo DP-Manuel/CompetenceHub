@@ -4,6 +4,7 @@ import { createUserManagement } from "./user-management.js";
 import { createCalendarForm, germanDateTime } from "./calendar-form.mjs";
 import { createCalendarDialogs } from "./calendar-dialogs.js";
 import { createReservations } from "./reservations.js";
+import { render as renderBusinessOverview } from "./business-overview.js";
 
 const API = {
   session: "/api/v1/portal/access/session",
@@ -269,6 +270,7 @@ function clearPortalClientState() {
   userManagement.reset();
   state.firstEnrollment = false;
   byId("pilot-overview").hidden = true;
+  renderBusinessOverview({ target: byId("business-overview") });
   byId("pilot-metrics").replaceChildren();
   byId("pilot-users").replaceChildren();
   byId("pilot-accounts").hidden = true;
@@ -559,10 +561,11 @@ let usersLoadSerial = 0, overviewLoadSerial = 0;
 
 async function loadPilotOverview() {
   const ticket = ++overviewLoadSerial;
-  if (!state.session?.user.roles.some(r => ["admin","coach","calendar_reviewer"].includes(r))) {
+  if (!state.companyTourAvailable && !state.session?.user.roles.some(r => ["admin","coach","calendar_reviewer"].includes(r))) {
     byId("pilot-overview").hidden = true; return;
   }
   byId("pilot-overview").hidden = false;
+  renderBusinessOverview({ target: byId("business-overview") });
   byId("pilot-metrics").replaceChildren();
   byId("pilot-overview-state").textContent = "Übersicht wird geladen …";
   const session = state.session;
@@ -572,12 +575,19 @@ async function loadPilotOverview() {
     if (!response.ok) throw new Error("unavailable");
     const data = await response.json();
     if (session !== state.session || ticket !== overviewLoadSerial) return;
+    renderBusinessOverview({
+      target: byId("business-overview"), business: data.business,
+      onNavigate: area => void selectPortalArea(area),
+    });
     for (const status of ["draft", "in_review", "changes_requested", "published", "withdrawn"]) {
+      if (data.business?.company && !data.business.coach && !data.business.review) break;
       if (status === "draft" && !session.user.roles.some(r => ["coach","admin"].includes(r))) continue;
       appendDefinition(byId("pilot-metrics"), status === "withdrawn" ? "Zurückgezogen" : calendarStatusLabel(status), String(data.calendar[status] || 0));
     }
-    byId("pilot-overview-state").textContent = "Aktuelle Revisionen im eigenen Berechtigungsumfang · Datenbank erreichbar";
-    if (session.user.roles.includes("calendar_reviewer")) {
+    byId("pilot-overview-state").textContent = data.business
+      ? "Stand beim Öffnen der Übersicht · Datenbank erreichbar"
+      : "Aktuelle Revisionen im eigenen Berechtigungsumfang · Datenbank erreichbar";
+    if (session.user.roles.includes("calendar_reviewer") && !data.business?.review) {
       appendDefinition(byId("pilot-metrics"),"Erneut eingereicht",String(data.resubmitted || 0));
     }
     byId("overview-create-event").hidden = !session.user.roles.includes("coach");
@@ -627,7 +637,9 @@ async function loadPilotUsers() {
       const row = document.createElement("li");
       const name = document.createElement("strong"); name.textContent = user.display_name;
       const description = document.createElement("p");
-      description.textContent = `${user.email} · ${labels[user.status]} · ${user.roles.join(", ")} · Coach-UUID: ${user.coach_id || "Keine Zuordnung"}`;
+      const roleNames = {admin: "Administration", internal: "Intern", coach: "Coach",
+        calendar_reviewer: "Fachprüfung", company_contact: "Firmenkontakt"};
+      description.textContent = `${user.email} · ${labels[user.status]} · ${user.roles.map(role => roleNames[role] || role).join(", ")}${user.coach_id ? " · Coach zugeordnet" : ""}`;
       const detail = document.createElement("p");
       const invitations = {pending:"Offen",revoked:"Widerrufen",consumed:"Aktiviert",expired:"Abgelaufen"};
       detail.textContent = `MFA: ${user.mfa_enabled ? "Eingerichtet" : "Noch nicht eingerichtet"} · Einladung: ${invitations[user.invitation?.status] || "Keine"} · Letzte Anmeldung: ${user.last_authenticated_at ? formatCalendarDate(user.last_authenticated_at) : "Noch keine"}`;
@@ -710,6 +722,7 @@ async function configurePortalAreas() {
   state.companyTourAvailable = Boolean(reservationCaps.company && reservationCaps.can_request);
   if (reservationCaps.can_request) areas.push({ id: "reservations", label: "Vormerkungen" });
   if (reservationCaps.can_review) areas.push({ id: "reservation-review", label: "Vormerkungen prüfen" });
+  if (reservationCaps.can_request && reservations.linkedOffer()) state.activePortalArea = "reservations";
   if (roles.has("admin")) areas.push({id:"accounts", label:"Zugänge"});
   configurePilotHelp(roles);
   renderPortalNavigation(areas);

@@ -6,8 +6,22 @@ const text = (tag, value) => { const element = document.createElement(tag); elem
 const formats = { online: "Online", praesenz: "Präsenz", hybrid: "Hybrid" };
 const isDemo = location.pathname.startsWith("/demo/");
 const months = monthKeys();
+const slug = new URLSearchParams(location.search).get("coach");
+const coachPath = slug && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug) && slug.length <= 100 ? `/coaches/${slug}/` : null;
+let journey = { portal_reservations: false, local_website: false };
 let month = 0, offers = [], selected = null, loaded = false, loading = false, downloading = false;
 const date = calendarInstantLabel;
+if ($("profile-filter")) $("profile-filter").hidden = !coachPath;
+if ($("portal-reservation")) {
+  fetch("/api/v1/calendar/journey", { credentials: "omit", cache: "no-store" })
+    .then(response => response.ok ? response.json() : null)
+    .then(data => {
+      if (!data) return;
+      journey = data;
+      $("local-website").hidden = !journey.local_website;
+      if (selected) updateJourney(selected);
+    }).catch(() => { /* The anonymous request draft remains available. */ });
+}
 if (document.getElementById("calendar-help")) {
   const tour = createProductTour({navigate:async () => {},canLeave:() => true,originSelector:"#calendar-help"});
   $("calendar-help").addEventListener("click",() => tour.start("calendar"));
@@ -20,11 +34,29 @@ function render(keepDetail = false) {
   $("previous").disabled = month === 0;
   $("next").disabled = month === months.length - 1;
   const items = offers.filter(offer => (!$("topic").value || offer.topic.id === $("topic").value)
-    && (!$("format").value || offer.format === $("format").value));
+    && (!$("format").value || offer.format === $("format").value)
+    && (!coachPath || offer.coach.profile_path === coachPath));
   const layout = buildMonthLayout(items, months[month]);
   $("empty").hidden = !loaded || layout.offerCount > 0;
   $("result-count").textContent = loaded ? `${layout.offerCount} freigegebene ${isDemo ? "Demo-Termine" : "Termine"}` : "";
   renderMonth($("grid"), layout, show, "detail");
+}
+function updateJourney(offer) {
+  const path = offer.coach.profile_path;
+  const valid = typeof path === "string" && /^\/coaches\/[a-z0-9]+(-[a-z0-9]+)*\/$/.test(path)
+    && (path !== "/coaches/v2-demo-coach/" || journey.local_website);
+  $("coach").hidden = !valid;
+  if (valid) {
+    if (isDemo) $("coach").href = path;
+    else if (journey.local_website && path === "/coaches/v2-demo-coach/") $("coach").href = "/website" + path;
+    else $("coach").href = "https://competencehub.donner-partner.de" + path;
+  } else $("coach").removeAttribute("href");
+  if ($("portal-reservation")) {
+    const canLink = journey.portal_reservations && Date.parse(offer.decision_deadline) > Date.now();
+    $("portal-reservation").hidden = !canLink;
+    if (canLink) $("portal-reservation-link").href = `/portal/?offer=${encodeURIComponent(offer.id)}`;
+    else $("portal-reservation-link").removeAttribute("href");
+  }
 }
 function show(offer, focus = true) {
   selected = offer; $("detail").hidden = false;
@@ -41,10 +73,7 @@ function show(offer, focus = true) {
     $("meta").append(text("dt", key), text("dd", value));
   }
   // The fixture explicitly supplies these synthetic routes. Never derive real mappings.
-  const path = offer.coach.profile_path;
-  const validPath = typeof path === "string" && /^\/coaches\/[a-z0-9]+(-[a-z0-9]+)*\/$/.test(path);
-  $("coach").hidden = !validPath;
-  if (validPath) $("coach").href = isDemo ? path : `https://competencehub.donner-partner.de${path}`;
+  updateJourney(offer);
   $("coach").textContent = `${offer.coach.display_name}${isDemo ? " · Fiktives Profil" : " · Profil"}`;
   $("seats").max = String(offer.capacity); $("seats").value = "1";
   $("request-status").textContent = "";
@@ -87,8 +116,9 @@ async function load(background = false) {
     $("topic").replaceChildren(new Option("Alle Themen", ""));
     for (const [id, name] of new Map(offers.map(o => [o.topic.id, o.topic.name]))) $("topic").add(new Option(name, id));
     if ([...$("topic").options].some(o => o.value === currentTopic)) $("topic").value = currentTopic;
-    if (!loaded && offers.length && !buildMonthLayout(offers, months[month]).offerCount) {
-      const found = months.findIndex(key => buildMonthLayout(offers, key).offerCount > 0);
+    const scoped = coachPath ? offers.filter(item => item.coach.profile_path === coachPath) : offers;
+    if (!loaded && scoped.length && !buildMonthLayout(scoped, months[month]).offerCount) {
+      const found = months.findIndex(key => buildMonthLayout(scoped, key).offerCount > 0);
       if (found >= 0) month = found;
     }
     const retained = offers.find(o => o.id === previousSelection);

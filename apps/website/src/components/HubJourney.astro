@@ -105,13 +105,15 @@ const connections = [
             class="hub-journey__node"
             href={`#hub-journey-step-${index + 1}`}
             aria-label={`Zum Schritt ${step.number} ${step.node} springen`}
-            style={`--journey-x: ${step.x}%; --journey-y: ${step.y}%;`}
+            style={__WEBSITE_V2_LOCAL__ ? undefined : `--journey-x: ${step.x}%; --journey-y: ${step.y}%;`}
             data-journey-node={index + 1}
           >
             <Icon name={step.icon} size={25} />
             <strong>{step.node}</strong>
           </a>
-        ))}
+        ))}{__WEBSITE_V2_LOCAL__ && <style is:inline set:html={steps.map((step, index) =>
+          `[data-journey-node="${index + 1}"] { --journey-x: ${step.x}%; --journey-y: ${step.y}%; }`
+        ).join("\n")} />}
       </div>
     </div>
 

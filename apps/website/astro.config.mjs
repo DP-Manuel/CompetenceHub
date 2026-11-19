@@ -3,6 +3,7 @@ import { cp, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { websiteEnvironment } from "./config/environment.mjs";
 import { coachProjectionIntegration } from "./config/coach-projection.mjs";
+import { approvedProductionContent } from "./config/approved-production-content.mjs";
 
 const environment = websiteEnvironment();
 const projection = coachProjectionIntegration(environment);
@@ -21,6 +22,7 @@ export default defineConfig({
     envDir: false,
     define: {
       "import.meta.env.PUBLIC_REVIEW_MODE": JSON.stringify(String(environment.preview)),
+      __WEBSITE_V2_LOCAL__: "false",
     },
     resolve: { alias: {
       "@website-offer-finder": fileURLToPath(new URL(
@@ -50,19 +52,5 @@ export default defineConfig({
         await cp(new URL("./src/preview/portraits/", import.meta.url), target, { recursive: true });
       },
     },
-  }] : [{
-    name: "approved-production-guelcan",
-    hooks: {
-      "astro:config:setup": ({ injectRoute }) => injectRoute({
-        pattern: "/coaches/guelcan-elmas-brandes",
-        entrypoint: fileURLToPath(new URL("./src/preview/profiles/guelcan-elmas-brandes.astro", import.meta.url)),
-      }),
-      "astro:build:done": async ({ dir }) => {
-        const target = new URL("images/coaches/", dir);
-        await mkdir(target, { recursive: true });
-        await cp(new URL("./src/preview/portraits/guelcan-elmas-brandes.png", import.meta.url),
-          new URL("guelcan-elmas-brandes.png", target));
-      },
-    },
-  }])],
+  }] : [approvedProductionContent()])],
 });

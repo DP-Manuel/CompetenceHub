@@ -1216,4 +1216,10 @@ dialog::backdrop {
 .reservation-history { padding-inline-start: 24px; }
 .reservation-history li { margin-block: 10px; }
 .reservation-history p { margin-block: 4px; }
+
+.business-overview { display: grid; gap: 16px; min-width: 0; overflow-wrap: anywhere; }
+.business-overview section { padding-block: 12px; border-block-start: 1px solid var(--color-line); min-width: 0; }
+.business-overview h3, .business-overview h4 { margin-block: 8px 12px; }
+.business-overview .calendar-card-meta { margin-block: 10px 16px; }
+.business-overview .button { max-width: 100%; min-height: 44px; white-space: normal; }
 @media (max-width: 600px) { .calendar-list-filters {grid-template-columns: minmax(0,1fr);} }

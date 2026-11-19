@@ -1,4 +1,5 @@
 from contextlib import AbstractAsyncContextManager
+from dataclasses import replace
 from datetime import timedelta
 from types import TracebackType
 from typing import Any
@@ -13,7 +14,7 @@ from competence_hub_api.auth.postgres_session_repository import (
 from competence_hub_api.auth.login_service import LoginService
 from competence_hub_api.auth.account_lifecycle import AccountLifecycleService
 from competence_hub_api.portal.companies import CompanyService
-from competence_hub_api.config import RuntimeSettings
+from competence_hub_api.config import RuntimeConfigurationError, RuntimeSettings
 from competence_hub_api.runtime import (
     create_database_engine,
     create_runtime_app,
@@ -90,6 +91,23 @@ def runtime_settings() -> RuntimeSettings:
         recovery_hmac_keys={"synthetic-v1": b"r" * 32},
         recovery_hmac_active_key_version="synthetic-v1",
     )
+
+
+def test_private_cal2_mode_only_accepts_the_isolated_database_and_origin():
+    base = runtime_settings()
+    pilot_url = base.database_url.replace("competence_hub_staging", "competence_hub_v2_pilot")
+    expected = {"database_url": pilot_url, "allowed_origin": "https://localhost:8447",
+                "cal2_mode": "synthetic-pilot"}
+    assert replace(base, **expected).cal2_mode == "synthetic-pilot"
+    for forbidden in (
+        {"database_url": base.database_url},
+        {"allowed_origin": base.allowed_origin},
+        {"invitation_delivery_enabled": True},
+        {"database_url": pilot_url + "?application_name=override"},
+        {"cal2_mode": "production"},
+    ):
+        with pytest.raises(RuntimeConfigurationError):
+            replace(base, **{**expected, **forbidden})
 
 
 @pytest.mark.anyio

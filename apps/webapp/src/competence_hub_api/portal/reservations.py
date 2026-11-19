@@ -149,7 +149,7 @@ class ReservationRepository:
         return {"company": company, "can_request": BOOKER_ROLE in actor.roles,
                 "can_review": bool(REVIEW_ROLES.intersection(actor.roles))}
 
-    async def catalogue(self, actor, after, *, search="", day=None):
+    async def catalogue(self, actor, after, *, search="", day=None, offer_id=None):
         async with self.engine.connect() as connection:
             company = await _company(connection, actor, lock=True)
             rows = (await _rows(connection, """
@@ -170,11 +170,12 @@ class ReservationRepository:
                 WHERE o.lifecycle_status = 'active' AND r.workflow_status = 'published'
                   AND t.active AND r.decision_deadline > statement_timestamp()
                   AND (CAST(:after AS uuid) IS NULL OR o.id > :after)
+                  AND (CAST(:offer_id AS uuid) IS NULL OR o.id = :offer_id)
                   AND (:search = '' OR strpos(lower(r.title || ' ' || t.name), lower(:search)) > 0)
             """ + _DAY_FILTER + """
                 ORDER BY o.id LIMIT 26
             """, after=after, company=company.company_id, occupied=list(OCCUPIED),
-                search=search, day=day)).all()
+                search=search, day=day, offer_id=offer_id)).all()
         return self._page(rows)
 
     async def list(self, actor, *, review, after=None, open_only=False, reservation_id=None,

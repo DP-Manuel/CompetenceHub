@@ -75,6 +75,14 @@ class CalendarReviewRequest(BaseModel):
 RequestModel = TypeVar("RequestModel", bound=BaseModel)
 
 
+@public_router.get("/journey")
+async def calendar_journey(request: Request) -> Response:
+    return JSONResponse({
+        "portal_reservations": request.app.state.reservation_repository is not None,
+        "local_website": getattr(request.app.state, "local_website_path", None) == "/website/",
+    })
+
+
 @public_router.get("/offers")
 async def list_public_offers(
     request: Request,

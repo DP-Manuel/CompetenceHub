@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { demoCalendarPath, demoOfferPath } from "./journey.mjs";
+import "../styles/global.css";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout
+  title="V2 Demo-Coach | Competence Hub"
+  description="Synthetisches Coachprofil für den lokalen V2-Kalender."
+>
+  <main class="subpage">
+    <section class="page-hero page-hero--accent" aria-labelledby="demo-coach-title">
+      <div>
+        <p class="eyebrow">Synthetisches Profil</p>
+        <h1 id="demo-coach-title">V2 Demo-Coach</h1>
+        <p>Dieses Profil steht für keine reale Person. Das Demo-Gruppenangebot und seine Termine gehören ausschließlich zum lokalen Testbetrieb.</p>
+        <div class="actions">
+          <a class="button" href={demoCalendarPath}><Icon name="calendar" size={20} /> Termine dieses Demo-Coaches</a>
+          <a class="button button--ghost" href={`${base}/${demoOfferPath}`}>Zurück zum Demo-Angebot</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

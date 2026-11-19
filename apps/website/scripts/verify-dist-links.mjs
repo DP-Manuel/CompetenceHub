@@ -124,6 +124,9 @@ for (const file of allFiles) {
 
   if (!textExtensions.has(extname(file).toLowerCase())) continue;
   const content = readFileSync(file, "utf8").toLocaleLowerCase("de-DE");
+  if (/v2-demo-coach|v2-demo-angebot|lokaler v2-pilot|\/portal\/calendar-public\.html/.test(content)) {
+    failures.push({ source: publicPath, reason: "Local V2 Calendar journey in public artifact" });
+  }
   if (/data-portal-login="design"/.test(content) || (!portalLogin.href && content.includes("data-portal-login"))) {
     failures.push({ source: publicPath, reason: "Unconfirmed or local-design Portal entry in public artifact" });
   }

@@ -4,6 +4,13 @@ Updated: 2026-11-17. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
+19.11 V2 local integration learning: exercise the real website-to-API navigation
+once in the same isolated origin and database; keep public builds byte-identical
+with the demo flags set. Exercise dashboard SQL on real PostgreSQL as well as
+repository doubles. Bind offline package evidence to the final Git object
+rather than a passing dirty worktree. [Project evidence](docs/handoffs/2026-11-19-v2-platform-acceptance.md).
+No global skill changes.
+
 19.11 CAL-2 delivery learning: keep undecided business options explicitly demo-only
 and finish independently testable work before one stakeholder session. Derive
 internal notices from the reservation ledger and from grouped current state instead

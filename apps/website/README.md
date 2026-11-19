@@ -54,6 +54,37 @@ Static preview URL:
 http://127.0.0.1:4321/
 ```
 
+## Local V2 Calendar Journey
+
+Build from this workspace with the portable Node runtime on PATH. Use a fresh,
+private output directory supplied by the loopback runner:
+
+```powershell
+$env:ASTRO_TELEMETRY_DISABLED = "1"
+node ./node_modules/astro/astro.js build --config astro.v2-local.config.mjs "--outDir=$privateOut"
+node ./scripts/verify-v2-local-dist.mjs "$privateOut"
+```
+
+Serve the output as directory indexes and static assets at `/website/` on the
+same loopback origin as `/portal/`. The separate config is the only switch;
+standard Production and Pages builds cannot opt in via environment flags.
+The local output is deliberately non-indexable and is not a release artifact.
+
+- `/website/leistungen/#v2-demo-angebot` links to
+  `/website/coaches/v2-demo-coach/`. The demo is separate from approved Finder
+  entries, family links and real contact links.
+- The synthetic profile links to `/portal/calendar-public.html?coach=v2-demo-coach`.
+  The Portal owns event selection and maps only the synthetic stored path
+  `/coaches/v2-demo-coach/` to the mounted profile. The Website's main Calendar
+  navigation opens the unfiltered calendar; Portal-Login opens `/portal/`.
+- Astro's local scripts and bundled styles are same-origin files. The loopback
+  runner can authorize retained inline style blocks with per-document CSP
+  SHA-256 hashes. No inline style attributes or executable inline scripts are
+  required. Keep Portal and API CSP unchanged.
+
+The optional second argument to `verify-v2-local-dist.mjs` is a standard
+Production artifact directory for checking official Finder data and family links.
+
 ## Deployment
 
 The prepared header Portal entry is off until `WEBSITE_PORTAL_URL` holds the

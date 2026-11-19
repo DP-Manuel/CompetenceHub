@@ -3,6 +3,7 @@ import Icon from "../components/Icon.astro";
 import { categories, topics } from "./topics";
 import { finderAudiences, finderFormats, finderDuration, type FinderEntry } from "./offering-finder-model";
 import { coachRequestMailto } from "./request-links";
+import { publicCalendarPath } from "../v2-local/journey.mjs";
 interface Props { entries: readonly FinderEntry[] }
 const { entries } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -13,7 +14,7 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
   <header class="finder-heading">
     <div><p class="eyebrow">Angebotsfinder</p><h2 id="finder-title">Was möchten Sie bewegen?</h2></div>
     <p>Coaching, Workshops und Impulse für Ihren nächsten Schritt. Termine und Durchführung stimmen wir persönlich ab.</p>
-  </header>
+  </header><slot name="local-demo" />
   <form class="finder-filters" aria-label="Angebote filtern" data-finder-form hidden>
     <div class="finder-filter-row">
       <div><label for="finder-query">Angebot oder Coach</label><input id="finder-query" type="search" name="query" maxlength="80" autocomplete="off" placeholder="Zum Beispiel Stress oder Führung" aria-controls="finder-results" /></div>
@@ -34,7 +35,7 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
       <button class="finder-reset" type="reset">Filter zurücksetzen</button>
     </div>
   </form>
-  <div class="finder-result-heading"><p data-finder-status role="status" aria-live="polite" aria-atomic="true">{entries.length} Angebote</p><nav aria-label="Weitere Wege zum passenden Angebot"><a href={url("coaches")}>Zum Coach-Netzwerk <Icon name="arrow-right" size={18} /></a><a href={url("kalender")}>Kalender-Vorschau <Icon name="arrow-right" size={18} /></a></nav></div>
+  <div class="finder-result-heading"><p data-finder-status role="status" aria-live="polite" aria-atomic="true">{entries.length} Angebote</p><nav aria-label="Weitere Wege zum passenden Angebot"><a href={url("coaches")}>Zum Coach-Netzwerk <Icon name="arrow-right" size={18} /></a><a href={__WEBSITE_V2_LOCAL__ ? publicCalendarPath : url("kalender")}>{__WEBSITE_V2_LOCAL__ ? "Veranstaltungskalender" : "Kalender-Vorschau"} <Icon name="arrow-right" size={18} /></a></nav></div>
   <ul class="finder-results" id="finder-results">
     {entries.map((entry) => (
       <li data-finder-entry={entry.id}>

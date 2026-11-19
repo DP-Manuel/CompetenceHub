@@ -226,6 +226,17 @@
         </header>
 
         <nav class="portal-navigation" id="portal-navigation" aria-label="Portalbereiche"></nav>
+        <section id="pilot-overview" class="pilot-overview" aria-labelledby="pilot-overview-title" hidden>
+          <h2 id="pilot-overview-title">Mein Arbeitsüberblick</h2>
+          <p id="pilot-overview-state" role="status"></p>
+          <div id="business-overview" class="business-overview" hidden></div>
+          <dl id="pilot-metrics" class="pilot-metrics"></dl>
+          <p id="pilot-next-event"></p>
+          <p id="pilot-access-summary" hidden></p>
+          <div id="pilot-recent" hidden><h3>Zuletzt freigegeben</h3><ul id="pilot-recent-list"></ul></div>
+          <button id="overview-create-event" class="button button-primary" type="button" hidden>Neuen Termin erstellen</button>
+          <a id="public-calendar-link" href="/portal/calendar-public.html" target="_blank" rel="noopener">Freigegebener Kalender</a>
+        </section>
         <section id="reservations-workspace" class="calendar-workspace" aria-labelledby="reservations-title" hidden>
           <header class="workspace-heading">
             <div>
@@ -236,16 +247,6 @@
           <p role="status"></p>
           <p class="form-error" role="alert" tabindex="-1" hidden></p>
           <div data-cal2-content></div>
-        </section>
-        <section id="pilot-overview" class="pilot-overview" aria-labelledby="pilot-overview-title" hidden>
-          <h2 id="pilot-overview-title">Mein Arbeitsüberblick</h2>
-          <p id="pilot-overview-state" role="status"></p>
-          <dl id="pilot-metrics" class="pilot-metrics"></dl>
-          <p id="pilot-next-event"></p>
-          <p id="pilot-access-summary" hidden></p>
-          <div id="pilot-recent" hidden><h3>Zuletzt freigegeben</h3><ul id="pilot-recent-list"></ul></div>
-          <button id="overview-create-event" class="button button-primary" type="button" hidden>Neuen Termin erstellen</button>
-          <a id="public-calendar-link" href="/portal/calendar-public.html" target="_blank" rel="noopener">Freigegebener Kalender</a>
         </section>
         <section id="pilot-accounts" aria-labelledby="pilot-accounts-title" hidden>
           <h2 id="pilot-accounts-title">Benutzer und Erstzugänge</h2>

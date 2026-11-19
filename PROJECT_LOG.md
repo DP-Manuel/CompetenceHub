@@ -2,6 +2,12 @@
 
 Significant milestones only; newest first.
 
+19.11 V2 local integration: existing Astro journey and Portal/CAL-1/CAL-2 paths
+share one locally isolated synthetic PostgreSQL system. Role summaries, scoped
+offer handoff and native multi-company workflow checked. Public build parity,
+no VPS, migration, account, Pages or IONOS action.
+[One acceptance and package handoff](docs/handoffs/2026-11-19-v2-platform-acceptance.md).
+
 19.11 CAL-2 local pilot completion: search, visit details, scoped replies and task
 feed, reviewer filters, revision handoff, discard confirmation, six-step company
 tour, four-role native demo with restart. No duplicate store or booking/dispatch.

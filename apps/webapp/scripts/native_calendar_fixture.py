@@ -65,6 +65,7 @@ class NativeCalendarFixture:
                       "admin": "admin", "internal": "internal", "contact": "company_contact"}
         self.users = {key: uuid4() for key in self.roles}
         self.coaches = {key: uuid4() for key in ("coach", "coach_two")}
+        self.coach_profile_paths = {}
         self.emails = {key: f"synthetic-native-ui-{value.hex}@example.invalid" for key, value in self.users.items()}
         self.topic = uuid4()
         self.password = secrets.token_urlsafe(32)
@@ -113,7 +114,7 @@ class NativeCalendarFixture:
                     raise RuntimeError("Required static role is missing or inactive")
                 await connection.execute(text("INSERT INTO competence_hub.auth_password_credentials (portal_user_id,password_hash) VALUES (:id,:hash)"), {"id": user, "hash": password_hash})
             for key, coach in self.coaches.items():
-                await connection.execute(text("INSERT INTO competence_hub.coaches (id,portal_user_id,display_name,public_profile_status,public_profile_path) VALUES (:id,:user,:name,'synthetic',NULL)"), {"id": coach, "user": self.users[key], "name": "Coach A" if key == "coach" else "Coach B"})
+                await connection.execute(text("INSERT INTO competence_hub.coaches (id,portal_user_id,display_name,public_profile_status,public_profile_path) VALUES (:id,:user,:name,'synthetic',:path)"), {"id": coach, "user": self.users[key], "name": "Coach A" if key == "coach" else "Coach B", "path": self.coach_profile_paths.get(key)})
             await connection.execute(text("INSERT INTO competence_hub.topics (id,name,active) VALUES (:id,:name,true)"), {"id": self.topic, "name": "Führung und Zusammenarbeit"})
             for coach in self.coaches.values():
                 await connection.execute(text("INSERT INTO competence_hub.coach_topics (coach_id,topic_id) VALUES (:coach,:topic)"), {"coach": coach, "topic": self.topic})

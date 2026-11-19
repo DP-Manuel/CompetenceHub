@@ -9,11 +9,12 @@
 </head>
 <body>
 <a class="skip-link" href="#content">Zum Inhalt</a>
-<nav class="demo-banner" aria-label="Staging-Pilot"><strong>Competence Hub · Staging-Pilot</strong><a href="/portal/">Zum Portal</a><button id="calendar-help" type="button">Kalender-Einführung starten</button></nav>
+<nav class="demo-banner" aria-label="Staging-Pilot"><strong>Competence Hub · Staging-Pilot</strong><a id="local-website" href="/website/" hidden>Zur Website</a><a href="/portal/">Zum Portal</a><button id="calendar-help" type="button">Kalender-Einführung starten</button></nav>
 <main id="content">
   <header><p class="eyebrow">Freigegebene Gruppenangebote</p><h1>Veranstaltungskalender</h1><p>Pilotbetrieb. Keine verbindliche Buchung und kein Versand von Anfragen.</p></header>
   <section id="calendar" aria-labelledby="calendar-heading">
     <h2 id="calendar-heading">Termine</h2>
+    <p id="profile-filter" hidden>Termine zum ausgewählten Coachprofil · <a href="/portal/calendar-public.html">Alle Termine</a></p>
     <div class="toolbar"><label>Thema<select id="topic"><option value="">Alle Themen</option></select></label><label>Format<select id="format"><option value="">Alle Formate</option><option value="online">Online</option><option value="praesenz">Präsenz</option><option value="hybrid">Hybrid</option></select></label><button id="reload" type="button">Aktualisieren</button></div>
     <div class="month-toolbar"><button id="previous" type="button" aria-label="Vorheriger Monat">←</button><h3 id="month-label" aria-live="polite"></h3><button id="next" type="button" aria-label="Nächster Monat">→</button></div>
     <p id="loading" role="status" hidden>Termine werden geladen …</p><p id="error" role="alert" tabindex="-1" hidden>Kalender konnte nicht geladen werden. Bitte erneut aktualisieren.</p>
@@ -22,6 +23,7 @@
     <section id="detail" tabindex="-1" aria-labelledby="detail-title" hidden>
       <p class="eyebrow">Freigegeben</p><h2 id="detail-title"></h2><p id="summary"></p><dl id="meta"></dl>
       <p><a id="coach">Coachprofil</a></p><p><a id="ics" download>Zum Kalender hinzufügen (.ics)</a></p><p>Termin für Outlook oder andere Kalender herunterladen.</p>
+      <p id="portal-reservation" hidden><a id="portal-reservation-link">Im Portal unverbindlich vormerken</a></p>
       <form id="request"><label for="seats">Gewünschte Plätze (unverbindlich)</label><input id="seats" type="number" min="1" max="500" value="1" required>
         <button type="submit">Anfrageentwurf vorbereiten</button><p>Keine Reservierung und kein Versand. Es werden keine Kundendaten gespeichert.</p><p id="request-status" role="status"></p>
         <div id="request-draft-panel" hidden><label for="request-draft">Unverbindlicher Anfrageentwurf</label><textarea id="request-draft" readonly rows="9"></textarea><button id="copy-request" type="button">Anfragetext kopieren</button></div>

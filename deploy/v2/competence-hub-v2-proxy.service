@@ -1,0 +1,28 @@
+[Unit]
+Description=Competence Hub V2 private loopback TLS proxy
+After=competence-hub-v2-api.service
+Requires=competence-hub-v2-api.service
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=competencehub-v2-proxy
+DynamicUser=yes
+RuntimeDirectory=competence-hub-v2-proxy
+LoadCredential=tls.key:/etc/competence-hub-pilot/tls.key
+ExecStart=/usr/sbin/nginx -c /opt/competence-hub-v2/nginx.conf -g "daemon off;"
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+UMask=0077
+MemoryMax=64M

@@ -1,7 +1,8 @@
-"""Run the CAL-2 demonstration or its acceptance against an owned throwaway database."""
+"""Run the integrated V2 platform or its acceptance against an owned throwaway database."""
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import suppress
 import asyncio
+from dataclasses import replace
 from datetime import datetime, timedelta
 from pathlib import Path
 import sys
@@ -11,21 +12,26 @@ from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 import httpx
+from fastapi.testclient import TestClient
 from playwright.sync_api import expect, sync_playwright
 import pyotp
 from sqlalchemy import text
+from sqlalchemy.engine import make_url
 from sqlalchemy.exc import SQLAlchemyError
 
 from cal1_pilot_acceptance import qa
 from local_calendar_postgres import LocalCalendarPostgres
+from local_platform_website import SYNTHETIC_PROFILE, attach_website, build_website
 from native_calendar_fixture import NativeCalendarFixture
 from vps_pilot_acceptance import zoom_profile
+from competence_hub_api.runtime import create_database_engine, create_runtime_app
 
 ROOT = Path(__file__).resolve().parents[1]
 RES = "/api/v1/portal/reservations"
 CAL = "/api/v1/portal/calendar/offers"
 PUBLIC = "/api/v1/calendar/offers"
 UI = "/portal/"
+OVERVIEW = "/api/v1/portal/pilot/overview"
 
 
 def check(label, condition):
@@ -48,9 +54,12 @@ def seed_companies(fixture):
     fixture.database(seed)
 
 
-def login(page, base, fixture, actor, recovery):
+def login(page, base, fixture, actor, recovery, *, target=UI):
     first = actor not in recovery
-    page.goto(base + UI)
+    if page.url != base + target:
+        with page.expect_response(lambda response: response.url.endswith("/portal/access/session")):
+            page.goto(base + target)
+    expect(page.locator("#login-email")).to_be_focused()
     page.locator("#login-email").fill(fixture.emails[actor])
     page.locator("#login-password").fill(fixture.password)
     page.get_by_role("button", name="Anmelden", exact=True).click()
@@ -79,8 +88,9 @@ def login(page, base, fixture, actor, recovery):
 
 
 def live_page(browser, base, fixture, actor, recovery, external, errors, *, mobile=False):
-    page = browser.new_page(ignore_https_errors=True, reduced_motion="reduce",
-                            viewport={"width": 390 if mobile else 1440, "height": 920})
+    context = browser.new_context(ignore_https_errors=True, reduced_motion="reduce",
+                                  viewport={"width": 390 if mobile else 1440, "height": 920})
+    page = context.new_page()
     guard_page(page, base, external, errors)
     login(page, base, fixture, actor, recovery)
     return page
@@ -95,6 +105,45 @@ def guard_page(page, base, external, errors):
             handler.abort()
     page.route("**/*", route)
     page.on("pageerror", lambda error: errors.append(error.name))
+
+
+def website_to_company(browser, base, fixture, recovery, external, errors, offer_id):
+    page = browser.new_page(ignore_https_errors=True, reduced_motion="reduce",
+                            viewport={"width": 390, "height": 920})
+    guard_page(page, base, external, errors)
+    response = page.goto(base + "/website/")
+    assert response.headers["x-robots-tag"] == "noindex, nofollow, noarchive"
+    assert "'unsafe-inline'" not in response.headers["content-security-policy"]
+    page.get_by_role("link", name="Demo-Angebot", exact=True).click()
+    expect(page.get_by_role("heading", name="Demo-Gruppenangebot")).to_be_visible()
+    page.get_by_role("link", name="Profil des V2 Demo-Coaches").click()
+    expect(page.get_by_role("heading", name="V2 Demo-Coach", exact=True)).to_be_visible()
+    page.get_by_role("link", name="Termine dieses Demo-Coaches").click()
+    expect(page.locator("#profile-filter")).to_be_visible()
+    offer = page.locator(f"[data-offer='{offer_id}']").first
+    while not offer.count() and not page.locator("#next").is_disabled():
+        expect(page.locator("#loading")).to_be_hidden()
+        if offer.count():
+            break
+        page.locator("#next").click()
+    offer.click()
+    expect(page.locator("#coach")).to_have_attribute("href", "/website" + SYNTHETIC_PROFILE)
+    page.get_by_role("button", name="Anfrageentwurf vorbereiten").click()
+    expect(page.locator("#request-status")).to_contain_text("Nichts gesendet oder reserviert")
+    assert page.request.get(base + RES + "/catalogue").status == 401
+    link = page.get_by_role("link", name="Im Portal unverbindlich vormerken")
+    expect(link).to_have_attribute("href", UI + "?offer=" + offer_id)
+    with page.expect_response(lambda response: response.url.endswith("/portal/access/session")):
+        link.click()
+    expect(page.get_by_role("heading", name="Willkommen im Competence Hub")).to_be_visible()
+    assert "'unsafe-inline'" not in page.request.get(base + UI).headers["content-security-policy"]
+    login(page, base, fixture, "contact", recovery, target=UI + "?offer=" + offer_id)
+    expect(page.get_by_role("heading", name="Ausgewählte Veranstaltung")).to_be_visible()
+    expect(page.locator("#reservation-catalogue .calendar-card")).to_have_count(1)
+    expect(page.get_by_role("button", name="Plätze vormerken: Demo-Workshop über zwei Tage")).to_be_visible()
+    check("One origin: Astro offer, synthetic Coach, published CAL-1 event, anonymous draft and authenticated CAL-2 deep link", True)
+    page.get_by_role("button", name="Alle Veranstaltungen").click()
+    return page
 
 
 class Session:
@@ -230,7 +279,7 @@ def browser_workflow(company, other_company, reviewer, zoom, base):
     expect(other_company.get_by_text("Eingereicht", exact=True)).to_be_visible()
     check("390 px and real two-company booking flow: stale four-seat request is blocked at the field", True)
 
-    reviewer.get_by_role("button", name="Vormerkungen prüfen", exact=True).click()
+    reviewer.locator("#portal-navigation").get_by_role("button", name="Vormerkungen prüfen", exact=True).click()
     reviewer.get_by_label("Veranstaltung", exact=True).fill("über zwei Tage")
     reviewer.get_by_label("Coach", exact=True).fill("Coach A")
     reviewer.get_by_role("button", name="Filtern", exact=True).click()
@@ -265,8 +314,9 @@ def browser_workflow(company, other_company, reviewer, zoom, base):
     zoom.add_cookies(reviewer.context.cookies())
     page = zoom.pages[0]
     page.goto(base + UI)
-    expect(page.get_by_role("button", name="Vormerkungen prüfen", exact=True)).to_be_visible()
-    keyboard_activate(page, page.get_by_role("button", name="Vormerkungen prüfen", exact=True))
+    review_tab = page.locator("#portal-navigation").get_by_role("button", name="Vormerkungen prüfen", exact=True)
+    expect(review_tab).to_be_visible()
+    keyboard_activate(page, review_tab)
     company_a_card = page.locator("#reservations-workspace .calendar-card").filter(
         has=page.get_by_text("Demo-Firma A", exact=True))
     page.get_by_label("Status", exact=True).select_option("decision")
@@ -289,7 +339,7 @@ def browser_workflow(company, other_company, reviewer, zoom, base):
     other_company.get_by_role("button", name="Vorgang ansehen").click()
     other_company.get_by_role("button", name="Vormerkung zurücknehmen").click()
     other_company.get_by_role("button", name="Rücknahme bestätigen").click()
-    expect(other_company.get_by_text("Zurückgenommen", exact=True)).to_be_visible()
+    expect(other_company.locator("#reservation-own").get_by_text("Zurückgenommen", exact=True)).to_be_visible()
     check("Reviewer filters, company reply, approval at native 200% zoom and withdrawal of B", True)
     return page, reply_retry
 
@@ -299,6 +349,25 @@ def api_workflow(fixture, base, actors, main_id, main_draft, offers, reply_retry
         ("contact", "contact_two", "reviewer", "coach", "internal", "admin"))
     request_main = a.send("GET", RES).json()["items"][0]
     id_main = request_main["id"]
+    scopes = {}
+    for key, session, expected in (
+        ("company", a, {"company"}), ("other_company", b, {"company"}),
+        ("coach", coach, {"coach"}), ("review", reviewer, {"review"}),
+        ("admin", admin, {"admin", "review"}),
+    ):
+        result = session.send("GET", OVERVIEW)
+        assert result.status_code == 200, f"{key} business overview HTTP {result.status_code}"
+        scopes[key] = result.json()["business"]
+        assert set(scopes[key]) == expected
+    check("Role dashboards share the live process without crossing company, coach or administrator scopes", (
+        scopes["company"]["company"]["counts"]["approved"] == 1
+        and scopes["other_company"]["company"]["counts"]["approved"] == 0
+        and scopes["review"]["review"]["counts"]["approved"] == 1
+        and scopes["coach"]["coach"]["counts"]["published"] == 6
+        and internal.send("GET", OVERVIEW).status_code == 403
+        and a.send("GET", OVERVIEW, origin="https://outside.example.invalid").status_code == 403
+        and all(set(event) == {"occurred_at", "category", "status"} for event in scopes["admin"]["admin"]["audit"])
+    ))
     check("Reviewer and admin may review; coach/internal/company cannot", (
         reviewer.send("GET", RES + "?review=true").status_code == 200
         and admin.send("GET", RES + "?review=true").status_code == 200
@@ -465,6 +534,41 @@ def api_workflow(fixture, base, actors, main_id, main_draft, offers, reply_retry
     return id_main
 
 
+def verify_pilot_runtime(db, fixture):
+    # The clone lives only in the owned test container. Keep the two database
+    # names distinct even when testing the private mode on this workstation.
+    db.sql("CREATE DATABASE competence_hub_v2_pilot TEMPLATE competence_hub_staging;", "postgres")
+    db.sql("""
+        REVOKE CONNECT ON DATABASE competence_hub_v2_pilot FROM PUBLIC;
+        GRANT CONNECT ON DATABASE competence_hub_v2_pilot TO competence_hub_app;
+    """, "postgres")
+    private_url = make_url(fixture.app_url).set(port=5432, database="competence_hub_v2_pilot")
+    settings = replace(fixture._runtime_settings, database_url=private_url.render_as_string(hide_password=False),
+                       allowed_origin="https://localhost:8447", cal2_mode="synthetic-pilot")
+
+    def fixture_engine(_):
+        return create_database_engine(private_url.set(port=55433).render_as_string(hide_password=False))
+
+    with TestClient(create_runtime_app(settings, engine_factory=fixture_engine)) as client:
+        assert client.get("/api/v1/calendar/journey").json() == {
+            "portal_reservations": True, "local_website": False,
+        }
+        assert client.get(RES).status_code == 401
+        assert client.get("/website/").status_code == 404
+
+    db.sql("""
+        SET ROLE competence_hub_owner;
+        INSERT INTO competence_hub.portal_users (id,display_name,email,active)
+            VALUES (gen_random_uuid(),'Synthetic guard probe','synthetic@example.test',false);
+    """, "competence_hub_v2_pilot")
+    try:
+        with TestClient(create_runtime_app(settings, engine_factory=fixture_engine)):
+            raise AssertionError("Pilot startup admitted a non-demo account")
+    except RuntimeError as error:
+        assert str(error) == "CAL-2 pilot database, schema or synthetic cohort did not pass"
+    check("Protected-mode clone starts only with migrated schema and a synthetic cohort", True)
+
+
 def interrupt_request(db, fixture, session, offer_id):
     locked, release = Event(), Event()
     backend = {}
@@ -519,12 +623,19 @@ def demo(db, application, start, pw):
                 for actor, title in (
                     ("coach", "CAL-2 Demo | Coach A"), ("reviewer", "CAL-2 Demo | Reviewer"),
                     ("contact", "CAL-2 Demo | Firma A"), ("contact_two", "CAL-2 Demo | Firma B"),
+                    ("admin", "Competence Hub V2 | Administration"),
                 ):
                     page = start(browser, base, actor)
                     page.evaluate("(title) => { document.title = title; }", title)
+                    if actor == "contact":
+                        visitor = page.context.new_page()
+                        visitor.route("**/*", lambda route: route.continue_() if route.request.url.startswith(base + "/") else route.abort())
+                        if not visitor.goto(base + "/website/").ok:
+                            raise RuntimeError("The local website did not load.")
                 if restarted:
                     print("CAL2_RESTART=PASS | App und PostgreSQL sind wieder erreichbar.", flush=True)
-                print("CAL2_DEMO=READY | Vier Firefox-Fenster: Coach, Reviewer, Firma A und Firma B.", flush=True)
+                print("V2_PLATFORM=READY CAL2_DEMO=READY | Website im Fenster von Firma A; Coach, Prüfung und Administration.", flush=True)
+                print("LOKALE_WEBSITE=" + base + "/website/", flush=True)
                 print("R + Enter: App und PostgreSQL neu starten. Enter: Demo beenden und Testdaten entfernen.", flush=True)
                 try:
                     restart = input().strip().lower() == "r"
@@ -538,11 +649,12 @@ def demo(db, application, start, pw):
         restarted = True
 
 
-def run(db, verify):
+def run(db, verify, website):
     fixture = NativeCalendarFixture(local_container_rehearsal=True)
     fixture.roles["contact_two"] = "company_contact"
     fixture.users["contact_two"] = uuid4()
     fixture.emails["contact_two"] = f"synthetic-cal2-{fixture.users['contact_two'].hex}@example.invalid"
+    fixture.coach_profile_paths["coach"] = SYNTHETIC_PROFILE
     fixture.prepare()
     for number in (7, 8, 9, 10, 11):
         migration, = (ROOT / "database/migrations").glob(f"{number:04d}_*.sql")
@@ -551,7 +663,9 @@ def run(db, verify):
     recovery, external, errors = {}, [], []
 
     def application(port):
-        return fixture.app(port, local_reservations=True)
+        app = fixture.app(port, local_reservations=True)
+        attach_website(app, website)
+        return app
 
     def start(browser, base, key, mobile=False):
         return live_page(browser, base, fixture, key, recovery, external, errors, mobile=mobile)
@@ -575,7 +689,7 @@ def run(db, verify):
             interrupted, _ = create_offer(coach_api, reviewer_api, fixture, "Demo: Neustart", 29, 1, 1)
             # Seeding rotated the reviewer CSRF; reload the authentic UI session before using it.
             reviewer.reload()
-            company = start(browser, base, "contact", mobile=True)
+            company = website_to_company(browser, base, fixture, recovery, external, errors, main_id)
             company_b = start(browser, base, "contact_two")
             with tempfile.TemporaryDirectory(prefix="competence-hub-cal2-zoom-") as profile:
                 zoom_profile(pw, Path(profile))
@@ -586,6 +700,8 @@ def run(db, verify):
                     actors = {"coach": coach, "reviewer": zoom_page, "contact": company, "contact_two": company_b}
                     for key in ("admin", "internal"):
                         actors[key] = start(browser, base, key)
+                    expect(actors["admin"].get_by_role("heading", name="Zugänge und wichtige Änderungen")).to_be_visible()
+                    expect(company.get_by_role("heading", name="Vormerkungen Ihrer Firma").first).to_be_visible()
                     check("Only company and reviewer/admin see their CAL-2 areas",
                           actors["internal"].get_by_role("button", name="Vormerkungen prüfen", exact=True).count() == 0
                           and coach.get_by_role("button", name="Vormerkungen", exact=True).count() == 0)
@@ -601,7 +717,7 @@ def run(db, verify):
             browser = pw.firefox.launch()
             try:
                 company = start(browser, base, "contact")
-                expect(company.get_by_text("Veranstaltung abgesagt", exact=True)).to_be_visible()
+                expect(company.locator("#reservation-own").get_by_text("Veranstaltung abgesagt", exact=True)).to_be_visible()
                 session = Session(company, base)
                 details = session.send("GET", RES + "/" + reservation_id).json()
                 check("Backend and PostgreSQL restart: status and six append-only events persisted",
@@ -625,6 +741,7 @@ def run(db, verify):
     ledger, audit, outbox = fixture.database(verify_database)
     check("History and audit consistent, zero outbox entries, zero browser-external requests or JS errors",
           ledger == audit and ledger > 0 and outbox == 0 and not external and not errors)
+    verify_pilot_runtime(db, fixture)
 
 
 if __name__ == "__main__":
@@ -632,8 +749,11 @@ if __name__ == "__main__":
         raise SystemExit("Usage: run-cal2-local.py [--verify]")
     db = LocalCalendarPostgres()
     try:
-        with db:
-            run(db, "--verify" in sys.argv)
+        with tempfile.TemporaryDirectory(prefix="competence-hub-v2-platform-") as work:
+            website = Path(work) / "website"
+            build_website(website)
+            with db:
+                run(db, "--verify" in sys.argv, website)
     finally:
         if db.removed and db.volume_removed:
             print("CAL2_CLEANUP=PASS | Owned container and volume removed.", flush=True)

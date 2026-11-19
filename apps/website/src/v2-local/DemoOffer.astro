@@ -1,0 +1,16 @@
+---
+import Icon from "../components/Icon.astro";
+import { demoCoachPath, demoOfferId } from "./journey.mjs";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<section class="cta-panel" id={demoOfferId} aria-labelledby="v2-demo-angebot-title">
+  <div>
+    <p class="eyebrow">Synthetisches Angebot · Lokaler V2-Pilot</p>
+    <h3 id="v2-demo-angebot-title">Demo-Gruppenangebot</h3>
+    <p>Dieses Gruppenangebot ist keinem realen Coach und keiner veröffentlichten Angebotsfamilie zugeordnet.</p>
+  </div>
+  <a class="button" href={`${base}/${demoCoachPath}`}>Profil des V2 Demo-Coaches <Icon name="arrow-right" size={18} /></a>
+</section>
+<style is:inline>#v2-demo-angebot { scroll-margin-top: 10rem; }</style>

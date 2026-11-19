@@ -3,7 +3,7 @@ import type { APIRoute } from "astro";
 const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
 
 export const GET: APIRoute = () => {
-  const body = reviewMode
+  const body = reviewMode || __WEBSITE_V2_LOCAL__
     ? "User-agent: *\nDisallow: /\n"
     : [
         "User-agent: *",

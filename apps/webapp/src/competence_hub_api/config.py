@@ -42,6 +42,8 @@ RECOVERY_HMAC_ACTIVE_KEY_VERSION_ENV = (
     "COMPETENCE_HUB_RECOVERY_HMAC_ACTIVE_KEY_VERSION"
 )
 KEY_VERSION_PATTERN = re.compile(r"^[A-Za-z0-9._-]{1,64}$")
+CAL2_MODE_ENV = "COMPETENCE_HUB_CAL2_MODE"
+CAL2_PILOT_DATABASE = "competence_hub_v2_pilot"
 
 
 class RuntimeConfigurationError(ValueError):
@@ -76,10 +78,22 @@ class RuntimeSettings:
     )
     recovery_hmac_active_key_version: str = ""
     invitation_delivery_enabled: bool = False
+    cal2_mode: str = "off"
 
     def __post_init__(self) -> None:
         _validate_database_url(self.database_url)
         _validate_allowed_origin(self.allowed_origin)
+        if self.cal2_mode not in {"off", "synthetic-pilot"}:
+            raise RuntimeConfigurationError("Unknown CAL-2 mode")
+        if self.cal2_mode == "synthetic-pilot":
+            database = make_url(self.database_url)
+            if (
+                database.host != "127.0.0.1" or database.port not in {None, 5432}
+                or database.database != CAL2_PILOT_DATABASE or database.query
+                or self.allowed_origin != "https://localhost:8447"
+                or self.invitation_delivery_enabled
+            ):
+                raise RuntimeConfigurationError("CAL-2 pilot requires the isolated private database and disabled delivery")
         idle_seconds = self.session_idle_timeout.total_seconds()
         if not 60 <= idle_seconds <= 60 * 60:
             raise RuntimeConfigurationError(
@@ -257,6 +271,7 @@ class RuntimeSettings:
             recovery_hmac_keys=recovery_hmac_keys,
             recovery_hmac_active_key_version=recovery_hmac_active_key_version,
             invitation_delivery_enabled=delivery_flag == "true",
+            cal2_mode=values.get(CAL2_MODE_ENV, "off"),
         )
 
 

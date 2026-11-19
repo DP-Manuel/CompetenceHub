@@ -219,7 +219,8 @@ const renderedEdges =
     {renderedNodes.map((node) => (
       <span
         class={`hub-graph__position hub-graph__position--${node.kind}`}
-        style={`--node-x: ${node.x}%; --node-y: ${node.y}%; --node-size: ${node.size}px;`}
+        style={__WEBSITE_V2_LOCAL__ ? undefined : `--node-x: ${node.x}%; --node-y: ${node.y}%; --node-size: ${node.size}px;`}
+        data-v2-position={__WEBSITE_V2_LOCAL__ ? node.id : undefined}
       >
         <a
           class="hub-graph__node"
@@ -234,7 +235,9 @@ const renderedEdges =
         </a>
       </span>
     ))}
-  </nav>
+  </nav>{__WEBSITE_V2_LOCAL__ && <style is:inline set:html={renderedNodes.map((node) =>
+    `[data-v2-position="${node.id}"] { --node-x: ${node.x}%; --node-y: ${node.y}%; --node-size: ${node.size}px; }`
+  ).join("\n")} />}
 
   <div class="hub-graph__guide" aria-hidden="true">
     <span></span>

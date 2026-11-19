@@ -74,13 +74,16 @@ async def capabilities(request: Request):
 
 @router.get("/catalogue")
 async def catalogue(request: Request, after: UUID | None = None,
-                    search: str = Query(default="", max_length=100), day: date | None = None):
+                    search: str = Query(default="", max_length=100), day: date | None = None,
+                    offer_id: UUID | None = None):
     context = await _context(request)
     if isinstance(context, Response):
         return context
     repo, actor = context
     try:
-        return JSONResponse(jsonable_encoder(await repo.catalogue(actor, after, search=search.strip(), day=day)))
+        return JSONResponse(jsonable_encoder(await repo.catalogue(
+            actor, after, search=search.strip(), day=day, offer_id=offer_id,
+        )))
     except ReservationError as error:
         return _error(error)
 
