@@ -6,6 +6,9 @@ Migration, Benutzerfreigabe oder Nachricht. Grundlage sind die angenommenen
 [ADR0007](../decisions/0007-calendar-and-reservation-increments.md).
 CAL-1-Veröffentlichung und Janays Abnahme bleiben abgeschlossen.
 
+Nachtrag 19.11: Der vorgeschlagene Slice ist inzwischen lokal mit synthetischen
+Daten umgesetzt. [Demo, konkrete lokale Regeln und verbleibende Gates](../handoffs/2026-11-19-cal2-local-mvp.md).
+
 ## Ein Begrenzter Erster Slice
 
 Angemeldeter, berechtigter Firmenkontakt fragt für genau eine veröffentlichte

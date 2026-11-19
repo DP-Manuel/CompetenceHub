@@ -22,6 +22,7 @@ from competence_hub_api.portal.calendar import (
     normalize_calendar_draft,
 )
 from competence_hub_api.portal.coach_profiles import validate_public_profile_path
+from competence_hub_api.portal.reservations import cancel_for_offer, ensure_republishable
 
 _CREATE_REQUEST_LOCK = text(
     """
@@ -403,8 +404,9 @@ _AUDIT = text(
 
 
 class PostgresCalendarRepository:
-    def __init__(self, engine: AsyncEngine) -> None:
+    def __init__(self, engine: AsyncEngine, *, reservation_checks: bool = False) -> None:
         self._engine = engine
+        self._reservation_checks = reservation_checks
 
     async def list_topics(
         self,
@@ -775,6 +777,8 @@ class PostgresCalendarRepository:
             if revision.workflow_status != "in_review":
                 raise CalendarTransitionConflictError("offer is not in review")
             if outcome == "published":
+                if self._reservation_checks:
+                    await ensure_republishable(connection, offer_id)
                 normalize_calendar_draft(revision.draft, now=now)
                 await _require_topic(
                     connection,
@@ -841,6 +845,8 @@ class PostgresCalendarRepository:
                 _WITHDRAW_OFFER,
                 {"offer_id": offer_id, "now": now},
             )
+            if self._reservation_checks:
+                await cancel_for_offer(connection, offer_id, actor_user_id, now)
             await _write_audit(
                 connection,
                 actor_user_id=actor_user_id,

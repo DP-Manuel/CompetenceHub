@@ -1180,4 +1180,27 @@ dialog::backdrop {
 }
 #calendar-offer-form [aria-invalid="true"] {border: 2px solid #9f2219; background: #fff6f3;}
 .calendar-list-filters input, .calendar-list-filters select {width: 100%; min-width: 0; min-height: 44px;}
+
+#reservations-workspace { overflow-wrap: anywhere; }
+#reservations-workspace h4 { margin-block: 0 12px; font-size: 1rem; }
+#reservations-workspace .calendar-card { min-width: 0; padding: 18px; }
+#reservations-workspace .button { min-height: 44px; max-width: 100%; white-space: normal; }
+.reservation-list { margin-block: 20px; }
+.reservation-list ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+.reservation-form { max-width: 36rem; margin-block: 16px; }
+.reservation-form fieldset { min-width: 0; padding: 0; border: 0; margin: 0; }
+.reservation-form input:not([type="checkbox"]),
+.reservation-form select, .reservation-form textarea { width: 100%; min-width: 0; }
+.reservation-form textarea { resize: vertical; }
+.reservation-form input[type="checkbox"], .reservation-toggle input { width: 20px; height: 20px; }
+.reservation-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+.reservation-history { padding-inline-start: 24px; }
+.reservation-history li { margin-block: 10px; }
+.reservation-history p { margin-block: 4px; }
 @media (max-width: 600px) { .calendar-list-filters {grid-template-columns: minmax(0,1fr);} }

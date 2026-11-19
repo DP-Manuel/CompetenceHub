@@ -18,6 +18,8 @@ from competence_hub_api.auth.mfa_service import MfaService
 from competence_hub_api.auth.session_repository import SessionRepository
 from competence_hub_api.portal.companies import CompanyService
 from competence_hub_api.portal.calendar import CalendarService
+from competence_hub_api.portal.reservations import ReservationRepository
+from competence_hub_api.web.reservations import router as reservations_router
 from competence_hub_api.portal.coach_registry import CoachRegistryService
 from competence_hub_api.web.coach_registry import router as coach_registry_router
 from competence_hub_api.web.coach_management import router as coach_management_router
@@ -64,6 +66,7 @@ def create_app(
     account_lifecycle_service: AccountLifecycleService | None = None,
     company_service: CompanyService | None = None,
     calendar_service: CalendarService | None = None,
+    reservation_repository: ReservationRepository | None = None,
     coach_registry_service: CoachRegistryService | None = None,
     coach_management_queries: CoachManagementQueries | None = None,
     calendar_cursor_hmac_key: bytes | None = None,
@@ -96,6 +99,7 @@ def create_app(
     app.state.account_lifecycle_service = account_lifecycle_service
     app.state.company_service = company_service
     app.state.calendar_service = calendar_service
+    app.state.reservation_repository = reservation_repository
     app.state.coach_registry_service = coach_registry_service
     app.state.coach_management_queries = coach_management_queries
     app.state.calendar_cursor_codec = (
@@ -130,6 +134,7 @@ def create_app(
     app.include_router(companies_router)
     app.include_router(public_calendar_router)
     app.include_router(protected_calendar_router)
+    app.include_router(reservations_router)
 
     @app.get("/", include_in_schema=False)
     async def portal_root() -> RedirectResponse:

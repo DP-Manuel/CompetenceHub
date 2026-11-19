@@ -105,7 +105,7 @@ class NativeCalendarFixture:
             self.now = (await connection.scalar(text("SELECT clock_timestamp()"))).astimezone(UTC)
             for key, user in self.users.items():
                 await connection.execute(text("INSERT INTO competence_hub.portal_users (id,display_name,email,active) VALUES (:id,:name,:email,true)"),
-                    {"id": user, "name": {"coach": "Coach A", "coach_two": "Coach B", "reviewer": "Reviewer A", "admin": "Admin A", "internal": "Internal A", "contact": "Company Contact A"}[key], "email": self.emails[key]})
+                    {"id": user, "name": {"coach": "Coach A", "coach_two": "Coach B", "reviewer": "Reviewer A", "admin": "Admin A", "internal": "Internal A", "contact": "Company Contact A", "contact_two": "Company Contact B"}[key], "email": self.emails[key]})
                 result = await connection.execute(text("INSERT INTO competence_hub.user_roles (user_id,role_id) SELECT :id,id FROM competence_hub.roles WHERE code=:role AND active"), {"id": user, "role": self.roles[key]})
                 if result.rowcount != 1:
                     raise RuntimeError("Required static role is missing or inactive")
@@ -118,7 +118,9 @@ class NativeCalendarFixture:
         self.database(seed)
         self.provisioned = True
 
-    def app(self, port):
+    def app(self, port, *, local_reservations=False):
+        if local_reservations and not self.local_container_rehearsal:
+            raise ValueError("Reservations require the owned local container")
         settings = getattr(self, "_runtime_settings", None)
         if settings is None:
             # Fixture-only keys survive fresh app instances during restart tests.
@@ -131,7 +133,8 @@ class NativeCalendarFixture:
                 totp_encryption_keys={"native-ui": secrets.token_bytes(32)}, totp_active_key_version="native-ui",
                 recovery_hmac_keys={"native-ui": secrets.token_bytes(32)}, recovery_hmac_active_key_version="native-ui",
             )
-        app = create_runtime_app(replace(settings, allowed_origin=f"https://127.0.0.1:{port}"))
+        app = create_runtime_app(replace(settings, allowed_origin=f"https://127.0.0.1:{port}"),
+                                 local_reservations=local_reservations)
         app.state.clock = lambda: self.now
         original_lifespan = app.router.lifespan_context
 

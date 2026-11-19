@@ -56,7 +56,9 @@ No rollback needed, fresh predecessor retained. No VPS/Pages/data/account change
 4. CONDITIONAL PERSONAL PILOT: invite only explicitly approved recipients after
    delivery/access gates; first MFA/recovery/tour/draft/reviewer flow. Not activated
    by this Website release, no productive booking assumed.
-5. PROVISIONAL CAL-2: settle only the two existing capacity/deadline precisions
-   before a later synthetic slice. No implementation or data collection here.
+5. CAL-2 LOCAL: synthetic slice implemented separately on 19.11.
+   [Demo and open scope gates](../../handoffs/2026-11-19-cal2-local-mvp.md).
+   Review seat binding and deadlines before controlled Staging adoption; no real
+   data, recipients or packages implied by the synthetic demo.
 
 Execution/interactive login status: [IONOS record](../../operations/website-ionos-release-2026-11-17.md).

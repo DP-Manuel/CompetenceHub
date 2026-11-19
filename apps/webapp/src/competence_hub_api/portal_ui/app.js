@@ -3,6 +3,7 @@ import { createProductTour } from "./product-tour.js";
 import { createUserManagement } from "./user-management.js";
 import { createCalendarForm, germanDateTime } from "./calendar-form.mjs";
 import { createCalendarDialogs } from "./calendar-dialogs.js";
+import { createReservations } from "./reservations.js";
 
 const API = {
   session: "/api/v1/portal/access/session",
@@ -89,6 +90,12 @@ const coachManagement = createCoachManagement({
 function byId(id) {
   return document.getElementById(id);
 }
+
+const reservationsRoot = byId("reservations-workspace");
+const reservations = createReservations({
+  root: reservationsRoot, request, hasCsrf: () => Boolean(state.sessionCsrf),
+  expired: () => showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."),
+});
 
 const userManagement = createUserManagement({request,reload:loadPilotUsers,
   prepareInvitation:user => {
@@ -275,6 +282,8 @@ function clearPortalClientState() {
   state.usersOffset = 0;
   coachManagement.reset();
   coachManagement.root.remove();
+  reservations.reset();
+  reservationsRoot.hidden = true;
   state.companies = [];
   state.selectedCompany = null;
   state.calendarCapabilities = null;
@@ -691,6 +700,10 @@ async function configurePortalAreas() {
   if (canReviewCalendar) {
     areas.push({ id: "review-calendar", label: "Prüfliste" });
   }
+  const reservationCaps = await reservations.available(roles, () => state.session === session);
+  if (state.session !== session) return;
+  if (reservationCaps.can_request) areas.push({ id: "reservations", label: "Vormerkungen" });
+  if (reservationCaps.can_review) areas.push({ id: "reservation-review", label: "Vormerkungen prüfen" });
   if (roles.has("admin")) areas.push({id:"accounts", label:"Zugänge"});
   configurePilotHelp(roles);
   renderPortalNavigation(areas);
@@ -743,6 +756,7 @@ function renderPortalNavigation(areas) {
   areas.forEach((area) => {
     const button = document.createElement("button");
     button.type = "button";
+    button.dataset.portalArea = area.id;
     button.textContent = area.label;
     button.setAttribute("aria-current", area.id === state.activePortalArea ? "page" : "false");
     button.addEventListener("click", () => selectPortalArea(area.id));
@@ -756,6 +770,8 @@ function switchPortalWorkspace(area) {
   byId("company-workspace").hidden = area !== "companies";
   restrictedCalendarNodes.coachWorkspace.hidden = area !== "coach-calendar";
   restrictedCalendarNodes.reviewWorkspace.hidden = area !== "review-calendar";
+  reservationsRoot.hidden = !["reservations", "reservation-review"].includes(area);
+  if (reservationsRoot.hidden) reservations.leave();
 }
 
 async function selectPortalArea(area) {
@@ -764,13 +780,8 @@ async function selectPortalArea(area) {
   if (state.activePortalArea === "coaches" && area !== "coaches" && !coachManagement.canLeave()) return;
   state.activePortalArea = area;
   switchPortalWorkspace(area);
-  const selectedLabel = area === "accounts" ? "Zugänge" : area === "coaches" ? "Coaches" : area === "companies"
-    ? "Firmen"
-    : area === "coach-calendar"
-      ? "Kalenderangebote"
-      : "Prüfliste";
   [...byId("portal-navigation").querySelectorAll("button")].forEach((button) => {
-    button.setAttribute("aria-current", button.textContent === selectedLabel ? "page" : "false");
+    button.setAttribute("aria-current", button.dataset.portalArea === area ? "page" : "false");
   });
   byId("admin-invitation-panel").hidden = !(
     ["companies", "accounts"].includes(area) && state.session.user.roles.includes("admin")
@@ -789,6 +800,8 @@ async function selectPortalArea(area) {
     await loadCoachOffers();
   } else if (area === "review-calendar") {
     await loadReviewQueue();
+  } else if (area === "reservations" || area === "reservation-review") {
+    await reservations.show(area === "reservation-review");
   }
 }
 

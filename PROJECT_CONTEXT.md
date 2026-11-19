@@ -1,8 +1,18 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-17.
+Updated: 2026-11-19.
 
 ## Current Milestone
+
+19.11 CAL-2 MVP LOCAL/ACCEPTED TECHNICALLY: synthetic company request, seat changes
+and withdrawal, reviewer queue/decisions and append-only history. Migration 0010
+and local runtime opt-in tested only in the owned PostgreSQL container. Last-seat
+concurrency, scoped idempotency, CAL-1 revision/withdrawal, no mail or public data,
+MFA/RBAC, 390 px and native 200% zoom, restart and verified cleanup PASS. 72 targeted
+contract tests and 17 native checks; no VPS, IONOS, Pages or live data changes.
+[Demo and rules](docs/handoffs/2026-11-19-cal2-local-mvp.md). Next CAL-2 block: local
+business acceptance with Janay before Staging. EDV still gates personal activation
+and the public website's portal link; neither is implicitly authorized.
 
 17.11 Portal-Login header LOCAL_READY, dedicated Git closure authorized, no deployment. Existing
 Icon/CD, desktop-right/mobile-first/native menu, shared backend /portal/ link only.
@@ -48,7 +58,8 @@ are closed above. Do not replay upload or ask for the same release approval.
 [Current result](docs/content/website-release-2026-11-17.md),
 [execution horizon](docs/exec-plans/active/website-release-onboarding-2026-11-17.md).
 Nine-row onboarding matrix retains Hupp ON_HOLD; real activation still requires
-EDV and personal identity/UUID/role/import gates. CAL-2 is a small proposal only.
+EDV and personal identity/UUID/role/import gates. The 17.11 CAL-2 proposal is
+superseded for local implementation by the 19.11 MVP above.
 Private accepted V1.2/TLS30.11 state and all protected data stay unchanged.
 
 16.11 TLS ACTUALLY ACCEPTED19:22 MEZ: runf87c37d2…/receiptSHAe6b80664…,

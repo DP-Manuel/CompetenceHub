@@ -4,6 +4,13 @@ Updated: 2026-11-17. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
+19.11 native zoom acceptance: Firefox's WebDriver click at full-page 200% sometimes
+hits the neighboring heading despite a visible control. Check the control center
+with DOM hit testing, then exercise real keyboard activation; report pointer
+verification separately. Always close the persistent context before removing its
+temporary profile on Windows, including failed tests. This was applied in the
+[CAL-2 demo proof](docs/handoffs/2026-11-19-cal2-local-mvp.md); no skill files changed.
+
 17.11 local-only UI learning: public GitHub Preview is not a local sandbox. Bind
 design-only rendering to actual dev mode, not the Preview environment, and prove
 absence/byte parity even with the design flag set at build time. Keep shared Login

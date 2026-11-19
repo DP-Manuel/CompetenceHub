@@ -11,7 +11,7 @@
 | CAL-1 current accepted scope | [Browser handoff](../handoffs/2026-09-18-cal1-browser-acceptance-handoff.md) | Local acceptance and next synthetic Staging UI gate |
 | CAL-1 latest local pilot increment | [Native SQL/ICS/UX proof and start](../handoffs/2026-11-06-cal1-pilot-readiness.md) | Real isolated PostgreSQL restart, shared public calendar, export/request; current Staging/production activation not approved |
 | CAL-1 API/UI | [API contract](../architecture/calendar-cal1-api-contract-v0.1.md), [UI contract](../architecture/calendar-cal1-portal-ui-contract-v0.1.md) | Protected/public projection and capabilities |
-| CAL-2 | [17.11 small slice proposal](cal2-small-slice-2026-11-17.md), [ADR 0007](../decisions/0007-calendar-and-reservation-increments.md) | Capacity/status/deadline proposal only; no implementation or real reservations |
+| CAL-2 | [Local MVP and demo](../handoffs/2026-11-19-cal2-local-mvp.md), [17.11 scope proposal](cal2-small-slice-2026-11-17.md), [ADR 0007](../decisions/0007-calendar-and-reservation-increments.md) | Synthetic local implementation; business acceptance, Staging and real use remain gated |
 | FIN-01 | [Invoice epic](fin-01-invoice-management-epic.md) | Bookkeeping discovery; no implementation |
 | Analytics | [ANALYTICS-01](analytics-01-discovery-2026-10-21.md) | Options and gated design |
 | Analytics consent/storage | [PRIV-ANALYTICS-01](../decisions/PRIV-ANALYTICS-01.md) | OPEN; no activation or legal conclusion |

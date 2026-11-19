@@ -7,11 +7,12 @@ import secrets
 
 from fastapi import FastAPI
 from sqlalchemy import text
+from sqlalchemy.engine import make_url
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from competence_hub_api.auth.login_service import LoginService
-from competence_hub_api.auth.admission import PORTAL_ADMISSION
+from competence_hub_api.auth.admission import AdmissionPolicy, PORTAL_ADMISSION
 from competence_hub_api.auth.mfa_service import MfaService
 from competence_hub_api.auth.account_lifecycle import AccountLifecycleService
 from competence_hub_api.auth.postgres_account_lifecycle import (
@@ -27,6 +28,7 @@ from competence_hub_api.main import create_app
 from competence_hub_api.portal.companies import CompanyService
 from competence_hub_api.portal.calendar import CalendarService
 from competence_hub_api.portal.postgres_calendar import PostgresCalendarRepository
+from competence_hub_api.portal.reservations import ReservationRepository
 from competence_hub_api.portal.postgres_companies import PostgresCompanyRepository
 from competence_hub_api.security.passwords import PasswordPolicy, PasswordService
 from competence_hub_api.security.secret_encryption import SecretCipher
@@ -63,7 +65,18 @@ def create_runtime_app(
     settings: RuntimeSettings,
     *,
     engine_factory: EngineFactory = create_database_engine,
+    local_reservations: bool = False,
 ) -> FastAPI:
+    if local_reservations:
+        database = make_url(settings.database_url)
+        if (database.host, database.port, database.database) != (
+            "127.0.0.1", 55433, "competence_hub_staging"
+        ) or not settings.allowed_origin.startswith("https://127.0.0.1:") or settings.invitation_delivery_enabled:
+            raise ValueError("CAL-2 is restricted to the owned local synthetic fixture")
+    portal_admission = (
+        AdmissionPolicy(PORTAL_ADMISSION.roles | {"company_contact"})
+        if local_reservations else PORTAL_ADMISSION
+    )
     engine = engine_factory(settings.database_url)
     session_repository = PostgresSessionRepository(engine)
     calendar_session_repository = PostgresSessionRepository(
@@ -86,7 +99,7 @@ def create_runtime_app(
         password_service,
         dummy_password_hash=dummy_password_hash,
         rate_limit_hmac_key=settings.rate_limit_hmac_key,
-        admission_policy=PORTAL_ADMISSION,
+        admission_policy=portal_admission,
     )
     totp_secret_cipher = SecretCipher(
         settings.totp_encryption_keys,
@@ -101,7 +114,7 @@ def create_runtime_app(
         session_idle_timeout=settings.session_idle_timeout,
     )
     portal_mfa_service = MfaService(
-        PostgresMfaRepository(engine, admission_policy=PORTAL_ADMISSION),
+        PostgresMfaRepository(engine, admission_policy=portal_admission),
         totp_secret_cipher,
         recovery_hmac_keys=settings.recovery_hmac_keys,
         recovery_active_key_version=settings.recovery_hmac_active_key_version,
@@ -109,7 +122,7 @@ def create_runtime_app(
         session_idle_timeout=settings.session_idle_timeout,
     )
     company_service = CompanyService(PostgresCompanyRepository(engine))
-    calendar_service = CalendarService(PostgresCalendarRepository(engine))
+    calendar_service = CalendarService(PostgresCalendarRepository(engine, reservation_checks=local_reservations))
     calendar_cursor_hmac_key = hmac.new(
         settings.idempotency_hmac_key,
         b"competence-hub:calendar-public-cursor:v1",
@@ -146,7 +159,7 @@ def create_runtime_app(
         session_repository=session_repository,
         calendar_session_repository=calendar_session_repository,
         portal_session_repository=PostgresSessionRepository(
-            engine, accepted_roles=PORTAL_ADMISSION.roles
+            engine, accepted_roles=portal_admission.roles
         ),
         portal_login_service=portal_login_service,
         portal_mfa_service=portal_mfa_service,
@@ -155,6 +168,7 @@ def create_runtime_app(
         account_lifecycle_service=account_lifecycle_service,
         company_service=company_service,
         calendar_service=calendar_service,
+        reservation_repository=ReservationRepository(engine, settings.idempotency_hmac_key) if local_reservations else None,
         calendar_cursor_hmac_key=calendar_cursor_hmac_key,
         allowed_origin=settings.allowed_origin,
         session_idle_timeout=settings.session_idle_timeout,

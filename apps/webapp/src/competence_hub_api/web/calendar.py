@@ -369,10 +369,15 @@ async def _protected_context(
     request: Request, *, require_csrf: bool
 ) -> tuple[SessionPrincipal, CalendarService] | Response:
     service: CalendarService | None = request.app.state.calendar_service
-    repository = request.app.state.calendar_session_repository
-    token = request.cookies.get(SESSION_COOKIE_NAME)
     if service is None:
         return _unavailable()
+    principal = await calendar_principal(request, require_csrf=require_csrf)
+    return principal if isinstance(principal, Response) else (principal, service)
+
+
+async def calendar_principal(request: Request, *, require_csrf: bool) -> SessionPrincipal | Response:
+    repository = request.app.state.calendar_session_repository
+    token = request.cookies.get(SESSION_COOKIE_NAME)
     if repository is None or token is None:
         return _authentication_failed()
     try:
@@ -387,7 +392,7 @@ async def _protected_context(
     if principal is None:
         return _authentication_failed()
     if not require_csrf:
-        return principal, service
+        return principal
     csrf_token = request.headers.get("x-csrf-token")
     if (
         request.app.state.allowed_origin is None
@@ -403,7 +408,7 @@ async def _protected_context(
         matches = False
     if not matches:
         return _request_verification_failed()
-    return principal, service
+    return principal
 
 
 def _public_context(
@@ -416,7 +421,9 @@ def _public_context(
     return service, codec
 
 
-async def _read_json(request: Request, model: type[RequestModel]) -> RequestModel | None:
+async def _read_json(
+    request: Request, model: type[RequestModel], *, field_names=(),
+) -> RequestModel | None:
     content_type = request.headers.get("content-type", "")
     if content_type.split(";", 1)[0].strip().casefold() != "application/json":
         return None
@@ -436,10 +443,12 @@ async def _read_json(request: Request, model: type[RequestModel]) -> RequestMode
         return model.model_validate_json(bytes(body))
     except ValidationError as error:
         if model in (CalendarDraftRequest, CalendarCreateRequest):
+            field_names = CalendarDraftRequest.model_fields
+        if field_names:
             request.state.calendar_field_errors = [
                 {"field": str(item["loc"][-1]), "code": "invalid"}
                 for item in error.errors(include_input=False)
-                if item["loc"] and item["loc"][-1] in CalendarDraftRequest.model_fields
+                if item["loc"] and item["loc"][-1] in field_names
             ][:13]
         return None
 

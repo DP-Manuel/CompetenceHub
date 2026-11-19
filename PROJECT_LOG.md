@@ -2,6 +2,14 @@
 
 Significant milestones only; newest first.
 
+19.11 CAL-2 synthetic local MVP PASS: reservation/seat updates/withdrawal through the
+authenticated company view, Reviewer/Admin queue and audited decision. Same offer
+lock as CAL-1, append-only events, current deadline, stable request keys and versions.
+72 targeted tests/17 native PostgreSQL and browser checks incl. 390/native200,
+persistence, no outbox, container/volume removed. Rules beyond CAL-D/T are local
+demo decisions pending business acceptance. No VPS/migration on Staging, IONOS,
+Pages, real accounts or mail. [Demo and gate](docs/handoffs/2026-11-19-cal2-local-mvp.md).
+
 17.11 local Portal header prepared: shared existing backend entry, D+P Login icon,
 desktop-right/mobile-first placement, central optional URL/dev-only design. No
 guessed domain, login form, role/cookie/auth implementation, account or deployment.
