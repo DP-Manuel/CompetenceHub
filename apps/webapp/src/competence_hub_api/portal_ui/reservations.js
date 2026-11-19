@@ -7,9 +7,18 @@ const STATUS = {
 };
 const EVENT = {
   submitted: "Eingereicht", seats_changed: "Platzzahl geändert",
-  clarification_requested: "Klärung angefordert", offer_cancelled: "Veranstaltung abgesagt",
+  clarification_requested: "Rückfrage gestellt", clarification_answered: "Rückfrage beantwortet",
+  offer_cancelled: "Veranstaltung abgesagt",
   ...STATUS,
 };
+const TASK = { overdue: "Entscheidung überfällig", deadline_soon: "Frist endet bald",
+  revision_pending: "Änderung zur Prüfung eingereicht", reply_needed: "Ihre Antwort ist offen" };
+const CHANGE_LABEL = {
+  starts_at: "Beginn", ends_at: "Ende", time_zone: "Zeitzone", capacity: "Kapazität",
+  review_threshold: "Prüfschwelle", decision_deadline: "Entscheidungsfrist", format_code: "Format",
+  public_location: "Ort", topic_id: "Thema", title: "Titel", summary: "Beschreibung", price_display_text: "Preishinweis",
+};
+const FORMAT = { online: "Online", praesenz: "Präsenz", hybrid: "Hybrid" };
 const ERRORS = {
   reservation_capacity: "Es sind nicht genügend Plätze frei. Bitte reduzieren Sie die Platzzahl.",
   reservation_unchanged_seats: "Geben Sie eine andere Platzzahl ein.",
@@ -21,6 +30,7 @@ const ERRORS = {
   reservation_not_found: "Dieser Vorgang oder das Angebot ist nicht mehr verfügbar.",
   reservation_contact_mapping: "Ihrem Konto ist kein eindeutiger Firmenkontakt zugeordnet.",
   reservation_forbidden: "Für diesen Vorgang fehlt die Berechtigung.",
+  reservation_idempotency_conflict: "Dieser Auftrag wurde bereits anders verarbeitet. Bitte laden Sie die Übersicht neu.",
 };
 const isOpen = (item) => ["pending", "clarification"].includes(item.status);
 const date = (value) => germanDateTime(value);
@@ -48,18 +58,65 @@ function facts(entries) {
   return list;
 }
 
+function filterControl(form, id, label, value, options, type = "text") {
+  const group = element("div", null, "field");
+  const caption = element("label", label);
+  const input = element(options ? "select" : "input");
+  caption.htmlFor = input.id = id;
+  if (options) {
+    for (const [key, title] of Object.entries(options)) {
+      const option = element("option", title);
+      option.value = key;
+      input.append(option);
+    }
+  } else {
+    input.type = type;
+    if (type === "text") input.maxLength = 100;
+  }
+  input.value = value;
+  group.append(caption, input);
+  form.append(group);
+  return input;
+}
+
+function query(path, values) {
+  const url = new URL(path, location.origin);
+  for (const [key, value] of Object.entries(values)) {
+    if (value !== "") url.searchParams.set(key, value);
+  }
+  return url.pathname + url.search;
+}
+
 export function createReservations({ root, request, hasCsrf, expired }) {
   const heading = root.querySelector("h2");
   const scope = root.querySelector("[data-cal2-scope]");
   const status = root.querySelector("[role=status]");
   const notice = root.querySelector("[role=alert]");
   const content = root.querySelector("[data-cal2-content]");
-  let caps = {}, controller, currentForm, isReview = false, showDone = false;
+  const initialReview = { status: "open", offer: "", coach: "", day: "", deadline: "" };
+  const initialCatalogue = { search: "", day: "" };
+  let caps = {}, controller, currentForm, isReview = false;
+  let reviewFilters = { ...initialReview }, catalogueFilters = { ...initialCatalogue };
+  const dirty = new Set();
+  const hasDraft = () => Array.from(dirty).some(changed => changed());
+
+  function canLeave() {
+    if (currentForm) return window.confirm("Speicherung läuft noch. Zur Übersicht wechseln und dort den Status prüfen?");
+    return !hasDraft() || window.confirm("Ungespeicherte Eingaben verwerfen?");
+  }
+
+  window.addEventListener("beforeunload", (event) => {
+    if (currentForm || hasDraft()) {
+      event.preventDefault();
+      event.returnValue = true;
+    }
+  });
 
   function leave() {
     controller?.abort();
     controller = undefined;
     currentForm = undefined;
+    dirty.clear();
     content.replaceChildren();
     status.textContent = "";
     notice.textContent = "";
@@ -88,8 +145,9 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     } catch { return {}; }
   }
 
-  function listSection(title, path, render, empty, signal) {
+  function listSection(title, path, render, empty, signal, id) {
     const section = element("section", null, "reservation-list");
+    if (id) section.id = id;
     const list = element("ul");
     section.append(element("h3", title), list);
     const pageStatus = element("p");
@@ -104,12 +162,11 @@ export function createReservations({ root, request, hasCsrf, expired }) {
       more.disabled = true;
       pageStatus.textContent = "Wird geladen …";
       try {
-        const url = new URL(path, location.origin);
-        if (after) url.searchParams.set("after", after);
-        const data = await read(url.pathname + url.search, signal);
+        const data = await read(query(path, { after: after || "" }), signal);
         if (signal.aborted) return;
         list.append(...data.items.map(render));
         next = data.next_after;
+        more.textContent = "Weitere laden";
         more.hidden = !next;
         pageStatus.textContent = list.children.length ? "" : empty;
         if (after && !next) {
@@ -127,14 +184,22 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     return load(null);
   }
 
+  function offerFacts(item) {
+    return facts([
+      ["Thema", item.topic_name], ["Coach", item.coach_name],
+      ["Beginn", date(item.starts_at)], ["Ende", date(item.ends_at)],
+      ["Format", FORMAT[item.format_code]], ["Ort", item.public_location],
+      ["Preishinweis", item.price_display_text], ["Freie Plätze", item.free_seats],
+      ["Entscheidungsfrist", date(item.decision_deadline)],
+    ]);
+  }
+
   function catalogueCard(item) {
     const card = element("li", null, "calendar-card");
-    card.append(element("h4", item.title), facts([
-      ["Thema", item.topic_name], ["Beginn", date(item.starts_at)], ["Ende", date(item.ends_at)],
-      ["Format", { online: "Online", praesenz: "Präsenz", hybrid: "Hybrid" }[item.format_code]],
-      ["Ort", item.public_location], ["Preis", item.price_display_text],
-      ["Freie Plätze", item.free_seats], ["Entscheidungsfrist", date(item.decision_deadline)],
-    ]));
+    const details = element("details", null, "reservation-offer-details");
+    details.append(element("summary", "Veranstaltungsdetails"), offerFacts(item));
+    if (item.summary) details.append(element("p", item.summary));
+    card.append(element("h4", item.title), element("p", `${date(item.starts_at)} · ${FORMAT[item.format_code]} · ${item.free_seats} frei`), details);
     if (item.has_reservation || item.free_seats < 1) {
       card.append(element("p", item.has_reservation ? "Für Ihre Firma bereits vorgemerkt" : "Keine freien Plätze"));
     } else {
@@ -148,19 +213,20 @@ export function createReservations({ root, request, hasCsrf, expired }) {
 
   function reservationFacts(item) {
     return facts([
-      ["Status", STATUS[item.status]], ["Gewünschte Plätze", item.seats],
+      ["Status", item.status === "clarification" && item.clarification_answered ? "Antwort eingegangen" : STATUS[item.status]],
+      ["Gewünschte Plätze", item.seats], ["Coach", item.coach_name],
       ["Beginn", date(item.starts_at)], ["Ende", date(item.ends_at)],
       ["Entscheidungsfrist", date(item.decision_deadline)],
       ["Firma", item.company_name], ["Kontaktperson", item.contact_name],
       ["Offen angefragt (Angebot)", item.requested_seats], ["Belegt (Angebot)", item.occupied_seats],
-      ["Kapazität", item.capacity], ["Prüfschwelle", item.review_threshold],
+      ["Kapazität", item.capacity], ["Prüfschwelle", item.review_threshold], ["Offene Vorgänge (Angebot)", item.open_count],
     ]);
   }
 
   function attention(item) {
     if (!isReview || !isOpen(item)) return "";
     if (item.deadline_passed) return "Entscheidung überfällig";
-    if (Date.parse(item.decision_deadline) - Date.now() <= 48 * 3600 * 1000) return "Frist endet bald";
+    if (item.deadline_soon) return "Frist endet bald";
     if (item.occupied_seats >= item.review_threshold) return "Prüfschwelle erreicht";
     return "Prüfschwelle noch nicht erreicht";
   }
@@ -169,14 +235,89 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     const card = element("li", null, "calendar-card");
     card.append(element("h4", item.title), reservationFacts(item));
     if (attention(item)) card.append(element("p", attention(item), "calendar-status"));
+    if (item.proposed_revision) card.append(element("p", "Änderung zur Prüfung eingereicht", "calendar-status"));
     card.append(button("Vorgang ansehen", () => void detail(item.id)));
     return card;
   }
 
-  async function show(review, done = false, message = "") {
+  function filters(review) {
+    const form = element("form", null, "reservation-filters");
+    form.setAttribute("aria-label", review ? "Vorgänge filtern" : "Veranstaltungen suchen");
+    const values = review ? reviewFilters : catalogueFilters;
+    const fields = review ? {
+      status: filterControl(form, "cal2-filter-status", "Status", values.status, {
+        open: "Offene Vorgänge", pending: "Eingereicht", clarification: "Rückfragen",
+        decision: "Entscheidung nötig", approved: "Positiv geprüft", rejected: "Abgelehnt",
+        withdrawn: "Zurückgenommen", cancelled: "Veranstaltung abgesagt", past: "Vergangene Vorgänge",
+        "": "Alle Vorgänge",
+      }),
+      offer: filterControl(form, "cal2-filter-offer", "Veranstaltung", values.offer),
+      coach: filterControl(form, "cal2-filter-coach", "Coach", values.coach),
+      day: filterControl(form, "cal2-filter-day", "Veranstaltungstag", values.day, null, "date"),
+      deadline: filterControl(form, "cal2-filter-deadline", "Entscheidungsfrist", values.deadline,
+        { "": "Alle Fristen", overdue: "Überfällig", soon: "Nächste 48 Stunden", later: "Später" }),
+    } : {
+      search: filterControl(form, "cal2-search", "Titel oder Thema", values.search),
+      day: filterControl(form, "cal2-day", "Veranstaltungstag", values.day, null, "date"),
+    };
+    const actions = element("div", null, "button-row");
+    const apply = element("button", review ? "Filtern" : "Suchen", "button button-primary");
+    apply.type = "submit";
+    actions.append(apply, button("Zurücksetzen", () => {
+      if (review) reviewFilters = { ...initialReview };
+      else catalogueFilters = { ...initialCatalogue };
+      void show(review);
+    }));
+    form.append(actions);
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      for (const [key, input] of Object.entries(fields)) values[key] = input.value.trim();
+      void show(review);
+    });
+    return form;
+  }
+
+  async function activity(review, signal) {
+    const container = element("details", null, "reservation-activity");
+    const summary = element("summary", "Aufgaben und Ereignisse");
+    const body = element("div");
+    container.append(summary, body);
+    content.append(container);
+    let loaded = false;
+    container.addEventListener("toggle", async () => {
+      if (!container.open || loaded) return;
+      loaded = true;
+      const note = element("p", "Wird geladen …");
+      note.setAttribute("role", "status");
+      body.replaceChildren(note);
+      try {
+        const data = await read(query(API + "/activity", { review }), signal);
+        if (signal.aborted) return;
+        body.replaceChildren();
+        for (const [title, entries, labels] of [
+          ["Anstehende Aufgaben", data.tasks, TASK], ["Letzte Ereignisse", data.events, EVENT],
+        ]) {
+          const list = element("ul", null, "reservation-activity-list");
+          for (const entry of entries) {
+            const line = element("li");
+            line.append(button(`${labels[entry.kind]}: ${entry.title}`, () => {
+              if (canLeave()) void detail(entry.reservation_id);
+            }), element("small", date(entry.occurred_at || entry.decision_deadline)));
+            list.append(line);
+          }
+          body.append(element("h3", title), entries.length ? list : element("p", "Keine Einträge."));
+        }
+      } catch {
+        if (signal.aborted) return;
+        note.textContent = "Die Übersicht konnte nicht geladen werden.";
+        body.append(button("Erneut laden", () => { loaded = false; container.dispatchEvent(new Event("toggle")); }));
+      }
+    });
+  }
+
+  async function show(review, message = "") {
     leave();
     isReview = review;
-    showDone = done;
     const signal = (controller = new AbortController()).signal;
     heading.textContent = review ? "Vormerkungen prüfen" : "Plätze vormerken";
     scope.textContent = review ? "Lokale Demo · Synthetische Firmenanfragen"
@@ -187,31 +328,25 @@ export function createReservations({ root, request, hasCsrf, expired }) {
       setNotice(ERRORS.reservation_contact_mapping);
       return;
     }
+    activity(review, signal);
+    const control = filters(review);
     if (review) {
-      const toggle = element("input");
-      toggle.type = "checkbox";
-      toggle.checked = done;
-      const label = element("label", null, "reservation-toggle");
-      label.append(toggle, document.createTextNode(" Auch abgeschlossene Vorgänge anzeigen"));
-      toggle.addEventListener("change", () => void show(true, toggle.checked));
-      content.append(label);
-      await listSection(done ? "Alle Vorgänge" : "Offene Vorgänge",
-        API + `?review=true&open_only=${!done}`, reservationCard, "Keine Vorgänge vorhanden.", signal);
-    } else {
-      await Promise.all([
-        listSection("Vormerkungen Ihrer Firma", API, reservationCard, "Noch keine Vormerkungen.", signal),
-        listSection("Veröffentlichte Gruppenangebote", API + "/catalogue", catalogueCard,
-          "Derzeit sind keine Angebote für Vormerkungen geöffnet.", signal),
-      ]);
+      content.append(control);
+      await listSection("Vorgänge", query(API, { review, ...reviewFilters }), reservationCard,
+        "Keine Vorgänge für diese Auswahl.", signal);
+      return;
     }
+    const own = listSection("Vormerkungen Ihrer Firma", API, reservationCard,
+      "Noch keine Vormerkungen.", signal, "reservation-own");
+    content.append(control);
+    await Promise.all([own, listSection("Veröffentlichte Gruppenangebote", query(API + "/catalogue", catalogueFilters),
+      catalogueCard, "Keine passenden Angebote für Vormerkungen gefunden.", signal, "reservation-catalogue")]);
   }
 
   function openPanel(title) {
-    const review = isReview;
-    const done = showDone;
     leave();
     const signal = (controller = new AbortController()).signal;
-    const back = button("Zur Übersicht", () => void show(review, done));
+    const back = button("Zur Übersicht", () => { if (canLeave()) void show(isReview); });
     content.append(back, element("h3", title));
     back.focus();
     return signal;
@@ -226,6 +361,14 @@ export function createReservations({ root, request, hasCsrf, expired }) {
       status.textContent = "";
       content.append(element("h4", item.title), reservationFacts(item));
       if (attention(item)) content.append(element("p", attention(item), "calendar-status"));
+      if (item.proposed_revision) {
+        const changes = item.changed_fields.map(field => CHANGE_LABEL[field]).filter(Boolean);
+        const warning = element("div", null, "notice");
+        warning.append(element("strong", "Änderung zur Prüfung eingereicht"),
+          element("p", changes.length ? `Betroffen: ${changes.join(", ")}.` : "Keine Änderung der gezeigten Angebotsdaten."),
+          element("p", "Die Vormerkung gilt für den zuletzt veröffentlichten Stand. Keine automatische Übernahme; Veröffentlichung bleibt bei belegten Plätzen gesperrt."));
+        content.append(warning);
+      }
       if (isOpen(item) && item.deadline_passed) {
         content.append(element("p", "Keine neuen oder zusätzlichen Plätze. Die Vormerkung bleibt bis zu einer Entscheidung oder Rücknahme offen."));
       }
@@ -234,9 +377,11 @@ export function createReservations({ root, request, hasCsrf, expired }) {
         if (isReview) decisionForm(item, signal);
         else {
           if (item.offer_available) changeForm(item, signal);
+          if (item.status === "clarification" && !item.clarification_answered) replyForm(item, signal);
           const withdraw = button("Vormerkung zurücknehmen", () => {
+            if (!canLeave()) return;
             const form = commandForm("Rücknahme bestätigen", signal, API + `/${item.id}/withdraw`,
-              "POST", version(item), () => ({}), "Vormerkung zurückgenommen.");
+              "POST", version(item), () => ({}), "Vormerkung zurückgenommen.", () => detail(item.id));
             form.container.prepend(element("p", "Die vorgemerkten Plätze werden wieder frei."));
             withdraw.replaceWith(form.node);
             form.submit.focus();
@@ -244,7 +389,7 @@ export function createReservations({ root, request, hasCsrf, expired }) {
           content.append(withdraw);
         }
       }
-      content.append(element("h4", "Statusverlauf"));
+      content.append(element("h4", item.history.length === 50 ? "Statusverlauf (letzte 50 Einträge)" : "Statusverlauf"));
       const history = element("ol", null, "reservation-history");
       for (const entry of item.history) {
         const row = element("li", `${date(entry.occurred_at)} · ${EVENT[entry.event]} · ${entry.seats_after} Plätze`);
@@ -284,7 +429,7 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     return field(form, "seats", "Teilnehmerzahl", input);
   }
 
-  function commandForm(label, signal, path, method, headers, payload, success) {
+  function commandForm(label, signal, path, method, headers, payload, success, cancel) {
     const node = element("form", null, "reservation-form");
     const container = element("fieldset");
     const submit = element("button", label, "button button-primary");
@@ -292,7 +437,16 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     const fields = {};
     let fingerprint, requestId;
     node.noValidate = true;
-    node.append(container, submit);
+    const actions = element("div", null, "button-row");
+    actions.append(submit, button("Abbrechen", () => { if (canLeave()) void cancel(); }));
+    node.append(container, actions);
+    let baseline;
+    const changed = () => {
+      if (baseline === undefined) return false;
+      return JSON.stringify(payload()) !== baseline;
+    };
+    dirty.add(changed);
+    queueMicrotask(() => { baseline = JSON.stringify(payload()); });
     node.addEventListener("submit", async (event) => {
       event.preventDefault();
       if (currentForm || signal.aborted) return;
@@ -318,6 +472,8 @@ export function createReservations({ root, request, hasCsrf, expired }) {
         }
       }
       const body = payload();
+      if (Array.from(dirty).some(other => other !== changed && other()) &&
+          !window.confirm("Andere ungespeicherte Eingaben werden verworfen. Diese Aktion speichern?")) return;
       const key = JSON.stringify(body);
       if (key !== fingerprint) { fingerprint = key; requestId = crypto.randomUUID(); }
       const running = currentForm = Symbol();
@@ -325,11 +481,12 @@ export function createReservations({ root, request, hasCsrf, expired }) {
       status.textContent = "Wird gespeichert …";
       try {
         const response = await request(path, {
-          method, headers, csrf: "session", body: { ...body, request_id: requestId }, signal,
+          method, headers, csrf: "session", body: { ...body, request_id: requestId },
+          signal: AbortSignal.any([signal, AbortSignal.timeout(15000)]),
         });
         if (signal.aborted) return;
         if (response.status === 401) { expired(); return; }
-        if (response.ok) { void show(isReview, showDone, success); return; }
+        if (response.ok) { void show(isReview, success); return; }
         const problem = await response.json();
         if (signal.aborted) return;
         const field = problem.field_errors?.[0]?.field;
@@ -357,9 +514,9 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     const form = commandForm("Unverbindlich vormerken", signal, API + `/offers/${item.id}`, "POST", {},
       () => ({ seats: seats.valueAsNumber, revision_number: item.revision_number,
         contact_confirmed: confirmed.checked, phone: phone.value || null, message: message.value || null }),
-      "Vormerkung eingereicht. Es wurde nichts verbindlich gebucht.");
-    content.append(facts([["Beginn", date(item.starts_at)], ["Ende", date(item.ends_at)],
-      ["Freie Plätze", item.free_seats], ["Entscheidungsfrist", date(item.decision_deadline)]]), form.node);
+      "Vormerkung eingereicht. Es wurde nichts verbindlich gebucht.", () => show(false));
+    content.append(offerFacts(item), form.node);
+    if (item.summary) form.node.before(element("p", item.summary));
     const seats = seatsField(form, "1", item.free_seats);
     const check = element("input");
     check.type = "checkbox";
@@ -375,14 +532,23 @@ export function createReservations({ root, request, hasCsrf, expired }) {
 
   function changeForm(item, signal) {
     const form = commandForm("Platzzahl ändern", signal, API + `/${item.id}/seats`, "PATCH",
-      version(item), () => ({ seats: seats.valueAsNumber }), "Platzzahl geändert.");
+      version(item), () => ({ seats: seats.valueAsNumber }), "Platzzahl geändert.", () => detail(item.id));
     const seats = seatsField(form, String(item.seats), item.deadline_passed ? item.seats : item.capacity);
+    content.append(form.node);
+  }
+
+  function replyForm(item, signal) {
+    const form = commandForm("Antwort senden", signal, API + `/${item.id}/reply`, "POST",
+      version(item), () => ({ reason: reply.value.trim() }), "Antwort im Vorgang gespeichert.", () => detail(item.id));
+    const input = element("textarea");
+    input.required = true; input.rows = 3; input.maxLength = 500;
+    const reply = field(form, "reason", "Antwort auf die Rückfrage", input);
     content.append(form.node);
   }
 
   function decisionForm(item, signal) {
     const form = commandForm("Entscheidung speichern", signal, API + `/${item.id}/decide`, "POST",
-      version(item), () => ({ outcome: outcome.value, reason: reason.value.trim() }), "Entscheidung gespeichert.");
+      version(item), () => ({ outcome: outcome.value, reason: reason.value.trim() }), "Entscheidung gespeichert.", () => detail(item.id));
     const select = element("select");
     select.required = true;
     for (const [value, text] of Object.entries({
@@ -392,7 +558,7 @@ export function createReservations({ root, request, hasCsrf, expired }) {
       const option = element("option", text);
       option.value = value;
       if (value === "approved" && !item.offer_available) option.disabled = true;
-      if (value === "clarification_requested" && item.status === "clarification") option.disabled = true;
+      if (value === "clarification_requested" && item.status === "clarification" && !item.clarification_answered) option.disabled = true;
       select.append(option);
     }
     const outcome = field(form, "outcome", "Entscheidung", select);
@@ -402,5 +568,10 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     content.append(form.node);
   }
 
-  return { available, show, leave, reset() { leave(); caps = {}; } };
+  return { available, show, leave, canLeave, reset() {
+    leave();
+    caps = {};
+    reviewFilters = { ...initialReview };
+    catalogueFilters = { ...initialCatalogue };
+  } };
 }

@@ -18,6 +18,7 @@ from competence_hub_api.portal.calendar import (
     CalendarOfferDetail,
     CalendarOfferNotFoundError,
     CalendarReviewDecision,
+    CalendarReservationConflictError,
     CalendarService,
     CalendarTimeConflictError,
     CalendarTopicUnavailableError,
@@ -604,6 +605,8 @@ def _calendar_error(exc: Exception) -> Response:
         return _conflict(
             "calendar_idempotency_conflict", "Anfrage kann nicht wiederholt werden"
         )
+    if isinstance(exc, CalendarReservationConflictError):
+        return _conflict("calendar_reservations_open", "Vormerkungen schuetzen den veroeffentlichten Stand")
     if isinstance(exc, CalendarTransitionConflictError):
         return _conflict(
             "calendar_transition_conflict", "Statuswechsel ist nicht moeglich"

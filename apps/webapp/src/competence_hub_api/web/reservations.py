@@ -1,7 +1,8 @@
+from datetime import date
 from typing import Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Query, Request, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, field_validator
@@ -41,6 +42,10 @@ class ReviewReservation(Command):
         return value
 
 
+class ReplyReservation(Command):
+    reason: str = Field(min_length=1, max_length=500)
+
+
 async def _context(request, *, write=False):
     repo = request.app.state.reservation_repository
     if repo is None:
@@ -68,21 +73,40 @@ async def capabilities(request: Request):
 
 
 @router.get("/catalogue")
-async def catalogue(request: Request, after: UUID | None = None):
+async def catalogue(request: Request, after: UUID | None = None,
+                    search: str = Query(default="", max_length=100), day: date | None = None):
     context = await _context(request)
     if isinstance(context, Response):
         return context
     repo, actor = context
     try:
-        return JSONResponse(jsonable_encoder(await repo.catalogue(actor, after)))
+        return JSONResponse(jsonable_encoder(await repo.catalogue(actor, after, search=search.strip(), day=day)))
+    except ReservationError as error:
+        return _error(error)
+
+
+@router.get("/activity")
+async def activity(request: Request, review: bool = False):
+    context = await _context(request)
+    if isinstance(context, Response):
+        return context
+    repo, actor = context
+    try:
+        return JSONResponse(jsonable_encoder(await repo.activity(actor, review=review)))
     except ReservationError as error:
         return _error(error)
 
 
 @router.get("")
 async def reservations(request: Request, review: bool = False, open_only: bool = False,
-                       after: UUID | None = None):
-    return await _list(request, review=review, open_only=open_only, after=after)
+                       after: UUID | None = None, day: date | None = None,
+                       offer: str = Query(default="", max_length=100),
+                       coach: str = Query(default="", max_length=100),
+                       status: Literal["", "open", "decision", "clarification", "pending", "approved",
+                                       "rejected", "withdrawn", "cancelled", "past"] = "",
+                       deadline: Literal["", "overdue", "soon", "later"] = ""):
+    return await _list(request, review=review, open_only=open_only, after=after, day=day,
+                       offer=offer.strip(), coach=coach.strip(), status=status, deadline=deadline)
 
 
 @router.get("/{reservation_id}")
@@ -121,6 +145,11 @@ async def withdraw(request: Request, reservation_id: UUID):
 @router.post("/{reservation_id}/decide")
 async def decide(request: Request, reservation_id: UUID):
     return await _command(request, reservation_id, ReviewReservation, review=True)
+
+
+@router.post("/{reservation_id}/reply")
+async def reply(request: Request, reservation_id: UUID):
+    return await _command(request, reservation_id, ReplyReservation, action="clarification_answered")
 
 
 async def _command(request, target, model, *, action=None, review=False):

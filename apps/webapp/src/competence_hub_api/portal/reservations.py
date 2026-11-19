@@ -8,7 +8,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from competence_hub_api.auth.session_repository import SessionPrincipal
-from competence_hub_api.portal.calendar import CalendarTransitionConflictError
+from competence_hub_api.portal.calendar import CalendarReservationConflictError
 
 OPEN = ("pending", "clarification")
 OCCUPIED = (*OPEN, "approved")
@@ -45,6 +45,29 @@ _EVENT = """
         :id, :version, :actor, :now, :event, :before, :status,
         :old_seats, :seats, :delta, :threshold, :reason, :request, :digest
     )
+"""
+
+# Only reviewers can see the unpublished comparison. The booking still points to the old revision.
+_REVISION_FIELDS = (
+    "starts_at", "ends_at", "time_zone", "capacity", "review_threshold", "decision_deadline",
+    "format_code", "public_location", "topic_id", "title", "summary", "price_display_text",
+)
+_REVISION_DIFF = "array_remove(ARRAY[" + ", ".join(
+    f"CASE WHEN proposed.{field} IS DISTINCT FROM r.{field} THEN '{field}' END"
+    for field in _REVISION_FIELDS
+) + "], NULL)"
+_DAY_FILTER = """
+    AND (CAST(:day AS date) IS NULL OR (
+        r.starts_at < (CAST(CAST(:day AS date) + 1 AS timestamp) AT TIME ZONE 'Europe/Berlin')
+        AND r.ends_at > (CAST(:day AS timestamp) AT TIME ZONE 'Europe/Berlin')
+    ))
+"""
+_LAST_CLARIFICATION = """
+    LEFT JOIN LATERAL (
+        SELECT event FROM competence_hub.calendar_reservation_events
+        WHERE reservation_id = s.id AND event IN ('clarification_requested', 'clarification_answered')
+        ORDER BY version DESC LIMIT 1
+    ) clarification ON s.status = 'clarification'
 """
 
 
@@ -88,7 +111,7 @@ async def _write_event(connection, **params):
 async def ensure_republishable(connection, offer_id):
     # The caller already holds the offer row lock. Never silently rebase agreed terms.
     if (await _totals(connection, offer_id)).occupied_seats:
-        raise CalendarTransitionConflictError("active reservations protect the published revision")
+        raise CalendarReservationConflictError("active reservations protect the published revision")
 
 
 async def cancel_for_offer(connection, offer_id, actor, now):
@@ -126,18 +149,19 @@ class ReservationRepository:
         return {"company": company, "can_request": BOOKER_ROLE in actor.roles,
                 "can_review": bool(REVIEW_ROLES.intersection(actor.roles))}
 
-    async def catalogue(self, actor, after):
+    async def catalogue(self, actor, after, *, search="", day=None):
         async with self.engine.connect() as connection:
-            company = await _company(connection, actor)
+            company = await _company(connection, actor, lock=True)
             rows = (await _rows(connection, """
                 SELECT o.id, r.revision_number, r.title, t.name AS topic_name,
-                       r.starts_at, r.ends_at, r.format_code,
+                       r.starts_at, r.ends_at, r.format_code, r.summary, coach.display_name AS coach_name,
                        r.public_location, r.capacity, r.decision_deadline, r.price_display_text,
                        r.capacity - coalesce(totals.seats, 0) AS free_seats,
                        coalesce(totals.has_reservation, false) AS has_reservation
                 FROM competence_hub.calendar_offers o
                 JOIN competence_hub.calendar_offer_revisions r ON r.offer_id = o.id
                 JOIN competence_hub.topics t ON t.id = r.topic_id
+                JOIN competence_hub.coaches coach ON coach.id = o.coach_id
                 LEFT JOIN LATERAL (
                     SELECT sum(seats) AS seats, bool_or(company_id = :company) AS has_reservation
                     FROM competence_hub.calendar_reservations
@@ -146,28 +170,42 @@ class ReservationRepository:
                 WHERE o.lifecycle_status = 'active' AND r.workflow_status = 'published'
                   AND t.active AND r.decision_deadline > statement_timestamp()
                   AND (CAST(:after AS uuid) IS NULL OR o.id > :after)
+                  AND (:search = '' OR strpos(lower(r.title || ' ' || t.name), lower(:search)) > 0)
+            """ + _DAY_FILTER + """
                 ORDER BY o.id LIMIT 26
-            """, after=after, company=company.company_id, occupied=list(OCCUPIED))).all()
+            """, after=after, company=company.company_id, occupied=list(OCCUPIED),
+                search=search, day=day)).all()
         return self._page(rows)
 
-    async def list(self, actor, *, review, after=None, open_only=False, reservation_id=None):
+    async def list(self, actor, *, review, after=None, open_only=False, reservation_id=None,
+                   status="", deadline="", offer="", coach="", day=None):
         if review:
             _reviewer(actor)
+        elif offer or coach or deadline or status or day:
+            raise ReservationError("forbidden", 403)
         async with self.engine.connect() as connection:
-            company_id = None if review else (await _company(connection, actor)).company_id
-            rows = (await _rows(connection, """
+            company_id = None if review else (await _company(connection, actor, lock=True)).company_id
+            rows = (await _rows(connection, f"""
                 SELECT s.id, s.offer_id, s.revision_number, s.seats, s.status, s.version,
                        r.title, r.starts_at, r.ends_at, r.capacity, r.decision_deadline,
                        r.decision_deadline <= statement_timestamp() AS deadline_passed,
+                       r.decision_deadline > statement_timestamp() AND
+                         r.decision_deadline <= statement_timestamp() + interval '48 hours' AS deadline_soon,
+                       coalesce(clarification.event = 'clarification_answered', false) AS clarification_answered,
                        o.lifecycle_status = 'active' AND t.active AND r.workflow_status = 'published'
                            AS offer_available,
+                       CASE WHEN :review THEN presenter.display_name END AS coach_name,
+                       proposed.revision_number AS proposed_revision,
+                       CASE WHEN proposed.id IS NOT NULL THEN {_REVISION_DIFF} END AS changed_fields,
                        CASE WHEN :review THEN b.name ELSE NULL END AS company_name,
                        CASE WHEN :review THEN c.first_name || ' ' || c.last_name ELSE NULL END AS contact_name,
                        CASE WHEN :review THEN r.review_threshold ELSE NULL END AS review_threshold,
-                       CASE WHEN :review OR s.requested_by = :actor THEN s.phone ELSE NULL END AS phone,
-                       CASE WHEN :review OR s.requested_by = :actor THEN s.message ELSE NULL END AS message,
+                       CASE WHEN CAST(:id AS uuid) IS NOT NULL AND
+                           (:review OR s.requested_by = :actor) THEN s.phone ELSE NULL END AS phone,
+                       CASE WHEN CAST(:id AS uuid) IS NOT NULL AND
+                           (:review OR s.requested_by = :actor) THEN s.message ELSE NULL END AS message,
                        CASE WHEN :review THEN coalesce(totals.occupied_seats, 0) END AS occupied_seats,
-                       totals.requested_seats
+                       totals.requested_seats, totals.open_count
                 FROM competence_hub.calendar_reservations s
                 JOIN competence_hub.companies b ON b.id = s.company_id
                 JOIN competence_hub.company_contacts c ON c.id = s.contact_id
@@ -175,19 +213,40 @@ class ReservationRepository:
                 JOIN competence_hub.calendar_offer_revisions r
                   ON (r.offer_id, r.revision_number) = (s.offer_id, s.revision_number)
                 JOIN competence_hub.topics t ON t.id = r.topic_id
+                JOIN competence_hub.coaches presenter ON presenter.id = o.coach_id
                 LEFT JOIN LATERAL (
                     SELECT sum(seats) AS occupied_seats,
-                           coalesce(sum(seats) FILTER (WHERE status = ANY(:open)), 0) AS requested_seats
+                           coalesce(sum(seats) FILTER (WHERE status = ANY(:open)), 0) AS requested_seats,
+                           count(*) FILTER (WHERE status = ANY(:open)) AS open_count
                     FROM competence_hub.calendar_reservations
                     WHERE offer_id = s.offer_id AND status = ANY(:occupied) AND :review
                 ) totals ON :review
+                LEFT JOIN competence_hub.calendar_offer_revisions proposed ON :review AND
+                    o.lifecycle_status = 'active' AND s.status = ANY(:occupied) AND
+                    proposed.offer_id = o.id AND proposed.workflow_status = 'in_review'
+                {_LAST_CLARIFICATION}
                 WHERE (:review OR s.company_id = CAST(:company AS uuid))
                   AND (NOT :open_only OR s.status = ANY(:open))
                   AND (CAST(:id AS uuid) IS NULL OR s.id = :id)
                   AND (CAST(:after AS uuid) IS NULL OR s.id > :after)
+                  AND (:status = '' OR
+                       (:status = 'open' AND s.status = ANY(:open)) OR
+                       (:status = 'decision' AND (s.status = 'pending' OR
+                            (s.status = 'clarification' AND clarification.event = 'clarification_answered'))) OR
+                       (:status = 'past' AND r.ends_at <= statement_timestamp()) OR s.status = :status)
+                  AND (:deadline = '' OR (s.status = ANY(:open) AND (
+                      (:deadline = 'overdue' AND r.decision_deadline <= statement_timestamp()) OR
+                      (:deadline = 'soon' AND r.decision_deadline > statement_timestamp() AND
+                       r.decision_deadline <= statement_timestamp() + interval '48 hours') OR
+                      (:deadline = 'later' AND r.decision_deadline > statement_timestamp() + interval '48 hours')
+                  )))
+                  AND (:offer = '' OR strpos(lower(r.title), lower(:offer)) > 0)
+                  AND (:coach = '' OR strpos(lower(presenter.display_name), lower(:coach)) > 0)
+                {_DAY_FILTER}
                 ORDER BY s.id LIMIT 26
             """, review=review, company=company_id, open_only=open_only, id=reservation_id,
-                after=after, actor=actor.user_id, open=list(OPEN), occupied=list(OCCUPIED))).all()
+                after=after, actor=actor.user_id, open=list(OPEN), occupied=list(OCCUPIED),
+                status=status, deadline=deadline, offer=offer, coach=coach, day=day)).all()
             result = self._page(rows)
             if reservation_id is not None:
                 if not rows:
@@ -201,6 +260,62 @@ class ReservationRepository:
                 """, id=reservation_id, review=review, version=item["version"])]
                 return item
             return result
+
+    async def activity(self, actor, *, review):
+        if review:
+            _reviewer(actor)
+        async with self.engine.connect() as connection:
+            company = None if review else (await _company(connection, actor, lock=True)).company_id
+            params = {"scope": review, "company": company, "open": list(OPEN), "occupied": list(OCCUPIED)}
+            # Events are observed, never copied to a second notification store.
+            events = (await _rows(connection, """
+                SELECT s.id AS reservation_id, s.offer_id, r.title, e.event AS kind,
+                       e.version, e.occurred_at, e.seats_after
+                FROM competence_hub.calendar_reservation_events e
+                JOIN competence_hub.calendar_reservations s ON s.id = e.reservation_id
+                JOIN competence_hub.calendar_offer_revisions r
+                    ON (r.offer_id, r.revision_number) = (s.offer_id, s.revision_number)
+                WHERE :scope OR s.company_id = CAST(:company AS uuid)
+                ORDER BY e.occurred_at DESC, s.id, e.version DESC LIMIT 30
+            """, **params)).all()
+            tasks = (await _rows(connection, f"""
+                WITH scoped AS (
+                    SELECT s.id AS reservation_id, s.offer_id, r.title, r.decision_deadline,
+                           s.status, clarification.event AS clarification_event,
+                           proposed.revision_number AS proposed_revision
+                    FROM competence_hub.calendar_reservations s
+                    JOIN competence_hub.calendar_offers o ON o.id = s.offer_id
+                    JOIN competence_hub.calendar_offer_revisions r
+                        ON (r.offer_id, r.revision_number) = (s.offer_id, s.revision_number)
+                    LEFT JOIN competence_hub.calendar_offer_revisions proposed ON :scope AND
+                        o.lifecycle_status = 'active' AND proposed.offer_id = o.id
+                        AND proposed.workflow_status = 'in_review'
+                    {_LAST_CLARIFICATION}
+                    WHERE s.status = ANY(:occupied) AND (:scope OR s.company_id = CAST(:company AS uuid))
+                ),
+                deadlines AS (
+                    SELECT DISTINCT ON (offer_id) reservation_id, offer_id, title, decision_deadline,
+                           CASE WHEN decision_deadline <= statement_timestamp() THEN 'overdue' ELSE 'deadline_soon' END AS kind,
+                           NULL::integer AS proposed_revision
+                    FROM scoped WHERE :scope AND status = ANY(:open)
+                      AND decision_deadline <= statement_timestamp() + interval '48 hours'
+                    ORDER BY offer_id, decision_deadline, reservation_id
+                ),
+                revisions AS (
+                    SELECT DISTINCT ON (offer_id) reservation_id, offer_id, title, decision_deadline,
+                           'revision_pending' AS kind, proposed_revision
+                    FROM scoped WHERE proposed_revision IS NOT NULL
+                    ORDER BY offer_id, reservation_id
+                ),
+                replies AS (
+                    SELECT reservation_id, offer_id, title, decision_deadline,
+                           'reply_needed' AS kind, NULL::integer AS proposed_revision
+                    FROM scoped WHERE NOT :scope AND clarification_event = 'clarification_requested'
+                )
+                SELECT * FROM (TABLE deadlines UNION ALL TABLE revisions UNION ALL TABLE replies) tasks
+                ORDER BY decision_deadline, offer_id, kind, reservation_id LIMIT 30
+            """, **params)).all()
+            return {"events": [dict(row) for row in events], "tasks": [dict(row) for row in tasks]}
 
     @staticmethod
     def _page(rows):
@@ -283,10 +398,20 @@ class ReservationRepository:
                     raise ReservationError("capacity", field="seats")
             if action == "approved" and now >= offer.starts_at:
                 raise ReservationError("started")
-            if action == "clarification_requested" and row.status == "clarification":
+            if action in ("clarification_requested", "clarification_answered") and row.status == "clarification":
+                latest = (await _rows(connection, """
+                    SELECT event FROM competence_hub.calendar_reservation_events
+                    WHERE reservation_id = :id AND event IN ('clarification_requested', 'clarification_answered')
+                    ORDER BY version DESC LIMIT 1
+                """, id=target)).one_or_none()
+                required = "clarification_answered" if review else "clarification_requested"
+                if latest is None or latest.event != required:
+                    raise ReservationError("invalid_transition")
+            elif action == "clarification_answered":
                 raise ReservationError("invalid_transition")
 
             status = {"submitted": "pending", "clarification_requested": "clarification",
+                      "clarification_answered": "clarification",
                       "seats_changed": row.status if row else "pending"}.get(action, action)
             new_seats = old_seats if seats is None else seats
             delta = (new_seats if status in OCCUPIED else 0) - old_seats

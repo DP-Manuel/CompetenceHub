@@ -31,6 +31,10 @@ class CalendarTransitionConflictError(RuntimeError):
     pass
 
 
+class CalendarReservationConflictError(CalendarTransitionConflictError):
+    pass
+
+
 class CalendarTimeConflictError(RuntimeError):
     pass
 

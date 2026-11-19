@@ -8,8 +8,10 @@ import secrets
 from dataclasses import replace
 from uuid import uuid4
 
+from asyncpg.exceptions import CannotConnectNowError, PostgresConnectionError
 from sqlalchemy import text
 from sqlalchemy.engine import make_url
+from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from competence_hub_api.config import RuntimeSettings
@@ -140,8 +142,12 @@ class NativeCalendarFixture:
 
         async def synchronize_database_clock():
             while True:
-                async with app.state.database_engine.connect() as connection:
-                    self.now = (await connection.scalar(text("SELECT clock_timestamp()"))).astimezone(UTC)
+                try:
+                    async with app.state.database_engine.connect() as connection:
+                        self.now = (await connection.scalar(text("SELECT clock_timestamp()"))).astimezone(UTC)
+                except (DBAPIError, CannotConnectNowError, PostgresConnectionError, OSError):
+                    if not local_reservations or not getattr(self, "testing_database_restart", False):
+                        raise
                 await asyncio.sleep(.1)
 
         @asynccontextmanager

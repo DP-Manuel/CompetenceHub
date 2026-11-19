@@ -1,16 +1,20 @@
 """Run the CAL-2 demonstration or its acceptance against an owned throwaway database."""
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import suppress
-from datetime import timedelta
+import asyncio
+from datetime import datetime, timedelta
 from pathlib import Path
 import sys
 import tempfile
+from threading import Event
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 import httpx
 from playwright.sync_api import expect, sync_playwright
 import pyotp
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 from cal1_pilot_acceptance import qa
 from local_calendar_postgres import LocalCalendarPostgres
@@ -67,7 +71,7 @@ def login(page, base, fixture, actor, recovery):
     expect(page.locator("#portal-view")).to_be_visible()
     expect(page.locator("#portal-navigation button").first).to_be_attached()
     tour = page.locator("#product-tour")
-    if first and fixture.roles[actor] in {"coach", "calendar_reviewer", "admin"}:
+    if first and fixture.roles[actor] in {"coach", "calendar_reviewer", "admin", "company_contact"}:
         expect(tour).to_be_visible()
         page.locator("#tour-skip").click()
     elif tour.is_visible():
@@ -164,8 +168,27 @@ def keyboard_activate(page, control):
     page.keyboard.press("Space" if control.get_attribute("type") == "checkbox" else "Enter")
 
 
-def browser_workflow(company, reviewer, zoom, base):
-    catalogue_button = company.get_by_role("button", name="Plätze vormerken: Demo-Workshop über zwei Tage")
+def browser_workflow(company, other_company, reviewer, zoom, base):
+    workshop = "Demo-Workshop über zwei Tage"
+    catalogue_button = company.get_by_role("button", name=f"Plätze vormerken: {workshop}")
+    company.locator("#pilot-help summary").click()
+    company.get_by_role("button", name="Unternehmens-Einführung starten").click()
+    tour = company.locator("#product-tour")
+    for step in range(1, 7):
+        expect(tour.get_by_text(f"Schritt {step} von 6", exact=True)).to_be_visible()
+        assert tour.evaluate("el => el.getBoundingClientRect().right <= innerWidth + 1")
+        expect(tour.locator("#tour-title")).to_be_focused()
+        tour.get_by_role("button", name="Abschließen" if step == 6 else "Weiter", exact=True).press("Enter")
+    expect(tour).to_be_hidden()
+    expect(company.locator("#pilot-help summary")).to_be_focused()
+    check("Six-step company tour on mobile, optional, restartable and keyboard-usable", True)
+    company.get_by_label("Titel oder Thema").fill("nicht vorhandener Titel")
+    company.get_by_role("button", name="Suchen", exact=True).click()
+    expect(company.get_by_text("Keine passenden Angebote für Vormerkungen gefunden.")).to_be_visible()
+    company.get_by_label("Titel oder Thema").fill("über zwei Tage")
+    company.get_by_role("button", name="Suchen", exact=True).click()
+    company.locator("#reservation-catalogue summary").click()
+    expect(company.get_by_text("Preis nach Abstimmung")).to_be_visible()
     expect(catalogue_button).to_be_visible()
     catalogue_button.focus()
     company.keyboard.press("Enter")
@@ -173,6 +196,19 @@ def browser_workflow(company, reviewer, zoom, base):
     company.keyboard.press("Tab")
     field = company.get_by_role("spinbutton", name="Teilnehmerzahl")
     expect(field).to_be_focused()
+    field.fill("3")
+    company.once("dialog", lambda dialog: dialog.dismiss())
+    company.get_by_role("button", name="Abbrechen", exact=True).click()
+    expect(field).to_have_value("3")
+    company.once("dialog", lambda dialog: dialog.accept())
+    company.get_by_role("button", name="Abbrechen", exact=True).click()
+    catalogue_button.click()
+    expect(field).to_have_value("1")
+    check("Catalogue search, empty state, details and guarded cancel preserve/discard correctly", True)
+    # B opens the form when it still shows space for four. A's write makes that view stale.
+    other_company.get_by_role("button", name=f"Plätze vormerken: {workshop}").click()
+    other_company.get_by_label("Teilnehmerzahl").fill("4")
+    other_company.get_by_label("Kontaktperson bestätigen: Demo B").check()
     field.fill("6")
     company.get_by_role("button", name="Unverbindlich vormerken").click()
     expect(field).to_have_attribute("aria-invalid", "true")
@@ -186,11 +222,22 @@ def browser_workflow(company, reviewer, zoom, base):
     company.get_by_role("button", name="Unverbindlich vormerken").click()
     expect(company.get_by_text("Vormerkung eingereicht. Es wurde nichts verbindlich gebucht.")).to_be_visible()
     expect(company.get_by_text("Eingereicht", exact=True)).to_be_visible()
-    check("390 px, keyboard, per-field errors and actual multi-day request", True)
+    other_company.get_by_role("button", name="Unverbindlich vormerken").click()
+    expect(other_company.get_by_text("Es sind nicht genügend Plätze frei.", exact=False)).to_be_visible()
+    expect(other_company.get_by_label("Teilnehmerzahl")).to_be_focused()
+    other_company.get_by_label("Teilnehmerzahl").fill("2")
+    other_company.get_by_role("button", name="Unverbindlich vormerken").click()
+    expect(other_company.get_by_text("Eingereicht", exact=True)).to_be_visible()
+    check("390 px and real two-company booking flow: stale four-seat request is blocked at the field", True)
 
     reviewer.get_by_role("button", name="Vormerkungen prüfen", exact=True).click()
-    expect(reviewer.get_by_text("Prüfschwelle noch nicht erreicht")).to_be_visible()
-    reviewer.get_by_role("button", name="Vorgang ansehen").click()
+    reviewer.get_by_label("Veranstaltung", exact=True).fill("über zwei Tage")
+    reviewer.get_by_label("Coach", exact=True).fill("Coach A")
+    reviewer.get_by_role("button", name="Filtern", exact=True).click()
+    company_a_card = reviewer.locator("#reservations-workspace .calendar-card").filter(
+        has=reviewer.get_by_text("Demo-Firma A", exact=True))
+    expect(company_a_card.get_by_text("Prüfschwelle erreicht", exact=True)).to_be_visible()
+    company_a_card.get_by_role("button", name="Vorgang ansehen").click()
     reviewer.get_by_label("Entscheidung", exact=True).select_option("clarification_requested")
     reviewer.get_by_role("button", name="Entscheidung speichern").click()
     expect(reviewer.get_by_label("Begründung für die Firma")).to_be_focused()
@@ -200,8 +247,16 @@ def browser_workflow(company, reviewer, zoom, base):
 
     company.reload()
     expect(company.get_by_text("Klärung nötig", exact=True)).to_be_visible()
-    company.get_by_role("button", name="Vorgang ansehen").click()
+    company.locator(".reservation-activity summary").click()
+    company.get_by_role("button", name=f"Ihre Antwort ist offen: {workshop}").click()
     expect(company.get_by_text("Bitte bestätigen Sie drei Plätze.")).to_be_visible()
+    company.get_by_label("Antwort auf die Rückfrage").fill("Drei Plätze sind möglich.")
+    with company.expect_response(lambda response: response.url.endswith("/reply")) as sent_reply:
+        company.get_by_role("button", name="Antwort senden").click()
+    reply_request = sent_reply.value.request
+    reply_retry = (reply_request.url.removeprefix(base), reply_request.post_data_json, reply_request.headers["if-match"])
+    expect(company.get_by_text("Antwort im Vorgang gespeichert.")).to_be_visible()
+    company.get_by_role("button", name="Vorgang ansehen").click()
     company.get_by_label("Teilnehmerzahl").fill("3")
     company.get_by_role("button", name="Platzzahl ändern").click()
     expect(company.get_by_text("Platzzahl geändert.", exact=True)).to_be_visible()
@@ -212,27 +267,34 @@ def browser_workflow(company, reviewer, zoom, base):
     page.goto(base + UI)
     expect(page.get_by_role("button", name="Vormerkungen prüfen", exact=True)).to_be_visible()
     keyboard_activate(page, page.get_by_role("button", name="Vormerkungen prüfen", exact=True))
-    expect(page.get_by_text("Prüfschwelle erreicht", exact=True)).to_be_visible()
+    company_a_card = page.locator("#reservations-workspace .calendar-card").filter(
+        has=page.get_by_text("Demo-Firma A", exact=True))
+    page.get_by_label("Status", exact=True).select_option("decision")
+    keyboard_activate(page, page.get_by_role("button", name="Filtern", exact=True))
+    expect(company_a_card.get_by_text("Prüfschwelle erreicht", exact=True)).to_be_visible()
     assert 1.9 <= page.evaluate("devicePixelRatio") <= 2.1
-    detail = page.get_by_role("button", name="Vorgang ansehen")
+    detail = company_a_card.get_by_role("button", name="Vorgang ansehen")
     keyboard_activate(page, detail)
-    expect(page.get_by_text("Prüfschwelle bei diesem Schritt erreicht.")).to_be_visible()
+    expect(page.get_by_text("Drei Plätze sind möglich.")).to_be_visible()
     assert_layout(page)
     page.get_by_label("Entscheidung", exact=True).select_option("approved")
     page.get_by_label("Begründung für die Firma").fill("Fachlich geprüft, keine verbindliche Buchung.")
     keyboard_activate(page, page.get_by_role("button", name="Entscheidung speichern"))
     expect(page.get_by_text("Entscheidung gespeichert.", exact=True)).to_be_visible()
-    toggle = page.get_by_role("checkbox", name="Auch abgeschlossene Vorgänge anzeigen")
-    expect(toggle).to_be_visible()
-    keyboard_activate(page, toggle)
-    expect(page.get_by_text("Positiv geprüft", exact=True)).to_be_visible()
+    page.get_by_label("Status", exact=True).select_option("approved")
+    keyboard_activate(page, page.get_by_role("button", name="Filtern", exact=True))
+    expect(company_a_card.get_by_text("Positiv geprüft", exact=True)).to_be_visible()
     company.reload()
     expect(company.get_by_text("Positiv geprüft", exact=True)).to_be_visible()
-    check("Reviewer clarification, threshold task, approval and company history at native 200% zoom", True)
-    return page
+    other_company.get_by_role("button", name="Vorgang ansehen").click()
+    other_company.get_by_role("button", name="Vormerkung zurücknehmen").click()
+    other_company.get_by_role("button", name="Rücknahme bestätigen").click()
+    expect(other_company.get_by_text("Zurückgenommen", exact=True)).to_be_visible()
+    check("Reviewer filters, company reply, approval at native 200% zoom and withdrawal of B", True)
+    return page, reply_retry
 
 
-def api_workflow(fixture, base, actors, main_id, main_draft, offers):
+def api_workflow(fixture, base, actors, main_id, main_draft, offers, reply_retry):
     a, b, reviewer, coach, internal, admin = (Session(actors[key], base) for key in
         ("contact", "contact_two", "reviewer", "coach", "internal", "admin"))
     request_main = a.send("GET", RES).json()["items"][0]
@@ -254,7 +316,7 @@ def api_workflow(fixture, base, actors, main_id, main_draft, offers):
         .intersection(a.send("GET", PUBLIC + "/" + main_id).json())
         and a.send("POST", PUBLIC + "/" + main_id, request_data(1)).status_code == 405
     ))
-    offer_last, offer_repeat, offer_deadline = offers
+    offer_last, offer_repeat, offer_deadline, revision_race = offers
     path = RES + "/offers/" + offer_last
     check("Origin, CSRF, strict seat type and contact confirmation", (
         a.send("POST", path, request_data(1), origin="https://invalid.example.invalid").status_code == 403
@@ -291,18 +353,51 @@ def api_workflow(fixture, base, actors, main_id, main_draft, offers):
     check("Positive decision cannot be withdrawn by the company",
           a.send("POST", RES + "/" + id_main + "/withdraw", {"request_id": str(uuid4())},
                  version=request_main["version"]).json()["code"] == "reservation_invalid_transition")
+    current = a.send("GET", detail).json()
+    reply = {"request_id": str(uuid4()), "reason": "Interne synthetische Antwort"}
+    check("Replies require a specific open question and exact company scope", (
+        a.send("POST", detail + "/reply", reply, version=current["version"]).status_code == 409
+        and b.send("POST", RES + "/" + id_main + "/reply", reply, version=request_main["version"]).status_code == 404
+    ))
+    retry_path, retry_body, retry_version = reply_retry
+    retry = a.send("POST", retry_path, retry_body, version=int(retry_version.strip('"v')))
+    a_events, b_events = (actor.send("GET", RES + "/activity").json()["events"] for actor in (a, b))
+    check("Activity contains one scoped reply event and no message, contact or actor payloads", (
+        retry.status_code == 200 and retry.json()["id"] == id_main
+        and sum(e["reservation_id"] == id_main and e["kind"] == "clarification_answered" for e in a_events) == 1
+        and all(e["reservation_id"] != id_main for e in b_events)
+        and all(set(e) == {"reservation_id", "offer_id", "title", "kind", "version", "occurred_at", "seats_after"} for e in a_events)
+        and b.send("GET", RES + "/activity?review=true").status_code == 403
+        and coach.send("GET", RES + "/activity?review=true").status_code == 403
+    ))
 
     deadline_path = RES + "/offers/" + offer_deadline
     in_time = a.send("POST", deadline_path, request_data(2))
     assert in_time.status_code == 201
     deadline_detail = RES + "/" + in_time.json()["id"]
-    async def pass_deadline(connection):
+    async def set_deadline(connection, hours):
         await connection.execute(text("""
             UPDATE competence_hub.calendar_offer_revisions
-            SET decision_deadline = clock_timestamp() - interval '1 second'
+            SET decision_deadline = clock_timestamp() + make_interval(hours => :hours)
             WHERE offer_id = CAST(:id AS uuid)
-        """), {"id": offer_deadline})
-    fixture.database(pass_deadline)
+        """), {"id": offer_deadline, "hours": hours})
+    fixture.database(lambda connection: set_deadline(connection, 12))
+    check("Upcoming decision deadline is scoped to active requests", (
+        [item["offer_id"] for item in reviewer.send("GET", RES + "?review=true&deadline=soon").json()["items"]]
+        == [offer_deadline] and
+        any(t["kind"] == "deadline_soon" and t["offer_id"] == offer_deadline
+            for t in reviewer.send("GET", RES + "/activity?review=true").json()["tasks"])
+    ))
+    fixture.database(lambda connection: set_deadline(connection, -1))
+    check("Reviewer overdue task is unique and its date and offer filters work across the catalogue", (
+        len([t for t in reviewer.send("GET", RES + "/activity?review=true").json()["tasks"]
+             if t["offer_id"] == offer_deadline and t["kind"] == "overdue"]) == 1
+        and [item["offer_id"] for item in reviewer.send("GET", RES +
+             "?review=true&status=open&deadline=overdue&offer=Frist").json()["items"]] == [offer_deadline]
+        and any(row["id"] == main_id for row in a.send("GET", RES + "/catalogue?day=" +
+            (datetime.fromisoformat(main_draft["ends_at"]) - timedelta(microseconds=1))
+            .astimezone(ZoneInfo("Europe/Berlin")).date().isoformat()).json()["items"])
+    ))
     check("Passed deadline: new/increased seats fail, existing items stay visible and may decrease/withdraw", (
         b.send("POST", deadline_path, request_data(1)).json()["code"] == "reservation_deadline"
         and a.send("PATCH", deadline_detail + "/seats",
@@ -312,13 +407,54 @@ def api_workflow(fixture, base, actors, main_id, main_draft, offers):
                    {"request_id": str(uuid4()), "seats": 1}, version=1).status_code == 200
         and a.send("POST", deadline_detail + "/withdraw", {"request_id": str(uuid4())}, version=2).status_code == 200
     ))
+    async def make_past(connection):
+        await connection.execute(text("""
+            UPDATE competence_hub.calendar_offer_revisions
+            SET starts_at = clock_timestamp() - interval '2 days',
+                ends_at = clock_timestamp() - interval '1 day',
+                decision_deadline = clock_timestamp() - interval '3 days'
+            WHERE offer_id = CAST(:id AS uuid)
+        """), {"id": offer_deadline})
+    fixture.database(make_past)
+    check("Past status filter retains withdrawn history without automatic deletion",
+          [item["status"] for item in reviewer.send("GET", RES + "?review=true&status=past").json()["items"]]
+          == ["withdrawn"])
     cal_path = CAL + "/" + main_id
-    revised = coach.send("PATCH", cal_path + "/draft", {**main_draft, "capacity": 2, "review_threshold": 2}, version=3)
+    shifted = {name: (datetime.fromisoformat(main_draft[name]) + timedelta(days=1)).isoformat()
+               for name in ("starts_at", "ends_at", "decision_deadline")}
+    revised = coach.send("PATCH", cal_path + "/draft", {
+        **main_draft, **shifted, "capacity": 2, "review_threshold": 2,
+        "format": "hybrid", "public_location": "Synthetischer neuer Ort",
+    }, version=3)
     assert revised.status_code == 200
     submitted = coach.send("POST", cal_path + "/submit", version=4)
     assert submitted.status_code == 200
     blocked = reviewer.send("POST", cal_path + "/review-decisions", {"outcome": "published"}, version=5)
-    check("Active reservations prevent replacing approved terms", blocked.status_code == 409)
+    review_details = reviewer.send("GET", RES + "/" + id_main + "?review=true").json()
+    company_details = a.send("GET", RES + "/" + id_main).json()
+    check("Proposed changes are actionable, protected and never silently replace current terms", (
+        blocked.status_code == 409 and blocked.json()["code"] == "calendar_reservations_open"
+        and review_details["proposed_revision"] == 2
+        and {"starts_at", "ends_at", "decision_deadline", "capacity", "format_code", "public_location"}
+        <= set(review_details["changed_fields"])
+        and company_details["proposed_revision"] is None and company_details["changed_fields"] is None
+        and a.send("GET", PUBLIC + "/" + main_id).json()["capacity"] == 5
+        and len([t for t in reviewer.send("GET", RES + "/activity?review=true").json()["tasks"]
+                 if t["offer_id"] == main_id and t["kind"] == "revision_pending"]) == 1
+    ))
+
+    race_id, race_draft = revision_race
+    race_path = CAL + "/" + race_id
+    assert coach.send("PATCH", race_path + "/draft", {**race_draft, "capacity": 3}, version=3).status_code == 200
+    assert coach.send("POST", race_path + "/submit", version=4).status_code == 200
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        publish = pool.submit(reviewer.send, "POST", race_path + "/review-decisions",
+                              {"outcome": "published"}, version=5)
+        reserve = pool.submit(b.send, "POST", RES + "/offers/" + race_id, request_data(1))
+        statuses = publish.result().status_code, reserve.result().status_code
+    check("Concurrent new publication versus a reservation on the old revision has one winner",
+          statuses in ((200, 409), (409, 201)) and
+          b.send("GET", PUBLIC + "/" + race_id).json()["capacity"] == (3 if statuses[0] == 200 else 2))
     check("Offer cancellation releases seats atomically and adds a customer-visible event", (
         coach.send("POST", cal_path + "/withdraw", version=5).status_code == 200
         and a.send("GET", PUBLIC + "/" + main_id).status_code == 404
@@ -329,13 +465,86 @@ def api_workflow(fixture, base, actors, main_id, main_draft, offers):
     return id_main
 
 
+def interrupt_request(db, fixture, session, offer_id):
+    locked, release = Event(), Event()
+    backend = {}
+    data = request_data(1)
+    path = RES + "/offers/" + offer_id
+
+    async def hold(connection):
+        await connection.execute(text("""
+            SELECT id FROM competence_hub.calendar_offers WHERE id = CAST(:id AS uuid) FOR UPDATE
+        """), {"id": offer_id})
+        backend["pid"] = await connection.scalar(text("SELECT pg_backend_pid()"))
+        locked.set()
+        await asyncio.to_thread(release.wait, 35)
+        await connection.execute(text("SELECT 1"))
+
+    async def wait_for_request(connection):
+        for _ in range(80):
+            if await connection.scalar(text("""
+                SELECT EXISTS(
+                    SELECT 1 FROM pg_locks
+                    WHERE NOT granted AND :pid = ANY(pg_blocking_pids(pid))
+                )
+            """), backend):
+                return True
+            await asyncio.sleep(.05)
+        return False
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        guard = pool.submit(fixture.database, hold)
+        try:
+            assert locked.wait(10)
+            request = pool.submit(session.send, "POST", path, data)
+            assert fixture.database(wait_for_request), "No blocked reservation before restart"
+            db.restart()
+            try:
+                assert request.result().status_code == 503
+            except httpx.TransportError:
+                pass
+        finally:
+            release.set()
+            with suppress(SQLAlchemyError):
+                guard.result()
+    return path, data
+
+
+def demo(db, application, start, pw):
+    restarted = False
+    while True:
+        with qa.synthetic_server(application) as base:
+            browser = pw.firefox.launch(headless=False)
+            try:
+                for actor, title in (
+                    ("coach", "CAL-2 Demo | Coach A"), ("reviewer", "CAL-2 Demo | Reviewer"),
+                    ("contact", "CAL-2 Demo | Firma A"), ("contact_two", "CAL-2 Demo | Firma B"),
+                ):
+                    page = start(browser, base, actor)
+                    page.evaluate("(title) => { document.title = title; }", title)
+                if restarted:
+                    print("CAL2_RESTART=PASS | App und PostgreSQL sind wieder erreichbar.", flush=True)
+                print("CAL2_DEMO=READY | Vier Firefox-Fenster: Coach, Reviewer, Firma A und Firma B.", flush=True)
+                print("R + Enter: App und PostgreSQL neu starten. Enter: Demo beenden und Testdaten entfernen.", flush=True)
+                try:
+                    restart = input().strip().lower() == "r"
+                except EOFError:
+                    restart = False
+            finally:
+                browser.close()
+        if not restart:
+            return
+        db.restart()
+        restarted = True
+
+
 def run(db, verify):
     fixture = NativeCalendarFixture(local_container_rehearsal=True)
     fixture.roles["contact_two"] = "company_contact"
     fixture.users["contact_two"] = uuid4()
     fixture.emails["contact_two"] = f"synthetic-cal2-{fixture.users['contact_two'].hex}@example.invalid"
     fixture.prepare()
-    for number in (7, 8, 9, 10):
+    for number in (7, 8, 9, 10, 11):
         migration, = (ROOT / "database/migrations").glob(f"{number:04d}_*.sql")
         db.sql(migration.read_text(encoding="utf8"))
     seed_companies(fixture)
@@ -348,58 +557,60 @@ def run(db, verify):
         return live_page(browser, base, fixture, key, recovery, external, errors, mobile=mobile)
 
     with sync_playwright() as pw:
+        if not verify:
+            demo(db, application, start, pw)
+            return
         with qa.synthetic_server(application) as base:
             browser = pw.firefox.launch(headless=verify)
             coach, reviewer = start(browser, base, "coach"), start(browser, base, "reviewer")
             coach_api, reviewer_api = Session(coach, base), Session(reviewer, base)
             main_id, main_draft = create_offer(coach_api, reviewer_api, fixture,
                 "Demo-Workshop über zwei Tage", 8, 5, 3, multi=True)
-            if not verify:
-                coach.close()
-                reviewer.close()
-                company = start(browser, base, "contact")
-                reviewer = start(browser, base, "reviewer")
-                reviewer.get_by_role("button", name="Vormerkungen prüfen", exact=True).click()
-                print("CAL2_DEMO=READY | Zwei Firefox-Fenster: Demo-Firma A und Reviewer.", flush=True)
-                print("Nur synthetische lokale Daten. Enter beendet die Demo und entfernt Container und Volume.", flush=True)
-                with suppress(EOFError):
-                    input()
-                browser.close()
-                return
             offers = [create_offer(coach_api, reviewer_api, fixture, title, day, capacity, threshold)[0]
                       for title, day, capacity, threshold in (
                           ("Demo: letzter Platz", 14, 1, 1), ("Demo: Wiederholung", 18, 2, 2),
                           ("Demo: Frist", 22, 4, 3),
                       )]
+            offers.append(create_offer(coach_api, reviewer_api, fixture, "Demo: Revisionsrennen", 25, 2, 1))
+            interrupted, _ = create_offer(coach_api, reviewer_api, fixture, "Demo: Neustart", 29, 1, 1)
             # Seeding rotated the reviewer CSRF; reload the authentic UI session before using it.
             reviewer.reload()
             company = start(browser, base, "contact", mobile=True)
+            company_b = start(browser, base, "contact_two")
             with tempfile.TemporaryDirectory(prefix="competence-hub-cal2-zoom-") as profile:
                 zoom_profile(pw, Path(profile))
                 zoom = pw.firefox.launch_persistent_context(profile, headless=True, no_viewport=True, ignore_https_errors=True)
                 try:
                     guard_page(zoom.pages[0], base, external, errors)
-                    zoom_page = browser_workflow(company, reviewer, zoom, base)
-                    actors = {"coach": coach, "reviewer": zoom_page, "contact": company}
-                    for key in ("contact_two", "admin", "internal"):
+                    zoom_page, reply_retry = browser_workflow(company, company_b, reviewer, zoom, base)
+                    actors = {"coach": coach, "reviewer": zoom_page, "contact": company, "contact_two": company_b}
+                    for key in ("admin", "internal"):
                         actors[key] = start(browser, base, key)
                     check("Only company and reviewer/admin see their CAL-2 areas",
                           actors["internal"].get_by_role("button", name="Vormerkungen prüfen", exact=True).count() == 0
                           and coach.get_by_role("button", name="Vormerkungen", exact=True).count() == 0)
-                    reservation_id = api_workflow(fixture, base, actors, main_id, main_draft, offers)
+                    reservation_id = api_workflow(fixture, base, actors, main_id, main_draft, offers, reply_retry)
+                    fixture.testing_database_restart = True
+                    path, data = interrupt_request(db, fixture, Session(company, base), interrupted)
                 finally:
                     zoom.close()
             browser.close()
 
-        db.restart()
+        fixture.testing_database_restart = False
         with qa.synthetic_server(application) as base:
             browser = pw.firefox.launch()
             try:
                 company = start(browser, base, "contact")
                 expect(company.get_by_text("Veranstaltung abgesagt", exact=True)).to_be_visible()
-                details = Session(company, base).send("GET", RES + "/" + reservation_id).json()
-                check("Backend and PostgreSQL restart: status and five append-only events persisted",
-                      details["status"] == "cancelled" and len(details["history"]) == 5)
+                session = Session(company, base)
+                details = session.send("GET", RES + "/" + reservation_id).json()
+                check("Backend and PostgreSQL restart: status and six append-only events persisted",
+                      details["status"] == "cancelled" and len(details["history"]) == 6)
+                retry = session.send("POST", path, data)
+                repeated = session.send("POST", path, data)
+                check("In-flight locked write interrupted by restart; retry commits exactly one event",
+                      retry.status_code == 201 and repeated.json() == retry.json() and
+                      len(session.send("GET", RES + "/" + retry.json()["id"]).json()["history"]) == 1)
             finally:
                 browser.close()
 

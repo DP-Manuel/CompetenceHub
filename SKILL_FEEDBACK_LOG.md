@@ -4,6 +4,13 @@ Updated: 2026-11-17. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
+19.11 CAL-2 delivery learning: keep undecided business options explicitly demo-only
+and finish independently testable work before one stakeholder session. Derive
+internal notices from the reservation ledger and from grouped current state instead
+of writing duplicate reminder rows. Prove a real interrupted write by observing
+its PostgreSQL lock wait before stopping the owned database, then replay the same
+idempotency key. [Pilot handoff](docs/handoffs/2026-11-19-cal2-pilot-acceptance.md).
+
 19.11 native zoom acceptance: Firefox's WebDriver click at full-page 200% sometimes
 hits the neighboring heading despite a visible control. Check the control center
 with DOM hit testing, then exercise real keyboard activation; report pointer

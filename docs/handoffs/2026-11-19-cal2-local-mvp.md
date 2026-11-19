@@ -4,6 +4,10 @@ Stand: 19.11.2026. Nur lokale synthetische Daten. Kein VPS-Update, keine öffent
 Schreibfunktion, keine realen Konten und kein Versand. Die Website und der bestehende
 CAL-1-Pilot bleiben unverändert.
 
+Dies ist der Nachweis des ersten MVP. Für den aktuellen Vier-Rollen-Start,
+Neustart und die Entscheidungsliste gilt die
+[gemeinsame CAL-2-Pilotabnahme](2026-11-19-cal2-pilot-acceptance.md).
+
 ## Demo Starten
 
 In **PowerShell**, aus dem Webapp-Verzeichnis. Docker Desktop mit lokalem Linux-Engine,

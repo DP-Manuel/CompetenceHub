@@ -6,6 +6,7 @@ export function createProductTour({ navigate, canLeave, originSelector = "#pilot
   const title = document.getElementById("tour-title"), copy = document.getElementById("tour-copy");
   const progress = document.getElementById("tour-progress");
   let steps = [], index = 0, target = null, origin = null, serial = 0, role = null;
+  let companyWorkspaceReady = false;
   const historyKey = "competenceHubTourV1";
   function remember(status) {
     try {history.replaceState({...history.state,[historyKey]:{role,index,status}},"",location.href);} catch { /* History persistence is optional. */ }
@@ -35,6 +36,14 @@ export function createProductTour({ navigate, canLeave, originSelector = "#pilot
       step("Veranstaltung freigeben", "Mit Veröffentlichen geben Sie genau die geprüfte Revision frei. Bei einem veralteten Datenstand müssen Sie erneut prüfen.", "#review-calendar-workspace", "review-calendar"),
       step("Öffentlicher Kalender", "Nur die freigegebene Revision ist dort sichtbar. Interne Hinweise und persönliche Verfügbarkeiten bleiben geschützt.", "#public-calendar-link"),
       step("Statusübersicht", "Die Übersicht zählt die für Ihre Rolle sichtbaren aktuellen Revisionen. Sie ist keine Teilnehmer- oder Buchungsstatistik.", "#pilot-overview"),
+    ],
+    company: [
+      step("Willkommen im Unternehmensbereich", "Hier sehen Sie die Vormerkungen Ihrer Firma und die verfügbaren Gruppenangebote.", "#reservations-title", "reservations"),
+      step("Veranstaltung auswählen", "Suchen Sie nach Titel oder Thema und öffnen Sie die Veranstaltungsdetails. Dort stehen Zeitraum, Format, Ort und Frist.", "#cal2-search", "reservations"),
+      step("Plätze vormerken", "Bei freien Plätzen geben Sie die Teilnehmerzahl ein und bestätigen den vorhandenen Firmenkontakt. Eine Vormerkung ist keine Buchung.", "#reservation-catalogue", "reservations"),
+      step("Eigene Vorgänge finden", "Unter Vormerkungen Ihrer Firma sehen Sie nur die Vorgänge Ihres Unternehmens.", "#reservation-own", "reservations"),
+      step("Ändern oder zurücknehmen", "Öffnen Sie einen noch nicht entschiedenen Vorgang. Dort können Sie die Platzzahl im erlaubten Rahmen ändern oder die Vormerkung zurücknehmen.", "#reservation-own", "reservations"),
+      step("Status und Rückfragen", "Aufgaben zeigen offene Rückfragen. Lesen oder beantworten Sie diese im Vorgang. Auch Positiv geprüft ist noch keine Buchung.", ".reservation-activity summary", "reservations"),
     ],
     calendar: [
       step("Veranstaltung öffnen", "Wählen Sie einen freigegebenen Termin im Monatskalender. Alle Tagessegmente eines mehrtägigen Termins öffnen dieselben Details.", "#grid"),
@@ -68,7 +77,10 @@ export function createProductTour({ navigate, canLeave, originSelector = "#pilot
     const ticket = ++serial;
     clear();
     const current = steps[index];
-    if (current.area) await navigate(current.area);
+    if (current.area && (role !== "company" || !companyWorkspaceReady)) {
+      await navigate(current.area);
+      if (role === "company" && ticket === serial) companyWorkspaceReady = true;
+    }
     if (ticket !== serial || !dialog.open) return;
     target = document.querySelector(current.selector);
     if (target?.matches("section,ul,nav,details")) target=target.querySelector("h2,summary,button,strong") || target;
@@ -105,10 +117,11 @@ export function createProductTour({ navigate, canLeave, originSelector = "#pilot
     const prior=saved();
     if (automatic && prior?.role===nextRole && prior.status!=="active") return;
     role=nextRole;origin = document.querySelector(originSelector); steps = definitions[role]; index = resume && prior?.role===role ? prior.index : 0;
+    companyWorkspaceReady = false;
     dialog.showModal(); show();
   }
   return {stop,start,
-    resume(roles) {const prior=saved();const admitted={coach:"coach",reviewer:"calendar_reviewer",admin:"admin"};if(prior?.status==="active" && roles.includes(admitted[prior.role])) start(prior.role,{resume:true});},
+    resume(roles) {const prior=saved();const admitted={coach:"coach",reviewer:"calendar_reviewer",admin:"admin",company:"company_contact"};if(prior?.status==="active" && roles.includes(admitted[prior.role])) start(prior.role,{resume:true});},
     reset() {stop();try {const next={...history.state};delete next[historyKey];history.replaceState(next,"",location.href);} catch { /* No personal state retained. */ }}
   };
 }

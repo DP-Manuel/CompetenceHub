@@ -33,6 +33,7 @@ const state = {
   companies: [],
   selectedCompany: null,
   calendarCapabilities: null,
+  companyTourAvailable: false,
   calendarTopics: [],
   coachOffers: [],
   reviewOffers: [],
@@ -219,6 +220,7 @@ async function problemMessage(response, fallback) {
       calendar_version_conflict: "Der Datenstand wurde zwischenzeitlich geändert.",
       calendar_time_conflict: "Der Zeitraum überschneidet sich mit einem anderen Angebot.",
       calendar_transition_conflict: "Diese Aktion passt nicht mehr zum aktuellen Status.",
+      calendar_reservations_open: "Für den veröffentlichten Stand sind Plätze vorgemerkt. Prüfen Sie die betroffenen Vorgänge, bevor eine neue Fassung veröffentlicht werden kann.",
       calendar_idempotency_conflict: "Dieser Entwurf steht im Konflikt mit einer früheren Anfrage.",
     };
     return messages[body.code] || body.title || fallback;
@@ -283,6 +285,7 @@ function clearPortalClientState() {
   coachManagement.reset();
   coachManagement.root.remove();
   reservations.reset();
+  state.companyTourAvailable = false;
   reservationsRoot.hidden = true;
   state.companies = [];
   state.selectedCompany = null;
@@ -494,10 +497,11 @@ async function enterPortal() {
   await configurePortalAreas();
   if (state.session !== session) return;
   const roles = state.session.user.roles;
+  const tourRoles = state.companyTourAvailable ? roles : roles.filter(role => role !== "company_contact");
   if (state.firstEnrollment) {
     state.firstEnrollment = false;
-    productTour.start(roles.includes("admin") ? "admin" : roles.includes("calendar_reviewer") ? "reviewer" : roles.includes("coach") ? "coach" : "",{automatic:true});
-  } else productTour.resume(roles);
+    productTour.start(roles.includes("admin") ? "admin" : roles.includes("calendar_reviewer") ? "reviewer" : roles.includes("coach") ? "coach" : state.companyTourAvailable ? "company" : "",{automatic:true});
+  } else productTour.resume(tourRoles);
 }
 
 const CALENDAR_STATUS_LABELS = {
@@ -535,14 +539,15 @@ function formatCalendarDate(value) {
   return `${germanDateTime(value)} Uhr`;
 }
 
-const productTour = createProductTour({navigate:selectPortalArea,
-  canLeave:() => !document.querySelector("dialog[open]") && coachManagement.canLeave()});
+const productTour = createProductTour({navigate:area => selectPortalArea(area, { fromTour: true }),
+  canLeave:() => !document.querySelector("dialog[open]") && coachManagement.canLeave() && reservations.canLeave()});
 
 function configurePilotHelp(roles) {
   const options = byId("tour-options"); options.replaceChildren();
   for (const [role, key, label] of [["coach","coach","Coach-Einführung starten"],
-    ["calendar_reviewer","reviewer","Prüfer-Einführung starten"], ["admin","admin","Admin-Einführung starten"]]) {
-    if (!roles.has(role)) continue;
+    ["calendar_reviewer","reviewer","Prüfer-Einführung starten"], ["admin","admin","Admin-Einführung starten"],
+    ["company_contact", "company", "Unternehmens-Einführung starten"]]) {
+    if (!roles.has(role) || (key === "company" && !state.companyTourAvailable)) continue;
     const button = document.createElement("button"); button.type = "button";
     button.className = "text-button"; button.textContent = label;
     button.addEventListener("click", () => { byId("pilot-help").open = false; productTour.start(key); });
@@ -702,6 +707,7 @@ async function configurePortalAreas() {
   }
   const reservationCaps = await reservations.available(roles, () => state.session === session);
   if (state.session !== session) return;
+  state.companyTourAvailable = Boolean(reservationCaps.company && reservationCaps.can_request);
   if (reservationCaps.can_request) areas.push({ id: "reservations", label: "Vormerkungen" });
   if (reservationCaps.can_review) areas.push({ id: "reservation-review", label: "Vormerkungen prüfen" });
   if (roles.has("admin")) areas.push({id:"accounts", label:"Zugänge"});
@@ -774,10 +780,13 @@ function switchPortalWorkspace(area) {
   if (reservationsRoot.hidden) reservations.leave();
 }
 
-async function selectPortalArea(area) {
+async function selectPortalArea(area, { fromTour = false } = {}) {
   const session = state.session;
   if (!session) return;
-  if (state.activePortalArea === "coaches" && area !== "coaches" && !coachManagement.canLeave()) return;
+  if (!fromTour) {
+    if (state.activePortalArea === "coaches" && area !== "coaches" && !coachManagement.canLeave()) return;
+    if (!reservations.canLeave()) return;
+  }
   state.activePortalArea = area;
   switchPortalWorkspace(area);
   [...byId("portal-navigation").querySelectorAll("button")].forEach((button) => {
@@ -2012,7 +2021,7 @@ document.querySelectorAll(".brand, #logout-button").forEach((item) => {
       }
       return;
     }
-    if (state.activePortalArea === "coaches" && !coachManagement.canLeave()) {
+    if ((state.activePortalArea === "coaches" && !coachManagement.canLeave()) || !reservations.canLeave()) {
       event.preventDefault(); event.stopImmediatePropagation();
     }
   }, true);

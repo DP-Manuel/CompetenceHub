@@ -4,14 +4,25 @@ Updated: 2026-11-19.
 
 ## Current Milestone
 
+19.11 CAL-2 LOCAL PILOT COMPLETION: Owner batches all independent work before
+one joint Manuel/Janay acceptance. Company search/details, replies and discard
+protection; reviewer filters, revision conflicts and scoped internal tasks;
+optional company tour and four-role local restartable demo. The latest
+[joint checklist and decision list](docs/handoffs/2026-11-19-cal2-pilot-acceptance.md)
+supersedes the MVP handoff below. Migrations 0010/0011 exercised only in owned
+local PostgreSQL. 26 joined browser/DB checks and 85 targeted regressions PASS;
+interactive four-window start/restart and local cleanup verified. No new binding business rules, booking, mail, account activation,
+Staging or public deployment. Next: one joint functional acceptance; only then
+separately review the protected VPS scope and rollback.
+
 19.11 CAL-2 MVP LOCAL/ACCEPTED TECHNICALLY: synthetic company request, seat changes
 and withdrawal, reviewer queue/decisions and append-only history. Migration 0010
 and local runtime opt-in tested only in the owned PostgreSQL container. Last-seat
 concurrency, scoped idempotency, CAL-1 revision/withdrawal, no mail or public data,
 MFA/RBAC, 390 px and native 200% zoom, restart and verified cleanup PASS. 72 targeted
 contract tests and 17 native checks; no VPS, IONOS, Pages or live data changes.
-[Demo and rules](docs/handoffs/2026-11-19-cal2-local-mvp.md). Next CAL-2 block: local
-business acceptance with Janay before Staging. EDV still gates personal activation
+[MVP evidence](docs/handoffs/2026-11-19-cal2-local-mvp.md). This checkpoint was
+followed by the local pilot completion above. EDV still gates personal activation
 and the public website's portal link; neither is implicitly authorized.
 
 17.11 Portal-Login header LOCAL_READY, dedicated Git closure authorized, no deployment. Existing

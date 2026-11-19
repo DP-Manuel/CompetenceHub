@@ -1199,7 +1199,20 @@ dialog::backdrop {
 .reservation-form select, .reservation-form textarea { width: 100%; min-width: 0; }
 .reservation-form textarea { resize: vertical; }
 .reservation-form input[type="checkbox"], .reservation-toggle input { width: 20px; height: 20px; }
-.reservation-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+.reservation-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr));
+  gap: 12px;
+  align-items: end;
+  margin-block: 16px;
+}
+.reservation-filters .field { min-width: 0; margin: 0; }
+.reservation-filters .field input, .reservation-filters .field select { min-width: 0; width: 100%; }
+.reservation-filters .button-row { margin: 0; }
+.reservation-activity, .reservation-offer-details { margin-block: 12px; }
+.reservation-activity summary, .reservation-offer-details summary { cursor: pointer; padding-block: 12px; }
+.reservation-activity-list { padding: 0; list-style: none; }
+.reservation-activity-list li { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-block: 8px; }
 .reservation-history { padding-inline-start: 24px; }
 .reservation-history li { margin-block: 10px; }
 .reservation-history p { margin-block: 4px; }

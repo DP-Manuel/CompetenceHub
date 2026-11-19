@@ -2,6 +2,14 @@
 
 Significant milestones only; newest first.
 
+19.11 CAL-2 local pilot completion: search, visit details, scoped replies and task
+feed, reviewer filters, revision handoff, discard confirmation, six-step company
+tour, four-role native demo with restart. No duplicate store or booking/dispatch.
+Migration 0011 extends the existing event schema only; owned DB and synthetic identities.
+26 native browser/DB checks, 85 targeted tests, demo restart and cleanup PASS.
+One pooled business acceptance by Janay/Manuel replaces intermediate approvals.
+[Proof, checklist and decisions](docs/handoffs/2026-11-19-cal2-pilot-acceptance.md).
+
 19.11 CAL-2 synthetic local MVP PASS: reservation/seat updates/withdrawal through the
 authenticated company view, Reviewer/Admin queue and audited decision. Same offer
 lock as CAL-1, append-only events, current deadline, stable request keys and versions.
