@@ -296,7 +296,7 @@ def browser_workflow(company, other_company, reviewer, zoom, base):
 
     company.reload()
     expect(company.get_by_text("Klärung nötig", exact=True)).to_be_visible()
-    company.locator(".reservation-activity summary").click()
+    company.locator("#reservations-workspace").get_by_text("Aufgaben und Ereignisse", exact=True).click()
     company.get_by_role("button", name=f"Ihre Antwort ist offen: {workshop}").click()
     expect(company.get_by_text("Bitte bestätigen Sie drei Plätze.")).to_be_visible()
     company.get_by_label("Antwort auf die Rückfrage").fill("Drei Plätze sind möglich.")
