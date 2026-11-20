@@ -1,7 +1,7 @@
 # Portal V2 Private Staging
 
 **Local preparation only.** Exact-source ZIP and Linux proof:
-[consolidated V2 report](../handoffs/2026-11-19-v2-platform-acceptance.md#testnachweise).
+[consolidated feedback report](../handoffs/2026-11-20-feedback-platform.md#nachweis-und-releasepakete).
 The 20.11 feedback candidate uses manifest format `competence-hub-private-v2/2`
 and migration head `0012`. For the earlier 19.11 ZIP, use the matching runbook
 and helpers from its tested source `9c20c3a`, not the following commands.

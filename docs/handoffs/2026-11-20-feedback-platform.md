@@ -78,6 +78,37 @@ von TLS, Diensten und Wiederherstellbarkeit käme `0007`–`0012` auf einen
 getrennten synthetischen Klon. App-Domain, dauerhaftes HTTPS und SMTP sind
 für echte Zugänge weiter offen.
 
+## Nachweis Und Releasepakete
+
+- **34 integrierte Nachweise** mit Firefox und nativem PostgreSQL auf exakt
+  `b9b90bfb88852a9dcffb5c1e78595340551b5b11`: Website und Kalender, 390 px,
+  nativer 200-%-Zoom, CSRF/Rollen, konkurrierende Vormerkungen und
+  Kundenpersistenz. Keine externen Browserzugriffe und keine Outbox-Einträge;
+  eigener Container und Volume entfernt.
+- **112 gezielte Portaltests**, darunter Rollen-Touren, Editor, Preis-/Orts-
+  und Kundenvertrag; **41 Website-Tests**; **acht Website-Browserabläufe**
+  (Produktion und Preview, Desktop, 390 px, ohne JavaScript und nativer 200-%-
+  Zoom). 1.641 interne Produktionsreferenzen geprüft. Kein separater
+  Screenreader-Durchlauf.
+- **Sechs lokale Linux-/Klonprüfungen** einschließlich atomarem
+  Migrationsrollback und unveränderter Ausgangsdatenbank. Das exakte
+  VPS-ZIP wurde unabhängig offline installiert, ohne einen Dienst zu starten.
+
+Beide Pakete liegen lokal unter
+`release-artifacts/feedback-platform/b9b90bfb88852a9dcffb5c1e78595340551b5b11/`.
+Der abschließende reine Dokumentationscommit ändert keine Paketbytes.
+
+| Paket | Prüfsumme SHA-256 |
+| --- | --- |
+| `website/competence-hub-website-b9b90bfb8885-20261120T150236Z.zip` (64 Dateien, acht aktive Profile, keine Testtermine) | `e02b574bcb57844b69c9422b3517545d1ddc3811f0af0e101f0124f704b6fe2c` |
+| `private-vps/competence-hub-private-v2-b9b90bfb88852a9dcffb5c1e78595340551b5b11.zip` | `0f3365ba9c32e04db331468dcaab9fa2210744f6467e54180c559d621b8174af` |
+| `tested-source.json` | `d534bdcbf8a687b88afadceab7466e3f718c31bc418dc7056e8c222504213797` |
+
+GitHub Pages bleibt auf Workflow `44149446991` / Quelle `11cb1ea`;
+der Push löst diesen manuell gestarteten Workflow nicht aus. Keine
+IONOS-/VPS-Installation, echte Datenmigration, GPG-/USB-Arbeit oder
+Aktivierung echter Konten.
+
 **Nächster Block:** Manuel und Frau Rappelt nehmen die sechs Schritte gemeinsam
 ab. Eingaben: lokale Demo und diese Liste. Erledigt, sobald beide die
 Nutzerwege, Abweichungen und offenen Geschäftsregeln protokolliert haben und

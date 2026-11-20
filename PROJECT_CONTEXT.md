@@ -8,7 +8,8 @@ Updated: 2026-11-20.
 integrated into the local website and synthetic Portal. Eight existing Coach
 profiles for the production candidate; Hupp remains paused. Scoped upcoming
 events, regional test search, price/seat facts, Editor, four tours and additive
-internal customer administration; no real publication, account or migration.
+internal customer administration. 34 native checks and two local release
+archives from `b9b90bf` verified; no real publication, account or migration.
 [Joint acceptance with Frau Rappelt](docs/handoffs/2026-11-20-feedback-platform.md),
 [execution horizon](docs/exec-plans/active/feedback-platform-2026-11-20.md).
 
