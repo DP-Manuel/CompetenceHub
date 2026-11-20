@@ -10,4 +10,4 @@ Evidence, decision list and stakeholder walkthrough:
 | 3. Portal | Event discovery, editor, tours and customer isolation checked with the shared owned local system. |
 | 4. Packages | Static production and protected VPS archives bound to tested source; no deployment. |
 | 5. Shared acceptance | PASS, confirmed by Manuel without reported deviations. Open pricing, geodata, privacy and review decisions remain separate. |
-| 6. Separate operating gates | Exact IONOS candidate approved; [release operating record](../../operations/website-ionos-release-2026-11-20.md) tracks backup and deployment. Private clone and real users remain outside the grant. |
+| 6. Separate operating gates | IONOS PASS, [backed up and verified live](../../operations/website-ionos-release-2026-11-20.md). Private clone and real users remain outside the grant. |

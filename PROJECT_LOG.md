@@ -2,6 +2,11 @@
 
 Significant milestones only; newest first.
 
+20.11 IONOS actual release PASS: exact `b9b90bf` ZIP, fresh backup and local
+restore 55/55, SFTP64/64, public HTTPS63/63 and Firefox desktop/mobile/zoom.
+Eight active profiles, no real/test event publication; rollback not required.
+Pages/VPS/database/account state unchanged. [Evidence](docs/operations/website-ionos-release-2026-11-20.md).
+
 20.11 exact IONOS website candidate separately approved. Package and 54 public
 predecessor paths verified; private SFTP backup and publication still pending.
 [Operating evidence](docs/operations/website-ionos-release-2026-11-20.md).

@@ -10,9 +10,9 @@ profiles for the production candidate; Hupp remains paused. Scoped upcoming
 events, regional test search, price/seat facts, Editor, four tours and additive
 internal customer administration. 34 native checks and two local release
 archives from `b9b90bf` verified; no real publication, account or migration.
-Manuel confirmed functional acceptance without reported deviations. Deployment
-approval now covers only the exact IONOS website ZIP; public predecessor
-comparison PASS, SFTP backup and upload still pending. [IONOS evidence](docs/operations/website-ionos-release-2026-11-20.md),
+Manuel confirmed functional acceptance without reported deviations. The exact
+Website ZIP is now live on IONOS: current backup/restore 55/55, SFTP64/64,
+HTTP63/63 and production browser PASS. [IONOS evidence](docs/operations/website-ionos-release-2026-11-20.md),
 [acceptance result](docs/handoffs/2026-11-20-feedback-platform.md),
 [execution horizon](docs/exec-plans/active/feedback-platform-2026-11-20.md).
 
@@ -461,11 +461,10 @@ diagnostics. No actual SQL/server/secret/data/Website action. [Contract and evid
 
 ## Production State
 
-- IONOS: https://competencehub.donner-partner.de/ remains at verified SB-54 source `1b4e33efa5e1` (25.09).
+- IONOS: https://competencehub.donner-partner.de/ runs the verified 20.11 source `b9b90bf`, archive `e02b574b…`. Prior live `11cb1ea` retained as this release's verified rollback.
 - Rights only29.10: Manuel explicitly approves Gülcan's profile/portrait and short offering descriptions for Preview and IONOS; [scope](docs/content/coach-publication-matrix-2026-09-24.md#zusätzliche-rechtefreigabe-gülcan-vom-29102026). No website release, full workshop scripts or unread details implied.
 - 21.10 read-only checks before and after Pages publication: Mindforge HTML/CSS return 200 and match the September hashes; this is a spot-check, not a full production retest.
-- Official preview: https://dp-manuel.github.io/CompetenceHub/ is now published from `78c3470258ea` through successful Pages run42060354587 (05.11). Nine approved Coaches,27 grouped offers/29 formats;141 current public checks PASS. [Current evidence](docs/exec-plans/active/coach5-offering-finder-2026-11-05.md); [earlier Website-first inventory](docs/content/website-first-2026-11-05.md) remains dated evidence. Local CAL demo is not hosted on Pages.
-- Preview-only isolation: production's entire 52-file build manifest remains byte-identical; no IONOS write or backend deployment.
+- Official preview: https://dp-manuel.github.io/CompetenceHub/ remains at `11cb1ea`, successful Pages run44149446991. The 20.11 IONOS release did not dispatch Pages or change the backend. Local CAL demo is not hosted on Pages.
 - Portal/backend is NOT public/productive, but the private synthetic VPS pilot is installed and accepted10.11; own API/TLS loopback only, access through the operator SSH tunnel. Real accounts/mappings, reservations, SMTP and Analytics remain inactive.
 - Production changes retain a separate release gate; [environment policy](docs/architecture/environment-policy.md) owns the three-environment decision.
 
@@ -539,7 +538,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Next block: complete [the approved IONOS release](docs/operations/website-ionos-release-2026-11-20.md) after fresh SFTP inventory, backup and local recovery proof. Private VPS rollout and real access remain separate. EDV App-DNS/HTTPS/access/SMTP remains open.
+1. Next block: reconcile confirmed EDV App-DNS/HTTPS/access/SMTP information. [IONOS release](docs/operations/website-ionos-release-2026-11-20.md) is complete and needs no further production change; private VPS rollout and real access remain separate.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. This exact IONOS promotion and its fresh inventory/rollback/smokes are closed. Any later content/release needs a new scoped approval. Preview still runs11cb1ea; no second Pages dispatch from the operations record.
 

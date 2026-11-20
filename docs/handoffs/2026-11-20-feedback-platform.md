@@ -114,7 +114,7 @@ der Push löst diesen manuell gestarteten Workflow nicht aus. Keine
 IONOS-/VPS-Installation, echte Datenmigration, GPG-/USB-Arbeit oder
 Aktivierung echter Konten.
 
-**Nächster Block:** Manuel hat die Veröffentlichung genau dieses Website-ZIP
-ausdrücklich freigegeben. Inventur, aktuelle Sicherung, Rückfall und
-Produktionsabnahme werden im [IONOS-Betriebsnachweis](../operations/website-ionos-release-2026-11-20.md)
-geführt. Der geschützte VPS hat ein eigenes Freigabeverfahren.
+**Website-Release:** Manuel hat genau dieses ZIP ausdrücklich freigegeben.
+Inventur, aktuelle Sicherung, Rückfallnachweis und Produktionsabnahme sind
+im [IONOS-Betriebsnachweis](../operations/website-ionos-release-2026-11-20.md)
+als abgeschlossen dokumentiert. Der geschützte VPS bleibt getrennt.

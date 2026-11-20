@@ -4,7 +4,7 @@ Stand: 20.11.2026. Historische Freigaben bleiben dokumentiert.
 
 ## Aktiver Umfang Seit Dem Feedback Vom 19.11
 
-Für den nächsten **lokalen Produktionskandidaten** sind die acht bereits
+Für den **Website-Release vom 20.11** sind die acht bereits
 aktiven Profile mit den bestehenden freigegebenen Bildern und Inhalten
 freigegeben: Christian Galvano, Manuela Rodríguez, Gülcan Elmas-Brandes,
 Elisabeth Schwabauer, Goran Celic, Stefanie Becker, T. Wegner-Ney und Susanne Klemm.
@@ -15,9 +15,9 @@ Quellen, Preise und Profile sind nicht Bestandteil dieser Freigabe.
 **Carolin Hupp bleibt pausiert:** keine Route, kein Portrait im Artefakt,
 keine Reaktivierung oder Löschung von Unterlagen. Ein späteres Profil von
 Frau Rappelt gehört zur Personalvermittlung, nicht zum Coach-Netzwerk;
-es wird noch nicht veröffentlicht. Der IONOS-Upload benötigt eine getrennte
-Freigabe. Die bisher tatsächlich veröffentlichte Website ist weiterhin der
-[17.11-Stand](../operations/website-ionos-release-2026-11-17.md).
+es wird noch nicht veröffentlicht. Genau dieser Inhaltsumfang ist nach
+separater Freigabe seit dem [20.11-Release](../operations/website-ionos-release-2026-11-20.md)
+auf IONOS veröffentlicht. Weitere Inhalte erfordern eine eigene Freigabe.
 
 ## Historischer Umfang Vor Der Neuen Freigabe
 
