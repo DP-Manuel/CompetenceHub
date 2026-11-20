@@ -10,7 +10,10 @@ profiles for the production candidate; Hupp remains paused. Scoped upcoming
 events, regional test search, price/seat facts, Editor, four tours and additive
 internal customer administration. 34 native checks and two local release
 archives from `b9b90bf` verified; no real publication, account or migration.
-[Joint acceptance with Frau Rappelt](docs/handoffs/2026-11-20-feedback-platform.md),
+Manuel confirmed functional acceptance without reported deviations. Deployment
+approval now covers only the exact IONOS website ZIP; public predecessor
+comparison PASS, SFTP backup and upload still pending. [IONOS evidence](docs/operations/website-ionos-release-2026-11-20.md),
+[acceptance result](docs/handoffs/2026-11-20-feedback-platform.md),
 [execution horizon](docs/exec-plans/active/feedback-platform-2026-11-20.md).
 
 19.11 V2 INTEGRATED LOCAL: one synthetic Astro/Portal/PostgreSQL session, one
@@ -536,7 +539,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Next block: one [feedback platform acceptance with Manuel and Frau Rappelt](docs/handoffs/2026-11-20-feedback-platform.md). EDV App-DNS/HTTPS/access/SMTP remains an external gate for real access. Existing V1.2 and TLS evidence is historical; do not infer a V2 installation or real personal activation.
+1. Next block: complete [the approved IONOS release](docs/operations/website-ionos-release-2026-11-20.md) after fresh SFTP inventory, backup and local recovery proof. Private VPS rollout and real access remain separate. EDV App-DNS/HTTPS/access/SMTP remains open.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. This exact IONOS promotion and its fresh inventory/rollback/smokes are closed. Any later content/release needs a new scoped approval. Preview still runs11cb1ea; no second Pages dispatch from the operations record.
 

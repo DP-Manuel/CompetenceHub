@@ -2,6 +2,15 @@
 
 Significant milestones only; newest first.
 
+20.11 exact IONOS website candidate separately approved. Package and 54 public
+predecessor paths verified; private SFTP backup and publication still pending.
+[Operating evidence](docs/operations/website-ionos-release-2026-11-20.md).
+
+20.11 feedback platform functional acceptance PASS, confirmed by Manuel with
+no reported deviations. No operating authorization inferred; next decision is
+the separate release of the exact website candidate.
+[Acceptance result and remaining gates](docs/handoffs/2026-11-20-feedback-platform.md).
+
 20.11 feedback candidate: eight approved active website profiles, held scope
 unchanged; corrected Finder and profile navigation. Reusable local calendar
 facts, regional search, Editor/tours and isolated internal customer records

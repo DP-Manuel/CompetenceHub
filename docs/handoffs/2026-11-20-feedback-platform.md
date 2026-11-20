@@ -6,6 +6,11 @@ die acht bereits aktiven Profile und ihre bestehenden Inhalte. Sie schließt
 weder Frau Hupp noch offene Angebotskandidaten oder Frau Rappelts künftiges
 Profil ein. Die Freigabe des tatsächlichen IONOS-Uploads bleibt separat.
 
+**Fachliche Abnahme: bestanden.** Manuel meldet, dass die Abnahme durch ist
+und alles passt. Keine Beanstandungen gemeldet. Diese Bestätigung ist keine
+Freigabe für IONOS, den geschützten VPS oder den Echtbetrieb und entscheidet
+nicht über die unten offenen Geschäftsregeln.
+
 ## Feedback Und Prüfnachweis
 
 | Feedback | Umsetzung | Prüfung / fachliche Grenze |
@@ -109,7 +114,7 @@ der Push löst diesen manuell gestarteten Workflow nicht aus. Keine
 IONOS-/VPS-Installation, echte Datenmigration, GPG-/USB-Arbeit oder
 Aktivierung echter Konten.
 
-**Nächster Block:** Manuel und Frau Rappelt nehmen die sechs Schritte gemeinsam
-ab. Eingaben: lokale Demo und diese Liste. Erledigt, sobald beide die
-Nutzerwege, Abweichungen und offenen Geschäftsregeln protokolliert haben und
-für Website und geschützten VPS separat über die Freigabe entscheiden können.
+**Nächster Block:** Manuel hat die Veröffentlichung genau dieses Website-ZIP
+ausdrücklich freigegeben. Inventur, aktuelle Sicherung, Rückfall und
+Produktionsabnahme werden im [IONOS-Betriebsnachweis](../operations/website-ionos-release-2026-11-20.md)
+geführt. Der geschützte VPS hat ein eigenes Freigabeverfahren.

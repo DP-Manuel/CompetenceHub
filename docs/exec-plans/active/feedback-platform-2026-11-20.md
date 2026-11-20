@@ -9,5 +9,5 @@ Evidence, decision list and stakeholder walkthrough:
 | 2. Website | Approved eight-profile candidate; held scope unchanged; finder and profile journeys verified. |
 | 3. Portal | Event discovery, editor, tours and customer isolation checked with the shared owned local system. |
 | 4. Packages | Static production and protected VPS archives bound to tested source; no deployment. |
-| 5. Shared acceptance | Manuel and Frau Rappelt verify the workflow and record open pricing, geodata, privacy and review decisions. |
-| 6. Separate operating gates | Scope approval, fresh TLS and restore proof for the private clone; separate approval for IONOS; no inferred approval for live users. |
+| 5. Shared acceptance | PASS, confirmed by Manuel without reported deviations. Open pricing, geodata, privacy and review decisions remain separate. |
+| 6. Separate operating gates | Exact IONOS candidate approved; [release operating record](../../operations/website-ionos-release-2026-11-20.md) tracks backup and deployment. Private clone and real users remain outside the grant. |
