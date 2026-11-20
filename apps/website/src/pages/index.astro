@@ -24,7 +24,7 @@ const trustPoints = [
     icon: "message-circle" as const,
   },
   {
-    text: "Frau Janay Rappelt als Ansprechpartnerin",
+    text: "Frau Rappelt als Ansprechpartnerin",
     icon: "user-round" as const,
   },
 ];
@@ -134,7 +134,7 @@ const coachPreview = coaches.map((coach) => ({
               )}
             </span>
             <span class="coach-preview__copy">
-              <strong>{coach.name}</strong>
+              <strong class="coach-preview__name">{coach.name}</strong>
               <small>{coach.role}</small>
             </span>
           </a>
@@ -150,7 +150,7 @@ const coachPreview = coaches.map((coach) => ({
         <span class="contact-lead__portrait">
           <img
             src={url("images/team/janay-rappelt.jpg")}
-            alt="Frau Janay Rappelt"
+            alt="Frau Rappelt"
             width="1066"
             height="1600"
             loading="lazy"
@@ -158,7 +158,7 @@ const coachPreview = coaches.map((coach) => ({
         </span>
         <div>
           <small>Ihre Ansprechpartnerin</small>
-          <strong>Frau Janay Rappelt</strong>
+          <strong>Frau Rappelt</strong>
           <p>Persönliche Verbindung zwischen Anliegen und passender Expertise</p>
         </div>
       </div>

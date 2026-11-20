@@ -2,8 +2,9 @@ import { createCoachManagement } from "./coach-management.js";
 import { createProductTour } from "./product-tour.js";
 import { createUserManagement } from "./user-management.js";
 import { createCalendarForm, germanDateTime } from "./calendar-form.mjs";
-import { createCalendarDialogs } from "./calendar-dialogs.js";
+import { createCalendarDialogs, createReviewNote } from "./calendar-dialogs.js";
 import { createReservations } from "./reservations.js";
+import { createCustomerAdministration } from "./customer-administration.js";
 import { render as renderBusinessOverview } from "./business-overview.js";
 
 const API = {
@@ -64,6 +65,7 @@ const restrictedCalendarNodes = {
   reviewDialog: document.querySelector("#calendar-review-dialog"),
 };
 const calendarForm = createCalendarForm(document.querySelector("#calendar-offer-form"));
+const calendarReviewNote = createReviewNote(document.querySelector("#calendar-review-form"));
 const calendarRequests=new WeakMap();
 const calendarDialogs=createCalendarDialogs({
   dialogs:[restrictedCalendarNodes.offerDialog,restrictedCalendarNodes.reviewDialog],
@@ -98,6 +100,16 @@ const reservations = createReservations({
   root: reservationsRoot, request, hasCsrf: () => Boolean(state.sessionCsrf),
   expired: () => showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."),
 });
+const customerAdmin = createCustomerAdministration({
+  request, hasCsrf: () => Boolean(state.sessionCsrf),
+  expired: () => showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."),
+});
+
+function labelCustomerArea(enabled) {
+  byId("company-workspace-title").textContent = enabled ? "Kundenverwaltung" : "Firmenbetreuung";
+  byId("company-workspace-eyebrow").textContent = enabled ? "Privat- und Geschäftskunden" : "Firmen und Kontakte";
+  byId("open-company-dialog").textContent = enabled ? "Kunde anlegen" : "Firma anlegen";
+}
 
 const userManagement = createUserManagement({request,reload:loadPilotUsers,
   prepareInvitation:user => {
@@ -287,6 +299,8 @@ function clearPortalClientState() {
   coachManagement.reset();
   coachManagement.root.remove();
   reservations.reset();
+  customerAdmin.reset();
+  labelCustomerArea(false);
   state.companyTourAvailable = false;
   reservationsRoot.hidden = true;
   state.companies = [];
@@ -321,6 +335,11 @@ function clearPortalClientState() {
   calendarForm.reset();
   restrictedCalendarNodes.offerDialog.querySelector("#calendar-review-feedback-text").textContent = "";
   restrictedCalendarNodes.reviewDialog.querySelector("#calendar-review-summary").replaceChildren();
+  const reviewDescription = restrictedCalendarNodes.reviewDialog.querySelector("#calendar-review-description");
+  reviewDescription.open = false;
+  reviewDescription.hidden = true;
+  reviewDescription.querySelector("p").textContent = "";
+  calendarReviewNote.reset();
   configureRestrictedCalendarNodes(false, false);
 }
 
@@ -699,7 +718,15 @@ async function configurePortalAreas() {
   applyMutationAvailability();
   const areas = [];
   if (canUseCompanies) {
-    areas.push({ id: "companies", label: "Firmen" });
+    const enabled = await customerAdmin.mount(byId("customer-administration"), {
+      setBusinessVisible(visible) {
+        byId("company-search-form").hidden = !visible;
+        byId("companies-data").hidden = !visible;
+      },
+    });
+    if (state.session !== session) return;
+    labelCustomerArea(enabled);
+    areas.push({ id: "companies", label: enabled ? "Kunden" : "Firmen" });
   }
   const registryAvailable = roles.has("admin") && await coachManagement.available();
   if (state.session !== session) return;
@@ -800,6 +827,7 @@ async function selectPortalArea(area, { fromTour = false } = {}) {
     if (state.activePortalArea === "coaches" && area !== "coaches" && !coachManagement.canLeave()) return;
     if (!reservations.canLeave()) return;
   }
+  if (state.activePortalArea === "companies" && area !== "companies" && !customerAdmin.leaveWorkspace()) return;
   state.activePortalArea = area;
   switchPortalWorkspace(area);
   [...byId("portal-navigation").querySelectorAll("button")].forEach((button) => {
@@ -1221,6 +1249,10 @@ function renderReviewSummary(detail) {
   appendDefinition(summary, "Entscheidungsfrist", formatCalendarDate(revision.decision_deadline));
   appendDefinition(summary, "Preishinweis", revision.price_display_text);
   appendDefinition(summary, "Revision", String(revision.revision_number));
+  const description = byId("calendar-review-description");
+  description.open = false;
+  description.hidden = !revision.summary;
+  byId("calendar-review-description-text").textContent = revision.summary || "";
 }
 
 async function openCalendarReview(index) {
@@ -1231,6 +1263,7 @@ async function openCalendarReview(index) {
   }
   state.selectedReviewOffer = selected;
   byId("calendar-review-form").reset();
+  calendarReviewNote.reset();
   setError("calendar-review-error");
   byId("reload-calendar-review").hidden = true;
   renderReviewSummary(selected.detail);
@@ -1247,18 +1280,14 @@ async function handleCalendarReview(event) {
     setError("calendar-review-error", "Bitte laden Sie das Angebot erneut.");
     return;
   }
-  const data = beginFormSubmission(form);
-  if (data === null) {
-    return;
-  }
-  const outcome = data.get("outcome");
-  const note = normalizeOptional(data.get("note"));
+  const outcome = form.querySelector('[name="outcome"]:checked')?.value;
+  const note = calendarReviewNote.value();
   if (outcome === "changes_requested" && !note) {
-    setBusy(form, false);
     setError("calendar-review-error", "Bitte beschreiben Sie die gewünschte Änderung.");
     byId("calendar-review-note").focus();
     return;
   }
+  if (beginFormSubmission(form) === null) return;
   const operation=beginCalendarRequest(form);
   try {
     const selected = state.selectedReviewOffer;
@@ -1321,6 +1350,7 @@ async function reloadSelectedCalendarReview() {
   if (selected) {
     state.selectedReviewOffer = selected;
     byId("calendar-review-form").reset();
+    calendarReviewNote.reset();
     byId("reload-calendar-review").hidden = true;
     setError("calendar-review-error");
     renderReviewSummary(selected.detail);
@@ -1592,8 +1622,11 @@ function renderCompanies() {
 }
 
 async function selectCompany(companyId) {
+  if (state.selectedCompany?.id !== companyId && !customerAdmin.canLeave()) return;
+  const session = state.session;
   try {
     const response = await request(`${API.companies}/${companyId}`);
+    if (state.session !== session) return;
     if (response.status === 401) {
       showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.");
       return;
@@ -1602,7 +1635,9 @@ async function selectCompany(companyId) {
       announce(await problemMessage(response, "Firma konnte nicht geladen werden."));
       return;
     }
-    state.selectedCompany = await response.json();
+    const company = await response.json();
+    if (state.session !== session) return;
+    state.selectedCompany = company;
     renderCompanies();
     renderCompanyDetail();
   } catch {
@@ -1612,6 +1647,7 @@ async function selectCompany(companyId) {
 
 function renderCompanyDetail() {
   const company = state.selectedCompany;
+  customerAdmin.selectCompany(byId("company-customer-details"), company?.id);
   if (!company) {
     byId("detail-placeholder").hidden = false;
     byId("detail-content").hidden = true;
@@ -1984,7 +2020,8 @@ function bindEvents() {
     }
   });
 
-  byId("open-company-dialog").addEventListener("click", () => {
+  byId("open-company-dialog").addEventListener("click", (event) => {
+    if (customerAdmin.openPrivateCreate(event.currentTarget)) return;
     if (state.sessionCsrf) {
       byId("company-dialog").showModal();
       byId("create-company-name").focus();
@@ -2034,7 +2071,8 @@ document.querySelectorAll(".brand, #logout-button").forEach((item) => {
       }
       return;
     }
-    if ((state.activePortalArea === "coaches" && !coachManagement.canLeave()) || !reservations.canLeave()) {
+    if ((state.activePortalArea === "coaches" && !coachManagement.canLeave()) || !reservations.canLeave()
+      || (state.activePortalArea === "companies" && !customerAdmin.canLeave())) {
       event.preventDefault(); event.stopImmediatePropagation();
     }
   }, true);

@@ -1,12 +1,16 @@
 "use strict";
 import { monthKeys, calendarInstantLabel, calendarMonthLabel, buildMonthLayout, renderMonth } from "./calendar-month.mjs";
 import { createProductTour } from "./product-tour.js";
+import { EVENT_FORMATS, eventPlace, eventPrice, seatBadge } from "./event-display.js";
 const $ = id => document.getElementById(id);
 const text = (tag, value) => { const element = document.createElement(tag); element.textContent = value; return element; };
-const formats = { online: "Online", praesenz: "Präsenz", hybrid: "Hybrid" };
+const formats = EVENT_FORMATS;
 const isDemo = location.pathname.startsWith("/demo/");
 const months = monthKeys();
-const slug = new URLSearchParams(location.search).get("coach");
+const params = new URLSearchParams(location.search);
+const slug = params.get("coach");
+const eventId = params.get("event");
+let linkedEvent = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(eventId || "") ? eventId.toLowerCase() : null;
 const coachPath = slug && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug) && slug.length <= 100 ? `/coaches/${slug}/` : null;
 let journey = { portal_reservations: false, local_website: false };
 let month = 0, offers = [], selected = null, loaded = false, loading = false, downloading = false;
@@ -19,7 +23,7 @@ if ($("portal-reservation")) {
       if (!data) return;
       journey = data;
       $("local-website").hidden = !journey.local_website;
-      if (selected) updateJourney(selected);
+      if (selected) { updateJourney(selected); void updateAvailability(selected); }
     }).catch(() => { /* The anonymous request draft remains available. */ });
 }
 if (document.getElementById("calendar-help")) {
@@ -58,6 +62,22 @@ function updateJourney(offer) {
     else $("portal-reservation-link").removeAttribute("href");
   }
 }
+async function updateAvailability(offer) {
+  if (!journey.local_website) return;
+  const target = $("public-seat-status");
+  if (!target) return;
+  try {
+    const response = await fetch("/api/v1/calendar/upcoming?event_id=" + encodeURIComponent(offer.id), {
+      credentials: "omit", cache: "no-store",
+    });
+    const candidate = response.ok ? (await response.json()).items[0] : null;
+    if (selected !== offer || !target.isConnected) return;
+    target.replaceChildren(seatBadge(candidate?.availability));
+  } catch {
+    if (selected === offer && target.isConnected) target.replaceChildren(seatBadge());
+  }
+}
+
 function show(offer, focus = true) {
   selected = offer; $("detail").hidden = false;
   $("ics").href = `/api/v1/calendar/offers/${encodeURIComponent(offer.id)}/calendar.ics`;
@@ -67,11 +87,19 @@ function show(offer, focus = true) {
   for (const [key, value] of Object.entries({ Coach: offer.coach.display_name,
     Thema: offer.topic.name, Beginn: date(offer.starts_at), Ende: date(offer.ends_at),
     Dauer: `${Math.round((new Date(offer.ends_at) - new Date(offer.starts_at)) / 60000)} Minuten`,
-    Zeitzone: offer.time_zone, Format: formats[offer.format], Ort: offer.public_location || "Online",
-    Kapazität: `Höchstens ${offer.capacity} Teilnehmende. Kein Stand freier Plätze.`,
-    Entscheidungsfrist: date(offer.decision_deadline), Preishinweis: offer.price_display_text })) {
+    Zeitzone: offer.time_zone, Format: formats[offer.format], Ort: eventPlace(offer),
+    Kapazität: `Höchstens ${offer.capacity} Teilnehmende.`,
+    Entscheidungsfrist: date(offer.decision_deadline), Preishinweis: eventPrice({
+      price: { status: "display_text", text: offer.price_display_text },
+    }) })) {
     $("meta").append(text("dt", key), text("dd", value));
   }
+  const label = $("meta").appendChild(text("dt", "Platzstand"));
+  const seatDetail = text("dd", "");
+  seatDetail.id = "public-seat-status";
+  seatDetail.append(seatBadge());
+  label.after(seatDetail);
+  void updateAvailability(offer);
   // The fixture explicitly supplies these synthetic routes. Never derive real mappings.
   updateJourney(offer);
   $("coach").textContent = `${offer.coach.display_name}${isDemo ? " · Fiktives Profil" : " · Profil"}`;
@@ -106,7 +134,10 @@ async function load(background = false) {
       } while (cursor);
     }
     offers = [...received.values()];
-    if (background && loaded && JSON.stringify(offers) === previousSignature) return;
+    if (background && loaded && JSON.stringify(offers) === previousSignature) {
+      if (selected) void updateAvailability(selected);
+      return;
+    }
     // Capture current interaction AFTER the async reads, not before the user
     // may have selected another filter, event or field while they were pending.
     const previousSelection = selected?.id;
@@ -125,6 +156,15 @@ async function load(background = false) {
     const selectedChanged = retained && JSON.stringify(selected) !== JSON.stringify(retained);
     const seats = $("seats").value, requestStatus = $("request-status").textContent;
     loaded = true; $("error").hidden = true; render(background && Boolean(retained));
+    if (linkedEvent) {
+      const linked = scoped.find(item => item.id === linkedEvent);
+      linkedEvent = null;
+      if (linked) {
+        const found = months.findIndex(key => buildMonthLayout([linked], key).offerCount > 0);
+        if (found >= 0) { month = found; render(); }
+        show(linked);
+      } else if ($("event-link-status")) $("event-link-status").hidden = false;
+    }
     if (background) {
       if (retained) {
         show(retained, false);
@@ -156,7 +196,7 @@ $("request").addEventListener("submit", event => {
     `Coach: ${selected.coach.display_name}`, `Thema: ${selected.topic.name}`,
     `Beginn: ${date(selected.starts_at)}`, `Ende: ${date(selected.ends_at)}`,
     `Zeitzone: ${selected.time_zone}`, `Format: ${formats[selected.format]}`,
-    `Ort: ${selected.public_location || "Online"}`, `Gewünschte Plätze: ${$("seats").value}`,
+    `Ort: ${eventPlace(selected)}`, `Gewünschte Plätze: ${$("seats").value}`,
     `Preishinweis: ${selected.price_display_text}`, "Bitte informieren Sie mich über die nächsten Schritte. Keine verbindliche Buchung."].join("\n");
   $("request-draft-panel").hidden = false;
 });

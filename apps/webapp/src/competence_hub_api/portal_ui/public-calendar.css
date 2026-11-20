@@ -28,6 +28,7 @@ dl { display: grid; grid-template-columns: minmax(100px, 1fr) minmax(0, 3fr); ga
 dt { font-weight: bold; }
 dd { margin: 0; min-width: 0; }
 #detail { margin-block: 24px; border-top: 4px solid #007b83; }
+#summary { white-space: pre-wrap; overflow-wrap: anywhere; }
 #request { display: grid; gap: 16px; max-width: 520px; }
 #request button { background: #ff8254; border-color: #ff8254; }
 #request-draft {width: 100%; max-width: 100%; padding: 12px; font: inherit; line-height: 1.5;}

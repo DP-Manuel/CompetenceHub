@@ -28,14 +28,14 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
         <div class="finder-topic-options">
           <label for="finder-category">Kategorie</label><select id="finder-category" name="category"><option value="all">Alle Kategorien</option>{categories.map((category) => <option value={category.id}>{category.label}</option>)}</select>
           <fieldset><legend>Themenschwerpunkte</legend>
-            <div class="finder-topic-checks">{topics.map((topic) => <label><input type="checkbox" name="topic" value={topic.id} /><span>{topic.label}</span></label>)}</div>
+            <div class="finder-topic-checks">{topics.map((topic) => <label data-topic-categories={topic.categories.join(" ")}><input type="checkbox" name="topic" value={topic.id} /><span>{topic.label}</span></label>)}</div>
           </fieldset>
         </div>
       </details>
       <button class="finder-reset" type="reset">Filter zurücksetzen</button>
     </div>
   </form>
-  <div class="finder-result-heading"><p data-finder-status role="status" aria-live="polite" aria-atomic="true">{entries.length} Angebote</p><nav aria-label="Weitere Wege zum passenden Angebot"><a href={url("coaches")}>Zum Coach-Netzwerk <Icon name="arrow-right" size={18} /></a><a href={__WEBSITE_V2_LOCAL__ ? publicCalendarPath : url("kalender")}>{__WEBSITE_V2_LOCAL__ ? "Veranstaltungskalender" : "Kalender-Vorschau"} <Icon name="arrow-right" size={18} /></a></nav></div>
+  <div class="finder-result-heading"><p data-finder-status role="status" aria-live="polite" aria-atomic="true">{entries.length} Angebote</p><nav aria-label="Weitere Wege zum passenden Angebot"><a href={url("coaches")}>Zum Coach-Netzwerk <Icon name="arrow-right" size={18} /></a><a href={__WEBSITE_V2_LOCAL__ ? publicCalendarPath : url("kalender")}>Veranstaltungskalender <Icon name="arrow-right" size={18} /></a></nav></div>
   <ul class="finder-results" id="finder-results">
     {entries.map((entry) => (
       <li data-finder-entry={entry.id}>
@@ -64,14 +64,14 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
               </ul>
               {entry.options.length > 0 && <p class="finder-options"><strong>Optionale Ergänzungen:</strong> {entry.options.join(" · ")}</p>}
               {entry.boundaries.map((boundary) => <p class="finder-boundary">{boundary}</p>)}
-              <a class="text-link" href={url(entry.coach.profilePath)} data-finder-profile>Coachprofil ansehen <Icon name="arrow-right" size={18} /></a>
+              <a class="text-link" href={url(`${entry.coach.profilePath}#angebote`)} data-finder-profile>Coachprofil und Angebote ansehen <Icon name="arrow-right" size={18} /></a>
             </div>
           </details>
         </article>
       </li>
     ))}
   </ul>
-  <div class="finder-empty" data-finder-empty hidden><h3>Für diese Auswahl ist noch kein Angebot aufgeführt.</h3><p>Wir klären gern, welche Begleitung zu Ihrem Anliegen passt.</p><a class="text-link" href={url("kontakt")}>Bedarf mit Janay besprechen <Icon name="arrow-right" size={18} /></a><a class="text-link" href={url("mindforge")}>Persönliche Begleitung bei Mindforge <Icon name="arrow-right" size={18} /></a></div>
+  <div class="finder-empty" data-finder-empty hidden><h3>Für diese Auswahl ist noch kein Angebot aufgeführt.</h3><p>Wir klären gern, welche Begleitung zu Ihrem Anliegen passt.</p><a class="text-link" href={url("kontakt")}>Bedarf mit Frau Rappelt besprechen <Icon name="arrow-right" size={18} /></a><a class="text-link" href={url("mindforge")}>Persönliche Begleitung bei Mindforge <Icon name="arrow-right" size={18} /></a></div>
   <button class="button button--ghost finder-more" type="button" data-finder-more hidden>Weitere Angebote anzeigen</button>
   <script is:inline type="application/json" data-finder-data set:html={JSON.stringify(entries).replace(/</g, "\\u003c")} />
 </section>
@@ -101,7 +101,7 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
   .finder-result-heading a, .offering-finder .text-link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; }
   .finder-results { list-style: none; padding: 0; margin: 0; }
   .finder-results > li { border-top: 1px solid var(--color-line); }
-  .finder-offer > summary { display: grid; grid-template-columns: minmax(0,1fr) minmax(200px,280px) 24px; align-items: center; gap: 24px; padding: 20px 0; cursor: pointer; list-style: none; }
+  .finder-offer > summary { display: grid; grid-template-columns: minmax(0,1fr) minmax(200px,280px) 24px; align-items: center; gap: 24px; padding: 20px 12px; cursor: pointer; list-style: none; }
   .finder-offer > summary::-webkit-details-marker { display: none; }
   .finder-offer > summary::after { content: "+"; font-size: 1.6rem; text-align: center; color: var(--color-pantone-deep); }
   .finder-offer[open] > summary::after { content: "−"; }
@@ -109,7 +109,7 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
   .finder-offer-summary > span { display: block; margin-top: 8px; color: var(--color-dark); font-size: .95rem; }
   .finder-coach { display: flex; align-items: center; gap: 12px; font-size: .95rem; }
   .finder-coach img { object-fit: cover; width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; }
-  .finder-offer-detail { padding: 0 0 28px; max-width: 900px; }
+  .finder-offer-detail { padding: 16px 0 28px; max-width: 900px; }
   .finder-offer-detail h3 { font-size: 1.3rem; line-height: 1.4; margin-bottom: 16px; }
   .finder-offer-detail h4 { font-size: 1.1rem; line-height: 1.4; }
   .finder-formats { padding: 0; list-style: none; }
@@ -125,6 +125,7 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
   .finder-more { margin-top: 20px; }
   .offering-finder :is(p,span,strong,h2,h3,h4,dd,a) { overflow-wrap: anywhere; min-width: 0; }
   .offering-finder :is(input,select,summary,button,a):focus-visible { outline: 3px solid var(--color-dark); outline-offset: 4px; }
+  .finder-offer > summary:focus-visible { outline-offset: -3px; }
   @media (min-width: 901px) and (max-width: 1200px) { .finder-filter-row { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } }
   @media (max-width: 900px) { .finder-heading, .finder-filter-row { grid-template-columns: minmax(0,1fr); } .finder-offer > summary { grid-template-columns: minmax(0,1fr) 24px; gap: 12px 16px; } .finder-coach { grid-row: 2; } .finder-offer > summary::after { grid-column: 2; grid-row: 1 / span 2; } }
   @media (max-width: 520px) { .finder-filters { padding: 18px 14px; } .finder-filter-actions { flex-direction: column; gap: 8px; } .finder-topics { width: 100%; } .finder-topic-checks { grid-template-columns: minmax(0,1fr); } .finder-formats dl > div { grid-template-columns: minmax(0,1fr); gap: 2px; } }
@@ -137,8 +138,16 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
     const rows = [...root.querySelectorAll<HTMLElement>("[data-finder-entry]")];
     const more = root.querySelector<HTMLButtonElement>("[data-finder-more]")!;
     const status = root.querySelector<HTMLElement>("[data-finder-status]")!;
+    const category = form.querySelector<HTMLSelectElement>("#finder-category")!;
+    const topicOptions = [...form.querySelectorAll<HTMLLabelElement>("[data-topic-categories]")];
     let limit = 8;
     function render() {
+      topicOptions.forEach((label) => {
+        const available = category.value === "all" || label.dataset.topicCategories!.split(" ").includes(category.value);
+        const input = label.querySelector("input")!;
+        input.disabled = label.hidden = !available;
+        if (!available) input.checked = false;
+      });
       const values = new FormData(form);
       const selection: FinderSelection = { ...emptyFinderSelection(), query: String(values.get("query") ?? ""),
         audience: String(values.get("audience")), format: String(values.get("format")),
@@ -154,7 +163,7 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
         row.querySelectorAll<HTMLElement>("[data-finder-format]").forEach((item) => { item.hidden = !ids?.includes(item.dataset.finderFormat!); });
       });
       root.querySelector<HTMLElement>("[data-finder-empty]")!.hidden = matches.length !== 0;
-      status.textContent = `${matches.length} passende Angebote${matches.length > limit ? ` · ${limit} angezeigt` : ""}`;
+      status.textContent = `${matches.length === 1 ? "1 passendes Angebot" : `${matches.length} passende Angebote`}${matches.length > limit ? ` · ${limit} angezeigt` : ""}`;
       more.hidden = matches.length <= limit;
     }
     form.addEventListener("submit", (event) => event.preventDefault());

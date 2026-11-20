@@ -3,7 +3,7 @@ import Icon from "../components/Icon.astro";
 import { guelcanOfferFamilies } from "./guelcan-offers";
 import { coachRequestMailto } from "./request-links";
 ---
-<section class="guelcan-offers" aria-labelledby="guelcan-offers-title">
+<section class="guelcan-offers" id="angebote" aria-labelledby="guelcan-offers-title">
   <header>
     <p class="eyebrow">Angebote von Gülcan Elmas-Brandes</p>
     <h2 id="guelcan-offers-title">Drei Themenfelder, ein passender Rahmen</h2>
@@ -36,7 +36,7 @@ import { coachRequestMailto } from "./request-links";
   </div>
 </section>
 <style>
-  .guelcan-offers { margin-block: 48px 70px; padding-top: 32px; border-top: 8px solid var(--color-pantone); }
+  .guelcan-offers { margin-block: 48px 70px; padding-top: 32px; border-top: 8px solid var(--color-pantone); scroll-margin-top: 160px; }
   header { max-width: 70ch; margin-bottom: 28px; }
   h2 { font-size: 2rem; line-height: 1.2; margin-bottom: 18px; }
   .guelcan-offer-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 32px; }

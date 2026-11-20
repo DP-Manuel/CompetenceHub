@@ -1,0 +1,4 @@
+.event-seat-status { display: inline-block; padding: 0.15rem 0.5rem; background: #eef3f4; color: #263435; }
+.event-seat-status[data-status=many] { color: #174731; background: #e2f1e8; }
+.event-seat-status[data-status=limited] { color: #633109; background: #ffead3; }
+.event-seat-status[data-status=none] { color: #74182a; background: #fbe6eb; }

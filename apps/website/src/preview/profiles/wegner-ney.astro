@@ -24,11 +24,11 @@ const topics = [
 ---
 
 <BaseLayout
-  canonical={false}
+  canonical={import.meta.env.PUBLIC_REVIEW_MODE !== "true"}
   title="Herr T. Wegner-Ney | Coaches | Competence Hub"
   description="Herr T. Wegner-Ney begleitet mittelständische Unternehmen bei Technologie- und Prozessveränderung, Qualitätsmanagement, Führung und Fachkräftesicherung."
 >
-  <main class="subpage">
+  <main class="subpage" data-coach-profile="wegner-ney">
     <section class="coach-profile-hero">
       <div>
         <p class="eyebrow">Unternehmensberatung, Workshops & Vorträge</p>
@@ -127,7 +127,7 @@ const topics = [
       </div>
       <div>
         <p>
-          Frau Janay Rappelt unterstützt bei der Einordnung und stellt den
+          Frau Rappelt unterstützt bei der Einordnung und stellt den
           Kontakt zwischen Unternehmen und Coach her.
         </p>
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>

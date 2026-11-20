@@ -25,11 +25,11 @@ const topics = [
 ---
 
 <BaseLayout
-  canonical={false}
+  canonical={import.meta.env.PUBLIC_REVIEW_MODE !== "true"}
   title="Frau Elisabeth Schwabauer | Coaches | Competence Hub"
   description="Frau Elisabeth Schwabauer ist Psychologin mit Schwerpunkten in psychologischer Beratung, psychischer Belastung sowie Team- und Konfliktklärung."
 >
-  <main class="subpage">
+  <main class="subpage" data-coach-profile="elisabeth-schwabauer">
     <section class="coach-profile-hero">
       <div>
         <p class="eyebrow">Psychologin</p>
@@ -46,6 +46,7 @@ const topics = [
         </p>
         <div class="coach-profile-actions">
           <a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a>
+          <a class="button button--ghost" href="#angebote">Vorträge und Workshops ansehen</a>
         </div>
       </div>
       <figure class="coach-profile-portrait coach-profile-portrait--elisabeth">
@@ -62,7 +63,7 @@ const topics = [
       </figure>
     </section>
 
-    <section class="coach-profile-section">
+    <section class="coach-profile-section" id="themenschwerpunkte">
       <div class="section-heading coach-section-heading">
         <div>
           <p class="eyebrow">Themenschwerpunkte</p>
@@ -83,7 +84,10 @@ const topics = [
           </article>
         ))}
       </div>
+      <p class="related-offers"><a class="text-link" href="#angebote">Zu Vorträgen, Workshops und Coaching</a></p>
     </section>
+
+    <ElisabethOffers />
 
     <section class="coach-credentials">
       <div>
@@ -103,31 +107,6 @@ const topics = [
         <li>Psychische Gefährdungsbeurteilung nach § 5 ArbSchG</li>
         <li>Heilpraktikerin, eingeschränkt für Psychotherapie</li>
       </ul>
-    </section>
-
-    <ElisabethOffers />
-
-    <section class="coach-profile-section coach-profile-section--pending">
-      <div class="section-heading coach-section-heading">
-        <div>
-          <p class="eyebrow">Persönliches Profil</p>
-          <h2>Arbeitsweise und passende Formate</h2>
-        </div>
-        <p>
-          Persönliches Zitat, bevorzugte Durchführungsformate, Einsatzregion
-          und Verfügbarkeit werden nach der finalen Abstimmung ergänzt.
-        </p>
-      </div>
-      <div class="coach-topic-grid">
-        <article>
-          <h3>Persönlicher Ansatz</h3>
-          <p>Persönliches Zitat und Beschreibung der Arbeitsweise folgen.</p>
-        </article>
-        <article>
-          <h3>Formate & Verfügbarkeit</h3>
-          <p>Angaben zu Präsenz, online, hybrid und möglichen Einsatzregionen folgen.</p>
-        </article>
-      </div>
     </section>
 
     <section class="notice-panel">
@@ -159,3 +138,8 @@ const topics = [
     </section>
   </main>
 </BaseLayout>
+
+<style>
+  #themenschwerpunkte { scroll-margin-top: 180px; }
+  .related-offers { margin-block: 24px 0; }
+</style>

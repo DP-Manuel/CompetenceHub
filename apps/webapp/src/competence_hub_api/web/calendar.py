@@ -28,6 +28,8 @@ from competence_hub_api.portal.calendar import (
 )
 from competence_hub_api.security.calendar_cursor import CalendarCursorCodec
 from competence_hub_api.portal.calendar_export import public_calendar_ics
+from competence_hub_api.portal.coach_profiles import validate_public_profile_path
+from competence_hub_api.portal.event_discovery import project_event, region_labels
 from competence_hub_api.security.cookies import SESSION_COOKIE_NAME
 from competence_hub_api.security.tokens import digest_token
 from competence_hub_api.web.problems import problem_response
@@ -81,6 +83,43 @@ async def calendar_journey(request: Request) -> Response:
         "portal_reservations": request.app.state.reservation_repository is not None,
         "local_website": getattr(request.app.state, "local_website_path", None) == "/website/",
     })
+
+
+@public_router.get("/upcoming")
+async def upcoming_events(
+    request: Request,
+    event_id: UUID | None = Query(default=None),
+    coach_path: str | None = Query(default=None, max_length=200),
+    location: str | None = Query(default=None, max_length=100),
+    radius_km: int | None = Query(default=None, ge=1, le=500),
+    limit: int = Query(default=5, ge=1, le=5),
+) -> Response:
+    context = _public_context(request)
+    if isinstance(context, Response):
+        return context
+    # This synthetic catalogue is never attached in the VPS runtime or a public build.
+    local = getattr(request.app.state, "local_website_path", None) == "/website/"
+    if not local:
+        return _not_found()
+    localities = getattr(request.app.state, "calendar_localities", ())
+    try:
+        profile = validate_public_profile_path(coach_path)
+        if (location is None) != (radius_km is None):
+            return _invalid_request()
+        places = region_labels(location, radius_km, localities) if location is not None else None
+    except ValueError:
+        return _invalid_request()
+    service, _ = context
+    now = request.app.state.clock()
+    events = await service.upcoming_events(
+        now=now, profile_path=profile, locations=places,
+        include_demo_seats=request.app.state.reservation_repository is not None, limit=limit,
+        event_id=event_id,
+    )
+    return JSONResponse(jsonable_encoder({
+        "items": [project_event(event, now) for event in events],
+        "locations": [{"id": point.key, "label": point.label} for point in localities],
+    }), headers={"Cache-Control": "no-store"})
 
 
 @public_router.get("/offers")

@@ -84,7 +84,7 @@ const url = (path: string) => `${base}/${path}`;
             : <span class="coach-card__monogram" aria-hidden="true">{coach.initials}</span>}
         </div>
         <div>
-          <p class="eyebrow">Coach-Profil</p><h2>{coach.name}</h2><strong>{coach.role}</strong>
+          <p class="eyebrow">Coach-Profil</p><h2><a class="coach-card__name" href={url(coach.profilePath)}>{coach.name}</a></h2><strong>{coach.role}</strong>
           <ul class="tag-list" aria-label="Themenschwerpunkte">{coach.focus.map((focus) => <li>{focus}</li>)}</ul>
           <p>{coach.text}</p>
           <div class="preview-coach-actions">
@@ -99,7 +99,7 @@ const url = (path: string) => `${base}/${path}`;
   </section>
   <div class="coach-topic-empty" data-preview-empty hidden>
     <p>Für diese Auswahl ist aktuell kein passendes freigegebenes Coach-Profil veröffentlicht.</p>
-    <a class="text-link" href={url("kontakt")}>Anliegen mit Janay besprechen <Icon name="arrow-right" size={20} /></a>
+    <a class="text-link" href={url("kontakt")}>Anliegen mit Frau Rappelt besprechen <Icon name="arrow-right" size={20} /></a>
   </div>
   <section class="cta-panel">
     <div><p class="eyebrow">Kontakt</p><h2>Coach-Profil oder Unternehmensbedarf besprechen</h2></div>

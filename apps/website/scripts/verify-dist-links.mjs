@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { extname, join, relative, resolve, sep } from "node:path";
 import assert from "node:assert/strict";
 import { websiteEnvironment, portalLoginConfiguration } from "../config/environment.mjs";
+import { activeCoachProfiles, pausedCoachSlugs } from "../config/active-coach-publication.mjs";
 
 const environment = websiteEnvironment();
 const portalLogin = portalLoginConfiguration();
@@ -10,21 +11,6 @@ const base = environment.preview ? environment.base : "";
 const canonicalHost = "competencehub.donner-partner.de";
 const htmlFiles = [];
 const allFiles = [];
-
-const forbiddenPublicIdentityFragments = [
-  "Susanne Klemm",
-  "susanne-klemm",
-  "Carolin Hupp",
-  "Elisabeth Schwabauer",
-  "Goran Celic",
-  "Stefanie Becker",
-  "Wegner-Ney",
-  "carolin-hupp",
-  "elisabeth-schwabauer",
-  "goran-celic",
-  "stefanie-becker",
-  "wegner-ney",
-];
 
 const textExtensions = new Set([".css", ".html", ".js", ".json", ".txt", ".xml"]);
 
@@ -113,55 +99,65 @@ for (const sourceFile of htmlFiles) {
 for (const file of allFiles) {
   const publicPath = relative(dist, file).split(sep).join("/");
   const pathLower = publicPath.toLocaleLowerCase("de-DE");
-  if (/carolin-hupp/i.test(publicPath)) {
+  if (pausedCoachSlugs.some((slug) => pathLower.includes(slug))) {
     failures.push({ source: publicPath, reason: "Paused Coach route/asset in public artifact" });
   }
-  for (const fragment of environment.preview ? [] : forbiddenPublicIdentityFragments) {
-    if (pathLower.includes(fragment.toLocaleLowerCase("de-DE"))) {
-      failures.push({ source: publicPath, target: fragment, reason: "removed identity in artifact path" });
-    }
-  }
-
   if (!textExtensions.has(extname(file).toLowerCase())) continue;
   const content = readFileSync(file, "utf8").toLocaleLowerCase("de-DE");
-  if (/v2-demo-coach|v2-demo-angebot|lokaler v2-pilot|\/portal\/calendar-public\.html/.test(content)) {
+  if (/v2-demo-coach|v2-demo-angebot|lokaler v2-pilot|data-live-upcoming|\/portal\/(?:calendar-public\.html|upcoming-events\.js)/.test(content)) {
     failures.push({ source: publicPath, reason: "Local V2 Calendar journey in public artifact" });
   }
   if (/data-portal-login="design"/.test(content) || (!portalLogin.href && content.includes("data-portal-login"))) {
     failures.push({ source: publicPath, reason: "Unconfirmed or local-design Portal entry in public artifact" });
   }
-  if (/carolin hupp|carolin-hupp|localhost:8447|217\.160\.255\.86|\/api\/v1\/portal|source_path|\.docx/.test(content)) {
+  if (/carolin hupp|carolin-hupp|janay rappelt|localhost:8447|217\.160\.255\.86|\/api\/v1\/portal|source_path|\.docx/.test(content)) {
     failures.push({ source: publicPath, reason: "Paused identity or internal data in public artifact" });
-  }
-  for (const fragment of environment.preview ? [] : forbiddenPublicIdentityFragments) {
-    if (content.includes(fragment.toLocaleLowerCase("de-DE"))) {
-      failures.push({ source: publicPath, target: fragment, reason: "removed identity in generated content" });
-    }
   }
 }
 
+const read = (path) => readFileSync(join(dist, path), "utf8");
+const expectedSlugs = activeCoachProfiles.map(({ slug }) => slug).sort();
+const portraitPaths = allFiles.map((file) => relative(dist, file).split(sep).join("/"))
+  .filter((path) => path.startsWith("images/coaches/"));
+assert.deepEqual(portraitPaths.sort(), activeCoachProfiles.map(({ portrait }) => `images/coaches/${portrait}`).sort());
+const profileRoutes = readdirSync(join(dist, "coaches"), { withFileTypes: true }).filter((entry) =>
+  entry.isDirectory() && !(!environment.preview && /^demoprofil-0[1-6]$/.test(entry.name))
+).map(({ name }) => name).sort();
+assert.deepEqual(profileRoutes, expectedSlugs);
+const home = read("index.html");
+const directory = read("coaches/index.html");
+assert.doesNotMatch(home, /Demoprofil/);
+assert.doesNotMatch(directory, /Demoprofil|Transparenter Messestand|Schabbauer/);
+assert.equal((directory.match(/class="coach-card__name"/g) ?? []).length, 8);
+assert.equal((home.match(/class="coach-preview__name"/g) ?? []).length, 8);
+for (const { slug, injected } of activeCoachProfiles) {
+  const html = read(`coaches/${slug}/index.html`);
+  assert.ok(html.includes(`data-coach-profile="${slug}"`), slug);
+  assert.ok(directory.includes(`class="coach-card__name" href="${base}/coaches/${slug}"`), slug);
+  if (environment.preview && injected) assert.doesNotMatch(html, /rel="canonical"|property="og:url"/, slug);
+  if (!environment.preview) assert.match(html, /rel="canonical"/, slug);
+}
+const offers = read("leistungen/index.html");
+const payload = offers.match(/<script[^>]+data-finder-data[^>]*>(.*?)<\/script>/s);
+assert.ok(payload, "Finder must contain its allowlisted public data");
+const entries = JSON.parse(payload[1]);
+assert.deepEqual([...new Set(entries.map((entry) => entry.coach.profilePath))].sort(), [
+  "coaches/elisabeth-schwabauer", "coaches/goran-celic", "coaches/guelcan-elmas-brandes", "coaches/susanne-klemm",
+]);
+assert.equal(entries.length, 28);
+assert.equal(entries.flatMap((entry) => entry.formats).length, 33);
+assert.doesNotMatch(payload[1], /Psychotherapie \(HeilprG\)|carolin-hupp|stefanie-becker/);
+const sitemap = read("sitemap.xml");
+
 if (environment.preview) {
-  assert.equal(readFileSync(join(dist, "robots.txt"), "utf8"), "User-agent: *\nDisallow: /\n");
-  assert.doesNotMatch(readFileSync(join(dist, "sitemap.xml"), "utf8"), /<url>/);
-  for (const slug of ["elisabeth-schwabauer", "goran-celic",
-    "guelcan-elmas-brandes", "stefanie-becker", "wegner-ney", "susanne-klemm"]) {
-    const html = readFileSync(join(dist, "coaches", slug, "index.html"), "utf8");
-    assert.doesNotMatch(html, /rel="canonical"|property="og:url"/, slug);
-  }
-  assert.doesNotMatch(readFileSync(join(dist, "coaches/index.html"), "utf8"), /Demoprofil|Transparenter Messestand|Schabbauer/);
-  assert.doesNotMatch(readFileSync(join(dist, "coaches/manuela-rodriguez/index.html"), "utf8"), /firmenseminare/);
-  assert.match(readFileSync(join(dist, "coaches/manuela-rodriguez/index.html"), "utf8"), /href="https:\/\/advisory\.donner-partner\.de\/"/);
+  assert.equal(read("robots.txt"), "User-agent: *\nDisallow: /\n");
+  assert.doesNotMatch(sitemap, /<url>/);
+  assert.doesNotMatch(read("coaches/manuela-rodriguez/index.html"), /firmenseminare/);
+  assert.match(read("coaches/manuela-rodriguez/index.html"), /href="https:\/\/advisory\.donner-partner\.de\/"/);
 } else {
-  const offers = readFileSync(join(dist, "leistungen/index.html"), "utf8");
-  const payload = offers.match(/<script[^>]+data-finder-data[^>]*>(.*?)<\/script>/s);
-  assert.ok(payload, "Production Finder must contain its allowlisted public data");
-  const entries = JSON.parse(payload[1]);
-  assert.equal(entries.length, 3);
-  assert.equal(entries.flatMap((entry) => entry.formats).length, 5);
-  assert.ok(entries.every((entry) => entry.coach.profilePath === "coaches/guelcan-elmas-brandes"));
-  assert.match(readFileSync(join(dist, "sitemap.xml"), "utf8"), /coaches\/guelcan-elmas-brandes/);
-  assert.match(readFileSync(join(dist, "coaches/guelcan-elmas-brandes/index.html"), "utf8"), /rel="canonical"/);
-  const manuela = readFileSync(join(dist, "coaches/manuela-rodriguez/index.html"), "utf8");
+  assert.deepEqual([...sitemap.matchAll(/<loc>https:\/\/competencehub\.donner-partner\.de\/coaches\/([^<\/]+)\/?<\/loc>/g)]
+    .map((match) => match[1]).sort(), expectedSlugs);
+  const manuela = read("coaches/manuela-rodriguez/index.html");
   assert.match(manuela, /href="https:\/\/donner-partner\.de\/dp\/fuer-unternehmen\/firmenseminare\/"/);
   assert.doesNotMatch(manuela, /href="https:\/\/advisory\.donner-partner\.de\/"/);
 }

@@ -26,6 +26,7 @@ from competence_hub_api.auth.postgres_session_repository import (
 from competence_hub_api.config import CAL2_PILOT_DATABASE, RuntimeSettings
 from competence_hub_api.main import create_app
 from competence_hub_api.portal.companies import CompanyService
+from competence_hub_api.portal.customers import CustomerAdministration
 from competence_hub_api.portal.calendar import CalendarService
 from competence_hub_api.portal.postgres_calendar import PostgresCalendarRepository
 from competence_hub_api.portal.reservations import ReservationRepository
@@ -52,6 +53,20 @@ async def _verify_cal2_pilot(engine: AsyncEngine) -> None:
         """), {"database": CAL2_PILOT_DATABASE})
     if not verified:
         raise RuntimeError("CAL-2 pilot database, schema or synthetic cohort did not pass")
+
+
+async def _customer_schema_ready(engine: AsyncEngine) -> bool:
+    # The two tables and their grants are installed atomically by 0012. The
+    # app role deliberately cannot read the migration ledger.
+    async with engine.connect() as connection:
+        return bool(await connection.scalar(text("""
+            SELECT has_table_privilege(
+                       to_regclass('competence_hub.private_customers'), 'SELECT'
+                   )
+               AND has_table_privilege(
+                       to_regclass('competence_hub.company_customer_details'), 'SELECT'
+                   )
+        """)))
 
 
 def create_database_engine(database_url: str) -> AsyncEngine:
@@ -165,15 +180,18 @@ def create_runtime_app(
         )
 
     @asynccontextmanager
-    async def lifespan(_: FastAPI):
+    async def lifespan(application: FastAPI):
         try:
             if pilot_reservations:
                 try:
                     await _verify_cal2_pilot(engine)
                 except (SQLAlchemyError, OSError):
                     raise RuntimeError("CAL-2 pilot database verification failed") from None
+            if reservations_enabled and await _customer_schema_ready(engine):
+                application.state.customer_administration = CustomerAdministration(engine)
             yield
         finally:
+            application.state.customer_administration = None
             await engine.dispose()
 
     app = create_app(

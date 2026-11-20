@@ -165,8 +165,8 @@ def offering_finder_checks(page, base, name):
     search = form.get_by_role("searchbox", name="Angebot oder Coach")
     status = root.locator("[data-finder-status]")
     rows = root.locator("[data-finder-entry]")
-    check(f"{name} finder 27 grouped offers", rows.count() == 27)
-    check(f"{name} finder initially bounded to eight rows", root.locator("[data-finder-entry]:visible").count() == 8 and "27 passende" in status.inner_text())
+    check(f"{name} finder 28 grouped offers", rows.count() == 28)
+    check(f"{name} finder initially bounded to eight rows", root.locator("[data-finder-entry]:visible").count() == 8 and "28 passende" in status.inner_text())
     check(f"{name} no private data in finder payload", not re.search(r'source_path|source_key|revision_id|coach_uuid|review_required|\.pdf|\.docx', root.locator("[data-finder-data]").text_content(), re.I))
     search.focus()
     page.keyboard.press("Tab")
@@ -179,7 +179,7 @@ def offering_finder_checks(page, base, name):
     root.locator(".finder-topics summary").click()
     form.get_by_label("Kategorie", exact=True).select_option("personalentwicklung")
     form.get_by_role("checkbox", name="Gesundheit & Prävention").check()
-    check(f"{name} all finder dimensions combine", root.locator("[data-finder-entry]:visible").count() == 1 and "1 passende" in status.inner_text())
+    check(f"{name} all finder dimensions combine", root.locator("[data-finder-entry]:visible").count() == 1 and "1 passendes Angebot" in status.inner_text())
     family = root.locator('[data-finder-entry="family/business-balance"]')
     family.locator("summary").focus()
     page.keyboard.press("Enter")
@@ -193,7 +193,7 @@ def offering_finder_checks(page, base, name):
     form.get_by_role("button", name="Filter zurücksetzen").click()
     check(f"{name} finder reset clears all dimensions", search.input_value() == "" and form.get_by_label("Zielgruppe").input_value() == "all"
           and form.get_by_label("Format", exact=True).input_value() == "all" and form.get_by_label("Kategorie", exact=True).input_value() == "all"
-          and form.locator('input[type="checkbox"]:checked').count() == 0 and "27 passende" in status.inner_text())
+          and form.locator('input[type="checkbox"]:checked').count() == 0 and "28 passende" in status.inner_text())
     more = root.get_by_role("button", name="Weitere Angebote anzeigen")
     more.focus()
     page.keyboard.press("Enter")
@@ -201,7 +201,7 @@ def offering_finder_checks(page, base, name):
           and root.locator("[data-finder-entry]:visible").nth(8).locator("summary").evaluate("e => e === document.activeElement"))
     more.click()
     more.click()
-    check(f"{name} all offers reachable without duplicates", root.locator("[data-finder-entry]:visible").count() == 27 and not more.is_visible())
+    check(f"{name} all offers reachable without duplicates", root.locator("[data-finder-entry]:visible").count() == 28 and not more.is_visible())
     for row in rows.all():
         row.locator("summary").click()
         check(f"{name} requestable offer has profile and draft", row.locator("[data-finder-profile]").count() == 1 and row.locator('a[href^="mailto:"]').count() >= 1)
@@ -365,9 +365,9 @@ def main():
                 page.goto(base + "/coaches/elisabeth-schwabauer/", wait_until="networkidle")
                 check(f"{name} Elisabeth spelling", page.locator("h1").inner_text() == "Frau Elisabeth Schwabauer")
                 check(f"{name} offer groups", page.locator(".offer-group").count() == 4)
-                check(f"{name} 17 exact supplied titles", page.locator(".offer-group li").count() == 17)
+                check(f"{name} 16 active titles", page.locator(".offer-group li").count() == 16)
                 check(f"{name} psychotherapy boundary", "Über den Competence Hub wird derzeit keine Psychotherapie angeboten."
-                      in page.locator(".elisabeth-offers").inner_text())
+                      in page.locator(".notice-panel").inner_text())
                 summary = page.locator(".offer-group summary").first
                 summary.focus()
                 page.keyboard.press("Enter")
@@ -393,7 +393,11 @@ def main():
                 page.screenshot(path=str(path))
                 screenshots.append(path.name)
 
-                for calendar in ("/kalender/", "/prototyp/kalender/"):
+                page.goto(base + "/kalender/", wait_until="networkidle")
+                check(f"{name} public calendar does not show sample dates",
+                      "Derzeit sind keine Termine veröffentlicht." in page.locator("main").inner_text()
+                      and page.locator(".calendar-event").count() == 0)
+                for calendar in ("/prototyp/kalender/",):
                     page.goto(base + calendar, wait_until="networkidle")
                     check(f"{name} {calendar} synthetic", "Ausschließlich Beispieldaten:" in page.locator("main").inner_text())
                     seen = 0
@@ -457,7 +461,7 @@ def main():
                 check("no-JS approved offerings and mail drafts work", page.locator("[data-offer-format]").count() == 5
                       and page.locator("[data-offer-format] a").first.get_attribute("href").startswith("mailto:"))
                 page.goto(base + "/leistungen/#angebotsfinder", wait_until="networkidle")
-                check("no-JS finder is complete and no dead controls", page.locator("[data-finder-entry]:visible").count() == 27
+                check("no-JS finder is complete and no dead controls", page.locator("[data-finder-entry]:visible").count() == 28
                       and not page.locator("[data-finder-form]").is_visible())
                 page.locator("[data-finder-entry] summary").first.click()
                 check("no-JS finder profile and mail draft work", page.locator("[data-finder-profile]:visible").count() == 1

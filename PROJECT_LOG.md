@@ -2,6 +2,12 @@
 
 Significant milestones only; newest first.
 
+20.11 feedback candidate: eight approved active website profiles, held scope
+unchanged; corrected Finder and profile navigation. Reusable local calendar
+facts, regional search, Editor/tours and isolated internal customer records
+with schema 0012. Source Word and existing deployments unchanged.
+[Consolidated acceptance](docs/handoffs/2026-11-20-feedback-platform.md).
+
 19.11 V2 local integration: existing Astro journey and Portal/CAL-1/CAL-2 paths
 share one locally isolated synthetic PostgreSQL system. Role summaries, scoped
 offer handoff and native multi-company workflow checked. Public build parity,

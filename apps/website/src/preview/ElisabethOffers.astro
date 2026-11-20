@@ -1,34 +1,40 @@
 ---
-import { offerGroups } from "./elisabeth-offers";
+import { publicElisabethOfferGroups as groups } from "./elisabeth-offers";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
-<section class="elisabeth-offers" aria-labelledby="elisabeth-offers-title">
+<section class="elisabeth-offers" id="angebote" aria-labelledby="elisabeth-offers-title">
   <p class="eyebrow">Psychische Gesundheit am Arbeitsplatz</p>
   <h2 id="elisabeth-offers-title">Angebote von Elisabeth Schwabauer</h2>
   <div class="offer-groups">
-    {offerGroups.map((group) => (
-      <details class="offer-group" open>
-        <summary><h3>{group.label}</h3></summary>
+    {groups.map((group, index) => (
+      <details class="offer-group" open={index === 0}>
+        <summary>
+          <strong>{group.label}</strong>
+          <span class="offer-count">{group.offers.length} {group.offers.length === 1 ? "Angebot" : "Angebote"}</span>
+          {index !== 0 && group.id !== "weitere" && <span class="offer-group-preview">{group.offers[0]}</span>}
+        </summary>
         <ul>{group.offers.map((offer) => <li>{offer}</li>)}</ul>
-        {group.id === "weitere" && <p>
-          Psychotherapie (HeilprG) ist hier als gesondertes Angebot aus der
-          bereitgestellten Übersicht genannt. Über den Competence Hub wird
-          derzeit keine Psychotherapie angeboten. Coaching und berufliche
-          Beratung ersetzen keine medizinische Beratung oder akute Krisenversorgung.
-        </p>}
       </details>
     ))}
   </div>
+  <nav class="offer-navigation" aria-label="Angebote und Themenschwerpunkte">
+    <a class="text-link" href={`${base}/leistungen?coach=elisabeth-schwabauer#angebotsfinder`}>Im Angebotsfinder ansehen</a>
+    <a class="text-link" href="#themenschwerpunkte">Zu den Themenschwerpunkten</a>
+  </nav>
 </section>
 <style>
-  .elisabeth-offers { margin-bottom: 70px; padding-block: 32px; border-top: 8px solid var(--color-pantone); }
-  h2 { font-size: 2rem; line-height: 1.15; max-width: 34ch; }
-  .offer-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 24px 40px; }
-  .offer-group { border-top: 2px solid var(--color-line); padding-block: 16px; min-width: 0; }
-  summary { cursor: pointer; padding: 10px 0; }
-  summary h3 { display: inline; font-size: 1.3rem; }
-  summary:focus-visible { outline: 3px solid var(--color-dark); outline-offset: 4px; }
-  ul { padding-left: 22px; }
-  li { margin-block: 12px; overflow-wrap: anywhere; }
-  p { max-width: 64ch; }
-  @media (max-width: 760px) { .offer-groups { grid-template-columns: minmax(0, 1fr); } }
+  .elisabeth-offers { margin-block: 32px 64px; padding-top: 32px; border-top: 2px solid var(--color-line); scroll-margin-top: 180px; }
+  h2 { font-size: 2rem; line-height: 1.2; margin-block: 12px 28px; overflow-wrap: anywhere; }
+  .offer-group { border-block-start: 1px solid var(--color-line); min-width: 0; }
+  .offer-group:last-child { border-block-end: 1px solid var(--color-line); }
+  summary { cursor: pointer; padding: 16px 12px; min-height: 48px; overflow-wrap: anywhere; }
+  summary strong { font-size: 1.2rem; }
+  summary:focus-visible { outline: 3px solid var(--color-dark); outline-offset: -3px; }
+  .offer-count { display: inline-block; margin-inline-start: 12px; font-size: .9rem; white-space: nowrap; }
+  .offer-group-preview { display: block; margin-block-start: 8px; }
+  .offer-group[open] .offer-group-preview { display: none; }
+  ul { padding-inline-start: 24px; margin-block: 0 20px; }
+  li { margin-block: 8px; overflow-wrap: anywhere; }
+  .offer-navigation { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 20px; }
+  .offer-navigation a { display: inline-flex; align-items: center; min-height: 44px; scroll-margin-top: 180px; }
 </style>

@@ -11,8 +11,15 @@ from icalendar import Calendar
 from playwright.sync_api import expect
 
 
+def disclose(page, section):
+    details = page.locator("#calendar-" + section)
+    if details.count() and details.get_attribute("open") is None:
+        details.locator(":scope > summary").click()
+
+
 def fill_datetime(page,name,value):
     """Date-only German control plus exactly one24h clock."""
+    disclose(page, "scheduling")
     page.locator('#calendar-'+name).fill(value.strftime('%d.%m.%Y'))
     page.locator('#calendar-'+name+'-hour').select_option(value.strftime('%H'))
     page.locator('#calendar-'+name+'-minute').select_option(value.strftime('%M'))
@@ -67,7 +74,15 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile,*,strict_tls=Fa
         [...document.querySelectorAll('dialog[open] input,dialog[open] select,dialog[open] button')].filter(e=>e.getClientRects().length)
         .every(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.left>=-1&&r.right<=innerWidth+1;})''')
     # Clean and dirty cancellation, including one choice rather than native confirm.
-    page.locator('#open-calendar-offer-dialog').click();page.locator('#calendar-offer-dialog [data-dialog-close]').last.click()
+    page.locator('#open-calendar-offer-dialog').click()
+    compact = bool(page.locator('#calendar-scheduling').count())
+    if compact:
+        expect(page.locator('#calendar-starts-at')).to_be_visible()
+        expect(page.locator('#calendar-starts-at-hour')).to_be_hidden()
+        expect(page.locator('#calendar-summary')).to_be_hidden()
+        expect(page.locator('#calendar-clock-preview')).to_contain_text('09:00 Uhr')
+        page.screenshot(path=str(evidence/'compact-editor-desktop.png'))
+    page.locator('#calendar-offer-dialog [data-dialog-close]').last.click()
     expect(page.locator('#calendar-offer-dialog')).to_be_hidden();expect(page.locator('#calendar-discard-dialog')).to_be_hidden()
     open_form(title)
     page.locator('#calendar-offer-dialog [data-dialog-close]').last.click()
@@ -95,7 +110,11 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile,*,strict_tls=Fa
     page.locator('#calendar-location').fill('Würzburg, Seminarraum')
     expect(page.locator('#calendar-location')).not_to_have_attribute('aria-invalid','true')
     case(6,'Short location-only error clears immediately on correction')
-    page.locator('#calendar-starts-at-minute').select_option('');page.locator('#save-calendar-offer').click()
+    page.locator('#calendar-starts-at-minute').select_option('')
+    if compact:
+        page.locator('#calendar-scheduling > summary').click()
+        expect(page.locator('#calendar-starts-at-minute')).to_be_hidden()
+    page.locator('#save-calendar-offer').click()
     expect(page.locator('#calendar-starts-at-minute')).to_be_focused()
     expect(page.locator('#calendar-starts-at-minute-error')).to_have_text('Bitte Minute wählen.')
     expect(page.locator('#calendar-starts-at')).not_to_have_attribute('aria-invalid','true')
@@ -112,6 +131,8 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile,*,strict_tls=Fa
          saved['summary'] is None and saved['starts_at']!=saved['ends_at'])
     # Multi-day range, explicit endpoints and intermediate highlight.
     multi=title+' Mehrtage';multi_start=(start+timedelta(days=2)).replace(hour=10)
+    if (multi_start + timedelta(days=3)).month != multi_start.month:
+        multi_start = (multi_start + timedelta(days=3)).replace(day=1)
     open_form(multi,multi_start,multi_start+timedelta(days=3,hours=2))
     select_date(page,'starts_at',multi_start);select_date(page,'ends_at',multi_start+timedelta(days=3))
     expect(page.locator('#calendar-date-panel .cal-range-middle')).to_have_count(2)
@@ -133,7 +154,16 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile,*,strict_tls=Fa
     case(10,'Escape layers and Browser Back: keep/discard once, return to overview')
     card(title).get_by_role('button',name='Entwurf bearbeiten',exact=True).click()
     expect(page.locator('#calendar-starts-at')).to_have_value(start.strftime('%d.%m.%Y'))
-    page.locator('#calendar-summary').fill('DEMO geänderter Entwurf');save()
+    disclose(page, "description")
+    description = 'Zielgruppe: Demo-Team.\n\nInhalte und Ablauf: ' + 'Beispiel und Reflexion. ' * 39
+    page.locator('#calendar-summary').fill(description)
+    if compact:
+        expect(page.locator('#calendar-summary-count')).to_have_text(f'{len(description)} / 1200 Zeichen')
+        assert page.locator('#calendar-summary').get_attribute('maxlength') == '1200'
+        page.locator('#calendar-description > summary').click()
+        expect(page.locator('#calendar-summary')).to_be_hidden()
+    save()
+    assert get(page,'/api/v1/portal/calendar/offers/'+offer_id).json()['current_revision']['summary'] == description.strip()
     case(11,'Saved draft reopens and updates without losing date/time')
     # Normal Reviewer workflow, not an approval bypass.
     with page.expect_response(lambda response:response.request.method=='POST' and response.url.endswith('/submit')) as sent:
@@ -146,12 +176,38 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile,*,strict_tls=Fa
             reviewer.reload();row=card(title,reviewer,True);row.get_by_role('button',name='Angebot prüfen',exact=True).click()
             expect(reviewer.locator('#calendar-review-dialog')).to_be_visible()
             expect(reviewer.locator('#calendar-review-summary')).to_contain_text(title)
+            note = reviewer.locator('#calendar-review-note')
+            if compact:
+                expect(note).to_be_hidden()
+                if outcome == 'changes_requested':
+                    expect(reviewer.locator('#calendar-review-description-text')).to_be_hidden()
+                    reviewer.locator('#calendar-review-description > summary').press('Enter')
+                    expect(reviewer.locator('#calendar-review-description-text')).to_have_text(description.strip(), use_inner_text=True)
             reviewer.locator('input[name="outcome"][value="'+outcome+'"]').check()
-            if outcome=='changes_requested':reviewer.locator('#calendar-review-note').fill('DEMO Kurzbeschreibung präzisieren')
+            if outcome=='changes_requested':
+                if compact:
+                    expect(note).to_be_visible()
+                    reviewer.get_by_role('button',name='Entscheidung speichern',exact=True).click()
+                    expect(note).to_be_focused()
+                    expect(reviewer.locator('#calendar-review-error')).to_contain_text('gewünschte Änderung')
+                note.fill('DEMO Kurzbeschreibung präzisieren')
+            elif compact:
+                expect(note).to_be_hidden()
+                toggle=reviewer.locator('#calendar-review-note-toggle')
+                toggle.press('Enter')
+                expect(toggle).to_have_attribute('aria-expanded','true')
+                expect(note).to_be_visible()
+                assert note.get_attribute('required') is None
+                note.fill('DEMO nur lokal, nicht mitgesendet')
+                toggle.press('Enter')
+                expect(note).to_be_hidden()
             with reviewer.expect_response(lambda response:response.request.method=='POST' and response.url.endswith('/review-decisions')) as result:
                 reviewer.get_by_role('button',name='Entscheidung speichern',exact=True).click()
             assert result.value.status==200;expect(reviewer.locator('#calendar-review-dialog')).to_be_hidden()
+            if compact and outcome=='published':
+                assert result.value.request.post_data_json['note'] is None
         review('changes_requested');page.reload();card(title).get_by_role('button',name='Neue Revision bearbeiten',exact=True).click()
+        disclose(page, "description")
         page.locator('#calendar-summary').fill('DEMO fachlich präzisierte Kurzbeschreibung');save()
         with page.expect_response(lambda response:response.request.method=='POST' and response.url.endswith('/submit')):
             card(title).get_by_role('button',name='Zur Prüfung einreichen',exact=True).click()
@@ -179,7 +235,15 @@ def exercise(page,base,pw,login,now,report,evidence,zoom_profile,*,strict_tls=Fa
         finally:public.close()
     finally:reviewer_context.close()
     # Mobile/touch-independent keyboard path; real full-page zoom uses existing helper.
-    open_form(title+' Mobil',start+timedelta(days=4));page.set_viewport_size({'width':390,'height':844})
+    page.set_viewport_size({'width':390,'height':844})
+    if compact:
+        page.locator('#open-calendar-offer-dialog').click()
+        expect(page.locator('#calendar-starts-at-hour')).to_be_hidden()
+        assert layout(page)
+        page.screenshot(path=str(evidence/'compact-editor-390.png'))
+        page.locator('#calendar-offer-dialog [data-dialog-close]').last.click()
+        expect(page.locator('#calendar-offer-dialog')).to_be_hidden()
+    open_form(title+' Mobil',start+timedelta(days=4))
     page.locator('#calendar-starts-at-minute').select_option('');page.locator('#save-calendar-offer').click()
     expect(page.locator('#calendar-starts-at-minute')).to_be_focused();assert layout(page)
     assert page.locator('#calendar-starts-at-minute').get_attribute('aria-describedby')=='calendar-starts-at-minute-error'

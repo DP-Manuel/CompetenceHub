@@ -132,21 +132,26 @@ Preview: http://127.0.0.1:4321/CompetenceHub/
 Production output stays in `dist`; preview output is isolated in `dist-preview`.
 Only the latter is uploaded by the manual Pages workflow.
 
-The05.11 Website-first slice adds approved Guelcan short offerings, combined
-Coach/topic/offer search and encoded Coach/format-specific email drafts in
-Preview only. These drafts open the visitor's mail client; the site does not
-send or store them. Held Becker candidates remain excluded. Registry projection
-stays opt-in and inactive by default; no database or key setup is needed here.
-Version inventory, current return targets and environment differences:
-[Website-first report](../../docs/content/website-first-2026-11-05.md).
+The 19.11 feedback candidate builds the same eight existing active Coach
+profiles and reviewed portraits for Production and Preview. The explicit
+[scope](config/active-coach-publication.mjs) does not include the paused
+Carolin Hupp profile or unpublished candidates. Legacy fictions are absent from
+the active portfolio and sitemap; their prior production direct links still
+resolve to clearly labelled, noindex demos. A new profile for Frau Rappelt
+belongs to the Personalvermittlung entry at `/leistungen/#recruiting` after
+approval, not to the Coach portfolio. No personal profile is published here.
 
-COACH-5 extends the existing `/leistungen/#angebotsfinder` in Preview only:
-27 grouped entries /29 formats from the three explicitly approved offering
-lists, shared canonical topics, combined filters and contextual mail drafts.
-The component accepts a public view model; no Registry source is activated.
-Production resolves the Finder import to a no-output component at build time,
-so neither markup nor its client bundle enters the stable52-file artifact.
-[Scope and acceptance](../../docs/exec-plans/active/coach5-offering-finder-2026-11-05.md).
+The `/leistungen/#angebotsfinder` candidate has 28 entries and 33 formats from
+four approved sources. The Celic profile and Finder share the existing formats
+for Rhetorik & Vertrieb. Contextual drafts open the visitor's own mail client;
+the site does not send or store them. Held Becker candidates and psychotherapy
+are not offered. Registry projection stays opt-in and inactive by default.
+Local artifacts do not change the current Pages or IONOS releases; each actual
+publication still requires its own approval.
+
+For the feedback proofs run `scripts/run-website-release-acceptance.py` with
+Playwright Firefox after building both modes. It checks keyboard use, 390 px,
+native 200% zoom and basic no-JavaScript access without contacting live sites.
 For an explicitly selected installed browser the QA runner accepts
 `WEBSITE_QA_BROWSER_EXECUTABLE`; its report names the actual engine/version.
 

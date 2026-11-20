@@ -18,11 +18,13 @@ assert.match(home, /href="\/website\/leistungen\/#v2-demo-angebot"/);
 assert.match(home, /href="\/portal\/calendar-public\.html"/);
 assert.match(offers, /id="v2-demo-angebot"/);
 assert.match(offers, /href="\/website\/coaches\/v2-demo-coach\/"/);
-assert.match(offers, /href="\/website\/coaches\/guelcan-elmas-brandes" data-finder-profile/);
+assert.match(offers, /href="\/website\/coaches\/guelcan-elmas-brandes#angebote" data-finder-profile/);
 assert.match(coach, /Synthetisches Profil/);
 assert.match(coach, /href="\/portal\/calendar-public\.html\?coach=v2-demo-coach"/);
 assert.match(coach, /href="\/website\/leistungen\/#v2-demo-angebot"/);
-assert.doesNotMatch(official, /calendar-public\.html\?coach=/);
+assert.match(official, /data-coach-path="\/coaches\/guelcan-elmas-brandes\/"/);
+assert.match(official, /href="\/portal\/calendar-public\.html\?coach=guelcan-elmas-brandes"/);
+assert.doesNotMatch(official, /calendar-public\.html\?coach=v2-demo-coach/);
 assert.equal(read("robots.txt"), "User-agent: *\nDisallow: /\n");
 assert.doesNotMatch(read("sitemap.xml"), /<url>/);
 assert.ok(!existsSync(join(root, ".htaccess")));
@@ -43,7 +45,7 @@ for (const file of htmlFiles) {
   assert.doesNotMatch(html, /rel="canonical"|property="og:url"|<[^>]+\sstyle=/, file);
   assert.equal([...html.matchAll(/href="\/portal\/" data-portal-login="enabled"/g)].length, 2, file);
   for (const [tag] of html.matchAll(/<script\b[^>]*>/g)) {
-    assert.match(tag, /\btype="application\/json"|\bsrc="\/website\/_astro\//, `${file}: ${tag}`);
+    assert.match(tag, /\btype="application\/json"|\bsrc="\/website\/_astro\/|\bsrc="\/portal\/upcoming-events\.js"/, `${file}: ${tag}`);
   }
 }
 console.log(`Verified local V2 journey, noindex and CSP contracts across ${htmlFiles.length} HTML files.`);

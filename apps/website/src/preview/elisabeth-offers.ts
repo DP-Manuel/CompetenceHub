@@ -32,3 +32,9 @@ export const offerGroups = [
   },
   { id: "weitere", label: "Coaching / weitere Angebote", offers: ["Coaching", "Psychotherapie (HeilprG)"] },
 ] as const;
+
+// Preserve the original shortlist above. Only the active offers are rendered.
+export const publicElisabethOfferGroups = offerGroups.map((group) => ({
+  ...group,
+  offers: group.offers.filter((offer) => offer !== "Psychotherapie (HeilprG)"),
+}));

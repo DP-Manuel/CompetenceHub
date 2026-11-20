@@ -10,7 +10,8 @@ import sys
 import zipfile
 
 from v2_package import (
-    TARGET, add_package_arguments, json_bytes, json_read, matches, rejection_code, require, sha, sha_valid, verify_arguments,
+    MIGRATION_HEAD, TARGET, add_package_arguments, json_bytes, json_read, matches, rejection_code,
+    require, sha, sha_valid, verify_arguments,
 )
 
 
@@ -23,7 +24,7 @@ TABLES = tuple(sorted("""
     calendar_offer_revisions calendar_review_decisions
 """.split()))
 SEQUENCES = ("audit_events_id_seq", "calendar_review_decisions_id_seq")
-ACTION = "V2_SCHEMA_ONLY_0007_TO_0011"
+ACTION = f"V2_SCHEMA_ONLY_0007_TO_{MIGRATION_HEAD:04}"
 
 
 def sql_list(items):
@@ -102,7 +103,7 @@ def plan(migrations, approval=None, *, ready=False):
     script += check("NOT EXISTS (SELECT FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid())",
                     "CLONE_MUST_BE_QUIET")
     if ready:
-        script += ledger(11)
+        script += ledger(MIGRATION_HEAD)
         script += check("NOT EXISTS (SELECT FROM competence_hub.auth_sessions WHERE revoked_at IS NULL"
                         " AND idle_expires_at>now() AND absolute_expires_at>now())"
                         " AND NOT EXISTS (SELECT FROM competence_hub.auth_login_challenges"
@@ -127,7 +128,7 @@ def plan(migrations, approval=None, *, ready=False):
         script += "SET SESSION AUTHORIZATION competence_hub_migrator;\n" + migration_body(migration)
         script += "RESET SESSION AUTHORIZATION;\n" + ledger(i)
     script += check(f"{clone_snapshot()}='{approval['reference_sha256']}'", "ORIGINAL_CLONE_REFERENCE_CHANGED")
-    script += check("(SELECT count(*) FROM pg_tables WHERE schemaname='competence_hub')=46"
+    script += check("(SELECT count(*) FROM pg_tables WHERE schemaname='competence_hub')=48"
                     " AND NOT EXISTS(SELECT FROM pg_tables WHERE schemaname='competence_hub'"
                     " AND tableowner<>'competence_hub_owner')"
                     " AND NOT EXISTS (SELECT FROM competence_hub.coach_import_sources)"
@@ -135,8 +136,12 @@ def plan(migrations, approval=None, *, ready=False):
                     " AND NOT EXISTS (SELECT FROM competence_hub.coach_import_evidence)"
                     " AND NOT EXISTS (SELECT FROM competence_hub.calendar_reservations)"
                     " AND NOT EXISTS (SELECT FROM competence_hub.calendar_reservation_events)"
+                    " AND NOT EXISTS (SELECT FROM competence_hub.private_customers)"
+                    " AND NOT EXISTS (SELECT FROM competence_hub.company_customer_details)"
                     " AND has_table_privilege('competence_hub_app','competence_hub.calendar_reservations','SELECT')"
                     " AND has_column_privilege('competence_hub_app','competence_hub.calendar_reservations','seats','UPDATE')"
+                    " AND has_table_privilege('competence_hub_app','competence_hub.private_customers','SELECT')"
+                    " AND NOT has_table_privilege('competence_hub_app','competence_hub.private_customers','DELETE')"
                     " AND NOT has_table_privilege('competence_hub_app','competence_hub.calendar_reservation_events','DELETE')",
                     "V2_POST_MIGRATION_INVARIANTS")
     return script + "COMMIT;\n" + return_sql
@@ -194,7 +199,7 @@ def main():
     print(json_bytes({**result, "archive_sha256": args.sha256, "commit": args.commit,
                       "source_evidence_sha256": args.source_evidence_sha256,
                       "approval_sha256": args.approval_sha256,
-                      "migration_head": "0006" if args.command == "inspect" else "0011",
+                      "migration_head": "0006" if args.command == "inspect" else f"{MIGRATION_HEAD:04}",
                       "deployment_authorized": False}).decode(), end="")
 
 

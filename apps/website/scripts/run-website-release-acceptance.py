@@ -9,7 +9,7 @@ from urllib.parse import parse_qs, urlsplit
 from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[3]
-EVIDENCE = ROOT / 'release-artifacts/website-release-20261117'
+EVIDENCE = ROOT / 'release-artifacts/website-feedback-20261119'
 
 
 def load(name, path):
@@ -44,7 +44,89 @@ def wait_for_portrait(page, timeout=15000):
     }''', timeout=timeout)
 
 
-def journey(context, base, mode, label, page=None):
+def ux_feedback(page, base, label):
+    def activate(control):
+        control.focus()
+        page.keyboard.press('Enter')
+
+    page.goto(base + '/')
+    name = page.locator('.coach-preview__name').filter(has_text='Christian Galvano')
+    assert name.evaluate("e=>getComputedStyle(e).textDecorationLine.includes('underline')")
+    name.locator('xpath=ancestor::a').focus()
+    page.keyboard.press('Enter')
+    expect(page.locator('main[data-coach-profile="christian-galvano"]')).to_be_visible()
+    page.goto(base + '/coaches/')
+    link = page.get_by_role('heading', name='Frau Elisabeth Schwabauer').get_by_role('link')
+    link.focus()
+    page.keyboard.press('Enter')
+    expect(page.locator('main[data-coach-profile="elisabeth-schwabauer"]')).to_be_visible()
+    assert page.locator('#themenschwerpunkte + #angebote').count() == 1
+    groups = page.locator('.offer-group')
+    expect(groups).to_have_count(4)
+    expect(page.locator('.offer-group[open]')).to_have_count(1)
+    expect(groups.first.locator('li').first).to_be_visible()
+    expect(groups.nth(1).locator('.offer-group-preview')).to_be_visible()
+    groups.nth(1).locator('summary').focus()
+    page.keyboard.press('Enter')
+    expect(groups.nth(1)).to_have_attribute('open', '')
+    expect(groups.nth(1).get_by_text('Wiedereingliederung nach psychischer Erkrankung')).to_be_visible()
+    assert page.get_by_text('Psychotherapie (HeilprG)', exact=True).count() == 0
+    fit(page)
+    page.locator('#angebote').evaluate("e=>e.scrollIntoView({block:'start',behavior:'instant'})")
+    page.screenshot(path=str(EVIDENCE / (label + '-schwabauer.png')))
+    activate(page.locator('#angebote').get_by_role('link', name='Im Angebotsfinder ansehen'))
+    expect(page.locator('#finder-coach')).to_have_value('coaches/elisabeth-schwabauer')
+    page.locator('#finder-query').fill('Wiedereingliederung')
+    row = page.locator('[data-finder-entry]:visible')
+    expect(row).to_have_count(1)
+    row.locator('summary').focus()
+    page.keyboard.press('Enter')
+    assert row.evaluate("""row => {
+        const summary = row.querySelector('summary');
+        const title = row.querySelector('h3');
+        const range = document.createRange(); range.selectNodeContents(title);
+        const outline = getComputedStyle(summary);
+        return summary.matches(':focus-visible') && parseFloat(outline.outlineOffset) < 0
+          && range.getBoundingClientRect().top - summary.getBoundingClientRect().bottom >= 12;
+    }"""), 'Focused summary outline must remain separate from actual heading text'
+    page.screenshot(path=str(EVIDENCE / (label + '-finder-focus.png')))
+    reset = page.get_by_role('button', name='Filter zurücksetzen')
+    activate(reset)
+    activate(page.locator('.finder-topics summary'))
+    health = page.locator('input[value="gesundheit-praevention"]')
+    health.focus()
+    page.keyboard.press('Space')
+    expect(health).to_be_checked()
+    page.locator('#finder-category').select_option('karrierecoaching')
+    expect(health).to_be_hidden()
+    expect(health).not_to_be_checked()
+    rhetorik = page.get_by_role('checkbox', name='Rhetorik & Vertrieb')
+    rhetorik.focus()
+    page.keyboard.press('Space')
+    expect(rhetorik).to_be_checked()
+    expect(row).to_have_count(1)
+    expect(row).to_have_attribute('data-finder-entry', 'goran/rhetorik-vertrieb')
+    page.locator('#finder-format').select_option('program')
+    expect(page.locator('[data-finder-empty]')).to_be_visible()
+    expect(page.get_by_role('link', name='Bedarf mit Frau Rappelt besprechen')).to_be_visible()
+    page.locator('#finder-format').select_option('workshop')
+    expect(row).to_have_count(1)
+    row.locator('summary').focus()
+    page.keyboard.press('Enter')
+    expect(row.locator('[data-finder-format]:visible')).to_have_count(1)
+    row.locator('[data-finder-profile]').focus()
+    page.keyboard.press('Enter')
+    expect(page.locator('main[data-coach-profile="goran-celic"]')).to_be_visible()
+    assert urlsplit(page.url).fragment == 'angebote'
+    activate(page.locator('#angebote').get_by_role('link', name='Im Angebotsfinder ansehen'))
+    expect(page.locator('#finder-coach')).to_have_value('coaches/goran-celic')
+    activate(reset)
+    expect(page.locator('[data-finder-status]')).to_contain_text('28 passende Angebote')
+    expect(row).to_have_count(8)
+    fit(page)
+
+
+def journey(context, base, mode, label, page=None, live=False):
     page = page if page is not None else context.new_page()
     errors = []; external = []; writes = []
     page.on('pageerror', lambda error: errors.append(error.name))
@@ -56,7 +138,7 @@ def journey(context, base, mode, label, page=None):
     page.route('**/*', guard)
     page.goto(base + '/unternehmen/'); fit(page)
     page.get_by_role('link', name='Workshops finden', exact=True).focus(); page.keyboard.press('Enter')
-    expect(page.locator('[data-finder-status]')).to_contain_text('3 passende Angebote' if mode == 'production' else '27 passende Angebote')
+    expect(page.locator('[data-finder-status]')).to_contain_text(f'{27 if live else 28} passende Angebote')
     page.locator('#finder-coach').select_option('coaches/guelcan-elmas-brandes')
     expect(page.locator('[data-finder-entry]:visible')).to_have_count(3)
     page.locator('[data-finder-entry]:visible summary').first.focus()
@@ -90,7 +172,19 @@ def journey(context, base, mode, label, page=None):
     page.goto(base + '/coaches/manuela-rodriguez/')
     mailto(page.get_by_role('link', name='Anfrage per E-Mail', exact=True), 'Manuela Rodríguez, M.A.')
     page.goto(base + '/kalender/')
-    expect(page.locator('.calendar-preview__scope')).to_contain_text('Ausschließlich Beispieldaten')
+    if live:
+        expect(page.locator('.calendar-preview__scope')).to_contain_text('Ausschließlich Beispieldaten')
+    else:
+        expect(page.get_by_role('heading', name='Veranstaltungskalender', exact=True)).to_be_visible()
+        expect(page.locator('#aktuelle-termine')).to_contain_text('Derzeit sind keine Termine veröffentlicht.')
+        assert page.locator('.calendar-event, [data-live-upcoming]').count() == 0
+        page.goto(base + '/prototyp/kalender/')
+        if mode == 'preview':
+            expect(page.locator('.calendar-preview__scope')).to_contain_text('Ausschließlich Beispieldaten')
+        else:
+            expect(page.get_by_role('link', name='Zu den aktuellen Terminen')).to_be_visible()
+            assert page.locator('.calendar-preview__scope, .calendar-event').count() == 0
+        page.goto(base + '/kalender/')
     page.get_by_role('navigation', name='Passendes Angebot und nächster Schritt').get_by_role('link', name='Bedarf besprechen').focus()
     page.keyboard.press('Enter')
     expect(page.locator('.form-note')).to_contain_text('E-Mail-Programm')
@@ -109,6 +203,8 @@ def journey(context, base, mode, label, page=None):
         assert page.locator('a[href="https://donner-partner.de/dp/' + route + '/"]').count() >= 1
     missing = page.goto(base + '/coaches/carolin-hupp/')
     assert missing.status == 404 and 'Carolin Hupp' not in page.locator('body').inner_text()
+    if not live:
+        ux_feedback(page, base, label)
     assert not errors and not external and not writes
     page.close()
 
@@ -123,15 +219,22 @@ def run(live=None):
                 try:
                     for width in (1440, 390):
                         context = browser.new_context(viewport={'width': width, 'height': 1000}, reduced_motion='reduce')
-                        try: journey(context, base, mode, f'{mode}-{width}'); completed.append(f'{mode}-{width}')
+                        try: journey(context, base, mode, f'{mode}-{width}', live=bool(live)); completed.append(f'{mode}-{width}')
                         finally: context.close()
                     context = browser.new_context(java_script_enabled=False, viewport={'width':390,'height':900})
                     try:
                         page = context.new_page(); page.goto(base + '/leistungen/')
-                        expect(page.locator('[data-finder-entry]')).to_have_count(3 if mode == 'production' else 27)
+                        expect(page.locator('[data-finder-entry]')).to_have_count(27 if live else 28)
                         expect(page.locator('[data-finder-form]')).to_be_hidden()
                         page.locator('summary').filter(has_text='Business & Balance').first.click()
                         mailto(page.locator('a[aria-label*="Tagesworkshop"][href^="mailto:"]').first, 'Gülcan Elmas-Brandes')
+                        if not live:
+                            page.goto(base + '/coaches/elisabeth-schwabauer/')
+                            expect(page.locator('#angebote .offer-group[open]')).to_have_count(1)
+                            group = page.locator('#angebote .offer-group').nth(1)
+                            expect(group.locator('.offer-group-preview')).to_be_visible()
+                            group.locator('summary').click()
+                            expect(group.get_by_text('Wiedereingliederung nach psychischer Erkrankung')).to_be_visible()
                         completed.append(mode + '-no-js')
                     finally: context.close()
                 finally: browser.close()
@@ -142,7 +245,7 @@ def run(live=None):
                         native_page, = context.pages
                         native_page.goto(base + '/unternehmen/')
                         assert native_page.evaluate('devicePixelRatio') == 2
-                        journey(context, base, mode, mode + '-native200', page=native_page)
+                        journey(context, base, mode, mode + '-native200', page=native_page, live=bool(live))
                         completed.append(mode + '-native200')
                     finally: context.close()
     result = {'status':'PASS','journeys':completed,'scope':'public Website only; no VPS/SFTP/account action'}

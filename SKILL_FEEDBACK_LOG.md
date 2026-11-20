@@ -4,6 +4,15 @@ Updated: 2026-11-17. This file is on-demand, not part of routine boot context.
 
 ## Active / Open Proposals
 
+20.11 feedback/release learning: inspect original screenshot positions before
+changing CI structure; separately test the production output and the joint
+synthetic environment. Use the same published-event projection for display,
+filtering and a future newsletter, withholding unknown facts. A browser
+session admitted to one product area can receive 401 at an existing narrower
+principal gate: prove its own scope first, then prove the protected scope
+denies it. [Evidence](docs/handoffs/2026-11-20-feedback-platform.md).
+No global skill changes.
+
 19.11 V2 local integration learning: exercise the real website-to-API navigation
 once in the same isolated origin and database; keep public builds byte-identical
 with the demo flags set. Exercise dashboard SQL on real PostgreSQL as well as

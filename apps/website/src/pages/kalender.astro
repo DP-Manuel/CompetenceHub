@@ -1,14 +1,26 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import CalendarPrototype from "../components/CalendarPrototype.astro";
+import UpcomingEvents from "../components/UpcomingEvents.astro";
 import "../styles/global.css";
+import { publicCalendarPath } from "../v2-local/journey.mjs";
+const local = __WEBSITE_V2_LOCAL__;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
 <BaseLayout
-  title="Kalender-Vorschau | Competence Hub"
-  description="Transparente Vorschau auf die geplante Darstellung von Themen, Gruppenangeboten und unverbindlichen Vormerkungen mit ausschliesslich synthetischen Beispieldaten."
-  bodyClass="calendar-prototype-page"
+  title="Veranstaltungskalender | Competence Hub"
+  description="Aktuelle veröffentlichte Workshops, Vorträge und Gruppenveranstaltungen."
   noindex
 >
-  <CalendarPrototype />
+  <main class="subpage">
+    <section class="page-hero page-hero--accent">
+      <div>
+        <p class="eyebrow">Workshops und Vorträge</p>
+        <h1>Veranstaltungskalender</h1>
+        <p>Interesse an einem Workshop oder Vortrag? Wir klären gern das passende Format für Ihr Anliegen.</p>
+        <a class="button" href={`${base}/kontakt/`}>Veranstaltung anfragen</a>
+      </div>
+    </section>
+    <UpcomingEvents live={local} calendarHref={publicCalendarPath} />
+  </main>
 </BaseLayout>

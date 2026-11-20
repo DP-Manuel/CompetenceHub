@@ -110,7 +110,7 @@ async def create_company(request: Request) -> Response:
     context = await _context(request, require_csrf=True)
     if isinstance(context, Response):
         return context
-    payload = await _read_json(request, CompanyCreateRequest)
+    payload = await read_company_json(request, CompanyCreateRequest)
     if payload is None:
         return _invalid_request()
     principal, service = context
@@ -135,7 +135,7 @@ async def update_company(company_id: UUID, request: Request) -> Response:
     context = await _context(request, require_csrf=True)
     if isinstance(context, Response):
         return context
-    payload = await _read_json(request, CompanyPatchRequest)
+    payload = await read_company_json(request, CompanyPatchRequest)
     if payload is None or not payload.model_fields_set:
         return _invalid_request()
     changes = {
@@ -164,7 +164,7 @@ async def add_contact(company_id: UUID, request: Request) -> Response:
     context = await _context(request, require_csrf=True)
     if isinstance(context, Response):
         return context
-    payload = await _read_json(request, ContactRequest)
+    payload = await read_company_json(request, ContactRequest)
     if payload is None:
         return _invalid_request()
     principal, service = context
@@ -193,7 +193,7 @@ async def update_contact(
     context = await _context(request, require_csrf=True)
     if isinstance(context, Response):
         return context
-    payload = await _read_json(request, ContactPatchRequest)
+    payload = await read_company_json(request, ContactPatchRequest)
     if payload is None or not payload.model_fields_set:
         return _invalid_request()
     changes = {
@@ -224,14 +224,21 @@ async def _context(
     require_csrf: bool,
 ) -> tuple[SessionPrincipal, CompanyService] | Response:
     service: CompanyService | None = request.app.state.company_service
-    repository = request.app.state.session_repository
-    token = request.cookies.get(SESSION_COOKIE_NAME)
     if service is None:
         return problem_response(
             status=503,
             code="portal_unavailable",
             title="Portal derzeit nicht verfuegbar",
         )
+    principal = await internal_company_principal(request, require_csrf=require_csrf)
+    return principal if isinstance(principal, Response) else (principal, service)
+
+
+async def internal_company_principal(
+    request: Request, *, require_csrf: bool,
+) -> SessionPrincipal | Response:
+    repository = request.app.state.session_repository
+    token = request.cookies.get(SESSION_COOKIE_NAME)
     if repository is None or token is None:
         return _authentication_failed()
     try:
@@ -248,7 +255,7 @@ async def _context(
     if not set(principal.roles).intersection(INTERNAL_ROLES):
         return _authorization_failed()
     if not require_csrf:
-        return principal, service
+        return principal
     allowed_origin = request.app.state.allowed_origin
     csrf_token = request.headers.get("x-csrf-token")
     if (
@@ -266,10 +273,10 @@ async def _context(
         csrf_matches = False
     if not csrf_matches:
         return _request_verification_failed()
-    return principal, service
+    return principal
 
 
-async def _read_json(
+async def read_company_json(
     request: Request,
     model: type[RequestModel],
 ) -> RequestModel | None:

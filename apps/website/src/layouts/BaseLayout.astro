@@ -4,6 +4,7 @@ import HubClearance from "../preview/HubClearance.astro";
 import { publicOfferKeywords } from "../preview/coach-discovery";
 import { coaches as productionCoaches } from "../data/coaches";
 import PortalLogin from "../components/PortalLogin.astro";
+import UpcomingEvents from "../components/UpcomingEvents.astro";
 import { portalLoginConfiguration } from "../../config/environment.mjs";
 import { demoOfferPath, portalPath, publicCalendarPath } from "../v2-local/journey.mjs";
 
@@ -65,6 +66,11 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
 );
 const profilePath = canonicalPath.replace(/^\//, "").replace(/\/$/, "");
 const approvedProfile = productionCoaches.some((coach) => coach.kind === "approved" && coach.profilePath === profilePath);
+const localDemoProfile = v2Local && profilePath === "coaches/v2-demo-coach";
+const showUpcoming = approvedProfile || localDemoProfile || (v2Local && isCurrent());
+const profileUpcoming = approvedProfile || localDemoProfile ? `/${profilePath}/` : "";
+const upcomingCalendarHref = profileUpcoming
+  ? `${publicCalendarPath}?coach=${encodeURIComponent(profilePath.split("/")[1])}` : publicCalendarPath;
 const profileHasOffers = (reviewMode || approvedProfile) && publicOfferKeywords(profilePath).length > 0;
 const journeyVisible = (reviewMode && /^coaches\/[^/]+$/.test(profilePath)) || approvedProfile || isCurrent("kalender");
 const finderHref = profileHasOffers
@@ -162,7 +168,8 @@ const finderHref = profileHasOffers
     {journeyVisible && <Fragment>
       <nav class="preview-journey-links" aria-label="Passendes Angebot und nächster Schritt">
         <a href={finderHref}>{profileHasOffers ? "Angebote dieses Coaches" : "Angebotsfinder"}</a>
-        {isCurrent("kalender") ? <a href={url("coaches")}>Coachprofile ansehen</a> : <a href={navHref("kalender")}>{v2Local ? "Veranstaltungskalender" : "Kalender-Vorschau"}</a>}
+        {showUpcoming && <a href="#aktuelle-termine">Nächste Veranstaltungen</a>}
+        {isCurrent("kalender") ? <a href={url("coaches")}>Coachprofile ansehen</a> : <a href={navHref("kalender")}>Veranstaltungskalender</a>}
         <a href={url("kontakt")}>Bedarf besprechen</a>
       </nav>
       <style is:inline>
@@ -171,6 +178,7 @@ const finderHref = profileHasOffers
         .preview-journey-links a:focus-visible { outline:3px solid var(--color-dark); outline-offset:4px; }
       </style>
     </Fragment>}<slot />
+    {showUpcoming && <UpcomingEvents live={v2Local} coachPath={profileUpcoming} calendarHref={upcomingCalendarHref} />}
     <footer class="site-footer">
       <div>
         <strong>Competence Hub</strong>

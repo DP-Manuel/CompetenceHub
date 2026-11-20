@@ -5,6 +5,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive"><title>Kalender | Competence Hub Pilot</title>
   <link rel="stylesheet" href="/portal/public-calendar.css"><link rel="stylesheet" href="/portal/calendar-month.css">
   <link rel="stylesheet" href="/portal/product-tour.css">
+  <link rel="stylesheet" href="/portal/event-status.css">
   <script type="module" src="/portal/public-calendar.js"></script>
 </head>
 <body>
@@ -15,6 +16,7 @@
   <section id="calendar" aria-labelledby="calendar-heading">
     <h2 id="calendar-heading">Termine</h2>
     <p id="profile-filter" hidden>Termine zum ausgewählten Coachprofil · <a href="/portal/calendar-public.html">Alle Termine</a></p>
+    <p id="event-link-status" role="status" hidden>Dieser Termin ist nicht mehr im Kalender verfügbar.</p>
     <div class="toolbar"><label>Thema<select id="topic"><option value="">Alle Themen</option></select></label><label>Format<select id="format"><option value="">Alle Formate</option><option value="online">Online</option><option value="praesenz">Präsenz</option><option value="hybrid">Hybrid</option></select></label><button id="reload" type="button">Aktualisieren</button></div>
     <div class="month-toolbar"><button id="previous" type="button" aria-label="Vorheriger Monat">←</button><h3 id="month-label" aria-live="polite"></h3><button id="next" type="button" aria-label="Nächster Monat">→</button></div>
     <p id="loading" role="status" hidden>Termine werden geladen …</p><p id="error" role="alert" tabindex="-1" hidden>Kalender konnte nicht geladen werden. Bitte erneut aktualisieren.</p>

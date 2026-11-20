@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { goranOffer } from "../goran-offers";
 import "../../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -24,14 +25,14 @@ const topics = [
 ---
 
 <BaseLayout
-  canonical={false}
+  canonical={import.meta.env.PUBLIC_REVIEW_MODE !== "true"}
   title="Herr Goran Celic | Rhetorik & Vertrieb | Competence Hub"
   description="Herr Goran Celic begleitet Vertriebsteams und Experten mit Rhetorik, Vertriebscoaching, Gesprächsführung, Storytelling und praxisnahen Workshops."
 >
-  <main class="subpage">
+  <main class="subpage" data-coach-profile="goran-celic">
     <section class="coach-profile-hero">
       <div>
-        <p class="eyebrow">Rhetorik & Vertriebscoaching</p>
+        <p class="eyebrow">{goranOffer.title}</p>
         <h1>Herr Goran Celic</h1>
         <p class="coach-profile-lead">
           Coach für Rhetorik und Vertrieb für Experten und Teams, die komplexe
@@ -46,6 +47,7 @@ const topics = [
         </p>
         <div class="coach-profile-actions">
           <a class="button" href={url("kontakt")}>Coaching anfragen</a>
+          <a class="button button--ghost" href="#angebote">Formate ansehen</a>
           <a
             class="button button--ghost"
             href="https://gorancelic.de/"
@@ -112,16 +114,18 @@ const topics = [
       </ul>
     </section>
 
-    <section class="coach-format-band" aria-labelledby="goran-formats-title">
+    <section class="coach-format-band" id="angebote" aria-labelledby="goran-formats-title">
       <div>
         <p class="eyebrow">Mögliche Formate</p>
         <h2 id="goran-formats-title">Vom Impuls bis zur Vertriebsbegleitung</h2>
       </div>
-      <p>
-        Impulsvortrag, Workshop, Coaching oder firmenspezifisches Konzept:
-        Zielgruppe, Ausgangslage und gewünschte Wirkung bestimmen den passenden
-        Rahmen.
-      </p>
+      <div>
+        <ul class="tag-list" aria-label="Formate">
+          {goranOffer.formats.map((format) => <li>{format.title}</li>)}
+        </ul>
+        <p>{goranOffer.description}</p>
+        <a class="text-link" href={url("leistungen?coach=goran-celic#angebotsfinder")}>Im Angebotsfinder ansehen</a>
+      </div>
     </section>
 
     <section class="showcase-strip coach-profile-cta">
@@ -131,7 +135,7 @@ const topics = [
       </div>
       <div>
         <p>
-          Frau Janay Rappelt unterstützt bei der Einordnung und stellt den Kontakt
+          Frau Rappelt unterstützt bei der Einordnung und stellt den Kontakt
           zwischen Unternehmen und Coach her.
         </p>
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
@@ -139,3 +143,7 @@ const topics = [
     </section>
   </main>
 </BaseLayout>
+
+<style>
+  #angebote { scroll-margin-top: 160px; }
+</style>

@@ -1,8 +1,25 @@
 # Coach-Veröffentlichungsmatrix
 
-Stand: 17.11.2026. Historische Freigaben bleiben dokumentiert. Gülcans bestehende
-IONOS-Rechte werden im lokalen Releasekandidaten berücksichtigt, noch kein Upload.
-Neueste Owner-Entscheidung: Carolin Hupp pausiert; siehe unten.
+Stand: 20.11.2026. Historische Freigaben bleiben dokumentiert.
+
+## Aktiver Umfang Seit Dem Feedback Vom 19.11
+
+Für den nächsten **lokalen Produktionskandidaten** sind die acht bereits
+aktiven Profile mit den bestehenden freigegebenen Bildern und Inhalten
+freigegeben: Christian Galvano, Manuela Rodríguez, Gülcan Elmas-Brandes,
+Elisabeth Schwabauer, Goran Celic, Stefanie Becker, T. Wegner-Ney und Susanne Klemm.
+Die [Build-Allowlist](../../apps/website/config/active-coach-publication.mjs) enthält
+die kanonischen Routen. Nicht freigegebene Angebote, unveröffentlichte
+Quellen, Preise und Profile sind nicht Bestandteil dieser Freigabe.
+
+**Carolin Hupp bleibt pausiert:** keine Route, kein Portrait im Artefakt,
+keine Reaktivierung oder Löschung von Unterlagen. Ein späteres Profil von
+Frau Rappelt gehört zur Personalvermittlung, nicht zum Coach-Netzwerk;
+es wird noch nicht veröffentlicht. Der IONOS-Upload benötigt eine getrennte
+Freigabe. Die bisher tatsächlich veröffentlichte Website ist weiterhin der
+[17.11-Stand](../operations/website-ionos-release-2026-11-17.md).
+
+## Historischer Umfang Vor Der Neuen Freigabe
 
 Die folgende historische Production-Matrix begrenzt den öffentlichen Messeauftritt. Sie ersetzt frühere
 Einzelfreigaben, soweit sie mehr als die beiden unten genannten echten Profile
@@ -19,14 +36,14 @@ Bildquelle für Frau Rodriguez: offizieller D+P-Advisory-Medienbestand,
 abgerufen und lokal verarbeitet am 24.09.2026. Die öffentliche Website bindet
 die externe Datei nicht ein.
 
-## Entfernte Identitäten
+## Damals Entfernte Identitäten
 
 Die sechs früheren personenbezogenen Routen werden nicht weiter erzeugt. Ihre
 Namen, Portraitdateien, Metadaten und individuellen Profiltexte sind aus dem
 Website-Build entfernt. Aufrufe der alten Routen enden kontrolliert auf der
 404-Seite; es gibt keine personenbezogene Weiterleitung.
 
-## Technische Sicherung
+## Damalige Technische Sicherung
 
 - Sitemap enthält nur die beiden freigegebenen echten Profilrouten.
 - Demoprofile tragen `noindex` und einen sichtbaren Fiktivhinweis.

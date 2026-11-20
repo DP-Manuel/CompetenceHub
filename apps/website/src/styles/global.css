@@ -1272,6 +1272,14 @@ p {
   transform: none;
 }
 
+.coach-preview__name,
+.coach-card__name {
+  text-decoration: underline;
+  text-decoration-color: var(--color-pantone-deep);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+}
+
 .coach-preview__card {
   display: grid;
   grid-template-rows: auto 1fr;

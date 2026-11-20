@@ -24,6 +24,7 @@ from local_calendar_postgres import LocalCalendarPostgres
 from local_platform_website import SYNTHETIC_PROFILE, attach_website, build_website
 from native_calendar_fixture import NativeCalendarFixture
 from vps_pilot_acceptance import zoom_profile
+from competence_hub_api.portal.event_discovery import Locality
 from competence_hub_api.runtime import create_database_engine, create_runtime_app
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,6 +33,10 @@ CAL = "/api/v1/portal/calendar/offers"
 PUBLIC = "/api/v1/calendar/offers"
 UI = "/portal/"
 OVERVIEW = "/api/v1/portal/pilot/overview"
+UPCOMING = "/api/v1/calendar/upcoming"
+CUSTOMERS = "/api/v1/portal/customers"
+# Fictitious coordinate pairs, never reused as a real venue or geocoding source.
+DEMO_PLACES = (Locality("demo-a", "Demo-Ort A", 0, 0), Locality("demo-b", "Demo-Ort B", 0, 1))
 
 
 def check(label, condition):
@@ -114,10 +119,36 @@ def website_to_company(browser, base, fixture, recovery, external, errors, offer
     response = page.goto(base + "/website/")
     assert response.headers["x-robots-tag"] == "noindex, nofollow, noarchive"
     assert "'unsafe-inline'" not in response.headers["content-security-policy"]
+    feed = page.request.get(base + UPCOMING)
+    check("Upcoming event API returns exactly five public facts without credentials",
+          feed.ok and len(feed.json()["items"]) == 5)
+    events = page.locator("#aktuelle-termine")
+    expect(events.locator("li")).to_have_count(5)
+    page.get_by_label("Ort oder PLZ").fill("Demo-Ort A")
+    page.get_by_label("Umkreis (km)").fill("20")
+    page.get_by_role("button", name="Termine finden").click()
+    expect(events.get_by_role("link", name="Demo: Wiederholung")).to_be_visible()
+    expect(events.locator("li")).to_have_count(1)
+    far = page.request.get(base + UPCOMING, params={"location": "demo-b", "radius_km": 20})
+    assert far.ok and far.json()["items"] == []
+    page.get_by_label("Ort oder PLZ").fill("Demo-Ort B")
+    page.get_by_label("Umkreis (km)").press("Enter")
+    expect(events.locator("[role=status]")).to_contain_text("Keine veröffentlichten")
+    page.get_by_role("button", name="Zurücksetzen").click()
+    expect(events.locator("li")).to_have_count(5)
+    check("Upcoming website event list: regional bounds, online exclusion, reset and limit", True)
     page.get_by_role("link", name="Demo-Angebot", exact=True).click()
     expect(page.get_by_role("heading", name="Demo-Gruppenangebot")).to_be_visible()
     page.get_by_role("link", name="Profil des V2 Demo-Coaches").click()
     expect(page.get_by_role("heading", name="V2 Demo-Coach", exact=True)).to_be_visible()
+    events = page.locator("#aktuelle-termine")
+    expect(events.locator("li")).to_have_count(5)
+    events.get_by_role("link", name="Demo-Workshop über zwei Tage").click()
+    expect(page.locator("#detail")).to_have_attribute("data-event-id", offer_id)
+    expect(page.locator("#public-seat-status")).to_contain_text("5 für Vormerkungen")
+    page.locator("#coach").click()
+    expect(events.get_by_role("link", name="Demo-Workshop über zwei Tage")).to_be_visible()
+    check("Coach profile and exact event deep-link work in both directions and show labelled seat status", True)
     page.get_by_role("link", name="Termine dieses Demo-Coaches").click()
     expect(page.locator("#profile-filter")).to_be_visible()
     offer = page.locator(f"[data-offer='{offer_id}']").first
@@ -146,6 +177,36 @@ def website_to_company(browser, base, fixture, recovery, external, errors, offer
     return page
 
 
+def customer_workflow(admin, internal, company):
+    expect(admin.get_by_role("heading", name="Kundenverwaltung")).to_be_visible()
+    admin.get_by_role("button", name="Privatkunden", exact=True).press("Enter")
+    admin.get_by_role("button", name="Kunde anlegen", exact=True).press("Enter")
+    form = admin.get_by_role("form", name="Privatkunde anlegen")
+    form.get_by_label("Vorname").fill("Demo")
+    form.get_by_label("Nachname").fill("Privatregister")
+    expect(form.get_by_label("Firmenname")).to_have_count(0)
+    form.get_by_role("button", name="Speichern", exact=True).press("Enter")
+    expect(admin.get_by_text("Privatkunde gespeichert.", exact=True)).to_be_visible()
+
+    expect(internal.get_by_role("heading", name="Kundenverwaltung")).to_be_visible()
+    internal.get_by_role("button", name="Privatkunden", exact=True).click()
+    expect(internal.get_by_role("button", name="Demo Privatregister", exact=True)).to_be_visible()
+    internal.get_by_role("button", name="Geschäftskunden", exact=True).click()
+    internal.get_by_role("button", name="Demo-Firma A", exact=False).first.click()
+    internal.locator("#company-customer-details").get_by_text("Anschrift und USt-IdNr.", exact=True).press("Enter")
+    expect(internal.get_by_role("form", name="Anschrift und USt-IdNr.")).to_be_visible()
+    allowed, denied, code = company.evaluate("""async ([own, internalOnly]) => {
+      const options = { credentials: "same-origin", cache: "no-store" };
+      const ownResponse = await fetch(own, options);
+      const response = await fetch(internalOnly, options);
+      return [ownResponse.status, response.status, (await response.json()).code];
+    }""", [RES + "/capabilities", CUSTOMERS + "/capabilities"])
+    assert allowed == 200 and (denied, code) in {
+        (401, "authentication_failed"), (403, "authorization_failed"),
+    }, "Active company session must be denied by the internal-only customer scope"
+    check("Combined Portal: private customer without company, internal company metadata and tenant denial", True)
+
+
 class Session:
     def __init__(self, page, base):
         self.base = base
@@ -169,7 +230,7 @@ class Session:
                              headers=headers, verify=False, trust_env=False, timeout=15)
 
 
-def create_offer(coach, reviewer, fixture, title, day, capacity, threshold, *, multi=False):
+def create_offer(coach, reviewer, fixture, title, day, capacity, threshold, *, multi=False, venue=None):
     start = (fixture.now + timedelta(days=day)).replace(second=0, microsecond=0)
     draft = {
         "title": title, "topic_id": str(fixture.topic), "format": "online",
@@ -177,6 +238,8 @@ def create_offer(coach, reviewer, fixture, title, day, capacity, threshold, *, m
         "time_zone": "Europe/Berlin", "capacity": capacity, "review_threshold": threshold,
         "decision_deadline": (start - timedelta(days=2)).isoformat(), "price_display_text": "Preis nach Abstimmung",
     }
+    if venue:
+        draft.update(format="praesenz", public_location=venue)
     created = coach.send("POST", CAL, {"client_request_id": str(uuid4()), "draft": draft})
     assert created.status_code == 201
     path = CAL + "/" + created.json()["id"]
@@ -656,7 +719,7 @@ def run(db, verify, website):
     fixture.emails["contact_two"] = f"synthetic-cal2-{fixture.users['contact_two'].hex}@example.invalid"
     fixture.coach_profile_paths["coach"] = SYNTHETIC_PROFILE
     fixture.prepare()
-    for number in (7, 8, 9, 10, 11):
+    for number in range(7, 13):
         migration, = (ROOT / "database/migrations").glob(f"{number:04d}_*.sql")
         db.sql(migration.read_text(encoding="utf8"))
     seed_companies(fixture)
@@ -665,6 +728,7 @@ def run(db, verify, website):
     def application(port):
         app = fixture.app(port, local_reservations=True)
         attach_website(app, website)
+        app.state.calendar_localities = DEMO_PLACES
         return app
 
     def start(browser, base, key, mobile=False):
@@ -680,7 +744,8 @@ def run(db, verify, website):
             coach_api, reviewer_api = Session(coach, base), Session(reviewer, base)
             main_id, main_draft = create_offer(coach_api, reviewer_api, fixture,
                 "Demo-Workshop über zwei Tage", 8, 5, 3, multi=True)
-            offers = [create_offer(coach_api, reviewer_api, fixture, title, day, capacity, threshold)[0]
+            offers = [create_offer(coach_api, reviewer_api, fixture, title, day, capacity, threshold,
+                                   venue="Demo-Ort A" if day == 18 else None)[0]
                       for title, day, capacity, threshold in (
                           ("Demo: letzter Platz", 14, 1, 1), ("Demo: Wiederholung", 18, 2, 2),
                           ("Demo: Frist", 22, 4, 3),
@@ -702,10 +767,14 @@ def run(db, verify, website):
                         actors[key] = start(browser, base, key)
                     expect(actors["admin"].get_by_role("heading", name="Zugänge und wichtige Änderungen")).to_be_visible()
                     expect(company.get_by_role("heading", name="Vormerkungen Ihrer Firma").first).to_be_visible()
+                    customer_workflow(actors["admin"], actors["internal"], company)
                     check("Only company and reviewer/admin see their CAL-2 areas",
                           actors["internal"].get_by_role("button", name="Vormerkungen prüfen", exact=True).count() == 0
                           and coach.get_by_role("button", name="Vormerkungen", exact=True).count() == 0)
                     reservation_id = api_workflow(fixture, base, actors, main_id, main_draft, offers, reply_retry)
+                    upcoming = company.request.get(base + UPCOMING + "?event_id=" + main_id)
+                    check("Withdrawn event and its availability are removed from the reuse projection",
+                          upcoming.ok and upcoming.json()["items"] == [])
                     fixture.testing_database_restart = True
                     path, data = interrupt_request(db, fixture, Session(company, base), interrupted)
                 finally:
@@ -735,9 +804,12 @@ def run(db, verify, website):
             SELECT
               (SELECT count(*) FROM competence_hub.calendar_reservation_events),
               (SELECT count(*) FROM competence_hub.audit_events WHERE entity_type='calendar_reservation'),
-              (SELECT count(*) FROM competence_hub.auth_token_delivery_outbox)
+              (SELECT count(*) FROM competence_hub.auth_token_delivery_outbox),
+              (SELECT count(*) FROM competence_hub.private_customers
+                WHERE first_name='Demo' AND last_name='Privatregister')
         """))).one()
-        return totals
+        assert totals[3] == 1, "Synthetic customer did not survive the PostgreSQL restart"
+        return totals[:3]
     ledger, audit, outbox = fixture.database(verify_database)
     check("History and audit consistent, zero outbox entries, zero browser-external requests or JS errors",
           ledger == audit and ledger > 0 and outbox == 0 and not external and not errors)

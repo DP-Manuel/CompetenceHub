@@ -1,27 +1,7 @@
-export type CoachTopicId =
-  | "fuehrung"
-  | "teams-konflikte"
-  | "gesundheit-praevention"
-  | "ki-transformation"
-  | "mediation"
-  | "recruiting-potenziale"
-  | "rhetorik-vertrieb"
-  | "psychologische-beratung";
-
-export type CoachTopicIcon =
-  | "heart-pulse"
-  | "leadership"
-  | "message-circle"
-  | "sparkles"
-  | "user-round"
-  | "users";
-
-export interface CoachTopic {
-  id: CoachTopicId;
-  label: string;
-  detail: string;
-  icon: CoachTopicIcon;
-}
+import { activeCoachProfiles } from "../../config/active-coach-publication.mjs";
+import { historicalCoaches } from "../preview/historical-coaches";
+import { susanneKlemm } from "../preview/susanne-klemm";
+import type { CoachTopicId } from "./coach-topics";
 
 export interface Coach {
   kind: "approved" | "demo";
@@ -38,58 +18,7 @@ export interface Coach {
   initials: string;
 }
 
-export const coachTopics: CoachTopic[] = [
-  {
-    id: "fuehrung",
-    label: "Führung",
-    detail: "Verantwortung und Wirkung",
-    icon: "leadership",
-  },
-  {
-    id: "teams-konflikte",
-    label: "Teams & Konflikte",
-    detail: "Zusammenarbeit und Klärung",
-    icon: "users",
-  },
-  {
-    id: "gesundheit-praevention",
-    label: "Gesundheit & Prävention",
-    detail: "Belastung und Balance",
-    icon: "heart-pulse",
-  },
-  {
-    id: "ki-transformation",
-    label: "KI & Transformation",
-    detail: "KI-Kompetenz und verantwortungsvolle Einführung",
-    icon: "sparkles",
-  },
-  {
-    id: "mediation",
-    label: "Mediation",
-    detail: "Strukturierte Konfliktklärung",
-    icon: "message-circle",
-  },
-  {
-    id: "recruiting-potenziale",
-    label: "Recruiting & Potenziale",
-    detail: "Auswahl und Entwicklung",
-    icon: "user-round",
-  },
-  {
-    id: "rhetorik-vertrieb",
-    label: "Rhetorik & Vertrieb",
-    detail: "Auftritt und Gesprächsführung",
-    icon: "message-circle",
-  },
-  {
-    id: "psychologische-beratung",
-    label: "Psychologische Beratung",
-    detail: "Einordnung und Orientierung",
-    icon: "sparkles",
-  },
-];
-
-export const coaches: Coach[] = [
+const existingCoaches: Coach[] = [
   {
     kind: "approved",
     name: "Herr Christian Galvano",
@@ -243,3 +172,17 @@ export const coaches: Coach[] = [
     initials: "06",
   },
 ];
+
+export const activeCoaches = activeCoachProfiles.map(({ slug, portrait }) => {
+  const coach = [...existingCoaches, ...historicalCoaches, susanneKlemm].find((entry) =>
+    entry.kind === "approved" && entry.profilePath === `coaches/${slug}`
+  );
+  if (!coach || coach.image !== `images/coaches/${portrait}`) {
+    throw new Error(`Missing approved Coach or portrait: ${slug}`);
+  }
+  return coach;
+});
+
+// Previously published fictional routes remain accessible directly, but are
+// not part of the active portfolio, sitemap or Finder.
+export const coaches = [...activeCoaches, ...existingCoaches.filter(({ kind }) => kind === "demo")];

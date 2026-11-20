@@ -136,6 +136,12 @@ class PublicCalendarPage:
     next_position: tuple[datetime, UUID] | None
 
 
+@dataclass(frozen=True)
+class UpcomingEvent:
+    offer: PublicCalendarOffer
+    remaining_seats: int | None
+
+
 class CalendarRepository(Protocol):
     async def list_topics(
         self,
@@ -202,6 +208,11 @@ class CalendarRepository(Protocol):
         *,
         offer_id: UUID,
     ) -> PublicCalendarOffer | None: ...
+
+    async def upcoming_events(
+        self, *, now: datetime, profile_path: str | None, locations: tuple[str, ...] | None,
+        include_demo_seats: bool, limit: int, event_id: UUID | None = None,
+    ) -> tuple[UpcomingEvent, ...]: ...
 
     async def update_draft(
         self,
@@ -392,6 +403,17 @@ class CalendarService:
 
     async def get_public_offer(self, *, offer_id: UUID) -> PublicCalendarOffer | None:
         return await self._repository.get_public_offer(offer_id=offer_id)
+
+    async def upcoming_events(
+        self, *, now: datetime, profile_path: str | None, locations: tuple[str, ...] | None,
+        include_demo_seats: bool, limit: int, event_id: UUID | None = None,
+    ) -> tuple[UpcomingEvent, ...]:
+        _validate_aware(now, "now")
+        _validate_limit(limit)
+        return await self._repository.upcoming_events(
+            now=now, profile_path=profile_path, locations=locations,
+            include_demo_seats=include_demo_seats, limit=limit, event_id=event_id,
+        )
 
     async def list_public_month(
         self,

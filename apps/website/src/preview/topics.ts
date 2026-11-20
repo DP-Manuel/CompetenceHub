@@ -1,5 +1,4 @@
-import { coachTopics } from "../data/coaches";
-import type { CoachTopic } from "../data/coaches";
+import { coachTopics, type CoachTopic } from "../data/coach-topics";
 
 export const categories = [
   { id: "personalentwicklung", label: "Personalentwicklung" },

@@ -95,7 +95,7 @@ export function fieldMessage(field, code, data, now = new Date()) {
   const messages = {
     title:"Bitte geben Sie einen Titel mit höchstens 160 Zeichen ein, z. B. Gesunde Mitarbeiterführung.",
     topic_id:"Bitte wählen Sie ein freigegebenes Thema aus, z. B. Führung und Zusammenarbeit. Ohne freigegebenes Thema ist Speichern nicht möglich.",
-    summary:"Die Kurzbeschreibung ist optional und darf höchstens 1200 Zeichen enthalten. Beispiel: Zweitägiger Workshop zur gesunden Mitarbeiterführung.",
+    summary:"Die öffentliche Seminarbeschreibung ist optional und darf höchstens 1200 Zeichen enthalten.",
     public_location:"Für Präsenz oder Hybrid geben Sie bitte einen öffentlichen Ort an, z. B. Würzburg, Seminarraum. Höchstens 200 Zeichen, keine privaten Zugangsdaten.",
     capacity:"Bitte geben Sie eine ganze Teilnehmerzahl zwischen 1 und 500 ein, z. B. 10.",
     review_threshold:"Bitte geben Sie eine ganze Prüfschwelle von 1 bis zur Kapazität ein, z. B. 5 bei Kapazität 10.",
@@ -108,6 +108,9 @@ export function fieldMessage(field, code, data, now = new Date()) {
 export function createCalendarForm(form) {
   let originals = {};
   const controls = {};let shown=[],rendered='';
+  const scheduling=form.querySelector('#calendar-scheduling'), description=form.querySelector('#calendar-description');
+  const datePanel=form.querySelector('#calendar-date-panel');
+  const descriptionInput=form.querySelector('#calendar-summary');
   for (const field of dates) {
     const input = form.querySelector('#'+fields[field]);
     input.type = "text";
@@ -125,6 +128,16 @@ export function createCalendarForm(form) {
     form.querySelector(`[data-clock="${field}"]`).append(choices);controls[field] = {input,hours,minutes};
   }
   const picker=createCalendarPicker(form,Object.fromEntries(dates.map(field=>[field,controls[field].input])));
+  form.addEventListener('click',event=>{
+    const toggle=event.target.closest('[data-pick-date]');
+    if (!toggle) return;
+    const field=toggle.dataset.pickDate === 'decision_deadline' ? 'decision_deadline' : 'ends_at';
+    const row=controls[field].input.closest('.field');
+    if (row.nextElementSibling !== datePanel) row.after(datePanel);
+  },true);
+  scheduling.addEventListener('toggle',()=>{
+    if (!scheduling.open && scheduling.contains(datePanel)) picker.hide();
+  });
   function values() {
     const data=new FormData(form);
     for(const field of dates) {
@@ -194,25 +207,39 @@ export function createCalendarForm(form) {
     const first=form.querySelector('[aria-invalid="true"]');
     const summary=form.querySelector('#calendar-offer-error');summary.dataset.calendarValidation='true';
     summary.textContent=first?'Bitte markierte Angaben prüfen.':'';summary.hidden=!first;
-    if(first && focus){first.scrollIntoView({block:'center'});first.focus({preventScroll:true});}
+    if(first && focus){
+      for (const error of shown) {
+        let section=control(error).closest('details');
+        while(section){section.open=true;section=section.parentElement.closest('details');}
+      }
+      first.scrollIntoView({block:'center'});first.focus({preventScroll:true});
+    }
     return Boolean(first);
   }
-  function locationHint() {
+  function refresh() {
     const required=form.querySelector('#calendar-format').value!=='online',input=form.querySelector('#calendar-location');
     input.required=required;
     form.querySelector('#calendar-location-label').textContent=required?'Veranstaltungsort *':'Öffentlicher Hinweis (optional)';
     form.querySelector('#calendar-location-hint').textContent=required?'Bitte Veranstaltungsort angeben, z. B. Würzburg, Seminarraum.':'Nur öffentliche Angaben, keine privaten Zugangsdaten.';
     form.querySelector('#calendar-location-count').textContent=`${input.value.length} / 200 Zeichen`;
+    form.querySelector('#calendar-summary-count').textContent=`${descriptionInput.value.length} / ${descriptionInput.maxLength} Zeichen`;
+    const clock=field=>{
+      const {hours,minutes}=controls[field];
+      return hours.value && minutes.value ? `${hours.value}:${minutes.value} Uhr` : "nicht gewählt";
+    };
+    form.querySelector('#calendar-clock-preview').textContent=`Beginn: ${clock("starts_at")} · Ende: ${clock("ends_at")}`;
   }
   function edited() {
-    locationHint();picker.refresh();
+    refresh();picker.refresh();
     if(shown.length){const known=new Set(shown.map(error=>error.field)),next=validate().errors.filter(error=>known.has(error.field));
       if(errorSignature(next)!==rendered)show(next,false);}
   }
   form.addEventListener('input',edited);form.addEventListener('change',edited);
-  return {show,hidePicker:picker.hide,refresh:locationHint,values,
+  return {show,hidePicker:picker.hide,refresh,values,
     clear(){shown=[];rendered='';clearDOM();const summary=form.querySelector('#calendar-offer-error');if(summary.dataset.calendarValidation){summary.hidden=true;summary.textContent='';delete summary.dataset.calendarValidation;}},
     reset(draft = {}) {this.clear();originals={};picker.hide();
+      controls.ends_at.input.closest('.field').after(datePanel);
+      scheduling.open=false;description.open=false;
       for (const field of dates) {
         const choice=controls[field],text=draft[field]?germanDateTime(draft[field]):'',p=localParts(text);
         originals[field]=draft[field];choice.input.value=text.slice(0,10);
@@ -220,7 +247,7 @@ export function createCalendarForm(form) {
         if(p && ![0,15,30,45].includes(p.minute)){const option=new Option(pad(p.minute),pad(p.minute));option.dataset.existing='true';choice.minutes.add(option);}
         choice.hours.value=p?pad(p.hour):field==='starts_at'?'09':field==='ends_at'?'10':'12';choice.minutes.value=p?pad(p.minute):'00';
       }
-      locationHint();picker.refresh();
+      refresh();picker.refresh();
     },
     validate,
   };

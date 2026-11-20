@@ -17,6 +17,7 @@ from competence_hub_api.auth.login_service import LoginService
 from competence_hub_api.auth.mfa_service import MfaService
 from competence_hub_api.auth.session_repository import SessionRepository
 from competence_hub_api.portal.companies import CompanyService
+from competence_hub_api.portal.customers import CustomerAdministration
 from competence_hub_api.portal.calendar import CalendarService
 from competence_hub_api.portal.reservations import ReservationRepository
 from competence_hub_api.web.reservations import router as reservations_router
@@ -35,6 +36,7 @@ from competence_hub_api.web.admin import router as admin_router
 from competence_hub_api.web.pilot import router as pilot_router
 from competence_hub_api.web.user_management import router as user_management_router, mapping_router
 from competence_hub_api.web.companies import router as companies_router
+from competence_hub_api.web.customers import router as customers_router
 from competence_hub_api.web.calendar import (
     protected_router as protected_calendar_router,
     public_router as public_calendar_router,
@@ -65,6 +67,7 @@ def create_app(
     mfa_service: MfaService | None = None,
     account_lifecycle_service: AccountLifecycleService | None = None,
     company_service: CompanyService | None = None,
+    customer_administration: CustomerAdministration | None = None,
     calendar_service: CalendarService | None = None,
     reservation_repository: ReservationRepository | None = None,
     coach_registry_service: CoachRegistryService | None = None,
@@ -98,6 +101,7 @@ def create_app(
     app.state.mfa_service = mfa_service
     app.state.account_lifecycle_service = account_lifecycle_service
     app.state.company_service = company_service
+    app.state.customer_administration = customer_administration
     app.state.calendar_service = calendar_service
     app.state.reservation_repository = reservation_repository
     app.state.coach_registry_service = coach_registry_service
@@ -132,6 +136,7 @@ def create_app(
     app.include_router(coach_registry_router)
     app.include_router(coach_management_router)
     app.include_router(companies_router)
+    app.include_router(customers_router)
     app.include_router(public_calendar_router)
     app.include_router(protected_calendar_router)
     app.include_router(reservations_router)

@@ -1,6 +1,7 @@
-import { offerGroups } from "./elisabeth-offers";
+import { publicElisabethOfferGroups } from "./elisabeth-offers";
 import { workshops } from "./susanne-klemm";
 import { guelcanOfferFamilies } from "./guelcan-offers";
+import { goranOffer } from "./goran-offers";
 import { coaches } from "./coaches";
 import type { FinderEntry, FinderFormatId, FinderTopicId } from "./offering-finder-model";
 
@@ -19,8 +20,7 @@ const elisabethTopics: FinderTopicId[][] = [
   ["teams-konflikte"], health, ["psychologische-beratung"], health, ["teams-konflikte"],
   ["psychologische-beratung"],
 ];
-const activeElisabeth = offerGroups.flatMap((group) => group.offers
-  .filter((title) => title !== "Psychotherapie (HeilprG)")
+const activeElisabeth = publicElisabethOfferGroups.flatMap((group) => group.offers
   .map((title) => ({ title, group: group.id })));
 const types: Record<string, FinderFormatId> = {
   vortraege: "lecture", workshops: "workshop", individuell: "individual", weitere: "coaching",
@@ -62,8 +62,16 @@ const guelcan: FinderEntry[] = guelcanOfferFamilies.map((family, index) => ({
   })),
 }));
 
+const goran: FinderEntry = {
+  id: "goran/rhetorik-vertrieb",
+  title: goranOffer.title, description: goranOffer.description,
+  coach: coach("goran-celic"), options: [], boundaries: [],
+  formats: goranOffer.formats.map((format) => ({
+    ...format, id: `goran/rhetorik-vertrieb/${format.id}`,
+    description: null, duration: null, audiences: ["companies"], topics: ["rhetorik-vertrieb"],
+  })),
+};
+
 // Public static adapter only. The UI accepts this view model as props; a later
 // validated COACH-4 adapter can supply it without changing the component.
-export const finderEntries: readonly FinderEntry[] = [...guelcan, ...elisabeth, ...susanne];
-// Explicit 29.10 Production rights: Guelcan short scope only, never all Preview data.
-export const productionFinderEntries: readonly FinderEntry[] = guelcan;
+export const finderEntries: readonly FinderEntry[] = [...guelcan, goran, ...elisabeth, ...susanne];

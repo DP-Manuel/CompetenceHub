@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 import { rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { approvedProductionContent } from "./config/approved-production-content.mjs";
+import { approvedCoachContent } from "./config/approved-production-content.mjs";
 import { demoCoachPath } from "./src/v2-local/journey.mjs";
 
 export default defineConfig({
@@ -17,11 +17,11 @@ export default defineConfig({
       __WEBSITE_V2_LOCAL__: "true",
     },
     resolve: { alias: {
-      "@website-coaches": fileURLToPath(new URL("./src/data/coaches.ts", import.meta.url)),
+      "@website-coaches": fileURLToPath(new URL("./src/preview/coaches.ts", import.meta.url)),
       "@website-offer-finder": fileURLToPath(new URL("./src/preview/OfferingFinder.astro", import.meta.url)),
     } },
   },
-  integrations: [approvedProductionContent(), {
+  integrations: [approvedCoachContent(), {
     name: "v2-loopback-website",
     hooks: {
       "astro:config:setup": ({ command, config, injectRoute }) => {

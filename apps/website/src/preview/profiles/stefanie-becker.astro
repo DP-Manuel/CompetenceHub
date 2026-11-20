@@ -24,11 +24,11 @@ const topics = [
 ---
 
 <BaseLayout
-  canonical={false}
+  canonical={import.meta.env.PUBLIC_REVIEW_MODE !== "true"}
   title="Frau Dr. Stefanie Becker | Coaches | Competence Hub"
   description="Frau Dr. Stefanie Becker begleitet Leitungsteams und Führungskräfte bei Change, Organisationsentwicklung, Strategie, Kultur, Female Leadership und Neurodiversität."
 >
-  <main class="subpage">
+  <main class="subpage" data-coach-profile="stefanie-becker">
     <section class="coach-profile-hero">
       <div>
         <p class="eyebrow">Change & Organisationsentwicklung</p>
@@ -126,7 +126,7 @@ const topics = [
       </div>
       <div>
         <p>
-          Frau Janay Rappelt unterstützt bei der Einordnung und stellt den
+          Frau Rappelt unterstützt bei der Einordnung und stellt den
           Kontakt zwischen Unternehmen und Coach her.
         </p>
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>

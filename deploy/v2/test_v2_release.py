@@ -60,7 +60,7 @@ def fixture_files():
              **{path: (DATABASE_FILES / path.removeprefix("database/")).read_bytes() for path in package.MIGRATIONS},
              **{name: ((HERE / Path(name).name).read_bytes() if name.endswith(".service") else b"offline test only")
                 for name in package.HELPERS}}
-    manifest = {"format": "competence-hub-private-v2/1", "commit": COMMIT, "source_mode": "committed-git-export",
+    manifest = {"format": package.FORMAT, "commit": COMMIT, "source_mode": "committed-git-export",
                 "tested_source_evidence_sha256": EVIDENCE, "deployment_authorized": False,
                 "real_coach_import_authorized": False, "target": package.TARGET, "baseline": package.BASELINE,
                 "required_migrations_before": [f"{i:04}" for i in range(1, 7)], "ordered_migrations": package.MIGRATIONS,

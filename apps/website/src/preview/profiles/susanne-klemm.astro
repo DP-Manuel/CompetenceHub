@@ -5,15 +5,15 @@ import "../../styles/global.css";
 const base = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 ---
-<BaseLayout canonical={false} title="Frau Susanne Klemm | Coaches | Competence Hub" description={coach.text}>
-  <main class="subpage">
+<BaseLayout canonical={import.meta.env.PUBLIC_REVIEW_MODE !== "true"} title="Frau Susanne Klemm | Coaches | Competence Hub" description={coach.text}>
+  <main class="subpage" data-coach-profile="susanne-klemm">
     <section class="coach-profile-hero">
       <div>
         <p class="eyebrow">{coach.role}</p>
         <h1>{coach.name}</h1>
         <p class="coach-profile-lead">{coach.text}</p>
         <p>Fragetechniken, Feedback und Körpersprache, der Wechsel in eine Führungsrolle und klare Grenzen im Alltag bilden die Schwerpunkte ihrer Workshopangebote. Praktische Übungen und Selbstreflexion unterstützen den Transfer in den Berufsalltag.</p>
-        <div class="coach-profile-actions"><a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a></div>
+        <div class="coach-profile-actions"><a class="button" href={url("kontakt")}>Passung und Anfrage besprechen</a><a class="button button--ghost" href="#angebote">Workshops ansehen</a></div>
       </div>
       <figure class="coach-profile-portrait">
         <img src={url(coach.image!)} alt="Porträt von Frau Susanne Klemm" width={coach.imageWidth} height={coach.imageHeight} />
@@ -32,17 +32,19 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
       <div><p class="eyebrow">Qualifikationen</p><h2>Ausbildungen und Weiterbildungen</h2><p>Die fachlichen Grundlagen umfassen Coaching, Resilienztraining und Kommunikation sowie eine kompakte Weiterbildung in systemischer Supervision.</p></div>
       <ul>{qualifications.map((qualification) => <li>{qualification}</li>)}</ul>
     </section>
-    <section class="coach-profile-section">
+    <section class="coach-profile-section" id="angebote">
       <div class="section-heading coach-section-heading"><div><p class="eyebrow">Angebote</p><h2>Workshops für den Berufsalltag</h2></div><p>Die Themen richten sich unter anderem an Führungskräfte und Mitarbeitende. Einzelne Angebote greifen ausdrücklich den Führungsalltag in der Pflege auf.</p></div>
       <ul class="workshops">{workshops.map((workshop) => <li>{workshop}</li>)}</ul>
+      <a class="text-link" href={url("leistungen?coach=susanne-klemm#angebotsfinder")}>Im Angebotsfinder ansehen</a>
     </section>
     <section class="showcase-strip coach-profile-cta">
       <div><p class="eyebrow">Passung klären</p><h2>Ihr Anliegen mit uns besprechen</h2></div>
-      <div><p>Janay Rappelt unterstützt bei der Einordnung und stellt den Kontakt her.</p><a class="button" href={url("kontakt")}>Bedarf besprechen</a></div>
+      <div><p>Frau Rappelt unterstützt bei der Einordnung und stellt den Kontakt her.</p><a class="button" href={url("kontakt")}>Bedarf besprechen</a></div>
     </section>
   </main>
 </BaseLayout>
 <style>
+  #angebote { scroll-margin-top: 160px; }
   .workshops { padding-left: 24px; max-width: 80ch; }
   .workshops li { margin-block: 18px; overflow-wrap: anywhere; }
 </style>

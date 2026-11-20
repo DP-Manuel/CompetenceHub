@@ -2,7 +2,8 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import PreviewCoachDirectory from "../preview/CoachDirectory.astro";
-import { coaches, coachTopics } from "../data/coaches";
+import { activeCoaches } from "../data/coaches";
+import { coachTopics } from "../data/coach-topics";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -15,9 +16,7 @@ const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
 
 <BaseLayout
   title="Coach-Netzwerk | Competence Hub"
-  description={reviewMode
-    ? "Freigegebene Coaches für Personalentwicklung, Persönlichkeitsentwicklung und Karrierecoaching."
-    : "Competence Hub zeigt freigegebene Coachprofile und klar gekennzeichnete fiktive Demoprofile für Führung, KI, Vertrieb, Gesundheit und Entwicklung."}
+  description="Freigegebene Coaches für Personalentwicklung, Persönlichkeitsentwicklung und Karrierecoaching."
 >
   {reviewMode ? <PreviewCoachDirectory /> : <>
   <main class="subpage">
@@ -26,8 +25,7 @@ const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
         <p class="eyebrow">Coach-Netzwerk</p>
         <h1>Ausgewählte Coaches statt endlosem Katalog</h1>
         <p>
-          Freigegebene echte Coachprofile und klar gekennzeichnete
-          Demoprofile zeigen, wie fachliche Schwerpunkte gefunden und passend
+          Freigegebene Coachprofile zeigen, wie fachliche Schwerpunkte gefunden und passend
           zu einem konkreten Anliegen eingeordnet werden können.
         </p>
         <div class="actions">
@@ -40,12 +38,6 @@ const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
         <strong>Passend.<br />Erfahren.<br />Verlässlich.</strong>
       </aside>
     </section>
-
-    <p class="demo-directory-notice">
-      <strong>Zur Orientierung:</strong> Demoprofile sind fiktiv und
-      dienen ausschließlich der Veranschaulichung der Plattform. Sie stellen
-      keine realen Coachpersonen dar.
-    </p>
 
     <section
       class="coach-topic-explorer"
@@ -107,11 +99,10 @@ const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
       aria-label="Vorhandene Coach-Profile"
       data-coach-profile-grid
     >
-      {coaches.map((coach) => (
+      {activeCoaches.map((coach) => (
         <article
           class="coach-card coach-card--featured"
           data-coach-card
-          data-demo-profile={coach.kind === "demo" ? "true" : undefined}
           data-coach-topics={coach.topics.join(" ")}
         >
           <div class="coach-card__media">
@@ -128,16 +119,9 @@ const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
             )}
           </div>
           <div>
-            <p class="eyebrow">
-              {coach.kind === "demo" ? "Fiktives Demoprofil" : "Coach-Profil"}
-            </p>
-            <h2>{coach.name}</h2>
+            <p class="eyebrow">Coach-Profil</p>
+            <h2><a class="coach-card__name" href={url(coach.profilePath)}>{coach.name}</a></h2>
             <strong>{coach.role}</strong>
-            {coach.kind === "demo" && (
-              <p class="demo-profile-card-note">
-                Keine reale Coachperson.
-              </p>
-            )}
             <ul class="tag-list" aria-label="Themenschwerpunkte">
               {coach.focus.map((topic) => <li>{topic}</li>)}
             </ul>
@@ -160,8 +144,7 @@ const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
       <h2 id="network-growth-title">Das Netzwerk wächst bewusst</h2>
       <p>
         Echte Profile veröffentlichen wir erst, wenn Name, Schwerpunkte,
-        Qualifikationen, Texte und Bildrechte abgestimmt sind. Bis dahin
-        bleiben technische Beispiele ausdrücklich als Demoprofile erkennbar.
+        Qualifikationen, Texte und Bildrechte abgestimmt sind.
       </p>
     </section>
 

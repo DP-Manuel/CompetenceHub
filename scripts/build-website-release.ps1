@@ -14,13 +14,13 @@ if (-not $OutputDirectory) {
     $OutputDirectory = Join-Path $repoRoot "release-artifacts\website"
 }
 
-$statusLines = @(git -C $repoRoot status --porcelain --untracked-files=normal)
+$statusLines = @(git -C $repoRoot status --porcelain --untracked-files=normal -- apps/website scripts/build-website-release.ps1)
 if ($LASTEXITCODE -ne 0) {
     throw "Git status could not be determined."
 }
-$dirty = @($statusLines | Where-Object { $_ -ne '?? .tmp/' })
+$dirty = @($statusLines)
 if ($dirty.Count -gt 0 -and -not $AllowDirty) {
-    throw "Release builds require a clean tracked worktree. Commit or stash changes first."
+    throw "Website release inputs must match the committed source. Review the website worktree first."
 }
 
 if (-not (Test-Path -LiteralPath (Join-Path $nodeRoot "node.exe"))) {

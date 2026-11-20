@@ -1,0 +1,39 @@
+---
+const { live = false, coachPath = "", calendarHref = "" } = Astro.props;
+---
+<section id="aktuelle-termine" class="upcoming-events" aria-labelledby="upcoming-title"
+  data-live-upcoming={live ? "" : undefined} data-coach-path={live && coachPath ? coachPath : undefined}>
+  <h2 id="upcoming-title">{coachPath ? "Nächste Veranstaltungen" : "Aktuelle Termine"}</h2>
+  {live && !coachPath && (
+    <form hidden class="nearby-search">
+      <label>Ort oder PLZ <input name="location" list="upcoming-localities" maxlength="100" required /></label>
+      <datalist id="upcoming-localities"></datalist>
+      <label>Umkreis (km) <input name="radius_km" type="number" min="1" max="500" step="1" value="100" required /></label>
+      <button type="submit" class="button">Termine finden</button>
+      <button type="reset" class="button button--ghost">Zurücksetzen</button>
+      <p>Entfernung als Luftlinie. Präsenz- und Hybridtermine mit bekanntem Ort.</p>
+    </form>
+  )}
+  <p role="status">Derzeit sind keine Termine veröffentlicht.</p>
+  {live && <ul class="upcoming-list"></ul>}
+  {live && (
+    <a href={calendarHref}>Veranstaltungskalender öffnen</a>
+    <link rel="stylesheet" href="/portal/event-status.css" />
+    <script is:inline type="module" src="/portal/upcoming-events.js"></script>
+  )}
+</section>
+<style>
+  .upcoming-events { max-width: 1440px; margin: 0 auto; padding: 32px 24px; border-top: 1px solid var(--color-line); }
+  h2 { font-size: 1.75rem; line-height: 1.2; margin: 0 0 1rem; }
+  .upcoming-list { list-style: none; padding: 0; margin: 1rem 0; }
+  .upcoming-list :global(li) { padding: 0.9rem 0; border-block-end: 1px solid var(--color-line); overflow-wrap: anywhere; }
+  .upcoming-list :global(h3) { font-size: 1.15rem; line-height: 1.35; margin: 0 0 0.4rem; }
+  .upcoming-list :global(p) { margin-block: 0.35rem; }
+  a, .upcoming-list :global(a) { text-decoration: underline; color: var(--color-pantone-deep); }
+  .nearby-search { display: flex; flex-wrap: wrap; align-items: end; gap: 0.75rem; }
+  .nearby-search[hidden] { display: none; }
+  .nearby-search label { display: grid; min-width: 0; gap: 0.3rem; }
+  .nearby-search input { width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--color-pantone-deep); padding: 0.5rem; font: inherit; }
+  .nearby-search input[type=number] { max-width: 9rem; }
+  .nearby-search p { flex-basis: 100%; margin: 0; }
+</style>

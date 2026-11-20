@@ -19,10 +19,11 @@ from competence_hub_api.portal.calendar import (
     CalendarTransitionConflictError,
     CalendarVersionConflictError,
     PublicCalendarOffer,
+    UpcomingEvent,
     normalize_calendar_draft,
 )
 from competence_hub_api.portal.coach_profiles import validate_public_profile_path
-from competence_hub_api.portal.reservations import cancel_for_offer, ensure_republishable
+from competence_hub_api.portal.reservations import OCCUPIED, cancel_for_offer, ensure_republishable
 
 _CREATE_REQUEST_LOCK = text(
     """
@@ -375,6 +376,33 @@ _PUBLIC_OFFER = text(
     """
 )
 
+def _upcoming_events_query(include_demo_seats: bool):
+    # V1.2 deployments lack CAL-2 entirely. Keep their query independent of that table.
+    seats = """revision.capacity - coalesce((
+        SELECT sum(seats)
+        FROM competence_hub.calendar_reservations
+        WHERE offer_id = offer.id AND status = ANY(:occupied)
+    ), 0)""" if include_demo_seats else "NULL"
+    return text(f"""
+        SELECT {_PUBLIC_COLUMNS}, {seats} AS remaining_seats
+        {_PUBLIC_FROM}
+        WHERE offer.lifecycle_status = 'active'
+          AND revision.workflow_status = 'published'
+          AND topic.active
+          AND revision.ends_at > :now
+          AND (CAST(:event_id AS uuid) IS NULL OR offer.id = CAST(:event_id AS uuid))
+          AND (CAST(:profile_path AS text) IS NULL OR coach.public_profile_path = :profile_path)
+          AND (CAST(:locations AS text[]) IS NULL OR (
+              revision.format_code IN ('praesenz', 'hybrid')
+              AND revision.public_location = ANY(CAST(:locations AS text[]))
+          ))
+        ORDER BY revision.starts_at, offer.id
+        LIMIT :limit
+    """)
+
+
+_UPCOMING_EVENTS = {enabled: _upcoming_events_query(enabled) for enabled in (False, True)}
+
 _BUMP_VERSION = text(
     """
     UPDATE competence_hub.calendar_offers
@@ -630,6 +658,18 @@ class PostgresCalendarRepository:
                 await connection.execute(_PUBLIC_OFFER, {"offer_id": offer_id})
             ).mappings().one_or_none()
         return _public_offer(row) if row is not None else None
+
+    async def upcoming_events(
+        self, *, now: datetime, profile_path: str | None, locations: tuple[str, ...] | None,
+        include_demo_seats: bool, limit: int, event_id: UUID | None = None,
+    ) -> tuple[UpcomingEvent, ...]:
+        args = {"now": now, "profile_path": profile_path, "locations": locations,
+                "limit": limit, "event_id": event_id}
+        if include_demo_seats:
+            args["occupied"] = list(OCCUPIED)
+        async with self._engine.connect() as connection:
+            rows = (await connection.execute(_UPCOMING_EVENTS[include_demo_seats], args)).mappings().all()
+        return tuple(UpcomingEvent(_public_offer(row), row["remaining_seats"]) for row in rows)
 
     async def update_draft(
         self,

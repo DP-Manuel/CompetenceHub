@@ -16,7 +16,7 @@ from webapp_release_source import destination
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "deploy/v2"))
 from v2_package import (  # noqa: E402
-    BASELINE, HASH_LOCK, HELPERS, INVENTORY, MIGRATIONS, TARGET, VERSION_LOCK,
+    BASELINE, FORMAT, HASH_LOCK, HELPERS, INVENTORY, MIGRATIONS, TARGET, VERSION_LOCK,
     commit_valid, json_bytes, json_read, require, sha, sha_valid, verify,
     wheelhouse_entries,
 )
@@ -114,7 +114,7 @@ def build(args):
         require(len(wheels) == 1, "EXPECTED_SINGLE_APPLICATION_WHEEL")
         files["packages/" + wheels[0].name] = wheels[0].read_bytes()
         files["MANIFEST.json"] = json_bytes({
-            "format": "competence-hub-private-v2/1", "commit": args.commit, "version": version,
+            "format": FORMAT, "commit": args.commit, "version": version,
             "source_mode": "committed-git-export", "source_date_epoch": epoch,
             "tested_source_evidence_sha256": args.source_evidence_sha256,
             "deployment_authorized": False, "real_coach_import_authorized": False,

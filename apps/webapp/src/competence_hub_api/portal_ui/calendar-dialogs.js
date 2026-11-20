@@ -70,3 +70,24 @@ export function createCalendarDialogs({dialogs,confirmation,discard,closed}) {
     },
   };
 }
+
+export function createReviewNote(form) {
+  const field=form.querySelector('#calendar-review-note-field');
+  const note=form.querySelector('#calendar-review-note');
+  const toggle=form.querySelector('#calendar-review-note-toggle');
+  const label=field.querySelector('label');
+  let optionalOpen=false;
+  function refresh() {
+    const outcome=form.querySelector('[name="outcome"]:checked')?.value;
+    const isRequired=outcome==='changes_requested', canAdd=outcome==='published';
+    field.hidden=!(isRequired || (canAdd && optionalOpen));
+    note.required=isRequired;
+    label.textContent=isRequired?'Gewünschte Änderung beschreiben (Pflichtfeld)':'Hinweis an den Coach (optional)';
+    toggle.hidden=!canAdd;
+    toggle.setAttribute('aria-expanded',String(canAdd && optionalOpen));
+    toggle.textContent=optionalOpen?'Hinweis ausblenden':'Hinweis ergänzen (optional)';
+  }
+  form.addEventListener('change',event=>{if(event.target.name==='outcome')refresh();});
+  toggle.addEventListener('click',()=>{optionalOpen=!optionalOpen;refresh();});
+  return {reset(){optionalOpen=false;refresh();}, value:()=>field.hidden?null:note.value.trim()||null};
+}

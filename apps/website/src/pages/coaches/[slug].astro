@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { coaches, coachTopics, type Coach } from "../../data/coaches";
+import { coaches, type Coach } from "../../data/coaches";
+import { coachTopics } from "../../data/coach-topics";
 import "../../styles/global.css";
 
 export function getStaticPaths() {
@@ -98,7 +99,7 @@ const topicLabels = new Map(coachTopics.map((topic) => [topic.id, topic.label]))
       </div>
       <div>
         <p>
-          Frau Janay Rappelt unterstützt bei der Einordnung und vermittelt
+          Frau Rappelt unterstützt bei der Einordnung und vermittelt
           ausschließlich zu tatsächlich verfügbaren und freigegebenen Coaches.
         </p>
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>

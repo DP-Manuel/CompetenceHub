@@ -16,10 +16,12 @@ TARGET = {
     "role": "competence_hub_app", "origin": "https://localhost:8447",
     "cal2_mode": "synthetic-pilot", "invitation_delivery_enabled": False,
 }
+FORMAT = "competence-hub-private-v2/2"
 MIGRATIONS = tuple(f"database/migrations/{name}.sql" for name in (
     "0007_coach_registry", "0008_coach_import_ledger", "0009_coach_lossless_target",
-    "0010_calendar_reservations", "0011_calendar_reservation_replies",
+    "0010_calendar_reservations", "0011_calendar_reservation_replies", "0012_customer_administration",
 ))
+MIGRATION_HEAD = 6 + len(MIGRATIONS)
 BASELINE = {
     "evidence_only": True,
     "v12_source": "5a555e9a9aaeecd03ccfa0645929b58d95801488",
@@ -142,7 +144,7 @@ def verify(path, expected_sha, commit, evidence_sha, extract_to=None):
     with zipfile.ZipFile(io.BytesIO(data)) as archive:
         members = archive_members(archive)
         manifest = json_read(archive.read("MANIFEST.json"))
-        require(manifest["format"] == "competence-hub-private-v2/1" and manifest["commit"] == commit
+        require(manifest["format"] == FORMAT and manifest["commit"] == commit
                 and manifest["tested_source_evidence_sha256"] == evidence_sha
                 and manifest["source_mode"] == "committed-git-export"
                 and manifest["deployment_authorized"] is False and manifest["real_coach_import_authorized"] is False,
