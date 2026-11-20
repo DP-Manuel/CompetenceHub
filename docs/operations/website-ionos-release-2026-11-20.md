@@ -14,8 +14,8 @@ Kein VPS, keine Datenbank, Portal-Aktivierung, Konten, E-Mails oder Pages.
 | Manifest und Inhalt | PASS: unverändert, sauberer Build, 64 Dateien, acht freigegebene Profile, kein Hupp-/Rappelt-Neuprofil und keine privaten Portal- oder Testdaten |
 | Öffentlicher Ausgangsstand | PASS: 54/54 abrufbare Vorgängerdateien exakt gegen `11cb1ea`; `.htaccess` ist nur per SFTP prüfbar |
 | Browser vor Upload | PASS am lokal aus dem exakten ZIP bereitgestellten Kandidaten: 1440 px, 390 px, nativer 200-%-Zoom, Tastatur, acht Profilpfade, Finder und Rechtswege. Kein Produktionsnachweis. |
-| SFTP | Bestätigter ED25519-Pin vorhanden; persönliche Anmeldung, vollständige Inventur und Backup noch ausstehend |
-| Rückfall | Erst nach 55/55 passender frischer Dateien, BitLocker/ACL und lokalem Wiederherstellungstest. Alte Sicherung nicht als aktuelle ausgeben |
+| SFTP | Bestätigter ED25519-Pin, Anmeldung und 55 Downloads erfolgt. Vollständige Verzeichnisliste noch nicht ausgewertet; keine Aussage über zusätzliche Remotepfade. |
+| Rückfall | Frische Kopie: 55/55 bekannte Dateien bytegenau, 11.932.989 Byte, einschließlich `.htaccess`; BitLocker C: und restriktive ACL geprüft. Neues Archiv getrennt entpackt, 55/55 Hashes erneut exakt. SHA-256 des Archivs: `7bec6352a1ffe5d5a8ef335259cc7e572e2f8f760bf2d6281aaa1868fc079aa0`. |
 | Upload / Readback / Produktionsbrowser | Noch nicht ausgeführt |
 
 ## Geplanter Umfang
@@ -34,6 +34,6 @@ Upload-, Rücklese- und Rückfallbefehle freigegeben. Bei einer kritischen
 Produktionsabweichung alte Dateien aus der frischen Sicherung zurückspielen
 und nur die eigenen neuen Pfade entfernen.
 
-**Nächster Block:** Nach der persönlichen Anmeldung den bestehenden Webroot
-inventarisieren, sichern und den Rückfall lokal testen. Danach ausschließlich
-das geprüfte Paket übertragen und per SFTP, HTTPS und Browser abnehmen.
+**Nächster Block:** Vollständige SFTP-Verzeichnisliste einschließlich `pwd`
+gegen die 55 bekannten Vorgängerdateien auswerten. Danach ausschließlich das
+geprüfte Paket übertragen und per SFTP, HTTPS und Browser abnehmen.
