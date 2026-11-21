@@ -1,10 +1,10 @@
 # Portal V2 Private Staging
 
 **Local preparation only.** Exact-source ZIP and Linux proof:
-[21.11 integrated acceptance](../handoffs/2026-11-21-v2-master-acceptance.md#nachweise-und-paket).
-Both the 21.11 integrated and 20.11 feedback candidates use manifest format `competence-hub-private-v2/2`
-and migration head `0012`. For the earlier 19.11 ZIP, use the matching runbook
-and helpers from its tested source `9c20c3a`, not the following commands.
+[Next Level acceptance](../handoffs/2026-11-21-v2-next-level.md).
+The Next Level candidate uses manifest format `competence-hub-private-v2/3`
+and migration head `0013`. For earlier ZIPs, use the matching runbook and
+helpers from their tested source, not the following commands.
 No VPS probe, deployment, migration of the original database or real Coach import.
 The only candidate scope is the synthetic private pilot. `deployment_authorized`
 is always `false` in package/preflight metadata, not a release approval.
@@ -58,7 +58,7 @@ $cache = 'release-artifacts/webapp-linux/20261113T151559Z-1a2ef9ab/wheelhouse'
 Use the actual fresh ZIP path and the separately recorded SHA printed on build
 as `$zip`/`$approvedArchiveSha`. Expected: `V2_PACKAGE=PASS`; exact application
 wheel/source content, 25 accepted Ubuntu 24.04 x86_64 Python 3.12 dependencies
-and the pinned hash lock, exactly six migration files plus the listed helpers.
+and the pinned hash lock, exactly seven migration files plus the listed helpers.
 The dependency cache is the [accepted V1.2 Linux proof](portal-v12-calendar-ux-2026-11-13.md#bound-local-release),
 not a fresh advisory check. A changed dependency lock or wheel byte is a STOP,
 not a network fallback. No source backup, fixture, operator inputs or secrets
@@ -123,12 +123,12 @@ the same `pkg` pins. No passwords on the command line or in receipts.
 sudo -u postgres python3.12 "$TOOLS/v2_clone.py" inspect "${pkg[@]}" > clone-0006.json
 # STOP here until Owner approves the exact observed database, hash and window.
 sudo -u postgres python3.12 "$TOOLS/v2_clone.py" migrate "${pkg[@]}" \
-  --approval "$OWNER_APPROVAL_JSON" --approval-sha256 "$OWNER_APPROVAL_SHA" > clone-0012.json
+  --approval "$OWNER_APPROVAL_JSON" --approval-sha256 "$OWNER_APPROVAL_SHA" > clone-0013.json
 sudo -u postgres python3.12 "$TOOLS/v2_clone.py" ready "${pkg[@]}" > clone-ready.json
 ```
 
 Owner approval JSON is nonsecret, supplied after inspection: `action`
-`V2_SCHEMA_ONLY_0007_TO_0012`; `commit`, `archive_sha256`,
+`V2_SCHEMA_ONLY_0007_TO_0013`; `commit`, `archive_sha256`,
 `source_evidence_sha256`; `database` `competence_hub_v2_pilot`;
 `system_identifier`, `clone_oid` and `reference_sha256` from `clone-0006.json`;
 `protected_restore_receipt_sha256` and `clone_parity_receipt_sha256` from the
@@ -137,8 +137,9 @@ accepted current proofs; `expires_utc` in `YYYY-MM-DDTHH:MM:SSZ` (within 24h);
 hash pins bind the human decisions and do not certify their truth. `migrate`
 rechecks the clone identity and reference, then runs the approved SQL bodies in
 one PostgreSQL transaction, checking each ledger in order: `0007` Registry,
-`0008` import ledger, `0009` lossless schema, `0010` reservations, `0011` replies
-and `0012` empty, internal customer tables (not an import).
+`0008` import ledger, `0009` lossless schema, `0010` reservations, `0011` replies,
+`0012` empty internal customer tables and `0013` additive fields, notes and
+history for the existing coaching requests (not an import).
 The helper preserves the original 27-table row projection and both sequences;
 the additive Coach metadata, taxonomy seeds and new ledger entries are expected.
 The SQL does not include an import or identity mapping. A real Coach import
@@ -147,13 +148,13 @@ always requires its own approval, manifest, mappings and operating procedure.
 `ready` is nonmutating and refuses replayable cloned sessions, challenges,
 one-time tokens or unfinished delivery. If these remain, wait for expiry where
 appropriate, or seek a distinct approval for clone-only auth isolation. Never
-invalidate V1.2 sessions/credentials to clear this gate. Compare `clone-0012`
+invalidate V1.2 sessions/credentials to clear this gate. Compare `clone-0013`
 and the earlier clone receipt; for failure/uncertain commit, inspect under a
 fresh operating decision before retry. Do not apply down migrations.
 
 ## 4. Future Window: Private Activation and No-Drop Rollback
 
-Only after a separate activation grant, after verifying `0012`, clone readiness,
+Only after a separate activation grant, after verifying `0013`, clone readiness,
 reference parity and current strict V1.2 TLS, stage in the fresh root-owned
 namespace. Do not overwrite files or an existing V2 unit. Review externally
 managed root-only `/etc/competence-hub-v2/runtime.env` with the authorized
@@ -218,7 +219,7 @@ unexpected original DB drift under the accepted incident/restore procedure.
 Tooling verification is distinct from a release: the isolated Linux test uses a
 disposable PG16 Unix socket, no network and no published ports. It seeds only
 synthetic 0006 rows, proves an injected 0009 failure leaves no partial migration,
-rejects a wrong clone and replayable cloned auth, applies 0007..0012, and verifies
+rejects a wrong clone and replayable cloned auth, applies 0007..0013, and verifies
 the original DB dump is unchanged. The additional archive and offline Linux
 install tests use a synthetic application wheel and the 25 real pinned cached
 dependency wheels; unit syntax is checked without starting services. Six local

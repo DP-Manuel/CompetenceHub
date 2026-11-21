@@ -19,6 +19,7 @@ from competence_hub_api.auth.session_repository import SessionRepository
 from competence_hub_api.portal.companies import CompanyService
 from competence_hub_api.portal.customers import CustomerAdministration
 from competence_hub_api.portal.calendar import CalendarService
+from competence_hub_api.portal.requests import CoachingRequestRepository
 from competence_hub_api.portal.reservations import ReservationRepository
 from competence_hub_api.web.reservations import router as reservations_router
 from competence_hub_api.portal.coach_registry import CoachRegistryService
@@ -37,6 +38,7 @@ from competence_hub_api.web.pilot import router as pilot_router
 from competence_hub_api.web.user_management import router as user_management_router, mapping_router
 from competence_hub_api.web.companies import router as companies_router
 from competence_hub_api.web.customers import router as customers_router
+from competence_hub_api.web.requests import router as requests_router
 from competence_hub_api.web.calendar import (
     protected_router as protected_calendar_router,
     public_router as public_calendar_router,
@@ -70,6 +72,7 @@ def create_app(
     customer_administration: CustomerAdministration | None = None,
     calendar_service: CalendarService | None = None,
     reservation_repository: ReservationRepository | None = None,
+    coaching_request_repository: CoachingRequestRepository | None = None,
     coach_registry_service: CoachRegistryService | None = None,
     coach_management_queries: CoachManagementQueries | None = None,
     calendar_cursor_hmac_key: bytes | None = None,
@@ -104,6 +107,7 @@ def create_app(
     app.state.customer_administration = customer_administration
     app.state.calendar_service = calendar_service
     app.state.reservation_repository = reservation_repository
+    app.state.coaching_request_repository = coaching_request_repository
     app.state.coach_registry_service = coach_registry_service
     app.state.coach_management_queries = coach_management_queries
     app.state.calendar_cursor_codec = (
@@ -140,6 +144,7 @@ def create_app(
     app.include_router(public_calendar_router)
     app.include_router(protected_calendar_router)
     app.include_router(reservations_router)
+    app.include_router(requests_router)
 
     @app.get("/", include_in_schema=False)
     async def portal_root() -> RedirectResponse:

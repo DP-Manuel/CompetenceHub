@@ -5,6 +5,7 @@ import { createCalendarForm, germanDateTime } from "./calendar-form.mjs";
 import { createCalendarDialogs, createReviewNote } from "./calendar-dialogs.js";
 import { createReservations } from "./reservations.js";
 import { createCustomerAdministration } from "./customer-administration.js";
+import { createBusinessRequests } from "./business-requests.js";
 import { render as renderBusinessOverview } from "./business-overview.js";
 
 const API = {
@@ -102,6 +103,11 @@ const reservations = createReservations({
 });
 const customerAdmin = createCustomerAdministration({
   request, hasCsrf: () => Boolean(state.sessionCsrf),
+  expired: () => showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."),
+});
+const requestsRoot = byId("requests-workspace");
+const businessRequests = createBusinessRequests({
+  root: requestsRoot, request, hasCsrf: () => Boolean(state.sessionCsrf),
   expired: () => showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."),
 });
 
@@ -298,6 +304,8 @@ function clearPortalClientState() {
   coachManagement.reset();
   coachManagement.root.remove();
   reservations.reset();
+  businessRequests.reset();
+  byId("overview-open-requests").hidden = true;
   customerAdmin.reset();
   labelCustomerArea(false);
   state.companyTourAvailable = false;
@@ -723,7 +731,9 @@ async function configurePortalAreas() {
   if (!session) return;
   const roles = new Set(session.user.roles || []);
   const canUseCompanies = roles.has("admin") || roles.has("internal");
-  const capabilities = await loadCalendarCapabilities();
+  const [capabilities, requestAccess] = await Promise.all([
+    loadCalendarCapabilities(), businessRequests.available(() => state.session === session),
+  ]);
   if (state.session !== session) return;
   state.calendarCapabilities = capabilities;
   const canManageCalendar = Boolean(
@@ -767,6 +777,8 @@ async function configurePortalAreas() {
   if (reservationCaps.can_request) areas.push({ id: "reservations", label: "Vormerkungen" });
   if (reservationCaps.can_review) areas.push({ id: "reservation-review", label: "Vormerkungen prüfen" });
   if (reservationCaps.can_request && reservations.linkedOffer()) state.activePortalArea = "reservations";
+  if (requestAccess) areas.push({ id: "requests", label: "Anfragen" });
+  byId("overview-open-requests").hidden = !requestAccess;
   if (roles.has("admin")) areas.push({id:"accounts", label:"Zugänge"});
   configurePilotHelp(roles);
   renderPortalNavigation(areas);
@@ -815,14 +827,14 @@ function configureRestrictedCalendarNodes(canManage, canReview) {
 function renderPortalNavigation(areas) {
   const navigation = byId("portal-navigation");
   navigation.replaceChildren();
-  navigation.hidden = areas.length < 2;
+  navigation.hidden = areas.length < 2 && !areas.some(({ id }) => id === "requests");
   areas.forEach((area) => {
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.portalArea = area.id;
     button.textContent = area.label;
     button.setAttribute("aria-current", area.id === state.activePortalArea ? "page" : "false");
-    button.addEventListener("click", () => selectPortalArea(area.id));
+    button.addEventListener("click", () => selectPortalArea(area.id, { focusWorkspace: area.id === "requests" }));
     navigation.append(button);
   });
 }
@@ -835,6 +847,8 @@ function switchPortalWorkspace(area) {
   restrictedCalendarNodes.reviewWorkspace.hidden = area !== "review-calendar";
   reservationsRoot.hidden = !["reservations", "reservation-review"].includes(area);
   if (reservationsRoot.hidden) reservations.leave();
+  requestsRoot.hidden = area !== "requests";
+  if (requestsRoot.hidden) businessRequests.leave();
 }
 
 async function selectPortalArea(area, {
@@ -848,6 +862,13 @@ async function selectPortalArea(area, {
     if (!reservations.canLeave()) return;
   }
   if (state.activePortalArea === "companies" && area !== "companies" && !customerAdmin.leaveWorkspace()) return;
+  if (state.activePortalArea === "requests") {
+    if (area === "requests") {
+      if (focusWorkspace) byId("requests-title").focus();
+      return true;
+    }
+    if (!businessRequests.canLeave()) return;
+  }
   const ticket = ++portalAreaSerial;
   state.activePortalArea = area;
   switchPortalWorkspace(area);
@@ -860,6 +881,7 @@ async function selectPortalArea(area, {
   const headingId = {
     accounts: "pilot-accounts-title", companies: "company-workspace-title",
     "coach-calendar": "coach-calendar-title", "review-calendar": "review-calendar-title",
+    requests: "requests-title",
   }[area];
   const heading = headingId && byId(headingId);
   if (focusWorkspace && heading) {
@@ -900,6 +922,8 @@ async function selectPortalArea(area, {
     await loadReviewQueue({ refreshOverview });
   } else if (area === "reservations" || area === "reservation-review") {
     await reservations.show(area === "reservation-review", "", { reviewFilters: reservationFilters, catalogue });
+  } else if (area === "requests") {
+    await businessRequests.show();
   }
   return state.session === session && ticket === portalAreaSerial;
 }
@@ -1982,6 +2006,7 @@ async function handleContactUpdate(event, errorElement) {
 }
 
 async function handleLogout() {
+  if (!businessRequests.canLeave()) return;
   if (!state.sessionCsrf) {
     showLogin("Bitte melden Sie sich erneut an, um die bestehende Sitzung sicher zu ersetzen.");
     return;
@@ -2006,6 +2031,7 @@ async function handleLogout() {
 
 function bindEvents() {
   byId("refresh-pilot-overview").addEventListener("click", loadPilotOverview);
+  byId("overview-open-requests").addEventListener("click", () => selectPortalArea("requests", { focusWorkspace: true }));
   byId("overview-create-event").addEventListener("click", async () => {
     if (await selectPortalArea("coach-calendar", { focusWorkspace: true })) byId("open-calendar-offer-dialog").click();
   });

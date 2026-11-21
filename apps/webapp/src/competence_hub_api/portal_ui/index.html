@@ -237,7 +237,19 @@
           <p id="pilot-access-summary" hidden></p>
           <div id="pilot-recent" hidden><h3>Zuletzt freigegeben</h3><ul id="pilot-recent-list"></ul></div>
           <button id="overview-create-event" class="button button-primary" type="button" hidden>Neuen Termin erstellen</button>
+          <button id="overview-open-requests" class="button button-secondary" type="button" hidden>Anfragen öffnen</button>
           <a id="public-calendar-link" href="/portal/calendar-public.html" target="_blank" rel="noopener">Freigegebener Kalender</a>
+        </section>
+        <section id="requests-workspace" class="calendar-workspace" aria-labelledby="requests-title" hidden>
+          <header class="workspace-heading">
+            <div>
+              <p class="eyebrow" data-request-scope></p>
+              <h2 id="requests-title" tabindex="-1">Anfragen</h2>
+            </div>
+          </header>
+          <p role="status"></p>
+          <p class="form-error" role="alert" tabindex="-1" hidden></p>
+          <div data-request-content></div>
         </section>
         <section id="reservations-workspace" class="calendar-workspace" aria-labelledby="reservations-title" hidden>
           <header class="workspace-heading">

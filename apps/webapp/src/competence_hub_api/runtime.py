@@ -29,6 +29,7 @@ from competence_hub_api.portal.companies import CompanyService
 from competence_hub_api.portal.customers import CustomerAdministration
 from competence_hub_api.portal.calendar import CalendarService
 from competence_hub_api.portal.postgres_calendar import PostgresCalendarRepository
+from competence_hub_api.portal.requests import CoachingRequestRepository
 from competence_hub_api.portal.reservations import ReservationRepository
 from competence_hub_api.portal.postgres_companies import PostgresCompanyRepository
 from competence_hub_api.security.passwords import PasswordPolicy, PasswordService
@@ -69,6 +70,32 @@ async def _customer_schema_ready(engine: AsyncEngine) -> bool:
         """)))
 
 
+async def _request_schema_ready(engine: AsyncEngine, *, timeout_seconds: float) -> bool:
+    # The migration ledger is intentionally not available to the app role.
+    # A missing migration or unsuccessful schema probe leaves Requests off.
+    try:
+        async with asyncio.timeout(timeout_seconds):
+            async with engine.connect() as connection:
+                return bool(await connection.scalar(text("""
+                    SELECT (SELECT count(*) = 8 FROM pg_catalog.pg_attribute
+                            WHERE attrelid = to_regclass('competence_hub.coaching_requests')
+                              AND NOT attisdropped AND attname IN (
+                                  'private_customer_id', 'service_id', 'offer_id', 'coach_id',
+                                  'follow_up_on', 'coach_summary', 'coach_release_id', 'version'
+                              ))
+                       AND has_table_privilege(to_regclass('competence_hub.coaching_request_notes'), 'SELECT')
+                       AND has_table_privilege(to_regclass('competence_hub.coaching_request_notes'), 'INSERT')
+                       AND has_table_privilege(to_regclass('competence_hub.coaching_request_events'), 'SELECT')
+                       AND has_table_privilege(to_regclass('competence_hub.coaching_request_events'), 'INSERT')
+                       AND NOT EXISTS (
+                           SELECT 1 FROM competence_hub.portal_users
+                           WHERE email NOT ILIKE '%@example.invalid'
+                       )
+                """)))
+    except (SQLAlchemyError, OSError, TimeoutError):
+        return False
+
+
 def create_database_engine(database_url: str) -> AsyncEngine:
     return create_async_engine(
         database_url,
@@ -105,6 +132,7 @@ def create_runtime_app(
             raise ValueError("CAL-2 is restricted to the owned local synthetic fixture")
     pilot_reservations = settings.cal2_mode == "synthetic-pilot"
     reservations_enabled = local_reservations or pilot_reservations
+    requests_candidate = pilot_reservations or (local_reservations and not database.query)
     portal_admission = (
         AdmissionPolicy(PORTAL_ADMISSION.roles | {"company_contact"})
         if reservations_enabled else PORTAL_ADMISSION
@@ -189,8 +217,13 @@ def create_runtime_app(
                     raise RuntimeError("CAL-2 pilot database verification failed") from None
             if reservations_enabled and await _customer_schema_ready(engine):
                 application.state.customer_administration = CustomerAdministration(engine)
+            if requests_candidate and await _request_schema_ready(
+                engine, timeout_seconds=settings.readiness_timeout_seconds
+            ):
+                application.state.coaching_request_repository = CoachingRequestRepository(engine)
             yield
         finally:
+            application.state.coaching_request_repository = None
             application.state.customer_administration = None
             await engine.dispose()
 

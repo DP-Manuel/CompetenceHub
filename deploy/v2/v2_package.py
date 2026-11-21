@@ -16,10 +16,11 @@ TARGET = {
     "role": "competence_hub_app", "origin": "https://localhost:8447",
     "cal2_mode": "synthetic-pilot", "invitation_delivery_enabled": False,
 }
-FORMAT = "competence-hub-private-v2/2"
+FORMAT = "competence-hub-private-v2/3"
 MIGRATIONS = tuple(f"database/migrations/{name}.sql" for name in (
     "0007_coach_registry", "0008_coach_import_ledger", "0009_coach_lossless_target",
     "0010_calendar_reservations", "0011_calendar_reservation_replies", "0012_customer_administration",
+    "0013_coaching_request_operations",
 ))
 MIGRATION_HEAD = 6 + len(MIGRATIONS)
 BASELINE = {

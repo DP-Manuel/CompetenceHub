@@ -3,6 +3,7 @@ from dataclasses import replace
 from datetime import timedelta
 from types import TracebackType
 from typing import Any
+from unittest.mock import AsyncMock
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -15,6 +16,8 @@ from competence_hub_api.auth.login_service import LoginService
 from competence_hub_api.auth.account_lifecycle import AccountLifecycleService
 from competence_hub_api.portal.companies import CompanyService
 from competence_hub_api.config import RuntimeConfigurationError, RuntimeSettings
+from competence_hub_api import runtime
+from competence_hub_api.portal.requests import CoachingRequestRepository
 from competence_hub_api.runtime import (
     create_database_engine,
     create_runtime_app,
@@ -108,6 +111,46 @@ def test_private_cal2_mode_only_accepts_the_isolated_database_and_origin():
     ):
         with pytest.raises(RuntimeConfigurationError):
             replace(base, **{**expected, **forbidden})
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "mode, schema_ready, enabled",
+    [
+        ("default", True, False), ("local", True, True), ("local_override", True, False),
+        ("pilot", True, True), ("pilot", False, False),
+    ],
+)
+async def test_requests_requires_a_synthetic_runtime_and_schema(monkeypatch, mode, schema_ready, enabled):
+    base = runtime_settings()
+    local = mode in {"local", "local_override"}
+    if local:
+        url = base.database_url.replace(":5432/", ":55433/")
+        if mode == "local_override":
+            url += "?host=127.0.0.2"
+        base = replace(base, database_url=url, allowed_origin="https://127.0.0.1:8447")
+    elif mode == "pilot":
+        base = replace(
+            base, database_url=base.database_url.replace("competence_hub_staging", "competence_hub_v2_pilot"),
+            allowed_origin="https://localhost:8447", cal2_mode="synthetic-pilot",
+        )
+    engine = FakeEngine()
+    pilot_check = AsyncMock()
+    schema_check = AsyncMock(return_value=schema_ready)
+    monkeypatch.setattr(runtime, "_verify_cal2_pilot", pilot_check)
+    monkeypatch.setattr(runtime, "_customer_schema_ready", AsyncMock(return_value=True))
+    monkeypatch.setattr(runtime, "_request_schema_ready", schema_check)
+
+    app = create_runtime_app(base, engine_factory=lambda _url: engine, local_reservations=local)
+    assert app.state.coaching_request_repository is None
+    async with app.router.lifespan_context(app):
+        assert isinstance(app.state.coaching_request_repository, CoachingRequestRepository) is enabled
+        assert (app.state.reservation_repository is not None) is (mode != "default")
+        assert (app.state.customer_administration is not None) is (mode != "default")
+    assert app.state.coaching_request_repository is None
+    assert engine.disposed
+    assert schema_check.await_count == int(mode in {"local", "pilot"})
+    assert pilot_check.await_count == int(mode == "pilot")
 
 
 @pytest.mark.anyio

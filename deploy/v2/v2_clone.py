@@ -24,6 +24,10 @@ TABLES = tuple(sorted("""
     calendar_offer_revisions calendar_review_decisions
 """.split()))
 SEQUENCES = ("audit_events_id_seq", "calendar_review_decisions_id_seq")
+REQUEST_ADDITIONS = (
+    "private_customer_id", "service_id", "offer_id", "coach_id", "follow_up_on",
+    "coach_summary", "coach_release_id", "version",
+)
 ACTION = f"V2_SCHEMA_ONLY_0007_TO_{MIGRATION_HEAD:04}"
 
 
@@ -42,13 +46,15 @@ def ledger(upper):
 
 
 def clone_snapshot():
-    # Keep only pre-0007 Coach columns and ledger rows, permitting the additive target schema.
+    # Preserve every 0006 value while ignoring additive columns and later ledger rows.
     rows = []
     for name in TABLES:
         row = "to_jsonb(t)"
         filter_ = ""
         if name == "coaches":
             row += " - ARRAY['lifecycle_status','registry_lock_version','registry_request_id','publication_floor']"
+        if name == "coaching_requests":
+            row += f" - ARRAY[{sql_list(REQUEST_ADDITIONS)}]"
         if name == "schema_migrations":
             filter_ = " WHERE version <= '0006'"
         rows.append(f"SELECT '{name}' AS name, count(*)::text || ':' || encode(sha256(convert_to("
@@ -58,6 +64,17 @@ def clone_snapshot():
                 for name in SEQUENCES)
     inner = " UNION ALL ".join(rows)
     return f"encode(sha256(convert_to((SELECT jsonb_object_agg(name,value)::text FROM ({inner}) q), 'UTF8')), 'hex')"
+
+
+def request_permissions():
+    allowed = []
+    for table in ("coaching_request_notes", "coaching_request_events"):
+        relation = f"'competence_hub.{table}'"
+        for privilege in ("SELECT", "INSERT"):
+            allowed.append(f"has_table_privilege('competence_hub_app',{relation},'{privilege}')")
+        allowed.append(f"NOT has_any_column_privilege('competence_hub_app',{relation},'UPDATE')")
+        allowed.append(f"NOT has_table_privilege('competence_hub_app',{relation},'DELETE,TRUNCATE')")
+    return check(" AND ".join(allowed), "REQUEST_HISTORY_PERMISSIONS")
 
 
 def migration_body(data):
@@ -104,6 +121,7 @@ def plan(migrations, approval=None, *, ready=False):
                     "CLONE_MUST_BE_QUIET")
     if ready:
         script += ledger(MIGRATION_HEAD)
+        script += request_permissions()
         script += check("NOT EXISTS (SELECT FROM competence_hub.auth_sessions WHERE revoked_at IS NULL"
                         " AND idle_expires_at>now() AND absolute_expires_at>now())"
                         " AND NOT EXISTS (SELECT FROM competence_hub.auth_login_challenges"
@@ -128,7 +146,7 @@ def plan(migrations, approval=None, *, ready=False):
         script += "SET SESSION AUTHORIZATION competence_hub_migrator;\n" + migration_body(migration)
         script += "RESET SESSION AUTHORIZATION;\n" + ledger(i)
     script += check(f"{clone_snapshot()}='{approval['reference_sha256']}'", "ORIGINAL_CLONE_REFERENCE_CHANGED")
-    script += check("(SELECT count(*) FROM pg_tables WHERE schemaname='competence_hub')=48"
+    script += check("(SELECT count(*) FROM pg_tables WHERE schemaname='competence_hub')=50"
                     " AND NOT EXISTS(SELECT FROM pg_tables WHERE schemaname='competence_hub'"
                     " AND tableowner<>'competence_hub_owner')"
                     " AND NOT EXISTS (SELECT FROM competence_hub.coach_import_sources)"
@@ -138,12 +156,17 @@ def plan(migrations, approval=None, *, ready=False):
                     " AND NOT EXISTS (SELECT FROM competence_hub.calendar_reservation_events)"
                     " AND NOT EXISTS (SELECT FROM competence_hub.private_customers)"
                     " AND NOT EXISTS (SELECT FROM competence_hub.company_customer_details)"
+                    " AND NOT EXISTS (SELECT FROM competence_hub.coaching_requests WHERE version<>1"
+                    " OR num_nonnulls(private_customer_id,service_id,offer_id,coach_id,follow_up_on,coach_summary,coach_release_id)<>0)"
+                    " AND NOT EXISTS (SELECT FROM competence_hub.coaching_request_notes)"
+                    " AND NOT EXISTS (SELECT FROM competence_hub.coaching_request_events)"
                     " AND has_table_privilege('competence_hub_app','competence_hub.calendar_reservations','SELECT')"
                     " AND has_column_privilege('competence_hub_app','competence_hub.calendar_reservations','seats','UPDATE')"
                     " AND has_table_privilege('competence_hub_app','competence_hub.private_customers','SELECT')"
                     " AND NOT has_table_privilege('competence_hub_app','competence_hub.private_customers','DELETE')"
                     " AND NOT has_table_privilege('competence_hub_app','competence_hub.calendar_reservation_events','DELETE')",
                     "V2_POST_MIGRATION_INVARIANTS")
+    script += request_permissions()
     return script + "COMMIT;\n" + return_sql
 
 

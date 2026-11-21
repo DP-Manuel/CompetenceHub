@@ -220,6 +220,9 @@ class NativeClone(unittest.TestCase):
                     INSERT INTO competence_hub.company_contacts(company_id, portal_user_id, first_name, last_name, email)
                     SELECT company.id, u.id, 'Synthetic', 'Contact', u.email
                     FROM company CROSS JOIN competence_hub.portal_users u WHERE u.email='synthetic3@example.invalid';
+                    INSERT INTO competence_hub.coaching_requests(company_id,subject,description,status)
+                    SELECT id, 'Synthetic historical request', 'Existing text must remain unchanged', 'historical'
+                    FROM competence_hub.companies WHERE name='Synthetic company';
                     SELECT nextval('competence_hub.audit_events_id_seq');
                 """)
                 psql(original, b"""
@@ -261,7 +264,8 @@ class NativeClone(unittest.TestCase):
                     SELECT count(*) FROM competence_hub.user_roles;
                     SELECT count(*) FROM competence_hub.company_contacts;
                     SELECT count(*) FROM competence_hub.calendar_offer_revisions;
-                """), b"4\n1\n1\n")
+                    SELECT count(*) FROM competence_hub.coaching_requests;
+                """), b"4\n1\n1\n1\n")
 
                 def native(sql):
                     return package.json_read(psql(clone.DATABASE, sql.encode("utf-8")))
@@ -270,7 +274,7 @@ class NativeClone(unittest.TestCase):
                 before = native(clone.plan(migrations))
                 approval = receipt(before)
                 failed = migrations.copy()
-                failed[2] = re.sub(rb"COMMIT;\s*$", b"SELECT 1/0;\nCOMMIT;\n", failed[2])
+                failed[-1] = re.sub(rb"COMMIT;\s*$", b"SELECT 1/0;\nCOMMIT;\n", failed[-1])
                 with self.assertRaises(subprocess.CalledProcessError) as failure:
                     native(clone.plan(failed, approval))
                 self.assertIn(b"division by zero", failure.exception.stderr)
@@ -279,6 +283,11 @@ class NativeClone(unittest.TestCase):
                     native(clone.plan(migrations, {**approval, "clone_oid": "1"}))
                 self.assertEqual(native(clone.plan(migrations, approval)), before)
                 self.assertEqual(native(clone.plan(migrations, ready=True)), before)
+                psql(clone.DATABASE, b"GRANT UPDATE (body) ON competence_hub.coaching_request_notes TO competence_hub_app;")
+                with self.assertRaises(subprocess.CalledProcessError) as failure:
+                    native(clone.plan(migrations, ready=True))
+                self.assertIn(b"REQUEST_HISTORY_PERMISSIONS", failure.exception.stderr)
+                psql(clone.DATABASE, b"REVOKE UPDATE (body) ON competence_hub.coaching_request_notes FROM competence_hub_app;")
                 with self.assertRaises(subprocess.CalledProcessError):
                     native(clone.plan(migrations, approval))
                 psql(clone.DATABASE, b"""

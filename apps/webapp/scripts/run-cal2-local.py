@@ -5,6 +5,7 @@ import asyncio
 from dataclasses import replace
 from datetime import datetime, timedelta
 from pathlib import Path
+import re
 import sys
 import tempfile
 from threading import Event
@@ -36,6 +37,10 @@ UI = "/portal/"
 OVERVIEW = "/api/v1/portal/pilot/overview"
 UPCOMING = "/api/v1/calendar/upcoming"
 CUSTOMERS = "/api/v1/portal/customers"
+REQUESTS = "/api/v1/portal/requests"
+CASE_TITLE = "Demo: Workshop-Anfrage"
+INTERNAL_NOTE = "Interne Demo-Rueckfrage zur Vorbereitung"
+COACH_NOTE = "Freigegebener Demo-Hinweis zum Ablauf"
 # Fictitious coordinate pairs, never reused as a real venue or geocoding source.
 DEMO_PLACES = (Locality("demo-a", "Demo-Ort A", 0, 0), Locality("demo-b", "Demo-Ort B", 0, 1))
 
@@ -206,6 +211,91 @@ def customer_workflow(admin, internal, company):
         (401, "authentication_failed"), (403, "authorization_failed"),
     }, "Active company session must be denied by the internal-only customer scope"
     check("Combined Portal: private customer without company, internal company metadata and tenant denial", True)
+
+
+def request_workflow(fixture, base, actors, offer_id):
+    reviewer_page = actors["reviewer"]
+    workspace = reviewer_page.locator("#requests-workspace")
+    reviewer_page.locator('#portal-navigation [data-portal-area="requests"]').press("Enter")
+    expect(workspace.get_by_role("heading", name="Anfragen", exact=True)).to_be_focused()
+    workspace.get_by_role("button", name="Anfrage erstellen", exact=True).press("Enter")
+    form = workspace.locator("form")
+    form.locator("#requests-company_id").select_option(label="Demo-Firma A")
+    form.get_by_label("Betreff", exact=True).fill(CASE_TITLE)
+    form.get_by_label("Beschreibung", exact=True).fill("Nur intern erfasster synthetischer Bedarf")
+    with reviewer_page.expect_response(lambda response: response.url == base + REQUESTS
+                                       and response.request.method == "POST") as created:
+        form.get_by_role("button", name="Anfrage speichern", exact=True).press("Enter")
+    assert created.value.status == 201
+    item = created.value.json()
+    expect(workspace.get_by_role("heading", name=CASE_TITLE)).to_be_focused()
+    assert 'heading "' + CASE_TITLE + '"' in workspace.aria_snapshot()
+    check("Reviewer creates a company request with named controls at native 200 percent zoom", True)
+
+    reviewer, admin, company, other, coach, coach_two = (
+        Session(actors[key], base) for key in ("reviewer", "admin", "contact", "contact_two", "coach", "coach_two")
+    )
+    target = REQUESTS + "/" + item["id"]
+    assert coach.send("GET", target).status_code == 404
+    assigned = reviewer.send("PATCH", target, {
+        "version": item["version"], "status": "waiting", "offer_id": offer_id,
+        "responsible_user_id": str(fixture.users["reviewer"]), "coach_id": str(fixture.coaches["coach"]),
+        "follow_up_on": (fixture.now + timedelta(days=2)).date().isoformat(),
+        "coach_summary": "Workshop-Rahmen vorbereiten",
+    })
+    assert assigned.status_code == 200
+    item = assigned.json()
+    for visibility, body in (("internal", INTERNAL_NOTE), ("coach", COACH_NOTE)):
+        saved = reviewer.send("POST", target + "/notes", {"version": item["version"], "visibility": visibility, "body": body})
+        assert saved.status_code == 201
+        item = saved.json()
+
+    own = company.send("GET", target)
+    released = coach.send("GET", target)
+    check("Business request: owner company reads status, assigned Coach only explicit release, no notes cross scopes", (
+        own.is_success and own.json()["status"] == "waiting" and INTERNAL_NOTE not in own.text and COACH_NOTE not in own.text
+        and "description" not in own.json() and own.headers["cache-control"] == "no-store"
+        and other.send("GET", target).status_code == 404 and coach_two.send("GET", target).status_code == 404
+        and released.is_success and released.json()["coach_summary"] == "Workshop-Rahmen vorbereiten"
+        and [note["body"] for note in released.json()["notes"]] == [COACH_NOTE]
+        and INTERNAL_NOTE not in released.text and "company_id" not in released.json()
+        and company.send("PATCH", target, {"version": item["version"], "status": "closed"}).status_code == 403
+        and reviewer.send("PATCH", target, {"version": item["version"], "status": "closed"}, csrf="invalid").status_code == 403))
+
+    for key, title in (("contact", CASE_TITLE), ("coach", "Freigegebene Anfrage")):
+        page = actors[key]
+        page.locator('#portal-navigation [data-portal-area="requests"]').press("Enter")
+        area = page.locator("#requests-workspace")
+        area.get_by_role("button", name=f"Details öffnen: {title}", exact=True).press("Enter")
+        expect(area.get_by_role("heading", name=title, exact=True)).to_be_focused()
+        expect(area.get_by_text(INTERNAL_NOTE, exact=True)).to_have_count(0)
+        expect(area.get_by_role("button", name="Bearbeiten", exact=True)).to_have_count(0)
+        if key == "coach":
+            expect(area.get_by_text(COACH_NOTE, exact=True)).to_be_visible()
+            expect(area.get_by_text(CASE_TITLE, exact=True)).to_have_count(0)
+        else:
+            expect(area.get_by_text(COACH_NOTE, exact=True)).to_have_count(0)
+    check("Company and Coach browser views render the restricted data without edit controls", True)
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        results = list(pool.map(lambda status: reviewer.send("PATCH", target, {
+            "version": item["version"], "status": status,
+        }), ("in_progress", "closed")))
+    check("Parallel case edits preserve a single winner and reject a stale version",
+          sorted(result.status_code for result in results) == [200, 409])
+    item = next(result.json() for result in results if result.status_code == 200)
+    changed = reviewer.send("PATCH", target, {"version": item["version"], "coach_id": str(fixture.coaches["coach_two"])})
+    check("Reassignment does not transfer an earlier Coach release", changed.status_code == 200
+          and coach.send("GET", target).status_code == 404 and coach_two.send("GET", target).status_code == 404)
+
+    private = admin.send("GET", REQUESTS + "/options?bucket=private_customers").json()["items"]
+    created = admin.send("POST", REQUESTS, {"subject": "Demo: Privatkunden-Anfrage",
+        "description": "Synthetisch, ohne Firma", "private_customer_id": next(customer["id"] for customer in private
+                                                                            if customer["label"] == "Demo Privatregister")})
+    assert created.status_code == 201
+    check("Private customer request needs no company and cannot be read by a company contact",
+          created.json()["company_id"] is None and company.send("GET", REQUESTS + "/" + created.json()["id"]).status_code == 404)
+    return target
 
 
 class Session:
@@ -671,13 +761,37 @@ def api_workflow(fixture, base, actors, main_id, main_draft, offers, reply_retry
 
 
 def verify_pilot_runtime(db, fixture):
-    # The clone lives only in the owned test container. Keep the two database
-    # names distinct even when testing the private mode on this workstation.
-    db.sql("CREATE DATABASE competence_hub_v2_pilot TEMPLATE competence_hub_staging;", "postgres")
-    db.sql("""
-        REVOKE CONNECT ON DATABASE competence_hub_v2_pilot FROM PUBLIC;
-        GRANT CONNECT ON DATABASE competence_hub_v2_pilot TO competence_hub_app;
-    """, "postgres")
+    source = "competence_hub_staging"
+    clone = "competence_hub_v2_pilot"
+
+    def cluster(*args, data=None):
+        return db.command("exec", "-i", db.container, *args, data=data).stdout
+
+    def snapshot(database):
+        dump = cluster("pg_dump", "--quote-all-identifiers", "-U", "postgres", "-d", database)
+        dump = re.sub(r"(?m)^\\(?:un)?restrict .*\n", "", dump)
+        # Parsing the restored DDL flattens two known BETWEEN/AND expressions.
+        for name, expression, low, high in (
+            ("private_customers_email_check", '"char_length"("email")', 3, 254),
+            ("coaching_request_events_changed_fields_check", '"cardinality"("changed_fields")', 1, 13),
+        ):
+            prefix = f'    CONSTRAINT "{name}" CHECK ('
+            bounds = f"({expression} >= {low}) AND ({expression} <= {high})"
+            dump = dump.replace(f"{prefix}(({bounds}) AND ", f"{prefix}({bounds} AND ", 1)
+        return dump
+
+    # This file exists only inside the owned synthetic container, never on a host mount.
+    dump_path = cluster("mktemp", "/tmp/ch-v2-restore-XXXXXX").strip()
+    assert re.fullmatch(r"/tmp/ch-v2-restore-[A-Za-z0-9]{6}", dump_path)
+    baseline = snapshot(source)
+    cluster("pg_dump", "--format=custom", "-U", "postgres", "-f", dump_path, "-d", source)
+    checksum = cluster("sha256sum", dump_path)
+    cluster("sha256sum", "--check", "--strict", "-", data=checksum)
+    bootstrap = (ROOT / "database/bootstrap-staging.sql").read_text(encoding="utf8").split("\\connect", 1)[0]
+    db.sql(bootstrap.replace(source, clone), "postgres")
+    cluster("pg_restore", "--exit-on-error", "--single-transaction", "-U", "postgres", "-d", clone, dump_path)
+    check("Current V2 custom dump restores exact synthetic data, schema, rights and sequences into a separate database",
+          snapshot(clone) == baseline and snapshot(source) == baseline)
     private_url = make_url(fixture.app_url).set(port=5432, database="competence_hub_v2_pilot")
     settings = replace(fixture._runtime_settings, database_url=private_url.render_as_string(hide_password=False),
                        allowed_origin="https://localhost:8447", cal2_mode="synthetic-pilot")
@@ -792,7 +906,7 @@ def run(db, verify, website):
     fixture.emails["contact_two"] = f"synthetic-cal2-{fixture.users['contact_two'].hex}@example.invalid"
     fixture.coach_profile_paths["coach"] = SYNTHETIC_PROFILE
     fixture.prepare()
-    for number in range(7, 13):
+    for number in range(7, 14):
         migration, = (ROOT / "database/migrations").glob(f"{number:04d}_*.sql")
         db.sql(migration.read_text(encoding="utf8"))
     seed_companies(fixture)
@@ -840,6 +954,8 @@ def run(db, verify, website):
                     expect(actors["admin"].get_by_role("heading", name="Zugänge und wichtige Änderungen")).to_be_visible()
                     expect(company.get_by_role("heading", name="Vormerkungen Ihrer Firma").first).to_be_visible()
                     customer_workflow(actors["admin"], actors["internal"], company)
+                    actors["coach_two"] = start(browser, base, "coach_two")
+                    request_path = request_workflow(fixture, base, actors, main_id)
                     check("Only company and reviewer/admin see their CAL-2 areas",
                           actors["internal"].get_by_role("button", name="Vormerkungen prüfen", exact=True).count() == 0
                           and coach.get_by_role("button", name="Vormerkungen", exact=True).count() == 0)
@@ -868,6 +984,12 @@ def run(db, verify, website):
                 check("In-flight locked write interrupted by restart; retry commits exactly one event",
                       retry.status_code == 201 and repeated.json() == retry.json() and
                       len(session.send("GET", RES + "/" + retry.json()["id"]).json()["history"]) == 1)
+                administrator = Session(start(browser, base, "admin"), base)
+                item = administrator.send("GET", request_path).json()
+                check("Restart preserves the request, its assignment and both note events", item["subject"] == CASE_TITLE
+                      and item["responsible_user_id"] == str(fixture.users["reviewer"])
+                      and {note["body"] for note in item["notes"]} == {INTERNAL_NOTE, COACH_NOTE}
+                      and len(item["audit"]) == 6)
             finally:
                 browser.close()
 

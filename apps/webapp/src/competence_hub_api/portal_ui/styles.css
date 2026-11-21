@@ -1222,6 +1222,24 @@ dialog::backdrop {
 .reservation-history li { margin-block: 10px; }
 .reservation-history p { margin-block: 4px; }
 
+#requests-workspace { overflow-wrap: anywhere; }
+#requests-workspace .button { max-width: 100%; min-height: 44px; white-space: normal; }
+.requests-list { padding: 0; margin-block: 16px; list-style: none; }
+.requests-list > li { padding-block: 14px; border-block-end: 1px solid var(--color-line); }
+.requests-list > li:first-child { border-block-start: 1px solid var(--color-line); }
+.requests-list h4, .requests-list p { margin-block: 0 8px; }
+.requests-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-block: 16px; }
+.requests-filters .field { flex: 1 1 12rem; min-width: 0; max-width: 24rem; margin: 0; }
+.requests-form { max-width: 36rem; margin-block: 16px; }
+.requests-form fieldset { min-width: 0; padding: 0; border: 0; margin: 0; }
+.requests-form input, .requests-form select, .requests-form textarea,
+.requests-filters select { width: 100%; min-width: 0; }
+.requests-form textarea { resize: vertical; }
+.request-text { white-space: pre-wrap; }
+.request-detail { margin-block: 16px; }
+.request-detail .button-row { gap: 8px; }
+.request-facts { grid-template-columns: minmax(0, max-content) minmax(0, 1fr); }
+
 .business-overview { display: grid; gap: 16px; min-width: 0; overflow-wrap: anywhere; }
 .business-overview section { padding-block: 12px; border-block-start: 1px solid var(--color-line); min-width: 0; }
 .business-overview h3, .business-overview h4 { margin-block: 8px 12px; }
