@@ -4,6 +4,17 @@ Updated: 2026-11-21.
 
 ## Current Milestone
 
+21.11 V2 NEXT LEVEL: one local Business Operations workspace on existing
+coaching requests; scoped notes and Coach releases, tenant-safe read-only
+company status, assignment, follow-up and audit. CAL-2 remains independent
+for capacity and reservations. 45 integrated checks; isolated `0006` to `0013`
+with atomic failure rollback and current synthetic data restore. Exact-source
+`a6bea57` package reproduced and installed offline. [Acceptance and evidence](docs/handoffs/2026-11-21-v2-next-level.md),
+[execution horizon](docs/exec-plans/active/v2-next-level-2026-11-21.md),
+[operator gates](docs/operations/portal-v2-next-level-operator.md). Spoken
+screenreader check and joint product acceptance open. VPS, IONOS and Pages
+unchanged; no live recovery, account or technical deployment approval inferred.
+
 21.11 V2 MASTER MISSION: local Coach/Reviewer action shortcuts, scoped CAL-2
 communication drafts without delivery and integrated synthetic workflow PASS.
 37 integrated browser/PG checks; populated `0006` dump restored and migrated
@@ -549,7 +560,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Next block: joint local V2 walkthrough with Manuel and Frau Rappelt; confirm workflow and decision list. Before any private V2 operating window, reconcile EDV and the 30.11 TLS deadline. [IONOS release](docs/operations/website-ionos-release-2026-11-20.md) is complete; private rollout and real access remain separate.
+1. Next block: joint local V2 Next Level acceptance with Manuel and Frau Rappelt, including spoken screenreader smoke and the consolidated decision list. Before any private operating window, reconcile EDV, independent recovery and the 30.11 TLS deadline. [IONOS release](docs/operations/website-ionos-release-2026-11-20.md) is complete; private rollout and real access remain separate.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. This exact IONOS promotion and its fresh inventory/rollback/smokes are closed. Any later content/release needs a new scoped approval. Preview still runs11cb1ea; no second Pages dispatch from the operations record.
 

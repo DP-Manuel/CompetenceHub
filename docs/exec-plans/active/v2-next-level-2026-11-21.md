@@ -8,12 +8,14 @@ one acceptance; do not reinterpret a pending acceptance as approval.
 | Step | Exit condition | State |
 | --- | --- | --- |
 | 1. Inventory | Actual Git head, existing request schema, role boundaries and deployment evidence read. | Done |
-| 2. Business Operations | Additive migration, server-side request scope, assignment, follow-up and safe history; existing roles and CAL-2 untouched. | In progress |
-| 3. Role journeys | Add one same-origin workspace with permitted controls, accessible names and keyboard focus. Never expose internal notes to customer or Coach. | In progress |
-| 4. Integrated proof | Continue the existing five-role native browser/PG demo; prove request permissions, stale edits, restart, migration and dump/restore. | In progress |
-| 5. Operating bundle | Bind tested commit and package, offline Linux proof, concise operator steps and one decision list. No public change. | Pending |
+| 2. Business Operations | Additive migration, server-side request scope, assignment, follow-up and safe history; existing roles and CAL-2 untouched. | Implemented and verified |
+| 3. Role journeys | Add one same-origin workspace with permitted controls, accessible names and keyboard focus. Never expose internal notes to customer or Coach. | Browser PASS; spoken Screenreader test open |
+| 4. Integrated proof | Continue the existing five-role native browser/PG demo; prove request permissions, stale edits, restart, migration and dump/restore. | 45 integrated checks; 79 focused tests and six offline release checks |
+| 5. Operating bundle | Bind tested commit and package, offline Linux proof, concise operator steps and one decision list. No public change. | PASS; exact package built from `a6bea57` |
 | 6. Product acceptance | One combined local walkthrough; record actual outcome and unresolved policy. | Pending |
 | 7. Controlled pilot | Current live inventory, confirmed TLS path before 30.11, independent recovery, separately scoped clone/activation decision. | Owner and EDV gates |
 
 Public Website, Pages and VPS remain unchanged. Real invite, identity import,
 bookings, pricing and outbound communication are out of scope.
+[Evidence and walkthrough](../../handoffs/2026-11-21-v2-next-level.md)
+are tracked separately from the [operating gates](../../operations/portal-v2-next-level-operator.md).

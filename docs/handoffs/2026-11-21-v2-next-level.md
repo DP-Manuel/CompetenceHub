@@ -69,7 +69,7 @@ pausiert, Frau Rappelts Personalvermittlungsprofil unveröffentlicht.
 ## Barrierefreiheit und Betriebsgrenze
 
 Die Browserprüfung deckt Tastatur, Fokus, zugängliche Formularnamen und
-Status-/Fehleransagen im Accessibility Tree ab. Die gesprochene Wiedergabe
+semantische Status-/Fehlerrollen ab. Die gesprochene Wiedergabe
 ist **offen**: Das isolierte Edge-Fenster ließ sich über die Windows-Automation
 nicht aus dem minimierten Zustand aktivieren. Ein sichtbarer Desktop muss
 Anfragenliste, Pflichtfelder, Fehlermeldung und Fokuswechsel mit aktivem
@@ -81,3 +81,26 @@ Die lokale Restoreprobe ersetzt keinen unabhängig entschlüsselbaren
 VPS-Sicherungsstand. Die letzte bestätigte private TLS-Frist ist **30.11.2026,
 19:09:39 MEZ**. Ohne gesondert freigegebenen und nachgewiesenen Zugangsweg
 kein V2-Start am VPS; ein abgelaufenes Zertifikat wird nicht umgangen.
+
+## Prüfnachweis und Releasepaket
+
+| Nachweis | Ergebnis |
+| --- | --- |
+| Ein gemeinsamer Astro-/Portal-/PG16-Lauf | **45 PASS**: CAL-1 und CAL-2, Erfassung im Reviewerfenster, Firmen- und Coachansicht ohne interne Daten oder Schreibrechte, Rollenwechsel, zwei konkurrierende Bearbeitungen, Neustart und gefüllter Dump-Restore. Keine externen Browserzugriffe, Outbox-Einträge oder verbliebenen eigenen Container und Volumes. |
+| Gezielte Regression | **79 PASS** für API, Runtime, UI und bestehende Kunden/Vormerkungen; 390 px, native 200 %, Tastatur, Fokus, Abbruch und Versionskonflikt. Kein eigener bestandener Sprachausgabetest. |
+| Offline-Migrationsprobe | **6 PASS**: gefülltes `0006` aus sha-geprüftem Custom Dump zurückgespielt, atomar bis `0013` auf 50 Tabellen migriert, Altwerte unverändert. Fehler in `0013` rollt die ganze Kette zurück; unerlaubtes Änderungsrecht an Notizen stoppt die Bereitschaft. |
+| Restore des neuen Zustands | Synthetischer Datenbestand nach Neustart in eine zweite Datenbank restauriert: Zeilen, Objektdefinitionen, Rechte und Sequenzzustand stimmen überein. Im Textvergleich werden nur Dump-Schutzmarker und die gleichwertige Klammerung zweier bekannter `CHECK`-Bedingungen normalisiert. |
+| Exaktes Release | ZIP zweimal bytegleich, Offline-Linux-Installation inklusive Pakethashes, Abhängigkeiten und Dienstdateien bestanden. Keine Dienstaktivierung und kein VPS-Rückfallversuch. |
+
+Quelle: `a6bea57b620fe82555beefd42015ff9629b7f8f4`.
+Lokales ZIP: `release-artifacts/v2-next-20261121/<Quelle>/private-vps/competence-hub-private-v2-<Quelle>.zip`.
+
+- ZIP-SHA-256: `3d3be22ac2f9dd5d94da938255f9a927856d78962c0b06ab29421aa2cc16f87f`
+- SHA-256 von `tested-source.json`: `2f82f1bbbc34c0c4a411ada40306c58d346a4a2a727f6ba39c8d048ce011914b`
+- Manifest `competence-hub-private-v2/3`: enthält die geordnete Kette
+  `0007`–`0013`, Dateihashes und `deployment_authorized: false`.
+
+Der [Betriebsleitfaden](../operations/portal-v2-next-level-operator.md) trennt
+den unabhängigen Backup-/Restore-Nachweis vom V1.2-Rückweg: V2 auf getrenntem
+Klon und eigenen Diensten, bei Fehlschlag V2 stoppen und die unveränderte
+Referenz prüfen. Keine Rückmigration, kein Restore auf die Originaldatenbank.

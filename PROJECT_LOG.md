@@ -2,6 +2,11 @@
 
 Significant milestones only; newest first.
 
+21.11 V2 Next Level `a6bea57`: Business Operations in the existing request
+model, scoped company/Coach views and 45 integrated checks. Offline migration
+to `0013`, current synthetic dump/restore and reproducible package PASS. No
+deployment or live data change. [Acceptance, evidence and remaining gates](docs/handoffs/2026-11-21-v2-next-level.md).
+
 21.11 integrated V2 candidate `cb3fb06`: role workspaces and scoped drafts,
 37 native integrated checks, synthetic dump restoration and clone migration
 through `0012`, reproducible offline Linux ZIP. No live deployment or data
