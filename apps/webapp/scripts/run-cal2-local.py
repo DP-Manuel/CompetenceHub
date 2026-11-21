@@ -20,6 +20,7 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.exc import SQLAlchemyError
 
 from cal1_pilot_acceptance import qa
+from calendar_v12_acceptance import fill_datetime
 from local_calendar_postgres import LocalCalendarPostgres
 from local_platform_website import SYNTHETIC_PROFILE, attach_website, build_website
 from native_calendar_fixture import NativeCalendarFixture
@@ -230,11 +231,11 @@ class Session:
                              headers=headers, verify=False, trust_env=False, timeout=15)
 
 
-def create_offer(coach, reviewer, fixture, title, day, capacity, threshold, *, multi=False, venue=None):
+def create_offer(coach, reviewer, fixture, title, day, capacity, threshold, *, venue=None):
     start = (fixture.now + timedelta(days=day)).replace(second=0, microsecond=0)
     draft = {
         "title": title, "topic_id": str(fixture.topic), "format": "online",
-        "starts_at": start.isoformat(), "ends_at": (start + timedelta(hours=26 if multi else 2)).isoformat(),
+        "starts_at": start.isoformat(), "ends_at": (start + timedelta(hours=2)).isoformat(),
         "time_zone": "Europe/Berlin", "capacity": capacity, "review_threshold": threshold,
         "decision_deadline": (start - timedelta(days=2)).isoformat(), "price_display_text": "Preis nach Abstimmung",
     }
@@ -248,6 +249,62 @@ def create_offer(coach, reviewer, fixture, title, day, capacity, threshold, *, m
     published = reviewer.send("POST", path + "/review-decisions", {"outcome": "published"}, version=2)
     assert published.status_code == 200
     return created.json()["id"], draft
+
+
+def publish_workshop_in_browser(coach, reviewer, base, fixture):
+    title = "Demo-Workshop über zwei Tage"
+    berlin = ZoneInfo("Europe/Berlin")
+    start = (fixture.now.astimezone(berlin) + timedelta(days=8)).replace(hour=10, minute=15, second=0, microsecond=0)
+    end = start + timedelta(days=1, hours=2)
+    coach.locator("#open-calendar-offer-dialog").click()
+    coach.locator("#calendar-title").fill(title)
+    coach.locator("#calendar-topic").select_option(str(fixture.topic))
+    for name, value in (("starts-at", start), ("ends-at", end), ("decision-deadline", start - timedelta(days=2))):
+        fill_datetime(coach, name, value)
+    coach.locator("#calendar-capacity").fill("5")
+    coach.locator("#calendar-review-threshold").fill("3")
+    coach.locator("#calendar-price").fill("Preis nach Abstimmung")
+    keyboard_activate(coach, coach.locator("#save-calendar-offer"))
+    expect(coach.locator("#calendar-offer-dialog")).to_be_hidden()
+    card = coach.locator("#coach-calendar-list .calendar-card").filter(
+        has=coach.get_by_role("heading", name=title, exact=True))
+    expect(card).to_contain_text("Entwurf")
+    draft = next(row for row in coach.request.get(base + CAL).json()["items"] if row["title"] == title)
+    offer_id = draft["id"]
+    public = base + PUBLIC + "/" + offer_id
+    assert coach.request.get(public).status == 404
+    keyboard_activate(coach, card.get_by_role("button", name="Zur Prüfung einreichen", exact=True))
+    expect(card).to_contain_text("Zur Prüfung eingereicht")
+    assert coach.request.get(public).status == 404
+    reviewer.reload()
+    assigned = reviewer.get_by_role("button", name=f"Titel in der Prüfliste suchen: {title}", exact=True)
+    keyboard_activate(reviewer, assigned)
+    expect(reviewer.locator("#review-calendar-title")).to_be_focused()
+    expect(reviewer.locator("#calendar-review-search")).to_have_value(title)
+    review_card = reviewer.locator("#review-calendar-list .calendar-card").filter(
+        has=reviewer.get_by_role("heading", name=title, exact=True))
+    expect(review_card).to_be_visible()
+    expect(reviewer.locator("#review-calendar-loading")).to_be_hidden()
+    keyboard_activate(reviewer, review_card.get_by_role("button", name="Angebot prüfen", exact=True))
+    dialog = reviewer.locator("#calendar-review-dialog")
+    expect(dialog).to_contain_text(title)
+    dialog.get_by_label("Veröffentlichen", exact=True).check()
+    keyboard_activate(reviewer, dialog.get_by_role("button", name="Entscheidung speichern", exact=True))
+    expect(dialog).to_be_hidden()
+    result = coach.request.get(public)
+    assert result.ok and result.json()["title"] == title
+    check("Browser Coach draft and submission remain private until Reviewer publishes the two-day workshop", True)
+    coach.locator("#refresh-pilot-overview").click()
+    shortcut = coach.get_by_role("button", name=f"Angebot in der Liste anzeigen: {title}", exact=True)
+    keyboard_activate(coach, shortcut)
+    expect(card.get_by_role("heading", name=title, exact=True)).to_be_focused()
+    check("Reviewer and Coach dashboard shortcuts focus their authorized workspaces", True)
+    return offer_id, {
+        "title": title, "topic_id": str(fixture.topic), "format": "online",
+        "starts_at": start.isoformat(), "ends_at": end.isoformat(),
+        "time_zone": "Europe/Berlin", "capacity": 5, "review_threshold": 3,
+        "decision_deadline": (start - timedelta(days=2)).isoformat(), "price_display_text": "Preis nach Abstimmung",
+    }
 
 
 def request_data(seats, **extras):
@@ -502,6 +559,22 @@ def api_workflow(fixture, base, actors, main_id, main_draft, offers, reply_retry
         and b.send("GET", RES + "/activity?review=true").status_code == 403
         and coach.send("GET", RES + "/activity?review=true").status_code == 403
     ))
+    communication = RES + "/communication-drafts"
+    draft_response = a.send("GET", communication)
+    draft_payload = draft_response.json()
+    company_drafts = [row for row in draft_payload["items"] if row["reservation_id"] == id_main]
+    review_drafts = reviewer.send("GET", communication + "?review=true").json()["items"]
+    check("Communication drafts use stable event IDs, no delivery and native company isolation", (
+        draft_response.headers["cache-control"] == "no-store"
+        and draft_payload == a.send("GET", communication).json()
+        and draft_payload["delivery_enabled"] is False and company_drafts
+        and all(row in review_drafts for row in company_drafts)
+        and all(set(row) == {"draft_id", "reservation_id", "offer_id", "event_version", "kind", "occurred_at"}
+                for row in company_drafts)
+        and any(row["kind"] == "clarification_answered" for row in company_drafts)
+        and all(row["reservation_id"] != id_main for row in b.send("GET", communication).json()["items"])
+        and coach.send("GET", communication + "?review=true").status_code == 403
+    ))
 
     deadline_path = RES + "/offers/" + offer_deadline
     in_time = a.send("POST", deadline_path, request_data(2))
@@ -741,9 +814,8 @@ def run(db, verify, website):
         with qa.synthetic_server(application) as base:
             browser = pw.firefox.launch(headless=verify)
             coach, reviewer = start(browser, base, "coach"), start(browser, base, "reviewer")
+            main_id, main_draft = publish_workshop_in_browser(coach, reviewer, base, fixture)
             coach_api, reviewer_api = Session(coach, base), Session(reviewer, base)
-            main_id, main_draft = create_offer(coach_api, reviewer_api, fixture,
-                "Demo-Workshop über zwei Tage", 8, 5, 3, multi=True)
             offers = [create_offer(coach_api, reviewer_api, fixture, title, day, capacity, threshold,
                                    venue="Demo-Ort A" if day == 18 else None)[0]
                       for title, day, capacity, threshold in (

@@ -100,6 +100,18 @@ async def activity(request: Request, review: bool = False):
         return _error(error)
 
 
+@router.get("/communication-drafts")
+async def communication_drafts(request: Request, review: bool = False):
+    context = await _context(request)
+    if isinstance(context, Response):
+        return context
+    repo, actor = context
+    try:
+        return JSONResponse(jsonable_encoder(await repo.communication_drafts(actor, review=review)))
+    except ReservationError as error:
+        return _error(error)
+
+
 @router.get("")
 async def reservations(request: Request, review: bool = False, open_only: bool = False,
                        after: UUID | None = None, day: date | None = None,

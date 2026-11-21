@@ -329,9 +329,52 @@ export function createReservations({ root, request, hasCsrf, expired }) {
     });
   }
 
-  async function show(review, message = "") {
+  function communicationDrafts(review, signal) {
+    const container = element("details", null, "reservation-activity");
+    const summary = element("summary", "Kommunikationsentwürfe");
+    const status = element("p");
+    status.setAttribute("role", "status");
+    const list = element("ul", null, "reservation-activity-list");
+    const retry = button("Entwürfe erneut laden", () => { summary.focus(); void load(); });
+    retry.hidden = true;
+    let requested = false;
+    container.append(summary, element("p", "Nur Entwürfe. Es wird nichts versendet."), status, list, retry);
+    content.append(container);
+    container.addEventListener("toggle", () => {
+      if (container.open && !requested) void load();
+    });
+
+    async function load() {
+      requested = true;
+      retry.hidden = true;
+      status.textContent = "Entwürfe werden geladen …";
+      try {
+        const data = await read(query(API + "/communication-drafts", { review }), signal);
+        if (signal.aborted) return;
+        for (const entry of data.items) {
+          const event = Object.hasOwn(EVENT, entry.kind) ? EVENT[entry.kind] : "Änderung der Vormerkung";
+          const when = date(entry.occurred_at);
+          const row = element("li");
+          row.append(element("span", `${event} · ${when}`), button("Zum Vorgang", () => {
+            if (canLeave()) void detail(entry.reservation_id);
+          }));
+          row.lastElementChild.setAttribute("aria-label", `Zum Vorgang: ${event}, ${when}`);
+          list.append(row);
+        }
+        status.textContent = data.items.length ? "" : "Keine Kommunikationsentwürfe vorhanden.";
+      } catch {
+        if (signal.aborted) return;
+        list.replaceChildren();
+        status.textContent = "Kommunikationsentwürfe konnten nicht geladen werden.";
+        retry.hidden = false;
+      }
+    }
+  }
+
+  async function show(review, message = "", { reviewFilters: preset, catalogue = false } = {}) {
     leave();
     isReview = review;
+    if (review && preset) reviewFilters = { ...initialReview, ...preset };
     const signal = (controller = new AbortController()).signal;
     heading.textContent = review ? "Vormerkungen prüfen" : "Plätze vormerken";
     scope.textContent = review ? "Lokale Demo · Synthetische Firmenanfragen"
@@ -343,6 +386,7 @@ export function createReservations({ root, request, hasCsrf, expired }) {
       return;
     }
     activity(review, signal);
+    communicationDrafts(review, signal);
     const control = filters(review);
     if (review) {
       content.append(control);
@@ -350,17 +394,20 @@ export function createReservations({ root, request, hasCsrf, expired }) {
         "Keine Vorgänge für diese Auswahl.", signal);
       return;
     }
-    const own = listSection("Vormerkungen Ihrer Firma", API, reservationCard,
+    const own = () => listSection("Vormerkungen Ihrer Firma", API, reservationCard,
       "Noch keine Vormerkungen.", signal, "reservation-own");
+    const ownList = catalogueFilters.offer_id ? null : own();
     if (catalogueFilters.offer_id) {
       const clear = button("Alle Veranstaltungen", () => { clearCatalogueLink(); void show(false); });
       content.append(clear);
     }
     content.append(control);
-    await Promise.all([own, listSection(catalogueFilters.offer_id ? "Ausgewählte Veranstaltung" : "Veröffentlichte Gruppenangebote",
+    const catalogueList = listSection(catalogueFilters.offer_id ? "Ausgewählte Veranstaltung" : "Veröffentlichte Gruppenangebote",
       query(API + "/catalogue", catalogueFilters), catalogueCard, catalogueFilters.offer_id
         ? "Für diese Veranstaltung sind keine neuen Vormerkungen möglich." : "Keine passenden Angebote für Vormerkungen gefunden.",
-      signal, "reservation-catalogue")]);
+      signal, "reservation-catalogue");
+    if (catalogue) control.querySelector("#cal2-search").focus();
+    await Promise.all([catalogueList, ownList ?? own()]);
   }
 
   function openPanel(title) {

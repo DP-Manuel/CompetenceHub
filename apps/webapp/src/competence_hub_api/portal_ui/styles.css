@@ -1227,4 +1227,36 @@ dialog::backdrop {
 .business-overview h3, .business-overview h4 { margin-block: 8px 12px; }
 .business-overview .calendar-card-meta { margin-block: 10px 16px; }
 .business-overview .button { max-width: 100%; min-height: 44px; white-space: normal; }
+.pilot-overview-heading { align-items: center; margin-bottom: 0; }
+.business-work-counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 195px), 1fr));
+  gap: 0 16px;
+  margin-block: 12px 20px;
+}
+.business-work-counts > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  border-bottom: 1px solid var(--color-line);
+}
+.business-work-counts dd { margin: 0; font-size: 1.25rem; font-weight: 700; }
+.business-work-counts .business-count-action {
+  padding-inline: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--color-brand-strong);
+  text-align: start;
+  text-decoration: underline;
+}
+.business-queues {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 16px 32px;
+}
+.business-overview .pilot-users { margin-block: 0; }
+.business-overview .pilot-users li p { margin-block: 4px; }
+.business-overview .pilot-users li .button { margin-top: 6px; }
 @media (max-width: 600px) { .calendar-list-filters {grid-template-columns: minmax(0,1fr);} }

@@ -227,11 +227,13 @@
 
         <nav class="portal-navigation" id="portal-navigation" aria-label="Portalbereiche"></nav>
         <section id="pilot-overview" class="pilot-overview" aria-labelledby="pilot-overview-title" hidden>
-          <h2 id="pilot-overview-title">Mein Arbeitsüberblick</h2>
+          <div class="workspace-heading pilot-overview-heading">
+            <h2 id="pilot-overview-title">Mein Arbeitsüberblick</h2>
+            <button id="refresh-pilot-overview" class="button button-secondary" type="button">Überblick aktualisieren</button>
+          </div>
           <p id="pilot-overview-state" role="status"></p>
           <div id="business-overview" class="business-overview" hidden></div>
           <dl id="pilot-metrics" class="pilot-metrics"></dl>
-          <p id="pilot-next-event"></p>
           <p id="pilot-access-summary" hidden></p>
           <div id="pilot-recent" hidden><h3>Zuletzt freigegeben</h3><ul id="pilot-recent-list"></ul></div>
           <button id="overview-create-event" class="button button-primary" type="button" hidden>Neuen Termin erstellen</button>
@@ -407,6 +409,11 @@
           </header>
           <p class="loading-state" id="review-calendar-loading" role="status" hidden>Prüfliste wird geladen.</p>
           <p class="form-error" id="review-calendar-error" role="alert" tabindex="-1" hidden></p>
+          <div class="calendar-list-filters">
+            <label for="calendar-review-search">Titel in der Prüfliste suchen</label>
+            <input id="calendar-review-search" type="search">
+          </div>
+          <p id="calendar-review-filter-count" role="status"></p>
           <div class="empty-state calendar-empty" id="review-calendar-empty" hidden>
             <h3>Aktuell nichts zu prüfen</h3>
             <p>Neue Einreichungen erscheinen automatisch beim nächsten Aufruf der Prüfliste.</p>

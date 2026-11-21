@@ -287,7 +287,6 @@ function clearPortalClientState() {
   byId("pilot-users").replaceChildren();
   byId("pilot-accounts").hidden = true;
   byId("pilot-overview-state").textContent = "";
-  byId("pilot-next-event").textContent = "";
   byId("pilot-access-summary").textContent = "";
   byId("pilot-access-summary").hidden = true;
   byId("pilot-recent-list").replaceChildren();
@@ -315,6 +314,8 @@ function clearPortalClientState() {
   restrictedCalendarNodes.coachWorkspace.querySelector("#calendar-offer-search").value = "";
   restrictedCalendarNodes.coachWorkspace.querySelector("#calendar-offer-status").value = "";
   restrictedCalendarNodes.coachWorkspace.querySelector("#calendar-filter-count").textContent = "";
+  restrictedCalendarNodes.reviewWorkspace.querySelector("#calendar-review-search").value = "";
+  restrictedCalendarNodes.reviewWorkspace.querySelector("#calendar-review-filter-count").textContent = "";
   byId("company-list")?.replaceChildren();
   restrictedCalendarNodes.coachWorkspace
     .querySelector("#coach-calendar-list")
@@ -576,7 +577,7 @@ function configurePilotHelp(roles) {
   }
 }
 
-let usersLoadSerial = 0, overviewLoadSerial = 0;
+let usersLoadSerial = 0, overviewLoadSerial = 0, portalAreaSerial = 0;
 
 async function loadPilotOverview() {
   const ticket = ++overviewLoadSerial;
@@ -584,32 +585,46 @@ async function loadPilotOverview() {
     byId("pilot-overview").hidden = true; return;
   }
   byId("pilot-overview").hidden = false;
-  renderBusinessOverview({ target: byId("business-overview") });
-  byId("pilot-metrics").replaceChildren();
+  const target = byId("business-overview");
   byId("pilot-overview-state").textContent = "Übersicht wird geladen …";
   const session = state.session;
   try {
     const response = await request("/api/v1/portal/pilot/overview");
     if (session !== state.session || ticket !== overviewLoadSerial) return;
+    if (response.status === 401) {
+      showLogin("Die Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.");
+      return;
+    }
     if (!response.ok) throw new Error("unavailable");
     const data = await response.json();
     if (session !== state.session || ticket !== overviewLoadSerial) return;
+    const roles = session.user.roles;
+    // The legacy calendar aggregate is not Coach-scoped when a wider role is also present.
+    const coachCalendar = roles.includes("coach") && !roles.some(r => ["admin", "calendar_reviewer"].includes(r))
+      ? data.calendar : null;
+    const areas = new Set([...byId("portal-navigation").querySelectorAll("[data-portal-area]")]
+      .map(button => button.dataset.portalArea));
+    const focusWasInSummary = target.contains(document.activeElement);
     renderBusinessOverview({
-      target: byId("business-overview"), business: data.business,
-      onNavigate: area => void selectPortalArea(area),
+      target, business: data.business, calendar: coachCalendar, areas,
+      onNavigate: (area, options) => {
+        if (state.session === session) void selectPortalArea(area, { ...options, focusWorkspace: true });
+      },
     });
+    if (focusWasInSummary) byId("refresh-pilot-overview").focus({ preventScroll: true });
+    byId("pilot-metrics").replaceChildren();
     for (const status of ["draft", "in_review", "changes_requested", "published", "withdrawn"]) {
-      if (data.business?.company && !data.business.coach && !data.business.review) break;
-      if (status === "draft" && !session.user.roles.some(r => ["coach","admin"].includes(r))) continue;
+      if (!data.business?.admin && (data.business?.review || data.business?.coach || data.business?.company)) break;
+      if (status === "draft" && !roles.some(r => ["coach","admin"].includes(r))) continue;
       appendDefinition(byId("pilot-metrics"), status === "withdrawn" ? "Zurückgezogen" : calendarStatusLabel(status), String(data.calendar[status] || 0));
     }
     byId("pilot-overview-state").textContent = data.business
       ? "Stand beim Öffnen der Übersicht · Datenbank erreichbar"
       : "Aktuelle Revisionen im eigenen Berechtigungsumfang · Datenbank erreichbar";
-    if (session.user.roles.includes("calendar_reviewer") && !data.business?.review) {
+    if (roles.includes("calendar_reviewer") && !data.business?.review) {
       appendDefinition(byId("pilot-metrics"),"Erneut eingereicht",String(data.resubmitted || 0));
     }
-    byId("overview-create-event").hidden = !session.user.roles.includes("coach");
+    byId("overview-create-event").hidden = !state.calendarCapabilities?.can_manage_own_offers;
     byId("pilot-recent-list").replaceChildren();
     for (const item of data.recent_publications || []) {
       const row=document.createElement("li");
@@ -617,11 +632,13 @@ async function loadPilotOverview() {
       byId("pilot-recent-list").append(row);
     }
     byId("pilot-recent").hidden = !(data.recent_publications || []).length;
-    const next = state.coachOffers.filter(o => o.lifecycle_status === "active" && new Date(o.starts_at) > new Date())
-      .sort((a,b) => a.starts_at.localeCompare(b.starts_at))[0];
-    byId("pilot-next-event").textContent = next ? `Nächste Veranstaltung in der geladenen Liste: ${next.title} · ${formatCalendarDate(next.starts_at)}` : "";
   } catch {
-    if (session === state.session && ticket === overviewLoadSerial) byId("pilot-overview-state").textContent = "Übersicht momentan nicht verfügbar. Die freigegebenen Arbeitsbereiche bleiben erreichbar.";
+    if (session !== state.session || ticket !== overviewLoadSerial) return;
+    if (target.contains(document.activeElement)) byId("refresh-pilot-overview").focus({ preventScroll: true });
+    renderBusinessOverview({ target });
+    byId("pilot-metrics").replaceChildren();
+    byId("pilot-recent").hidden = true;
+    byId("pilot-overview-state").textContent = "Übersicht momentan nicht verfügbar. Die freigegebenen Arbeitsbereiche bleiben erreichbar.";
   }
 }
 
@@ -762,11 +779,11 @@ async function configurePortalAreas() {
   const selected = areas.some((area) => area.id === state.activePortalArea)
     ? state.activePortalArea
     : areas[0].id;
-  await selectPortalArea(selected);
+  await selectPortalArea(selected, { refreshOverview: false });
   if (state.session !== session) return;
   await loadPilotOverview();
   if (state.session !== session) return;
-  if (roles.has("admin")) await loadPilotUsers();
+  if (roles.has("admin") && state.activePortalArea !== "accounts") await loadPilotUsers();
 }
 
 function configureRestrictedCalendarNodes(canManage, canReview) {
@@ -820,7 +837,10 @@ function switchPortalWorkspace(area) {
   if (reservationsRoot.hidden) reservations.leave();
 }
 
-async function selectPortalArea(area, { fromTour = false } = {}) {
+async function selectPortalArea(area, {
+  fromTour = false, focusWorkspace = false, refreshOverview = true,
+  reviewTitle, coachStatus, coachOfferId, reservationFilters, catalogue,
+} = {}) {
   const session = state.session;
   if (!session) return;
   if (!fromTour) {
@@ -828,6 +848,7 @@ async function selectPortalArea(area, { fromTour = false } = {}) {
     if (!reservations.canLeave()) return;
   }
   if (state.activePortalArea === "companies" && area !== "companies" && !customerAdmin.leaveWorkspace()) return;
+  const ticket = ++portalAreaSerial;
   state.activePortalArea = area;
   switchPortalWorkspace(area);
   [...byId("portal-navigation").querySelectorAll("button")].forEach((button) => {
@@ -836,6 +857,15 @@ async function selectPortalArea(area, { fromTour = false } = {}) {
   byId("admin-invitation-panel").hidden = !(
     ["companies", "accounts"].includes(area) && state.session.user.roles.includes("admin")
   );
+  const headingId = {
+    accounts: "pilot-accounts-title", companies: "company-workspace-title",
+    "coach-calendar": "coach-calendar-title", "review-calendar": "review-calendar-title",
+  }[area];
+  const heading = headingId && byId(headingId);
+  if (focusWorkspace && heading) {
+    heading.tabIndex = -1;
+    heading.focus();
+  }
   if (area === "accounts") {
     byId("pilot-accounts").append(byId("admin-invitation-panel"));
     await loadPilotUsers();
@@ -845,14 +875,33 @@ async function selectPortalArea(area, { fromTour = false } = {}) {
     byId("company-workspace").prepend(byId("admin-invitation-panel"));
     await loadCompanies();
   } else if (area === "coach-calendar") {
+    if (coachStatus !== undefined || coachOfferId) {
+      byId("calendar-offer-search").value = "";
+      byId("calendar-offer-status").value = coachStatus ?? "";
+      renderCoachOffers();
+    }
     await loadCalendarTopics();
-    if (state.session !== session) return;
-    await loadCoachOffers();
+    if (state.session !== session || ticket !== portalAreaSerial) return;
+    const loaded = await loadCoachOffers({ refreshOverview });
+    if (loaded && coachOfferId && state.session === session && ticket === portalAreaSerial
+        && document.activeElement === heading) {
+      const card = [...byId("coach-calendar-list").children].find(node => node.dataset.offerId === coachOfferId);
+      if (card) {
+        const title = card.querySelector("h3");
+        title.tabIndex = -1;
+        title.focus();
+      } else announce("Dieses Angebot ist nicht mehr in der Liste verfügbar.");
+    }
   } else if (area === "review-calendar") {
-    await loadReviewQueue();
+    if (reviewTitle !== undefined) {
+      byId("calendar-review-search").value = reviewTitle;
+      renderReviewQueue();
+    }
+    await loadReviewQueue({ refreshOverview });
   } else if (area === "reservations" || area === "reservation-review") {
-    await reservations.show(area === "reservation-review");
+    await reservations.show(area === "reservation-review", "", { reviewFilters: reservationFilters, catalogue });
   }
+  return state.session === session && ticket === portalAreaSerial;
 }
 
 async function loadCalendarTopics() {
@@ -899,7 +948,7 @@ function renderCalendarTopicOptions(selected = "") {
   byId("open-calendar-offer-dialog").disabled = !canCreate || !state.sessionCsrf;
 }
 
-async function loadCoachOffers() {
+async function loadCoachOffers({ refreshOverview = true } = {}) {
   const session = state.session;
   byId("coach-calendar-loading").hidden = false;
   byId("coach-calendar-empty").hidden = true;
@@ -919,7 +968,8 @@ async function loadCoachOffers() {
     if (state.session !== session) return;
     state.coachOffers = offers;
     renderCoachOffers();
-    await loadPilotOverview();
+    if (refreshOverview) await loadPilotOverview();
+    return true;
   } catch {
     if (state.session !== session) return;
     setError("coach-calendar-error", "Angebote konnten nicht geladen werden.");
@@ -989,6 +1039,7 @@ function renderCoachOffers() {
   byId("calendar-filter-count").textContent = `${items.length} von ${state.coachOffers.length} Angeboten · nach Beginn sortiert`;
   items.forEach(({offer, index}) => {
     const card = calendarCard(offer);
+    card.item.dataset.offerId = offer.id;
     const editable = ["draft", "changes_requested", "published"].includes(offer.workflow_status)
       && offer.lifecycle_status === "active";
     if (editable) {
@@ -1195,7 +1246,7 @@ async function withdrawCalendarOffer(index) {
   await versionedCalendarAction(index, "withdraw", "Das Angebot wurde zurückgezogen.");
 }
 
-async function loadReviewQueue() {
+async function loadReviewQueue({ refreshOverview = true } = {}) {
   const session = state.session;
   byId("review-calendar-loading").hidden = false;
   byId("review-calendar-empty").hidden = true;
@@ -1215,7 +1266,7 @@ async function loadReviewQueue() {
     if (state.session !== session) return;
     state.reviewOffers = offers;
     renderReviewQueue();
-    await loadPilotOverview();
+    if (refreshOverview) await loadPilotOverview();
   } catch {
     if (state.session !== session) return;
     setError("review-calendar-error", "Prüfliste konnte nicht geladen werden.");
@@ -1228,11 +1279,18 @@ function renderReviewQueue() {
   const list = byId("review-calendar-list");
   list.replaceChildren();
   byId("review-calendar-empty").hidden = state.reviewOffers.length !== 0;
+  const term = byId("calendar-review-search").value.trim().toLocaleLowerCase("de");
+  let visible = 0;
   state.reviewOffers.forEach((offer, index) => {
+    if (term && !offer.title.toLocaleLowerCase("de").includes(term)) return;
     const card = calendarCard(offer, true);
     card.actions.append(actionButton("Angebot prüfen", "button-primary", () => openCalendarReview(index)));
     list.append(card.item);
+    visible++;
   });
+  byId("calendar-review-filter-count").textContent = term && !visible
+    ? "Keine Angebote mit diesem Titel in der Prüfliste."
+    : `${visible} von ${state.reviewOffers.length} Angeboten`;
 }
 
 function renderReviewSummary(detail) {
@@ -1947,7 +2005,10 @@ async function handleLogout() {
 }
 
 function bindEvents() {
-  byId("overview-create-event").addEventListener("click",async () => {await selectPortalArea("coach-calendar");byId("open-calendar-offer-dialog").click();});
+  byId("refresh-pilot-overview").addEventListener("click", loadPilotOverview);
+  byId("overview-create-event").addEventListener("click", async () => {
+    if (await selectPortalArea("coach-calendar", { focusWorkspace: true })) byId("open-calendar-offer-dialog").click();
+  });
   byId("prepare-invitation").addEventListener("click",() => {
     const form=byId("admin-invitation-form");if (!form.reportValidity()) return;
     const preview=byId("invitation-preview");preview.hidden=false;
@@ -2004,6 +2065,7 @@ function bindEvents() {
   byId("enter-portal").addEventListener("click", enterPortal);
   byId("open-calendar-offer-dialog").addEventListener("click", openNewCalendarOffer);
   byId("refresh-review-queue").addEventListener("click", loadReviewQueue);
+  byId("calendar-review-search").addEventListener("input", renderReviewQueue);
   byId("reload-calendar-offer").addEventListener("click", reloadSelectedCalendarOffer);
   byId("reload-calendar-review").addEventListener("click", reloadSelectedCalendarReview);
   byId("calendar-offer-search").addEventListener("input", renderCoachOffers);

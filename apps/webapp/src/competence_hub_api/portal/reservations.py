@@ -99,6 +99,19 @@ def _reviewer(actor):
         raise ReservationError("forbidden", 403)
 
 
+async def _recent_events(connection, *, review, company):
+    return (await _rows(connection, """
+        SELECT s.id AS reservation_id, s.offer_id, r.title, e.event AS kind,
+               e.version, e.occurred_at, e.seats_after
+        FROM competence_hub.calendar_reservation_events e
+        JOIN competence_hub.calendar_reservations s ON s.id = e.reservation_id
+        JOIN competence_hub.calendar_offer_revisions r
+            ON (r.offer_id, r.revision_number) = (s.offer_id, s.revision_number)
+        WHERE :scope OR s.company_id = CAST(:company AS uuid)
+        ORDER BY e.occurred_at DESC, s.id, e.version DESC LIMIT 30
+    """, scope=review, company=company)).all()
+
+
 async def _write_event(connection, **params):
     await connection.execute(text(_EVENT), params)
     await connection.execute(text("""
@@ -268,17 +281,7 @@ class ReservationRepository:
         async with self.engine.connect() as connection:
             company = None if review else (await _company(connection, actor, lock=True)).company_id
             params = {"scope": review, "company": company, "open": list(OPEN), "occupied": list(OCCUPIED)}
-            # Events are observed, never copied to a second notification store.
-            events = (await _rows(connection, """
-                SELECT s.id AS reservation_id, s.offer_id, r.title, e.event AS kind,
-                       e.version, e.occurred_at, e.seats_after
-                FROM competence_hub.calendar_reservation_events e
-                JOIN competence_hub.calendar_reservations s ON s.id = e.reservation_id
-                JOIN competence_hub.calendar_offer_revisions r
-                    ON (r.offer_id, r.revision_number) = (s.offer_id, s.revision_number)
-                WHERE :scope OR s.company_id = CAST(:company AS uuid)
-                ORDER BY e.occurred_at DESC, s.id, e.version DESC LIMIT 30
-            """, **params)).all()
+            events = await _recent_events(connection, review=review, company=company)
             tasks = (await _rows(connection, f"""
                 WITH scoped AS (
                     SELECT s.id AS reservation_id, s.offer_id, r.title, r.decision_deadline,
@@ -317,6 +320,25 @@ class ReservationRepository:
                 ORDER BY decision_deadline, offer_id, kind, reservation_id LIMIT 30
             """, **params)).all()
             return {"events": [dict(row) for row in events], "tasks": [dict(row) for row in tasks]}
+
+    async def communication_drafts(self, actor, *, review):
+        if review:
+            _reviewer(actor)
+        async with self.engine.connect() as connection:
+            company = None if review else (await _company(connection, actor, lock=True)).company_id
+            events = await _recent_events(connection, review=review, company=company)
+        # Identity comes from the append-only event key, not its contents or the viewing role.
+        return {"delivery_enabled": False, "items": [
+            {
+                "draft_id": f"cal2:{event.reservation_id}:{event.version}",
+                "reservation_id": event.reservation_id,
+                "offer_id": event.offer_id,
+                "event_version": event.version,
+                "kind": event.kind,
+                "occurred_at": event.occurred_at,
+            }
+            for event in events
+        ]}
 
     @staticmethod
     def _page(rows):

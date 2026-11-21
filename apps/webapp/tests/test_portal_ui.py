@@ -111,11 +111,20 @@ def test_portal_captures_form_values_before_disabling_controls() -> None:
         .read_text(encoding="utf-8")
     )
 
-    capture = javascript.index("const data = new FormData(form);")
-    disable = javascript.index("return setBusy(form, true) ? data : null;")
+    helper = javascript.index("function beginFormSubmission(form)")
+    capture = javascript.index("const data = new FormData(form);", helper)
+    disable = javascript.index("return setBusy(form, true) ? data : null;", helper)
 
-    assert capture < disable
-    assert javascript.count("const data = beginFormSubmission(form);") >= 12
+    assert helper < capture < disable
+    for name in (
+        "PasswordResetRequest", "AccountToken", "CalendarOfferSave", "AdminInvitation",
+        "Login", "Mfa", "EnrollmentConfirmation", "CreateCompany", "CompanyUpdate", "AddContact", "ContactUpdate",
+    ):
+        handler = javascript.split(f"async function handle{name}(", 1)[1].split("\n}\n", 1)[0]
+        assert "const data = beginFormSubmission(form);" in handler, name
+    review = javascript.split("async function handleCalendarReview(", 1)[1].split("\n}\n", 1)[0]
+    assert review.index("const outcome = ") < review.index("if (beginFormSubmission(form) === null)")
+    assert review.index("const note = ") < review.index("if (beginFormSubmission(form) === null)")
 
 
 def test_calendar_portal_uses_authoritative_capabilities_and_safe_dom_rendering() -> None:
@@ -138,8 +147,12 @@ def test_calendar_portal_uses_authoritative_capabilities_and_safe_dom_rendering(
     assert "data-offer-id" not in javascript
     assert 'headers: { "If-Match": selected.etag }' in javascript
     assert "function clearPortalClientState()" in javascript
-    topics = javascript.index("await loadCalendarTopics();")
-    offers = javascript.index("await loadCoachOffers();", topics)
+    navigation = javascript[
+        javascript.index("async function selectPortalArea("):
+        javascript.index("async function loadCalendarTopics(")
+    ]
+    topics = navigation.index("await loadCalendarTopics(")
+    offers = navigation.index("await loadCoachOffers(")
     assert topics < offers
     assert 'querySelector("#coach-calendar-list")' in javascript
     assert 'querySelector("#review-calendar-list")' in javascript

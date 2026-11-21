@@ -32,7 +32,7 @@ const AUDIT_CATEGORY = {
 const AUDIT_STATUS = { success: "Erfolgreich", denied: "Abgewiesen", recorded: "Erfasst" };
 
 // The caller owns session/loading state and workspace changes.
-export function render({ target, business, createElement, onNavigate }) {
+export function render({ target, business, calendar, createElement, onNavigate, areas }) {
   target.replaceChildren();
   target.hidden = true;
   if (!business) return;
@@ -53,20 +53,25 @@ export function render({ target, business, createElement, onNavigate }) {
     return node;
   }
 
+  function shortcut(area, label, options, context) {
+    if (!onNavigate || (areas && !areas.has(area))) return null;
+    const action = element("button", label, "button button-secondary");
+    action.type = "button";
+    action.dataset.businessDestination = area;
+    if (context) action.setAttribute("aria-label", `${label}: ${context}`);
+    action.addEventListener("click", () => onNavigate(area, options));
+    return action;
+  }
+
   function section(key, title, destinations) {
     const node = element("section");
     node.dataset.businessSection = key;
     node.setAttribute("aria-label", title);
     node.append(element("h3", title));
-    if (onNavigate) {
+    const links = destinations.map((args) => shortcut(...args)).filter(Boolean);
+    if (links.length) {
       const actions = element("div", null, "button-row");
-      for (const [area, label] of destinations) {
-        const action = element("button", label, "button button-secondary");
-        action.type = "button";
-        action.dataset.businessDestination = area;
-        action.addEventListener("click", () => onNavigate(area));
-        actions.append(action);
-      }
+      actions.append(...links);
       node.append(actions);
     }
     target.append(node);
@@ -82,6 +87,27 @@ export function render({ target, business, createElement, onNavigate }) {
     return list;
   }
 
+  function workCounts(values, entries) {
+    const list = element("dl", null, "business-work-counts");
+    for (const [key, label, area, options] of entries) {
+      const value = values[key] ?? 0;
+      const group = element("div");
+      const count = element("dd", String(value));
+      const action = value > 0 && shortcut(area, label, options);
+      if (action) {
+        action.classList.add("business-count-action");
+        // Preserve the visible count and the term without announcing the count twice.
+        action.setAttribute("aria-label", `${label}: ${value}`);
+        count.setAttribute("aria-hidden", "true");
+      }
+      const term = element("dt", action ? null : label);
+      if (action) term.append(action);
+      group.append(term, count);
+      list.append(group);
+    }
+    return list;
+  }
+
   function details(title, ...children) {
     const node = element("details", null, "reservation-activity");
     node.append(element("summary", title), ...children);
@@ -93,8 +119,8 @@ export function render({ target, business, createElement, onNavigate }) {
     const list = element("ul", null, "pilot-users");
     for (const task of tasks) {
       const row = element("li");
-      row.dataset.businessTask = task.kind;
-      row.append(element("strong", task.title), ...rowContent(task));
+      if (task.kind) row.dataset.businessTask = task.kind;
+      row.append(element("strong", task.title), ...rowContent(task).filter(Boolean));
       list.append(row);
     }
     return list;
@@ -110,45 +136,60 @@ export function render({ target, business, createElement, onNavigate }) {
 
   if (business.review) {
     const { counts: summary, tasks } = business.review;
-    const node = section("review", "Prüfung und Vormerkungen", [
-      ["review-calendar", "Zur Prüfliste"],
-      ["reservation-review", "Vormerkungen prüfen"],
-    ]);
-    node.append(
-      element("h4", "Offene Vorgänge"),
-      counts(summary, [
-        ["calendar_in_review", "Angebote zur Prüfung"],
-        ["calendar_resubmitted", "Davon erneut eingereicht"],
-        ["pending", "Neue Vormerkungen"],
-        ["clarification", "Rückfrage offen"],
-        ["reply_ready", "Antwort bereit zur Prüfung"],
-      ]),
-      element("h4", "Fristen und Auslastung"),
-      counts(summary, RISK),
-      element("h4", "Priorisierte Vorgänge"),
-      taskList(tasks, "Keine priorisierten Vorgänge.", (task) => {
-        if (task.kind === "calendar_review") {
-          return [facts(["Angebot prüfen"], "Eingereicht", task.submitted_at)];
+    const calendarTasks = tasks.filter((task) => task.kind === "calendar_review");
+    const reservationTasks = tasks.filter((task) => task.kind === "reservation_review");
+    const reserveQueue = ["reservation-review", "Vormerkungen prüfen", { reservationFilters: {} }];
+    const reviewQueue = ["review-calendar", "Zur Prüfliste", { reviewTitle: "" }];
+    const node = section("review", "Prüfung und Vormerkungen", [reviewQueue, reserveQueue]);
+    node.append(workCounts({ ...summary, decision: (summary.pending ?? 0) + (summary.reply_ready ?? 0) }, [
+      ["calendar_in_review", "Angebote zur Prüfung", reviewQueue[0], reviewQueue[2]],
+      ["decision", "Vormerkungen zur Entscheidung", reserveQueue[0], { reservationFilters: { status: "decision" } }],
+      ["overdue", "Angebote mit Fristablauf", reserveQueue[0], { reservationFilters: { deadline: "overdue" } }],
+      ["deadline_soon", "Angebote mit Frist in 48 Stunden", reserveQueue[0], { reservationFilters: { deadline: "soon" } }],
+    ]));
+    const queues = element("div", null, "business-queues");
+    const reservations = element("div");
+    reservations.append(element("h4", "Priorisierte Vormerkungen"),
+      taskList(reservationTasks, "Keine priorisierten Vormerkungen.", (task) => {
+        const isDeadline = task.overdue || task.deadline_soon;
+        // The snapshot groups by offer/revision but exposes only the title, not an ID.
+        const reservationFilters = { offer: Array.from(task.title).slice(0, 100).join(""), status: "" };
+        if (isDeadline) {
+          reservationFilters.status = "open";
+          reservationFilters.deadline = task.overdue ? "overdue" : "soon";
         }
         return [facts([
-          `${task.occupied_seats} von ${task.capacity} Plätzen belegt`,
-          task.occupied_seats >= task.review_threshold ? "Prüfschwelle erreicht" :
-            `Noch ${task.review_threshold - task.occupied_seats} bis zur Prüfschwelle`,
-          task.reply_ready ? `Antworten zur Prüfung: ${task.reply_ready}` : null,
-          task.pending ? `Neue Vormerkungen: ${task.pending}` : null,
           task.overdue ? "Entscheidungsfrist abgelaufen" : task.deadline_soon ? "Frist endet bald" : null,
           task.revision_pending ? "Neue Fassung eingereicht; Plätze belegt" : null,
-        ], "Frist", task.decision_deadline)];
-      }),
-      details("Entschiedene und vergangene Vormerkungen",
-        counts(summary, [...CLOSED, ["past", "Vergangene Veranstaltungen"]]))
-    );
+          task.reply_ready ? `Antworten zur Prüfung: ${task.reply_ready}` : null,
+          task.pending ? `Neue Vormerkungen: ${task.pending}` : null,
+        ], "Frist", task.decision_deadline),
+        facts([`${task.occupied_seats} von ${task.capacity} Plätzen belegt`,
+          task.threshold_reached ? "Prüfschwelle erreicht" : null]),
+        shortcut(reserveQueue[0], "Vorgänge zum Titel suchen", { reservationFilters }, task.title)];
+      }));
+    const submissions = element("div");
+    submissions.append(element("h4", "Eingereichte Angebote"),
+      taskList(calendarTasks, "Keine eingereichten Angebote.", (task) => [
+        facts([], "Eingereicht", task.submitted_at),
+        shortcut(reviewQueue[0], "Titel in der Prüfliste suchen", { reviewTitle: task.title }, task.title),
+      ]));
+    queues.append(reservations, submissions);
+    node.append(queues, details("Weitere Kennzahlen",
+      counts(summary, [
+        ["calendar_resubmitted", "Erneut eingereichte Angebote"],
+        ["pending", "Neue Vormerkungen"],
+        ["reply_ready", "Antworten zur Prüfung"],
+        ["clarification", "Warten auf Antwort der Firma"],
+        ...RISK.slice(2), ...CLOSED, ["past", "Vormerkungen vergangener Veranstaltungen"],
+      ])));
   }
 
   if (business.company) {
     const { counts: summary, tasks } = business.company;
     const node = section("company", "Vormerkungen Ihrer Firma", [
       ["reservations", "Zu den Vormerkungen"],
+      ["reservations", "Veranstaltungen finden", { catalogue: true }],
     ]);
     const forKind = (kind, empty, dateLabel, dateKey) => taskList(
       tasks.filter((task) => task.kind === kind), empty,
@@ -174,31 +215,32 @@ export function render({ target, business, createElement, onNavigate }) {
   }
 
   if (business.coach) {
-    const node = section("coach", "Eigene veröffentlichte Veranstaltungen", [
-      ["coach-calendar", "Zu den Kalenderangeboten"],
+    const node = section("coach", "Eigene Angebote und Termine", [
+      ["coach-calendar", "Zu den Kalenderangeboten", { coachStatus: "" }],
     ]);
-    node.append(counts(business.coach.counts, [
-      ["published", "Veröffentlicht"], ["upcoming", "Bevorstehend"], ["past", "Vergangen"],
-      ...RISK,
+    if (calendar) node.append(workCounts(calendar, [
+      ["changes_requested", "Änderungen angefordert", "coach-calendar", { coachStatus: "changes_requested" }],
+      ["draft", "Entwürfe", "coach-calendar", { coachStatus: "draft" }],
+      ["in_review", "Zur Prüfung eingereicht", "coach-calendar", { coachStatus: "in_review" }],
     ]));
     const offers = business.coach.upcoming_offers || [];
-    if (offers.length) {
-      const list = element("ul", null, "pilot-users");
-      for (const offer of offers) {
-        const row = element("li");
-        row.append(element("strong", offer.title), facts([
-          `${offer.occupied_seats} von ${offer.capacity} Plätzen belegt`,
+    const totals = business.coach.counts;
+    node.append(element("h4", "Kommende freigegebene Termine"),
+      taskList(offers, "Keine kommenden freigegebenen Termine.", (offer) => [
+        facts([`${offer.occupied_seats} von ${offer.capacity} Plätzen belegt`,
           offer.revision_pending ? "Neue Fassung betrifft belegte Plätze" : null,
-        ], "Beginn", offer.starts_at));
-        list.append(row);
-      }
-      node.append(element("h4", "Kommende freigegebene Termine"), list);
-    }
+        ], "Beginn", offer.starts_at),
+        offer.id && shortcut("coach-calendar", "Angebot in der Liste anzeigen", { coachOfferId: offer.id }, offer.title),
+      ]),
+      details("Veröffentlichung und Auslastung", counts(totals, [
+        ["published", "Veröffentlicht"], ["upcoming", "Bevorstehend"], ["past", "Vergangen"], ...RISK,
+      ])));
   }
 
   if (business.admin) {
     const node = section("admin", "Zugänge und wichtige Änderungen", [
       ["accounts", "Zu den Zugängen"],
+      ["companies", "Zur Firmen- und Kundenbetreuung"],
     ]);
     const { counts: summary, audit } = business.admin;
     const activity = element("ul", null, "pilot-users");

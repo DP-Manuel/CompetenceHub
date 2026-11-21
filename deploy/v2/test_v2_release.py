@@ -1,6 +1,7 @@
 """Local tooling tests; the optional native test owns an unpublished Linux cluster."""
 
 from datetime import datetime, timedelta, timezone
+import hashlib
 import io
 import os
 from pathlib import Path
@@ -205,17 +206,67 @@ class NativeClone(unittest.TestCase):
                     SELECT 'Synthetic' || i, 'synthetic' || i || '@example.invalid' FROM generate_series(1,4) i;
                     INSERT INTO competence_hub.coaches(display_name,public_profile_status)
                     SELECT 'Synthetic coach ' || i, 'draft' FROM generate_series(1,2) i;
+                    UPDATE competence_hub.coaches SET portal_user_id = (
+                        SELECT id FROM competence_hub.portal_users WHERE email='synthetic1@example.invalid'
+                    ) WHERE display_name='Synthetic coach 1';
+                    INSERT INTO competence_hub.user_roles(user_id, role_id)
+                    SELECT u.id, r.id FROM competence_hub.portal_users u CROSS JOIN competence_hub.roles r
+                    WHERE (u.email, r.code) IN (('synthetic1@example.invalid','coach'),
+                        ('synthetic2@example.invalid','calendar_reviewer'),
+                        ('synthetic3@example.invalid','company_contact'), ('synthetic4@example.invalid','admin'));
+                    WITH company AS (
+                        INSERT INTO competence_hub.companies(name,status) VALUES ('Synthetic company','pilot') RETURNING id
+                    )
+                    INSERT INTO competence_hub.company_contacts(company_id, portal_user_id, first_name, last_name, email)
+                    SELECT company.id, u.id, 'Synthetic', 'Contact', u.email
+                    FROM company CROSS JOIN competence_hub.portal_users u WHERE u.email='synthetic3@example.invalid';
                     SELECT nextval('competence_hub.audit_events_id_seq');
                 """)
-                psql("postgres", f"CREATE DATABASE {clone.DATABASE} TEMPLATE {original} OWNER competence_hub_owner;".encode())
-                # The clone inherits object ACLs from its template, not database ACLs.
-                psql("postgres", bootstrap.replace(b"competence_hub_staging", clone.DATABASE.encode()))
+                psql(original, b"""
+                    WITH topic AS (
+                        INSERT INTO competence_hub.topics(name) VALUES ('Synthetic topic') RETURNING id
+                    ), offer AS (
+                        INSERT INTO competence_hub.calendar_offers(coach_id,created_by_user_id,client_request_id)
+                        SELECT id,portal_user_id,gen_random_uuid() FROM competence_hub.coaches
+                        WHERE display_name='Synthetic coach 1' RETURNING id,created_by_user_id
+                    )
+                    INSERT INTO competence_hub.calendar_offer_revisions
+                        (offer_id,revision_number,topic_id,title,starts_at,ends_at,format_code,
+                         capacity,review_threshold,decision_deadline,price_display_text,created_by_user_id)
+                    SELECT offer.id,1,topic.id,'Synthetic retained draft','2027-01-08T10:00+01',
+                        '2027-01-09T15:00+01','online',6,3,'2027-01-06T10:00+01',
+                        'Not a real offer',offer.created_by_user_id FROM offer CROSS JOIN topic;
+                """)
+
+                def plain_dump(database):
+                    return re.sub(rb"(?m)^\\(?:un)?restrict .*\n", b"", run(
+                        bin_dir + "pg_dump", "--quote-all-identifiers", database,
+                    ))
+
+                original_before = plain_dump(original)
+                backup = run(bin_dir + "pg_dump", "--format=custom", original)
+                digest = hashlib.sha256(backup).digest()
+                snapshot = Path(folder, "synthetic-only.dump")
+                snapshot.touch(mode=0o600)
+                snapshot.write_bytes(backup)
+                restored_bytes = snapshot.read_bytes()
+                self.assertEqual(hashlib.sha256(restored_bytes).digest(), digest)
+                # Provision only the database-level settings; restore owns all object data and privileges.
+                database_bootstrap = bootstrap.split(b"\\connect", 1)[0]
+                psql("postgres", database_bootstrap.replace(b"competence_hub_staging", clone.DATABASE.encode()))
+                run(bin_dir + "pg_restore", "--exit-on-error", "--single-transaction", "--dbname", clone.DATABASE,
+                    data=restored_bytes)
+                self.assertEqual(plain_dump(clone.DATABASE), original_before)
+                self.assertEqual(psql(clone.DATABASE, b"""
+                    SELECT count(*) FROM competence_hub.user_roles;
+                    SELECT count(*) FROM competence_hub.company_contacts;
+                    SELECT count(*) FROM competence_hub.calendar_offer_revisions;
+                """), b"4\n1\n1\n")
 
                 def native(sql):
                     return package.json_read(psql(clone.DATABASE, sql.encode("utf-8")))
 
                 migrations = [(DATABASE_FILES / path.removeprefix("database/")).read_bytes() for path in package.MIGRATIONS]
-                original_before = run(bin_dir + "pg_dump", "--data-only", original)
                 before = native(clone.plan(migrations))
                 approval = receipt(before)
                 failed = migrations.copy()
@@ -240,9 +291,7 @@ class NativeClone(unittest.TestCase):
                 with self.assertRaises(subprocess.CalledProcessError) as failure:
                     native(clone.plan(migrations, ready=True))
                 self.assertIn(b"CLONED_AUTH_STATE_MUST_NOT_BE_REPLAYABLE", failure.exception.stderr)
-                original_after = run(bin_dir + "pg_dump", "--data-only", original)
-                self.assertEqual(re.sub(rb"(?m)^\\(?:un)?restrict .*\n", b"", original_before),
-                                 re.sub(rb"(?m)^\\(?:un)?restrict .*\n", b"", original_after))
+                self.assertEqual(plain_dump(original), original_before)
             finally:
                 run(bin_dir + "pg_ctl", "-D", data_dir, "-m", "immediate", "-w", "stop")
 
