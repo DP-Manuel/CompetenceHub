@@ -1,8 +1,8 @@
 # Portal V2 Private Staging
 
 **Local preparation only.** Exact-source ZIP and Linux proof:
-[consolidated feedback report](../handoffs/2026-11-20-feedback-platform.md#nachweis-und-releasepakete).
-The 20.11 feedback candidate uses manifest format `competence-hub-private-v2/2`
+[21.11 integrated acceptance](../handoffs/2026-11-21-v2-master-acceptance.md#nachweise-und-paket).
+Both the 21.11 integrated and 20.11 feedback candidates use manifest format `competence-hub-private-v2/2`
 and migration head `0012`. For the earlier 19.11 ZIP, use the matching runbook
 and helpers from its tested source `9c20c3a`, not the following commands.
 No VPS probe, deployment, migration of the original database or real Coach import.

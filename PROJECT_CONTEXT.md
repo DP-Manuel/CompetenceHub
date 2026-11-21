@@ -1,8 +1,19 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-20.
+Updated: 2026-11-21.
 
 ## Current Milestone
+
+21.11 V2 MASTER MISSION: local Coach/Reviewer action shortcuts, scoped CAL-2
+communication drafts without delivery and integrated synthetic workflow PASS.
+37 integrated browser/PG checks; populated `0006` dump restored and migrated
+through `0012` in isolated Linux; reproducible exact-source ZIP `cb3fb06`
+installed offline. [Joint walkthrough and package](docs/handoffs/2026-11-21-v2-master-acceptance.md),
+[execution horizon](docs/exec-plans/active/v2-master-mission-2026-11-21.md),
+[operating gates](docs/operations/portal-v2-pilot-gates-2026-11-21.md). No
+IONOS, VPS, Pages, real accounts, invitations or key work. Last recorded VPS
+reference is V1.2/`0006`; fresh live inventory and independent live recovery are
+unproven. Private TLS deadline: 30.11.2026 19:09:39 MEZ.
 
 20.11 FEEDBACK PLATFORM: four annotated screenshots and product feedback
 integrated into the local website and synthetic Portal. Eight existing Coach
@@ -538,7 +549,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Next block: reconcile confirmed EDV App-DNS/HTTPS/access/SMTP information. [IONOS release](docs/operations/website-ionos-release-2026-11-20.md) is complete and needs no further production change; private VPS rollout and real access remain separate.
+1. Next block: joint local V2 walkthrough with Manuel and Frau Rappelt; confirm workflow and decision list. Before any private V2 operating window, reconcile EDV and the 30.11 TLS deadline. [IONOS release](docs/operations/website-ionos-release-2026-11-20.md) is complete; private rollout and real access remain separate.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. This exact IONOS promotion and its fresh inventory/rollback/smokes are closed. Any later content/release needs a new scoped approval. Preview still runs11cb1ea; no second Pages dispatch from the operations record.
 

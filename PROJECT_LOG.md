@@ -2,6 +2,11 @@
 
 Significant milestones only; newest first.
 
+21.11 integrated V2 candidate `cb3fb06`: role workspaces and scoped drafts,
+37 native integrated checks, synthetic dump restoration and clone migration
+through `0012`, reproducible offline Linux ZIP. No live deployment or data
+change. [Joint acceptance and remaining gates](docs/handoffs/2026-11-21-v2-master-acceptance.md).
+
 20.11 IONOS actual release PASS: exact `b9b90bf` ZIP, fresh backup and local
 restore 55/55, SFTP64/64, public HTTPS63/63 and Firefox desktop/mobile/zoom.
 Eight active profiles, no real/test event publication; rollback not required.

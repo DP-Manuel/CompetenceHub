@@ -3,6 +3,7 @@
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
 | V2 private candidate | [Offline package and operating gates](portal-v2-private-staging.md) | Tested source, separate synthetic clone and original V1.2 rollback; no VPS action authorized |
+| V2 pilot dependencies | [EDV, TLS, identity and restore gates](portal-v2-pilot-gates-2026-11-21.md) | Recorded VPS reference vs current access limit, pre-expiry TLS decision and onboard/activation limits |
 | Current IONOS release | [20.11 actual PASS](website-ionos-release-2026-11-20.md) | Live b9b90bf/e02b574b, protected backup/restore 55/55, SFTP64/64, HTTP63/63 and actual browser |
 | Previous IONOS release | [17.11 operating record](website-ionos-release-2026-11-17.md) | Previous live 11cb1ea, retained as 20.11 rollback |
 | Private TLS rollover | [16.11 actual certificate acceptance](pilot-tls-renewal-2026-11-16.md#actual-acceptance) | Expiry30.11, strict new trust/retained session/MFA/six services PASS; actual rollback proven, no app update |
