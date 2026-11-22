@@ -58,3 +58,30 @@ Sequenzparität, wiederhergestellte Anmeldung per MFA-Recovery, korrektes
 Lesen/Schreiben einer Anfrage samt Notiz und Audit. Negative Prüfungen:
 anonym, falscher Origin, falscher CSRF-Token, veraltete Version, Zugriff nach
 Logout. Keine Windows-Identität, DPAPI oder realen Schlüssel benötigt.
+
+## Prüfungen und Release
+
+| Prüfbereich | Ergebnis |
+| --- | --- |
+| Integrierter Firefox-/PG16-Lauf | **45 PASS**: CAL-1, CAL-2, Kapazität, Rückfragen und revisionssichere Vormerkung, Kundenakte, Anfrage, Mandanten- und Notizgrenzen, Coachwechsel, parallele Aktionen, Neustart und Bereinigung. |
+| Gezielte Regression | **101 PASS** für Auth, MFA, Session, Portal, Kunden und Anfragen. Fokussierbare Authfehler, Meldung am zugehörigen Anfragefeld und Tastaturweg zur Konfliktauflösung nachgeprüft. |
+| Synthetisches Onboarding | **PASS**: Einladung in der lokalen Outbox erfasst und im Testprozess eingelesen, Aktivierung, Passwort, MFA, Einführung, Abmeldung und erneute Anmeldung bis zur richtigen Prüfliste. Kein externer Mailtransport gestartet. |
+| Migration und Rückfall | **6 Linux-Prüfungen PASS**: vollständige Kette `0006` nach `0013`, Altwerte erhalten, fehlerhafte Kette atomar zurückgerollt, unzulässige Notizrechte blockieren Bereitschaft. Referenz bleibt erhalten; der echte V1.2-Dienstrückfall ist nur geplant. |
+| Unabhängige synthetische Recovery | **PASS** mit exakt dem unten gebundenen ZIP. Installierte Anwendung im Zielprozess ausgeführt; Parität, wiederhergestelltes MFA-Recovery, exakte Reviewerrolle und geschütztes Schreiben belegt. Eigene Container und Volumes entfernt. |
+| Echte Recovery und gesprochene Prüfung | **OFFEN**. Kein VPS-Export, kein Real-Restore, kein bestandener NVDA-/Narrator-Sprachnachweis. |
+
+Paketquelle: `e948e8cd1ee90613b5c638cee44566c7ed755714`.
+Das doppelt bytegleich gebaute ZIP und seine Begleitdateien liegen lokal unter
+`release-artifacts/v2-pilot-readiness-20261122/<Paketquelle>/`.
+ZIP: `private-vps/competence-hub-private-v2-<Paketquelle>.zip`.
+
+- ZIP-SHA-256: `ace1f89995bd187e2db4c12a4c252ebffd88ac3c542065e4ac148c62da04fc2e`
+- `tested-source.json` SHA-256: `1082e87b40283aab5ddd6594c122e9bd5daba9ee8318625bf73e83461ef2bee9`
+- `operator-bundle.json` bindet die ZIP, Quellbestätigung,
+  nicht geheime Konfigurationsreferenz und das lokale Recovery-Protokoll.
+  `deployment_authorized: false`; Inhalt der ZIP: Wheel, gepinnte Linux-
+  Abhängigkeiten, Migrationen `0007` bis `0013`, kontrollierte Clone-/Host-
+  Helfer, Dienst- und Proxyvorlagen und Installationshandbuch.
+
+IONOS, GitHub Pages und VPS wurden nicht verändert. Der Repo-Workflow für
+Pages wird ausschließlich manuell ausgelöst; kein Push-Deployment.

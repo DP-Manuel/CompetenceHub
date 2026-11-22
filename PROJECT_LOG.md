@@ -2,6 +2,11 @@
 
 Significant milestones only; newest first.
 
+22.11 V2 pilot readiness `e948e8c`: exact-source ZIP and independent synthetic
+PostgreSQL/OpenPGP restore with runtime recovery and protected write PASS.
+Onboarding without SMTP and accessible login/request regression passed.
+No VPS, IONOS or Pages change. [Evidence and open gates](docs/handoffs/2026-11-22-v2-pilot-readiness.md).
+
 21.11 V2 Next Level `a6bea57`: Business Operations in the existing request
 model, scoped company/Coach views and 45 integrated checks. Offline migration
 to `0013`, current synthetic dump/restore and reproducible package PASS. No

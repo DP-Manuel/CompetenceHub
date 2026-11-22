@@ -1,8 +1,18 @@
 # Competence Hub Current Context
 
-Updated: 2026-11-21.
+Updated: 2026-11-22.
 
 ## Current Milestone
+
+22.11 V2 PILOT READINESS: existing scope, targeted accessible auth/request
+focus fixes, native synthetic onboarding without outbound mail, 45 joined and
+101 focused checks. Exact `e948e8c` ZIP installed and operational after
+independent synthetic Linux/PG16 + OpenPGP restore; source first removed.
+[Evidence](docs/handoffs/2026-11-22-v2-pilot-readiness.md),
+[execution horizon](docs/exec-plans/active/v2-pilot-readiness-2026-11-22.md),
+[operating gates and role guide](docs/operations/portal-pilot-launch-conditions.md).
+No live action. Current VPS inventory, protected TLS continuation, independent
+live restore, V2 business acceptance and spoken screenreader remain open.
 
 21.11 V2 NEXT LEVEL: one local Business Operations workspace on existing
 coaching requests; scoped notes and Coach releases, tenant-safe read-only
@@ -560,7 +570,7 @@ Existing SSH key works in two independent connections; no SSH/agent/host securit
 
 ## Next Actions
 
-1. Next block: joint local V2 Next Level acceptance with Manuel and Frau Rappelt, including spoken screenreader smoke and the consolidated decision list. Before any private operating window, reconcile EDV, independent recovery and the 30.11 TLS deadline. [IONOS release](docs/operations/website-ionos-release-2026-11-20.md) is complete; private rollout and real access remain separate.
+1. Next block: resolve the 30.11 protected TLS deadline using the [EDV decision list](docs/operations/portal-pilot-launch-conditions.md). Record a separately approvable access path with rollback reserve or suspend the private route at expiry. Before any VPS activation, record V2 business acceptance, spoken screenreader result, fresh inventory and independent restore. IONOS remains unchanged.
 2. Backup-key rebase/R2 remains PAUSED. No key/password/operator resume without a NEW task. COACH-3B REAL APPLY/live export remain disabled; backend backup/restore/Admin gates are not Website dependencies.
 3. This exact IONOS promotion and its fresh inventory/rollback/smokes are closed. Any later content/release needs a new scoped approval. Preview still runs11cb1ea; no second Pages dispatch from the operations record.
 

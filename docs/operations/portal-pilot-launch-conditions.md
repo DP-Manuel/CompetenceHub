@@ -27,6 +27,10 @@ persoenliche Zugaenge oder Echtdaten**. Diese Unterlage erteilt keine Freigabe.
   Receipts, Format `competence-hub-private-v2/3`, `0007..0013` sowie
   `deployment_authorized: false` und `real_coach_import_authorized: false`.
   Gemeinsame V2-Fachabnahme und gesprochener Screenreader-Smoke sind offen.
+- **22.11., aktueller lokaler Kandidat:** [Pilot-Readiness mit Paketnachweis](../handoffs/2026-11-22-v2-pilot-readiness.md)
+  belegt getrennte synthetische Linux-Quell-/Recovery-Instanzen, OpenPGP und
+  einen funktionalen Start aus der gesicherten Konfiguration. Kein Nachweis
+  fuer echte VPS-Daten, aktuelle TLS-Auslieferung oder Produktionsbetrieb.
 
 ## EDV und TLS: eine Entscheidungsliste
 
