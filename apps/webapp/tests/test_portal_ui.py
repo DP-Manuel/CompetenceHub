@@ -169,7 +169,7 @@ def test_portal_error_cleanup_tolerates_security_detached_calendar_nodes() -> No
         .read_text(encoding="utf-8")
     )
 
-    helper = javascript.index("function setErrorElement(element, message = \"\")")
+    helper = javascript.index("function setErrorElement(element, message = \"\"")
     null_guard = javascript.index("if (!element) {", helper)
     restricted_cleanup = javascript.index(
         "Object.values(restrictedCalendarNodes).forEach((node) => {"

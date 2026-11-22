@@ -3,6 +3,7 @@ deploy/scripts/competence-hub-postgres-snapshot text eol=lf
 deploy/scripts/competence-hub-postgres-backup-monitor text eol=lf
 deploy/scripts/competence-hub-backup-notification-render text eol=lf
 deploy/scripts/competence-hub-postgres-restore-check text eol=lf
+deploy/v2/rehearse_v2_openpgp.sh text eol=lf
 deploy/systemd/*.example text eol=lf
 deploy/nginx/*.example text eol=lf
 deploy/postgresql/*.example text eol=lf

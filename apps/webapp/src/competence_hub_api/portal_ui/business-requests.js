@@ -204,12 +204,12 @@ export function createBusinessRequests({ root, request, hasCsrf, expired }) {
     const open = button("Details öffnen", () => void showDetail(item.id));
     open.dataset.requestId = item.id;
     open.setAttribute("aria-label", `Details öffnen: ${title}`);
-    if (coach() && item.coach_summary) {
+    entry.append(element("h4", title));
+    if (summary.textContent) {
       summary.id = `request-summary-${item.id}`;
       open.setAttribute("aria-describedby", summary.id);
+      entry.append(summary);
     }
-    entry.append(element("h4", title));
-    if (summary.textContent) entry.append(summary);
     entry.append(open);
     return entry;
   }
@@ -401,8 +401,31 @@ export function createBusinessRequests({ root, request, hasCsrf, expired }) {
       const form = element("form", null, "requests-form");
       const fields = element("fieldset");
       const feedback = element("p", null, "form-error");
+      feedback.id = "requests-form-error";
       feedback.setAttribute("role", "alert");
       feedback.hidden = true;
+      let invalidFields = [];
+      function clearValidation() {
+        for (const control of invalidFields) {
+          control.removeAttribute("aria-invalid");
+          control.removeAttribute("aria-describedby");
+        }
+        invalidFields = [];
+        error(feedback);
+      }
+      function validationError(message, ...controls) {
+        invalidFields = controls;
+        for (const control of controls) {
+          control.setAttribute("aria-invalid", "true");
+          control.setAttribute("aria-describedby", feedback.id);
+        }
+        feedback.textContent = message;
+        feedback.hidden = false;
+        controls[0].focus();
+      }
+      form.addEventListener("input", (event) => {
+        if (invalidFields.includes(event.target)) clearValidation();
+      });
       const actions = element("div", null, "button-row");
       const save = button(isCreate ? "Anfrage speichern" : isNote ? "Notiz speichern" : "Änderungen speichern", null, true);
       save.type = "submit";
@@ -439,8 +462,8 @@ export function createBusinessRequests({ root, request, hasCsrf, expired }) {
           field("follow_up_on", "Wiedervorlage am", { value: data.follow_up_on, type: "date" }),
           pick("service_id", "services"), pick("offer_id", "offers"), summaryField);
       }
-      fields.append(actions);
-      form.append(fields, feedback);
+      fields.append(feedback, actions);
+      form.append(fields);
       content.append(title, form);
       editor = { form, baseline: snapshot(form), saving: false };
       status.textContent = "";
@@ -449,7 +472,7 @@ export function createBusinessRequests({ root, request, hasCsrf, expired }) {
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         if (!current(signal) || editor.saving) return;
-        error(feedback);
+        clearValidation();
         if (!hasCsrf()) {
           error(feedback, "Bitte melden Sie sich für Änderungen erneut an.");
           return;
@@ -457,18 +480,17 @@ export function createBusinessRequests({ root, request, hasCsrf, expired }) {
         let body = Object.fromEntries([...new FormData(form)].map(([key, value]) => [key, value.trim() || null]));
         const blank = [...form.elements].find((control) => control.required && control.name && !body[control.name]);
         if (blank) {
-          error(feedback, "Bitte füllen Sie alle Pflichtfelder aus.");
-          blank.focus();
+          validationError("Bitte füllen Sie alle Pflichtfelder aus.", blank);
           return;
         }
         if (isCreate && Boolean(body.company_id) === Boolean(body.private_customer_id)) {
-          error(feedback, "Wählen Sie entweder ein Unternehmen oder einen Privatkunden.");
-          form.elements.company_id.focus();
+          validationError("Wählen Sie entweder ein Unternehmen oder einen Privatkunden.",
+            form.elements.company_id, form.elements.private_customer_id);
           return;
         }
         if (!isNote && body.service_id && body.offer_id) {
-          error(feedback, "Wählen Sie entweder eine Leistung oder ein Kalenderangebot.");
-          form.elements.service_id.focus();
+          validationError("Wählen Sie entweder eine Leistung oder ein Kalenderangebot.",
+            form.elements.service_id, form.elements.offer_id);
           return;
         }
         if (!isCreate && !isNote) {
@@ -481,6 +503,7 @@ export function createBusinessRequests({ root, request, hasCsrf, expired }) {
         fields.disabled = true;
         form.setAttribute("aria-busy", "true");
         status.textContent = "Wird gespeichert …";
+        let failure;
         try {
           const response = await request(path, {
             method: isCreate || isNote ? "POST" : "PATCH", csrf: "session", body, signal,
@@ -491,13 +514,13 @@ export function createBusinessRequests({ root, request, hasCsrf, expired }) {
             if ([409, 412].includes(response.status) && !isCreate) {
               save.disabled = true;
               reload.hidden = false;
-              error(feedback, "Der Datenstand hat sich geändert. Laden Sie den aktuellen Stand vor einer erneuten Bearbeitung.");
+              failure = "Der Datenstand hat sich geändert. Laden Sie den aktuellen Stand vor einer erneuten Bearbeitung.";
             } else if (response.status === 403) {
-              error(feedback, "Speichern nicht erlaubt. Prüfen Sie Ihre Berechtigung oder melden Sie sich erneut an.");
+              failure = "Speichern nicht erlaubt. Prüfen Sie Ihre Berechtigung oder melden Sie sich erneut an.";
             } else if ([400, 422].includes(response.status)) {
-              error(feedback, "Bitte prüfen Sie die eingegebenen Daten.");
+              failure = "Bitte prüfen Sie die eingegebenen Daten.";
             } else {
-              error(feedback, "Speichern fehlgeschlagen. Prüfen Sie den aktuellen Stand, bevor Sie es erneut versuchen.");
+              failure = "Speichern fehlgeschlagen. Prüfen Sie den aktuellen Stand, bevor Sie es erneut versuchen.";
             }
             return;
           }
@@ -505,13 +528,14 @@ export function createBusinessRequests({ root, request, hasCsrf, expired }) {
           if (!current(signal)) return;
           void showDetail(saved.id, isNote ? "Notiz gespeichert." : "Anfrage gespeichert.", saved);
         } catch {
-          if (current(signal)) error(feedback, "Speicherung nicht bestätigt. Prüfen Sie den aktuellen Stand.");
+          failure = "Speicherung nicht bestätigt. Prüfen Sie den aktuellen Stand.";
         } finally {
           if (current(signal)) {
             status.textContent = "";
             editor.saving = false;
             fields.disabled = false;
             form.setAttribute("aria-busy", "false");
+            if (failure) error(feedback, failure);
           }
         }
       });

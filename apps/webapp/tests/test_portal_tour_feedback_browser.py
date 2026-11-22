@@ -77,7 +77,9 @@ def visible_step(page, step, total):
     expect(tour.locator("#tour-progress")).to_have_text(f"Schritt {step} von {total}", timeout=1800)
     heading = tour.locator("#tour-title")
     expect(heading).to_be_focused()
-    assert heading.get_attribute("aria-describedby") == "tour-progress tour-copy"
+    copy = tour.locator("#tour-copy").inner_text()
+    expect(tour).to_have_accessible_name(heading.inner_text())
+    expect(heading).to_have_accessible_description(f"Schritt {step} von {total} {copy}")
     assert tour.evaluate("""node => {
         const box = node.getBoundingClientRect();
         return box.left >= 0 && box.top >= 0 && box.right <= innerWidth + 1

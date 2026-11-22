@@ -212,6 +212,11 @@ function setBusy(form, busy) {
   return true;
 }
 
+function finishAuthSubmission(form, errorId, failure) {
+  setBusy(form, false);
+  if (failure) setError(errorId, failure);
+}
+
 function beginFormSubmission(form) {
   if (!form.reportValidity()) {
     return null;
@@ -276,7 +281,9 @@ function showLogin(message = "") {
   state.challengeCsrf = null;
   state.accountAction = null;
   byId("session-summary").hidden = true;
-  setError("login-error", message);
+  const feedback = byId("login-error");
+  feedback.textContent = message;
+  feedback.hidden = !message;
   showView("login");
   byId("login-email").focus();
 }
@@ -400,13 +407,14 @@ async function handlePasswordResetRequest(event) {
   if (data === null) {
     return;
   }
+  let failure;
   try {
     const response = await request(API.passwordResetRequest, {
       method: "POST",
       body: { email: data.get("email") },
     });
     if (!response.ok) {
-      setError("password-reset-request-error", await problemMessage(response, "Anfrage nicht möglich."));
+      failure = await problemMessage(response, "Anfrage nicht möglich.");
       return;
     }
     form.reset();
@@ -414,9 +422,9 @@ async function handlePasswordResetRequest(event) {
     status.textContent = "Falls ein aktives Konto vorhanden ist, wurde ein Link versendet.";
     status.hidden = false;
   } catch {
-    setError("password-reset-request-error", "Das Portal ist momentan nicht erreichbar.");
+    failure = "Das Portal ist momentan nicht erreichbar.";
   } finally {
-    setBusy(form, false);
+    finishAuthSubmission(form, "password-reset-request-error", failure);
   }
 }
 
@@ -430,15 +438,14 @@ async function handleAccountToken(event) {
   }
   const password = String(data.get("password") || "");
   if (password !== data.get("password_confirm")) {
-    setError("account-token-error", "Die eingegebenen Passwörter stimmen nicht überein.");
-    setBusy(form, false);
+    finishAuthSubmission(form, "account-token-error", "Die eingegebenen Passwörter stimmen nicht überein.");
     return;
   }
   if (!state.accountAction) {
-    setError("account-token-error", "Der Link ist ungültig oder abgelaufen.");
-    setBusy(form, false);
+    finishAuthSubmission(form, "account-token-error", "Der Link ist ungültig oder abgelaufen.");
     return;
   }
+  let failure;
   try {
     const invitation = state.accountAction.purpose === "invitation";
     const response = await request(
@@ -449,7 +456,7 @@ async function handleAccountToken(event) {
       },
     );
     if (!response.ok) {
-      setError("account-token-error", await problemMessage(response, "Anfrage nicht möglich."));
+      failure = await problemMessage(response, "Anfrage nicht möglich.");
       return;
     }
     state.accountAction = null;
@@ -462,9 +469,9 @@ async function handleAccountToken(event) {
     state.challengeCsrf = body.csrf_token;
     await beginEnrollment();
   } catch {
-    setError("account-token-error", "Das Portal ist momentan nicht erreichbar.");
+    failure = "Das Portal ist momentan nicht erreichbar.";
   } finally {
-    setBusy(form, false);
+    finishAuthSubmission(form, "account-token-error", failure);
   }
 }
 
@@ -1512,6 +1519,7 @@ async function handleLogin(event) {
   if (data === null) {
     return;
   }
+  let failure;
   try {
     const response = await request(API.login, {
       method: "POST",
@@ -1521,7 +1529,7 @@ async function handleLogin(event) {
       },
     });
     if (!response.ok) {
-      setError("login-error", await problemMessage(response, "Anmeldung nicht möglich."));
+      failure = await problemMessage(response, "Anmeldung nicht möglich.");
       return;
     }
     const body = await response.json();
@@ -1531,12 +1539,13 @@ async function handleLogin(event) {
       await beginEnrollment();
       return;
     }
+    setError("mfa-error");
     showView("mfa");
     byId("mfa-code").focus();
   } catch {
-    setError("login-error", "Das Portal ist momentan nicht erreichbar.");
+    failure = "Das Portal ist momentan nicht erreichbar.";
   } finally {
-    setBusy(form, false);
+    finishAuthSubmission(form, "login-error", failure);
   }
 }
 
@@ -1571,6 +1580,7 @@ async function handleMfa(event) {
   }
   const method = data.get("mfa-method");
   const endpoint = method === "recovery" ? API.recoveryVerify : API.totpVerify;
+  let failure;
   try {
     const response = await request(endpoint, {
       method: "POST",
@@ -1578,7 +1588,7 @@ async function handleMfa(event) {
       body: { code: String(data.get("code") || "").trim() },
     });
     if (!response.ok) {
-      setError("mfa-error", await problemMessage(response, "Code konnte nicht bestätigt werden."));
+      failure = await problemMessage(response, "Code konnte nicht bestätigt werden.");
       return;
     }
     form.reset();
@@ -1587,9 +1597,9 @@ async function handleMfa(event) {
       await enterPortal();
     }
   } catch {
-    setError("mfa-error", "Das Portal ist momentan nicht erreichbar.");
+    failure = "Das Portal ist momentan nicht erreichbar.";
   } finally {
-    setBusy(form, false);
+    finishAuthSubmission(form, "mfa-error", failure);
   }
 }
 
@@ -1601,6 +1611,7 @@ async function handleEnrollmentConfirmation(event) {
   if (data === null) {
     return;
   }
+  let failure;
   try {
     const response = await request(API.enrollmentConfirm, {
       method: "POST",
@@ -1608,10 +1619,7 @@ async function handleEnrollmentConfirmation(event) {
       body: { code: String(data.get("code") || "").trim() },
     });
     if (!response.ok) {
-      setError(
-        "enrollment-error",
-        await problemMessage(response, "Code konnte nicht bestätigt werden."),
-      );
+      failure = await problemMessage(response, "Code konnte nicht bestätigt werden.");
       return;
     }
     const body = await response.json();
@@ -1623,9 +1631,9 @@ async function handleEnrollmentConfirmation(event) {
     state.firstEnrollment = true;
     showView("recovery");
   } catch {
-    setError("enrollment-error", "Das Portal ist momentan nicht erreichbar.");
+    failure = "Das Portal ist momentan nicht erreichbar.";
   } finally {
-    setBusy(form, false);
+    finishAuthSubmission(form, "enrollment-error", failure);
   }
 }
 
@@ -2072,7 +2080,7 @@ function bindEvents() {
       byId("mfa-code-label").textContent = recovery ? "Recovery-Code" : "Sechsstelliger Code";
       byId("mfa-code").inputMode = recovery ? "text" : "numeric";
       byId("mfa-code").value = "";
-      byId("mfa-code").focus();
+      setError("mfa-error");
     });
   });
 

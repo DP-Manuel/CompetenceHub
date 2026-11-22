@@ -1,0 +1,21 @@
+# Reference only. Empty values deliberately prevent start. Never deploy this file.
+# An authorized operator supplies the separate root-owned runtime configuration.
+# DSN: asyncpg, competence_hub_app, 127.0.0.1:5432, competence_hub_v2_pilot.
+COMPETENCE_HUB_DATABASE_URL=
+COMPETENCE_HUB_COMPROMISED_PASSWORD_FINGERPRINTS_PATH=
+
+# Use approved versioned custody. Keyrings are JSON maps of base64 values.
+COMPETENCE_HUB_RATE_LIMIT_HMAC_KEY=
+COMPETENCE_HUB_IDEMPOTENCY_HMAC_KEY=
+COMPETENCE_HUB_OUTBOX_KEYRING=
+COMPETENCE_HUB_OUTBOX_ACTIVE_KEY_VERSION=
+COMPETENCE_HUB_TOTP_KEYRING=
+COMPETENCE_HUB_TOTP_ACTIVE_KEY_VERSION=
+COMPETENCE_HUB_RECOVERY_HMAC_KEYRING=
+COMPETENCE_HUB_RECOVERY_HMAC_ACTIVE_KEY_VERSION=
+
+# Enforced by the V2 unit for the private synthetic pilot.
+COMPETENCE_HUB_CAL2_MODE=synthetic-pilot
+COMPETENCE_HUB_ALLOWED_ORIGIN=https://localhost:8447
+COMPETENCE_HUB_INVITATION_DELIVERY_ENABLED=false
+# No SMTP, worker, real import or website configuration in this scope.
