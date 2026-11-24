@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import { customerFeedbacks } from "../data/customerFeedbacks";
 import "../styles/global.css";
+import "../styles/company-experience.css";
 
 const publishedCustomerFeedbacks = customerFeedbacks.filter(
   (feedback) => feedback.approvedForPublication,
@@ -13,51 +14,91 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 
-const companyPaths = [
-  { title: "Firmencoaching", detail: "Führung und Teams", href: "mindforge#unternehmen", icon: "leadership" },
-  { title: "Recruiting", detail: "Personalbedarf und Auswahl", href: "leistungen#recruiting", icon: "user-round" },
-  { title: "Personalentwicklung", detail: "Potenziale und Qualifizierung", href: "leistungen#personalentwicklung", icon: "building" },
-  { title: "Workshops & Vorträge", detail: "Formate und Themen entdecken", href: "leistungen#angebotsfinder", icon: "users" },
+const topics = [
+  {
+    id: "fuehrung", icon: "leadership", title: "Führung",
+    heading: "In Führung hineinwachsen",
+    text: "Eine neue Rolle übernehmen, Verantwortung klären oder Mitarbeitergespräche besser führen: Der passende Einstieg richtet sich nach der konkreten Führungssituation.",
+    links: [
+      ["Businesscoaching für Unternehmen", "mindforge#unternehmen"],
+      ["Workshops und Vorträge", "leistungen#gruppenformate"],
+    ],
+  },
+  {
+    id: "teams", icon: "users", title: "Teams und Zusammenarbeit",
+    heading: "Zusammenarbeit gezielt verbessern",
+    text: "Wenn Absprachen nicht greifen oder Konflikte den Alltag bestimmen, hilft es, Kommunikation und Zusammenarbeit gemeinsam in den Blick zu nehmen.",
+    links: [
+      ["Mindforge für Unternehmen", "mindforge#unternehmen"],
+      ["Workshops und Vorträge", "leistungen#gruppenformate"],
+      ["Praxisbeispiel zur Kommunikation", "#concept-clean-kommunikation"],
+    ],
+  },
+  {
+    id: "recruiting", icon: "user-round", title: "Recruiting und Personal",
+    heading: "Passende Mitarbeitende finden",
+    text: "Was muss jemand für die Rolle mitbringen? Ein klares Anforderungsprofil hilft, Bewerbende zu vergleichen und Potenziale zu erkennen.",
+    links: [
+      ["Recruiting für Unternehmen", "leistungen#recruiting"],
+      ["Assessment Center zur Auswahl", "#assessment-center"],
+    ],
+  },
+  {
+    id: "entwicklung", icon: "sparkles", title: "Personalentwicklung",
+    heading: "Stärken erkennen und weiterentwickeln",
+    text: "Mitarbeitende auf neue Aufgaben vorbereiten oder Kompetenzen gezielt ausbauen: Anlass, Zielgruppe und Lernziel geben die Richtung vor.",
+    links: [
+      ["Personalentwicklung im Überblick", "leistungen#personalentwicklung"],
+      ["Entwicklungspotenziale einschätzen", "#assessment-center"],
+      ["Angebote nach Thema finden", "leistungen#angebotsfinder"],
+    ],
+  },
+  {
+    id: "veraenderung", icon: "compass", title: "Veränderung und Transformation",
+    heading: "Orientierung im Wandel schaffen",
+    text: "Ob neue Strukturen oder neue Arbeitsweisen: Führungskräfte und Teams brauchen Klarheit darüber, was sich ändert und wie sie damit umgehen können.",
+    links: [
+      ["Businesscoaching im Wandel", "mindforge#unternehmen"],
+      ["Beratung und Coaching einordnen", "leistungen#mindforge"],
+      ["Workshops und Vorträge", "leistungen#gruppenformate"],
+    ],
+  },
+  {
+    id: "gesundheit", icon: "heart-pulse", title: "Gesundheit und Prävention",
+    heading: "Belastung im Arbeitsalltag ansprechen",
+    text: "Berufliche Belastung, Selbstmanagement oder Konfliktprävention können Anlass für ein Coaching sein. Welche Begleitung passt, klären wir gemeinsam.",
+    links: [
+      ["Coaching für Unternehmen", "mindforge#unternehmen"],
+      ["Passende Themen im Angebotsfinder", "leistungen#angebotsfinder"],
+    ],
+  },
 ] as const;
 
-const occasions = [
+const serviceWorlds = [
   {
-    title: "Führung und Zusammenarbeit",
-    text: "Wenn Rollen, Verantwortung, Erwartungen oder Abstimmung im Team klarer werden sollen.",
-    icon: "leadership" as const,
+    title: "Führung & Zusammenarbeit", icon: "leadership",
+    text: "Führung stärken, Teams entwickeln, Kommunikation verbessern und Konflikte professionell bearbeiten.",
+    links: [["Mindforge für Unternehmen", "mindforge#unternehmen"]],
   },
   {
-    title: "Kommunikation",
-    text: "Wenn Gespräche, Feedback, Kundenkontakt oder interne Abstimmung professioneller laufen sollen.",
-    icon: "message-circle" as const,
+    title: "Personalgewinnung & Potenziale", icon: "user-round",
+    text: "Geeignete Mitarbeitende finden, Kompetenzen erkennen und Auswahlprozesse fundiert gestalten.",
+    links: [["Recruiting entdecken", "leistungen#recruiting"], ["Zum Assessment Center", "#assessment-center"]],
   },
   {
-    title: "Veränderung und Entwicklung",
-    text: "Wenn neue Aufgaben, Wachstum, Umstrukturierung oder berufliche Entwicklung begleitet werden sollen.",
-    icon: "compass" as const,
+    title: "Qualifizierung & Veränderung", icon: "compass",
+    text: "Mitarbeitende weiterentwickeln, berufliche Kompetenzen stärken und Veränderungsprozesse begleiten.",
+    links: [["Personalentwicklung", "leistungen#personalentwicklung"], ["Workshops & Vorträge", "leistungen#gruppenformate"]],
   },
-  {
-    title: "Belastung und Orientierung",
-    text: "Wenn Teams Orientierung, Konfliktprävention und einen gesunden Umgang mit beruflicher Belastung brauchen.",
-    icon: "heart-pulse" as const,
-  },
-  {
-    title: "Qualifizierung als Baustein",
-    text: "Wenn Coaching und Qualifizierung als Teil einer nachhaltigen Personal- und Kompetenzentwicklung gedacht werden.",
-    icon: "users" as const,
-  },
-  {
-    title: "Recruiting und Potenziale",
-    text: "Wenn praktische Fähigkeiten, Entwicklungsmöglichkeiten und der tatsächliche Personalbedarf stärker zusammengebracht werden sollen.",
-    icon: "building" as const,
-  },
-];
+] as const;
 
 const collaboration = [
-  { title: "Bedarf klären", text: "Mit Frau Rappelt besprechen Sie Anlass, Zielgruppe und Dringlichkeit." },
-  { title: "Expertise auswählen", text: "Wir empfehlen Coaches oder Fachleute, die zu Ihrem Thema und Unternehmen passen." },
-  { title: "Rahmen abstimmen", text: "Ziele, Format, Umfang und Ablauf besprechen Sie gemeinsam vor dem Start." },
+  { title: "Anliegen klären", text: "Mit Frau Rappelt besprechen Sie Anlass, Zielgruppe und Ziel." },
+  { title: "Expertise finden", text: "Wir empfehlen Coaches oder Fachleute für Ihr konkretes Thema." },
+  { title: "Zusammenarbeit gestalten", text: "Format, Umfang und Ablauf stimmen Sie vor dem Start gemeinsam ab." },
 ];
+
+const destination = (href: string) => href.startsWith("#") ? href : url(href);
 
 const caseStories = [
   {
@@ -66,7 +107,6 @@ const caseStories = [
     title: "Eine neue Führungskraft findet in ihre Rolle",
     lead:
       "Das Szenario zeigt einen möglichen Weg durch den Competence Hub. Es ist ein Beispiel und keine Kundenreferenz oder Ergebniszusage.",
-    tone: "example",
     steps: [
       {
         label: "Ausgangslage",
@@ -101,7 +141,6 @@ const caseStories = [
     title: "Kommunikation, die zum Arbeitsalltag passt",
     lead:
       "Concept Clean beschreibt einen Kommunikationskurs für Mitarbeitende, bei dem Matching, Inhalte und Zeiten auf den betrieblichen Kontext abgestimmt wurden.",
-    tone: "customer",
     steps: [
       {
         label: "Anfrage",
@@ -181,544 +220,263 @@ const faqs = [
 ---
 
 <BaseLayout
-  title="Coaching für Unternehmen | Competence Hub"
-  description="Competence Hub verbindet Unternehmen mit ausgewählten Coaches und Expertise für Führung, Zusammenarbeit, Recruiting, Gesundheit und Veränderung."
+  title="Für Unternehmen | Competence Hub"
+  description="Welches Anliegen beschäftigt Ihr Unternehmen? Entdecken Sie passende Wege für Führung, Teams, Recruiting, Personalentwicklung, Veränderung und Gesundheit."
 >
-  <main class="subpage company-page">
-    <section class="company-intro" aria-labelledby="company-title">
-      <div>
-        <p class="eyebrow">Für Unternehmen</p>
-        <h1 id="company-title">Passende Expertise für Ihr Unternehmen</h1>
-        <p>Ob Führungswechsel, Zusammenarbeit oder Personalauswahl: Wir klären Ihren Bedarf und vermitteln die passenden Coaches oder Fachleute.</p>
-        <a class="button" href="#unternehmenskontakt">Mit Frau Rappelt sprechen</a>
+  <main class="company-business">
+    <section class="business-hero business-wrap" aria-labelledby="company-title">
+      <p class="eyebrow">Für Unternehmen</p>
+      <h1 id="company-title">Was möchten Sie in Ihrem Unternehmen bewegen?</h1>
+      <p class="business-lead">Ob Sie Mitarbeitende entwickeln, Führung stärken, neue Fachkräfte gewinnen oder Veränderungen gestalten möchten – wir verbinden Sie mit der passenden Expertise.</p>
+      <div class="business-actions">
+        <a class="button" href="#anlaesse">Möglichkeiten entdecken <Icon name="arrow-right" size={18} /></a>
+        <a class="text-link" href="#unternehmenskontakt">Persönlich beraten lassen</a>
       </div>
-      <nav class="company-paths" aria-labelledby="company-title-connections">
-        <h2 id="company-title-connections">Leistungen für Unternehmen</h2>
-        <ul role="list">
-          {companyPaths.map((path) => (
+    </section>
+
+    <section class="business-compass" id="anlaesse" aria-labelledby="compass-title" data-company-compass>
+      <div class="business-wrap">
+        <div class="compass-heading">
+          <p class="eyebrow"><Icon name="compass" size={21} /> Unternehmens-Kompass</p>
+          <h2 id="compass-title">Was beschäftigt Sie gerade?</h2>
+        </div>
+        <div class="compass-options" data-compass-options>
+          {topics.map((topic) => (
+            <a class="compass-option" id={`kompass-wahl-${topic.id}`} href={`#kompass-${topic.id}`} data-compass-tab>
+              <Icon name={topic.icon} size={26} strokeWidth={1.7} />
+              <span>{topic.id === "entwicklung" ? <>Personal<wbr />entwicklung</> : topic.title}</span>
+            </a>
+          ))}
+        </div>
+        <div class="compass-panels">
+          {topics.map((topic) => (
+            <section class="compass-panel" id={`kompass-${topic.id}`} data-compass-panel>
+              <div>
+                <h3>{topic.heading}</h3>
+                <p>{topic.text}</p>
+              </div>
+              <ul class="business-link-list" role="list">
+                {topic.links.map(([label, href]) => (
+                  <li><a href={destination(href)}>{label}<Icon name="arrow-right" size={17} /></a></li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="business-worlds business-wrap" aria-labelledby="business-worlds-title">
+      <p class="eyebrow">Leistungswelten</p>
+      <h2 id="business-worlds-title">Drei Wege für Ihr Unternehmen</h2>
+      <div>
+        {serviceWorlds.map((world, index) => (
+          <article class="business-world">
+            <div class="world-mark" aria-hidden="true">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <Icon name={world.icon} size={52} strokeWidth={1.2} />
+            </div>
+            <div>
+              <h3>{world.title}</h3>
+              <p>{world.text}</p>
+              <div class="business-actions">
+                {world.links.map(([label, href]) => (
+                  <a class="text-link" href={destination(href)}>{label} <Icon name="arrow-right" size={16} /></a>
+                ))}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="business-process" id="zusammenarbeit" aria-labelledby="company-process-title">
+      <div class="business-wrap">
+        <h2 id="company-process-title">So arbeiten wir zusammen</h2>
+        <ol role="list">
+          {collaboration.map((step, index) => (
             <li>
-              <a href={url(path.href)}>
-                <Icon name={path.icon} size={22} />
-                <span><strong>{path.title}</strong><small>{path.detail}</small></span>
-                <Icon name="arrow-right" size={18} />
-              </a>
+              <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
             </li>
           ))}
-        </ul>
-      </nav>
+        </ol>
+        <a class="text-link" href={url("coaches")}>Coach-Netzwerk kennenlernen <Icon name="arrow-right" size={18} /></a>
+      </div>
     </section>
 
-    <section class="company-occasions" id="anlaesse" aria-labelledby="company-occasions-title">
-      <h2 id="company-occasions-title">Typische Anlässe</h2>
-      <ul role="list">
-        {occasions.map((occasion) => (
-          <li>
-            <Icon name={occasion.icon} size={22} />
-            <div><h3>{occasion.title}</h3><p>{occasion.text}</p></div>
-          </li>
-        ))}
-      </ul>
-    </section>
-
-    <section class="company-process" id="zusammenarbeit" aria-labelledby="company-process-title">
-      <h2 id="company-process-title">So arbeiten wir zusammen</h2>
-      <ol>
-        {collaboration.map((step) => (
-          <li><h3>{step.title}</h3><p>{step.text}</p></li>
-        ))}
-      </ol>
-      <a class="text-link" href={url("coaches")}>Coach-Netzwerk kennenlernen <Icon name="arrow-right" size={18} /></a>
-    </section>
-
-    <section class="company-assessment" id="assessment-center" aria-labelledby="assessment-title">
-      <header class="company-assessment__heading">
-        <h2 id="assessment-title">Assessment Center für Auswahl und Entwicklung</h2>
-        <p>
-          Präsenz, digital oder hybrid. Umfang und Beobachtungsaufwand werden
-          passend zur Zielgruppe und zur konkreten Entscheidung geplant.
-        </p>
-      </header>
-
-      <div class="company-assessment__applications">
-        {assessmentApplications.map((application) => (
-          <article>
-            <Icon name={application.icon} size={28} />
-            <div>
-              <h3>{application.title}</h3>
-              <p>{application.text}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      <div class="company-assessment__levels" aria-label="Leistungsstufen und Preise">
-        {assessmentLevels.map((level) => (
-          <article>
-            <div>
-              <h3>{level.title}</h3>
-              <p>{level.text}</p>
-            </div>
-            <p class="company-assessment__price"><strong>{level.price}</strong> <small>{level.unit}</small></p>
-          </article>
-        ))}
-      </div>
-
-      <div class="company-assessment__links">
-        <a class="button" href={url("kontakt")}>Assessment Center anfragen</a>
-        <a class="text-link" href={url("mindforge#unternehmen")}>
-          Mindforge für Unternehmen
-          <Icon name="arrow-right" size={18} />
-        </a>
-      </div>
+    <section class="business-assessment business-wrap" id="assessment-center" aria-labelledby="assessment-title">
+      <p class="eyebrow">Auswahl & Entwicklung</p>
+      <h2 id="assessment-title">Assessment Center für Unternehmen</h2>
+      <p class="business-lead">Bewerbende strukturiert beurteilen oder Stärken und Entwicklungsfelder im Team sichtbar machen. Das Format stimmen wir auf Ihre Fragestellung ab: in Präsenz, digital oder hybrid.</p>
+      <details class="business-disclosure">
+        <summary>Leistungsstufen und Preise</summary>
+        <div class="assessment-detail">
+          <div class="assessment-grid">
+            {assessmentApplications.map((application) => (
+              <div><Icon name={application.icon} size={24} /><h3>{application.title}</h3><p>{application.text}</p></div>
+            ))}
+          </div>
+          <div class="assessment-grid">
+            {assessmentLevels.map((level) => (
+              <div>
+                <h3>{level.title}</h3><p>{level.text}</p>
+                <p class="assessment-price"><strong>{level.price}</strong> <small>{level.unit}</small></p>
+              </div>
+            ))}
+          </div>
+          <a class="text-link" href={url("mindforge#unternehmen")}>Mindforge für Unternehmen <Icon name="arrow-right" size={16} /></a>
+        </div>
+      </details>
+      <a class="text-link assessment-cta" href={url("kontakt")}>Assessment Center anfragen <Icon name="arrow-right" size={18} /></a>
     </section>
 
     {publishedCustomerFeedbacks.length > 0 && (
-      <section
-        class="customer-feedback-section"
-        aria-labelledby="customer-feedback-title"
-      >
-      <header class="customer-feedback__heading">
-        <div>
+      <section class="business-feedback" aria-labelledby="customer-feedback-title">
+        <div class="business-wrap">
           <p class="eyebrow">Kundenfeedback</p>
-          <h2 id="customer-feedback-title">
-            Das waren die Eindrücke von unseren Kunden
-          </h2>
-        </div>
-        <p>
-          Hier sammeln wir Rückmeldungen dazu, wie Unternehmen Matching,
-          Inhalte und Zusammenarbeit erlebt haben.
-        </p>
-        {publishedCustomerFeedbacks.length > 1 && (
-          <div
-            class="customer-feedback__controls"
-            role="group"
-            aria-label="Kundenstimmen steuern"
-          >
-            <button
-              class="customer-feedback__control"
-              type="button"
-              aria-label="Vorherige Kundenstimme"
-              title="Vorherige Kundenstimme"
-              data-feedback-previous
-            >
-              <span class="customer-feedback__control-icon--previous">
-                <Icon name="arrow-right" size={20} />
-              </span>
-            </button>
-            <button
-              class="customer-feedback__control"
-              type="button"
-              aria-pressed="false"
-              aria-label="Kundenstimmen pausieren"
-              title="Kundenstimmen pausieren"
-              data-feedback-toggle
-            >
-              <span data-feedback-pause-icon><Icon name="pause" size={20} /></span>
-              <span data-feedback-play-icon hidden><Icon name="play" size={20} /></span>
-            </button>
-            <button
-              class="customer-feedback__control"
-              type="button"
-              aria-label="Nächste Kundenstimme"
-              title="Nächste Kundenstimme"
-              data-feedback-next
-            >
-              <Icon name="arrow-right" size={20} />
-            </button>
-          </div>
-        )}
-      </header>
-
-      <div class="customer-feedback__carousel" data-feedback-carousel>
-        <div class="customer-feedback__viewport" data-feedback-viewport>
-          <div
-            class:list={[
-              "customer-feedback__track",
-              {
-                "customer-feedback__track--single":
-                  publishedCustomerFeedbacks.length === 1,
-              },
-            ]}
-            data-feedback-track
-          >
-            {publishedCustomerFeedbacks.map((feedback) => (
-              <article class="customer-feedback__card" id={`feedback-${feedback.id}`}>
-                <div class="customer-feedback__logo">
-                  <img
-                    src={url(feedback.logo)}
-                    alt={feedback.logoAlt}
-                    width="500"
-                    height="500"
-                    loading="lazy"
-                  />
-                </div>
-                <div class="customer-feedback__content">
-                  <div class="customer-feedback__topic">
-                    <small>Thema der Zusammenarbeit</small>
-                    <strong>{feedback.topic}</strong>
-                  </div>
-                  <blockquote class="customer-feedback__quote">
-                    <p>{`„${feedback.quote}“`}</p>
-                  </blockquote>
-                  <footer>
-                    <cite>{feedback.company}</cite>
-                    <a class="text-link" href={feedback.detailHref}>
-                      Praxisweg ansehen <Icon name="arrow-right" size={18} />
-                    </a>
-                  </footer>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </div>
-      </section>
-    )}
-
-    <section class="use-case-section" aria-labelledby="use-case-title">
-      <div class="section-heading use-case-section__heading">
-        <p class="eyebrow">Vom Anliegen zur Umsetzung</p>
-        <h2 id="use-case-title">Zwei Wege durch den Competence Hub</h2>
-        <p>
-          Der genaue Verlauf richtet sich nach Anlass, Zielgruppe und Format.
-          Die folgenden Geschichten machen sichtbar, wie die einzelnen Ebenen
-          zusammenspielen können.
-        </p>
-      </div>
-
-      <div class="case-story-browser" data-case-story-browser>
-        <div class="case-story-picker" role="group" aria-label="Use Cases auswählen">
-          {caseStories.map((story) => (
-            <button
-              class:list={[
-                "case-story-trigger",
-                `case-story-trigger--${story.tone}`,
-              ]}
-              id={`use-case-trigger-${story.id}`}
-              type="button"
-              aria-expanded="false"
-              aria-controls={story.id}
-              data-case-story-trigger
-            >
-              <span class="case-story-trigger__copy">
-                <span class="eyebrow">{story.eyebrow}</span>
-                <strong class="case-story-trigger__title">{story.title}</strong>
-                <span class="case-story-trigger__lead">{story.lead}</span>
-              </span>
-              <span class="case-story-trigger__action">
-                <span data-case-story-label>Ablauf ansehen</span>
-                <span class="case-story-trigger__symbol" data-case-story-symbol aria-hidden="true">+</span>
-              </span>
-            </button>
-          ))}
-        </div>
-
-        <div class="case-story-panels">
-          {caseStories.map((story) => (
-            <article
-              class:list={[
-                "case-story",
-                `case-story--${story.tone}`,
-              ]}
-              id={story.id}
-              aria-labelledby={`use-case-trigger-${story.id}`}
-              data-case-story-panel
-            >
-              <h3 class="visually-hidden">{story.title}</h3>
-              <div class="case-story__route">
-                <svg
-                  class="case-story__curve"
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <path d="M50 0 C88 6 88 19 50 25 C12 31 12 44 50 50 C88 56 88 69 50 75 C12 81 12 94 50 100" />
-                </svg>
-                <ol class="case-story__steps">
-                  {story.steps.map((step, index) => (
-                    <li class="case-story__step">
-                      <div class="case-story__step-copy">
-                        <small>{step.label}</small>
-                        <h4>{step.title}</h4>
-                        <p>{step.text}</p>
-                      </div>
-                      <span class="case-story__marker" aria-hidden="true">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
+          <h2 id="customer-feedback-title">Das waren die Eindrücke von unseren Kunden</h2>
+          {publishedCustomerFeedbacks.map((feedback) => (
+            <article class="business-quote" id={`feedback-${feedback.id}`}>
+              <img src={url(feedback.logo)} alt={feedback.logoAlt} width="500" height="500" loading="lazy" />
+              <div>
+                <blockquote><p>{`„${feedback.quote}“`}</p></blockquote>
+                <footer class="business-quote-byline">
+                  <strong>{feedback.company}</strong><span>{feedback.topic}</span>
+                </footer>
+                <a class="text-link" href={feedback.detailHref}>Praxisweg ansehen <Icon name="arrow-right" size={16} /></a>
               </div>
             </article>
           ))}
         </div>
-      </div>
+      </section>
+    )}
+
+    <section class="business-stories business-wrap" aria-labelledby="use-case-title">
+      <p class="eyebrow">Vom Anliegen zur Umsetzung</p>
+      <h2 id="use-case-title">Zwei Wege durch den Competence Hub</h2>
+      {caseStories.map((story) => (
+        <details class:list={["business-disclosure", {"case-story--customer": story.id === "concept-clean-kommunikation"}]} data-business-story>
+          <summary id={`use-case-trigger-${story.id}`}>
+            <span>
+              <span class="story-label">{story.eyebrow}</span>
+              <strong>{story.title}</strong>
+            </span>
+          </summary>
+          <p id={story.id}>{story.lead}</p>
+          <div class="case-story__route">
+            <svg class="case-story__curve" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <path d="M50 0 C88 6 88 19 50 25 C12 31 12 44 50 50 C88 56 88 69 50 75 C12 81 12 94 50 100" />
+            </svg>
+            <ol class="case-story__steps" role="list">
+              {story.steps.map((step, index) => (
+                <li class="case-story__step">
+                  <div class="case-story__step-copy">
+                    <small>{step.label}</small><h3>{step.title}</h3><p>{step.text}</p>
+                  </div>
+                  <span class="case-story__marker" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </details>
+      ))}
     </section>
 
-    <section class="faq-section" aria-labelledby="company-faq-title">
-      <div class="section-heading">
-        <p class="eyebrow">FAQ</p>
-        <h2 id="company-faq-title">Fragen von Unternehmen</h2>
-      </div>
-      <div class="faq-grid">
-        {faqs.map((faq) => (
-          <details>
-            <summary>{faq.question}</summary>
-            <p>{faq.answer}</p>
-          </details>
-        ))}
-      </div>
+    <section class="business-faq business-wrap" aria-labelledby="company-faq-title">
+      <h2 id="company-faq-title">Fragen von Unternehmen</h2>
+      {faqs.slice(0, 2).map((faq) => (
+        <details class="business-disclosure"><summary>{faq.question}</summary><p>{faq.answer}</p></details>
+      ))}
+      <details class="business-disclosure">
+        <summary>Weitere Fragen</summary>
+        <dl>
+          {faqs.slice(2).map((faq) => <><dt>{faq.question}</dt><dd>{faq.answer}</dd></>)}
+        </dl>
+      </details>
     </section>
 
-    <section class="company-contact" id="unternehmenskontakt" aria-labelledby="company-contact-title">
-      <img src={url("images/team/janay-rappelt.jpg")} alt="" width="1066" height="1600" loading="lazy" />
-      <div>
-        <p class="eyebrow">Ihre Ansprechpartnerin</p>
-        <h2 id="company-contact-title">Frau Rappelt</h2>
-        <p>Schildern Sie kurz Ihr Anliegen. Frau Rappelt hilft Ihnen, das passende Format und die richtige Ansprechperson zu finden.</p>
-        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
-        <a class="text-link" href="tel:+491726799972">0172 6799972 anrufen</a>
+    <section class="business-contact" id="unternehmenskontakt" aria-labelledby="company-contact-title">
+      <div class="business-wrap">
+        <div>
+          <p class="eyebrow">Ihre Ansprechpartnerin</p>
+          <h2 id="company-contact-title">Sie müssen die passende Lösung nicht selbst finden.</h2>
+          <p class="business-lead"><strong>Frau Rappelt</strong> hilft Ihnen, Ihr Anliegen einzuordnen und passende Coaches, Fachleute oder Formate zu finden.</p>
+          <div class="business-actions">
+            <a class="button" href={url("kontakt")}>Bedarf besprechen <Icon name="arrow-right" size={18} /></a>
+            <a class="text-link" href="tel:+491726799972">0172 6799972 anrufen</a>
+          </div>
+        </div>
+        <img src={url("images/team/janay-rappelt.jpg")} alt="Frau Rappelt" width="1066" height="1600" loading="lazy" />
       </div>
     </section>
   </main>
 </BaseLayout>
 
-<style>
-  .company-page { overflow-wrap: anywhere; }
-  .company-page :is(h1, h2, h3, .button) { overflow-wrap: anywhere; }
-  .company-page :is(h2, h3) { line-height: 1.22; }
-  .company-page :is(.company-occasions, .company-process, .company-assessment, .company-contact) {
-    scroll-margin-top: 9rem;
-  }
-  .company-intro {
-    display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    align-items: center;
-    gap: 2.5rem 4rem;
-    padding-block: 1rem 3rem;
-  }
-  .company-intro h1 { font-size: 3.5rem; line-height: 1.1; max-width: 17ch; }
-  .company-intro p:not(.eyebrow), .company-contact p:not(.eyebrow) { max-width: 51ch; }
-  .company-page .eyebrow, .company-paths small { color: var(--color-pantone-deep); }
-  .company-paths h2 { font-size: 1.25rem; margin-bottom: .65rem; }
-  .company-paths ul, .company-occasions ul { list-style: none; margin: 0; padding: 0; }
-  .company-paths a {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: .75rem;
-    align-items: center;
-    border-top: 1px solid var(--color-line);
-    min-height: 3.5rem;
-    padding: .55rem .5rem;
-  }
-  .company-paths a:hover { background: var(--color-soft); }
-  .company-paths a:hover strong { text-decoration: underline; text-underline-offset: .17em; }
-  .company-paths a:focus-visible { outline-offset: -3px; }
-  .company-paths a :global(svg), .company-occasions li > :global(svg),
-  .company-assessment__applications article > :global(svg) { color: var(--color-pantone-deep); }
-  .company-paths small { display: block; font-size: .9rem; }
-  .company-occasions, .company-process, .company-assessment { padding-block: 2rem; border-top: 1px solid var(--color-line); }
-  .company-page :is(.company-occasions, .company-process, .company-assessment, .company-contact) h2 { font-size: 2rem; }
-  .company-occasions ul, .company-process ol {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.4rem 2rem;
-  }
-  .company-occasions li, .company-assessment__applications article {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: start;
-    gap: .75rem;
-  }
-  .company-occasions li > :global(svg), .company-assessment__applications article > :global(svg) { margin-top: .15rem; }
-  .company-occasions h3, .company-process h3, .company-assessment h3 { font-size: 1.12rem; margin-bottom: .35rem; }
-  .company-occasions p, .company-process p, .company-assessment p { margin-bottom: 0; }
-  .company-process ol { padding-left: 1.7rem; margin-block: 1.2rem .65rem; column-gap: 2.75rem; }
-  .company-process li::marker { color: var(--color-pantone-deep); font-weight: 800; }
-  .company-page :is(.company-process, .company-assessment__links, .company-contact) .text-link {
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    min-height: 44px;
-  }
-  .company-assessment { margin-bottom: 2rem; }
-  .company-assessment__heading { margin-bottom: 1.4rem; }
-  .company-assessment__heading h2 { max-width: 30ch; }
-  .company-assessment__applications, .company-assessment__levels {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem 2rem;
-    padding-block: 1rem;
-    border-top: 1px solid var(--color-line);
-  }
-  .company-assessment__price { margin-top: .7rem; }
-  .company-assessment__price strong { color: var(--color-pantone-deep); }
-  .company-assessment__links { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem 1.25rem; }
-  .company-contact {
-    display: grid;
-    grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
-    align-items: center;
-    gap: 1.2rem 2rem;
-    padding-block: 2rem .75rem;
-    border-top: 1px solid var(--color-line);
-  }
-  .company-contact img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 24%; }
-  .company-contact .text-link { margin-inline-start: .8rem; }
-  @media (max-width: 54rem) {
-    .company-intro { gap: 1.75rem; }
-    .company-intro h1 { font-size: 2.65rem; }
-    .company-occasions ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  @media (max-width: 42rem) {
-    .company-intro, .company-occasions ul, .company-process ol,
-    .company-assessment__applications, .company-assessment__levels { grid-template-columns: minmax(0, 1fr); }
-    .company-intro { padding-block: .25rem 2rem; }
-    .company-intro h1 { font-size: 2.3rem; }
-    .company-contact { grid-template-columns: minmax(0, 1fr); }
-    .company-contact img { width: min(100%, 8.5rem); }
-    .company-contact .text-link { display: flex; width: fit-content; margin: .5rem 0 0; }
-  }
-</style>
-
 <script>
-  const caseStoryBrowsers = document.querySelectorAll<HTMLElement>(
-    "[data-case-story-browser]",
-  );
+  for (const compass of document.querySelectorAll("[data-company-compass]")) {
+    const options = compass.querySelector("[data-compass-options]");
+    const tabs = [...compass.querySelectorAll<HTMLAnchorElement>("[data-compass-tab]")];
+    const panels = [...compass.querySelectorAll<HTMLElement>("[data-compass-panel]")];
+    if (!options || !tabs.length || tabs.length !== panels.length) continue;
 
-  caseStoryBrowsers.forEach((browser) => {
-    const triggers = Array.from(
-      browser.querySelectorAll<HTMLButtonElement>("[data-case-story-trigger]"),
-    );
-    const panels = Array.from(
-      browser.querySelectorAll<HTMLElement>("[data-case-story-panel]"),
-    );
-
-    const setOpenStory = (selected: HTMLButtonElement | null) => {
-      triggers.forEach((trigger) => {
-        const isOpen = trigger === selected;
-        const panelId = trigger.getAttribute("aria-controls");
-        const panel = panels.find((candidate) => candidate.id === panelId);
-        const label = trigger.querySelector<HTMLElement>("[data-case-story-label]");
-        const symbol = trigger.querySelector<HTMLElement>("[data-case-story-symbol]");
-
-        trigger.setAttribute("aria-expanded", String(isOpen));
-        trigger.classList.toggle("is-open", isOpen);
-        if (panel) {
-          panel.hidden = !isOpen;
-          panel.classList.toggle("is-open", isOpen);
-        }
-        if (label) label.textContent = isOpen ? "Ablauf schließen" : "Ablauf ansehen";
-        if (symbol) symbol.textContent = isOpen ? "−" : "+";
-      });
+    options.setAttribute("role", "tablist");
+    options.setAttribute("aria-labelledby", "compass-title");
+    const select = (index: number, focus = false) => {
+      for (const [i, tab] of tabs.entries()) {
+        const active = i === index;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+        panels[i].inert = !active;
+        panels[i].dataset.active = String(active);
+      }
+      if (focus) tabs[index].focus();
+    };
+    const selectHash = () => {
+      const index = tabs.findIndex((tab) => tab.hash === location.hash);
+      if (index >= 0) {
+        select(index);
+        return true;
+      }
+      return false;
     };
 
-    browser.classList.add("is-enhanced");
-    const triggerForHash = () => triggers.find(
-      (trigger) => `#${trigger.getAttribute("aria-controls")}` === window.location.hash,
-    );
-    const initialTrigger = triggerForHash() || null;
-    setOpenStory(initialTrigger);
-    if (initialTrigger) {
-      window.requestAnimationFrame(() =>
-        initialTrigger.scrollIntoView({ block: "start" }),
-      );
+    for (const [index, tab] of tabs.entries()) {
+      const panel = panels[index];
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", panel.id);
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", tab.id);
+      panel.tabIndex = 0;
+      tab.addEventListener("click", (event) => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        select(index);
+      });
+      tab.addEventListener("keydown", (event) => {
+        let next: number;
+        if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+        else if (event.key === "ArrowLeft") next = (index + tabs.length - 1) % tabs.length;
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = tabs.length - 1;
+        else if (event.key === " ") next = index;
+        else return;
+        event.preventDefault();
+        select(next, true);
+      });
     }
 
-    triggers.forEach((trigger) => {
-      trigger.addEventListener("click", () => {
-        const wasOpen = trigger.getAttribute("aria-expanded") === "true";
-        setOpenStory(wasOpen ? null : trigger);
-      });
-    });
+    if (!selectHash()) select(0);
+    compass.setAttribute("data-enhanced", "");
+    window.addEventListener("hashchange", selectHash);
+  }
 
-    window.addEventListener("hashchange", () => {
-      const selected = triggerForHash();
-      if (!selected) return;
-      setOpenStory(selected);
-      window.requestAnimationFrame(() => selected.scrollIntoView({ block: "start" }));
-    });
-  });
-
-  const feedbackCarousels = document.querySelectorAll<HTMLElement>(
-    "[data-feedback-carousel]",
-  );
-
-  feedbackCarousels.forEach((carousel) => {
-    const track = carousel.querySelector<HTMLElement>("[data-feedback-track]");
-    const viewport = carousel.querySelector<HTMLElement>("[data-feedback-viewport]");
-    const cards = Array.from(
-      track?.querySelectorAll<HTMLElement>(".customer-feedback__card") || [],
-    );
-    const section = carousel.closest(".customer-feedback-section");
-    const toggle = section?.querySelector<HTMLButtonElement>("[data-feedback-toggle]");
-    const previous = section?.querySelector<HTMLButtonElement>("[data-feedback-previous]");
-    const next = section?.querySelector<HTMLButtonElement>("[data-feedback-next]");
-    const pauseIcon = toggle?.querySelector<HTMLElement>("[data-feedback-pause-icon]");
-    const playIcon = toggle?.querySelector<HTMLElement>("[data-feedback-play-icon]");
-
-    if (
-      !track ||
-      !viewport ||
-      cards.length < 2 ||
-      !toggle ||
-      !previous ||
-      !next
-    ) return;
-
-    let currentIndex = 0;
-    let autoAdvance: number | undefined;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    const showCard = (target: number) => {
-      currentIndex = (target + cards.length) % cards.length;
-      viewport.scrollTo({
-        left: cards[currentIndex].offsetLeft - track.offsetLeft,
-        behavior: reducedMotion.matches ? "auto" : "smooth",
-      });
-    };
-
-    const stopAutoAdvance = () => {
-      if (autoAdvance !== undefined) window.clearInterval(autoAdvance);
-      autoAdvance = undefined;
-    };
-
-    const startAutoAdvance = () => {
-      stopAutoAdvance();
-      if (carousel.dataset.paused === "true") return;
-      autoAdvance = window.setInterval(() => showCard(currentIndex + 1), 7500);
-    };
-
-    const setPaused = (paused: boolean) => {
-      carousel.dataset.paused = paused ? "true" : "false";
-      toggle.setAttribute("aria-pressed", paused ? "true" : "false");
-      toggle.setAttribute(
-        "aria-label",
-        paused ? "Kundenstimmen fortsetzen" : "Kundenstimmen pausieren",
-      );
-      toggle.title = paused
-        ? "Kundenstimmen fortsetzen"
-        : "Kundenstimmen pausieren";
-      if (pauseIcon) pauseIcon.hidden = paused;
-      if (playIcon) playIcon.hidden = !paused;
-      paused ? stopAutoAdvance() : startAutoAdvance();
-    };
-
-    carousel.classList.add("is-ready");
-    setPaused(reducedMotion.matches);
-
-    toggle.addEventListener("click", () => {
-      setPaused(carousel.dataset.paused !== "true");
-    });
-    previous.addEventListener("click", () => {
-      setPaused(true);
-      showCard(currentIndex - 1);
-    });
-    next.addEventListener("click", () => {
-      setPaused(true);
-      showCard(currentIndex + 1);
-    });
-    viewport.addEventListener("focusin", stopAutoAdvance);
-    viewport.addEventListener("focusout", startAutoAdvance);
-  });
+  const openLinkedStory = () => {
+    for (const story of document.querySelectorAll<HTMLDetailsElement>("[data-business-story]")) {
+      if (story.querySelector("p[id]")?.id === location.hash.slice(1)) story.open = true;
+    }
+  };
+  openLinkedStory();
+  window.addEventListener("hashchange", openLinkedStory);
 </script>

@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| Unternehmens-Kompass | [Company experience and release boundaries](website-company-compass.md) | Six visitor needs, accessible navigation, preserved prices and customer evidence, Pages-only release |
 | Interactive Hub | [Mouse, touch and editorial refinement](website-interactive-experience.md) | Draggable homepage graph, equal portraits, company and service navigation, Pages-only release |
 | Website Evolution 24.11 | [Editorial update and staged Coach rollout](website-evolution-2026-11-24.md) | Two profiles on Pages, target-specific asset and route selection, separate IONOS gate |
 | Feedback 19.11 website increment | [Shared acceptance](../handoffs/2026-11-20-feedback-platform.md) | Existing active Coach scope, Finder/profile corrections and public calendar boundary; published on IONOS, protected Portal unchanged |
