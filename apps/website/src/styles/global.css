@@ -4328,23 +4328,6 @@ p {
   line-height: 1.55;
 }
 
-.customer-feedback__quote-mark {
-  display: inline-block;
-  color: var(--color-pantone);
-  font-size: 2.4rem;
-  font-weight: 900;
-  line-height: 0;
-  vertical-align: -0.14em;
-}
-
-.customer-feedback__quote-mark--open {
-  margin-right: 0.12em;
-}
-
-.customer-feedback__quote-mark--close {
-  margin-left: 0.12em;
-}
-
 .customer-feedback__content footer {
   display: flex;
   flex-wrap: wrap;

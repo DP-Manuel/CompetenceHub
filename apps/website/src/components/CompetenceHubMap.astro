@@ -1,5 +1,6 @@
 ---
 import Icon from "./Icon.astro";
+import { hubEdgePath } from "./hub-geometry";
 
 interface Props {
   presentation?: "default" | "living" | "homepage";
@@ -136,21 +137,24 @@ const asymmetricPositions: Record<
   gruppenformate: { x: 32, y: 9, size: 94 },
 };
 
-// Keep the outer nodes in three bands: the top and bottom pairs move away
-// from the core while the larger nodes sit at the sides.
 const homepagePositions: typeof asymmetricPositions = {
-  unternehmen: { x: 11, y: 38, size: 138 },
-  coaches: { x: 89, y: 38, size: 132 },
-  leistungen: { x: 87, y: 75, size: 136 },
-  recruiting: { x: 13, y: 75, size: 126 },
-  kontakt: { x: 28, y: 81, size: 112 },
-  mindforge: { x: 73, y: 17, size: 122 },
-  beratung: { x: 72, y: 81, size: 104 },
-  gruppenformate: { x: 27, y: 17, size: 128 },
+  unternehmen: { x: 13, y: 34, size: 114 },
+  coaches: { x: 87, y: 34, size: 108 },
+  leistungen: { x: 87, y: 69, size: 112 },
+  recruiting: { x: 13, y: 69, size: 108 },
+  kontakt: { x: 33, y: 82, size: 100 },
+  mindforge: { x: 69, y: 16, size: 108 },
+  beratung: { x: 67, y: 82, size: 100 },
+  gruppenformate: { x: 31, y: 16, size: 112 },
 };
 
 const positions = homepage ? homepagePositions : layout === "asymmetric" ? asymmetricPositions : undefined;
 const renderedNodes = nodes.map((node) => ({ ...node, ...positions?.[node.id] }));
+const homepageLabels: Record<string, string> = { unternehmen: "Unternehmen", gruppenformate: "Workshops" };
+const homepageEdges = [
+  ...edges,
+  ...["mindforge", "beratung", "gruppenformate"].map((to) => ({ from: "core", to, d: "" })),
+];
 
 const pointFor = (id: string) => {
   if (id === "core") return { x: 600, y: 380 };
@@ -162,20 +166,10 @@ const pointFor = (id: string) => {
 
 const renderedEdges =
   positions
-    ? edges.map((edge, index) => {
+    ? (homepage ? homepageEdges : edges).map((edge, index) => {
         const from = pointFor(edge.from);
         const to = pointFor(edge.to);
-        const dx = to.x - from.x;
-        const dy = to.y - from.y;
-        const length = Math.max(Math.hypot(dx, dy), 1);
-        const bend = (index % 2 === 0 ? 1 : -1) * Math.min(28, length * 0.05);
-        const controlX = (from.x + to.x) / 2 - (dy / length) * bend;
-        const controlY = (from.y + to.y) / 2 + (dx / length) * bend;
-
-        return {
-          ...edge,
-          d: `M${from.x} ${from.y} Q${controlX} ${controlY} ${to.x} ${to.y}`,
-        };
+        return { ...edge, d: hubEdgePath(from, to, index) };
       })
     : edges;
 ---
@@ -205,7 +199,7 @@ const renderedEdges =
   >
     <circle class="hub-graph__orbit" cx="600" cy="380" r="188" />
     <circle class="hub-graph__orbit hub-graph__orbit--outer" cx="600" cy="380" r="310" />
-    <circle class="hub-graph__marker" cx="600" cy="192" r="7" />
+    {!homepage && <circle class="hub-graph__marker" cx="600" cy="192" r="7" />}
     {renderedEdges.map((edge) => (
       <path
         d={edge.d}
@@ -225,7 +219,7 @@ const renderedEdges =
     aria-describedby="hub-graph-help"
   >
     <h1>Competence <em>Hub</em></h1>
-    <p>Expertise, die zu Ihrem Anliegen passt.</p>
+    <p>{homepage ? "Expertise im Netzwerk" : "Expertise, die zu Ihrem Anliegen passt."}</p>
   </a>
 
   <nav class="hub-graph__nodes" aria-label="Bereiche des Competence Hub">
@@ -234,17 +228,20 @@ const renderedEdges =
         class={`hub-graph__position hub-graph__position--${node.kind}`}
         style={__WEBSITE_V2_LOCAL__ ? undefined : `--node-x: ${node.x}%; --node-y: ${node.y}%; --node-size: ${node.size}px;`}
         data-v2-position={__WEBSITE_V2_LOCAL__ ? node.id : undefined}
+        data-home-x={homepage ? node.x : undefined}
+        data-home-y={homepage ? node.y : undefined}
       >
         <a
           class="hub-graph__node"
           data-node={node.id}
+          data-grab-node={homepage ? "" : undefined}
           data-kind={node.kind}
           href={url(node.href)}
           aria-label={`${node.title}: ${node.detail}`}
         >
           <Icon name={node.icon} size={node.kind === "primary" ? 25 : 20} />
-          <strong>{node.title}</strong>
-          <small>{node.detail}</small>
+          <strong>{homepage ? homepageLabels[node.id] ?? node.title : node.title}</strong>
+          {!homepage && <small>{node.detail}</small>}
         </a>
       </span>
     ))}
@@ -258,11 +255,21 @@ const renderedEdges =
     <span></span>
   </div>}
 </div>
+{homepage && (
+  <div class="hub-graph-tools" data-hub-tools hidden>
+    <span><Icon name="move" size={17} /> Knoten verschieben</span>
+    <button type="button" data-hub-reset aria-disabled="true">
+      <Icon name="rotate-ccw" size={17} /> Ansicht zurücksetzen
+    </button>
+  </div>
+)}
 
 <script>
+  import { enableHubDrag } from "./hub-drag";
   const graphs = document.querySelectorAll<HTMLElement>("[data-hub-graph]");
 
   graphs.forEach((graph) => {
+    if (graph.classList.contains("hub-graph--homepage")) enableHubDrag(graph);
     const core = graph.querySelector<HTMLElement>('[data-node="core"]');
     const nodes = Array.from(
       graph.querySelectorAll<HTMLElement>(".hub-graph__node[data-node]"),
@@ -456,6 +463,32 @@ const renderedEdges =
     outline-offset: 2px;
   }
 
+  .hub-graph-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    border-top: 1px solid var(--color-line);
+    padding: 0.25rem 0.75rem 0;
+    color: var(--color-pantone-deep);
+    font-size: 0.875rem;
+  }
+  .hub-graph-tools[hidden] { display: none; }
+  .hub-graph-tools :is(span, button) { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .hub-graph-tools button {
+    min-height: 44px;
+    border: 0;
+    padding: 0 0.125rem;
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    font-weight: 750;
+    cursor: pointer;
+  }
+  .hub-graph-tools button[aria-disabled="true"] { opacity: 0.8; cursor: default; }
+  .hub-graph-tools button:not([aria-disabled="true"]):hover { text-decoration: underline; }
+
   @media (min-width: 40rem) {
     .hub-graph--homepage .hub-graph__nodes {
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -466,7 +499,7 @@ const renderedEdges =
     .hub-graph--homepage {
       --homepage-core-position: translate(-50%, -50%);
       display: block;
-      height: 25.5rem;
+      height: 32rem;
     }
 
     .hub-graph--homepage .hub-graph__connections {
@@ -482,20 +515,20 @@ const renderedEdges =
       opacity: 0.28;
     }
 
-    .hub-graph--homepage .hub-graph__connections path.is-active {
+    .hub-graph--homepage .hub-graph__connections path:is(.is-active, [data-drag-edge]) {
       opacity: 0.8;
     }
 
     .hub-graph--homepage .hub-graph__core {
       position: absolute;
       inset: 50% auto auto 50%;
-      width: 15.5rem;
+      width: 16.5rem;
       padding: 0.9rem;
       border-width: 7px;
     }
 
     .hub-graph--homepage .hub-graph__core h1 {
-      font-size: 1.875rem;
+      font-size: 2rem;
     }
 
     .hub-graph--homepage .hub-graph__core p {
@@ -509,29 +542,31 @@ const renderedEdges =
 
     .hub-graph--homepage .hub-graph__position {
       position: absolute;
-      inset: var(--node-y) auto auto var(--node-x);
+      inset: var(--drag-y, var(--node-y)) auto auto var(--drag-x, var(--node-x));
       width: var(--node-size);
       height: var(--node-size);
       transform: translate(-50%, -50%);
     }
 
     .hub-graph--homepage .hub-graph__node {
-      display: grid;
-      gap: 0.25rem;
-      padding: 0.65rem;
+      flex-direction: column;
+      gap: 0.55rem;
+      padding: 0.5rem;
       border-color: var(--color-pantone);
       border-radius: 50%;
     }
 
-    .hub-graph--homepage .hub-graph__node small {
-      display: block;
-      max-width: 15ch;
-      color: var(--color-dark);
-      font-size: 0.68rem;
-      font-weight: 550;
-      overflow-wrap: anywhere;
+    .hub-graph--homepage .hub-graph__node strong {
+      font-size: 0.875rem;
     }
 
+    .hub-graph--homepage[data-hub-draggable] .hub-graph__node { cursor: grab; user-select: none; }
+    .hub-graph--homepage[data-dragging] .hub-graph__node { cursor: grabbing; }
+    .hub-graph--homepage .hub-graph__node[data-dragged] {
+      border-color: var(--color-pantone-deep);
+      box-shadow: 0 0 0 3px var(--color-red), 0 6px 20px #00292b26;
+      outline: none;
+    }
     .hub-graph--homepage .hub-graph__node.is-related,
     .hub-graph--homepage[data-active="core"] .hub-graph__position--primary .hub-graph__node {
       border-color: var(--color-pantone-deep);

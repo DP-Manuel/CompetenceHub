@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
 import { customerFeedbacks } from "../data/customerFeedbacks";
 import "../styles/global.css";
@@ -13,6 +12,13 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
+
+const companyPaths = [
+  { title: "Firmencoaching", detail: "Führung und Teams", href: "mindforge#unternehmen", icon: "leadership" },
+  { title: "Recruiting", detail: "Personalbedarf und Auswahl", href: "leistungen#recruiting", icon: "user-round" },
+  { title: "Personalentwicklung", detail: "Potenziale und Qualifizierung", href: "leistungen#personalentwicklung", icon: "building" },
+  { title: "Workshops & Vorträge", detail: "Formate und Themen entdecken", href: "leistungen#angebotsfinder", icon: "users" },
+] as const;
 
 const occasions = [
   {
@@ -47,11 +53,10 @@ const occasions = [
   },
 ];
 
-const benefits = [
-  "klare Einordnung des Anliegens",
-  "passendes Coaching-Format statt Standardpaket",
-  "kuratierte Auswahl statt unübersichtlichem Katalog",
-  "passende Expertise für Thema und Unternehmenskontext",
+const collaboration = [
+  { title: "Bedarf klären", text: "Mit Frau Rappelt besprechen Sie Anlass, Zielgruppe und Dringlichkeit." },
+  { title: "Expertise auswählen", text: "Wir empfehlen Coaches oder Fachleute, die zu Ihrem Thema und Unternehmen passen." },
+  { title: "Rahmen abstimmen", text: "Ziele, Format, Umfang und Ablauf besprechen Sie gemeinsam vor dem Start." },
 ];
 
 const caseStories = [
@@ -179,77 +184,62 @@ const faqs = [
   title="Coaching für Unternehmen | Competence Hub"
   description="Competence Hub verbindet Unternehmen mit ausgewählten Coaches und Expertise für Führung, Zusammenarbeit, Recruiting, Gesundheit und Veränderung."
 >
-  <main class="subpage">
-    <ConnectedPageHero
-      eyebrow="Für Unternehmen"
-      title="Passende Coaches für echte Themen im Unternehmen"
-      lead="Competence Hub hilft Unternehmen, ihren Bedarf klar zu formulieren und vermittelt ausgewählte Coaches für das konkrete Thema, die Zielgruppe und den gewünschten Rahmen."
-      centerLabel="Unternehmen"
-      centerDetail="Anliegen und Ziele"
-      centerIcon="building"
-      titleId="company-title"
-      related={[
-        {
-          label: "Firmencoaching",
-          detail: "Führung & Teams",
-          href: "mindforge#unternehmen",
-          icon: "leadership",
-        },
-        {
-          label: "Recruiting",
-          detail: "Bedarf & Auswahl",
-          href: "leistungen#recruiting",
-          icon: "user-round",
-        },
-        {
-          label: "Personal",
-          labelSuffix: "entwicklung",
-          detail: "Potenziale & Entwicklung",
-          href: "leistungen#personalentwicklung",
-          icon: "building",
-        },
-        {
-          label: "Coaches",
-          detail: "Expertise wählen",
-          href: "coaches",
-          icon: "users",
-        },
-      ]}
-    >
-      <div slot="actions" class="actions">
-        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
-        <a class="button button--ghost" href={url("leistungen#angebotsfinder")}>Workshops finden</a>
-        <a class="button button--ghost" href={url("coaches#thema-fuehrung")}>Coaches für Führung</a>
+  <main class="subpage company-page">
+    <section class="company-intro" aria-labelledby="company-title">
+      <div>
+        <p class="eyebrow">Für Unternehmen</p>
+        <h1 id="company-title">Passende Expertise für Ihr Unternehmen</h1>
+        <p>Ob Führungswechsel, Zusammenarbeit oder Personalauswahl: Wir klären Ihren Bedarf und vermitteln die passenden Coaches oder Fachleute.</p>
+        <a class="button" href="#unternehmenskontakt">Mit Frau Rappelt sprechen</a>
       </div>
-    </ConnectedPageHero>
-
-    <section
-      class="feature-grid feature-grid--company"
-      id="anlaesse"
-      aria-label="Typische Anlässe für Unternehmen"
-    >
-      {occasions.map((occasion) => (
-        <article class="feature-card">
-          <span class="feature-card__icon"><Icon name={occasion.icon} size={28} /></span>
-          <h2>{occasion.title}</h2>
-          <p>{occasion.text}</p>
-        </article>
-      ))}
+      <nav class="company-paths" aria-labelledby="company-title-connections">
+        <h2 id="company-title-connections">Leistungen für Unternehmen</h2>
+        <ul role="list">
+          {companyPaths.map((path) => (
+            <li>
+              <a href={url(path.href)}>
+                <Icon name={path.icon} size={22} />
+                <span><strong>{path.title}</strong><small>{path.detail}</small></span>
+                <Icon name="arrow-right" size={18} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </section>
 
-    <section class="assessment-section" id="assessment-center" aria-labelledby="assessment-title">
-      <div class="assessment-section__heading">
-        <div>
-          <p class="eyebrow">Personalentwicklung · Assessment Center</p>
-          <h2 id="assessment-title">Assessment Center für Auswahl und Entwicklung</h2>
-        </div>
+    <section class="company-occasions" id="anlaesse" aria-labelledby="company-occasions-title">
+      <h2 id="company-occasions-title">Typische Anlässe</h2>
+      <ul role="list">
+        {occasions.map((occasion) => (
+          <li>
+            <Icon name={occasion.icon} size={22} />
+            <div><h3>{occasion.title}</h3><p>{occasion.text}</p></div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="company-process" id="zusammenarbeit" aria-labelledby="company-process-title">
+      <h2 id="company-process-title">So arbeiten wir zusammen</h2>
+      <ol>
+        {collaboration.map((step) => (
+          <li><h3>{step.title}</h3><p>{step.text}</p></li>
+        ))}
+      </ol>
+      <a class="text-link" href={url("coaches")}>Coach-Netzwerk kennenlernen <Icon name="arrow-right" size={18} /></a>
+    </section>
+
+    <section class="company-assessment" id="assessment-center" aria-labelledby="assessment-title">
+      <header class="company-assessment__heading">
+        <h2 id="assessment-title">Assessment Center für Auswahl und Entwicklung</h2>
         <p>
           Präsenz, digital oder hybrid. Umfang und Beobachtungsaufwand werden
           passend zur Zielgruppe und zur konkreten Entscheidung geplant.
         </p>
-      </div>
+      </header>
 
-      <div class="assessment-applications">
+      <div class="company-assessment__applications">
         {assessmentApplications.map((application) => (
           <article>
             <Icon name={application.icon} size={28} />
@@ -261,40 +251,24 @@ const faqs = [
         ))}
       </div>
 
-      <div class="assessment-levels" aria-label="Leistungsstufen und Preise">
+      <div class="company-assessment__levels" aria-label="Leistungsstufen und Preise">
         {assessmentLevels.map((level) => (
           <article>
             <div>
               <h3>{level.title}</h3>
               <p>{level.text}</p>
             </div>
-            <strong>{level.price}</strong>
-            <small>{level.unit}</small>
+            <p class="company-assessment__price"><strong>{level.price}</strong> <small>{level.unit}</small></p>
           </article>
         ))}
       </div>
 
-      <div class="assessment-section__links">
+      <div class="company-assessment__links">
         <a class="button" href={url("kontakt")}>Assessment Center anfragen</a>
         <a class="text-link" href={url("mindforge#unternehmen")}>
           Mindforge für Unternehmen
           <Icon name="arrow-right" size={18} />
         </a>
-      </div>
-    </section>
-
-    <section class="split-panel">
-      <div>
-        <p class="eyebrow">Nutzen</p>
-        <h2>Vom ersten Anliegen zur passenden Person</h2>
-        <p>
-          Unternehmen müssen nicht sofort wissen, welches Format richtig ist.
-          Im ersten Schritt werden Anlass, Zielgruppe, Dringlichkeit und
-          mögliche Formate sortiert und passende Expertise ausgewählt.
-        </p>
-      </div>
-      <div class="benefit-grid">
-        {benefits.map((benefit) => <span>{benefit}</span>)}
       </div>
     </section>
 
@@ -384,11 +358,7 @@ const faqs = [
                     <strong>{feedback.topic}</strong>
                   </div>
                   <blockquote class="customer-feedback__quote">
-                    <p>
-                      <span class="customer-feedback__quote-mark customer-feedback__quote-mark--open" aria-hidden="true">„</span>
-                      {feedback.quote}
-                      <span class="customer-feedback__quote-mark customer-feedback__quote-mark--close" aria-hidden="true">“</span>
-                    </p>
+                    <p>{`„${feedback.quote}“`}</p>
                   </blockquote>
                   <footer>
                     <cite>{feedback.company}</cite>
@@ -501,15 +471,115 @@ const faqs = [
       </div>
     </section>
 
-    <section class="cta-panel">
+    <section class="company-contact" id="unternehmenskontakt" aria-labelledby="company-contact-title">
+      <img src={url("images/team/janay-rappelt.jpg")} alt="" width="1066" height="1600" loading="lazy" />
       <div>
-        <p class="eyebrow">Nächster Schritt</p>
-        <h2>Coaching-Bedarf kurz beschreiben</h2>
+        <p class="eyebrow">Ihre Ansprechpartnerin</p>
+        <h2 id="company-contact-title">Frau Rappelt</h2>
+        <p>Schildern Sie kurz Ihr Anliegen. Frau Rappelt hilft Ihnen, das passende Format und die richtige Ansprechperson zu finden.</p>
+        <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+        <a class="text-link" href="tel:+491726799972">0172 6799972 anrufen</a>
       </div>
-      <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
     </section>
   </main>
 </BaseLayout>
+
+<style>
+  .company-page { overflow-wrap: anywhere; }
+  .company-page :is(h1, h2, h3, .button) { overflow-wrap: anywhere; }
+  .company-page :is(h2, h3) { line-height: 1.22; }
+  .company-page :is(.company-occasions, .company-process, .company-assessment, .company-contact) {
+    scroll-margin-top: 9rem;
+  }
+  .company-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 2.5rem 4rem;
+    padding-block: 1rem 3rem;
+  }
+  .company-intro h1 { font-size: 3.5rem; line-height: 1.1; max-width: 17ch; }
+  .company-intro p:not(.eyebrow), .company-contact p:not(.eyebrow) { max-width: 51ch; }
+  .company-page .eyebrow, .company-paths small { color: var(--color-pantone-deep); }
+  .company-paths h2 { font-size: 1.25rem; margin-bottom: .65rem; }
+  .company-paths ul, .company-occasions ul { list-style: none; margin: 0; padding: 0; }
+  .company-paths a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: .75rem;
+    align-items: center;
+    border-top: 1px solid var(--color-line);
+    min-height: 3.5rem;
+    padding: .55rem .5rem;
+  }
+  .company-paths a:hover { background: var(--color-soft); }
+  .company-paths a:hover strong { text-decoration: underline; text-underline-offset: .17em; }
+  .company-paths a:focus-visible { outline-offset: -3px; }
+  .company-paths a :global(svg), .company-occasions li > :global(svg),
+  .company-assessment__applications article > :global(svg) { color: var(--color-pantone-deep); }
+  .company-paths small { display: block; font-size: .9rem; }
+  .company-occasions, .company-process, .company-assessment { padding-block: 2rem; border-top: 1px solid var(--color-line); }
+  .company-page :is(.company-occasions, .company-process, .company-assessment, .company-contact) h2 { font-size: 2rem; }
+  .company-occasions ul, .company-process ol {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.4rem 2rem;
+  }
+  .company-occasions li, .company-assessment__applications article {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: .75rem;
+  }
+  .company-occasions li > :global(svg), .company-assessment__applications article > :global(svg) { margin-top: .15rem; }
+  .company-occasions h3, .company-process h3, .company-assessment h3 { font-size: 1.12rem; margin-bottom: .35rem; }
+  .company-occasions p, .company-process p, .company-assessment p { margin-bottom: 0; }
+  .company-process ol { padding-left: 1.7rem; margin-block: 1.2rem .65rem; column-gap: 2.75rem; }
+  .company-process li::marker { color: var(--color-pantone-deep); font-weight: 800; }
+  .company-page :is(.company-process, .company-assessment__links, .company-contact) .text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    min-height: 44px;
+  }
+  .company-assessment { margin-bottom: 2rem; }
+  .company-assessment__heading { margin-bottom: 1.4rem; }
+  .company-assessment__heading h2 { max-width: 30ch; }
+  .company-assessment__applications, .company-assessment__levels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .company-assessment__price { margin-top: .7rem; }
+  .company-assessment__price strong { color: var(--color-pantone-deep); }
+  .company-assessment__links { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem 1.25rem; }
+  .company-contact {
+    display: grid;
+    grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+    align-items: center;
+    gap: 1.2rem 2rem;
+    padding-block: 2rem .75rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .company-contact img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 24%; }
+  .company-contact .text-link { margin-inline-start: .8rem; }
+  @media (max-width: 54rem) {
+    .company-intro { gap: 1.75rem; }
+    .company-intro h1 { font-size: 2.65rem; }
+    .company-occasions ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 42rem) {
+    .company-intro, .company-occasions ul, .company-process ol,
+    .company-assessment__applications, .company-assessment__levels { grid-template-columns: minmax(0, 1fr); }
+    .company-intro { padding-block: .25rem 2rem; }
+    .company-intro h1 { font-size: 2.3rem; }
+    .company-contact { grid-template-columns: minmax(0, 1fr); }
+    .company-contact img { width: min(100%, 8.5rem); }
+    .company-contact .text-link { display: flex; width: fit-content; margin: .5rem 0 0; }
+  }
+</style>
 
 <script>
   const caseStoryBrowsers = document.querySelectorAll<HTMLElement>(

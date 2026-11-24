@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ConnectedPageHero from "../components/ConnectedPageHero.astro";
 import Icon from "../components/Icon.astro";
 import OfferingFinder from "@website-offer-finder";
 import DemoOffer from "../v2-local/DemoOffer.astro";
@@ -15,38 +14,42 @@ const url = (path = "") => `${base}${path.replace(/^\//, "")}`;
 const services = [
   {
     eyebrow: "Mindforge",
-    title: "Coaching und Beratung bündeln",
+    title: "Coaching und Beratung",
     text: "Beratungsgespräche für Privatpersonen sowie Businesscoaching und abgestimmte Beratung für Unternehmen.",
     href: "mindforge",
     link: "Mindforge ansehen",
-    id: undefined,
+    id: "mindforge",
+    shortcut: "Coaching & Beratung",
     icon: "sparkles" as const,
   },
   {
     eyebrow: "Personalvermittlung · Recruiting",
-    title: "Menschen und Aufgaben passend verbinden",
-    text: "Wir klären Anforderungsprofil, Unternehmenskontext und Auswahlweg. So können passende Fachkräfte, Potenziale und praktische Fähigkeiten gezielt zusammengebracht werden.",
+    title: "Passende Fachkräfte finden",
+    text: "Wir klären Anforderungsprofil, Unternehmenskontext und Auswahlweg, damit praktische Fähigkeiten und Potenziale zum tatsächlichen Bedarf passen.",
     href: "kontakt",
     link: "Recruiting besprechen",
     id: "recruiting",
+    shortcut: "Recruiting",
     icon: "user-round" as const,
   },
   {
     eyebrow: "Personalentwicklung",
-    title: "Potenziale erkennen und Entwicklung begleiten",
+    title: "Potenziale erkennen und entwickeln",
     text: "Je nach Anliegen können Coaching, Development Assessment Center oder Supervision die nächsten Schritte unterstützen. Mediation wird nur bei bestätigter Qualifikation und Verfügbarkeit im Netzwerk vermittelt.",
     href: "unternehmen#assessment-center",
     link: "Personalentwicklung ansehen",
     id: "personalentwicklung",
+    shortcut: "Personalentwicklung",
     icon: "building" as const,
   },
   {
     eyebrow: "Workshops & Vorträge",
-    title: "Wissen gemeinsam weitergeben",
+    title: "Gemeinsam lernen",
     text: "Für Wissenstransfer, Lernimpulse und konkrete Themen in Gruppen.",
     href: "leistungen#angebotsfinder",
     link: "Zum Angebotsfinder",
     id: "gruppenformate",
+    shortcut: "Workshops & Vorträge",
     icon: "users" as const,
   },
 ];
@@ -83,49 +86,23 @@ const faqs = [
   title="Leistungen | Competence Hub"
   description="Competence Hub verbindet Privatpersonen und Unternehmen mit Mindforge Coaching und Beratung, Recruiting, Assessment Center, Supervision, Mediation und Gruppenformaten."
 >
-  <main class="subpage">
-    <ConnectedPageHero
-      eyebrow="Leistungen"
-      title="Das Thema zuerst. Dann die passende Expertise."
-      lead="Coaching, Beratung und Gruppenformate für Unternehmen und Privatpersonen. Wir klären Ihr Anliegen und vermitteln passende Expertise."
-      centerLabel="Leistungen"
-      centerDetail="Passende Formate"
-      centerIcon="briefcase"
-      titleId="services-title"
-      related={[
-        {
-          label: "Mindforge",
-          detail: "Coaching & Beratung",
-          href: "mindforge",
-          icon: "sparkles",
-        },
-        {
-          label: "Recruiting",
-          detail: "Bedarf & Auswahl",
-          href: "#recruiting",
-          icon: "user-round",
-        },
-        {
-          label: "Personal",
-          labelSuffix: "entwicklung",
-          detail: "Potenziale & Entwicklung",
-          href: "#personalentwicklung",
-          icon: "building",
-        },
-        {
-          label: "Workshops & Vorträge",
-          detail: "Gemeinsam lernen",
-          href: "#gruppenformate",
-          icon: "users",
-        },
-      ]}
-    >
-      <div slot="actions" class="actions">
-        <a class="button" href="#angebotsfinder">Angebote finden</a>
-        <a class="button button--ghost" href={url("mindforge")}>Mindforge entdecken</a>
-        <a class="button button--ghost" href={url("unternehmen")}>Für Unternehmen</a>
+  <main class="subpage services-page">
+    <section class="services-intro" aria-labelledby="services-title">
+      <div>
+        <p class="eyebrow">Leistungen</p>
+        <h1 id="services-title">Das passende Angebot finden</h1>
+        <p>Coaching, Beratung und Gruppenformate für Unternehmen und Privatpersonen.</p>
+        <a class="button" href="#angebotsfinder">Zum Angebotsfinder</a>
       </div>
-    </ConnectedPageHero>
+      <nav class="services-shortcuts" aria-labelledby="services-title-connections">
+        <h2 id="services-title-connections">Leistungsbereiche</h2>
+        <ul role="list">
+          {services.map((service) => (
+            <li><a href={`#${service.id}`}><Icon name={service.icon} size={22} /> <span>{service.shortcut}</span> <Icon name="arrow-right" size={18} /></a></li>
+          ))}
+        </ul>
+      </nav>
+    </section>
 
     <OfferingFinder entries={finderEntries}>
       <Fragment slot="local-demo">{__WEBSITE_V2_LOCAL__ && <DemoOffer />}</Fragment>
@@ -146,15 +123,6 @@ const faqs = [
       ))}
     </section>
 
-    <section class="cta-panel">
-      <div>
-        <p class="eyebrow">Noch unsicher?</p>
-        <h2>Wir ordnen Ihr Anliegen gemeinsam ein.</h2>
-        <p>Eine kurze Beschreibung reicht für eine erste Empfehlung.</p>
-      </div>
-      <a class="button" href={url("kontakt")}>Bedarf klären</a>
-    </section>
-
     <section class="faq-section" aria-labelledby="services-faq-title">
       <div class="section-heading">
         <p class="eyebrow">FAQ</p>
@@ -169,12 +137,46 @@ const faqs = [
         ))}
       </div>
     </section>
+
+    <section class="services-contact" aria-labelledby="services-contact-title">
+      <div>
+        <h2 id="services-contact-title">Noch unsicher?</h2>
+        <p>Frau Rappelt hilft Ihnen, Ihr Anliegen einzuordnen und eine passende Leistung zu finden.</p>
+      </div>
+      <a class="button" href={url("kontakt")}>Bedarf mit Frau Rappelt klären</a>
+    </section>
   </main>
 </BaseLayout>
 
 <style>
-  .service-index { padding-block: 36px; }
+  .services-page :is(h1, h2, h3, a) { overflow-wrap: anywhere; }
+  .services-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 2rem 4rem;
+    padding-block: 1rem 0;
+  }
+  .services-intro h1 { max-width: 17ch; font-size: 3.5rem; line-height: 1.1; }
+  .services-intro .eyebrow, .services-shortcuts a :global(svg) { color: var(--color-pantone-deep); }
+  .services-shortcuts h2 { font-size: 1.25rem; line-height: 1.3; margin-bottom: .65rem; }
+  .services-shortcuts ul { list-style: none; margin: 0; padding: 0; }
+  .services-shortcuts a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: .75rem;
+    border-top: 1px solid var(--color-line);
+    min-height: 44px;
+    padding: .55rem .5rem;
+    font-weight: 750;
+  }
+  .services-shortcuts a:hover { background: var(--color-soft); }
+  .services-shortcuts a:hover span { text-decoration: underline; text-underline-offset: .17em; }
+  .services-shortcuts a:focus-visible { outline-offset: -3px; }
+  .service-index { padding-block: 1.5rem 2.5rem; scroll-margin-top: 9rem; }
   .service-index > h2 { margin: 0 0 22px; }
+  .service-index > h2, .services-contact h2 { font-size: 2rem; line-height: 1.22; }
   .service-row {
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
@@ -184,14 +186,30 @@ const faqs = [
     scroll-margin-top: 144px;
   }
   .service-row:last-child { border-bottom: 1px solid var(--color-line); }
-  .service-row__heading { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; }
+  .service-row__heading { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; }
   .service-row__mark { color: var(--color-pantone-deep); padding-top: 4px; }
   .service-row :is(h3, p) { margin: 0; overflow-wrap: anywhere; }
   .service-row h3 { font-size: 1.4rem; line-height: 1.3; }
   .service-row .eyebrow { margin-bottom: 6px; color: var(--color-pantone-deep); }
   .service-row .text-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
   .service-row .text-link :global(svg) { flex: none; }
-  @media (max-width: 720px) {
-    .service-row { grid-template-columns: minmax(0, 1fr); }
+  .services-contact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem 2rem;
+    border-top: 1px solid var(--color-line);
+    padding-block: 1.75rem .75rem;
+  }
+  .services-contact p { max-width: 55ch; margin: 0; }
+  @media (max-width: 54rem) {
+    .services-intro { gap: 1.75rem; }
+    .services-intro h1 { font-size: 2.65rem; }
+  }
+  @media (max-width: 42rem) {
+    .service-row, .services-intro { grid-template-columns: minmax(0, 1fr); }
+    .services-intro { padding-block-start: .25rem; }
+    .services-intro h1 { font-size: 2.3rem; }
   }
 </style>

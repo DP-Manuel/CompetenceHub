@@ -76,9 +76,14 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
     <div class="profile-chapter-content">
       {copy ? (
         <div class="profile-disclosures">
-          {copy.topics.map(({ title, text }) => (
+          {copy.topics.map(({ title, preview, text }) => (
             <details>
-              <summary>{title}</summary>
+              <summary>
+                <span>
+                  <strong>{title}</strong>
+                  <span class="profile-topic-preview">{preview}</span>
+                </span>
+              </summary>
               <div class="profile-disclosure-body">
                 <p>{text}</p>
                 {offerTitles.includes(title) && (
@@ -125,28 +130,33 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
         <div class="profile-chapter-heading">
           <p class="profile-kicker">Hintergrund &amp; Qualifikation</p>
           <h2 id="profile-background">{copy.backgroundHeading}</h2>
-          <p>{copy.background}</p>
         </div>
         <div class="profile-chapter-content">
-          <p class="profile-byline">{copy.byline}</p>
           <div class="profile-disclosures">
             <details>
-              <summary>Qualifikationen und berufliche Stationen</summary>
+              <summary><span>Qualifikationen und berufliche Stationen</span></summary>
               <div class="profile-disclosure-body">
+                <p>{copy.background}</p>
+                <p>{copy.byline}</p>
                 <ul>{copy.qualifications.map((entry) => <li>{entry}</li>)}</ul>
               </div>
             </details>
+            {copy.quote && (
+              <details>
+                <summary><span>Haltung und Leitsatz</span></summary>
+                <div class="profile-disclosure-body">
+                  {copy.perspective && <p>{copy.perspective}</p>}
+                  <figure class="profile-quote">
+                    <blockquote><p>„{copy.quote}“</p></blockquote>
+                    <figcaption>{coach.name}</figcaption>
+                  </figure>
+                </div>
+              </details>
+            )}
           </div>
         </div>
       </div>
     </section>
-  )}
-
-  {copy?.quote && (
-    <figure class="profile-wrap profile-quote">
-      <blockquote><p>„{copy.quote}“</p></blockquote>
-      <figcaption>{coach.name}</figcaption>
-    </figure>
   )}
 
   <section class="profile-contact" aria-labelledby="profile-contact">
@@ -215,6 +225,7 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
 
   .profile-heading {
     grid-area: heading;
+    align-self: end;
   }
 
   .profile-lede {
@@ -292,6 +303,7 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
     display: block;
     inline-size: 100%;
     block-size: auto;
+    border-radius: 8px 8px 0 0;
   }
 
   .profile-portrait figcaption {
@@ -394,7 +406,6 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
     line-height: 1.65;
   }
 
-  .profile-chapter-content .profile-byline,
   .profile-contact .profile-chapter-content > p {
     margin: 0 0 1.05rem;
   }
@@ -441,8 +452,19 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
   .profile-disclosures summary:hover,
   .profile-disclosures details[open] summary {
     color: var(--profile-deep);
+  }
+
+  .profile-disclosures summary:hover > span {
     text-decoration: underline;
     text-underline-offset: .2em;
+  }
+
+  .profile-topic-preview {
+    display: block;
+    margin-block-start: .2rem;
+    color: var(--profile-muted);
+    font-size: .9375rem;
+    font-weight: 400;
   }
 
   .profile-disclosure-body {
@@ -453,6 +475,10 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
   .profile-disclosure-body ul,
   .profile-focus-list {
     margin: 0;
+  }
+
+  .profile-disclosure-body p + :is(p, ul) {
+    margin-block-start: .8rem;
   }
 
   .profile-disclosure-body ul,
@@ -473,7 +499,7 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
   .profile-calendar :global(.upcoming-events) { padding-inline: 0; }
 
   .profile-quote {
-    padding-block: 2.75rem;
+    margin: .9rem 0 0;
   }
 
   .profile-quote blockquote {
@@ -481,12 +507,14 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
     padding-inline-start: 1.15rem;
     margin: 0;
     border-inline-start: 3px solid var(--profile-deep);
-    font-size: 1.5rem;
+    font-size: 1.125rem;
     line-height: 1.45;
   }
 
   .profile-quote p {
     margin: 0;
+    color: var(--profile-ink);
+    line-height: inherit;
   }
 
   .profile-quote figcaption {
@@ -566,12 +594,5 @@ const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice
       font-size: 1.125rem;
     }
 
-    .profile-quote {
-      padding-block: 2rem;
-    }
-
-    .profile-quote blockquote {
-      font-size: 1.25rem;
-    }
   }
 </style>

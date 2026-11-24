@@ -29,6 +29,7 @@ def hub_geometry(page):
       const hero = document.querySelector('.living-hero--homepage');
       const nodes = [...hero.querySelectorAll('[data-hub-graph] [data-node]')];
       const copy = [...hero.querySelectorAll('.living-hero__homepage-intro, .living-hero__actions a')];
+      const circles = getComputedStyle(hero.querySelector('.hub-graph__connections')).display !== 'none';
       const box = node => node.getBoundingClientRect();
       const overlaps = (a, b) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 &&
         Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1;
@@ -38,7 +39,11 @@ def hub_geometry(page):
         if (a.width < 44 || a.height < 44 || a.left < -1 ||
           a.right > document.documentElement.clientWidth + 1) errors.push([id, 'target']);
         for (const other of [...nodes.slice(i + 1), ...copy]) {
-          if (overlaps(a, box(other))) errors.push([id, other.dataset.node ?? other.textContent.trim()]);
+          const b = box(other);
+          const collision = circles && other.dataset.node
+            ? Math.hypot(a.x + a.width/2 - b.x - b.width/2, a.y + a.height/2 - b.y - b.height/2) + 1 < (a.width+b.width)/2
+            : overlaps(a,b);
+          if (collision) errors.push([id, other.dataset.node ?? other.textContent.trim()]);
         }
         const texts = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
         for (let text; (text = texts.nextNode());) {
@@ -77,12 +82,16 @@ def home(page, base, bust=""):
     audience = page.get_by_role("navigation", name="Direkte Einstiege")
     expect(audience.get_by_role("link", name="Für Unternehmen")).to_have_attribute("href", "/CompetenceHub/unternehmen")
     expect(audience.get_by_role("link", name="Für Privatpersonen")).to_have_attribute("href", "/CompetenceHub/mindforge#privatpersonen")
+    portrait_sizes = []
     for slug in VISIBLE:
         card = page.locator(f'[data-spotlight-coach="{slug}"]')
         expect(card.locator("h3 a")).to_have_attribute("href", f"/CompetenceHub/coaches/{slug}")
         card.locator("img").scroll_into_view_if_needed()
         expect(card.locator("img")).to_have_js_property("complete", True)
         assert card.locator("img").evaluate("(img) => img.naturalWidth > 0")
+        box = card.locator(".portrait-story__image").bounding_box()
+        portrait_sizes.append((box["width"], box["height"]))
+    assert all(abs(a - b) < 0.1 for a, b in zip(*portrait_sizes)), portrait_sizes
     page.evaluate("window.scrollTo(0, 0)")
     expect(page.locator("#anfrage a.button")).to_have_attribute("href", "/CompetenceHub/kontakt")
 
@@ -96,6 +105,105 @@ def profile(page, base, slug, bust=""):
     expect(page.locator("#angebote")).to_be_visible()
     expect(page.locator("#aktuelle-termine")).to_contain_text("keine Termine veröffentlicht")
     expect(page.locator("main a[href^='mailto:']").first).to_be_visible()
+    topic = page.locator("#angebote details > summary").first
+    topic.focus()
+    topic.press("Enter")
+    expect(topic.locator("xpath=..")).to_have_attribute("open", "")
+    fit(page)
+
+
+def drag_network(page, base, folder, prefix):
+    graph = page.locator(".hub-graph--homepage")
+    graph.scroll_into_view_if_needed()
+    expect(graph).to_have_attribute("data-hub-draggable", "")
+    node = graph.locator('[data-node="unternehmen"]')
+    reset = page.get_by_role("button", name="Ansicht zurücksetzen")
+    starting_path = graph.locator('[data-from="core"][data-to="unternehmen"]').get_attribute("d")
+    start = page.url
+
+    def center():
+        rect = node.bounding_box()
+        return rect["x"] + rect["width"] / 2, rect["y"] + rect["height"] / 2
+
+    def geometry():
+        graph.evaluate("""(graph) => {
+          const svg = graph.querySelector('svg.hub-graph__connections');
+          const bounds = graph.getBoundingClientRect();
+          const points = new Map([...graph.querySelectorAll('[data-node]')].map((node) => {
+            const rect = node.getBoundingClientRect();
+            return [node.dataset.node, {x:rect.x + rect.width/2, y:rect.y + rect.height/2, r:rect.width/2}];
+          }));
+          for (const [id, p] of points) {
+            if (p.x - p.r < bounds.left || p.x + p.r > bounds.right ||
+                p.y - p.r < bounds.top || p.y + p.r > bounds.bottom) throw Error('outside: ' + id);
+            for (const [other, q] of points) {
+              if (other !== id && Math.hypot(p.x-q.x, p.y-q.y) < p.r+q.r) throw Error(id+' overlaps '+other);
+            }
+          }
+          for (const path of svg.querySelectorAll('[data-edge]')) {
+            for (const [id, distance] of [[path.dataset.from,0],[path.dataset.to,path.getTotalLength()]]) {
+              const actual = path.getPointAtLength(distance).matrixTransform(svg.getScreenCTM());
+              const target = points.get(id);
+              if (Math.hypot(actual.x-target.x, actual.y-target.y)>1.5) throw Error('edge detached from '+id);
+            }
+          }
+        }""")
+
+    geometry()
+    ox, oy = center()
+    page.mouse.move(ox, oy)
+    page.mouse.down()
+    page.mouse.move(ox + 38, oy - 51, steps=6)
+    expect(graph).to_have_attribute("data-dragging", "unternehmen")
+    expect(graph.locator('[data-from="core"][data-to="unternehmen"]')).not_to_have_attribute("d", starting_path)
+    geometry()
+    assert node.evaluate("(node) => getComputedStyle(node).cursor") == "grabbing"
+    if page.viewport_size["width"] == 1440:
+        graph.screenshot(path=folder / f"{prefix}-hub-drag-1440.png", animations="disabled")
+    page.mouse.up()
+    assert page.url == start
+    expect(reset).to_have_attribute("aria-disabled", "false")
+    assert abs(center()[0] - ox) > 20
+    geometry()
+
+    # A coarse event which ends outside the canvas must stay captured and not navigate.
+    x, y = center()
+    page.mouse.move(x, y)
+    page.mouse.down()
+    page.mouse.move(1, y, steps=1)
+    page.mouse.up()
+    assert page.url == start
+    assert center()[0] < x - 10
+    geometry()
+
+    width = page.viewport_size["width"]
+    x, y = center()
+    page.mouse.move(x, y)
+    page.mouse.down()
+    page.mouse.move(width - 2, y, steps=1)
+    page.mouse.up()
+    assert page.url == start
+    assert center()[0] < width / 2
+    geometry()
+
+    page.set_viewport_size({"width": 768, "height": 900})
+    expect(reset).to_be_hidden()
+    hub_geometry(page)
+    page.set_viewport_size({"width": width, "height": 900})
+    expect(reset).to_be_visible()
+    geometry()
+    reset.focus()
+    reset.press("Enter")
+    expect(reset).to_have_attribute("aria-disabled", "true")
+    expect(reset).to_be_focused()
+    expect(graph.locator('[data-from="core"][data-to="unternehmen"]')).to_have_attribute("d", starting_path)
+    graph.scroll_into_view_if_needed()
+    x, y = center()
+    page.mouse.move(x, y)
+    page.mouse.down()
+    page.mouse.move(x + 3, y)
+    page.mouse.up()
+    expect(page).to_have_url(re.compile(re.escape(base + "unternehmen") + "/?$"))
 
 
 def keyboard_and_hover(page, base, width):
@@ -122,7 +230,7 @@ def keyboard_and_hover(page, base, width):
     expect(page.locator(".hub-journey--compact [data-journey-step]")).to_have_count(4)
 
 
-def navigation(page, base):
+def navigation(page, base, folder, prefix, width):
     enter(page, base, "leistungen/")
     expect(page.locator("#finder-coach option")).to_have_count(3)
     expect(page.locator("[data-finder-entry]:visible")).to_have_count(4)
@@ -140,6 +248,10 @@ def navigation(page, base):
     expect(page.locator("[data-finder-empty]")).to_be_visible()
     page.locator(".finder-reset").click()
     expect(page.locator("[data-finder-entry]:visible")).to_have_count(4)
+    page.screenshot(path=folder / f"{prefix}-leistungen-{width}.png", full_page=True, animations="disabled")
+    page.locator("#finder-query").fill("Rhetorik & Vertrieb")
+    expect(page.locator("[data-finder-entry]:visible")).to_have_count(0)
+    expect(page.locator("[data-finder-empty] a[href='/CompetenceHub/kontakt']")).to_be_visible()
     for anchor in ("recruiting", "personalentwicklung", "gruppenformate"):
         expect(page.locator("#" + anchor)).to_be_visible()
     enter(page, base, "coaches/")
@@ -159,6 +271,10 @@ def navigation(page, base):
         expect(page.get_by_role("navigation", name="Hauptnavigation", exact=True).get_by_text("Coaches", exact=True)).to_have_attribute("aria-current", "page")
     for route in ("unternehmen/", "mindforge/", "kontakt/"):
         enter(page, base, route)
+        if route == "unternehmen/":
+            page.locator("img").evaluate_all("(imgs) => imgs.forEach((img) => img.loading = 'eager')")
+            page.wait_for_function("Array.from(document.images).every((img) => img.complete)")
+            page.screenshot(path=folder / f"{prefix}-unternehmen-{width}.png", full_page=True, animations="disabled")
     for scheme in ("mailto", "tel"):
         expect(page.locator(f'.contact-direct-links a[href^="{scheme}:"]').first).to_be_visible()
     for label, target in (
@@ -212,12 +328,13 @@ def main():
     parser.add_argument("--screenshots", required=True, type=Path)
     parser.add_argument("--prefix", default="after")
     parser.add_argument("--bust", default="website-evolution")
+    parser.add_argument("--browser", choices=("firefox", "edge"), default="firefox")
     args = parser.parse_args()
     base = args.base.rstrip("/") + "/"
     args.screenshots.mkdir(exist_ok=True, parents=True)
     errors = []
     with sync_playwright() as playwright:
-        browser = playwright.firefox.launch()
+        browser = playwright.firefox.launch() if args.browser == "firefox" else playwright.chromium.launch(channel="msedge")
         for width in WIDTHS:
             context = browser.new_context(viewport={"width": width, "height": 900}, reduced_motion="reduce")
             page = context.new_page()
@@ -230,19 +347,32 @@ def main():
             if width in (390, 1440):
                 page.screenshot(path=args.screenshots / f"{args.prefix}-home-{width}.png", full_page=True, animations="disabled")
                 keyboard_and_hover(page, base, width)
+            if width in (1024, 1440, 1920):
+                drag_network(page, base, args.screenshots, args.prefix)
+            else:
+                expect(page.locator("[data-hub-tools]")).to_be_hidden()
             for slug in VISIBLE:
                 profile(page, base, slug, args.bust)
                 if width in (390, 1440):
                     label = "galvano" if slug.startswith("christian") else "rodriguez"
                     page.screenshot(path=args.screenshots / f"{args.prefix}-{label}-{width}.png", full_page=True, animations="disabled")
             if width in (390, 1440):
-                navigation(page, base)
+                navigation(page, base, args.screenshots, args.prefix, width)
             if width == 1440:
                 public_artifact(page, base, args.bust)
             context.close()
-            print(f"Firefox {width}px: PASS")
+            print(f"{args.browser} {width}px: PASS")
+        if args.browser == "edge":
+            with browser.new_context(viewport={"width": 768, "height": 900}, has_touch=True, is_mobile=True) as context:
+                touch = context.new_page()
+                home(touch, base, args.bust)
+                expect(touch.locator("[data-hub-tools]")).to_be_hidden()
+                touch.locator('[data-node="unternehmen"]').tap()
+                expect(touch).to_have_url(re.compile(re.escape(base + "unternehmen") + "/?$"))
+            print("Touch navigation: PASS")
         browser.close()
-        native_zoom(playwright, base, args.screenshots, args.prefix)
+        if args.browser == "firefox":
+            native_zoom(playwright, base, args.screenshots, args.prefix)
     failures = [error for error in errors if "NS_BINDING_ABORTED" not in error]
     assert not failures, failures
     print("WEBSITE_EVOLUTION_BROWSER=PASS")

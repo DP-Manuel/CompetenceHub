@@ -12,19 +12,19 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
 ---
 <section class="offering-finder" id="angebotsfinder" aria-labelledby="finder-title" data-offering-finder>
   <header class="finder-heading">
-    <div><p class="eyebrow">Angebotsfinder</p><h2 id="finder-title">Was möchten Sie bewegen?</h2></div>
-    <p>Coaching, Workshops und Impulse für Ihren nächsten Schritt. Termine und Durchführung stimmen wir persönlich ab.</p>
+    <h2 id="finder-title">Angebotsfinder</h2>
+    <p>Termine und Durchführung stimmen wir persönlich ab.</p>
   </header><slot name="local-demo" />
   <form class="finder-filters" aria-label="Angebote filtern" data-finder-form hidden>
     <div class="finder-filter-row">
-      <div><label for="finder-query">Angebot oder Coach</label><input id="finder-query" type="search" name="query" maxlength="80" autocomplete="off" placeholder="Zum Beispiel Stress oder Führung" aria-controls="finder-results" /></div>
+      <div><label for="finder-query">Thema, Angebot oder Coach</label><input id="finder-query" type="search" name="query" maxlength="80" autocomplete="off" placeholder="Z. B. Stress oder Führung" aria-controls="finder-results" /></div>
       <div><label for="finder-audience">Zielgruppe</label><select id="finder-audience" name="audience" aria-controls="finder-results"><option value="all">Alle Zielgruppen</option>{finderAudiences.map((audience) => <option value={audience.id}>{audience.label}</option>)}</select></div>
       <div><label for="finder-format">Format</label><select id="finder-format" name="format" aria-controls="finder-results"><option value="all">Alle Formate</option>{finderFormats.map((format) => <option value={format.id}>{format.label}</option>)}</select></div>
       <div><label for="finder-coach">Coach</label><select id="finder-coach" name="coach" aria-controls="finder-results"><option value="all">Alle Coaches</option>{finderCoaches.map((coach) => <option value={coach.profilePath}>{coach.name}</option>)}</select></div>
     </div>
     <div class="finder-filter-actions">
       <details class="finder-topics">
-        <summary>Themen und Kategorien</summary>
+        <summary>Themen und Kategorien <span class="finder-topic-active" data-finder-topic-active hidden></span></summary>
         <div class="finder-topic-options">
           <label for="finder-category">Kategorie</label><select id="finder-category" name="category"><option value="all">Alle Kategorien</option>{categories.map((category) => <option value={category.id}>{category.label}</option>)}</select>
           <fieldset><legend>Themenschwerpunkte</legend>
@@ -36,7 +36,7 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
     </div>
   </form>
   <div class="finder-result-heading"><p data-finder-status role="status" aria-live="polite" aria-atomic="true">{entries.length} Angebote</p><nav aria-label="Weitere Wege zum passenden Angebot"><a href={url("coaches")}>Zum Coach-Netzwerk <Icon name="arrow-right" size={18} /></a><a href={__WEBSITE_V2_LOCAL__ ? publicCalendarPath : url("kalender")}>Veranstaltungskalender <Icon name="arrow-right" size={18} /></a></nav></div>
-  <ul class="finder-results" id="finder-results">
+  <ul class="finder-results" id="finder-results" role="list">
     {entries.map((entry) => (
       <li data-finder-entry={entry.id}>
         <article>
@@ -76,19 +76,21 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
   <script is:inline type="application/json" data-finder-data set:html={JSON.stringify(entries).replace(/</g, "\\u003c")} />
 </section>
 <style is:inline>
-  .offering-finder { margin-block: 48px 64px; border-top: 8px solid var(--color-pantone); padding-top: 28px; scroll-margin-top: 180px; }
+  .offering-finder { margin-block: 40px 48px; border-top: 3px solid var(--color-pantone); padding-top: 24px; scroll-margin-top: 9rem; }
   .offering-finder [hidden] { display: none !important; }
-  .finder-heading { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 24px; margin-bottom: 28px; }
-  .finder-heading h2 { font-size: 2rem; line-height: 1.25; margin: 10px 0 0; }
+  .finder-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-bottom: 16px; }
+  .finder-heading h2 { font-size: 2rem; line-height: 1.25; margin: 0; }
   .finder-heading p { margin-bottom: 0; }
-  .finder-filters { background: var(--color-soft); padding: 24px; border-block: 1px solid var(--color-line); }
+  .finder-filters { background: var(--color-soft); padding: 18px 20px 8px; border-block: 1px solid var(--color-line); }
   .finder-filter-row { display: grid; grid-template-columns: minmax(0,1.3fr) repeat(3,minmax(0,1fr)); gap: 20px; }
   .finder-filters label { display: block; font-weight: 750; min-width: 0; }
-  .finder-filters input[type="search"], .finder-filters select { display: block; width: 100%; min-width: 0; min-height: 48px; margin-top: 8px; border: 2px solid var(--color-line); background: white; color: var(--color-dark); padding: 10px 12px; border-radius: 4px; font: inherit; font-weight: 400; }
-  .finder-filter-actions { display: flex; justify-content: space-between; align-items: start; gap: 24px; margin-top: 18px; }
+  .finder-filters input[type="search"], .finder-filters select { display: block; width: 100%; min-width: 0; min-height: 46px; margin-top: 6px; border: 1px solid var(--color-pantone-deep); background: white; color: var(--color-dark); padding: 6px 10px; border-radius: 4px; font: inherit; font-weight: 400; }
+  .finder-filter-actions { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 4px 24px; margin-top: 8px; }
   .finder-topics { flex: 1; min-width: 0; }
   .finder-topics summary { padding-block: 10px; cursor: pointer; font-weight: 750; min-height: 44px; }
-  .finder-topic-options { padding-block: 16px; max-width: 800px; }
+  .finder-topic-active { color: var(--color-pantone-deep); font-size: .9rem; }
+  .finder-topic-options { padding-block: 4px 12px; max-width: 800px; }
+  .finder-topic-options select { max-width: 24rem; }
   .finder-topic-options fieldset { border: 0; padding: 20px 0 0; margin: 0; min-width: 0; }
   .finder-topic-options legend { font-weight: 750; padding-top: 20px; }
   .finder-topic-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; }
@@ -98,10 +100,12 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
   .finder-result-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px 24px; align-items: center; padding-block: 24px 16px; }
   .finder-result-heading p { font-weight: 750; margin: 0; }
   .finder-result-heading nav { display: flex; flex-wrap: wrap; gap: 12px 24px; }
-  .finder-result-heading a, .offering-finder .text-link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; }
+  .finder-result-heading a, .offering-finder .text-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+  .finder-result-heading a { color: var(--color-pantone-deep); text-decoration: underline; text-underline-offset: .2em; }
   .finder-results { list-style: none; padding: 0; margin: 0; }
   .finder-results > li { border-top: 1px solid var(--color-line); }
-  .finder-offer > summary { display: grid; grid-template-columns: minmax(0,1fr) minmax(200px,280px) 24px; align-items: center; gap: 24px; padding: 20px 12px; cursor: pointer; list-style: none; }
+  .finder-offer > summary { display: grid; grid-template-columns: minmax(0,1fr) minmax(10rem,16rem) 24px; align-items: center; gap: 18px; padding: 14px 12px; cursor: pointer; list-style: none; }
+  .finder-offer > summary:hover, .finder-offer[open] > summary { background: var(--color-soft); }
   .finder-offer > summary::-webkit-details-marker { display: none; }
   .finder-offer > summary::after { content: "+"; font-size: 1.6rem; text-align: center; color: var(--color-pantone-deep); }
   .finder-offer[open] > summary::after { content: "−"; }
@@ -121,14 +125,15 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
   .finder-boundary { border-left: 3px solid var(--color-pantone); padding-left: 16px; font-size: .95rem; }
   .finder-empty { border-top: 1px solid var(--color-line); padding-block: 24px; }
   .finder-empty h3 { font-size: 1.3rem; line-height: 1.4; }
-  .finder-empty a { margin-right: 24px; }
+  .finder-empty a { width: fit-content; margin-right: min(24px, 4%); }
   .finder-more { margin-top: 20px; }
   .offering-finder :is(p,span,strong,h2,h3,h4,dd,a) { overflow-wrap: anywhere; min-width: 0; }
   .offering-finder :is(input,select,summary,button,a):focus-visible { outline: 3px solid var(--color-dark); outline-offset: 4px; }
   .finder-offer > summary:focus-visible { outline-offset: -3px; }
-  @media (min-width: 901px) and (max-width: 1200px) { .finder-filter-row { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } }
-  @media (max-width: 900px) { .finder-heading, .finder-filter-row { grid-template-columns: minmax(0,1fr); } .finder-offer > summary { grid-template-columns: minmax(0,1fr) 24px; gap: 12px 16px; } .finder-coach { grid-row: 2; } .finder-offer > summary::after { grid-column: 2; grid-row: 1 / span 2; } }
-  @media (max-width: 520px) { .finder-filters { padding: 18px 14px; } .finder-filter-actions { flex-direction: column; gap: 8px; } .finder-topics { width: 100%; } .finder-topic-checks { grid-template-columns: minmax(0,1fr); } .finder-formats dl > div { grid-template-columns: minmax(0,1fr); gap: 2px; } }
+  @media (max-width: 55rem) { .finder-filter-row { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px 16px; } }
+  @media (max-width: 42rem) { .finder-offer > summary { grid-template-columns: minmax(0,1fr) 24px; gap: 8px 12px; } .finder-coach { grid-row: 2; } .finder-offer > summary::after { grid-column: 2; grid-row: 1 / span 2; } }
+  @media (max-width: 34rem) { .finder-filters { padding: 12px 14px 6px; } .finder-filter-row > :first-child { grid-column: 1 / -1; } .finder-filter-row > :last-child { grid-column: 1 / -1; } .finder-topic-checks { grid-template-columns: minmax(0,1fr); } .finder-formats dl > div { grid-template-columns: minmax(0,1fr); gap: 2px; } }
+  @media (max-width: 23rem) { .finder-filter-row { grid-template-columns: minmax(0,1fr); } .finder-topics { flex-basis: 100%; } }
 </style>
 <script>
   import { filterFinder, finderFormats, finderCoachFromQuery, emptyFinderSelection, type FinderEntry, type FinderSelection } from "./offering-finder-model";
@@ -140,6 +145,7 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
     const status = root.querySelector<HTMLElement>("[data-finder-status]")!;
     const category = form.querySelector<HTMLSelectElement>("#finder-category")!;
     const topicOptions = [...form.querySelectorAll<HTMLLabelElement>("[data-topic-categories]")];
+    const activeTopicLabel = form.querySelector<HTMLElement>("[data-finder-topic-active]")!;
     let limit = 8;
     function render() {
       topicOptions.forEach((label) => {
@@ -152,6 +158,11 @@ const finderCoaches = [...new Map(entries.map((entry) => [entry.coach.profilePat
       const selection: FinderSelection = { ...emptyFinderSelection(), query: String(values.get("query") ?? ""),
         audience: String(values.get("audience")), format: String(values.get("format")),
         category: values.get("category") as FinderSelection["category"], topics: values.getAll("topic").map(String), coach: String(values.get("coach")) };
+      const topicCount = selection.topics.length;
+      activeTopicLabel.textContent = topicCount
+        ? `· ${topicCount} ${topicCount === 1 ? "Thema" : "Themen"} ausgewählt`
+        : selection.category === "all" ? "" : "· 1 Kategorie ausgewählt";
+      activeTopicLabel.hidden = !activeTopicLabel.textContent;
       const matches = filterFinder(entries, selection);
       const visible = new Map(matches.slice(0, limit).map((match) => [match.entry.id, match.formats.map((format) => format.id)]));
       rows.forEach((row) => {

@@ -2,11 +2,12 @@ export interface EditorialProfileCopy {
   description: string;
   byline: string;
   intro: string;
+  perspective?: string;
   portraitAlt: string;
   portraitCaption: string;
   topicsHeading: string;
   audience: string;
-  topics: readonly { title: string; text: string }[];
+  topics: readonly { title: string; preview: string; text: string }[];
   backgroundHeading: string;
   background: string;
   qualifications: readonly string[];
@@ -25,12 +26,12 @@ export const editorialProfileCopy = new Map<string, EditorialProfileCopy>([
     intro: "Seine Angebote verbinden Erkenntnisse aus Neurowissenschaft und Psychologie mit konkreten Werkzeugen für Führung, Kommunikation, Veränderung und gesundes Arbeiten.",
     portraitAlt: "Porträt von Herrn Christian Galvano",
     portraitCaption: "Neurowissenschaften · Führung · Prävention",
-    topicsHeading: "Wissen, das im Arbeitsalltag Wirkung entfaltet",
+    topicsHeading: "Führung, Zusammenarbeit und Prävention",
     audience: "Die Inhalte richten sich an Unternehmen, Führungskräfte und Teams, die Veränderung verstehen und verantwortungsvoll gestalten möchten.",
     topics: [
-      { title: "Neuroleadership", text: "Neurowissenschaftlich fundierte Impulse für Führung, Mitarbeitermotivation, Veränderung und mentale Stärke." },
-      { title: "Konfliktmanagement", text: "Praxisnahe Kommunikations- und Verhandlungsstrategien für konstruktive Konfliktklärung und Zusammenarbeit." },
-      { title: "Stress- und Burnoutprävention", text: "Stressmechanismen verstehen, Ressourcen stärken und wirksame Methoden für einen gesunden Arbeitsalltag anwenden." },
+      { title: "Neuroleadership", preview: "Führen und motivieren in Veränderungsphasen", text: "Neurowissenschaftlich fundierte Impulse für Führung, Mitarbeitermotivation, Veränderung und mentale Stärke." },
+      { title: "Konfliktmanagement", preview: "Konflikte klären und Zusammenarbeit stärken", text: "Praxisnahe Kommunikations- und Verhandlungsstrategien für konstruktive Konfliktklärung und Zusammenarbeit." },
+      { title: "Stress- und Burnoutprävention", preview: "Stress verstehen und Ressourcen stärken", text: "Stressmechanismen verstehen, Ressourcen stärken und wirksame Methoden für einen gesunden Arbeitsalltag anwenden." },
     ],
     backgroundHeading: "Fachliche Grundlage",
     background: "Herr Christian Galvano arbeitet an der Schnittstelle von Neurowissenschaften, Erwachsenenbildung und beruflicher Entwicklung.",
@@ -50,15 +51,16 @@ export const editorialProfileCopy = new Map<string, EditorialProfileCopy>([
   ["coaches/manuela-rodriguez", {
     description: "Manuela Rodríguez verbindet KI-Kompetenz, Digitalstrategie, Didaktik, Psychoedukation und Coaching für eine menschenzentrierte Arbeitswelt.",
     byline: "Zertifizierte KI-Managerin mit Fokus auf Human Intelligence, Leitung Digitalstrategie, Dozentin, Moderatorin, Speakerin und Coach.",
-    intro: "Manuela Rodríguez verbindet verantwortungsvolle KI-Transformation mit Lehre und persönlicher Entwicklung. Im Mittelpunkt steht eine Arbeitswelt, in der Technologie Menschen stärkt, statt sie zu ersetzen.",
+    intro: "Manuela Rodríguez verbindet verantwortungsvolle KI-Transformation mit Lehre und persönlicher Entwicklung.",
+    perspective: "Im Mittelpunkt steht eine Arbeitswelt, in der Technologie Menschen stärkt, statt sie zu ersetzen.",
     portraitAlt: "Porträt von Manuela Rodríguez",
     portraitCaption: "KI-Kompetenz · Didaktik · Transformation",
-    topicsHeading: "Technologie menschlich und zukunftsfähig gestalten",
+    topicsHeading: "KI, Lernen und Coaching",
     audience: "Die Angebote richten sich an Unternehmen und Menschen, die KI-Kompetenz aufbauen, Veränderung verantwortungsvoll gestalten und Wissen wirksam in die Praxis übertragen möchten.",
     topics: [
-      { title: "KI-Kompetenz und Verantwortung", text: "KI-Literacy, ethische Standards und praktische Anwendung so vermitteln, dass Menschen Künstliche Intelligenz sicher und sinnvoll einsetzen können." },
-      { title: "Didaktik und Psychoedukation", text: "Komplexe Inhalte verständlich strukturieren und Lernen mit einem klaren Blick auf menschliche Wahrnehmung, Entwicklung und Transfer gestalten." },
-      { title: "Coaching und Kommunikation", text: "NLP, Hypnotherapie und assoziatives Bildercoaching als methodische Zugänge für Reflexion, Veränderung und klare Kommunikation nutzen." },
+      { title: "KI-Kompetenz und Verantwortung", preview: "KI sicher und sinnvoll einsetzen", text: "KI-Literacy, ethische Standards und praktische Anwendung so vermitteln, dass Menschen Künstliche Intelligenz sicher und sinnvoll einsetzen können." },
+      { title: "Didaktik und Psychoedukation", preview: "Komplexes verständlich und anwendbar machen", text: "Komplexe Inhalte verständlich strukturieren und Lernen mit einem klaren Blick auf menschliche Wahrnehmung, Entwicklung und Transfer gestalten." },
+      { title: "Coaching und Kommunikation", preview: "Reflexion, Veränderung und klare Kommunikation", text: "NLP, Hypnotherapie und assoziatives Bildercoaching als methodische Zugänge für Reflexion, Veränderung und klare Kommunikation nutzen." },
     ],
     backgroundHeading: "KI-Management, Lehre und Coaching verbunden",
     background: "Ihr Profil verbindet geisteswissenschaftliche Perspektiven, Erwachsenenbildung, Digitalstrategie und methodische Coachingansätze.",
