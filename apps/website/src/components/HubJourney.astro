@@ -136,6 +136,11 @@ const connections = [
         >
           {compact ? (
             <>
+              {index < steps.length - 1 && (
+                <span class="hub-journey__track" aria-hidden="true">
+                  <span class="hub-journey__fill" data-journey-fill></span>
+                </span>
+              )}
               <span class="hub-journey__milestone" aria-hidden="true">{step.number}</span>
               <div class="hub-journey__summary">
                 <h3>{step.node}</h3>
@@ -166,6 +171,67 @@ const connections = [
 </section>
 
 <script>
+  function trackCompactJourney(journey: HTMLElement) {
+    const steps = [...journey.querySelectorAll<HTMLElement>("[data-journey-step]")];
+    const fills = [...journey.querySelectorAll<HTMLElement>("[data-journey-fill]")];
+    const events = new AbortController();
+    let frame = 0;
+    let active: number | undefined;
+
+    const update = () => {
+      frame = 0;
+      // Use each anchor's own scroll alignment. On desktop the markers share
+      // one row but cross different viewport lines; on mobile they stack.
+      const offsets = steps.map((step) =>
+        step.getBoundingClientRect().top - parseFloat(getComputedStyle(step).scrollMarginTop),
+      );
+      const index = offsets.reduce((current, offset, i) => offset <= 1 ? i : current, -1);
+
+      if (active !== index) {
+        active = index;
+        steps.forEach((step, i) => {
+          if (i === index) step.setAttribute("aria-current", "step");
+          else step.removeAttribute("aria-current");
+        });
+      }
+
+      fills.forEach((fill, i) => {
+        const distance = offsets[i + 1] - offsets[i];
+        const value = distance > 0
+          ? Math.max(0, Math.min(1, -offsets[i] / distance))
+          : Number(i < index);
+        fill.style.setProperty("--journey-fill", String(value));
+      });
+    };
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    const size = new ResizeObserver(schedule);
+    size.observe(document.body);
+    size.observe(journey);
+    steps.forEach((step) => size.observe(step));
+    const listening = { signal: events.signal, passive: true };
+    window.addEventListener("scroll", schedule, listening);
+    window.addEventListener("resize", schedule, listening);
+    window.addEventListener("hashchange", schedule, listening);
+    window.visualViewport?.addEventListener("resize", schedule, listening);
+    window.addEventListener("pagehide", () => {
+      events.abort();
+      size.disconnect();
+      cancelAnimationFrame(frame);
+    }, { signal: events.signal, once: true });
+    schedule();
+  }
+
+  const compactJourneys = document.querySelectorAll<HTMLElement>(".hub-journey--compact[data-hub-journey]");
+  compactJourneys.forEach(trackCompactJourney);
+  if (compactJourneys.length) {
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) compactJourneys.forEach(trackCompactJourney);
+    });
+  }
+
   document.querySelectorAll<HTMLElement>("[data-hub-journey]:not(.hub-journey--compact)").forEach((journey) => {
     const steps = Array.from(
       journey.querySelectorAll<HTMLElement>("[data-journey-step]"),
@@ -271,19 +337,29 @@ const connections = [
     padding: 0;
     border: 0;
     background: none;
+    scroll-margin-top: 62dvh;
   }
 
   .hub-journey--compact .hub-journey__steps li::before {
     display: none;
   }
 
-  .hub-journey--compact .hub-journey__steps li:not(:last-child)::after {
-    content: "";
+  .hub-journey__track {
     position: absolute;
     z-index: 0;
-    inset: calc(var(--journey-marker-size) / 2) auto calc(-1 * var(--journey-gap)) calc(var(--journey-marker-size) / 2);
-    border-left: 2px solid var(--color-line);
+    inset: calc(var(--journey-marker-size) / 2) auto calc(-1 * (var(--journey-gap) + var(--journey-marker-size) / 2)) calc(var(--journey-marker-size) / 2 - 1px);
+    width: 2px;
+    background: var(--color-line);
     pointer-events: none;
+  }
+
+  .hub-journey__fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--color-pantone);
+    transform: scaleY(var(--journey-fill, 0));
+    transform-origin: top;
   }
 
   .hub-journey__milestone {
@@ -302,10 +378,12 @@ const connections = [
     font-variant-numeric: tabular-nums;
   }
 
-  .hub-journey--compact .hub-journey__steps li:last-child .hub-journey__milestone {
+  .hub-journey--compact .hub-journey__steps li[aria-current="step"] .hub-journey__milestone {
     border-color: var(--color-red);
     background: var(--color-red);
     color: var(--color-dark);
+    outline: 2px solid var(--color-dark);
+    outline-offset: 2px;
   }
 
   .hub-journey--compact .hub-journey__summary h3 {
@@ -340,12 +418,26 @@ const connections = [
 
     .hub-journey--compact .hub-journey__steps li {
       grid-template-columns: minmax(0, 1fr);
+      scroll-margin-top: 81dvh;
+    }
+    .hub-journey--compact .hub-journey__steps li:nth-child(2) { scroll-margin-top: 63dvh; }
+    .hub-journey--compact .hub-journey__steps li:nth-child(3) { scroll-margin-top: 45dvh; }
+    .hub-journey--compact .hub-journey__steps li:nth-child(4) { scroll-margin-top: 27dvh; }
+
+    .hub-journey__track {
+      inset: calc(var(--journey-marker-size) / 2 - 1px) calc(-1 * (var(--journey-gap) + var(--journey-marker-size) / 2)) auto calc(var(--journey-marker-size) / 2);
+      width: auto;
+      height: 2px;
     }
 
-    .hub-journey--compact .hub-journey__steps li:not(:last-child)::after {
-      inset: calc(var(--journey-marker-size) / 2) calc(-1 * var(--journey-gap)) auto calc(var(--journey-marker-size) / 2);
-      border-top: 2px solid var(--color-line);
-      border-left: 0;
+    .hub-journey__fill {
+      transform: scaleX(var(--journey-fill, 0));
+      transform-origin: left;
     }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hub-journey__fill { transition: transform 120ms ease-out; }
+    .hub-journey__milestone { transition: background-color 120ms ease-out, color 120ms ease-out; }
   }
 </style>

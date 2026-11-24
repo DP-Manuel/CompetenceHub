@@ -27,6 +27,12 @@ freigegeben. IONOS, VPS, Portal, Datenbank, DNS und E-Mail bleiben unverändert.
   bleiben vorhanden. Auf Pages liefert „Rhetorik & Vertrieb“ einen
   Kontaktweg statt eines zurückgestellten Profils; die bestehende Zuordnung
   im separaten Produktionsbuild bleibt erhalten.
+- Die kompakte Prozessstrecke auf der Startseite hat eine scrollabhängige
+  Linie und genau einen aktiven Schritt nach Erreichen der ersten Station.
+  Dieselben Abstände steuern Ankersprünge und Fortschritt. Beim
+  Zurückscrollen läuft der Fortschritt zurück; Reduced Motion betrifft nur
+  die Übergänge. Der [Browsertest](../../apps/website/scripts/run-visual-recovery-browser.py)
+  prüft echte Scroll-Eingaben, Teilfüllung, Anker, Resize und Zoom.
 
 ## Prüfen und veröffentlichen
 

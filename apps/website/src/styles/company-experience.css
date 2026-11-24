@@ -215,6 +215,21 @@
 
 .business-stories { padding-block: 2.65rem 1.15rem; }
 .business-stories > h2, .business-faq > h2 { margin-bottom: .8rem; }
+.business-stories .business-disclosure {
+  color: var(--color-dark);
+  background: var(--color-white);
+}
+.business-stories .business-disclosure[open] > summary {
+  color: var(--color-pantone-deep);
+  background: var(--color-soft);
+}
+.business-stories .case-story--customer:not([open]) > summary:not(:hover) {
+  color: var(--color-white);
+  background: var(--color-pantone-deep);
+}
+.business-stories .case-story--customer > summary:hover { color: var(--color-pantone-deep); }
+.business-stories .case-story--customer > summary::after { border-color: currentColor; }
+.business-stories .case-story--customer .story-label { color: inherit; }
 .story-label { display: block; font-size: .84rem; font-weight: 650; color: var(--color-pantone-deep); }
 .business-stories .case-story__route { margin-inline: .8rem; }
 .business-stories .case-story__step-copy h3 { font-size: 1.23rem; margin-bottom: .4rem; }

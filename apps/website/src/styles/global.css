@@ -4481,7 +4481,7 @@ p {
   display: none;
 }
 
-.case-story--customer {
+.case-story.case-story--customer {
   border-top-color: var(--color-yellow);
   background: var(--color-pantone-deep);
   color: var(--color-white);
