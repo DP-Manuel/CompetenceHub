@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { createServer } from "vite";
 import { websiteEnvironment } from "../config/environment.mjs";
-import { activeCoachProfiles, pausedCoachSlugs } from "../config/active-coach-publication.mjs";
+import { coachProfilesFor, featuredCoachSlugs, pausedCoachSlugs } from "../config/active-coach-publication.mjs";
 
 const vite = await createServer({
   configFile: false, envDir: false,
@@ -14,7 +14,7 @@ const vite = await createServer({
 });
 after(() => vite.close());
 const { coaches } = await vite.ssrLoadModule("/src/preview/coaches.ts");
-const { coaches: production } = await vite.ssrLoadModule("/src/data/coaches.ts");
+const { coaches: production, demoCoaches } = await vite.ssrLoadModule("/src/data/coaches.ts");
 const { categories, topics, topicsForCategory } = await vite.ssrLoadModule("/src/preview/topics.ts");
 const { offerGroups, publicElisabethOfferGroups } = await vite.ssrLoadModule("/src/preview/elisabeth-offers.ts");
 const { susanneKlemm, workshops, qualifications } = await vite.ssrLoadModule("/src/preview/susanne-klemm.ts");
@@ -38,16 +38,23 @@ test("one validated mode controls host, base and artifact, rejecting legacy drif
   assert.throws(() => websiteEnvironment({ WEBSITE_ENV: "preview", GITHUB_PAGES_REVIEW: "false" }));
   assert.throws(() => websiteEnvironment({ WEBSITE_ENV: "preview", PUBLIC_REVIEW_MODE: "false" }));
 });
-test("only the eight active profiles enter the portfolio in either environment; Hupp source is retained", () => {
+test("launch wave is separate from the production portfolio; Hupp and demo sources are retained", () => {
   const expected = ["christian-galvano", "manuela-rodriguez", ...slugs].sort();
-  assert.deepEqual(activeCoachProfiles.map(({ slug }) => slug).sort(), expected);
+  assert.deepEqual(coachProfilesFor("production").map(({ slug }) => slug).sort(), expected);
+  assert.deepEqual(coachProfilesFor("preview").map(({ slug }) => slug), ["christian-galvano", "manuela-rodriguez"]);
+  assert.deepEqual(featuredCoachSlugs, ["christian-galvano", "manuela-rodriguez"]);
   assert.deepEqual(coaches.map((coach) => coach.profilePath.split("/")[1]).sort(), expected);
   assert.deepEqual(production.filter((coach) => coach.kind === "approved"), coaches);
   assert.deepEqual(pausedCoachSlugs, ["carolin-hupp"]);
   assert.ok(historicalCoaches.some((coach) => coach.profilePath === "coaches/carolin-hupp"));
   assert.equal(new Set(coaches.map((coach) => coach.profilePath)).size, coaches.length);
   assert.ok(coaches.every((coach) => coach.kind === "approved"));
-  assert.equal(production.filter((coach) => coach.kind === "demo").length, 6);
+  assert.equal(demoCoaches.length, 6);
+  for (const blocked of ["carolin-hupp", "demoprofil-01", "unknown"]) {
+    assert.throws(() => coachProfilesFor("preview", [blocked]), /Unapproved or paused/);
+  }
+  assert.throws(() => coachProfilesFor("preview", ["manuela-rodriguez", "manuela-rodriguez"]), /Invalid/);
+  assert.deepEqual(coachProfilesFor("preview", ["susanne-klemm"]).map(({ slug }) => slug), ["susanne-klemm"]);
   assert.equal(coaches.length, 8);
   assert.ok(!coaches.some((coach) => coach.profilePath === "coaches/carolin-hupp"));
 });

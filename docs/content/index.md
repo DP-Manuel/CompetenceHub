@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| Website Evolution 24.11 | [Editorial update and staged Coach rollout](website-evolution-2026-11-24.md) | Two profiles on Pages, target-specific asset and route selection, separate IONOS gate |
 | Feedback 19.11 website increment | [Shared acceptance](../handoffs/2026-11-20-feedback-platform.md) | Existing active Coach scope, Finder/profile corrections and public calendar boundary; published on IONOS, protected Portal unchanged |
 | Prepared Portal header | [Local design / one confirmed URL](../architecture/website-portal-login-2026-11-17.md) | Desktop/mobile shared entry, dev-only inert design; public artifacts unchanged, no auth duplication/publication |
 | Current Website release | [20.11 actual IONOS PASS](../operations/website-ionos-release-2026-11-20.md) | Eight active coach profiles and improved Finder, Hupp paused, no Test Calendar or private Portal link; Pages unchanged |

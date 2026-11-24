@@ -1,25 +1,20 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import CalendarPrototype from "../../components/CalendarPrototype.astro";
 import "../../styles/global.css";
-const prototypeEnabled = import.meta.env.PUBLIC_REVIEW_MODE === "true" || __WEBSITE_V2_LOCAL__;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
 <BaseLayout
-  title="Kalender-Vorschau | Competence Hub"
-  description="Interner Prototyp für Themenfilter, Coach-Verfügbarkeiten und unverbindliche Platzvormerkungen."
-  bodyClass="calendar-prototype-page"
+  title="Veranstaltungskalender | Competence Hub"
+  description="Zum öffentlichen Veranstaltungskalender des Competence Hub."
   noindex
 >
-  {prototypeEnabled ? <CalendarPrototype /> : (
-    <main class="subpage">
-      <section class="page-hero page-hero--accent">
-        <div>
-          <h1>Veranstaltungskalender</h1>
-          <a class="button" href={`${base}/kalender/`}>Zu den aktuellen Terminen</a>
-        </div>
-      </section>
-    </main>
-  )}
+  <main class="subpage">
+    <section class="page-hero page-hero--accent">
+      <div>
+        <h1>Veranstaltungskalender</h1>
+        <a class="button" href={`${base}/kalender/`}>Zu den aktuellen Terminen</a>
+      </div>
+    </section>
+  </main>
 </BaseLayout>

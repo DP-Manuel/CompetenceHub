@@ -2,12 +2,12 @@ import { publicElisabethOfferGroups } from "./elisabeth-offers";
 import { workshops } from "./susanne-klemm";
 import { guelcanOfferFamilies } from "./guelcan-offers";
 import { goranOffer } from "./goran-offers";
-import { coaches } from "./coaches";
+import { activeCoaches, knownApprovedCoaches } from "../data/coaches";
 import type { FinderEntry, FinderFormatId, FinderTopicId } from "./offering-finder-model";
 
 function coach(slug: string) {
-  const item = coaches.find((value) => value.profilePath === `coaches/${slug}`);
-  if (!item || item.kind !== "approved") throw new Error("Finder requires an approved public Coach");
+  const item = knownApprovedCoaches.find((value) => value.profilePath === `coaches/${slug}`);
+  if (!item) throw new Error("Finder requires an approved Coach");
   return { name: item.name, profilePath: item.profilePath, image: item.image };
 }
 
@@ -74,4 +74,23 @@ const goran: FinderEntry = {
 
 // Public static adapter only. The UI accepts this view model as props; a later
 // validated COACH-4 adapter can supply it without changing the component.
-export const finderEntries: readonly FinderEntry[] = [...guelcan, goran, ...elisabeth, ...susanne];
+const established: readonly FinderEntry[] = [...guelcan, goran, ...elisabeth, ...susanne];
+
+// The profile text describes these focus areas, not dated or bookable workshops.
+const spotlightTopics = [
+  { slug: "christian-galvano", id: "neuroleadership", title: "Neuroleadership", topic: "fuehrung" },
+  { slug: "christian-galvano", id: "konfliktmanagement", title: "Konfliktmanagement", topic: "teams-konflikte" },
+  { slug: "christian-galvano", id: "stresspraevention", title: "Stress- und Burnoutprävention", topic: "gesundheit-praevention" },
+  { slug: "manuela-rodriguez", id: "ki-kompetenz", title: "KI-Kompetenz und Verantwortung", topic: "ki-transformation" },
+] as const satisfies readonly { slug: string; id: string; title: string; topic: FinderTopicId }[];
+
+const spotlight: FinderEntry[] = spotlightTopics.map(({ slug, id, title, topic }) => ({
+  id: `${slug}/${id}`, title, description: null, coach: coach(slug), options: [], boundaries: [],
+  formats: [{ id: `${slug}/${id}`, title, kind: "individual", description: null,
+    duration: null, audiences: ["companies"], topics: [topic] }],
+}));
+
+const visiblePaths = new Set(activeCoaches.map(({ profilePath }) => profilePath));
+const catalogue = import.meta.env.PUBLIC_REVIEW_MODE === "true"
+  ? [...spotlight, ...established] : established;
+export const finderEntries = catalogue.filter(({ coach }) => visiblePaths.has(coach.profilePath));

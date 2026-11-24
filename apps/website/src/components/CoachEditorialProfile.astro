@@ -1,0 +1,577 @@
+---
+import Icon from "./Icon.astro";
+import UpcomingEvents from "./UpcomingEvents.astro";
+import type { EditorialProfileCopy } from "./editorial-profile-copy";
+import type { Coach } from "../data/coaches";
+import { coachRequestMailto } from "../preview/request-links";
+import { publicCalendarPath } from "../v2-local/journey.mjs";
+
+interface Props {
+  coach: Coach;
+  copy?: EditorialProfileCopy;
+  offerTitles: readonly string[];
+  url: (path: string) => string;
+}
+
+const { coach, copy, offerTitles, url } = Astro.props;
+const slug = coach.profilePath.slice("coaches/".length);
+const requestHref = coachRequestMailto(coach.name);
+const requestLabel = copy?.requestLabel ?? "Anfrage per E-Mail";
+const externalLink = copy?.externalLink;
+const externalHref = import.meta.env.PUBLIC_REVIEW_MODE === "true"
+  ? externalLink?.reviewHref ?? externalLink?.href
+  : externalLink?.href;
+const highlights = (copy?.topics.map(({ title }) => title) ?? coach.focus).slice(0, 5);
+---
+
+<main class="editorial-profile" data-coach-profile={slug}>
+  <header class="profile-masthead">
+    <div class="profile-wrap profile-intro" class:list={{ "profile-intro--text-only": !coach.image }}>
+      <div class="profile-heading">
+        <a class="profile-back" href={url("coaches/")}>
+          <Icon name="arrow-right" size={16} /> Alle Coachprofile
+        </a>
+        <h1>{coach.name}</h1>
+        <p class="profile-position">{coach.role}</p>
+      </div>
+      {coach.image && (
+        <figure class="profile-portrait">
+          <img
+            src={url(coach.image)}
+            alt={copy?.portraitAlt ?? `Porträt von ${coach.name}`}
+            width={coach.imageWidth}
+            height={coach.imageHeight}
+            fetchpriority="high"
+            decoding="async"
+          />
+          {copy?.portraitCaption && <figcaption>{copy.portraitCaption}</figcaption>}
+        </figure>
+      )}
+      <div class="profile-lede">
+        <p class="profile-summary">{copy?.intro ?? coach.text}</p>
+        {highlights.length > 0 && (
+          <ul class="profile-highlights" aria-label="Kernkompetenzen">
+            {highlights.map((topic) => <li>{topic}</li>)}
+          </ul>
+        )}
+        <div class="profile-actions">
+          <a class="button profile-button" href={requestHref}>
+            <Icon name="message-circle" size={19} /> {requestLabel}
+          </a>
+          <a class="profile-link" href="#angebote">
+            Schwerpunkte &amp; Angebote <Icon name="arrow-right" size={18} />
+          </a>
+          <a class="profile-link" href="#aktuelle-termine">Termine</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="profile-wrap profile-chapter" id="angebote" aria-labelledby="profile-topics">
+    <div class="profile-chapter-heading">
+      <p class="profile-kicker">Schwerpunkte &amp; Angebote</p>
+      <h2 id="profile-topics">{copy?.topicsHeading ?? "Themenschwerpunkte"}</h2>
+      {copy?.audience && <p>{copy.audience}</p>}
+    </div>
+    <div class="profile-chapter-content">
+      {copy ? (
+        <div class="profile-disclosures">
+          {copy.topics.map(({ title, text }) => (
+            <details>
+              <summary>{title}</summary>
+              <div class="profile-disclosure-body">
+                <p>{text}</p>
+                {offerTitles.includes(title) && (
+                  <a class="profile-link" href={coachRequestMailto(coach.name, title)}>
+                    {title} anfragen <Icon name="arrow-right" size={18} />
+                  </a>
+                )}
+              </div>
+            </details>
+          ))}
+        </div>
+      ) : coach.focus.length > 0 && (
+        <ul class="profile-focus-list">
+          {coach.focus.map((topic) => <li>{topic}</li>)}
+        </ul>
+      )}
+      <div class="profile-actions profile-actions--inline">
+        <a class="profile-link" href={requestHref}>
+          Passendes Format anfragen <Icon name="arrow-right" size={18} />
+        </a>
+        {offerTitles.length > 0 && (
+          <a class="profile-link" href={url(`leistungen/?coach=${encodeURIComponent(slug)}#angebotsfinder`)}>
+            Zum Angebotsfinder <Icon name="arrow-right" size={18} />
+          </a>
+        )}
+        {externalLink && externalHref && (
+          <a class="profile-link" href={externalHref} target="_blank" rel="noopener noreferrer">
+            {externalLink.label} <span class="profile-sr-only">(öffnet in neuem Tab)</span>
+            <Icon name="arrow-right" size={18} />
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <div class="profile-wrap profile-calendar">
+    <UpcomingEvents live={__WEBSITE_V2_LOCAL__} coachPath={`/${coach.profilePath}/`}
+      calendarHref={`${publicCalendarPath}?coach=${encodeURIComponent(slug)}`} />
+  </div>
+
+  {copy && (
+    <section class="profile-background" aria-labelledby="profile-background">
+      <div class="profile-wrap profile-chapter">
+        <div class="profile-chapter-heading">
+          <p class="profile-kicker">Hintergrund &amp; Qualifikation</p>
+          <h2 id="profile-background">{copy.backgroundHeading}</h2>
+          <p>{copy.background}</p>
+        </div>
+        <div class="profile-chapter-content">
+          <p class="profile-byline">{copy.byline}</p>
+          <div class="profile-disclosures">
+            <details>
+              <summary>Qualifikationen und berufliche Stationen</summary>
+              <div class="profile-disclosure-body">
+                <ul>{copy.qualifications.map((entry) => <li>{entry}</li>)}</ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {copy?.quote && (
+    <figure class="profile-wrap profile-quote">
+      <blockquote><p>„{copy.quote}“</p></blockquote>
+      <figcaption>{coach.name}</figcaption>
+    </figure>
+  )}
+
+  <section class="profile-contact" aria-labelledby="profile-contact">
+    <div class="profile-wrap profile-chapter">
+      <div class="profile-chapter-heading">
+        <p class="profile-kicker">Kontakt</p>
+        <h2 id="profile-contact">{copy?.contactHeading ?? "Passendes Format besprechen"}</h2>
+      </div>
+      <div class="profile-chapter-content">
+        {copy?.contactText && <p>{copy.contactText}</p>}
+        <div class="profile-actions">
+          <a class="button profile-button" href={requestHref}>
+            <Icon name="message-circle" size={19} /> {requestLabel}
+          </a>
+          <a class="profile-link" href={url("kontakt/")}>
+            Bedarf besprechen <Icon name="arrow-right" size={18} />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<style>
+  .editorial-profile {
+    --profile-deep: #004c51;
+    --profile-ink: #233033;
+    --profile-muted: #41595c;
+    --profile-line: #cadcde;
+    --profile-tint: #f0f7f8;
+    --profile-accent: #ff7f57;
+    inline-size: 100%;
+    color: var(--profile-ink);
+    overflow-wrap: anywhere;
+  }
+
+  .profile-wrap {
+    inline-size: min(100% - 3rem, 78rem);
+    margin-inline: auto;
+  }
+
+  .profile-masthead {
+    background: var(--profile-deep);
+    color: #fff;
+  }
+
+  .profile-intro,
+  .profile-chapter {
+    display: grid;
+    min-inline-size: 0;
+    align-items: start;
+  }
+
+  .profile-intro {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    grid-template-areas: "heading portrait" "lede portrait";
+    grid-template-rows: auto 1fr;
+    gap: 1.25rem 4rem;
+    padding-block: 2.5rem 3rem;
+  }
+
+  .profile-intro--text-only {
+    grid-template-columns: minmax(0, 46rem);
+    grid-template-areas: "heading" "lede";
+  }
+
+  .profile-heading {
+    grid-area: heading;
+  }
+
+  .profile-lede {
+    grid-area: lede;
+  }
+
+  .profile-back {
+    margin-block-end: 1.25rem;
+  }
+
+  .profile-back :global(svg) {
+    transform: rotate(180deg);
+  }
+
+  .editorial-profile h1,
+  .editorial-profile h2 {
+    margin: 0;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  .editorial-profile h1 {
+    max-inline-size: 18ch;
+    font-size: 3.75rem;
+    line-height: 1.06;
+  }
+
+  .editorial-profile h2 {
+    font-size: 2.125rem;
+    line-height: 1.16;
+    text-wrap: pretty;
+  }
+
+  .profile-position {
+    margin: .85rem 0 0;
+    color: #c3e9e9;
+    font-size: 1.25rem;
+    font-weight: 650;
+    line-height: 1.42;
+  }
+
+  .profile-summary {
+    max-inline-size: 56ch;
+    margin: 0;
+    color: #fff;
+    line-height: 1.6;
+  }
+
+  .profile-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem .85rem;
+    padding: 0;
+    margin: 1.1rem 0 0;
+    list-style: none;
+  }
+
+  .profile-highlights li {
+    max-inline-size: 100%;
+    padding-inline-start: .55rem;
+    border-inline-start: 2px solid #79acae;
+    font-size: .875rem;
+    line-height: 1.45;
+  }
+
+  .profile-portrait {
+    grid-area: portrait;
+    inline-size: min(100%, 28rem);
+    justify-self: end;
+    margin: 0;
+  }
+
+  .profile-portrait img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  .profile-portrait figcaption {
+    padding-block-start: .65rem;
+    color: #c3e9e9;
+    font-size: .875rem;
+    line-height: 1.5;
+  }
+
+  .profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .45rem 1.25rem;
+    margin-block-start: 1.35rem;
+  }
+
+  .profile-actions--inline {
+    margin-block-start: 1rem;
+  }
+
+  .profile-back,
+  .profile-link,
+  .profile-button {
+    display: inline-flex;
+    max-inline-size: 100%;
+    min-block-size: 44px;
+    align-items: center;
+    gap: .55rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .profile-back,
+  .profile-link {
+    color: var(--profile-deep);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: .22em;
+  }
+
+  .profile-masthead :is(.profile-back, .profile-link) {
+    color: #fff;
+  }
+
+  .profile-link:hover,
+  .profile-back:hover {
+    text-decoration-thickness: .16em;
+  }
+
+  .profile-button {
+    padding: .65rem .95rem;
+    border: 2px solid transparent;
+    border-radius: 2px;
+    background: var(--profile-accent);
+    color: #252424;
+  }
+
+  .profile-button:hover,
+  .profile-button:focus-visible {
+    border-color: currentColor;
+    background: #ffa083;
+    color: #252424;
+  }
+
+  .editorial-profile :is(a, summary):focus-visible {
+    outline: 3px solid var(--profile-deep);
+    outline-offset: 4px;
+  }
+
+  .profile-masthead a:focus-visible {
+    outline-color: #fff;
+  }
+
+  .editorial-profile :global(svg) {
+    flex: none;
+  }
+
+  .profile-chapter {
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: 3.25rem;
+    padding-block: 3rem;
+    scroll-margin-block-start: 6rem;
+  }
+
+  .profile-kicker {
+    margin: 0 0 .7rem;
+    color: var(--profile-deep);
+    font-size: .875rem;
+    font-weight: 750;
+    text-transform: uppercase;
+  }
+
+  .profile-chapter-heading > p:not(.profile-kicker),
+  .profile-chapter-content p {
+    max-inline-size: 62ch;
+    margin: .8rem 0 0;
+    color: var(--profile-muted);
+    line-height: 1.65;
+  }
+
+  .profile-chapter-content .profile-byline,
+  .profile-contact .profile-chapter-content > p {
+    margin: 0 0 1.05rem;
+  }
+
+  .profile-disclosures {
+    border-block-start: 1px solid var(--profile-line);
+  }
+
+  .profile-disclosures details {
+    border-block-end: 1px solid var(--profile-line);
+  }
+
+  .profile-disclosures summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) .85rem;
+    align-items: center;
+    gap: 1rem;
+    min-block-size: 48px;
+    padding: .85rem .25rem;
+    cursor: pointer;
+    font-weight: 750;
+    line-height: 1.35;
+    list-style: none;
+  }
+
+  .profile-disclosures summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .profile-disclosures summary::after {
+    content: "";
+    inline-size: .55rem;
+    block-size: .55rem;
+    border-inline-end: 2px solid currentColor;
+    border-block-end: 2px solid currentColor;
+    justify-self: center;
+    transform: rotate(45deg);
+  }
+
+  .profile-disclosures details[open] summary::after {
+    transform: rotate(225deg);
+  }
+
+  .profile-disclosures summary:hover,
+  .profile-disclosures details[open] summary {
+    color: var(--profile-deep);
+    text-decoration: underline;
+    text-underline-offset: .2em;
+  }
+
+  .profile-disclosure-body {
+    padding: 0 1.35rem 1.15rem .25rem;
+  }
+
+  .profile-disclosure-body p,
+  .profile-disclosure-body ul,
+  .profile-focus-list {
+    margin: 0;
+  }
+
+  .profile-disclosure-body ul,
+  .profile-focus-list {
+    padding-inline-start: 1.35rem;
+    line-height: 1.65;
+  }
+
+  .profile-disclosure-body li + li,
+  .profile-focus-list li + li {
+    margin-block-start: .35rem;
+  }
+
+  .profile-background {
+    background: var(--profile-tint);
+  }
+
+  .profile-calendar :global(.upcoming-events) { padding-inline: 0; }
+
+  .profile-quote {
+    padding-block: 2.75rem;
+  }
+
+  .profile-quote blockquote {
+    max-inline-size: 68ch;
+    padding-inline-start: 1.15rem;
+    margin: 0;
+    border-inline-start: 3px solid var(--profile-deep);
+    font-size: 1.5rem;
+    line-height: 1.45;
+  }
+
+  .profile-quote p {
+    margin: 0;
+  }
+
+  .profile-quote figcaption {
+    margin: .75rem 0 0 1.35rem;
+    color: var(--profile-muted);
+    font-weight: 700;
+  }
+
+  .profile-contact {
+    border-block: 1px solid var(--profile-line);
+  }
+
+  .profile-sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .profile-button {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 64rem) {
+    .profile-intro {
+      column-gap: 2rem;
+    }
+
+    .profile-chapter {
+      gap: 2rem;
+    }
+
+    .editorial-profile h1 {
+      font-size: 3rem;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .profile-wrap {
+      inline-size: min(100% - 2rem, 38rem);
+    }
+
+    .profile-intro,
+    .profile-chapter {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.35rem;
+      padding-block: 1.5rem 2rem;
+    }
+
+    .profile-intro {
+      grid-template-areas: "heading" "portrait" "lede";
+      grid-template-rows: auto;
+    }
+
+    .profile-intro--text-only {
+      grid-template-areas: "heading" "lede";
+    }
+
+    .profile-portrait {
+      inline-size: min(100%, 21rem);
+      justify-self: start;
+    }
+
+    .editorial-profile h1 {
+      font-size: 2.375rem;
+    }
+
+    .editorial-profile h2 {
+      font-size: 1.7rem;
+    }
+
+    .profile-position {
+      font-size: 1.125rem;
+    }
+
+    .profile-quote {
+      padding-block: 2rem;
+    }
+
+    .profile-quote blockquote {
+      font-size: 1.25rem;
+    }
+  }
+</style>

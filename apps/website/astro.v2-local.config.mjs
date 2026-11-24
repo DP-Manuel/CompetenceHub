@@ -21,7 +21,7 @@ export default defineConfig({
       "@website-offer-finder": fileURLToPath(new URL("./src/preview/OfferingFinder.astro", import.meta.url)),
     } },
   },
-  integrations: [approvedCoachContent(), {
+  integrations: [approvedCoachContent("production"), {
     name: "v2-loopback-website",
     hooks: {
       "astro:config:setup": ({ command, config, injectRoute }) => {

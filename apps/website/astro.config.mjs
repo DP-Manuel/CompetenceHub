@@ -29,5 +29,5 @@ export default defineConfig({
       )),
     } },
   },
-  integrations: [...(projection ? [projection] : []), approvedCoachContent()],
+  integrations: [...(projection ? [projection] : []), approvedCoachContent(environment.mode)],
 });

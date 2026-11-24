@@ -2,11 +2,12 @@
 import Icon from "./Icon.astro";
 
 interface Props {
-  presentation?: "default" | "living";
+  presentation?: "default" | "living" | "homepage";
   layout?: "default" | "asymmetric";
 }
 
 const { presentation = "default", layout = "default" } = Astro.props;
+const homepage = presentation === "homepage";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
@@ -135,10 +136,21 @@ const asymmetricPositions: Record<
   gruppenformate: { x: 32, y: 9, size: 94 },
 };
 
-const renderedNodes =
-  layout === "asymmetric"
-    ? nodes.map((node) => ({ ...node, ...asymmetricPositions[node.id] }))
-    : nodes;
+// Keep the outer nodes in three bands: the top and bottom pairs move away
+// from the core while the larger nodes sit at the sides.
+const homepagePositions: typeof asymmetricPositions = {
+  unternehmen: { x: 11, y: 38, size: 138 },
+  coaches: { x: 89, y: 38, size: 132 },
+  leistungen: { x: 87, y: 75, size: 136 },
+  recruiting: { x: 13, y: 75, size: 126 },
+  kontakt: { x: 28, y: 81, size: 112 },
+  mindforge: { x: 73, y: 17, size: 122 },
+  beratung: { x: 72, y: 81, size: 104 },
+  gruppenformate: { x: 27, y: 17, size: 128 },
+};
+
+const positions = homepage ? homepagePositions : layout === "asymmetric" ? asymmetricPositions : undefined;
+const renderedNodes = nodes.map((node) => ({ ...node, ...positions?.[node.id] }));
 
 const pointFor = (id: string) => {
   if (id === "core") return { x: 600, y: 380 };
@@ -149,7 +161,7 @@ const pointFor = (id: string) => {
 };
 
 const renderedEdges =
-  layout === "asymmetric"
+  positions
     ? edges.map((edge, index) => {
         const from = pointFor(edge.from);
         const to = pointFor(edge.to);
@@ -174,14 +186,15 @@ const renderedEdges =
     {
       "hub-graph--living": presentation === "living",
       "hub-graph--asymmetric": layout === "asymmetric",
+      "hub-graph--homepage": homepage,
     },
   ]}
   data-hub-graph
 >
   <p class="visually-hidden" id="hub-graph-help">
-    Der Competence Hub ist der zentrale Startknoten. Fokussieren oder berühren
-    Sie den Kern, um seine Hauptverbindungen anzuzeigen. Der Kern führt zur
-    Seite Über uns, die Außenknoten direkt zu den jeweiligen Bereichen.
+    {homepage
+      ? "Der Kern führt zur Seite Über uns. Die weiteren Links führen direkt zu den Bereichen des Competence Hub."
+      : "Der Competence Hub ist der zentrale Startknoten. Fokussieren oder berühren Sie den Kern, um seine Hauptverbindungen anzuzeigen. Der Kern führt zur Seite Über uns, die Außenknoten direkt zu den jeweiligen Bereichen."}
   </p>
 
   <svg
@@ -239,11 +252,11 @@ const renderedEdges =
     `[data-v2-position="${node.id}"] { --node-x: ${node.x}%; --node-y: ${node.y}%; --node-size: ${node.size}px; }`
   ).join("\n")} />}
 
-  <div class="hub-graph__guide" aria-hidden="true">
+  {!homepage && <div class="hub-graph__guide" aria-hidden="true">
     <span></span>
     <strong>Hub oder Knoten berühren</strong>
     <span></span>
-  </div>
+  </div>}
 </div>
 
 <script>
@@ -312,3 +325,223 @@ const renderedEdges =
     });
   });
 </script>
+
+<style>
+  .hub-graph--homepage {
+    --homepage-core-position: none;
+    display: grid;
+    height: auto;
+    min-height: 0;
+    gap: 1.15rem;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+
+  .hub-graph--homepage::before {
+    display: none;
+  }
+
+  .hub-graph--homepage .hub-graph__connections {
+    display: none;
+  }
+
+  .hub-graph--homepage .hub-graph__core {
+    position: relative;
+    inset: auto;
+    width: min(100%, 12rem);
+    height: auto;
+    max-width: none;
+    aspect-ratio: 1;
+    justify-items: center;
+    margin: 0 auto;
+    padding: 0.6rem;
+    border: 5px solid var(--color-white);
+    background: var(--color-pantone-deep);
+    box-shadow: 0 0 0 1px var(--color-pantone-deep), 0 8px 18px rgba(0, 111, 118, 0.14);
+    transform: var(--homepage-core-position);
+  }
+
+  .hub-graph--homepage .hub-graph__core:is(:hover, :focus-visible),
+  .hub-graph--homepage[data-active="core"] .hub-graph__core {
+    box-shadow: 0 0 0 4px var(--color-red), 0 8px 18px rgba(0, 111, 118, 0.2);
+    transform: var(--homepage-core-position);
+  }
+
+  .hub-graph--homepage .hub-graph__core h1 {
+    margin: 0 0 0.55rem;
+    font-size: 1.5rem;
+    font-weight: 850;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .hub-graph--homepage .hub-graph__core h1 em {
+    margin-top: 0.2em;
+    color: var(--color-white);
+  }
+
+  .hub-graph--homepage .hub-graph__core p {
+    max-width: 15ch;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .hub-graph--homepage .hub-graph__nodes {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .hub-graph--homepage .hub-graph__position {
+    position: relative;
+    inset: auto;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    aspect-ratio: auto;
+    transform: none;
+    animation: none;
+  }
+
+  .hub-graph--homepage .hub-graph__node {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.9rem;
+    padding: 0.4rem 0.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 5px;
+    background: var(--color-white);
+    box-shadow: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .hub-graph--homepage .hub-graph__node::after { content: none; }
+
+  .hub-graph--homepage .hub-graph__node strong {
+    font-size: 0.82rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .hub-graph--homepage .hub-graph__node small {
+    display: none;
+  }
+
+  .hub-graph--homepage .hub-graph__node :global(.icon) {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    color: var(--color-pantone-deep);
+    flex: none;
+  }
+
+  .hub-graph--homepage .hub-graph__node:is(:hover, :focus-visible, .is-active),
+  .hub-graph--homepage[data-active="core"] .hub-graph__node {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hub-graph--homepage .hub-graph__node:is(:hover, :focus-visible, .is-active) {
+    border-color: var(--color-pantone-deep);
+    box-shadow: 0 0 0 2px var(--color-red);
+  }
+
+  .hub-graph--homepage .hub-graph__node:focus-visible {
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 40rem) {
+    .hub-graph--homepage .hub-graph__nodes {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .hub-graph--homepage {
+      --homepage-core-position: translate(-50%, -50%);
+      display: block;
+      height: 25.5rem;
+    }
+
+    .hub-graph--homepage .hub-graph__connections {
+      display: block;
+    }
+
+    .hub-graph--homepage .hub-graph__connections path {
+      stroke-dashoffset: 0;
+      opacity: 0.1;
+    }
+
+    .hub-graph--homepage .hub-graph__connections path[data-from="core"] {
+      opacity: 0.28;
+    }
+
+    .hub-graph--homepage .hub-graph__connections path.is-active {
+      opacity: 0.8;
+    }
+
+    .hub-graph--homepage .hub-graph__core {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 15.5rem;
+      padding: 0.9rem;
+      border-width: 7px;
+    }
+
+    .hub-graph--homepage .hub-graph__core h1 {
+      font-size: 1.875rem;
+    }
+
+    .hub-graph--homepage .hub-graph__core p {
+      font-size: 0.93rem;
+    }
+
+    .hub-graph--homepage .hub-graph__nodes {
+      position: absolute;
+      display: block;
+    }
+
+    .hub-graph--homepage .hub-graph__position {
+      position: absolute;
+      inset: var(--node-y) auto auto var(--node-x);
+      width: var(--node-size);
+      height: var(--node-size);
+      transform: translate(-50%, -50%);
+    }
+
+    .hub-graph--homepage .hub-graph__node {
+      display: grid;
+      gap: 0.25rem;
+      padding: 0.65rem;
+      border-color: var(--color-pantone);
+      border-radius: 50%;
+    }
+
+    .hub-graph--homepage .hub-graph__node small {
+      display: block;
+      max-width: 15ch;
+      color: var(--color-dark);
+      font-size: 0.68rem;
+      font-weight: 550;
+      overflow-wrap: anywhere;
+    }
+
+    .hub-graph--homepage .hub-graph__node.is-related,
+    .hub-graph--homepage[data-active="core"] .hub-graph__position--primary .hub-graph__node {
+      border-color: var(--color-pantone-deep);
+      background: var(--color-ice);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .hub-graph--homepage { gap: 0.8rem; }
+    .hub-graph--homepage .hub-graph__core { width: min(100%, 11.2rem); }
+    .hub-graph--homepage .hub-graph__core h1 { font-size: 1.4rem; }
+  }
+</style>

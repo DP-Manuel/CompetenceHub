@@ -11,6 +11,7 @@ interface Props {
 }
 
 const { variant, prototypeMode = true } = Astro.props;
+const homepageEdition = variant === "c" && !prototypeMode && !__WEBSITE_V2_LOCAL__;
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
@@ -43,7 +44,7 @@ const variants = [
   class:list={[
     "living-prototype",
     `living-prototype--${variant}`,
-    { "living-prototype--production": !prototypeMode },
+    { "living-prototype--production": !prototypeMode, "living-prototype--editorial": homepageEdition },
   ]}
   data-living-prototype
 >
@@ -69,7 +70,7 @@ const variants = [
   )}
 
   <section
-    class:list={["living-hero", `living-hero--${variant}`]}
+    class:list={["living-hero", `living-hero--${variant}`, { "living-hero--homepage": homepageEdition }]}
     data-living-hero
     aria-label={
       prototypeMode
@@ -77,11 +78,11 @@ const variants = [
         : "Competence Hub entdecken"
     }
   >
-    <div class="living-hero__depth" aria-hidden="true">
+    {!homepageEdition && <div class="living-hero__depth" aria-hidden="true">
       <span class="living-hero__contour living-hero__contour--outer"></span>
       <span class="living-hero__contour living-hero__contour--inner"></span>
       <span class="living-hero__signal"></span>
-    </div>
+    </div>}
 
     {variant === "a" && (
       <>
@@ -172,6 +173,41 @@ const variants = [
             <CompetenceHubMap presentation="living" layout="asymmetric" />
           </div>
         </div>
+      ) : homepageEdition ? (
+        <div class="living-hero__homepage-stage">
+          <header class="living-hero__homepage-intro">
+            <p class="eyebrow">Coaching, Entwicklung und Beratung</p>
+            <p class="living-hero__lead">
+              Wir verbinden Unternehmen und Privatpersonen mit passenden Coaches,
+              Workshops und persönlicher Beratung.
+            </p>
+            <nav class="living-hero__routes" aria-label="Direkte Einstiege">
+              <a href={url("unternehmen")}>
+                <Icon name="building" size={20} />
+                Für Unternehmen
+              </a>
+              <a href={url("mindforge#privatpersonen")}>
+                <Icon name="sparkles" size={20} />
+                Für Privatpersonen
+              </a>
+              <a href={url("leistungen#angebotsfinder")}>
+                <Icon name="briefcase" size={20} />
+                Angebote finden
+              </a>
+            </nav>
+          </header>
+
+          <div class="living-hero__space--homepage">
+            <CompetenceHubMap presentation="homepage" />
+          </div>
+
+          <div class="living-hero__actions living-hero__actions--centered">
+            <a class="button" href={url("kontakt")}>Bedarf besprechen</a>
+            <a class="button button--ghost" href="#so-funktioniert-der-hub">
+              Hub erkunden
+            </a>
+          </div>
+        </div>
       ) : (
         <div class="living-hero__centered-stage">
           <div class="living-hero__copy living-hero__copy--centered">
@@ -215,7 +251,7 @@ const variants = [
   </section>
 
   <slot name="before-journey" />
-  <HubJourney />
+  <HubJourney compact={homepageEdition} />
   <slot />
 </main>
 
@@ -226,7 +262,7 @@ const variants = [
   const clamp = (value: number, min: number, max: number) =>
     Math.min(Math.max(value, min), max);
 
-  document.querySelectorAll<HTMLElement>("[data-living-hero]").forEach((hero) => {
+  document.querySelectorAll<HTMLElement>("[data-living-hero]:not(.living-hero--homepage)").forEach((hero) => {
     let frame = 0;
     let pointerX = 0;
     let pointerY = 0;
@@ -995,6 +1031,79 @@ const variants = [
       font-size: 1.85rem;
     }
 
+  }
+
+  .living-prototype--production .living-hero--homepage {
+    padding: 1.75rem clamp(1rem, 3vw, 2.5rem) 2rem;
+    border-top-width: 4px;
+    background: var(--color-soft);
+  }
+
+  .living-prototype.living-prototype--editorial {
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .living-hero--homepage + :global(.hub-journey--compact) {
+    width: min(var(--max-width), calc(100% - var(--page-pad) * 2));
+    margin: 2.75rem auto 3.25rem;
+  }
+
+  .living-hero__homepage-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+    justify-items: center;
+  }
+
+  .living-hero__homepage-intro {
+    width: 100%;
+    text-align: center;
+  }
+
+  .living-hero__homepage-intro .eyebrow {
+    margin-bottom: 0.4rem;
+    color: var(--color-pantone-deep);
+  }
+
+  .living-hero__homepage-intro .living-hero__lead {
+    max-width: 43rem;
+    margin: 0 auto;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  .living-hero__homepage-intro .living-hero__routes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.15rem 1.5rem;
+    margin: 0.45rem 0 0;
+  }
+
+  .living-hero__homepage-intro .living-hero__routes a {
+    min-height: 44px;
+    text-align: left;
+  }
+
+  .living-hero__space--homepage {
+    width: 100%;
+    max-width: 68rem;
+  }
+
+  @media (max-width: 640px) {
+    .living-prototype--production .living-hero--homepage {
+      padding: 1rem 0.9rem 1rem;
+    }
+
+    .living-hero__homepage-stage { gap: 0.8rem; }
+
+    .living-hero--homepage .living-hero__actions--centered {
+      max-width: 24rem;
+      gap: 0.5rem;
+      padding-inline: 0;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -1,8 +1,8 @@
 ---
 import Icon from "../components/Icon.astro";
 import HubClearance from "../preview/HubClearance.astro";
-import { publicOfferKeywords } from "../preview/coach-discovery";
-import { coaches as productionCoaches } from "../data/coaches";
+import { finderEntries } from "../preview/offering-finder-data";
+import { activeCoaches } from "../data/coaches";
 import PortalLogin from "../components/PortalLogin.astro";
 import UpcomingEvents from "../components/UpcomingEvents.astro";
 import { portalLoginConfiguration } from "../../config/environment.mjs";
@@ -14,6 +14,7 @@ interface Props {
   bodyClass?: string;
   noindex?: boolean;
   canonical?: boolean;
+  editorialProfile?: boolean;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   bodyClass = "",
   noindex = false,
   canonical = true,
+  editorialProfile = false,
 } = Astro.props;
 
 const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
@@ -65,13 +67,14 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
   (path) => isCurrent(path),
 );
 const profilePath = canonicalPath.replace(/^\//, "").replace(/\/$/, "");
-const approvedProfile = productionCoaches.some((coach) => coach.kind === "approved" && coach.profilePath === profilePath);
+const approvedProfile = activeCoaches.some((coach) => coach.profilePath === profilePath);
 const localDemoProfile = v2Local && profilePath === "coaches/v2-demo-coach";
 const showUpcoming = approvedProfile || localDemoProfile || (v2Local && isCurrent());
 const profileUpcoming = approvedProfile || localDemoProfile ? `/${profilePath}/` : "";
 const upcomingCalendarHref = profileUpcoming
   ? `${publicCalendarPath}?coach=${encodeURIComponent(profilePath.split("/")[1])}` : publicCalendarPath;
-const profileHasOffers = (reviewMode || approvedProfile) && publicOfferKeywords(profilePath).length > 0;
+const profileHasOffers = approvedProfile && finderEntries.some((entry) => entry.coach.profilePath === profilePath);
+const currentNav = (path: string) => isCurrent(path) ? "page" : path === "coaches" && approvedProfile ? "location" : undefined;
 const journeyVisible = (reviewMode && /^coaches\/[^/]+$/.test(profilePath)) || approvedProfile || isCurrent("kalender");
 const finderHref = profileHasOffers
   ? url(`leistungen?coach=${encodeURIComponent(profilePath.split("/")[1])}#angebotsfinder`)
@@ -117,7 +120,7 @@ const finderHref = profileHasOffers
       <nav class="nav nav--desktop" aria-label="Hauptnavigation">
         <a href={url()} aria-current={isCurrent() ? "page" : undefined}>Start</a>
         <details class="services-menu">
-          <summary class:list={{ "is-current": isServicePage }}>Leistungen</summary>
+          <summary aria-current={isServicePage ? "location" : undefined} class:list={{ "is-current": isServicePage }}>Leistungen</summary>
           <div class="services-menu__panel">
             <strong>Leistungen im Überblick</strong>
             {serviceNavigation.map((item) => (
@@ -132,7 +135,7 @@ const finderHref = profileHasOffers
         {navigation.slice(1).map((item) => (
           <a
             href={navHref(item.href)}
-            aria-current={isCurrent(item.href) ? "page" : undefined}
+            aria-current={currentNav(item.href)}
           >
             {item.label}
           </a>
@@ -145,7 +148,7 @@ const finderHref = profileHasOffers
           {serviceNavigation.map((item) => (
             <a
             href={url(item.href)}
-              aria-current={isCurrent(item.href) ? "page" : undefined}
+              aria-current={currentNav(item.href)}
             >
               {item.label}
             </a>
@@ -153,19 +156,19 @@ const finderHref = profileHasOffers
           {navigation.slice(1).map((item) => (
             <a
             href={navHref(item.href)}
-              aria-current={isCurrent(item.href) ? "page" : undefined}
+              aria-current={currentNav(item.href)}
             >
               {item.label}
             </a>
           ))}
-          <a href={url("kontakt")}>Kontakt</a>
+          <a href={url("kontakt")} aria-current={currentNav("kontakt")}>Kontakt</a>
         </nav>
       </details>
       <div class="header-actions">
         <a class="button" href={url("kontakt")}>Bedarf besprechen</a>{portalLogin.visible && <PortalLogin href={portalLogin.href} placement="desktop" />}
       </div>
     </header>
-    {journeyVisible && <Fragment>
+    {journeyVisible && !editorialProfile && <Fragment>
       <nav class="preview-journey-links" aria-label="Passendes Angebot und nächster Schritt">
         <a href={finderHref}>{profileHasOffers ? "Angebote dieses Coaches" : "Angebotsfinder"}</a>
         {showUpcoming && <a href="#aktuelle-termine">Nächste Veranstaltungen</a>}
@@ -178,7 +181,7 @@ const finderHref = profileHasOffers
         .preview-journey-links a:focus-visible { outline:3px solid var(--color-dark); outline-offset:4px; }
       </style>
     </Fragment>}<slot />
-    {showUpcoming && <UpcomingEvents live={v2Local} coachPath={profileUpcoming} calendarHref={upcomingCalendarHref} />}
+    {showUpcoming && !editorialProfile && <UpcomingEvents live={v2Local} coachPath={profileUpcoming} calendarHref={upcomingCalendarHref} />}
     <footer class="site-footer">
       <div>
         <strong>Competence Hub</strong>

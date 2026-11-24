@@ -1,4 +1,4 @@
-import { activeCoachProfiles } from "../../config/active-coach-publication.mjs";
+import { approvedCoachProfiles, coachProfilesFor, featuredCoachSlugs } from "../../config/active-coach-publication.mjs";
 import { historicalCoaches } from "../preview/historical-coaches";
 import { susanneKlemm } from "../preview/susanne-klemm";
 import type { CoachTopicId } from "./coach-topics";
@@ -173,7 +173,7 @@ const existingCoaches: Coach[] = [
   },
 ];
 
-export const activeCoaches = activeCoachProfiles.map(({ slug, portrait }) => {
+function resolveApprovedCoach({ slug, portrait }: { slug: string; portrait: string }) {
   const coach = [...existingCoaches, ...historicalCoaches, susanneKlemm].find((entry) =>
     entry.kind === "approved" && entry.profilePath === `coaches/${slug}`
   );
@@ -181,8 +181,15 @@ export const activeCoaches = activeCoachProfiles.map(({ slug, portrait }) => {
     throw new Error(`Missing approved Coach or portrait: ${slug}`);
   }
   return coach;
-});
+}
 
-// Previously published fictional routes remain accessible directly, but are
-// not part of the active portfolio, sitemap or Finder.
-export const coaches = [...activeCoaches, ...existingCoaches.filter(({ kind }) => kind === "demo")];
+export const knownApprovedCoaches = approvedCoachProfiles.map(resolveApprovedCoach);
+const mode = import.meta.env.PUBLIC_REVIEW_MODE === "true" ? "preview" : "production";
+export const activeCoaches = coachProfilesFor(mode).map(resolveApprovedCoach);
+export const featuredCoaches = featuredCoachSlugs.flatMap((slug) =>
+  activeCoaches.filter((coach) => coach.profilePath === `coaches/${slug}`)
+);
+
+// Retain fictional data for local work, never materialize it in a public build.
+export const demoCoaches = existingCoaches.filter(({ kind }) => kind === "demo");
+export const coaches = activeCoaches;

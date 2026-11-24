@@ -18,6 +18,7 @@ const services = [
     title: "Coaching und Beratung bündeln",
     text: "Beratungsgespräche für Privatpersonen sowie Businesscoaching und abgestimmte Beratung für Unternehmen.",
     href: "mindforge",
+    link: "Mindforge ansehen",
     id: undefined,
     icon: "sparkles" as const,
   },
@@ -26,6 +27,7 @@ const services = [
     title: "Menschen und Aufgaben passend verbinden",
     text: "Wir klären Anforderungsprofil, Unternehmenskontext und Auswahlweg. So können passende Fachkräfte, Potenziale und praktische Fähigkeiten gezielt zusammengebracht werden.",
     href: "kontakt",
+    link: "Recruiting besprechen",
     id: "recruiting",
     icon: "user-round" as const,
   },
@@ -34,6 +36,7 @@ const services = [
     title: "Potenziale erkennen und Entwicklung begleiten",
     text: "Je nach Anliegen können Coaching, Development Assessment Center oder Supervision die nächsten Schritte unterstützen. Mediation wird nur bei bestätigter Qualifikation und Verfügbarkeit im Netzwerk vermittelt.",
     href: "unternehmen#assessment-center",
+    link: "Personalentwicklung ansehen",
     id: "personalentwicklung",
     icon: "building" as const,
   },
@@ -42,6 +45,7 @@ const services = [
     title: "Wissen gemeinsam weitergeben",
     text: "Für Wissenstransfer, Lernimpulse und konkrete Themen in Gruppen.",
     href: "leistungen#angebotsfinder",
+    link: "Zum Angebotsfinder",
     id: "gruppenformate",
     icon: "users" as const,
   },
@@ -83,7 +87,7 @@ const faqs = [
     <ConnectedPageHero
       eyebrow="Leistungen"
       title="Das Thema zuerst. Dann die passende Expertise."
-      lead="Competence Hub klärt den Bedarf und vermittelt ausgewählte Coaches oder Expertinnen und Experten. So finden Privatpersonen und Unternehmen einen passenden Einstieg, ohne sich zuerst durch einen großen Katalog arbeiten zu müssen."
+      lead="Coaching, Beratung und Gruppenformate für Unternehmen und Privatpersonen. Wir klären Ihr Anliegen und vermitteln passende Expertise."
       centerLabel="Leistungen"
       centerDetail="Passende Formate"
       centerIcon="briefcase"
@@ -126,14 +130,18 @@ const faqs = [
     <OfferingFinder entries={finderEntries}>
       <Fragment slot="local-demo">{__WEBSITE_V2_LOCAL__ && <DemoOffer />}</Fragment>
     </OfferingFinder>
-    <section class="offer-grid offer-grid--services" id="angebote" aria-label="Angebotsübersicht">
+    <section class="service-index" id="angebote" aria-labelledby="service-index-title">
+      <h2 id="service-index-title">Leistungen im Überblick</h2>
       {services.map((service) => (
-        <article class="offer-card" id={service.id}>
-          <span class="offer-card__icon"><Icon name={service.icon} size={30} /></span>
-          <p class="eyebrow">{service.eyebrow}</p>
-          <h2>{service.title}</h2>
-          <p>{service.text}</p>
-          <a class="text-link" href={url(service.href)}>Mehr erfahren</a>
+        <article class="service-row" id={service.id}>
+          <div class="service-row__heading">
+            <span class="service-row__mark"><Icon name={service.icon} size={28} /></span>
+            <div><p class="eyebrow">{service.eyebrow}</p><h3>{service.title}</h3></div>
+          </div>
+          <div class="service-row__detail">
+            <p>{service.text}</p>
+            <a class="text-link" href={url(service.href)}>{service.link} <Icon name="arrow-right" size={18} /></a>
+          </div>
         </article>
       ))}
     </section>
@@ -163,3 +171,27 @@ const faqs = [
     </section>
   </main>
 </BaseLayout>
+
+<style>
+  .service-index { padding-block: 36px; }
+  .service-index > h2 { margin: 0 0 22px; }
+  .service-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 12px 40px;
+    border-top: 1px solid var(--color-line);
+    padding-block: 24px;
+    scroll-margin-top: 144px;
+  }
+  .service-row:last-child { border-bottom: 1px solid var(--color-line); }
+  .service-row__heading { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; }
+  .service-row__mark { color: var(--color-pantone-deep); padding-top: 4px; }
+  .service-row :is(h3, p) { margin: 0; overflow-wrap: anywhere; }
+  .service-row h3 { font-size: 1.4rem; line-height: 1.3; }
+  .service-row .eyebrow { margin-bottom: 6px; color: var(--color-pantone-deep); }
+  .service-row .text-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+  .service-row .text-link :global(svg) { flex: none; }
+  @media (max-width: 720px) {
+    .service-row { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
