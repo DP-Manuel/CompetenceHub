@@ -13,6 +13,8 @@ Die Anbieter wurden auf ihren eigenen öffentlich zugänglichen Seiten betrachte
 | [Sharpist](https://www.sharpist.com/de/coaching-plattform) | Formate, Matching und Ansprechpartner werden als verschiedene Schritte erklärt | Zielgruppe, Nutzen und Format separat benennen; bei uns keine automatische Zuweisung |
 | [Haufe Akademie](https://www.haufe-akademie.de/corporate-learning/inhouse) | Thematische Einstiege und persönliche Beratung laufen nebeneinander; Format ist sichtbar | Kuratierte Themen und direkte Beratung, keine zweite Katalog-Navigation |
 
+In einem Edge-Lauf bei 390 CSS-Pixeln erreichten alle vier Seiten ihre Hauptüberschrift per HTTP 200. In dieser Stichprobe trat bei Sharpist horizontaler Überlauf auf; der Lauf hatte keine Aussage über Formulare, Nutzerkonversion oder Feldwerte der Anbieter. Unser Augenmerk bleibt auf kurzen Einstiegen, Fokus und Umbruch langer Begriffe.
+
 ## Nutzerwege Und Inhalte
 
 - Unternehmen: Start → Kompass → Zielgruppe und Ziel abschätzen → bis zu drei begründete vorhandene Leistungswege → direkter Kontakt mit einem vorgewählten, öffentlichen Themenwert. Ohne JavaScript bleiben die sechs statischen Einstiegspfade nutzbar. Antworten bleiben im Arbeitsspeicher; es gibt keine Analyse oder Übertragung.
@@ -33,6 +35,12 @@ Die Anbieter wurden auf ihren eigenen öffentlich zugänglichen Seiten betrachte
 | Privat-TLS und Januar-Pilot | Letzter belegter Ablauf 30.11.2026, 19:09:39 MEZ. [Eigenständiges Betriebsgate](../operations/pilot-tls-continuity-2026-11-30.md); kein Wechsel aus diesem Sprint. Ohne sichere freigegebene Fortführung nach Ablauf keinen privaten Pilotzugang verwenden. |
 
 Messung: Mit moderierten Aufgaben Klicks bis zur passenden Leistung, Aufgabe erfolgreich/nicht erfolgreich, benötigte Zeit und freiwillige Rückmeldung sammeln. Keine Cookies, Telemetrie oder Daten von echten Besuchern in diesem Sprint. Lokale Browser-Labormessungen sind keine Feldwerte; kein INP oder Reichweitenwert ohne Daten. Ein gesprochener Screenreader-Durchlauf ist als reale Abnahme separat auszuweisen.
+
+## Release Und Nachweis
+
+- GitHub Pages: [öffentliche Vorschau](https://dp-manuel.github.io/CompetenceHub/), Source `bfa798b`, [Build und Deployment](https://github.com/DP-Manuel/CompetenceHub/actions/runs/45999895725).
+- Live PASS für Führung, Recruiting, Privatberatung, Workshop-Detail und Kontakt in Edge und Firefox bei 320/390/768/1024/1440/1920 CSS-Pixeln; nativer Firefox-Zoom 200 %, ohne JavaScript, Tastatur, Touch und Reduced Motion. Die vier Detailrouten sowie Hub-Drag und Freigabegrenzen zusätzlich geprüft. Alle Tests waren synthetisch, keine externen Testpersonen.
+- Kleine Edge-Laborsamples auf Pages: Desktop-LCP 0,74–1,07 s, mobile Einzelmessung 2,74 s; CLS maximal 0,001, unverändert nur ein extern geladenes eigenes JavaScript-Modul auf der Startseite. Keine repräsentative Zeitreihe und kein stabiler Performance-Gewinn abgeleitet.
 
 ## Entwürfe für später, kein Versand
 

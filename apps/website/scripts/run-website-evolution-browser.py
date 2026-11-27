@@ -80,7 +80,9 @@ def home(page, base, bust=""):
     ) == list(VISIBLE)
     hub_geometry(page)
     audience = page.get_by_role("navigation", name="Direkte Einstiege")
-    expect(audience.get_by_role("link", name="Für Unternehmen")).to_have_attribute("href", "/CompetenceHub/unternehmen")
+    expect(audience.get_by_role("link", name="Für Unternehmen")).to_have_attribute(
+        "href", re.compile(r"/CompetenceHub/unternehmen/?(?:#anlaesse)?$")
+    )
     expect(audience.get_by_role("link", name="Für Privatpersonen")).to_have_attribute("href", "/CompetenceHub/mindforge#privatpersonen")
     portrait_sizes = []
     for slug in VISIBLE:
