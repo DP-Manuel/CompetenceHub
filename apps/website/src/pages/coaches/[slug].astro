@@ -7,6 +7,7 @@ import { editorialProfileCopy } from "../../components/editorial-profile-copy";
 import { coaches } from "../../preview/coaches";
 import { finderEntries } from "../../preview/offering-finder-data";
 import type { Coach } from "../../data/coaches";
+import { workshopProfiles } from "../../data/workshop-themes";
 import "../../styles/global.css";
 
 export const getStaticPaths = (() => {
@@ -27,6 +28,7 @@ interface Props {
 
 const { coach } = Astro.props;
 const copy = editorialProfileCopy.get(coach.profilePath);
+const workshopProfile = workshopProfiles.find((profile) => profile.coach.profilePath === coach.profilePath);
 const offerTitles = finderEntries
   .filter((entry) => entry.coach.profilePath === coach.profilePath)
   .map(({ title }) => title);
@@ -39,5 +41,5 @@ const profileUrl = (path: string) => `${base}/${path.replace(/^\//, "")}`;
   description={copy?.description ?? coach.text}
   editorialProfile
 >
-  <CoachEditorialProfile {coach} {copy} {offerTitles} url={profileUrl} />
+  <CoachEditorialProfile {coach} {copy} {offerTitles} workshopThemes={workshopProfile?.themes} url={profileUrl} />
 </BaseLayout>

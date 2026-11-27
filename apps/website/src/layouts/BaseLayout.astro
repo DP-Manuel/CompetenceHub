@@ -67,7 +67,9 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
   (path) => isCurrent(path),
 );
 const profilePath = canonicalPath.replace(/^\//, "").replace(/\/$/, "");
-const approvedProfile = activeCoaches.some((coach) => coach.profilePath === profilePath);
+const publicProfile = activeCoaches.find((coach) => coach.profilePath === profilePath);
+const approvedProfile = Boolean(publicProfile);
+const sharePortrait = publicProfile?.image ? new URL(publicProfile.image, canonicalSite).href : "";
 const localDemoProfile = v2Local && profilePath === "coaches/v2-demo-coach";
 const showUpcoming = approvedProfile || localDemoProfile || (v2Local && isCurrent());
 const profileUpcoming = approvedProfile || localDemoProfile ? `/${profilePath}/` : "";
@@ -92,6 +94,7 @@ const finderHref = profileHasOffers
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    {!v2Local && sharePortrait && <meta property="og:image" content={sharePortrait} />}
     {canonical && !v2Local && <meta property="og:url" content={canonicalUrl} />}
     {canonical && !v2Local && <link rel="canonical" href={canonicalUrl} />}
     <link rel="icon" href={url("favicon.svg")} type="image/svg+xml" />

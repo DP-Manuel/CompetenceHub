@@ -76,26 +76,29 @@ const topics = [
         class="contact-form"
         id="contact-request-form"
         data-recipient={primaryEmail}
+        method="dialog"
+        hidden
       >
         <div class="contact-form__heading contact-form__wide">
           <p class="eyebrow">Anfrage vorbereiten</p>
           <h2>Worum geht es?</h2>
           <p class="contact-form__required-note"><span aria-hidden="true">*</span> Pflichtfeld</p>
+          <p>Sie öffnen einen Entwurf in Ihrem E-Mail-Programm und entscheiden selbst, ob Sie ihn absenden.</p>
         </div>
 
         <label>
           <span>Unternehmen <small>(optional)</small></span>
-          <input name="company" autocomplete="organization" />
+          <input name="company" autocomplete="organization" maxlength="120" />
         </label>
 
         <label>
           <span>Name <span class="required-marker" aria-hidden="true">*</span></span>
-          <input name="contact" autocomplete="name" required />
+          <input name="contact" autocomplete="name" maxlength="120" required />
         </label>
 
         <label class="contact-form__wide">
           <span>E-Mail-Adresse <span class="required-marker" aria-hidden="true">*</span></span>
-          <input name="email" type="email" autocomplete="email" required />
+          <input name="email" type="email" autocomplete="email" maxlength="254" required />
         </label>
 
         <label class="contact-form__wide">
@@ -111,23 +114,31 @@ const topics = [
           <textarea
             name="message"
             rows="5"
+            maxlength="1000"
             placeholder="Situation, Zielgruppe und gewünschter Zeitraum"
           ></textarea>
         </label>
 
-        <button class="button contact-form__wide" type="submit">
-          Anfrage vorbereiten
+        <button class="button contact-form__wide" type="submit" disabled>
+          E-Mail-Entwurf öffnen
         </button>
         <p class="form-note contact-form__wide">
-          Bis die sichere Direktübermittlung freigegeben ist, öffnet der Button
-          Ihr E-Mail-Programm. Die Website speichert keine Formulardaten.
+          Die Website speichert oder versendet keine Formulardaten. Bitte teilen Sie hier keine vertraulichen oder sensiblen Angaben mit.
         </p>
       </form>
     </section>
   </main>
 
   <script>
+    import { contactTopics } from "../data/solution-guide.mjs";
     const form = document.querySelector<HTMLFormElement>("#contact-request-form");
+    const requestTopic = new URLSearchParams(location.search).get("thema") ?? "";
+    const select = form?.querySelector<HTMLSelectElement>("select[name=topic]");
+    const submit = form?.querySelector<HTMLButtonElement>("button[type=submit]");
+
+    if (select && Object.hasOwn(contactTopics, requestTopic)) {
+      select.value = contactTopics[requestTopic as keyof typeof contactTopics];
+    }
 
     form?.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -145,5 +156,13 @@ const topics = [
 
       window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(`Anfrage: ${topic}`)}&body=${encodeURIComponent(body)}`;
     });
+    if (form && submit) {
+      submit.disabled = false;
+      form.hidden = false;
+    }
   </script>
 </BaseLayout>
+
+<style>
+  .contact-form[hidden] { display: none; }
+</style>

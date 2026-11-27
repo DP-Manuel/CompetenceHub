@@ -1,5 +1,7 @@
 ---
 import Icon from "../components/Icon.astro";
+import WorkshopDiscovery from "../components/WorkshopDiscovery.astro";
+import { workshopProfiles } from "../data/workshop-themes";
 import { coaches } from "./coaches";
 import { categories, topics } from "./topics";
 import { publicOfferKeywords } from "./coach-discovery";
@@ -16,6 +18,9 @@ const url = (path: string) => `${base}/${path}`;
       <div class="actions">
         <a class="button" href={url("kontakt")}>Coaching-Bedarf besprechen</a>
         <a class="button button--ghost" href={url("kontakt")}>Als Coach vorstellen</a>
+        {workshopProfiles.length > 0 && (
+          <a class="text-link" href="#workshop-themen">Workshop-Themen für Unternehmen <Icon name="arrow-right" size={18} /></a>
+        )}
       </div>
     </div>
     <aside class="coach-list-hero__note" aria-label="Netzwerkanspruch">
@@ -101,6 +106,7 @@ const url = (path: string) => `${base}/${path}`;
     <p>Für diese Auswahl ist aktuell kein passendes freigegebenes Coach-Profil veröffentlicht.</p>
     <a class="text-link" href={url("kontakt")}>Anliegen mit Frau Rappelt besprechen <Icon name="arrow-right" size={20} /></a>
   </div>
+  <WorkshopDiscovery {url} />
   <section class="cta-panel">
     <div><p class="eyebrow">Kontakt</p><h2>Coach-Profil oder Unternehmensbedarf besprechen</h2></div>
     <div class="actions"><a class="button button--ghost" href={url("leistungen#angebotsfinder")}>Angebote finden</a><a class="button" href={url("kontakt")}>Bedarf besprechen</a></div>

@@ -1,0 +1,97 @@
+---
+import Icon from "./Icon.astro";
+import { workshopProfiles } from "../data/workshop-themes";
+
+interface Props {
+  url: (path: string) => string;
+}
+
+const { url } = Astro.props;
+---
+
+{workshopProfiles.length > 0 && (
+  <section class="workshop-discovery" id="workshop-themen" aria-labelledby="workshop-heading">
+    <header>
+      <p class="eyebrow">Gruppenformate</p>
+      <h2 id="workshop-heading">Workshop-Themen für Unternehmen</h2>
+      <p>Ob ein Workshop, ein Vortrag oder ein anderes Format zu Ihrem Anliegen passt, klären wir gemeinsam.</p>
+    </header>
+    {workshopProfiles.map(({ coach, copy, slug, themes }) => (
+      <section class="workshop-group" aria-labelledby={`workshop-${slug}`}>
+        <div class="workshop-person">
+          {coach.image && (
+            <img src={url(coach.image)} alt="" width={coach.imageWidth} height={coach.imageHeight} loading="lazy" />
+          )}
+          <div>
+            <h3 id={`workshop-${slug}`}><a class="text-link" href={url(`${coach.profilePath}/`)}>{coach.name}</a></h3>
+            <p>{copy.topicsHeading}</p>
+          </div>
+        </div>
+        <ul class="workshop-list" role="list">
+          {themes.map(({ title, preview, path }) => (
+            <li>
+              <a class="workshop-topic" href={url(path)}>
+                <span><strong>{title}</strong><span class="workshop-preview">{preview}</span></span>
+                <Icon name="arrow-right" size={20} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+    <a class="text-link" href={url("kontakt/")}>Workshop-Bedarf mit Frau Rappelt besprechen <Icon name="arrow-right" size={18} /></a>
+  </section>
+)}
+
+<style>
+  .workshop-discovery {
+    padding-block: 2.5rem;
+    border-block: 1px solid var(--color-line);
+    scroll-margin-block-start: 7rem;
+    overflow-wrap: anywhere;
+  }
+
+  .workshop-discovery > header { max-inline-size: 66ch; margin-block-end: 1.5rem; }
+  h2, h3 { margin: 0; letter-spacing: 0; }
+  h2 { font-size: 2rem; line-height: 1.15; }
+  h3 { font-size: 1.12rem; line-height: 1.3; }
+  p { margin: .4rem 0 0; }
+  .eyebrow { margin: 0 0 .5rem; color: var(--color-pantone-deep); }
+
+  .workshop-group {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+    align-items: start;
+    gap: 1rem 2.5rem;
+    padding-block: 1.25rem;
+    border-block-start: 1px solid var(--color-line);
+  }
+
+  .workshop-person { display: flex; align-items: center; gap: 1rem; }
+  .workshop-person img { inline-size: 4.5rem; block-size: 4.5rem; flex: none; object-fit: cover; border-radius: 4px; }
+  .workshop-person p { margin: 0; }
+  .workshop-list { margin: 0; padding: 0; list-style: none; }
+  .workshop-list li + li { border-block-start: 1px solid var(--color-line); }
+  .workshop-topic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .875rem;
+    min-block-size: 44px;
+    padding: .65rem .85rem;
+    color: var(--color-pantone-deep);
+    background: var(--color-soft);
+    text-decoration: none;
+  }
+
+  .workshop-topic strong { text-decoration: underline; text-underline-offset: .2em; }
+  .workshop-preview { display: block; margin-block-start: .12rem; color: var(--color-dark); }
+  .workshop-topic:hover { background: var(--color-ice); }
+  .workshop-discovery a:focus-visible { outline: 3px solid var(--color-pantone-deep); outline-offset: 3px; }
+  .workshop-discovery :global(svg) { flex: none; }
+
+  @media (max-width: 48rem) {
+    h2 { font-size: 1.65rem; }
+    .workshop-group { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

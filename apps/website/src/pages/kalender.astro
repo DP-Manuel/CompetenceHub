@@ -9,7 +9,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 <BaseLayout
   title="Veranstaltungskalender | Competence Hub"
-  description="Aktuelle veröffentlichte Workshops, Vorträge und Gruppenveranstaltungen."
+  description="Workshops und Vorträge im Competence Hub: Entdecken Sie mögliche Formate oder besprechen Sie Ihr Veranstaltungsvorhaben mit Frau Rappelt."
   noindex
 >
   <main class="subpage">
@@ -17,8 +17,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       <div>
         <p class="eyebrow">Workshops und Vorträge</p>
         <h1>Veranstaltungskalender</h1>
-        <p>Interesse an einem Workshop oder Vortrag? Wir klären gern das passende Format für Ihr Anliegen.</p>
-        <a class="button" href={`${base}/kontakt/`}>Veranstaltung anfragen</a>
+        <p>Interesse an einem Workshop oder Vortrag? Frau Rappelt klärt mit Ihnen Zielgruppe, Thema und das passende Format.</p>
+        <div class="actions">
+          <a class="button" href={`${base}/kontakt/?thema=workshop`}>Veranstaltung anfragen</a>
+          <a class="button button--ghost" href={`${base}/leistungen/#gruppenformate`}>Workshops &amp; Vorträge</a>
+        </div>
       </div>
     </section>
     <UpcomingEvents live={local} calendarHref={publicCalendarPath} />

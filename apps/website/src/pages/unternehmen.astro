@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
+import SolutionGuide from "../components/SolutionGuide.astro";
 import { customerFeedbacks } from "../data/customerFeedbacks";
 import "../styles/global.css";
 import "../styles/company-experience.css";
@@ -242,7 +243,7 @@ const faqs = [
         </div>
         <div class="compass-options" data-compass-options>
           {topics.map((topic) => (
-            <a class="compass-option" id={`kompass-wahl-${topic.id}`} href={`#kompass-${topic.id}`} data-compass-tab>
+            <a class="compass-option" id={`kompass-wahl-${topic.id}`} href={`#kompass-${topic.id}`} data-compass-tab data-topic={topic.id}>
               <Icon name={topic.icon} size={26} strokeWidth={1.7} />
               <span>{topic.id === "entwicklung" ? <>Personal<wbr />entwicklung</> : topic.title}</span>
             </a>
@@ -263,6 +264,7 @@ const faqs = [
             </section>
           ))}
         </div>
+        <SolutionGuide />
       </div>
     </section>
 
@@ -432,6 +434,7 @@ const faqs = [
         panels[i].dataset.active = String(active);
       }
       if (focus) tabs[index].focus();
+      compass.dispatchEvent(new Event("company-compass:change"));
     };
     const selectHash = () => {
       const index = tabs.findIndex((tab) => tab.hash === location.hash);
