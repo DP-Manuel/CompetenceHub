@@ -104,6 +104,8 @@
 [data-company-compass][data-enhanced] .compass-panels { display: grid; }
 [data-company-compass][data-enhanced] .compass-panel { grid-area: 1 / 1; margin: 0; }
 [data-company-compass][data-enhanced] .compass-panel[data-active="false"] { visibility: hidden; }
+[data-unified-compass][data-enhanced] .compass-panel[data-active="false"] { display: none; }
+[data-unified-compass] .compass-panel { grid-template-columns: minmax(0, 1fr); }
 @media (prefers-reduced-motion: no-preference) {
   [data-company-compass][data-enhanced] .compass-panel[data-active="true"] > * {
     animation: compass-enter 170ms ease-out;

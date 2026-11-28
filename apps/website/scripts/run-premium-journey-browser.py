@@ -132,7 +132,7 @@ def no_javascript(browser, base):
     page.close()
 
 
-def native_zoom(playwright, base):
+def native_zoom(playwright, base, verify=journey):
     with tempfile.TemporaryDirectory(prefix="competence-premium-zoom-") as tmp:
         context = playwright.firefox.launch_persistent_context(tmp, no_viewport=True)
         old_ratio = context.pages[0].evaluate("devicePixelRatio")
@@ -147,7 +147,7 @@ def native_zoom(playwright, base):
             page = context.pages[0]
             visit(page, base, "")
             assert 1.95 < page.evaluate("devicePixelRatio") / old_ratio < 2.05
-            journey(page, base, keyboard=True)
+            verify(page, base, keyboard=True)
         finally:
             context.close()
 

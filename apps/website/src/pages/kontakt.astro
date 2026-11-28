@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
+import { workshopProfiles } from "../data/workshop-themes";
 import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -12,6 +13,9 @@ const primaryPhone = "0172 6799972";
 const primaryPhoneHref = "tel:+491726799972";
 const fallbackSubject = encodeURIComponent("Anfrage über Competence Hub");
 const fallbackMailto = `mailto:${primaryEmail}?subject=${fallbackSubject}`;
+const review = import.meta.env.PUBLIC_REVIEW_MODE === "true";
+const workshopTopics = workshopProfiles.flatMap(({ themes }) =>
+  themes.map(({ id, title }) => ({ id, title })));
 
 const topics = [
   "Mindforge für Privatpersonen",
@@ -42,11 +46,11 @@ const topics = [
           Ein paar Stichpunkte reichen. Wir melden uns zur gemeinsamen
           Einordnung und empfehlen den passenden nächsten Schritt.
         </p>
-        <div class="contact-points" aria-label="So geht es weiter">
+        {!review && <div class="contact-points" aria-label="So geht es weiter">
           <span><Icon name="message-circle" size={22} /> Anliegen schildern</span>
           <span><Icon name="user-round" size={22} /> Expertise auswählen</span>
           <span><Icon name="calendar" size={22} /> Rahmen abstimmen</span>
-        </div>
+        </div>}
         <aside class="contact-person" aria-label="Persönliche Ansprechpartnerin">
           <span class="contact-person__portrait">
             <img
@@ -69,21 +73,31 @@ const topics = [
         <div class="contact-direct-links" aria-label="Direkte Kontaktwege">
           <a class="contact-email" href={fallbackMailto}>{primaryEmail}</a>
           <a class="contact-phone" href={primaryPhoneHref}>{primaryPhone}</a>
+          {review && <button class="button button--ghost contact-copy" type="button" data-copy-address hidden>E-Mail-Adresse kopieren</button>}
         </div>
+        {review && <>
+          <label class="contact-address-fallback" data-address-fallback hidden>
+            E-Mail-Adresse zum manuellen Kopieren <input value={primaryEmail} readonly />
+          </label>
+          <p class="contact-feedback" data-address-status role="status"></p>
+        </>}
       </div>
 
       <form
         class="contact-form"
         id="contact-request-form"
         data-recipient={primaryEmail}
+        data-local-draft={review || undefined}
         method="dialog"
         hidden
       >
         <div class="contact-form__heading contact-form__wide">
           <p class="eyebrow">Anfrage vorbereiten</p>
           <h2>Worum geht es?</h2>
-          <p class="contact-form__required-note"><span aria-hidden="true">*</span> Pflichtfeld</p>
-          <p>Sie öffnen einen Entwurf in Ihrem E-Mail-Programm und entscheiden selbst, ob Sie ihn absenden.</p>
+          {!review && <p class="contact-form__required-note"><span aria-hidden="true">*</span> Pflichtfeld</p>}
+          <p>{review
+            ? "Sie können den Text kopieren oder in Ihrem E-Mail-Programm öffnen. Hier wird nichts versendet."
+            : "Sie öffnen einen Entwurf in Ihrem E-Mail-Programm und entscheiden selbst, ob Sie ihn absenden."}</p>
         </div>
 
         <label>
@@ -92,20 +106,23 @@ const topics = [
         </label>
 
         <label>
-          <span>Name <span class="required-marker" aria-hidden="true">*</span></span>
-          <input name="contact" autocomplete="name" maxlength="120" required />
+          <span>Name {review ? <small>(optional)</small> : <span class="required-marker" aria-hidden="true">*</span>}</span>
+          <input name="contact" autocomplete="name" maxlength="120" required={!review} />
         </label>
 
-        <label class="contact-form__wide">
+        {!review && <label class="contact-form__wide">
           <span>E-Mail-Adresse <span class="required-marker" aria-hidden="true">*</span></span>
           <input name="email" type="email" autocomplete="email" maxlength="254" required />
-        </label>
+        </label>}
 
         <label class="contact-form__wide">
-          <span>Thema <span class="required-marker" aria-hidden="true">*</span></span>
-          <select name="topic" required>
-            <option value="">Bitte auswählen</option>
-            {topics.map((topic) => <option value={topic}>{topic}</option>)}
+          <span>Thema {!review && <span class="required-marker" aria-hidden="true">*</span>}</span>
+          <select name="topic" required={!review}>
+            <option value="">{review ? "Noch nicht sicher" : "Bitte auswählen"}</option>
+            {topics.filter((topic) => !review || topic !== "Noch nicht sicher").map((topic) => <option value={topic}>{topic}</option>)}
+            {workshopTopics.length > 0 && <optgroup label="Workshop-Themen">
+              {workshopTopics.map(({ id, title }) => <option value={title} data-workshop={id}>{title}</option>)}
+            </optgroup>}
           </select>
         </label>
 
@@ -120,8 +137,21 @@ const topics = [
         </label>
 
         <button class="button contact-form__wide" type="submit" disabled>
-          E-Mail-Entwurf öffnen
+          {review ? "Entwurf vorbereiten" : "E-Mail-Entwurf öffnen"}
         </button>
+        {review && (
+          <section class="contact-draft contact-form__wide" data-draft hidden aria-labelledby="draft-title">
+            <h3 id="draft-title" tabindex="-1">Ihr Entwurf</h3>
+            <label>Text zum Übernehmen
+              <textarea data-draft-text readonly rows="6"></textarea>
+            </label>
+            <div class="contact-draft__actions">
+              <a class="button" data-open-mail>Im E-Mail-Programm öffnen</a>
+              <button class="button button--ghost" type="button" data-copy-draft>Entwurf kopieren</button>
+            </div>
+            <p class="contact-feedback" data-draft-status role="status"></p>
+          </section>
+        )}
         <p class="form-note contact-form__wide">
           Die Website speichert oder versendet keine Formulardaten. Bitte teilen Sie hier keine vertraulichen oder sensiblen Angaben mit.
         </p>
@@ -135,16 +165,70 @@ const topics = [
     const requestTopic = new URLSearchParams(location.search).get("thema") ?? "";
     const select = form?.querySelector<HTMLSelectElement>("select[name=topic]");
     const submit = form?.querySelector<HTMLButtonElement>("button[type=submit]");
+    const work = new URLSearchParams(location.search).get("workshop");
 
-    if (select && Object.hasOwn(contactTopics, requestTopic)) {
-      select.value = contactTopics[requestTopic as keyof typeof contactTopics];
+    if (select) {
+      const candidate = work ? Array.from(select.options).find(({ dataset }) => dataset.workshop === work) : undefined;
+      if (candidate) select.value = candidate.value;
+      else if (Object.hasOwn(contactTopics, requestTopic)) select.value = contactTopics[requestTopic as keyof typeof contactTopics];
     }
+
+    const draft = form?.querySelector<HTMLElement>("[data-draft]");
+    const draftText = draft?.querySelector<HTMLTextAreaElement>("[data-draft-text]");
+    const openMail = draft?.querySelector<HTMLAnchorElement>("[data-open-mail]");
+    const draftStatus = draft?.querySelector("[data-draft-status]");
+    const copyDraft = draft?.querySelector<HTMLButtonElement>("[data-copy-draft]");
+    const copyAddress = document.querySelector<HTMLButtonElement>("[data-copy-address]");
+    const addressStatus = document.querySelector("[data-address-status]");
+    const addressFallback = document.querySelector<HTMLElement>("[data-address-fallback]");
+    const addressField = addressFallback?.querySelector("input");
+    const copy = async (value: string, field: HTMLInputElement | HTMLTextAreaElement, status: Element, fallback?: HTMLElement) => {
+      try {
+        await navigator.clipboard.writeText(value);
+        status.textContent = "In die Zwischenablage kopiert.";
+      } catch {
+        if (fallback) fallback.hidden = false;
+        field.focus();
+        field.select();
+        status.textContent = "Automatisches Kopieren ist nicht verfügbar. Der Text ist zum manuellen Kopieren markiert.";
+      }
+    };
+    if (copyAddress && addressStatus && addressFallback && addressField) {
+      copyAddress.hidden = false;
+      copyAddress.addEventListener("click", () => void copy(addressField.value, addressField, addressStatus, addressFallback));
+    }
+    copyDraft?.addEventListener("click", () => {
+      if (draftText && draftStatus) void copy(draftText.value, draftText, draftStatus);
+    });
+    form?.addEventListener("input", () => {
+      if (draft) draft.hidden = true;
+    });
 
     form?.addEventListener("submit", (event) => {
       event.preventDefault();
       const data = new FormData(form);
       const recipient = form.dataset.recipient;
       const topic = String(data.get("topic") || "Coaching-Anfrage");
+      const subject = `Anfrage: ${topic}`;
+      if (draft && draftText && openMail && draftStatus && recipient) {
+        const fields = [["Name", data.get("contact")], ["Unternehmen", data.get("company")]]
+          .map(([label, value]) => [label, String(value ?? "").trim()])
+          .filter(([, value]) => value)
+          .map(([label, value]) => `${label}: ${value}`);
+        const message = String(data.get("message") || "").trim();
+        const body = [message, fields.join("\n")].filter(Boolean).join("\n\n");
+        const href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        draftText.value = `An: ${recipient}\nBetreff: ${subject}\n\n${body}`;
+        openMail.hidden = href.length > 1800;
+        if (openMail.hidden) openMail.removeAttribute("href");
+        else openMail.href = href;
+        draftStatus.textContent = openMail.hidden
+          ? "Dieser Entwurf ist für die direkte Übergabe zu lang. Bitte kopieren Sie den Text."
+          : "Entwurf vorbereitet. Es wurde nichts gesendet.";
+        draft.hidden = false;
+        draft.querySelector("h3")?.focus();
+        return;
+      }
       const body = [
         `Unternehmen (optional): ${data.get("company") || "Privatanfrage"}`,
         `Name: ${data.get("contact") || ""}`,
@@ -154,7 +238,7 @@ const topics = [
         String(data.get("message") || ""),
       ].join("\n");
 
-      window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(`Anfrage: ${topic}`)}&body=${encodeURIComponent(body)}`;
+      window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     });
     if (form && submit) {
       submit.disabled = false;
@@ -165,4 +249,13 @@ const topics = [
 
 <style>
   .contact-form[hidden] { display: none; }
+  .contact-page [hidden] { display: none; }
+  .contact-copy, .contact-draft__actions :is(a, button) { min-block-size: 44px; max-inline-size: 100%; white-space: normal; overflow-wrap: anywhere; }
+  .contact-address-fallback { display: grid; gap: .25rem; max-inline-size: 100%; margin-block-start: .75rem; }
+  .contact-address-fallback input { min-inline-size: 0; max-inline-size: 100%; font: inherit; }
+  .contact-draft { border-block-start: 2px solid var(--color-pantone); margin-block-start: .4rem; padding-block-start: 1rem; }
+  .contact-draft h3 { margin: 0 0 .65rem; }
+  .contact-draft__actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-block-start: .7rem; }
+  .contact-feedback { font-size: .95rem; }
+  .contact-feedback:empty { margin: 0; }
 </style>

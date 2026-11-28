@@ -47,8 +47,8 @@ const byTopic = Object.freeze({
 // Input is a closed set. Neither answers nor resulting order are transmitted.
 /** @returns {(typeof directions)[keyof typeof directions][]} */
 export function suggestDirections(topic = "", audience = "", goal = "") {
-  if (!Object.hasOwn(byTopic, topic) || !audiences.some(({ id }) => id === audience)
-    || !goals.some(({ id }) => id === goal)) return [];
+  if (!Object.hasOwn(byTopic, topic) || (audience && !audiences.some(({ id }) => id === audience))
+    || (goal && !goals.some(({ id }) => id === goal))) return [];
   return byTopic[topic]
     .map((key, index) => {
       const direction = directions[key];

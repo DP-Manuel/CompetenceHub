@@ -7,11 +7,14 @@ import "../styles/global.css";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const url = (path: string) => `${base}/${path}`;
+const review = import.meta.env.PUBLIC_REVIEW_MODE === "true";
 ---
 
 <BaseLayout
   title="Competence Hub | Coaching für Unternehmen und Privatpersonen"
-  description="Coaching, Beratung und Workshops für Unternehmen und Privatpersonen. Lernen Sie die Coaches und passenden Formate im Competence Hub kennen."
+  description={review
+    ? "Coaching, Beratung und Workshops für Unternehmen und Privatpersonen: Finden Sie einen passenden Einstieg und besprechen Sie Ihr Anliegen mit Frau Rappelt."
+    : "Coaching, Beratung und Workshops für Unternehmen und Privatpersonen. Lernen Sie die Coaches und passenden Formate im Competence Hub kennen."}
   bodyClass="home-page"
 >
   <LivingHubPrototype variant="c" prototypeMode={false}>

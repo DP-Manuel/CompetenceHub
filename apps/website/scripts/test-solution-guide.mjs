@@ -4,8 +4,8 @@ import { audiences, contactTopics, directions, goals, suggestDirections } from "
 
 test("the existing six compass topics return at most three real local directions", () => {
   for (const topic of ["fuehrung", "teams", "recruiting", "entwicklung", "veraenderung", "gesundheit"]) {
-    for (const { id: audience } of audiences) {
-      for (const { id: goal } of goals) {
+    for (const { id: audience } of [{ id: "" }, ...audiences]) {
+      for (const { id: goal } of [{ id: "" }, ...goals]) {
         const result = suggestDirections(topic, audience, goal);
         assert.ok(result.length >= 2 && result.length <= 3);
         assert.equal(new Set(result).size, result.length);
@@ -26,11 +26,14 @@ test("the ranking reflects the task without introducing a new service", () => {
   assert.equal(suggestDirections("fuehrung", "team", "entwickeln")[0], directions.workshops);
   assert.equal(suggestDirections("recruiting", "organisation", "auswahl")[0], directions.assessment);
   assert.equal(suggestDirections("recruiting", "organisation", "klaeren")[0], directions.recruiting);
+  assert.deepEqual(suggestDirections("fuehrung"), [directions.business, directions.workshops, directions.development]);
+  assert.equal(suggestDirections("fuehrung", "team")[0], directions.workshops);
+  assert.equal(suggestDirections("recruiting", "", "auswahl")[0], directions.assessment);
 });
 
 test("unknown choices fail closed, including inherited object names", () => {
   assert.deepEqual(suggestDirections("__proto__", "einzel", "klaeren"), []);
   assert.deepEqual(suggestDirections("fuehrung", "unknown", "klaeren"), []);
   assert.deepEqual(suggestDirections("fuehrung", "einzel", "unknown"), []);
-  assert.deepEqual(suggestDirections("fuehrung"), []);
+  assert.deepEqual(suggestDirections(), []);
 });

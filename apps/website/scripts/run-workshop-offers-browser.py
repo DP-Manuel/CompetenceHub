@@ -61,8 +61,10 @@ def preview_journey(page, base, screenshots):
             expect(portrait).to_have_js_property("complete", True)
             assert portrait.evaluate("node => node.naturalWidth > 0")
             expect(main.get_by_role("link", name=coach)).to_have_attribute("href", urlsplit(base + f"coaches/{slug}/").path)
-            expect(main.get_by_role("link", name="Zur Kontaktseite")).to_have_attribute("href", urlsplit(base + "kontakt/").path)
-            draft = urlsplit(main.get_by_role("link", name="Thema per E-Mail anfragen").get_attribute("href"))
+            expect(main.get_by_role("link", name="Thema mit Frau Rappelt besprechen")).to_have_attribute(
+                "href", urlsplit(base + "kontakt/").path + f"?workshop={key}"
+            )
+            draft = urlsplit(main.get_by_role("link", name="Direkt per E-Mail anfragen").get_attribute("href"))
             assert (draft.scheme, draft.path) == ("mailto", "competencehub@donner-partner.de")
             fields = parse_qs(draft.query)
             assert title in fields["subject"][0] and coach in fields["subject"][0]

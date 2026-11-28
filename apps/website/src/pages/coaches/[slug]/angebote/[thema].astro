@@ -48,15 +48,25 @@ const url = (path: string) => `${base}/${path}`;
     <div class="workshop-wrap">
       <section class="workshop-row" aria-labelledby="workshop-audience">
         <h2 id="workshop-audience">Für wen?</h2>
-        <p>{copy.audience}</p>
+        <p>{theme.fit}</p>
+      </section>
+      <section class="workshop-row" aria-labelledby="workshop-content">
+        <h2 id="workshop-content">Darum geht es</h2>
+        <ul class="workshop-focus" role="list">
+          {theme.focus.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+      <section class="workshop-row" aria-labelledby="workshop-takeaway">
+        <h2 id="workshop-takeaway">Was Sie mitnehmen können</h2>
+        <p>{theme.takeaway}</p>
       </section>
       <section class="workshop-row" aria-labelledby="workshop-request">
         <h2 id="workshop-request">Passendes Format besprechen</h2>
         <div>
           <p>Ob ein Workshop, ein Vortrag oder ein anderes Format passt, klären Sie mit Frau Rappelt.</p>
           <div class="workshop-actions">
-            <a class="button" href={coachRequestMailto(coach.name, theme.title)}><Icon name="message-circle" size={19} /> Thema per E-Mail anfragen</a>
-            <a class="text-link" href={url("kontakt/")}>Zur Kontaktseite <Icon name="arrow-right" size={18} /></a>
+            <a class="button" href={url(`kontakt/?workshop=${theme.id}`)}><Icon name="message-circle" size={19} /> Thema mit Frau Rappelt besprechen</a>
+            <a class="text-link" href={coachRequestMailto(coach.name, theme.title)}>Direkt per E-Mail anfragen <Icon name="arrow-right" size={18} /></a>
           </div>
         </div>
       </section>
@@ -83,6 +93,7 @@ const url = (path: string) => `${base}/${path}`;
   .workshop-row { display: grid; grid-template-columns: minmax(0, .6fr) minmax(0, 1fr); gap: .65rem 2rem; padding-block: 1.75rem; }
   .workshop-row + .workshop-row { border-block-start: 1px solid var(--color-line); }
   .workshop-row p { max-inline-size: 65ch; }
+  .workshop-focus { display: grid; gap: .35rem; padding-inline-start: 1.1rem; margin: 0; }
   .workshop-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem 1.25rem; margin-block-start: 1.15rem; }
   .workshop-detail :is(.text-link, .button) { display: inline-flex; align-items: center; min-block-size: 44px; max-inline-size: 100%; gap: .5rem; white-space: normal; }
   .workshop-detail a:focus-visible { outline: 3px solid var(--color-pantone-deep); outline-offset: 3px; }

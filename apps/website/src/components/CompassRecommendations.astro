@@ -1,0 +1,96 @@
+---
+import Icon from "./Icon.astro";
+import { audiences, goals, suggestDirections } from "../data/solution-guide.mjs";
+import { workshopProfiles } from "../data/workshop-themes";
+
+interface Props {
+  topic: string;
+  url: (path?: string) => string;
+}
+const { topic, url } = Astro.props;
+const matchedTheme: Record<string, string> = {
+  fuehrung: "neuroleadership", teams: "konfliktmanagement", veraenderung: "ki-kompetenz",
+};
+const sample = workshopProfiles.flatMap(({ coach, themes }) =>
+  themes.map((theme) => ({ coach, theme }))).find(({ theme }) => theme.id === matchedTheme[topic]);
+const results = suggestDirections(topic);
+const local = (path: string) => path.startsWith("unternehmen#")
+  ? path.slice("unternehmen".length) : url(path.replace("#", "/#"));
+---
+
+<div class="compass-recommendations" data-compass-recommendations data-topic={topic}>
+  <ol class="compass-results" role="list" aria-label="Passende Wege">
+    {results.map(({ title, href, contact, reason }) => (
+      <li data-direction={contact}>
+        <a class="compass-result-title" href={local(href)}>{title} <Icon name="arrow-right" size={16} /></a>
+        <p>{reason}</p>
+        {contact === "workshop" && sample && (
+          <p class="compass-example">
+            <a href={url(sample.theme.path)}>{sample.theme.title}</a> ·
+            <a href={url(`${sample.coach.profilePath}/`)}>{sample.coach.name}</a>
+          </p>
+        )}
+        <a class="compass-contact" aria-label={`Mit Frau Rappelt besprechen: ${title}`} href={url(`kontakt/?thema=${contact}`)}>Mit Frau Rappelt besprechen</a>
+      </li>
+    ))}
+  </ol>
+  <details class="compass-refine" hidden>
+    <summary>Empfehlungen präzisieren</summary>
+    <form method="dialog">
+      <label>Für wen?
+        <select name="audience"><option value="">Alle Zielgruppen</option>
+          {audiences.map(({ id, label }) => <option value={id}>{label}</option>)}
+        </select>
+      </label>
+      <label>Was möchten Sie erreichen?
+        <select name="goal"><option value="">Alle Ziele</option>
+          {goals.map(({ id, label }) => <option value={id}>{label}</option>)}
+        </select>
+      </label>
+    </form>
+    <p role="status" class="compass-refine-status"></p>
+  </details>
+</div>
+
+<script>
+  import { suggestDirections } from "../data/solution-guide.mjs";
+  document.querySelectorAll<HTMLElement>("[data-compass-recommendations]").forEach((group) => {
+    const details = group.querySelector("details");
+    const form = group.querySelector("form");
+    const list = group.querySelector("ol");
+    const status = group.querySelector("[role=status]");
+    if (!details || !form || !list || !status) return;
+    const rows = new Map([...list.querySelectorAll<HTMLLIElement>("[data-direction]")]
+      .map((row) => [row.dataset.direction, row]));
+    form.addEventListener("submit", (event) => event.preventDefault());
+    form.addEventListener("change", () => {
+      const values = new FormData(form);
+      const results = suggestDirections(group.dataset.topic, String(values.get("audience")), String(values.get("goal")));
+      list.append(...results.flatMap(({ contact }) => rows.get(contact) ?? []));
+      status.textContent = results.length ? `Empfehlung zuerst: ${results[0].title}.` : "";
+    });
+    details.hidden = false;
+  });
+</script>
+
+<style>
+  .compass-results { list-style: none; padding: 0; margin: .7rem 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .compass-results li { min-inline-size: 0; border-block-start: 2px solid var(--color-pantone); padding: .75rem .9rem; overflow-wrap: anywhere; }
+  .compass-results li + li { border-inline-start: 1px solid var(--color-line); }
+  .compass-results a { color: var(--color-pantone-deep); text-decoration: underline; text-underline-offset: .2em; }
+  .compass-result-title { display: inline-flex; align-items: center; gap: .5rem; font-weight: 750; min-block-size: 44px; }
+  .compass-result-title :global(svg) { flex: none; }
+  .compass-contact { display: inline-flex; align-items: center; min-block-size: 44px; margin-block-start: .3rem; }
+  .compass-example { font-size: .95rem; }
+  .compass-refine { border-block-start: 1px solid var(--color-line); }
+  summary { cursor: pointer; padding-block: .65rem; font-weight: 700; color: var(--color-pantone-deep); }
+  form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+  label { display: grid; gap: .25rem; font-weight: 650; }
+  select { inline-size: 100%; min-inline-size: 0; min-block-size: 44px; padding: .4rem; font: inherit; color: inherit; background: white; border: 1px solid var(--color-pantone-deep); }
+  .compass-refine-status { font-size: .95rem; }
+  @media (max-width: 44rem) {
+    .compass-results, form { grid-template-columns: minmax(0, 1fr); }
+    .compass-results li { padding-inline: 0; }
+    .compass-results li + li { border-inline-start: 0; }
+  }
+</style>

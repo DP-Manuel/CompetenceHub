@@ -117,6 +117,9 @@ for (const file of allFiles) {
     || excludedSlugs.some((slug) => content.includes(slug))) {
     failures.push({ source: publicPath, reason: "Paused identity or internal data in public artifact" });
   }
+  if (environment.preview && /g[üu]lcan|elmas[- ]brandes|images\/room-experience\//.test(content)) {
+    failures.push({ source: publicPath, reason: "Coach or room content outside the review release" });
+  }
 }
 
 const read = (path) => readFileSync(join(dist, path), "utf8");
@@ -160,13 +163,21 @@ for (const slug of expectedFinderSlugs) {
 }
 assert.doesNotMatch(payload[1], /Psychotherapie \(HeilprG\)|carolin-hupp|stefanie-becker/);
 const sitemap = read("sitemap.xml");
+const company = read("unternehmen/index.html");
+const contact = read("kontakt/index.html");
 
 if (environment.preview) {
+  assert.equal((company.match(/data-compass-recommendations/g) ?? []).length, 6);
+  assert.doesNotMatch(company, /data-solution-guide(?:=|\s)/);
+  assert.match(contact, /data-copy-address/);
+  assert.match(contact, /data-copy-draft/);
   assert.equal(read("robots.txt"), "User-agent: *\nDisallow: /\n");
   assert.doesNotMatch(sitemap, /<url>/);
   assert.doesNotMatch(read("coaches/manuela-rodriguez/index.html"), /firmenseminare/);
   assert.match(read("coaches/manuela-rodriguez/index.html"), /href="https:\/\/advisory\.donner-partner\.de\/"/);
 } else {
+  assert.doesNotMatch(company, /data-compass-recommendations/);
+  assert.doesNotMatch(contact, /data-copy-draft|data-copy-address/);
   assert.deepEqual([...sitemap.matchAll(/<loc>https:\/\/competencehub\.donner-partner\.de\/coaches\/([^<\/]+)\/?<\/loc>/g)]
     .map((match) => match[1]).sort(), expectedSlugs);
   const manuela = read("coaches/manuela-rodriguez/index.html");

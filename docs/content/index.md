@@ -2,6 +2,7 @@
 
 | Topic | Canonical home | Purpose |
 | --- | --- | --- |
+| Premium Experience 2.0 | [Customer journeys and release boundaries](website-premium-experience-2-2026-11-28.md) | Unified compass, four editorial workshop views, safe local draft and Pages-only scope |
 | Premium Customer Experience | [Website sprint, benchmark and release gates](website-premium-experience-2026-11-27.md) | Rule-based guide, workshop themes, contact, unpublished assets and IONOS follow-up |
 | Unternehmens-Kompass | [Company experience and release boundaries](website-company-compass.md) | Six visitor needs, accessible navigation, preserved prices and customer evidence, Pages-only release |
 | Interactive Hub | [Mouse, touch and editorial refinement](website-interactive-experience.md) | Draggable homepage graph, equal portraits, company and service navigation, Pages-only release |
