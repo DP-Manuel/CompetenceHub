@@ -1,0 +1,41 @@
+---
+import Icon from "./Icon.astro";
+import RoomPicture from "./RoomPicture.astro";
+import { photoFor, previewCities, venuePath } from "../data/venues.mjs";
+
+const city = previewCities[0];
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+{city && <section class="venue-teaser business-wrap" aria-labelledby="venue-teaser-title" data-venue-teaser>
+  <div class="venue-teaser__heading">
+    <div>
+      <p class="eyebrow">Veranstaltungsorte · {city.name}</p>
+      <h2 id="venue-teaser-title">Auch der Rahmen muss passen.</h2>
+      <p>Erste Raumeindrücke für Workshops, Seminare und gemeinsame Entwicklung.</p>
+    </div>
+    <a class="text-link" href={`${base}/${venuePath}`}>Veranstaltungsorte entdecken <Icon name="arrow-right" size={19} /></a>
+  </div>
+  <div class="venue-teaser__photos">
+    {city.preview.map((id, index) => <div>
+      <RoomPicture photo={photoFor(city, id)} city={city.id}
+        sizes={index === 0 ? "(min-width: 75rem) 710px, (min-width: 44rem) 65vw, 100vw" : "(min-width: 75rem) 350px, 45vw"} />
+    </div>)}
+  </div>
+</section>}
+
+<style>
+  .venue-teaser { padding-block: 2.4rem; border-block-start: 1px solid var(--color-line); }
+  .venue-teaser__heading { display: flex; gap: .7rem 1.5rem; align-items: end; justify-content: space-between; flex-wrap: wrap; margin-block-end: 1.1rem; }
+  .venue-teaser__heading h2 { margin: 0; letter-spacing: 0; }
+  .venue-teaser__heading p { margin-block: .4rem; max-width: 64ch; }
+  .venue-teaser__heading a { min-block-size: 44px; }
+  .venue-teaser__photos { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: .5rem; }
+  .venue-teaser__photos > div { min-width: 0; aspect-ratio: 2 / 1; overflow: hidden; background: var(--color-soft); }
+  .venue-teaser__photos > div:first-child { grid-row: span 2; aspect-ratio: auto; }
+  .venue-teaser__photos :global(picture), .venue-teaser__photos :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  @media (max-width: 44rem) {
+    .venue-teaser__photos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .venue-teaser__photos > div:first-child { grid-row: auto; grid-column: span 2; aspect-ratio: 2 / 1; }
+  }
+</style>

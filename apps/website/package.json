@@ -8,7 +8,7 @@
     "build": "astro check && astro build",
     "build:coach-projection": "astro build",
     "check": "astro check",
-    "test:preview": "node --test scripts/test-preview-model.mjs scripts/test-coach-projection.mjs scripts/test-portal-login.mjs scripts/test-hub-geometry.mjs scripts/test-solution-guide.mjs",
+    "test:preview": "node --test scripts/test-preview-model.mjs scripts/test-coach-projection.mjs scripts/test-portal-login.mjs scripts/test-hub-geometry.mjs scripts/test-solution-guide.mjs scripts/test-venues.mjs",
     "test:coach-projection": "node --test scripts/test-coach-projection.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "verify:dist": "node scripts/verify-dist-links.mjs"

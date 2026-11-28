@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import SolutionGuide from "../components/SolutionGuide.astro";
 import CompassRecommendations from "../components/CompassRecommendations.astro";
+import VenueTeaser from "../components/VenueTeaser.astro";
 import { customerFeedbacks } from "../data/customerFeedbacks";
 import "../styles/global.css";
 import "../styles/company-experience.css";
@@ -293,6 +294,8 @@ const faqs = [
         ))}
       </div>
     </section>
+
+    {review && <VenueTeaser />}
 
     <section class="business-process" id="zusammenarbeit" aria-labelledby="company-process-title">
       <div class="business-wrap">

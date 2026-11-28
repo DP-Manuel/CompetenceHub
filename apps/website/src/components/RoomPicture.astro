@@ -1,0 +1,27 @@
+---
+import { photoFor, roomWidths } from "../data/venues.mjs";
+
+interface Props {
+  photo: ReturnType<typeof photoFor>;
+  city: string;
+  sizes: string;
+  priority?: boolean;
+}
+
+const { photo, city, sizes, priority = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const image = (width: number, ext: string) => `${base}/images/venues/${city}/${photo.id}-${width}.${ext}`;
+const srcset = (ext: string) => roomWidths.map((width) => `${image(width, ext)} ${width}w`).join(", ");
+---
+
+<picture class="room-picture">
+  <source type="image/webp" srcset={srcset("webp")} sizes={sizes} />
+  <img src={image(960, "jpg")} srcset={srcset("jpg")} sizes={sizes} alt={photo.alt}
+    width="1800" height={photo.height} loading={priority ? "eager" : "lazy"}
+    fetchpriority={priority ? "high" : undefined} decoding="async" />
+</picture>
+
+<style>
+  .room-picture, .room-picture img { display: block; width: 100%; }
+  .room-picture img { height: auto; }
+</style>

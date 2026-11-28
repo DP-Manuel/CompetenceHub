@@ -7,6 +7,7 @@ import PortalLogin from "../components/PortalLogin.astro";
 import UpcomingEvents from "../components/UpcomingEvents.astro";
 import { portalLoginConfiguration } from "../../config/environment.mjs";
 import { demoOfferPath, portalPath, publicCalendarPath } from "../v2-local/journey.mjs";
+import { previewCities, venuePath } from "../data/venues.mjs";
 
 interface Props {
   title: string;
@@ -15,6 +16,7 @@ interface Props {
   noindex?: boolean;
   canonical?: boolean;
   editorialProfile?: boolean;
+  socialImage?: string;
 }
 
 const {
@@ -24,6 +26,7 @@ const {
   noindex = false,
   canonical = true,
   editorialProfile = false,
+  socialImage,
 } = Astro.props;
 
 const reviewMode = import.meta.env.PUBLIC_REVIEW_MODE === "true";
@@ -69,7 +72,8 @@ const isServicePage = ["leistungen", "mindforge", "lifecoaching", "livecoaching"
 const profilePath = canonicalPath.replace(/^\//, "").replace(/\/$/, "");
 const publicProfile = activeCoaches.find((coach) => coach.profilePath === profilePath);
 const approvedProfile = Boolean(publicProfile);
-const sharePortrait = publicProfile?.image ? new URL(publicProfile.image, canonicalSite).href : "";
+const shareImage = socialImage && Astro.site ? new URL(socialImage, Astro.site).href
+  : publicProfile?.image ? new URL(publicProfile.image, canonicalSite).href : "";
 const localDemoProfile = v2Local && profilePath === "coaches/v2-demo-coach";
 const showUpcoming = approvedProfile || localDemoProfile || (v2Local && isCurrent());
 const profileUpcoming = approvedProfile || localDemoProfile ? `/${profilePath}/` : "";
@@ -94,7 +98,7 @@ const finderHref = profileHasOffers
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    {!v2Local && sharePortrait && <meta property="og:image" content={sharePortrait} />}
+    {!v2Local && shareImage && <meta property="og:image" content={shareImage} />}
     {canonical && !v2Local && <meta property="og:url" content={canonicalUrl} />}
     {canonical && !v2Local && <link rel="canonical" href={canonicalUrl} />}
     <link rel="icon" href={url("favicon.svg")} type="image/svg+xml" />
@@ -199,6 +203,7 @@ const finderHref = profileHasOffers
         <a href={url("unternehmen")}>Für Unternehmen</a>
         <a href={url("coaches")}>Coaches</a>
         <a href={navHref("kalender")}>Kalender</a>
+        {reviewMode && previewCities.length > 0 && <a href={url(venuePath)}>Veranstaltungsorte</a>}
         <a href={url("ueber-uns")}>Über uns</a>
         <a href={url("kontakt")}>Kontakt</a>
         <a href="https://donner-partner.de/dp/impressum/">Impressum</a>

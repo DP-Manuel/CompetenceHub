@@ -3,6 +3,7 @@ import { extname, join, relative, resolve, sep } from "node:path";
 import assert from "node:assert/strict";
 import { websiteEnvironment, portalLoginConfiguration } from "../config/environment.mjs";
 import { approvedCoachProfiles, coachProfilesFor, featuredCoachSlugs, pausedCoachSlugs } from "../config/active-coach-publication.mjs";
+import { venuePhotoPaths } from "../config/venue-preview-media.mjs";
 
 const environment = websiteEnvironment();
 const activeCoachProfiles = coachProfilesFor(environment.mode);
@@ -165,8 +166,16 @@ assert.doesNotMatch(payload[1], /Psychotherapie \(HeilprG\)|carolin-hupp|stefani
 const sitemap = read("sitemap.xml");
 const company = read("unternehmen/index.html");
 const contact = read("kontakt/index.html");
+const venueFiles = allFiles.map((path) => relative(dist, path).split(sep).join("/"))
+  .filter((path) => path.startsWith("images/venues/") || path.startsWith("veranstaltungsorte/")).sort();
 
 if (environment.preview) {
+  assert.deepEqual(venueFiles, [...venuePhotoPaths().map((path) => `images/venues/${path}`), "veranstaltungsorte/index.html"].sort());
+  const venuePage = read("veranstaltungsorte/index.html");
+  assert.match(venuePage, /property="og:image" content="https:\/\/dp-manuel\.github\.io\/CompetenceHub\/images\/venues\//);
+  assert.doesNotMatch(venuePage, /rel="canonical"|Schreinerei|Heisenberg|Röntgen|K[öo]lliker|Siebold|Buchner|Max-Planck/);
+  assert.match(company, /data-venue-teaser/);
+  assert.match(contact, /data-venue="wuerzburg"/);
   assert.equal((company.match(/data-compass-recommendations/g) ?? []).length, 6);
   assert.doesNotMatch(company, /data-solution-guide(?:=|\s)/);
   assert.match(contact, /data-copy-address/);
@@ -176,6 +185,9 @@ if (environment.preview) {
   assert.doesNotMatch(read("coaches/manuela-rodriguez/index.html"), /firmenseminare/);
   assert.match(read("coaches/manuela-rodriguez/index.html"), /href="https:\/\/advisory\.donner-partner\.de\/"/);
 } else {
+  assert.deepEqual(venueFiles, []);
+  assert.doesNotMatch(company, /data-venue-teaser|veranstaltungsorte\//);
+  assert.doesNotMatch(contact, /data-venue=/);
   assert.doesNotMatch(company, /data-compass-recommendations/);
   assert.doesNotMatch(contact, /data-copy-draft|data-copy-address/);
   assert.deepEqual([...sitemap.matchAll(/<loc>https:\/\/competencehub\.donner-partner\.de\/coaches\/([^<\/]+)\/?<\/loc>/g)]

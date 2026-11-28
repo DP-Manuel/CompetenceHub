@@ -1,0 +1,190 @@
+---
+import Icon from "./Icon.astro";
+import RoomPicture from "./RoomPicture.astro";
+import { roomsFor } from "../data/venues.mjs";
+
+interface Props { city: Parameters<typeof roomsFor>[0]; }
+const { city } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const rooms = roomsFor(city);
+const views = (items: typeof rooms) => items.flatMap((room) => room.photos.map((photo) => ({ room, photo })));
+const featuredRooms = city.featured.flatMap((photoId) => rooms.filter(({ photos }) => photos[0]?.id === photoId));
+const featured = views(featuredRooms);
+const additional = views(rooms.filter((room) => !featuredRooms.includes(room)));
+const galleryTitle = `room-gallery-title-${city.id}`;
+const viewerTitle = `room-viewer-title-${city.id}`;
+const pictureUrl = (id: string) => `${base}/images/venues/${city.id}/${id}-1800.jpg`;
+const smallSizes = "(min-width: 76rem) 295px, (min-width: 39rem) 45vw, calc(100vw - 2rem)";
+---
+
+<section class="room-gallery" id={`raeume-${city.id}`} aria-labelledby={galleryTitle} data-room-gallery>
+  <div class="venue-wrap">
+    <h3 id={galleryTitle}>Räume entdecken</h3>
+    <p class="room-gallery__intro">Vom kleinen Gesprächskreis bis zur Vortragsbestuhlung: Diese Ansichten zeigen unterschiedliche Möglichkeiten.</p>
+
+    <div class="room-gallery__featured">
+      {featured.map(({ room, photo }, index) => (
+        <figure class:list={["room-tile", `room-tile--${index + 1}`]}>
+          <a class="room-tile__image" href={pictureUrl(photo.id)}
+            data-room-photo data-room-title={photo.title} data-room-group={room.id} data-room-label={room.title} aria-label={`Raumfoto vergrößern: ${photo.title}`}>
+            <RoomPicture photo={photo} city={city.id} sizes={index < 2 ? "(min-width: 76rem) 620px, (min-width: 59rem) 52vw, calc(100vw - 2rem)" : smallSizes} />
+            <span class="room-tile__zoom"><Icon name="maximize" size={20} /></span>
+          </a>
+          <figcaption><strong>{photo.title}</strong><span>{room.title} · {photo.setup}</span></figcaption>
+        </figure>
+      ))}
+    </div>
+
+    {additional.length > 0 && <details class="room-gallery__more">
+      <summary>Weitere Raumansichten entdecken <span>({additional.length})</span><Icon name="arrow-right" size={20} /></summary>
+      <div class="room-gallery__additional">
+        {additional.map(({ room, photo }) => (
+          <figure class="room-tile">
+            <a class="room-tile__image" href={pictureUrl(photo.id)}
+              data-room-photo data-room-title={photo.title} data-room-group={room.id} data-room-label={room.title} aria-label={`Raumfoto vergrößern: ${photo.title}`}>
+              <RoomPicture photo={photo} city={city.id} sizes={smallSizes} />
+              <span class="room-tile__zoom"><Icon name="maximize" size={20} /></span>
+            </a>
+            <figcaption><strong>{photo.title}</strong><span>{room.title} · {photo.setup}</span></figcaption>
+          </figure>
+        ))}
+      </div>
+    </details>}
+  </div>
+
+  <dialog class="room-viewer" aria-labelledby={viewerTitle}>
+    <div class="room-viewer__head">
+      <h3 id={viewerTitle}>Raumansicht</h3>
+      <button type="button" data-room-close autofocus title="Schließen" aria-label="Schließen"><Icon name="x" size={22} /></button>
+    </div>
+    <div class="room-viewer__image" data-room-image></div>
+    <div class="room-viewer__toolbar">
+      <button type="button" data-room-prev title="Vorheriges Foto" aria-label="Vorheriges Foto"><Icon name="arrow-right" size={22} /></button>
+      <p role="status"><strong data-room-current></strong><span data-room-label></span><span data-room-counter></span></p>
+      <button type="button" data-room-next title="Nächstes Foto" aria-label="Nächstes Foto"><Icon name="arrow-right" size={22} /></button>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  for (const gallery of document.querySelectorAll("[data-room-gallery]")) {
+    const dialog = gallery.querySelector("dialog");
+    const photos = [...gallery.querySelectorAll<HTMLAnchorElement>("[data-room-photo]")];
+    const media = gallery.querySelector("[data-room-image]");
+    const label = gallery.querySelector("[data-room-current]");
+    const group = dialog?.querySelector("[data-room-label]");
+    const count = gallery.querySelector("[data-room-counter]");
+    if (!dialog || typeof dialog.showModal !== "function" || !media || !label || !group || !count || !photos.length) continue;
+
+    let active = 0;
+    let opener: HTMLAnchorElement | undefined;
+    const show = (index: number) => {
+      active = (index + photos.length) % photos.length;
+      const photo = photos[active];
+      const picture = photo.querySelector("picture")?.cloneNode(true);
+      if (!(picture instanceof HTMLPictureElement)) return;
+      for (const element of picture.querySelectorAll("source, img")) {
+        element.setAttribute("sizes", "(min-width: 66rem) 1000px, calc(100vw - 3rem)");
+      }
+      const image = picture.querySelector("img");
+      if (image) image.loading = "eager";
+      media.replaceChildren(picture);
+      label.textContent = photo.dataset.roomTitle ?? "";
+      group.textContent = photo.dataset.roomLabel ?? "";
+      count.textContent = `${active + 1} / ${photos.length}`;
+    };
+
+    photos.forEach((photo, index) => {
+      photo.setAttribute("aria-haspopup", "dialog");
+      photo.addEventListener("click", (event) => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        opener = photo;
+        show(index);
+        dialog.showModal();
+        gallery.querySelector<HTMLButtonElement>("[data-room-close]")?.focus();
+      });
+    });
+    gallery.querySelector("[data-room-close]")?.addEventListener("click", () => dialog.close());
+    gallery.querySelector("[data-room-prev]")?.addEventListener("click", () => show(active - 1));
+    gallery.querySelector("[data-room-next]")?.addEventListener("click", () => show(active + 1));
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      show(active + (event.key === "ArrowRight" ? 1 : -1));
+    });
+    dialog.addEventListener("close", () => {
+      media.replaceChildren();
+      opener?.focus({ preventScroll: true });
+    });
+  }
+</script>
+
+<style>
+  .room-gallery { padding-block: 2.75rem; background: var(--color-soft); border-block: 1px solid var(--color-line); }
+  .room-gallery h3 { max-width: 28ch; margin: 0; line-height: 1.2; }
+  .room-gallery__intro { max-width: 64ch; font-size: 1.12rem; margin: .8rem 0 .4rem; }
+  .room-gallery__featured, .room-gallery__additional { display: grid; gap: 1.25rem; align-items: start; }
+  .room-gallery__featured { margin-top: 1.6rem; }
+  .room-gallery__additional { padding-block: 1rem 1.4rem; }
+  .room-tile { margin: 0; min-width: 0; }
+  .room-tile__image { display: block; position: relative; background: var(--color-ice); }
+  .room-tile__zoom {
+    display: grid; place-items: center; position: absolute; inset: auto .45rem .45rem auto;
+    width: 2.75rem; height: 2.75rem; background: var(--color-white); color: var(--color-pantone-deep);
+    border: 1px solid var(--color-line); border-radius: 4px;
+  }
+  .room-tile__image:hover .room-tile__zoom { color: var(--color-white); background: var(--color-pantone-deep); }
+  .room-tile figcaption { display: grid; padding-block: .5rem; font-size: .92rem; }
+  .room-tile figcaption strong { color: var(--color-pantone-deep); }
+  .room-gallery__more { margin-block: .7rem 1.1rem; border-block: 1px solid var(--color-line); }
+  .room-gallery__more summary {
+    display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+    padding: .65rem .3rem; min-height: 2.75rem; cursor: pointer; list-style: none; font-weight: 750;
+    color: var(--color-pantone-deep);
+  }
+  .room-gallery__more summary::-webkit-details-marker { display: none; }
+  .room-gallery__more summary :global(.icon) { transform: rotate(90deg); }
+  .room-gallery__more[open] summary :global(.icon) { transform: rotate(-90deg); }
+  .room-gallery__more summary:hover { background: var(--color-ice); }
+  .room-gallery__more summary span { margin-inline-end: auto; }
+  .room-gallery :is(a, button, summary):focus-visible { outline: 2px solid var(--color-dark); outline-offset: 3px; }
+
+  .room-viewer {
+    width: min(66rem, calc(100% - 1rem)); max-width: none; max-height: calc(100dvh - 1rem);
+    padding: .7rem; border: 1px solid var(--color-line); border-top: 4px solid var(--color-pantone);
+    border-radius: 5px; color: var(--color-dark); background: var(--color-white);
+  }
+  .room-viewer::backdrop { background: rgba(28, 30, 31, .72); }
+  .room-viewer__head, .room-viewer__toolbar { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+  .room-viewer__head h3 { font-size: 1.2rem; }
+  .room-viewer button {
+    display: grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; cursor: pointer;
+    border: 1px solid var(--color-pantone-deep); border-radius: 4px; background: var(--color-white);
+    color: var(--color-pantone-deep);
+  }
+  .room-viewer button:hover { background: var(--color-ice); }
+  .room-viewer [data-room-prev] :global(.icon) { transform: rotate(180deg); }
+  .room-viewer__image { margin-block: .65rem; background: var(--color-soft); }
+  .room-viewer__image :global(img) { width: 100%; max-height: min(66dvh, calc(100dvh - 9.5rem)); object-fit: contain; }
+  .room-viewer__toolbar p { margin: 0; display: grid; text-align: center; color: var(--color-dark); font-size: .92rem; }
+
+  @media (min-width: 39rem) {
+    .room-gallery__featured, .room-gallery__additional { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .room-tile--1 { grid-column: 1 / -1; }
+  }
+  @media (min-width: 59rem) {
+    .room-gallery__featured { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .room-gallery__featured .room-tile { grid-column: span 4; }
+    .room-gallery__featured .room-tile--1 { grid-column: span 7; }
+    .room-gallery__featured .room-tile--2 { grid-column: span 5; }
+    .room-gallery__featured .room-tile--1 :global(img), .room-gallery__featured .room-tile--2 :global(img) {
+      aspect-ratio: auto; object-fit: contain;
+    }
+    .room-gallery__additional { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width: 42rem) {
+    .room-gallery { padding-block: 2.2rem; }
+    .room-gallery__intro { font-size: 1rem; }
+  }
+</style>

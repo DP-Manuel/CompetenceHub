@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { websiteEnvironment } from "./config/environment.mjs";
 import { coachProjectionIntegration } from "./config/coach-projection.mjs";
 import { approvedCoachContent } from "./config/approved-production-content.mjs";
+import { venuePreviewMedia } from "./config/venue-preview-media.mjs";
 
 const environment = websiteEnvironment();
 const projection = coachProjectionIntegration(environment);
@@ -29,5 +30,6 @@ export default defineConfig({
       )),
     } },
   },
-  integrations: [...(projection ? [projection] : []), approvedCoachContent(environment.mode)],
+  integrations: [...(projection ? [projection] : []), approvedCoachContent(environment.mode),
+    ...(environment.preview ? [venuePreviewMedia()] : [])],
 });
